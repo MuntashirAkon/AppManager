@@ -31,7 +31,6 @@ public class SessionMonitoringService extends Service {
     public static final String TAG = SessionMonitoringService.class.getSimpleName();
 
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.SESSION_MONITOR";
-    public static final int NOTIFICATION_ID = 1;
 
     public static final String STOP_ACTION = BuildConfig.APPLICATION_ID + ".action.STOP_SESSION_MONITOR";
 
@@ -95,7 +94,7 @@ public class SessionMonitoringService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setContentIntent(defaultIntent)
                 .addAction(stopServiceAction);
-        startForeground(NOTIFICATION_ID, builder.build());
+        startForeground(NotificationUtils.nextNotificationId(), builder.build());
         if (screenLockEnabled && Prefs.Privacy.isAutoLockEnabled()) {
             IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
             filter.addAction(Intent.ACTION_SCREEN_OFF);

@@ -48,7 +48,6 @@ public class FreezeUnfreezeService extends Service {
     public static final String TAG = FreezeUnfreezeService.class.getSimpleName();
 
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.FREEZE_UNFREEZE_MONITOR";
-    public static final int NOTIFICATION_ID = 1;
 
     private static final String STOP_ACTION = BuildConfig.APPLICATION_ID + ".action.STOP_FREEZE_UNFREEZE_MONITOR";
 
@@ -106,7 +105,7 @@ public class FreezeUnfreezeService extends Service {
                 .setSubText(getText(R.string.freeze_unfreeze))
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .addAction(stopServiceAction);
-        startForeground(NOTIFICATION_ID, builder.build());
+        startForeground(NotificationUtils.nextNotificationId(), builder.build());
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_USER_PRESENT);

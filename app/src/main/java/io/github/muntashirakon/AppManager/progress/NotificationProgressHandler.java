@@ -7,6 +7,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 
 import androidx.annotation.DrawableRes;
@@ -16,6 +17,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationChannelCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.PendingIntentCompat;
 
 import org.jetbrains.annotations.Contract;
 
@@ -42,7 +44,6 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
     @Nullable
     private final NotificationManagerCompat mQueueNotificationManager;
     private final int mProgressNotificationId;
-    private final int mQueueNotificationId;
 
     @Nullable
     private NotificationInfo mLastProgressNotification = null;
@@ -61,8 +62,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
         mProgressNotificationManager = getNotificationManager(context, mProgressNotificationManagerInfo);
         mCompletionNotificationManager = getNotificationManager(context, mCompletionNotificationManagerInfo);
         mQueueNotificationManager = getNotificationManager(context, mQueueNotificationManagerInfo);
-        mProgressNotificationId = NotificationUtils.getNotificationId(mProgressNotificationManagerInfo.channelId);
-        mQueueNotificationId = mQueueNotificationManagerInfo != null ? NotificationUtils.getNotificationId(mQueueNotificationManagerInfo.channelId) : -1;
+        mProgressNotificationId = NotificationUtils.acquireNotificationId();
     }
 
     @Override
@@ -75,7 +75,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
                 .getBuilder(mContext, mQueueNotificationManagerInfo)
                 .setLocalOnly(true)
                 .build();
-        notify(mContext, mQueueNotificationManager, mQueueNotificationId, notification);
+        notify(mContext, mQueueNotificationManager, NotificationUtils.nextNotificationId(), notification);
     }
 
     @Override
@@ -144,12 +144,12 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
         Notification notification = info
                 .getBuilder(mContext, mCompletionNotificationManagerInfo)
                 .build();
-        int notificationId = NotificationUtils.getNotificationId(mCompletionNotificationManagerInfo.channelId);
-        notify(mContext, mCompletionNotificationManager, notificationId, notification);
+        notify(mContext, mCompletionNotificationManager, NotificationUtils.nextNotificationId(), notification);
     }
 
     @Override
     public void onDetach(@Nullable Service service) {
+        NotificationUtils.releaseNotificationId(mProgressNotificationId);
         if (service != null) {
             mAttachedToService = false;
             mProgressNotificationManager.cancel(mProgressNotificationId);
@@ -324,6 +324,11 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
 
         @NonNull
         NotificationCompat.Builder getBuilder(@NonNull Context context, @NonNull NotificationManagerInfo info) {
+            PendingIntent contentIntent;
+            if (autoCancel && defaultAction == null) {
+                // Auto-cancel requires a content Intent
+                contentIntent = PendingIntentCompat.getActivity(context, 0, new Intent(), 0, false);
+            } else contentIntent = defaultAction;
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, info.channelId)
                     .setLocalOnly(!Prefs.Misc.sendNotificationsToConnectedDevices())
                     .setPriority(NotificationUtils.importanceToPriority(info.importance))
@@ -333,7 +338,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
                     .setTicker(statusBarText)
                     .setContentTitle(title)
                     .setContentText(body)
-                    .setContentIntent(defaultAction)
+                    .setContentIntent(contentIntent)
                     .setAutoCancel(autoCancel)
                     .setGroup(groupId)
                     .setStyle(style);

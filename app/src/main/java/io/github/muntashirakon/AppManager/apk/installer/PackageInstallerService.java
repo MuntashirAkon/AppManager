@@ -211,15 +211,11 @@ public class PackageInstallerService extends ForegroundService {
     }
 
     @Override
-    public void onTaskRemoved(Intent rootIntent) {
+    public void onDestroy() {
+        ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE);
         if (mProgressHandler != null) {
             mProgressHandler.onDetach(this);
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE);
         super.onDestroy();
     }
 

@@ -3,12 +3,16 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.INotificationManager;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Process;
 import android.provider.Settings;
+import android.service.notification.StatusBarNotification;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -19,9 +23,11 @@ import androidx.core.app.NotificationManagerCompat;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Method;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
@@ -65,16 +71,39 @@ public final class NotificationUtils {
         Notification build(NotificationCompat.Builder builder);
     }
 
-    private static final Map<String, Integer> sNotificationIds = Collections.synchronizedMap(new HashMap<>());
+    private static final Set<Integer> sNotificationIds = Collections.synchronizedSet(new HashSet<>(8));
+    private static final Set<Integer> sReservedNotificationIds = new HashSet<>(8);
 
-    public static int getNotificationId(String channelId) {
-        Integer id = sNotificationIds.get(channelId);
-        if (id == null) {
-            sNotificationIds.put(channelId, 1);
-            return 1;
+    public static int acquireNotificationId() {
+        int newNotificationId = nextNotificationId();
+        synchronized (sReservedNotificationIds) {
+            sReservedNotificationIds.add(newNotificationId);
         }
-        sNotificationIds.put(channelId, id + 1);
-        return id;
+        return newNotificationId;
+    }
+
+    public static void releaseNotificationId(int notificationId) {
+        synchronized (sReservedNotificationIds) {
+            sReservedNotificationIds.remove(notificationId);
+        }
+    }
+
+    public static int nextNotificationId() {
+        return nextNotificationId(1);
+    }
+
+    public static int nextNotificationId(int start) {
+        synchronized (sNotificationIds) {
+            sNotificationIds.clear();
+            for (StatusBarNotification notification : getActiveNotifications()) {
+                sNotificationIds.add(notification.getId());
+            }
+            int i = start;
+            synchronized (sReservedNotificationIds) {
+                while (sNotificationIds.contains(i) || sReservedNotificationIds.contains(i)) ++i;
+            }
+            return i;
+        }
     }
 
     @NonNull
@@ -90,22 +119,21 @@ public final class NotificationUtils {
 
     public static void displayHighPriorityNotification(@NonNull Context context,
                                                        @NonNull NotificationBuilder notification) {
-        int notificationId = getNotificationId(HIGH_PRIORITY_CHANNEL_ID);
+        int notificationId = nextNotificationId();
         displayNotification(context, HIGH_PRIORITY_CHANNEL_ID, "Alerts",
                 NotificationManagerCompat.IMPORTANCE_HIGH, notificationId, notification);
     }
 
-    public static int displayFreezeUnfreezeNotification(@NonNull Context context,
-                                                        int notificationId,
-                                                        @NonNull NotificationBuilder notification) {
+    public static void displayFreezeUnfreezeNotification(@NonNull Context context,
+                                                         int notificationId,
+                                                         @NonNull NotificationBuilder notification) {
         displayNotification(context, FREEZE_UNFREEZE_CHANNEL_ID, "Freeze",
                 NotificationManagerCompat.IMPORTANCE_DEFAULT, notificationId, notification);
-        return notificationId;
     }
 
     public static int displayInstallConfirmNotification(@NonNull Context context,
                                                         @NonNull NotificationBuilder notification) {
-        int notificationId = getNotificationId(INSTALL_CONFIRM_CHANNEL_ID);
+        int notificationId = nextNotificationId();
         displayNotification(context, INSTALL_CONFIRM_CHANNEL_ID, "Confirm Installation",
                 NotificationManagerCompat.IMPORTANCE_HIGH, notificationId, notification);
         return notificationId;
@@ -192,5 +220,25 @@ public final class NotificationUtils {
             intent.putExtra("app_uid", Process.myUid());
         }
         return intent;
+    }
+
+    @SuppressWarnings("JavaReflectionMemberAccess")
+    @SuppressLint("DiscouragedPrivateApi")
+    private static StatusBarNotification[] getActiveNotifications() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            NotificationManager notificationManager = (NotificationManager) ContextUtils.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            return ArrayUtils.defeatNullable(StatusBarNotification.class, notificationManager.getActiveNotifications());
+        }
+        try {
+            // Fetch using private API
+
+            Method getService = NotificationManager.class.getDeclaredMethod("getService");
+            INotificationManager notificationManager = (INotificationManager) Objects.requireNonNull(getService.invoke(null));
+            return ArrayUtils.defeatNullable(StatusBarNotification.class, notificationManager.getActiveNotifications(BuildConfig.APPLICATION_ID));
+        } catch (Throwable th) {
+            // Should never happen
+            th.printStackTrace();
+            return ArrayUtils.emptyArray(StatusBarNotification.class);
+        }
     }
 }
