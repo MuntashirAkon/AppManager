@@ -25,6 +25,7 @@ import androidx.lifecycle.MutableLiveData;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -281,11 +282,9 @@ public class AppInfoViewModel extends AndroidViewModel {
         boolean isExternalApk = mMainModel.isExternalApk();
         AppInfo appInfo = new AppInfo();
         try {
-            // Set source dir
             if (!isExternalApk) {
+                // Set source dir
                 appInfo.sourceDir = new File(applicationInfo.publicSourceDir).getParent();
-            }
-            if (!isExternalApk) {
                 // Set data dirs
                 appInfo.dataDir = applicationInfo.dataDir;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -307,7 +306,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                 }
                 boolean hasUsageAccess = FeatureController.isUsageAccessEnabled() && SelfPermissions.checkUsageStatsPermission();
                 if (hasUsageAccess) {
-                // Net statistics
+                    // Net statistics
                     appInfo.dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
                             applicationInfo.uid, UsageUtils.USAGE_LAST_BOOT);
                     // Set sizes
@@ -424,7 +423,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         public String dataDir;
         @Nullable
         public String dataDeDir;
-        public List<String> extDataDirs;
+        public List<String> extDataDirs = Collections.emptyList();
         @Nullable
         public String jniDir;
         // Data usage
