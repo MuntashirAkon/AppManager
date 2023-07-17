@@ -134,7 +134,6 @@
     <string name="sort_by_memory_usage">Využití paměti</string>
     <string name="rsa_modulus">Modul</string>
     <string name="conversion_failed">Konverze se nezdařila.</string>
-    <string name="pref_show_users_in_installer">Zobrazit uživatele v instalátoru</string>
     <string name="cache">Mezipaměť</string>
     <string name="test_only">Pouze test</string>
     <string name="validity">Platnost</string>
@@ -259,7 +258,6 @@
     <string name="algorithm">Algoritmus</string>
     <string name="scanner">Skener</string>
     <string name="no_app_ops">Žádné operace aplikace</string>
-    <string name="pref_show_users_in_installer_msg">Zobrazit seznam uživatelů, které lze vybrat před instalací externí aplikace. Vyžaduje root nebo ADB.</string>
     <string name="the_import_was_successful">Importováno</string>
     <string name="launch_mode_single_instance">Jediná instance</string>
     <string name="keyboard_no_keys">Žádné klíče</string>

@@ -658,7 +658,6 @@
     <string name="pref_encryption_msg">Шифрування резервних копій.</string>
     <string name="encryption">Шифрування</string>
     <string name="select_user">Виберіть користувача</string>
-    <string name="pref_show_users_in_installer_msg">Відображення списку користувачів, котрих потрібно вибрати перед встановленям зовнішнього додатка. Потрібен ROOT або ADB.</string>
     <string name="pref_show_users_in_installer">Показати користувачів у програмі встановлення</string>
     <string name="failed_to_duplicate_profile">Не вдалося дублювати профіль</string>
     <string name="user_profile_with_id">Профіль: %1$s (%2$d)</string>
@@ -1386,7 +1385,6 @@
     <string name="debloat_list_misc">Різне</string>
     <string name="debloat_list_pending">Розглядається</string>
     <string name="debloat_removal_caution">З обережністю</string>
-    <string name="debloat_removal_unsafe">Небезпечно</string>
     <plurals name="alert_failed_to_unblock_components">
         <item quantity="one">Не вдалося розблокувати компоненти %1$d додатку</item>
         <item quantity="few">Не вдалося розблокувати компоненти %1$d додатків</item>

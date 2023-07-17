@@ -583,7 +583,6 @@
     <string name="pref_encryption_msg">加密备份。</string>
     <string name="encryption">加密</string>
     <string name="select_user">选择用户</string>
-    <string name="pref_show_users_in_installer_msg">安装外部应用程序之前，显示要选择的用户列表。需要 root 或 ADB。</string>
     <string name="pref_show_users_in_installer">在安装器中显示用户</string>
     <string name="failed_to_duplicate_profile">无法复制配置文件</string>
     <string name="keyboard_no_keys">无键盘</string>
@@ -1291,7 +1290,6 @@
     <string name="debloat_removal_safe">安全</string>
     <string name="debloat_removal_replace">替换</string>
     <string name="debloat_removal_caution">留意</string>
-    <string name="debloat_removal_unsafe">危险</string>
     <string name="static_shared_library">静态共享库</string>
     <string name="filter_force_stopped_apps">停止了的应用</string>
     <plurals name="folder_count">

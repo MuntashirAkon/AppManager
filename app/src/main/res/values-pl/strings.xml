@@ -442,7 +442,6 @@
     <string name="pref_encryption_msg">Dodaj szyfrowanie do kopii zapasowych.</string>
     <string name="encryption">Szyfrowanie</string>
     <string name="select_user">Wybierz użytkownika</string>
-    <string name="pref_show_users_in_installer_msg">Wyświetl listę użytkowników do wyboru przed zainstalowaniem aplikacji. Wymaga roota lub ADB.</string>
     <string name="failed_to_duplicate_profile">Nie udało się zduplikować profilu</string>
     <string name="duplicate">Duplikuj</string>
     <string name="new_profile">Nowy profil</string>
@@ -591,7 +590,6 @@
     <string name="orientation_reverse_portrait">Pionowa, odwrócona</string>
     <string name="orientation_portrait">Pionowa</string>
     <string name="orientation_landscape">Pozioma</string>
-    <string name="pref_show_users_in_installer">Pokaż użytkowników w instalatorze</string>
     <string name="input_profile_name_description">Nazwa profilu nie może zawierać żadnych spacji.</string>
     <string name="input_profile_name">Nazwa profilu</string>
     <string name="conversion_failed">Konwersja nie powiodła się.</string>
@@ -1402,7 +1400,6 @@
     <string name="debloat_removal_safe">Bezpieczny</string>
     <string name="debloat_removal_replace">Zastąp</string>
     <string name="debloat_removal_caution">Uwaga</string>
-    <string name="debloat_removal_unsafe">Niebezpieczny</string>
     <string name="static_shared_library">Statyczna biblioteka współdzielona</string>
     <plurals name="search_results">
         <item quantity="one">%d wynik</item>

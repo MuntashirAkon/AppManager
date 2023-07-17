@@ -578,7 +578,6 @@
     <string name="send_crash_report">Invia rapporto di arresto anomalo</string>
     <string name="input_profile_name_description">Il nome del profilo non può contenere spazi.</string>
     <string name="failed_to_duplicate_profile">Impossibile duplicare profilo</string>
-    <string name="pref_show_users_in_installer">Mostra utenti nel programma di installazione</string>
     <string name="pref_show_users_in_installer_msg">Visualizza un elenco di utenti da selezionare prima di installare un\'app esterna. Richiede root o ADB.</string>
     <string name="pref_encryption_msg">Crittografa backup.</string>
     <string name="none">Nessuno</string>
@@ -1374,7 +1373,6 @@
     <string name="read_only_file_warning">Le modifiche non possono essere scritte nel file, probabilmente perché si trova in un volume su cui App Manager non ha il permesso di scrivere. Vuoi salvarlo in un posto diverso\?</string>
     <string name="debloat_list_misc">Miscellanea</string>
     <string name="debloat_removal_safe">Sicuro</string>
-    <string name="debloat_removal_unsafe">Non sicuro</string>
     <string name="filter_force_stopped_apps">App fermate</string>
     <plurals name="file_count">
         <item quantity="one">%d file</item>

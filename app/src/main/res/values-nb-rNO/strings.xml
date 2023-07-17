@@ -431,7 +431,6 @@
     <string name="aes">AES</string>
     <string name="encryption">Kryptering</string>
     <string name="select_user">Velg bruker</string>
-    <string name="pref_show_users_in_installer">Vis brukere i installasjonskandidat</string>
     <string name="new_profile">Ny profil</string>
     <string name="input_profile_name_description">Profilnavnet kan ikke inneholde mellomrom.</string>
     <string name="input_profile_name">Profilnavn</string>
@@ -1008,7 +1007,6 @@
     <string name="batch_ops">Partielle handlinger, partielle operasjoner</string>
     <string name="view_missing_signatures">Trykk for å se eller sende inn signaturer som ennå ikke finnes i App Managers database med biblioteker.</string>
     <string name="state_zombie">Zombie</string>
-    <string name="pref_show_users_in_installer_msg">Vis liste over brukere du kan velge før installasjon av ekstern app. Krever root eller ADB.</string>
     <string name="input_permissions">Inndata tillatelser</string>
     <string name="installer">Installer</string>
     <string name="matching_activities">Samsvarende aktiviteter</string>

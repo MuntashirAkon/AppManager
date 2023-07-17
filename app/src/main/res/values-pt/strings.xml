@@ -883,7 +883,6 @@
     <string name="aes">AES</string>
     <string name="pref_encryption_msg">Criptografia para backups.</string>
     <string name="encryption">Criptografia</string>
-    <string name="pref_show_users_in_installer_msg">Mostrar uma lista de utilizadores para selecionar antes de instalar uma app externa. Requer root ou ADB.</string>
     <string name="pref_show_users_in_installer">Mostrar utilizadores no instalador</string>
     <string name="un_apkm">UnApkm</string>
     <string name="select_apk">Selecionar APK</string>
@@ -1346,7 +1345,6 @@
     <string name="debloat_removal_safe">Seguro</string>
     <string name="debloat_removal_replace">Repor</string>
     <string name="debloat_removal_caution">Cuidado</string>
-    <string name="debloat_removal_unsafe">Inseguro</string>
     <string name="static_shared_library">Livraria partilhada estática</string>
     <string name="empty_folder">Vazio</string>
     <string name="go_to_path">Ir para…</string>

@@ -181,7 +181,6 @@
     <string name="filter_user_apps">Aplicații utilizator</string>
     <string name="no_apps">Fără aplicații</string>
     <string name="ecc">Criptografie în curbă eliptică</string>
-    <string name="pref_show_users_in_installer">Afișare utilizatori în programul de instalare</string>
     <string name="orientation_sensor_portrait">Senzor portret</string>
     <string name="import_failed">Importare eșuată!</string>
     <string name="clear_app_cache">Șterge memoria cache a aplicației</string>
@@ -260,7 +259,6 @@
     <string name="input_profile_name">Numele profilului</string>
     <string name="new_profile">Profil nou</string>
     <string name="duplicate">Duplicat</string>
-    <string name="pref_show_users_in_installer_msg">Afișează o listă de utilizatori care trebuie selectați înainte de a instala o aplicație externă. Necesită root sau ADB.</string>
     <string name="enabled">Activat</string>
     <string name="advanced">Avansat</string>
     <plurals name="alert_failed_to_disable_trackers">

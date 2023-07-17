@@ -459,7 +459,6 @@
     <string name="pref_encryption_msg">تشفير النسخ الاحتياطية.</string>
     <string name="encryption">التشفير</string>
     <string name="select_user">اختر المستخدم</string>
-    <string name="pref_show_users_in_installer_msg">اعرض قائمة بالمستخدمين المراد تحديدهم قبل تثبيت تطبيق خارجي. يتطلب الجذر أو ADB.</string>
     <string name="pref_show_users_in_installer">إظهار المستخدمين في المثبت</string>
     <string name="failed_to_duplicate_profile">تعذر تكرار ملف التعريف</string>
     <string name="duplicate">مكرره</string>
@@ -1479,7 +1478,6 @@
     <string name="debloat_removal_safe">آمن</string>
     <string name="debloat_removal_replace">تبديل</string>
     <string name="debloat_removal_caution">الحذر</string>
-    <string name="debloat_removal_unsafe">غير آمن</string>
     <string name="static_shared_library">المكتبة المشتركة الثابتة</string>
     <string name="pref_zip_align">محاذاة ملفات APK</string>
     <string name="block_unblock_components_description">حظر أو إلغاء حظر جميع المكونات المحددة بواسطة التوقيعات المحددة</string>

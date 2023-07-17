@@ -697,7 +697,6 @@
     <string name="issued_date">داده های استخراج شده</string>
     <string name="only_install">فقط نصب</string>
     <string name="sys_config">پیکربندی سیستم</string>
-    <string name="pref_show_users_in_installer">نشان دادن کاربر در نصب کننده</string>
     <string name="select_user">انتخاب کاربر</string>
     <string name="encryption">رمزگذاری</string>
     <string name="aes">رمزگذاری پیشرفته</string>
@@ -990,7 +989,6 @@
     <string name="pref_sign_apk_msg">امضای فایل های برنامه قبل نصب آنها.</string>
     <string name="new_profile">حالت جدید</string>
     <string name="failed_to_duplicate_profile">حالت تکراری نمیشه</string>
-    <string name="pref_show_users_in_installer_msg">نمایش لیستی از کاربرانی که باید قبل از نصب یک برنامه خارجی, انتخاب کنید. نیاز به روت یا ADB دارد.</string>
     <string name="v3_scheme">طرح نسخه 3 (از اندروید 9)</string>
     <string name="uri">لینک</string>
     <string name="on">روشن</string>

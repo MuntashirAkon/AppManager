@@ -956,7 +956,6 @@
     <string name="in_progress">진행 중</string>
     <string name="duplicate">복제</string>
     <string name="v1_scheme">v1 방식(Android 1.0 이후)</string>
-    <string name="pref_show_users_in_installer_msg">외부 앱을 설치하기 전에 선택할 사용자 목록을 표시합니다. 루트 또는 ADB가 필요합니다.</string>
     <string name="pref_sign_apk">APK 서명</string>
     <string name="cpu">CPU</string>
     <string name="options">옵션들</string>
@@ -1025,7 +1024,6 @@
     <string name="select_user">사용자 선택</string>
     <string name="backup_rules_description">App Manager 내에서 설정된 백업 규칙입니다.</string>
     <string name="redo_existing_backups_msg">이전 백업이 있는 설치된 앱에 대해 백업을 다시 실행합니다.</string>
-    <string name="pref_show_users_in_installer">설치 프로그램에 사용자 표시</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="security_providers">보안 제공업체</string>
     <string name="external_storage">외부 저장소</string>

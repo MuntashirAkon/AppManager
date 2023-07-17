@@ -821,7 +821,6 @@
     <string name="patch_level">Cấp độ bản vá</string>
     <string name="encryption">Mã hoá</string>
     <string name="select_user">Chọn người dùng</string>
-    <string name="pref_show_users_in_installer_msg">Hiển thị một danh sách những người dùng để chọn trước khi cài đặt một ứng dụng ngoài. Yêu cầu root hoặc ADB.</string>
     <string name="pref_show_users_in_installer">Hiện những người dùng trong trình cài đặt</string>
     <string name="failed_to_duplicate_profile">Không thể nhân bản cấu hình</string>
     <string name="duplicate">Nhân bản</string>
@@ -1295,7 +1294,6 @@
     <plurals name="alert_failed_to_unblock_components">
         <item quantity="other">Không thể bỏ chặn các thành phần cho ứng dụng %1$d</item>
     </plurals>
-    <string name="debloat_removal_unsafe">Không an toàn</string>
     <string name="static_shared_library">Thư viện chia sẻ tĩnh</string>
     <string name="warning_working_on_system_mode">Cảnh báo: Làm việc trên hệ thống thay vì chế độ ADB.</string>
     <string name="search_option_match_case">Khớp chữ hoa chữ thường</string>

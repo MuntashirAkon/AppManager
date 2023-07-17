@@ -643,9 +643,7 @@
     <string name="none">Nenhuma</string>
     <string name="encryption">Criptografia</string>
     <string name="select_user">Selecionar usuário</string>
-    <string name="pref_show_users_in_installer_msg">Mostrar uma lista de usuários para selecionar antes de instalar um aplicativo externo. Requer root ou ADB.</string>
     <string name="failed_to_duplicate_profile">Não foi possível duplicar o perfil</string>
-    <string name="pref_show_users_in_installer">Mostrar usuários no instalador</string>
     <string name="send_selected">Enviar selecionado</string>
     <string name="input_permissions_description">Insira permissões com espaços, p. ex. <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> etc. Use <tt>*</tt> para solicitar todas as permissões.</string>
     <string name="input_permissions">Inserir permissões</string>
