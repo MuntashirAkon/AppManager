@@ -29,6 +29,10 @@ import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class NotificationProgressHandler extends QueuedProgressHandler {
+    private static final String TAG_PROGRESS = null;
+    private static final String TAG_QUEUE = "queue";
+    private static final String TAG_ALERT = "alert";
+
     @NonNull
     private final Context mContext;
     @NonNull
@@ -62,7 +66,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
         mProgressNotificationManager = getNotificationManager(context, mProgressNotificationManagerInfo);
         mCompletionNotificationManager = getNotificationManager(context, mCompletionNotificationManagerInfo);
         mQueueNotificationManager = getNotificationManager(context, mQueueNotificationManagerInfo);
-        mProgressNotificationId = NotificationUtils.acquireNotificationId();
+        mProgressNotificationId = NotificationUtils.nextNotificationId(TAG_PROGRESS);
     }
 
     @Override
@@ -75,7 +79,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
                 .getBuilder(mContext, mQueueNotificationManagerInfo)
                 .setLocalOnly(true)
                 .build();
-        notify(mContext, mQueueNotificationManager, NotificationUtils.nextNotificationId(), notification);
+        notify(mContext, mQueueNotificationManager, TAG_QUEUE, NotificationUtils.nextNotificationId(TAG_QUEUE), notification);
     }
 
     @Override
@@ -127,13 +131,13 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
                 builder.setContentText(mContext.getString(R.string.operation_running));
             }
         }
-        notify(mContext, mProgressNotificationManager, mProgressNotificationId, builder.build());
+        notify(mContext, mProgressNotificationManager, TAG_PROGRESS, mProgressNotificationId, builder.build());
     }
 
     @Override
     public void onResult(@Nullable Object message) {
         if (!mAttachedToService) {
-            mProgressNotificationManager.cancel(mProgressNotificationId);
+            mProgressNotificationManager.cancel(TAG_PROGRESS, mProgressNotificationId);
         } else {
             onProgressUpdate(MAX_FINISHED, 0, null); // Trick to remove progressbar
         }
@@ -144,15 +148,14 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
         Notification notification = info
                 .getBuilder(mContext, mCompletionNotificationManagerInfo)
                 .build();
-        notify(mContext, mCompletionNotificationManager, NotificationUtils.nextNotificationId(), notification);
+        notify(mContext, mCompletionNotificationManager, TAG_ALERT, NotificationUtils.nextNotificationId(TAG_ALERT), notification);
     }
 
     @Override
     public void onDetach(@Nullable Service service) {
-        NotificationUtils.releaseNotificationId(mProgressNotificationId);
         if (service != null) {
             mAttachedToService = false;
-            mProgressNotificationManager.cancel(mProgressNotificationId);
+            mProgressNotificationManager.cancel(TAG_PROGRESS, mProgressNotificationId);
         }
     }
 
@@ -189,10 +192,11 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
 
     private static void notify(@NonNull Context context,
                                @NonNull NotificationManagerCompat notificationManager,
+                               @Nullable String notificationTag,
                                int notificationId,
                                @NonNull Notification notification) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-            notificationManager.notify(notificationId, notification);
+            notificationManager.notify(notificationTag, notificationId, notification);
         }
     }
 

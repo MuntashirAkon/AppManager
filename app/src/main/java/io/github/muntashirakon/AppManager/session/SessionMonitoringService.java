@@ -94,7 +94,7 @@ public class SessionMonitoringService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setContentIntent(defaultIntent)
                 .addAction(stopServiceAction);
-        startForeground(NotificationUtils.nextNotificationId(), builder.build());
+        startForeground(NotificationUtils.nextNotificationId(null), builder.build());
         if (screenLockEnabled && Prefs.Privacy.isAutoLockEnabled()) {
             IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
             filter.addAction(Intent.ACTION_SCREEN_OFF);

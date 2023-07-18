@@ -91,8 +91,8 @@ public final class FreezeUnfreeze {
             // There's a small chance that the notification by shortcutInfo.hasCode() already exists, in that case,
             // find the next one. This will cause trouble with dismissing the notification, but this is a viable
             // trade-off.
-            int notificationId = NotificationUtils.nextNotificationId(shortcutInfo.hashCode());
-            NotificationUtils.displayFreezeUnfreezeNotification(activity, notificationId, builder -> builder
+            String notificationTag = String.valueOf(shortcutInfo.hashCode());
+            NotificationUtils.displayFreezeUnfreezeNotification(activity, notificationTag, builder -> builder
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setWhen(System.currentTimeMillis())
                     .setSmallIcon(R.drawable.ic_default_notification)

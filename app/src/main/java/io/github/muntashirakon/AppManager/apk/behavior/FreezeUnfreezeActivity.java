@@ -114,8 +114,8 @@ public class FreezeUnfreezeActivity extends BaseActivity {
 
     private void hideNotification(@Nullable FreezeUnfreezeShortcutInfo shortcutInfo) {
         if (shortcutInfo == null) return;
-        int notificationId = shortcutInfo.hashCode();
-        NotificationUtils.getFreezeUnfreezeNotificationManager(this).cancel(notificationId);
+        String notificationTag = String.valueOf(shortcutInfo.hashCode());
+        NotificationUtils.getFreezeUnfreezeNotificationManager(this).cancel(notificationTag, 1);
     }
 
     public static class FreezeUnfreezeViewModel extends AndroidViewModel {

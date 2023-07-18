@@ -52,7 +52,7 @@ public class FreezeUnfreezeService extends Service {
     private static final String STOP_ACTION = BuildConfig.APPLICATION_ID + ".action.STOP_FREEZE_UNFREEZE_MONITOR";
 
     private final Map<String, FreezeUnfreezeShortcutInfo> mPackagesToShortcut = new HashMap<>();
-    private final Map<String, Integer> mPackagesToNotificationId = new HashMap<>();
+    private final Map<String, String> mPackagesToNotificationTag = new HashMap<>();
     private ScreenLockChecker mScreenLockChecker;
     private final BroadcastReceiver mScreenLockedReceiver = new BroadcastReceiver() {
         @Override
@@ -105,7 +105,7 @@ public class FreezeUnfreezeService extends Service {
                 .setSubText(getText(R.string.freeze_unfreeze))
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .addAction(stopServiceAction);
-        startForeground(NotificationUtils.nextNotificationId(), builder.build());
+        startForeground(NotificationUtils.nextNotificationId(null), builder.build());
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_USER_PRESENT);
@@ -142,15 +142,15 @@ public class FreezeUnfreezeService extends Service {
         FreezeUnfreezeShortcutInfo shortcutInfo = FreezeUnfreeze.getShortcutInfo(intent);
         if (shortcutInfo == null) return;
         mPackagesToShortcut.put(shortcutInfo.packageName, shortcutInfo);
-        int notificationId = shortcutInfo.hashCode();
-        mPackagesToNotificationId.put(shortcutInfo.packageName, notificationId);
+        String notificationTag = String.valueOf(shortcutInfo.hashCode());
+        mPackagesToNotificationTag.put(shortcutInfo.packageName, notificationTag);
     }
 
     @WorkerThread
     private void freezeAllPackages() {
         for (String packageName : mPackagesToShortcut.keySet()) {
             FreezeUnfreezeShortcutInfo shortcutInfo = mPackagesToShortcut.get(packageName);
-            Integer notificationId = mPackagesToNotificationId.get(packageName);
+            String notificationTag = mPackagesToNotificationTag.get(packageName);
             if (shortcutInfo != null) {
                 try {
                     ApplicationInfo applicationInfo = PackageManagerCompat.getApplicationInfo(shortcutInfo.packageName,
@@ -165,8 +165,8 @@ public class FreezeUnfreezeService extends Service {
                     e.printStackTrace();
                 }
             }
-            if (notificationId != null) {
-                NotificationUtils.getFreezeUnfreezeNotificationManager(this).cancel(notificationId);
+            if (notificationTag != null) {
+                NotificationUtils.getFreezeUnfreezeNotificationManager(this).cancel(notificationTag, 1);
             }
         }
         stopSelf();
