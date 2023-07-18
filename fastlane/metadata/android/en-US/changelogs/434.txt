@@ -1,0 +1,16 @@
+What's New
+- New tags in app info tab: Bloatware and Xposed
+- Display bloatware details on clicking on an item
+- App list is now taken from android-debloat-list project
+- Enabled editing files via Code Editor from third-party applications
+- Fully-featured file manager
+- Added an option to perform DEX optimisation immediately after installing an app
+- Added the ability to modify installer options before installing an app
+- New filtering options in Main page: Stopped apps and users
+- New batch operation: Optimise
+- Display link to Pithus report in scanner
+- Added options to run App Manager in the background in settings
+- Fetch data usage for all apps in Android 5 and 5.1
+- New mode of operation: System (UID 100)
+- Improved DEX optimiser
+- Only allow connections from supported online locations

@@ -2,6 +2,252 @@
 <changelog>
     <release
         type="alpha release"
+        version="v4.0.0-alpha01"
+        code="434"
+        date="18 July 2023">
+        <note subtext="true">
+            [i]Due to the massive number of changes, v3.2.x is skipped in favour of v4.0.0. For the same reason the
+            release notes provided here are incomplete as only the most useful ones are noted.[/i]
+        </note>
+        <note>App Manager is now on [a href="https://matrix.to/#/#appmanager:matrix.org"]Matrix[/a]!</note>
+
+        <title type="medium">App Info</title>
+        <new>Added a new tag: Bloatware</new>
+        <note subtext="true">
+            Clicking on the tag opens a dialog containing description, dependencies, alternatives, etc. like in the
+            Debloater page described below.
+        </note>
+        <new>Added a new tag: Xposed</new>
+        <note subtext="true">
+            Clicking on the tag opens a dialog with more details:[br /]
+            1. Module name[br /]
+            2. Description[br /]
+            3. Type of module (modern or legacy)[br /]
+            4. Xposed API dependency info[br /]
+            5. Scope (if available statically).
+        </note>
+        <improve>List SAF files and directories in a user-friendly manner</improve>
+        <note subtext="true">
+            Instead of a raw representation of the granted URI, display authority, type of file or folder, and the file
+            or folder itself in a meaningful way. It also attempts to retrieve the original file path when possible.
+        </note>
+
+        <title type="medium">Backup/Restore</title>
+        <improve>Display backup extras and rules in no-root mode</improve>
+
+        <title type="medium">Debloater</title>
+        <new>Display bloatware details on clicking on an item</new>
+        <note subtext="true">
+            Current the following information are displayed with visual enhancements:[br /]
+            - App icon (valid only when the app is installed)[br /]
+            - App label[br /]
+            - Package name[br /]
+            - App info button (if the app is installed)[br /]
+            - Tags (list type and removal type for now)[br /]
+            - Warning (if exists)[br /]
+            - Description with references[br /]
+            - Dependencies[br /]
+            - Suggestions/alternatives.
+        </note>
+        <improve>App list is now taken from android-debloat-list</improve>
+        <note subtext="true">
+            [a href="https://github.com/MuntashirAkon/android-debloat-list"]android-debloat-list[/a] is a new project
+            aimed at improving debloating experience by listing the details in a more structured way and list potential
+            alternatives of the bloatware with usability and reproducibility in mind.
+        </note>
+
+        <title type="medium">Docs</title>
+        <fix>Fixed App Manager links in the docs</fix>
+
+        <title type="medium">Editor</title>
+        <improve>Enabled editing files via Code Editor from third-party applications</improve>
+        <improve>Enabled editing AXML (Android APK's binary XML format) files</improve>
+        <improve>Improved memory usage during loading or saving a file</improve>
+        <fix>Fixed clearing texts on configuration changes</fix>
+        <fix>Fixed writing to files that were managed by ContentProvider</fix>
+
+        <title type="medium">Explorer</title>
+        <improve>Avoided decoding AXML files</improve>
+        <note subtext="true">Decoding should be done by code editors, not explorers.</note>
+
+        <title type="medium">Files</title>
+        <new>Added a floating action button to create new files, folders and links</new>
+        <note subtext="true">
+            It allows creating a few blank documents. They include: text files, PDF, documents (docx/odt), sheet
+            (xlsx/ods), presentation (pptx, odp) and SQLite3 database.
+        </note>
+        <new>Added intent-filters that allows opening folders from third-party apps</new>
+        <new>Display path navigation on top</new>
+        <note subtext="true">
+            Using the path navigation, it is possible to navigate to any parent folders quite easily, or navigate to any
+            arbitrary location using the “Edit” or “Go to” button.[br /]
+
+            Long clicking on any path also displays a popup menu which can be used to copy the path, open it in a new
+            window or view properties.
+        </note>
+        <new>Display thumbnails for supported files</new>
+        <new>Implemented all the unimplemented features in popup menus</new>
+        <note subtext="true">
+            Implemented copy- and cut-paste options, shortcut creation, multiple selection options such as batch
+            renaming, deletion, cut/copying and sharing. Note that [u]copy and paste options are experimental and should
+            be handled with care.[/u]
+        </note>
+        <new>Implemented settings for file manager</new>
+        <note subtext="true">
+            Added option to set home directory, remember last opened folder and position, and whether to display the
+            file manager as “Files” in the app drawer like a regular app.
+        </note>
+        <improve>Added searching in the “Open with” dialog</improve>
+        <improve>Added support for SAF/tree URIs</improve>
+        <note subtext="true">
+            SAF access is currently very slow and its usage isn't recommended if there are a lot of files in the folder.
+        </note>
+        <improve>Display folder info (size, file count, etc.) as a subtitle</improve>
+        <improve>Display helpful messages when a folder is empty, non-existent or invalid</improve>
+        <improve>
+            Implemented modification of access and modification dates, permissions, UID/GID and SELinux context in the
+            properties dialog
+        </improve>
+        <improve>Open resolved symbolic link instead of the link itself</improve>
+        <improve>Remember the selection locations for past opened folders in a session</improve>
+        <improve>Use file overlays to display directories inaccessible in no-root mode</improve>
+
+        <title type="medium">Installer</title>
+        <new>Added an option to perform DEX optimisation immediately after installing an app</new>
+        <new>Added the ability to modify installer options before installing an app</new>
+        <note subtext="true">
+            In the installation dialog, clicking on the settings/cog icon opens a new dialog where the installer
+            options can be temporarily set for the session. Any items queued for the session will retain those temporary
+            options.
+        </note>
+        <improve>Display installation progress in the notification</improve>
+        <note subtext="true">
+            In some devices such as Samsung, it takes an indefinite amount of time to verify the app after copying the
+            APK files. For those cases, the progress won't be accurate as it only takes into account the amount of time
+            to copy the files.
+        </note>
+        <improve>Display “Confirm install” notification even if the app is running in foreground</improve>
+        <note subtext="true">
+            In no-root mode, when the app is running in foreground, the user may accidentally dismiss the
+            install-confirmation dialog produced by the Android package installer which would either allow the
+            installation to run forever or for a minute until the timeout occurs. To solve the issue, a silent
+            notification is triggered at the same time the dialog is shown so that even if the user accidentally
+            dismisses the dialog, the dialog can still be displayed by clicking the notification.
+        </note>
+        <fix>Fixed parsing unsigned APK files</fix>
+        <fix>Fixed installing apps for users other than the main profile</fix>
+
+        <title type="medium">Interceptor</title>
+        <fix>Prevented the app from crashing on creating a shortcut with invalid extras</fix>
+        <note subtext="true">
+            Shortcuts support only 11 types of data structures. Intents, on the other hand, support any type of data
+            structures. When a shortcut creation is requested, the unsupported data structures are removed from the
+            Intent to avoid crashes.
+        </note>
+
+        <title type="medium">Labs</title>
+        <improve>Display “System Config” page in all modes of operation</improve>
+
+        <title type="medium">Main page</title>
+        <new>Added a new filtering option “Stopped apps“ to filter the force-stopped apps</new>
+        <new>Added filtering by users in the list options</new>
+        <new>Added a new batch operation “Optimise” to dex optimisation of the selected apps</new>
+        <improve>Display user count alongside app ID</improve>
+        <note subtext="true">
+            If an app is installed in more than one profiles (that is, for multiple users), instead of displaying only
+            the kernel user ID (UID), display the app ID (that is, UID sans the user ID) and user count in the following
+            format:[br /]
+
+            [tt]&amp;lt;user count&amp;gt;+&amp;lt;app ID&amp;gt;[/tt]
+        </note>
+
+        <title type="medium">Scanner</title>
+        <new>Display link to Pithus report if available</new>
+        <improve>Calculate file hashes more efficiently</improve>
+        <fix>Fixed scanning external APK files in privileged mode</fix>
+
+        <title type="medium">Settings</title>
+        <new>Added options to run App Manager in the background</new>
+        <note subtext="true">
+            In Settings > Privacy, two new options have been added:[br /]
+            1. Run App Manager in the background[br /]
+            2. Automatic lockdown[br /]
+            [br /]
+
+            Running App Manager in the background makes the annoying “Initializing” screen go away. Due to possible
+            privacy issues, this option is disabled by default. When automatic lockdown is enabled, App Manager will
+            attempt to lock the app by killing its process. As expected, there are several side effects:[br /]
+            1. All the activities will be closed. They'll be reopened by the system based on how the user was
+            interacting with them[br /]
+            2. All the running operations as well as scheduled or running jobs will be stopped immediately. This might
+            cause data loss if potentially destructive operations are running.[br /]
+            [br /]
+
+            Note: Enabling the latter option does not wipe the memory of App Manager, i.e. it does not prevent a
+            forensic software from scrapping the memory used by App Manager even if the process no longer exists.
+        </note>
+        <new>Added option to disable sending notification to the connected devices</new>
+        <note subtext="true">
+            The setting is located at [a href="app-manager://settings/advanced_prefs"]Settings > Advanced > Send
+            notifications to the connected devices[/a] and is enabled by default. Low importance notifications, e.g.
+            ongoing notifications and optional alerts, won't be delivered to the connected devices even if the setting
+            is enabled.
+        </note>
+        <fix>Fixed saving backup options</fix>
+        <fix>Prevented a crash that occurs on importing the rules if some of them are invalid</fix>
+
+        <title type="medium">UI</title>
+        <improve>
+            Better handling of application-wide notifications including the progress of various operations
+        </improve>
+        <improve>Display all multi-selection options in a single row with an overflow menu at the end</improve>
+        <improve>Display icons in popup menus</improve>
+        <improve>Display shortcut editor before creating a shortcut along with a preview panel</improve>
+        <improve>Improved layouts of popup and dropdown menus</improve>
+
+        <title type="medium">Usage</title>
+        <improve>Fetch data usage for all apps in Android 5 and 5.1</improve>
+        <improve>Fetch usage stats and package size info only when the feature is enabled</improve>
+        <improve>Reduced lags by recycling views</improve>
+
+        <title type="medium">Others</title>
+        <new>New mode of operation: System (UID 100)</new>
+        <improve>Enabled backing up data from App Manager via Android-default backup systems</improve>
+        <improve>Improved DEX optimiser</improve>
+        <note subtext="true">
+            DEX optimiser now works in no-root mode for apps installed with App Manager. In 1-Click Ops page, when
+            DEX optimiser is run, it attempts to optimise all apps in privileged mode. But in unprivileged mode, it only
+            attempts to optimise apps installed by App Manager. The option is also displayed in the App Info tab in
+            no-root mode for apps installed by App Manager.
+        </note>
+        <improve>Only allow connections from supported online locations</improve>
+        <note subtext="true">
+            To avoid issues with ADB, localhost is allowed unrestricted connections, but other websites, namely
+            virustotal.com and pithus.org, are restricted via public key pinning (PKP) using network security
+            configuration.
+        </note>
+        <improve>Replaced the usernames “Main” and “Work” with “This” and “Other”</improve>
+        <note subtext="true">
+            In no-root mode, usernames cannot be fetched from the system. Hence, “Main” and “Work” are inferred based on
+            the status of the system. However, this can cause issues if the app is installed in the Work profile.
+            Instead, the names “This” and “Other” are used to clarify the situation.
+        </note>
+        <improve>
+            Schedule cache cleaning job more actively to ensure App Manager's caches are cleared regularly
+        </improve>
+        <improve>
+            Use granted permissions rather than the mode of operation to check the eligibility of a feature
+        </improve>
+        <fix>Prevented crashing in Android 14 due to compatibility issues related to installer</fix>
+        <fix>Prevented crashing in various places due to lifecycle issues</fix>
+
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.2.0-alpha01...v4.0.0-alpha01"]v3.2.0-alpha01...v4.0.0-alpha01[/a]
+        </note>
+    </release>
+    <release
+        type="alpha release"
         version="v3.2.0-alpha01"
         code="433"
         date="30 April 2023">
