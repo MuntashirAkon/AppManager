@@ -578,7 +578,6 @@
     <string name="send_crash_report">Invia rapporto di arresto anomalo</string>
     <string name="input_profile_name_description">Il nome del profilo non può contenere spazi.</string>
     <string name="failed_to_duplicate_profile">Impossibile duplicare profilo</string>
-    <string name="pref_show_users_in_installer_msg">Visualizza un elenco di utenti da selezionare prima di installare un\'app esterna. Richiede root o ADB.</string>
     <string name="pref_encryption_msg">Crittografa backup.</string>
     <string name="none">Nessuno</string>
     <string name="allow_routine_ops">Permetti operazioni di routine</string>
@@ -720,7 +719,7 @@
         <item quantity="many">Esegui al massimo %1$d operazioni in parallelo</item>
         <item quantity="other">Esegui al massimo %1$d operazioni in parallelo</item>
     </plurals>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">Canale Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="pref_remove_all_rules">Rimuovi tutte le regole</string>
     <string name="installer_error_session_abandon">Impossibile abbandonare la sessione di installazione</string>
     <string name="unencrypted">Non crittografato</string>
@@ -1209,8 +1208,8 @@
     <string name="pref_reload_apps">Ricarica app</string>
     <string name="pref_reload_apps_msg">Ricarica l\'elenco delle app archiviate nel database di App Manager in caso di comportamenti imprevisti.</string>
     <string name="changelog_type_new">Nuovo</string>
-    <string name="changelog_type_fix">Correggi</string>
-    <string name="changelog_type_improve">Migliora</string>
+    <string name="changelog_type_fix">Corretto</string>
+    <string name="changelog_type_improve">Migliorato</string>
     <string name="unsupported_split_apk">Non supportato</string>
     <string name="view_changelog">Scopri le novità di questa versione</string>
     <string name="sort_by_total_size">Dimensione totale</string>
@@ -1418,4 +1417,31 @@
     <string name="symbolic_link_not_supported">Questa cartella non supporta la creazione di un collegamento simbolico.</string>
     <string name="failed_to_copy_specified_file">Impossibile copiare \"%1$s\".</string>
     <string name="pref_send_notifications_to_connected_devices">Invia notifiche ai dispositivi connessi</string>
+    <string name="debloat_removal_safe_short_description">Sicuro da rimuovere</string>
+    <string name="debloat_removal_caution_short_description">Presta attenzione</string>
+    <string name="debloat_removal_replace_short_description">Sostituisci con alternativa</string>
+    <string name="title_alternatives_to_bloatware">Alternative</string>
+    <string name="pref_files_msg">Configura file manager.</string>
+    <string name="pref_files_display_in_launcher">Visualizza \"File\" nel cassetto delle app</string>
+    <string name="pref_files_remember_last_path">Ricorda l\'ultimo percorso aperto e la sua posizione</string>
+    <string name="pref_set_home">Imposta principale</string>
+    <string name="xposed_module_info">Informazioni sul modulo Xposed</string>
+    <string name="title_description">Descrizione</string>
+    <string name="tap_to_open_notification_settings">Tocca per nascondere</string>
+    <string name="action_lock_app">Blocca</string>
+    <string name="pref_enable_persistent_session">Esegui App Manager in background</string>
+    <string name="pref_files_remember_last_path_msg">Quando questa opzione è abilitata, aprendo una nuova finestra viene aperta l\'ultima cartella aperta anziché la cartella principale.</string>
+    <string name="installer_options">Opzioni installazione</string>
+    <string name="browse_files">Sfoglia</string>
+    <string name="module_name">Nome modulo</string>
+    <string name="app_manager_is_running">App Manager è in esecuzione</string>
+    <string name="app_manager_is_unlocked">App Manager è sbloccata</string>
+    <string name="pref_enable_persistent_session_msg">L\'esecuzione di App Manager in background riduce il ritardo di inizializzazione. Utile se usi spesso App Manager.</string>
+    <string name="pref_enable_auto_lock">Blocco automatico</string>
+    <string name="pref_enable_auto_lock_msg">Blocca App Manager quando il dispositivo è bloccato.</string>
+    <string name="path_does_not_exist">\"%1$s\" non esiste</string>
+    <string name="path_not_a_folder">\"%1$s\" non è una cartella</string>
+    <string name="scan_report_from_pithus">Rapporto Pithus</string>
+    <string name="action_checking">Controllo…</string>
+    <string name="report_not_available">Non disponibile</string>
 </resources>
