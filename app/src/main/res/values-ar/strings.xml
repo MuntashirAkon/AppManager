@@ -459,7 +459,6 @@
     <string name="pref_encryption_msg">تشفير النسخ الاحتياطية.</string>
     <string name="encryption">التشفير</string>
     <string name="select_user">اختر المستخدم</string>
-    <string name="pref_show_users_in_installer">إظهار المستخدمين في المثبت</string>
     <string name="failed_to_duplicate_profile">تعذر تكرار ملف التعريف</string>
     <string name="duplicate">مكرره</string>
     <string name="new_profile">ملف تعريف جديد</string>
@@ -1116,7 +1115,7 @@
     <string name="wireless_debugging">التصحيح اللاسلكي</string>
     <string name="unknown_net_policy">سياسة شبكة غير معروفة (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">تعذر منع %1$s من العمل في الخلفية</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel"> قناة تيليجرام </a> • <a href="https://twitter.com/AppManagerNews"> تويتر </a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org"> ماتريكس </a> • <a href="https://t.me/AppManagerChannel"> تيليجرام </a> • <a href="https://twitter.com/AppManagerNews"> تويتر </a></string>
     <string name="community">المجتمع</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="zero">تعذر استيراد %1$d نسخة احتياطية</item>
@@ -1546,4 +1545,31 @@
     <string name="title_change_selinux_context">تغيير سياق SELinux</string>
     <string name="apply_recursively">تطبيق على الملفات المرفقة</string>
     <string name="change_owner_uid">تغيير المالك (UID)</string>
+    <string name="report_not_available">غير متاح</string>
+    <string name="installer_options">خيارات المثبت</string>
+    <string name="debloat_removal_safe_short_description">آمن للإزالة</string>
+    <string name="debloat_removal_caution_short_description">كن حذرا</string>
+    <string name="debloat_removal_replace_short_description">استبدله ببديل</string>
+    <string name="title_alternatives_to_bloatware">البدائل</string>
+    <string name="browse_files">تصفَّح</string>
+    <string name="pref_files_msg">تكوين مدير الملفات.</string>
+    <string name="pref_files_display_in_launcher">عرض \"الملفات\" في درج التطبيق</string>
+    <string name="pref_files_remember_last_path">تذكر آخر مسار تم فتحه وموقعه</string>
+    <string name="pref_files_remember_last_path_msg">عند تمكين هذا الخيار ، يؤدي فتح نافذة جديدة إلى فتح آخر مجلد مفتوح بدلا من المجلد الرئيسي.</string>
+    <string name="pref_set_home">تعيين الرئيسية</string>
+    <string name="xposed_module_info">معلومات وحدة Xposed</string>
+    <string name="title_description">الوصف</string>
+    <string name="module_name">اسم الوحدة</string>
+    <string name="app_manager_is_running">مدير التطبيقات قيد التشغيل</string>
+    <string name="tap_to_open_notification_settings">انقر للإخفاء</string>
+    <string name="app_manager_is_unlocked">مدير التطبيقات غير مؤمن</string>
+    <string name="action_lock_app">قفل</string>
+    <string name="pref_enable_persistent_session">تشغيل مدير التطبيقات في الخلفية</string>
+    <string name="pref_enable_persistent_session_msg">يؤدي تشغيل مدير التطبيقات في الخلفية إلى تقليل تأخير التجهيز. مفيد إذا كنت تستخدم مدير التطبيقات بشكل متكرر.</string>
+    <string name="pref_enable_auto_lock">تأمين تلقائي</string>
+    <string name="pref_enable_auto_lock_msg">قفل مدير التطبيقات عندما يكون الجهاز مقفلا.</string>
+    <string name="path_does_not_exist">\"%1$s\" غير موجود</string>
+    <string name="path_not_a_folder">\"%1$s\" ليس مجلدا</string>
+    <string name="scan_report_from_pithus">تقرير بيثوس</string>
+    <string name="action_checking">التحقق…</string>
 </resources>
