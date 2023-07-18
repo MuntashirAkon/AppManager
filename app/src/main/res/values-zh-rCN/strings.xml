@@ -583,7 +583,6 @@
     <string name="pref_encryption_msg">加密备份。</string>
     <string name="encryption">加密</string>
     <string name="select_user">选择用户</string>
-    <string name="pref_show_users_in_installer">在安装器中显示用户</string>
     <string name="failed_to_duplicate_profile">无法复制配置文件</string>
     <string name="keyboard_no_keys">无键盘</string>
     <string name="send_selected">发送选中的应用</string>
@@ -957,7 +956,7 @@
     <string name="wireless_debugging">无线调试</string>
     <string name="unknown_net_policy">未知的 netpolicy (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">无法防止 %1$s 在后台运行</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram 频道</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">社区</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="other">无法导入 %1$d 个备份</item>
@@ -1302,4 +1301,27 @@
     <string name="go_to_path">转至…</string>
     <string name="copy_this_path">复制路径</string>
     <string name="title_audio_player">音频播放器</string>
+    <string name="restoring_app">正在恢复 %1$s…</string>
+    <string name="symbolic_link">符号链接</string>
+    <string name="create_new_folder">新建文件夹</string>
+    <string name="create_new_file">新建文件</string>
+    <string name="invalid_target_path">无效路径</string>
+    <string name="conflict_detected_while_copying_message">此位置中已存在名为“%1$s”的项目。你想换掉它吗？</string>
+    <string name="moved_successfully">已移动</string>
+    <string name="title_change_selinux_context">更改SELinux上下文</string>
+    <string name="warning_working_on_system_mode">警告：在系统上运行，而不是在ADB模式下运行。</string>
+    <string name="backing_up_app">正在备份 %1$s…</string>
+    <string name="installing_package">正在安装 %1$s…</string>
+    <string name="enter_target_path">目标路径</string>
+    <string name="title_confirm_deletion">确认删除</string>
+    <string name="copy_these_paths">复制路径</string>
+    <string name="failed_to_copy_specified_file">无法复制“%1$s”。</string>
+    <string name="failed_to_delete_specified_file_after_copying">复制“%1$s”后无法将其删除，可能是权限不足。</string>
+    <string name="pref_send_notifications_to_connected_devices">向联网的设备发送通知</string>
+    <string name="symbolic_link_not_supported">此文件夹不支持创建符号链接。</string>
+    <string name="copied_successfully">已复制。</string>
+    <string name="pref_installer_force_dexopt_description">安装应用程序后立即执行DEX优化，无需等待系统在系统空闲时执行此操作。</string>
+    <string name="create_new_symbolic_link">新建符号链接</string>
+    <string name="pref_send_notification_to_connected_devices_msg">设置是否向可穿戴设备等联网设备发送通知。</string>
+    <string name="change_mode">更改模式</string>
 </resources>
