@@ -815,7 +815,7 @@
     <string name="app_signing_signatures">Sygnatury</string>
     <string name="soft_input">Tryb delikatnego wprowadzenia</string>
     <string name="authority">Autorytet</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">Kanał na Telegramie</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Kanał Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Społeczność</string>
     <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="subject">Temat</string>
@@ -1458,4 +1458,31 @@
     <string name="conflict_detected_while_copying">Wykryto konflikt</string>
     <string name="apply_recursively">Zastosuj do załączonych plików</string>
     <string name="change_owner_uid">Zmień właściciela (UID)</string>
+    <string name="debloat_removal_replace_short_description">Zastąp alternatywą</string>
+    <string name="installer_options">Opcje instalatora</string>
+    <string name="debloat_removal_safe_short_description">Można bezpiecznie usunąć</string>
+    <string name="debloat_removal_caution_short_description">Zachowaj ostrożność</string>
+    <string name="title_alternatives_to_bloatware">Alternatywy</string>
+    <string name="browse_files">Przeglądaj</string>
+    <string name="pref_files_msg">Skonfiguruj menedżera plików.</string>
+    <string name="pref_files_display_in_launcher">Wyświetl \"Pliki\" w szufladzie aplikacji</string>
+    <string name="pref_files_remember_last_path">Zapamiętaj ostatnio otwartą ścieżkę i jej pozycję</string>
+    <string name="pref_files_remember_last_path_msg">Gdy ta opcja jest włączona, otwarcie nowego okna powoduje otwarcie ostatnio otwieranego folderu zamiast folderu domowego.</string>
+    <string name="pref_set_home">Ustaw ścieżkę początkową</string>
+    <string name="xposed_module_info">Informacje o module Xposed</string>
+    <string name="title_description">Opis</string>
+    <string name="module_name">Nazwa modułu</string>
+    <string name="app_manager_is_running">App Manager jest uruchomiony</string>
+    <string name="tap_to_open_notification_settings">Dotknij, aby ukryć</string>
+    <string name="app_manager_is_unlocked">App Manager jest odblokowany</string>
+    <string name="action_lock_app">Zablokuj</string>
+    <string name="pref_enable_persistent_session">Uruchom App Manager w tle</string>
+    <string name="pref_enable_persistent_session_msg">Uruchamianie App Manager w tle zmniejsza opóźnienie inicjalizacji. Przydatne, jeśli często korzystasz z aplikacji App Manager.</string>
+    <string name="pref_enable_auto_lock">Automatyczne blokowanie</string>
+    <string name="pref_enable_auto_lock_msg">Zablokuj App Manager, gdy urządzenie jest zablokowane.</string>
+    <string name="path_does_not_exist">“%1$s” nie istnieje</string>
+    <string name="path_not_a_folder">„%1$s” nie jest folderem</string>
+    <string name="scan_report_from_pithus">Raport Pithusa</string>
+    <string name="action_checking">Sprawdzanie…</string>
+    <string name="report_not_available">Niedostępne</string>
 </resources>
