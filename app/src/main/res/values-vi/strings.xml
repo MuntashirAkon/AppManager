@@ -314,7 +314,7 @@
     <string name="data">Dữ liệu</string>
     <string name="external_data">Dữ liệu ngoài</string>
     <plurals name="classes">
-        <item quantity="other">%1$d class</item>
+        <item quantity="other">%1$d lớp</item>
     </plurals>
     <plurals name="backup_exists_are_you_sure">
         <item quantity="other">Nhiều ứng dụng đã có bản sao lưu. Bạn có chắc không\?</item>
@@ -423,7 +423,7 @@
     <string name="expiry_date_cannot_be_empty">Ngày hết hạn không thể trống.</string>
     <string name="signing_key">Mã ký</string>
     <string name="app_signing_signatures">Chữ ký</string>
-    <string name="backup_rules_description">Sao lưu các quy tắc được định cấu hình trong Trình quản lý ứng dụng. <font fgcolor="#ff0000">Tùy thuộc vào quyền, không phải tất cả các quy tắc đều có thể được áp dụng lại trong quá trình khôi phục.</font> . </string>
+    <string name="backup_rules_description">Sao lưu các quy tắc được định cấu hình trong App Manager. <font fgcolor="#ff0000">Tùy thuộc vào quyền, không phải tất cả các quy tắc đều có thể được áp dụng lại trong quá trình khôi phục.</font> . </string>
     <string name="backup_extras_description">Sao lưu các quyền của ứng dụng, tùy chọn tiết kiệm pin và sử dụng dữ liệu, trạng thái MagiskHide, SSAID, v.v. <font fgcolor="#ff0000">Tùy thuộc vào quyền, không phải tất cả các tính năng bổ sung đều có thể được khôi phục.</font>. </string>
     <string name="backup_extras">Bổ sung</string>
     <string name="backup_cache_description">Sao lưu các thư mục <b>cache</b>, <b>no_cache</b> và <b>no_backup</b>.</string>
@@ -730,8 +730,8 @@
     <string name="pk8_file">Tệp PKCS #8 (PK8)</string>
     <string name="pem_and_pk8">PEM và PKCS #8 (PK8)</string>
     <string name="pkcs12_keystore">PKCS #12 KeyStore (P12)</string>
-    <string name="bouncy_castle_keystore">Bouncy Castle KeyStore (BKS)</string>
-    <string name="java_keystore">Java KeyStore (JKS)</string>
+    <string name="bouncy_castle_keystore">Kho khóa lâu đài Bouncy (BKS)</string>
+    <string name="java_keystore">Kho khóa Java (JKS)</string>
     <string name="keystore_pass">Mật khẩu KeyStore</string>
     <string name="keystore_file">Tệp KeyStore</string>
     <string name="country_name" tools:ignore="TypographyOther">Tên quốc gia (C)</string>
@@ -821,7 +821,6 @@
     <string name="patch_level">Cấp độ bản vá</string>
     <string name="encryption">Mã hoá</string>
     <string name="select_user">Chọn người dùng</string>
-    <string name="pref_show_users_in_installer">Hiện những người dùng trong trình cài đặt</string>
     <string name="failed_to_duplicate_profile">Không thể nhân bản cấu hình</string>
     <string name="duplicate">Nhân bản</string>
     <string name="new_profile">Cấu hình mới</string>
@@ -924,7 +923,7 @@
     <string name="launch_mode_single_top">Một hoạt động ở trên</string>
     <string name="launch_mode_single_instance">Một bản sao</string>
     <string name="installer_error_session_commit">Không thể hành động với các tệp APK</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">Kênh Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Cộng đồng</string>
     <string name="native_library_dir">Thư mục thư viện JNI gốc</string>
     <string name="input_key">Nhập mã (ở hệ thập lục phân)</string>
@@ -1061,7 +1060,7 @@
     <string name="swap">Tráo đổi</string>
     <string name="swap_chart_info">● %1$s đã sử dụng ● %2$s còn trống</string>
     <string name="warning_working_on_root_mode">Cảnh báo: Hoạt động bằng root thay vì ADB.</string>
-    <string name="magisk_denylist">Magisk DenyList</string>
+    <string name="magisk_denylist">Danh sách Từ chối Magisk</string>
     <string name="failed_to_enable_magisk_deny_list">Không thể bật Magisk DenyList</string>
     <string name="failed_to_disable_magisk_deny_list">Không thể tắt Magisk DenyList</string>
     <string name="mode_of_op_with_inferred_mode_of_op">%1$s (Chế độ xử lý: %2$s)</string>
@@ -1257,11 +1256,11 @@
     <string name="pref_layout_direction">Hướng bố trí</string>
     <string name="app_info_tag_open_links">Mở liên kết</string>
     <string name="pref_zip_align">Căn chỉnh tệp APK</string>
-    <string name="pref_zip_align_msg">Việc căn chỉnh tệp APK giúp giảm mức sử dụng bộ nhớ vì có thể truy cập trực tiếp các tệp trong APK mà không cần sao chép dữ liệu vào RAM. Bước này là bắt buộc nếu &lt;tt&gt;extractNativeLibs&lt;/tt&gt; được đặt thành &lt;tt&gt;true&lt;/</string>
+    <string name="pref_zip_align_msg">Việc căn chỉnh tệp APK giúp giảm mức sử dụng bộ nhớ vì có thể truy cập trực tiếp các tệp trong APK mà không cần sao chép dữ liệu vào RAM. Bước này là bắt buộc nếu <tt>extractNativeLibs</tt> được đặt thành <tt>true</tt>.</string>
     <string name="title_code_editor">Trình chỉnh sửa mã</string>
     <string name="redo">Làm lại</string>
     <string name="read_only_file">Tập tin chỉ đọc</string>
-    <string name="read_only_file_warning">Không thể ghi các thay đổi vào tệp, có thể do tệp nằm trong ổ đĩa mà Trình quản lý ứng dụng không có quyền ghi vào. Bạn có muốn lưu nó ở một nơi khác không\?</string>
+    <string name="read_only_file_warning">Không thể ghi các thay đổi vào tệp, có thể do tệp nằm trong ổ đĩa mà App Manager không có quyền ghi vào. Bạn có muốn lưu nó ở một nơi khác không\?</string>
     <string name="line_separator">Dấu tách dòng</string>
     <string name="action_replace_all">Thay thế tất cả</string>
     <string name="search_option_whole_word">Cả từ</string>
@@ -1331,4 +1330,31 @@
     <string name="pref_send_notification_to_connected_devices_msg">Đặt có gửi thông báo đến các thiết bị được kết nối chẳng hạn như thiết bị đeo được hay không.</string>
     <string name="conflict_detected_while_copying_message">Một mục có tên “%1$s” đã tồn tại ở vị trí này. Bạn có muốn thay thế nó\?</string>
     <string name="failed_to_delete_specified_file_after_copying">Không thể xóa “%1$s” sau khi sao chép, có thể do không đủ quyền.</string>
+    <string name="debloat_removal_safe_short_description">An toàn để loại bỏ</string>
+    <string name="installer_options">Tùy chọn trình cài đặt</string>
+    <string name="title_alternatives_to_bloatware">Lựa chọn thay thế</string>
+    <string name="pref_files_display_in_launcher">Hiển thị “Tệp” trong ngăn kéo ứng dụng</string>
+    <string name="debloat_removal_replace_short_description">Thay thế bằng thay thế</string>
+    <string name="browse_files">Duyệt</string>
+    <string name="pref_files_msg">Định cấu hình trình quản lý tệp.</string>
+    <string name="pref_files_remember_last_path_msg">Khi tùy chọn này được bật, việc mở một cửa sổ mới sẽ mở thư mục được mở lần cuối thay vì thư mục chính.</string>
+    <string name="app_manager_is_unlocked">App Manager đã được mở khóa</string>
+    <string name="pref_enable_auto_lock">Tự động khóa</string>
+    <string name="pref_enable_persistent_session_msg">Chạy App Manager trong nền giúp giảm độ trễ khởi tạo. Hữu ích nếu bạn sử dụng App Manager thường xuyên.</string>
+    <string name="debloat_removal_caution_short_description">Chú ý khi tập luyện</string>
+    <string name="pref_files_remember_last_path">Ghi nhớ đường dẫn được mở lần cuối và vị trí của nó</string>
+    <string name="pref_set_home">Đặt trang chủ</string>
+    <string name="xposed_module_info">Thông tin mô-đun Xposed</string>
+    <string name="title_description">Mô tả</string>
+    <string name="module_name">Tên mô-đun</string>
+    <string name="tap_to_open_notification_settings">Nhấn để ẩn</string>
+    <string name="app_manager_is_running">App Manager đang chạy</string>
+    <string name="action_lock_app">Khóa</string>
+    <string name="pref_enable_persistent_session">Chạy App Manager trong nền</string>
+    <string name="path_does_not_exist">“%1$s” không tồn tại</string>
+    <string name="pref_enable_auto_lock_msg">Khóa App Manager khi thiết bị đã khóa.</string>
+    <string name="path_not_a_folder">“%1$s” không phải là một thư mục</string>
+    <string name="scan_report_from_pithus">Báo cáo Pithus</string>
+    <string name="action_checking">Đang kiểm tra…</string>
+    <string name="report_not_available">Không có sẵn</string>
 </resources>
