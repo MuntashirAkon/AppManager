@@ -1371,10 +1371,10 @@
     <string name="unblock_components_dots">Odblokuj komponenty…</string>
     <string name="block_unblock_components_description">Blokuj lub odblokowuj wszystkie komponenty zidentyfikowane przez podane sygnatury</string>
     <plurals name="alert_failed_to_unblock_components">
-        <item quantity="one">Nie można odblokować komponentów dla aplikacji %1$d</item>
-        <item quantity="few">Nie można odblokować komponentów dla aplikacji %1$d</item>
-        <item quantity="many">Nie można odblokować komponentów dla aplikacji %1$d</item>
-        <item quantity="other">Nie można odblokować komponentów dla aplikacji %1$d</item>
+        <item quantity="one">Nie można odblokować komponentów dla %1$d aplikacji</item>
+        <item quantity="few">Nie można odblokować komponentów dla %1$d aplikacji</item>
+        <item quantity="many">Nie można odblokować komponentów dla %1$d aplikacji</item>
+        <item quantity="other">Nie można odblokować komponentów dla %1$d aplikacji</item>
     </plurals>
     <string name="pref_layout_direction">Kierunek układu</string>
     <string name="pref_zip_align">Wyrównaj pliki APK</string>
