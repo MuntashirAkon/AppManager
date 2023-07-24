@@ -5,6 +5,7 @@ package io.github.muntashirakon.dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import androidx.annotation.StringRes;
 import com.google.android.material.button.MaterialButton;
 
 import io.github.muntashirakon.ui.R;
+import io.github.muntashirakon.util.UiUtils;
 
 public class DialogTitleBuilder {
     @NonNull
@@ -25,6 +27,7 @@ public class DialogTitleBuilder {
     private final TextView mSubtitle;
     private final ImageView mStartIcon;
     private final MaterialButton mEndIcon;
+    private final int mIconTopPadding;
 
     public DialogTitleBuilder(@NonNull Context context) {
         mContext = context;
@@ -36,6 +39,7 @@ public class DialogTitleBuilder {
         mStartIcon.setVisibility(View.GONE);
         mEndIcon = mView.findViewById(R.id.action);
         mEndIcon.setVisibility(View.GONE);
+        mIconTopPadding = UiUtils.dpToPx(context, 12);
     }
 
     public DialogTitleBuilder setTitle(@Nullable CharSequence title) {
@@ -55,12 +59,14 @@ public class DialogTitleBuilder {
 
     public DialogTitleBuilder setSubtitle(@Nullable CharSequence subtitle) {
         toggleVisibility(mSubtitle, subtitle != null);
+        updateIconPadding(subtitle != null);
         mSubtitle.setText(subtitle);
         return this;
     }
 
     public DialogTitleBuilder setSubtitle(@StringRes int subtitleRes) {
         toggleVisibility(mSubtitle, subtitleRes != 0);
+        updateIconPadding(subtitleRes != 0);
         mSubtitle.setText(subtitleRes);
         return this;
     }
@@ -119,5 +125,9 @@ public class DialogTitleBuilder {
         } else if (isShown) {
             v.setVisibility(View.GONE);
         }
+    }
+
+    private void updateIconPadding(boolean set) {
+        ((FrameLayout) mStartIcon.getParent()).setPadding(0, set ? mIconTopPadding : 0, 0, 0);
     }
 }
