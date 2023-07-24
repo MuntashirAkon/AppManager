@@ -224,9 +224,7 @@ public class OpenWithDialogFragment extends DialogFragment {
             mViewModel.getMatchingActivitiesLiveData().observe(getViewLifecycleOwner(), matchingActivities -> {
                 mAdapter.setDefaultList(matchingActivities);
                 // Don't display search bar if items are less than 6
-                if (matchingActivities.size() < 6) {
-                    mSearchView.setVisibility(View.GONE);
-                }
+                mSearchView.setVisibility(matchingActivities.size() < 6 ? View.GONE : View.VISIBLE);
             });
             mViewModel.getPathContentInfoLiveData().observe(getViewLifecycleOwner(), pathContentInfo -> {
                 if (mAdapter != null) {
