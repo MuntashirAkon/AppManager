@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Binder;
+import android.os.Process;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -16,7 +18,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.io.File;
+import io.github.muntashirakon.io.Paths;
 
 public class MediaDocumentFile extends SingleDocumentFile {
     private final Context mContext;
@@ -40,18 +42,17 @@ public class MediaDocumentFile extends SingleDocumentFile {
             return true;
         }
         // Ignore if grant doesn't allow write
-        if (mContext.checkCallingOrSelfUriPermission(mUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (Binder.getCallingPid() != Process.myPid() && mContext.checkCallingUriPermission(mUri,
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
             return false;
         }
         // Ignore documents without MIME
         if (TextUtils.isEmpty(getRawType(mContext, mUri))) {
             return false;
         }
-
         // For media documents, check if the underlying file is writable
         String path = getRealPath(mContext, mUri);
-        return path == null || new File(path).canWrite();
+        return path == null || Paths.get(path).canWrite();
     }
 
     @Override
