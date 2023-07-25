@@ -71,22 +71,15 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
     private RecyclerView mSuggestionView;
     private SuggestionsAdapter mAdapter;
 
+    @Override
+    public boolean displayLoaderByDefault() {
+        return true;
+    }
 
     @NonNull
     @Override
     public View initRootView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_bloatware_details, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        String packageName = requireArguments().getString(ARG_PACKAGE_NAME);
-        if (packageName == null) {
-            dismiss();
-            return;
-        }
-        BloatwareDetailsViewModel viewModel = new ViewModelProvider(requireActivity()).get(BloatwareDetailsViewModel.class);
+        View view = inflater.inflate(R.layout.dialog_bloatware_details, container, false);
         mAppIconView = view.findViewById(R.id.icon);
         mOpenAppInfoButton = view.findViewById(R.id.info);
         mAppLabelView = view.findViewById(R.id.name);
@@ -99,12 +92,24 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
         mSuggestionView.setLayoutManager(new LinearLayoutManager(requireContext()));
         mAdapter = new SuggestionsAdapter();
         mSuggestionView.setAdapter(mAdapter);
+        return view;
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        String packageName = requireArguments().getString(ARG_PACKAGE_NAME);
+        if (packageName == null) {
+            dismiss();
+            return;
+        }
+        BloatwareDetailsViewModel viewModel = new ViewModelProvider(requireActivity()).get(BloatwareDetailsViewModel.class);
         viewModel.debloatObjectLiveData.observe(getViewLifecycleOwner(), debloatObject -> {
             if (debloatObject == null) {
                 dismiss();
                 return;
             }
+            finishLoading();
             updateDialog(debloatObject);
             updateDialog(debloatObject.getSuggestions());
         });
