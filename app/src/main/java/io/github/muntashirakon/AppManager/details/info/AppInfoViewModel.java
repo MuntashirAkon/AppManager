@@ -213,7 +213,7 @@ public class AppInfoViewModel extends AndroidViewModel {
             tagCloud.usesPlayAppSigning = PackageUtils.usesPlayAppSigning(applicationInfo);
             tagCloud.backups = BackupUtils.getBackupMetadataFromDbNoLockValidate(packageName);
             if (!isExternalApk) {
-                tagCloud.isBatteryOptimized = ExUtils.requireNonNullElse(() -> DeviceIdleManagerCompat.isBatteryOptimizedApp(packageName), true);
+                tagCloud.isBatteryOptimized = DeviceIdleManagerCompat.isBatteryOptimizedApp(packageName);
             } else {
                 tagCloud.isBatteryOptimized = true;
             }

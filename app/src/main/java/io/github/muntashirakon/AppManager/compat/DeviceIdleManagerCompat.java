@@ -11,27 +11,47 @@ import androidx.annotation.RequiresApi;
 import androidx.annotation.RequiresPermission;
 
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 
 public final class DeviceIdleManagerCompat {
     @RequiresPermission(ManifestCompat.permission.DEVICE_POWER)
-    public static void disableBatteryOptimization(@NonNull String packageName) throws RemoteException {
+    public static boolean disableBatteryOptimization(@NonNull String packageName) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getDeviceIdleController().addPowerSaveWhitelistApp(packageName);
+            try {
+                getDeviceIdleController().addPowerSaveWhitelistApp(packageName);
+                return true; // returns true when the package isn't installed
+            } catch (RemoteException e) {
+                ExUtils.rethrowFromSystemServer(e);
+            }
         }
+        return false;
     }
 
     @RequiresPermission(ManifestCompat.permission.DEVICE_POWER)
-    public static void enableBatteryOptimization(@NonNull String packageName) throws RemoteException {
+    public static boolean enableBatteryOptimization(@NonNull String packageName) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getDeviceIdleController().removePowerSaveWhitelistApp(packageName);
+            try {
+                getDeviceIdleController().removePowerSaveWhitelistApp(packageName);
+                return true;
+            } catch (RemoteException e) {
+                ExUtils.rethrowFromSystemServer(e);
+            } catch (UnsupportedOperationException e) {
+                // System whitelisted app
+                e.printStackTrace();
+            }
         }
+        return false;
     }
 
-    public static boolean isBatteryOptimizedApp(@NonNull String packageName) throws RemoteException {
+    public static boolean isBatteryOptimizedApp(@NonNull String packageName) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            IDeviceIdleController controller = getDeviceIdleController();
-            return !controller.isPowerSaveWhitelistExceptIdleApp(packageName) &&
-                    !controller.isPowerSaveWhitelistApp(packageName);
+            try {
+                IDeviceIdleController controller = getDeviceIdleController();
+                return !controller.isPowerSaveWhitelistExceptIdleApp(packageName) &&
+                        !controller.isPowerSaveWhitelistApp(packageName);
+            } catch (RemoteException e) {
+                ExUtils.rethrowFromSystemServer(e);
+            }
         }
         // Not supported
         return true;

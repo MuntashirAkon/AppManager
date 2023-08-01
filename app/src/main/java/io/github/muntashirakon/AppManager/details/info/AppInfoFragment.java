@@ -436,20 +436,18 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setTitle(R.string.battery_optimization)
                         .setMessage(R.string.choose_what_to_do)
                         .setPositiveButton(R.string.enable, (dialog, which) -> {
-                            try {
-                                DeviceIdleManagerCompat.enableBatteryOptimization(mPackageName);
+                            if (DeviceIdleManagerCompat.enableBatteryOptimization(mPackageName)) {
                                 UIUtils.displayShortToast(R.string.done);
                                 refreshDetails();
-                            } catch (RemoteException e) {
+                            } else {
                                 UIUtils.displayShortToast(R.string.failed);
                             }
                         })
                         .setNegativeButton(R.string.disable, (dialog, which) -> {
-                            try {
-                                DeviceIdleManagerCompat.disableBatteryOptimization(mPackageName);
+                            if (DeviceIdleManagerCompat.disableBatteryOptimization(mPackageName)) {
                                 UIUtils.displayShortToast(R.string.done);
                                 refreshDetails();
-                            } catch (RemoteException e) {
+                            } else {
                                 UIUtils.displayShortToast(R.string.failed);
                             }
                         })
@@ -864,11 +862,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setMessage(R.string.enable_battery_optimization)
                         .setNegativeButton(R.string.no, null)
                         .setPositiveButton(R.string.yes, (dialog, which) -> {
-                            try {
-                                DeviceIdleManagerCompat.enableBatteryOptimization(mPackageName);
+                            if (DeviceIdleManagerCompat.enableBatteryOptimization(mPackageName)) {
                                 UIUtils.displayShortToast(R.string.done);
                                 refreshDetails();
-                            } catch (RemoteException e) {
+                            } else {
                                 UIUtils.displayShortToast(R.string.failed);
                             }
                         })

@@ -445,7 +445,7 @@ class BackupOp implements Closeable {
             }
         }
         // Backup battery optimization
-        boolean batteryOptimized = ExUtils.requireNonNullElse(() -> DeviceIdleManagerCompat.isBatteryOptimizedApp(mPackageName), true);
+        boolean batteryOptimized = DeviceIdleManagerCompat.isBatteryOptimizedApp(mPackageName);
         if (!batteryOptimized) {
             rules.setBatteryOptimization(false);
         }
