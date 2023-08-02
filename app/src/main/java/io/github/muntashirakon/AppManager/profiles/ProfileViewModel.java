@@ -47,10 +47,12 @@ public class ProfileViewModel extends AndroidViewModel {
     private final MutableLiveData<Pair<Integer, Boolean>> mToast = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<Pair<CharSequence, ApplicationInfo>>> mInstalledApps = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mProfileLoaded = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mProfileModifiedLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> mLogs = new MutableLiveData<>();
     @GuardedBy("profileLock")
     private String mProfileName;
     private boolean mIsNew;
+    private boolean mIsModified;
     @Nullable
     private Future<?> mLoadProfileResult;
     private Future<?> mLoadAppsResult;
@@ -70,6 +72,21 @@ public class ProfileViewModel extends AndroidViewModel {
         super.onCleared();
     }
 
+    public boolean isModified() {
+        return mIsModified;
+    }
+
+    public void setModified(boolean modified) {
+        if (mIsModified != modified) {
+            mIsModified = modified;
+            if (ThreadUtils.isMainThread()) {
+                mProfileModifiedLiveData.setValue(modified);
+            } else {
+                mProfileModifiedLiveData.postValue(modified);
+            }
+        }
+    }
+
     public LiveData<Pair<Integer, Boolean>> observeToast() {
         return mToast;
     }
@@ -80,6 +97,10 @@ public class ProfileViewModel extends AndroidViewModel {
 
     public LiveData<Boolean> observeProfileLoaded() {
         return mProfileLoaded;
+    }
+
+    public LiveData<Boolean> getProfileModifiedLiveData() {
+        return mProfileModifiedLiveData;
     }
 
     public LiveData<String> getLogs() {
@@ -138,6 +159,7 @@ public class ProfileViewModel extends AndroidViewModel {
         synchronized (mProfileLock) {
             mProfileName = profileName;
             mIsNew = isNew;
+            setModified(isNew);
         }
     }
 
@@ -239,6 +261,7 @@ public class ProfileViewModel extends AndroidViewModel {
     @AnyThread
     @GuardedBy("profileLock")
     public void setPackages(@NonNull List<String> packages) {
+        setModified(true);
         synchronized (mProfileLock) {
             profile.packages = packages.toArray(new String[0]);
             Log.e("Packages", packages.toString());
@@ -256,12 +279,13 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @AnyThread
     @GuardedBy("profileLock")
-    public void save() {
+    public void save(boolean exitOnSave) {
         ThreadUtils.postOnBackgroundThread(() -> {
             synchronized (mProfileLock) {
                 try {
                     profileMetaManager.writeProfile();
-                    mToast.postValue(new Pair<>(R.string.saved_successfully, false));
+                    mToast.postValue(new Pair<>(R.string.saved_successfully, exitOnSave));
+                    setModified(false);
                 } catch (IOException | JSONException | RemoteException e) {
                     e.printStackTrace();
                     mToast.postValue(new Pair<>(R.string.saving_failed, false));
@@ -282,6 +306,7 @@ public class ProfileViewModel extends AndroidViewModel {
                     return;
                 }
                 loadPackages();
+                setModified(false);
             }
         });
     }
@@ -324,6 +349,7 @@ public class ProfileViewModel extends AndroidViewModel {
     }
 
     public void putBoolean(@NonNull String key, boolean value) {
+        setModified(true);
         switch (key) {
             case "freeze":
                 profile.freeze = value;
@@ -376,10 +402,12 @@ public class ProfileViewModel extends AndroidViewModel {
     }
 
     public void setComment(@Nullable String comment) {
+        setModified(true);
         profile.comment = comment;
     }
 
     public void setState(@ProfileMetaManager.ProfileState String state) {
+        setModified(true);
         profile.state = state;
     }
 
@@ -390,6 +418,7 @@ public class ProfileViewModel extends AndroidViewModel {
     }
 
     public void setUsers(@Nullable int[] users) {
+        setModified(true);
         profile.users = users;
     }
 
@@ -400,6 +429,7 @@ public class ProfileViewModel extends AndroidViewModel {
     }
 
     public void setExportRules(@Nullable Integer flags) {
+        setModified(true);
         profile.exportRules = flags;
     }
 
@@ -409,6 +439,7 @@ public class ProfileViewModel extends AndroidViewModel {
     }
 
     public void setComponents(@Nullable String[] components) {
+        setModified(true);
         profile.components = components;
     }
 
@@ -418,6 +449,7 @@ public class ProfileViewModel extends AndroidViewModel {
     }
 
     public void setPermissions(@Nullable String[] permissions) {
+        setModified(true);
         if (permissions != null) {
             for (String permission : permissions) {
                 if (permission.equals("*")) {
@@ -436,6 +468,7 @@ public class ProfileViewModel extends AndroidViewModel {
     }
 
     public void setAppOps(@Nullable String[] appOpsStr) {
+        setModified(true);
         if (appOpsStr == null) {
             profile.appOps = null;
             return;
@@ -469,6 +502,7 @@ public class ProfileViewModel extends AndroidViewModel {
     }
 
     public void setBackupInfo(@Nullable ProfileMetaManager.Profile.BackupInfo backupInfo) {
+        setModified(true);
         profile.backupData = backupInfo;
     }
 

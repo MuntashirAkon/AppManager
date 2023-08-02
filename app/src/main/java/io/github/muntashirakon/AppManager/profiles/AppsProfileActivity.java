@@ -27,6 +27,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -171,11 +172,11 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
             // New profile requested
             if (profileName != null) {
                 // Clone profile
-                model.setProfileName(profileName, false);
+                model.setProfileName(profileName, true);
                 model.loadAndCloneProfile(newProfileName);
             } else {
                 // New profile
-                model.setProfileName(newProfileName, false);
+                model.setProfileName(newProfileName, true);
                 model.loadNewProfile(initialPackages);
             }
         }
@@ -189,6 +190,12 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
             model.loadInstalledApps();
         });
         // Observers
+        model.getProfileModifiedLiveData().observe(this, modified -> {
+            if (getSupportActionBar() != null) {
+                String name = (modified ? "* " : "") + model.getProfileName();
+                getSupportActionBar().setTitle(name);
+            }
+        });
         model.observeToast().observe(this, stringResAndIsFinish -> {
             UIUtils.displayShortToast(stringResAndIsFinish.first);
             if (stringResAndIsFinish.second) finish();
@@ -215,6 +222,24 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
     }
 
     @Override
+    public void onBackPressed() {
+        if (model != null && model.isModified()) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.exit_confirmation)
+                    .setMessage(R.string.profile_modified_are_you_sure)
+                    .setPositiveButton(R.string.no, null)
+                    .setNegativeButton(R.string.yes, (dialog, which) -> super.onBackPressed())
+                    .setNeutralButton(R.string.save_and_exit, (dialog, which) -> {
+                        model.save(true);
+                        super.onBackPressed();
+                    })
+                    .show();
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.fragment_profile_apps_actions, menu);
         return super.onCreateOptionsMenu(menu);
@@ -224,7 +249,7 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            finish();
+            onBackPressed();
         } else if (id == R.id.action_apply) {
             final String[] statesL = new String[]{getString(R.string.on), getString(R.string.off)};
             @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
@@ -242,7 +267,7 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
                     })
                     .show();
         } else if (id == R.id.action_save) {
-            model.save();
+            model.save(false);
         } else if (id == R.id.action_discard) {
             model.discard();
         } else if (id == R.id.action_delete) {

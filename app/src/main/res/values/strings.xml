@@ -1446,4 +1446,5 @@
     <string name="scan_report_from_pithus">Pithus report</string>
     <string name="action_checking">Checking…</string>
     <string name="report_not_available">Not available</string>
+    <string name="profile_modified_are_you_sure">The profile was modified. Discard all your changes and exit?</string>
 </resources>
