@@ -110,7 +110,22 @@ public class ProfileViewModel extends AndroidViewModel {
                         return;
                     }
                 }
+                List<String> selectedPackages = Arrays.asList(profile.packages);
                 Collections.sort(itemPairs, (o1, o2) -> o1.first.toString().compareToIgnoreCase(o2.first.toString()));
+                Collections.sort(itemPairs, (o1, o2) -> {
+                    boolean o1Selected = selectedPackages.contains(o1.second.packageName);
+                    boolean o2Selected = selectedPackages.contains(o2.second.packageName);
+                    if (o1Selected && o2Selected) {
+                        return 0;
+                    }
+                    if (o1Selected) {
+                        return -1;
+                    }
+                    if (o2Selected) {
+                        return +1;
+                    }
+                    return 0;
+                });
                 mInstalledApps.postValue(itemPairs);
             } catch (Exception e) {
                 e.printStackTrace();
