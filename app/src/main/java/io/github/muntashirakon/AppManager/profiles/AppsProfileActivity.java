@@ -271,7 +271,12 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
         } else if (id == R.id.action_discard) {
             model.discard();
         } else if (id == R.id.action_delete) {
-            model.delete();
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(getString(R.string.delete_filename, model.getProfileName()))
+                    .setMessage(R.string.are_you_sure)
+                    .setPositiveButton(R.string.cancel, null)
+                    .setNegativeButton(R.string.ok, (dialog, which) -> model.delete())
+                    .show();
         } else if (id == R.id.action_duplicate) {
             new TextInputDialogBuilder(this, R.string.input_profile_name)
                     .setTitle(R.string.new_profile)

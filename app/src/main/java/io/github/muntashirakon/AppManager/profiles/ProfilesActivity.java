@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
@@ -262,13 +263,20 @@ public class ProfilesActivity extends BaseActivity {
                                 })
                                 .show();
                     } else if (id == R.id.action_delete) {
-                        ProfileMetaManager manager = new ProfileMetaManager(profName);
-                        if (manager.deleteProfile()) {
-                            Toast.makeText(mActivity, R.string.deleted_successfully, Toast.LENGTH_SHORT).show();
-                            new Thread(() -> mActivity.mModel.loadProfiles()).start();
-                        } else {
-                            Toast.makeText(mActivity, R.string.deletion_failed, Toast.LENGTH_SHORT).show();
-                        }
+                        new MaterialAlertDialogBuilder(mActivity)
+                                .setTitle(mActivity.getString(R.string.delete_filename, profName))
+                                .setMessage(R.string.are_you_sure)
+                                .setPositiveButton(R.string.cancel, null)
+                                .setNegativeButton(R.string.ok, (dialog, which) -> {
+                                    ProfileMetaManager manager = new ProfileMetaManager(profName);
+                                    if (manager.deleteProfile()) {
+                                        Toast.makeText(mActivity, R.string.deleted_successfully, Toast.LENGTH_SHORT).show();
+                                        new Thread(() -> mActivity.mModel.loadProfiles()).start();
+                                    } else {
+                                        Toast.makeText(mActivity, R.string.deletion_failed, Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .show();
                     } else if (id == R.id.action_routine_ops) {
                         // TODO(7/11/20): Setup routine operations for this profile
                         Toast.makeText(mActivity, "Not yet implemented", Toast.LENGTH_SHORT).show();
