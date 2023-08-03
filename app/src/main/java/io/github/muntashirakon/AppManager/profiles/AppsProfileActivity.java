@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.profiles;
 
+import static io.github.muntashirakon.AppManager.profiles.ProfileApplierActivity.ST_ADVANCED;
+import static io.github.muntashirakon.AppManager.profiles.ProfileApplierActivity.ST_SIMPLE;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 import android.content.Context;
@@ -18,7 +20,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringDef;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
@@ -33,8 +34,6 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
@@ -80,43 +79,11 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
         return intent;
     }
 
-    @NonNull
-    public static Intent getShortcutIntent(@NonNull Context context, @NonNull String profileName, @Nullable String shortcutType, @Nullable String state) {
-        Intent intent = new Intent(context, AppsProfileActivity.class);
-        intent.putExtra(EXTRA_PROFILE_NAME, profileName);
-        if (shortcutType == null) {
-            if (state != null) { // State => It's a simple shortcut
-                intent.putExtra(EXTRA_SHORTCUT_TYPE, ST_SIMPLE);
-                intent.putExtra(EXTRA_STATE, state);
-            } else { // Otherwise it's an advance shortcut
-                intent.putExtra(EXTRA_SHORTCUT_TYPE, ST_ADVANCED);
-            }
-        } else {
-            intent.putExtra(EXTRA_SHORTCUT_TYPE, shortcutType);
-            if (state != null) {
-                intent.putExtra(EXTRA_STATE, state);
-            } else if (shortcutType.equals(ST_SIMPLE)) {
-                // Shortcut is set to simple but no state set
-                intent.putExtra(EXTRA_STATE, ProfileMetaManager.STATE_ON);
-            }
-        }
-        return intent;
-    }
-
     private static final String EXTRA_NEW_PROFILE_NAME = "new_prof";
     private static final String EXTRA_NEW_PROFILE_PACKAGES = "new_prof_pkgs";
     private static final String EXTRA_SHORTCUT_TYPE = "shortcut";
-
-    public static final String EXTRA_PROFILE_NAME = "prof";
-    public static final String EXTRA_STATE = "state";
-
-    @StringDef({ST_NONE, ST_SIMPLE, ST_ADVANCED})
-    public @interface ShortcutType {
-    }
-
-    public static final String ST_NONE = "none";
-    public static final String ST_SIMPLE = "simple";
-    public static final String ST_ADVANCED = "advanced";
+    private static final String EXTRA_PROFILE_NAME = "prof";
+    private static final String EXTRA_STATE = "state";
 
     private ViewPager mViewPager;
     private NavigationBarView mBottomNavigationView;
@@ -139,21 +106,18 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
             finish();
             return;
         }
-        @ShortcutType String shortcutType = getIntent().getStringExtra(EXTRA_SHORTCUT_TYPE);
-        if (shortcutType == null) {
-            shortcutType = ST_NONE;
-        }
-        @Nullable String profileState = getIntent().getStringExtra(EXTRA_STATE);
         @Nullable String newProfileName = getIntent().getStringExtra(EXTRA_NEW_PROFILE_NAME);
         @Nullable String[] initialPackages = getIntent().getStringArrayExtra(EXTRA_NEW_PROFILE_PACKAGES);
         @Nullable String profileName = getIntent().getStringExtra(EXTRA_PROFILE_NAME);
-        if (!shortcutType.equals(ST_NONE)) {
-            if (profileName == null) {
-                // Profile name not set
-                finish();
-                return;
+        if (getIntent().hasExtra(EXTRA_SHORTCUT_TYPE)) {
+            // Compatibility mode for shortcut
+            @ProfileApplierActivity.ShortcutType String shortcutType = getIntent().getStringExtra(EXTRA_SHORTCUT_TYPE);
+            @Nullable String profileState = getIntent().getStringExtra(EXTRA_STATE);
+            if (shortcutType != null && profileName != null) {
+                ProfileApplierActivity.getShortcutIntent(this, profileName, shortcutType, profileState);
             }
-            handleShortcut(shortcutType, profileName, profileState);
+            // Finish regardless of whether the profile applier launched or not
+            finish();
             return;
         }
         if (profileName == null && newProfileName == null) {
@@ -251,21 +215,8 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
         if (id == android.R.id.home) {
             onBackPressed();
         } else if (id == R.id.action_apply) {
-            final String[] statesL = new String[]{getString(R.string.on), getString(R.string.off)};
-            @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
-            new SearchableSingleChoiceDialogBuilder<>(this, states, statesL)
-                    .setTitle(R.string.profile_state)
-                    .setOnSingleChoiceClickListener((dialog, which, item1, isChecked) -> {
-                        if (!isChecked) {
-                            return;
-                        }
-                        Intent aIntent = new Intent(this, ProfileApplierService.class);
-                        aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, model.getProfileName());
-                        aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, states.get(which));
-                        ContextCompat.startForegroundService(this, aIntent);
-                        dialog.dismiss();
-                    })
-                    .show();
+            Intent intent = ProfileApplierActivity.getShortcutIntent(this, model.getProfileName(), null, null);
+            startActivity(intent);
         } else if (id == R.id.action_save) {
             model.save(false);
         } else if (id == R.id.action_discard) {
@@ -360,40 +311,6 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
 
     @Override
     public void onPageScrollStateChanged(int state) {
-    }
-
-    private void handleShortcut(@NonNull @ShortcutType String shortcutType, @NonNull String profileName, @Nullable String state) {
-        switch (shortcutType) {
-            case ST_SIMPLE:
-                Intent intent = new Intent(this, ProfileApplierService.class);
-                intent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profileName);
-                // There must be a state
-                intent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, Objects.requireNonNull(state));
-                ContextCompat.startForegroundService(this, intent);
-                finish();
-                break;
-            case ST_ADVANCED:
-                final String[] statesL = new String[]{
-                        getString(R.string.on),
-                        getString(R.string.off)
-                };
-                @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
-                new SearchableSingleChoiceDialogBuilder<>(this, states, statesL)
-                        .setTitle(R.string.profile_state)
-                        .setSelection(state)
-                        .setOnSingleChoiceClickListener((dialog, which, item, isChecked) -> {
-                            if (!isChecked) {
-                                return;
-                            }
-                            Intent aIntent = new Intent(this, ProfileApplierService.class);
-                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profileName);
-                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, states.get(which));
-                            ContextCompat.startForegroundService(this, aIntent);
-                            dialog.dismiss();
-                        })
-                        .show();
-                break;
-        }
     }
 
     // For tab layout

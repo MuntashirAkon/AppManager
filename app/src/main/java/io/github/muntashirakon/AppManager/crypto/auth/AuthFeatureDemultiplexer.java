@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
-import io.github.muntashirakon.AppManager.profiles.AppsProfileActivity;
+import io.github.muntashirakon.AppManager.profiles.ProfileApplierActivity;
 
 public class AuthFeatureDemultiplexer extends BaseActivity {
     public static final String EXTRA_AUTH = "auth";
@@ -54,8 +54,8 @@ public class AuthFeatureDemultiplexer extends BaseActivity {
     }
 
     public void launchProfile(@NonNull Intent intent) {
-        String profileName = intent.getStringExtra(AppsProfileActivity.EXTRA_PROFILE_NAME);
-        String state = intent.getStringExtra(AppsProfileActivity.EXTRA_STATE);
-        startActivity(AppsProfileActivity.getShortcutIntent(getApplicationContext(), profileName, null, state));
+        String profileName = intent.getStringExtra(ProfileApplierActivity.EXTRA_PROFILE_NAME);
+        String state = intent.getStringExtra(ProfileApplierActivity.EXTRA_STATE);
+        startActivity(ProfileApplierActivity.getShortcutIntent(getApplicationContext(), profileName, null, state));
     }
 }

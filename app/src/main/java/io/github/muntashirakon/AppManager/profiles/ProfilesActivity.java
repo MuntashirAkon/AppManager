@@ -2,6 +2,9 @@
 
 package io.github.muntashirakon.AppManager.profiles;
 
+import static io.github.muntashirakon.AppManager.profiles.ProfileApplierActivity.ST_ADVANCED;
+import static io.github.muntashirakon.AppManager.profiles.ProfileApplierActivity.ST_SIMPLE;
+
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -35,7 +38,6 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -244,24 +246,8 @@ public class ProfilesActivity extends BaseActivity {
                 popupMenu.setOnMenuItemClickListener(item -> {
                     int id = item.getItemId();
                     if (id == R.id.action_apply) {
-                        final String[] statesL = new String[]{
-                                mActivity.getString(R.string.on),
-                                mActivity.getString(R.string.off)
-                        };
-                        @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
-                        new SearchableSingleChoiceDialogBuilder<>(mActivity, states, statesL)
-                                .setTitle(R.string.profile_state)
-                                .setOnSingleChoiceClickListener((dialog, which, selectedState, isChecked) -> {
-                                    if (!isChecked) {
-                                        return;
-                                    }
-                                    Intent aIntent = new Intent(mActivity, ProfileApplierService.class);
-                                    aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profName);
-                                    aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, selectedState);
-                                    ContextCompat.startForegroundService(mActivity, aIntent);
-                                    dialog.dismiss();
-                                })
-                                .show();
+                        Intent intent = ProfileApplierActivity.getShortcutIntent(mActivity, profName, null, null);
+                        mActivity.startActivity(intent);
                     } else if (id == R.id.action_delete) {
                         new MaterialAlertDialogBuilder(mActivity)
                                 .setTitle(mActivity.getString(R.string.delete_filename, profName))
@@ -301,7 +287,7 @@ public class ProfilesActivity extends BaseActivity {
                                 mActivity.getString(R.string.simple),
                                 mActivity.getString(R.string.advanced)
                         };
-                        final String[] shortcutTypes = new String[]{AppsProfileActivity.ST_SIMPLE, AppsProfileActivity.ST_ADVANCED};
+                        final String[] shortcutTypes = new String[]{ST_SIMPLE, ST_ADVANCED};
                         new SearchableSingleChoiceDialogBuilder<>(mActivity, shortcutTypes, shortcutTypesL)
                                 .setTitle(R.string.create_shortcut)
                                 .setOnSingleChoiceClickListener((dialog, which, item1, isChecked) -> {

@@ -89,7 +89,7 @@ public class ProfileApplierService extends ForegroundService {
         if (intent == null) return;
         mProfileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
         Intent notificationIntent = new Intent(this, AppsProfileActivity.class);
-        notificationIntent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, mProfileName);
+        notificationIntent.putExtra(ProfileApplierActivity.EXTRA_PROFILE_NAME, mProfileName);
         PendingIntent pendingIntent = PendingIntentCompat.getActivity(this, 0, notificationIntent,
                 0, false);
         // Set app name in the ongoing notification

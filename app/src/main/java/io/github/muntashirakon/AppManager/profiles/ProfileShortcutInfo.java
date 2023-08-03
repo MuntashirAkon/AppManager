@@ -13,11 +13,11 @@ import io.github.muntashirakon.AppManager.shortcut.ShortcutInfo;
 
 public class ProfileShortcutInfo extends ShortcutInfo {
     public final String profileName;
-    @AppsProfileActivity.ShortcutType
+    @ProfileApplierActivity.ShortcutType
     public final String shortcutType;
 
     public ProfileShortcutInfo(@NonNull String profileName,
-                               @AppsProfileActivity.ShortcutType String shortcutType,
+                               @ProfileApplierActivity.ShortcutType String shortcutType,
                                @Nullable CharSequence readableShortcutType) {
         this.profileName = profileName;
         this.shortcutType = shortcutType;
@@ -39,7 +39,7 @@ public class ProfileShortcutInfo extends ShortcutInfo {
 
     @Override
     public Intent toShortcutIntent(@NonNull Context context) {
-        Intent intent = AppsProfileActivity.getShortcutIntent(context, profileName, shortcutType, null);
+        Intent intent = ProfileApplierActivity.getShortcutIntent(context, profileName, shortcutType, null);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return intent;
     }
