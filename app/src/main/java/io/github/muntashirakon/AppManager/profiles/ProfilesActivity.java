@@ -101,8 +101,6 @@ public class ProfilesActivity extends BaseActivity {
                     // Save
                     manager.writeProfile();
                     Toast.makeText(this, R.string.the_import_was_successful, Toast.LENGTH_SHORT).show();
-                    // Reload page
-                    new Thread(() -> mModel.loadProfiles()).start();
                     // Load imported profile
                     startActivity(AppsProfileActivity.getProfileIntent(this, manager.getProfileName()));
                 } catch (IOException | JSONException | RemoteException e) {
@@ -137,23 +135,12 @@ public class ProfilesActivity extends BaseActivity {
                     }
                 })
                 .show());
-        mModel.getProfiles().observe(this, profiles -> {
+        mModel.getProfilesLiveData().observe(this, profiles -> {
             mProgressIndicator.hide();
             mAdapter.setDefaultList(profiles);
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mProgressIndicator != null) {
-            mProgressIndicator.show();
-        }
-        new Thread(() -> {
-            if (mModel != null) {
-                mModel.loadProfiles();
-            }
-        }).start();
+        mProgressIndicator.show();
+        mModel.loadProfiles();
     }
 
     @Override
@@ -171,7 +158,7 @@ public class ProfilesActivity extends BaseActivity {
             mImportProfile.launch("application/json");
         } else if (id == R.id.action_refresh) {
             mProgressIndicator.show();
-            new Thread(() -> mModel.loadProfiles()).start();
+            mModel.loadProfiles();
         } else return super.onOptionsItemSelected(item);
         return true;
     }
@@ -257,7 +244,6 @@ public class ProfilesActivity extends BaseActivity {
                                     ProfileMetaManager manager = new ProfileMetaManager(profName);
                                     if (manager.deleteProfile()) {
                                         Toast.makeText(mActivity, R.string.deleted_successfully, Toast.LENGTH_SHORT).show();
-                                        new Thread(() -> mActivity.mModel.loadProfiles()).start();
                                     } else {
                                         Toast.makeText(mActivity, R.string.deletion_failed, Toast.LENGTH_SHORT).show();
                                     }

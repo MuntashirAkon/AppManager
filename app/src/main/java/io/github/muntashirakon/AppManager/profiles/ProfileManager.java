@@ -22,6 +22,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Path;
 
 public class ProfileManager {
@@ -46,6 +47,10 @@ public class ProfileManager {
         String[] profilesFiles = profilesPath.listFileNames((dir, name) -> name.endsWith(ProfileMetaManager.PROFILE_EXT));
         HashMap<String, CharSequence> profiles = new HashMap<>(profilesFiles.length);
         for (String profile : profilesFiles) {
+            if (ThreadUtils.isInterrupted()) {
+                // Thread interrupted, return as is
+                return profiles;
+            }
             int index = profile.indexOf(ProfileMetaManager.PROFILE_EXT);
             profile = profile.substring(0, index);
             ProfileMetaManager metaManager = new ProfileMetaManager(profile);

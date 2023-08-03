@@ -3,34 +3,76 @@
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.app.Application;
+import android.os.FileObserver;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.WorkerThread;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.concurrent.Future;
+
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class ProfilesViewModel extends AndroidViewModel {
+    private final MutableLiveData<HashMap<String, CharSequence>> mProfilesLiveData = new MutableLiveData<>();
+    private Future<?> mProfileResult;
+    private FileObserver mFileObserver;
 
     public ProfilesViewModel(@NonNull Application application) {
         super(application);
     }
 
-    private MutableLiveData<HashMap<String, CharSequence>> mProfileLiveData;
-
-    public LiveData<HashMap<String, CharSequence>> getProfiles() {
-        if (mProfileLiveData == null) {
-            mProfileLiveData = new MutableLiveData<>();
-            new Thread(this::loadProfiles).start();
+    @Override
+    protected void onCleared() {
+        if (mFileObserver != null) {
+            mFileObserver.stopWatching();
         }
-        return mProfileLiveData;
+        super.onCleared();
     }
 
-    @WorkerThread
+    public LiveData<HashMap<String, CharSequence>> getProfilesLiveData() {
+        return mProfilesLiveData;
+    }
+
     public void loadProfiles() {
-        HashMap<String, CharSequence> profiles = ProfileManager.getProfileSummaries(getApplication());
-        mProfileLiveData.postValue(profiles);
+        if (mProfileResult != null) {
+            mProfileResult.cancel(true);
+        }
+        mProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
+            synchronized (mProfilesLiveData) {
+                HashMap<String, CharSequence> profiles = ProfileManager.getProfileSummaries(getApplication());
+                setUpObserverAndStart();
+                mProfilesLiveData.postValue(profiles);
+            }
+        });
+    }
+
+    private void setUpObserverAndStart() {
+        if (mFileObserver != null) {
+            mFileObserver.startWatching();
+            return;
+        }
+        File profilePath = ProfileMetaManager.getProfilesDir().getFile();
+        if (profilePath != null && !profilePath.exists()) {
+            // Do not set up observer yet
+            return;
+        }
+        int mask = FileObserver.CREATE
+                | FileObserver.DELETE
+                | FileObserver.DELETE_SELF
+                | FileObserver.MOVED_TO
+                | FileObserver.MODIFY
+                | FileObserver.MOVED_FROM;
+        mFileObserver = new FileObserver(profilePath, mask) {
+            @Override
+            public void onEvent(int event, @Nullable String path) {
+                loadProfiles();
+            }
+        };
+        mFileObserver.startWatching();
     }
 }
