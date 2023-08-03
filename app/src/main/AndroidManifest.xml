@@ -880,7 +880,7 @@
             android:exported="false" />
         <activity
             android:name=".apk.behavior.FreezeUnfreezeActivity"
-            android:taskAffinity=""
+            android:taskAffinity=".apk.behavior.FreezeUnfreezeActivity"
             android:launchMode="singleInstance"
             android:noHistory="true"
             android:excludeFromRecents="true"
