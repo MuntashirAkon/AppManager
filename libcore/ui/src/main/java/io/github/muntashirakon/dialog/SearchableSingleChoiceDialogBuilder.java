@@ -104,6 +104,11 @@ public class SearchableSingleChoiceDialogBuilder<T> {
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    public SearchableSingleChoiceDialogBuilder<T> setOnDismissListener(@Nullable DialogInterface.OnDismissListener dismissListener) {
+        mBuilder.setOnDismissListener(dismissListener);
+        return this;
+    }
+
     public SearchableSingleChoiceDialogBuilder<T> setOnSingleChoiceClickListener(@Nullable OnSingleChoiceClickListener<T>
                                                                                          onSingleChoiceClickListener) {
         mOnSingleChoiceClickListener = onSingleChoiceClickListener;

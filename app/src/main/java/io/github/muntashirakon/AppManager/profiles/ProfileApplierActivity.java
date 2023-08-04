@@ -12,8 +12,10 @@ import androidx.annotation.StringDef;
 import androidx.core.content.ContextCompat;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Queue;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
@@ -56,6 +58,8 @@ public class ProfileApplierActivity extends BaseActivity {
         return intent;
     }
 
+    private final Queue<Intent> mQueue = new LinkedList<>();
+
     @Override
     public boolean getTransparentBackground() {
         return true;
@@ -63,12 +67,29 @@ public class ProfileApplierActivity extends BaseActivity {
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
-        onNewIntent(getIntent());
+        synchronized (mQueue) {
+            mQueue.add(getIntent());
+        }
+        next();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
+        synchronized (mQueue) {
+            mQueue.add(intent);
+        }
         super.onNewIntent(intent);
+    }
+
+    private void next() {
+        Intent intent;
+        synchronized (mQueue) {
+            intent = mQueue.poll();
+        }
+        if (intent == null) {
+            finish();
+            return;
+        }
         @ShortcutType String shortcutType = getIntent().getStringExtra(EXTRA_SHORTCUT_TYPE);
         String profileName = getIntent().getStringExtra(EXTRA_PROFILE_NAME);
         String profileState = getIntent().getStringExtra(EXTRA_STATE);
@@ -87,7 +108,7 @@ public class ProfileApplierActivity extends BaseActivity {
                 // There must be a state
                 intent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, Objects.requireNonNull(state));
                 ContextCompat.startForegroundService(this, intent);
-                finish();
+                next();
                 break;
             case ST_ADVANCED:
                 final String[] statesL = new String[]{
@@ -98,18 +119,20 @@ public class ProfileApplierActivity extends BaseActivity {
                 new SearchableSingleChoiceDialogBuilder<>(this, states, statesL)
                         .setTitle(R.string.profile_state)
                         .setSelection(state)
-                        .setOnSingleChoiceClickListener((dialog, which, item, isChecked) -> {
-                            if (!isChecked) {
-                                return;
-                            }
+                        .setPositiveButton(R.string.ok, (dialog, which, selectedState) -> {
                             Intent aIntent = new Intent(this, ProfileApplierService.class);
                             aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profileName);
-                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, states.get(which));
+                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, selectedState);
                             ContextCompat.startForegroundService(this, aIntent);
-                            dialog.dismiss();
                         })
+                        .setNegativeButton(R.string.cancel, null)
+                        .setOnDismissListener(dialog -> next())
                         .show();
                 break;
+            default:
+                next();
         }
     }
+
+
 }
