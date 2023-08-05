@@ -22,10 +22,6 @@
         android:title="@string/block_unblock_trackers"
         android:icon="@drawable/ic_cctv_off" />
     <item
-        android:id="@+id/action_new_profile"
-        android:icon="@drawable/ic_file_document"
-        android:title="@string/new_profile" />
-    <item
         android:id="@+id/action_add_to_profile"
         android:icon="@drawable/ic_file_plus"
         android:title="@string/add_to_profile" />
