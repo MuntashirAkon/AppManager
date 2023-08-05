@@ -61,6 +61,7 @@ import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.HelpActivity;
 import io.github.muntashirakon.AppManager.misc.LabsActivity;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
+import io.github.muntashirakon.AppManager.profiles.AppsProfileActivity;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
 import io.github.muntashirakon.AppManager.profiles.ProfilesActivity;
@@ -80,6 +81,7 @@ import io.github.muntashirakon.dialog.AlertDialogBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
+import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
 import io.github.muntashirakon.util.UiUtils;
@@ -431,6 +433,20 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
             handleBatchOp(BatchOpsManager.OP_FORCE_STOP);
         } else if (id == R.id.action_uninstall) {
             handleBatchOpWithWarning(BatchOpsManager.OP_UNINSTALL);
+        } else if (id == R.id.action_new_profile) {
+            new TextInputDialogBuilder(this, R.string.input_profile_name)
+                    .setTitle(R.string.new_profile)
+                    .setHelperText(R.string.input_profile_name_description)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.go, (dialog, which, profName, isChecked) -> {
+                        if (!TextUtils.isEmpty(profName)) {
+                            //noinspection ConstantConditions
+                            startActivity(AppsProfileActivity.getNewProfileIntent(this, profName.toString(),
+                                    viewModel.getSelectedPackages().keySet().toArray(new String[0])));
+                            mMultiSelectionView.cancel();
+                        }
+                    })
+                    .show();
         } else if (id == R.id.action_add_to_profile) {
             List<ProfileMetaManager> profiles = ProfileManager.getProfileMetadata();
             List<CharSequence> profileNames = new ArrayList<>(profiles.size());
