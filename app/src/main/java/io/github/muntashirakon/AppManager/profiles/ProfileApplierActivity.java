@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.profiles;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -19,6 +23,8 @@ import java.util.Queue;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 
 public class ProfileApplierActivity extends BaseActivity {
@@ -58,7 +64,17 @@ public class ProfileApplierActivity extends BaseActivity {
         return intent;
     }
 
+    private static class ProfileApplierInfo {
+        public ProfileMetaManager.Profile profile;
+        public String profileId;
+        @ShortcutType
+        public String shortcutType;
+        @Nullable
+        public String state;
+    }
+
     private final Queue<Intent> mQueue = new LinkedList<>();
+    private ProfileApplierViewModel mViewModel;
 
     @Override
     public boolean getTransparentBackground() {
@@ -67,9 +83,11 @@ public class ProfileApplierActivity extends BaseActivity {
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
+        mViewModel = new ViewModelProvider(this).get(ProfileApplierViewModel.class);
         synchronized (mQueue) {
             mQueue.add(getIntent());
         }
+        mViewModel.mProfileLiveData.observe(this, this::handleShortcut);
         next();
     }
 
@@ -90,21 +108,27 @@ public class ProfileApplierActivity extends BaseActivity {
             finish();
             return;
         }
-        @ShortcutType String shortcutType = getIntent().getStringExtra(EXTRA_SHORTCUT_TYPE);
-        String profileName = getIntent().getStringExtra(EXTRA_PROFILE_NAME);
+        @ShortcutType
+        String shortcutType = getIntent().getStringExtra(EXTRA_SHORTCUT_TYPE);
+        String profileId = getIntent().getStringExtra(EXTRA_PROFILE_NAME);
         String profileState = getIntent().getStringExtra(EXTRA_STATE);
-        if (shortcutType == null || profileName == null) {
+        if (shortcutType == null || profileId == null) {
             // Invalid shortcut
             return;
         }
-        handleShortcut(shortcutType, profileName, profileState);
+        ProfileApplierInfo info = new ProfileApplierInfo();
+        info.profileId = profileId;
+        info.shortcutType = shortcutType;
+        info.state = profileState;
+        mViewModel.loadProfile(info);
     }
 
-    private void handleShortcut(@NonNull @ShortcutType String shortcutType, @NonNull String profileName, @Nullable String state) {
-        switch (shortcutType) {
+    private void handleShortcut(@NonNull ProfileApplierInfo info) {
+        String state = info.state != null ? info.state : info.profile.state;
+        switch (info.shortcutType) {
             case ST_SIMPLE:
                 Intent intent = new Intent(this, ProfileApplierService.class);
-                intent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profileName);
+                intent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, info.profileId);
                 // There must be a state
                 intent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, Objects.requireNonNull(state));
                 ContextCompat.startForegroundService(this, intent);
@@ -116,12 +140,15 @@ public class ProfileApplierActivity extends BaseActivity {
                         getString(R.string.off)
                 };
                 @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
+                DialogTitleBuilder titleBuilder = new DialogTitleBuilder(this)
+                        .setTitle(getString(R.string.apply_profile, info.profile.name))
+                        .setSubtitle(R.string.choose_a_profile_state);
                 new SearchableSingleChoiceDialogBuilder<>(this, states, statesL)
-                        .setTitle(R.string.profile_state)
+                        .setTitle(titleBuilder.build())
                         .setSelection(state)
                         .setPositiveButton(R.string.ok, (dialog, which, selectedState) -> {
                             Intent aIntent = new Intent(this, ProfileApplierService.class);
-                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profileName);
+                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, info.profileId);
                             aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, selectedState);
                             ContextCompat.startForegroundService(this, aIntent);
                         })
@@ -134,5 +161,18 @@ public class ProfileApplierActivity extends BaseActivity {
         }
     }
 
+    public static class ProfileApplierViewModel extends AndroidViewModel {
+        final MutableLiveData<ProfileApplierInfo> mProfileLiveData = new MutableLiveData<>();
 
+        public ProfileApplierViewModel(@NonNull Application application) {
+            super(application);
+        }
+
+        public void loadProfile(ProfileApplierInfo info) {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                info.profile = new ProfileMetaManager(info.profileId).getProfile();
+                mProfileLiveData.postValue(info);
+            });
+        }
+    }
 }
