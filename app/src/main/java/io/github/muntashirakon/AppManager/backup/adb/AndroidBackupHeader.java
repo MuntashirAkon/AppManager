@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
@@ -42,6 +43,9 @@ import javax.crypto.spec.SecretKeySpec;
 import aosp.libcore.util.HexEncoding;
 
 final class AndroidBackupHeader {
+    // NOTE: (CWE-326) Vulnerable to padding oracle attacks, but there's no way to fix it as it's used by Android.
+    private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
+
     private final SecureRandom mRng = new SecureRandom();
     private int mBackupFileVersion;
     private boolean mCompress;
@@ -165,7 +169,7 @@ final class AndroidBackupHeader {
         byte[] checksumSalt = randomBytes(PBKDF2_SALT_SIZE);
 
         // primary encryption of the datastream with the encryption key
-        Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        Cipher c = Cipher.getInstance(TRANSFORMATION);
         SecretKeySpec encryptionKeySpec = new SecretKeySpec(encryptionKey, "AES");
         c.init(Cipher.ENCRYPT_MODE, encryptionKeySpec);
         OutputStream finalOutput = new CipherOutputStream(ofstream, c);
@@ -184,7 +188,7 @@ final class AndroidBackupHeader {
         headerbuf.append('\n');
 
         // line 8: IV of the user key [hex]
-        Cipher mkC = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        Cipher mkC = Cipher.getInstance(TRANSFORMATION);
         mkC.init(Cipher.ENCRYPT_MODE, userKey);
 
         byte[] IV = mkC.getIV();
@@ -263,7 +267,7 @@ final class AndroidBackupHeader {
                                                               String encryptionKeyBlobHex, InputStream rawInStream)
             throws Exception {
         InputStream result;
-        Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        Cipher c = Cipher.getInstance(TRANSFORMATION);
         SecretKey userKey = buildCharArrayKey(algorithm, decryptPassword, userSalt,
                 rounds);
         byte[] IV = hexToByteArray(userIvHex);
@@ -292,7 +296,7 @@ final class AndroidBackupHeader {
         // now validate the decrypted encryption key against the checksum
         byte[] calculatedCk = makeKeyChecksum(algorithm, encryptionKey, ckSalt,
                 rounds);
-        if (Arrays.equals(calculatedCk, mkChecksum)) {
+        if (MessageDigest.isEqual(calculatedCk, mkChecksum)) {
             ivSpec = new IvParameterSpec(IV);
             c.init(Cipher.DECRYPT_MODE,
                     new SecretKeySpec(encryptionKey, "AES"),

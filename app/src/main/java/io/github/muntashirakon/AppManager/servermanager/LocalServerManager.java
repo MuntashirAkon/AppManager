@@ -275,6 +275,9 @@ class LocalServerManager {
         }
         Socket socket = new Socket(ServerConfig.getLocalServerHost(mContext), ServerConfig.getLocalServerPort());
         socket.setSoTimeout(1000 * 30);
+        // NOTE: (CWE-319) No need for SSL since it only runs on a random port in localhost with specific authorization.
+        // TODO: 5/8/23 We could use an SSL server with a randomly generated certificate per session without requiring
+        //  any other authorization methods. This session is independent of the application.
         OutputStream os = socket.getOutputStream();
         InputStream is = socket.getInputStream();
         DataTransmission transfer = new DataTransmission(os, is, false);
