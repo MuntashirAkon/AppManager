@@ -205,6 +205,7 @@ public class MainPreferences extends PreferenceFragment {
                 case Ops.STATUS_SUCCESS:
                 case Ops.STATUS_FAILURE:
                     mModeOfOpsAlertDialog.dismiss();
+                    mCurrentMode = Ops.getMode();
                     mModePref.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op,
                             mModes[MODE_NAMES.indexOf(mCurrentMode)], Ops.getInferredMode(mActivity)));
             }

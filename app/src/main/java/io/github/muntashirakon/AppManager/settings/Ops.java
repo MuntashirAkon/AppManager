@@ -217,7 +217,7 @@ public class Ops {
     public static int init(@NonNull Context context, boolean force) {
         String mode = getMode();
         if (MODE_AUTO.equals(mode)) {
-            autoDetectRootSystemOrAdb(context);
+            autoDetectRootSystemOrAdbAndPersist(context);
             return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
         }
         if (MODE_NO_ROOT.equals(mode)) {
@@ -273,10 +273,12 @@ public class Ops {
 
     @WorkerThread
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
-    private static void autoDetectRootSystemOrAdb(@NonNull Context context) {
+    private static void autoDetectRootSystemOrAdbAndPersist(@NonNull Context context) {
         sIsRoot = hasRoot();
         if (sIsRoot) {
-            // Root permission was granted, disable ADB and force root
+            // Root permission was granted
+            setMode(MODE_ROOT);
+            // Disable ADB and force root
             sIsSystem = sIsAdb = false;
             if (LocalServices.alive()) {
                 if (Users.getSelfOrRemoteUid() == ROOT_UID) {
@@ -308,6 +310,7 @@ public class Ops {
         }
         // Root was not working/granted, but check for AM service just in case
         if (LocalServices.alive()) {
+            setMode(MODE_ADB_OVER_TCP);
             int uid = Users.getSelfOrRemoteUid();
             if (uid == ROOT_UID) {
                 sIsSystem = sIsAdb = false;
@@ -328,7 +331,9 @@ public class Ops {
         }
         // Root not granted
         if (!SelfPermissions.checkSelfPermission(Manifest.permission.INTERNET)) {
-            // INTERNET permission is not granted, skip checking for ADB
+            // INTERNET permission is not granted
+            setMode(MODE_NO_ROOT);
+            // Skip checking for ADB
             sIsAdb = false;
             return;
         }
@@ -346,6 +351,7 @@ public class Ops {
             // Any message produced by the method below is just a helpful message.
             checkRootOrIncompleteUsbDebuggingInAdb();
         }
+        setMode(isPrivileged() ? MODE_ADB_OVER_TCP : MODE_NO_ROOT);
     }
 
     @UiThread
@@ -605,6 +611,7 @@ public class Ops {
             ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
         } else {
             // No-root mode
+            sIsAdb = sIsSystem = sIsRoot = false;
             return STATUS_FAILURE;
         }
         return initPermissionsWithSuccess();
