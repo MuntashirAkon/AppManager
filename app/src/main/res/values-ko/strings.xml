@@ -24,7 +24,7 @@
     <string name="no_activities">활동 없음</string>
     <string name="refresh">새로 고침</string>
     <string name="launch">실행</string>
-    <string name="activities">활동</string>
+    <string name="activities">액티비티</string>
     <string name="require_no_permission">권한이 필요하지 않음</string>
     <string name="permissions">사용 권한</string>
     <string name="uninstall">삭제</string>
@@ -66,7 +66,7 @@
         <item quantity="other">%1$d초</item>
     </plurals>
     <string name="no_usage_in_this_time_range">이 시간 범위 내 사용량 없음</string>
-    <string name="error_verbose_pin_shortcut">현재 실행도구는 핀바로가기를 지원하지 않습니다. 바로가기를 만들 수 없습니다.</string>
+    <string name="error_verbose_pin_shortcut">현재 홈 화면은 핀바로가기를 지원하지 않습니다. 바로가기를 만들 수 없습니다.</string>
     <string name="create_shortcut">바로가기 만들기</string>
     <string name="shortcut_name">바로가기 이름</string>
     <string name="word_wrap">단어 줄 바꿈 전환</string>
@@ -79,13 +79,13 @@
     <string name="paths_and_directories">경로 및 디렉터리</string>
     <string name="source_dir">원본 디렉터리</string>
     <string name="data_dir">데이터 디렉터리</string>
-    <string name="sdk_max">대상</string>
-    <string name="more_info">더 많은 정보</string>
+    <string name="sdk_max">대상 SDK 버전</string>
+    <string name="more_info">더보기</string>
     <string name="date_installed">설치된 날짜</string>
     <string name="date_updated">업데이트된 날짜</string>
     <string name="installer_app">설치 프로그램</string>
     <string name="user_id">사용자 ID</string>
-    <string name="main_activity">주요 활동</string>
+    <string name="main_activity">기본 액티비티</string>
     <string name="sdk_flags">플래그</string>
     <string name="empty_package_name">빈 패키지 이름</string>
     <string name="error_creating_shortcut">바로가기 생성 중 오류</string>
@@ -120,11 +120,12 @@
     <string name="pref_backup_flags_msg">백업 옵션에 대한 프리셋을 추가하면 백업/복원할 때마다 플래그를 선택해야 하는 부담이 제거됩니다.</string>
     <string name="credits">크레딧</string>
     <string name="found_trackers">발견된 추적기:</string>
-    <string name="backup_extras_description">앱 권한 백업, 배터리 절약 및 데이터 사용량 옵션, MagiskHide 상태, SSAID 등.</string>
+    <string name="backup_extras_description">앱 권한, 배터리 절약 및 데이터 사용량 옵션, MagiskHide 상태, SSAID 등을 백업하기.
+\n<font fgcolor="#ff0000">권한에 따라 일부 옵션은 복원되지 않을 수 있습니다.</font> </string>
     <string name="permission_flags">권한 플래그</string>
     <string name="clear_data_from_uninstalled_apps_description"><tt>DONT_DELETE_DATA</tt> 플래그로 제거된 앱에서 데이터 삭제</string>
     <string name="usage_access_not_supported">해당 설정 페이지가 존재하지 않아 사용량 접근권한을 요청할 수 없습니다.</string>
-    <string name="starting_activity">활동 시작: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
+    <string name="starting_activity">다음 액티비티를 시작하는 중: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="third_party">서드 파티 라이브러리 및 아이콘</string>
     <plurals name="tracker_and_classes">
         <item quantity="other"><xliff:g id="class_no" example="50">%1$d</xliff:g> 클래스가 있는 추적기 1개</item>
@@ -181,7 +182,7 @@
     <string name="saved_successfully">저장하기</string>
     <string name="failed_to_disable_op">요청한 작업을 비활성화 할 수 없습니다</string>
     <string name="str_logo">로고</string>
-    <string name="sdk_min">최소</string>
+    <string name="sdk_min">최소 SDK 버전</string>
     <string name="menu_remove_rules">규칙 삭제</string>
     <string name="menu_apply_rules">규칙 적용</string>
     <string name="search">검색</string>
@@ -279,7 +280,7 @@
     <plurals name="no_of_components">
         <item quantity="other">%1$d 구성요소</item>
     </plurals>
-    <string name="clear_app_cache_description">모든 앱 캐시를 삭제한다</string>
+    <string name="clear_app_cache_description">모든 앱의 캐시를 삭제합니다</string>
     <plurals name="failed_to_backup_some_apk_files">
         <item quantity="other">%1$d 앱 백업이 실패했습니다</item>
     </plurals>
@@ -323,7 +324,7 @@
     </plurals>
     <string name="sort_by_denied_app_ops">우선 거부</string>
     <string name="source_code">소스 코드</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">텔레그램 채널</a> • <a href="https://twitter.com/AppManagerNews">트위터</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram 채널</a> • <a href="https://twitter.com/AppManagerNews">트위터</a></string>
     <string name="pref_import_existing">기존 규칙 가져오기</string>
     <string name="block_unblock_trackers_description">설치된 모든 앱에서 광고 및 트래킹 구성 요소 차단 또는 차단 해제</string>
     <string name="deny_app_ops_description">다음 상수값으로 식별되는 앱 작업 모드 설정하기, <tt>63</tt> 또는 <tt>RUN_IN_BACKGROUND</tt></string>
@@ -527,7 +528,7 @@
     <string name="file_properties">특성</string>
     <string name="open_as_video">비디오</string>
     <string name="on_unfreeze_open_application">고정 해제 후 앱 열기</string>
-    <string name="suspend_app_description">이것은 가장 약한 고정 방법이다. 일시 중단된 앱이 실행기에 계속 나타날 수 있지만 회색으로 표시되어 실행할 수 없습니다.</string>
+    <string name="suspend_app_description">이것은 가장 약한 고정 방법입니다. 중지된 앱이 홈 화면에 계속 나타날 수 있지만 회색으로 표시되어 실행할 수 없습니다.</string>
     <string name="pref_reload_apps_msg">예기치 않은 동작이 발생할 경우 App Manager 데이터베이스에 저장된 앱 목록을 다시 로드합니다.</string>
     <string name="pref_saved_apk_name_format_msg">APK 파일을 저장할 때 이름을 지정하는 데 사용되는 형식입니다.</string>
     <string name="file_modified_are_you_sure">파일이 수정되었습니다. 모든 변경 사항을 취소하고 종료하시겠습니까\?</string>
@@ -555,7 +556,7 @@
     <string name="confirm_import_keystore">기존 KeyStore를 바꾸시겠습니까\? 이 작업은 취소할 수 없습니다.</string>
     <string name="orientation_right_to_left">오른쪽에서 왼쪽으로</string>
     <string name="port_number">포트</string>
-    <string name="files">파일들</string>
+    <string name="files">파일 탐색기</string>
     <string name="port_number_invalid">포트 번호가 잘못되었습니다.</string>
     <string name="pref_block_trackers_msg">앱 관리자를 사용하여 앱 설치 후 구성 요소 추적을 차단합니다.</string>
     <string name="search_type_regular_expressions">정규식</string>
@@ -613,16 +614,16 @@
     <string name="pref_sign_apk_no_signing_key">서명 키 없음</string>
     <string name="failed_to_freeze"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.를 중지할 수 없습니다.</string>
     <string name="failed_to_unfreeze"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>를 해제할 수 없습니다.</string>
-    <string name="freeze_unfreeze">고정/비고정</string>
+    <string name="freeze_unfreeze">고정/해제</string>
     <string name="profile_freeze_msg">상태에 따라 앱을 고정하거나 고정 해제</string>
     <string name="pref_default_freezing_method">기본 고정 방법</string>
     <string name="pref_default_freezing_method_description">고정 방법을 선택할 수 있는 옵션이 없는 위치에서 기본적으로 사용되는 방법입니다.</string>
     <string name="suspend_app">중지</string>
-    <string name="disable_app_description">고정 방법을 권장합니다. 앱과 모든 구성 요소를 비활성화 하지만 모든 바로 가기가 손실됩니다.</string>
+    <string name="disable_app_description">권장되는 방법입니다. 앱과 모든 구성 요소를 비활성화 하지만 바로 가기가 손실됩니다.</string>
     <string name="hide_app_description">이 방법은 일상적인 사용에만 권장됩니다. 숨겨진 앱이 제거된 것처럼 나타납니다. 그러나 앱이 다시 설치되거나 업데이트되면 다시 나타날 수 있습니다.</string>
-    <string name="sort_by_frozen_app">우선 고정</string>
-    <string name="filter_frozen_apps">고정된 응용 프로그램</string>
-    <string name="pref_appearance_description">테마, 방향, 특징 등.</string>
+    <string name="sort_by_frozen_app">고정된 앱</string>
+    <string name="filter_frozen_apps">고정된 앱</string>
+    <string name="pref_appearance_description">테마, 방향, 기능 등.</string>
     <string name="hide_app">숨겨진</string>
     <plurals name="alert_failed_to_unfreeze">
         <item quantity="other">%1$d개 앱의 고정을 해제할 수 없습니다</item>
@@ -631,9 +632,9 @@
         <item quantity="other">%1$d개 앱의 고정할 수 없습니다</item>
     </plurals>
     <string name="pref_privacy">보안</string>
-    <string name="pref_privacy_description">화면 잠금, 권한 부여 등.</string>
+    <string name="pref_privacy_description">화면 잠금, 인증 관리 등.</string>
     <string name="user_manual">사용자 매뉴얼</string>
-    <string name="get_help">도움을 받다</string>
+    <string name="get_help">도움말</string>
     <string name="pref_advanced_pref">사용자, APK 이름 형식, 병렬 실행 등.</string>
     <string name="pref_version_changelog">버전/변경된로그</string>
     <string name="vt_failed">VirusTotal: 실패</string>
@@ -851,7 +852,7 @@
     <string name="base_backup">기본 백업</string>
     <string name="trackers_unblocked_successfully">이제 추적기의 차단이 해제되었습니다</string>
     <string name="no_changes">변화 없음</string>
-    <string name="netpolicy_allow_background_data">데이터 보호기가 켜져 있을 때 백그라운드 데이터 허용</string>
+    <string name="netpolicy_allow_background_data">데이터 절약 모드가 켜져 있을 때 백그라운드 데이터 허용</string>
     <string name="intent_firewall">IFW</string>
     <string name="invalid_password">암호가 잘못되었습니다. 다시 시도하십시오.</string>
     <string name="identifier">식별자</string>
@@ -887,7 +888,7 @@
     <string name="subject_log_report">로그 기록</string>
     <string name="help_app_ops_tab">항목을 클릭하여 <b>허용</b>하거나 <b>무시</b>하십시오. 지원되는 다른 모드를 보려면 항목을 길게 클릭하십시오.</string>
     <string name="netpolicy_disable_network_access">네트워크 액세스 사용 안 함</string>
-    <string name="adb_pair">쌍</string>
+    <string name="adb_pair">페어링</string>
     <string name="minimum_version">최소 버전: %d</string>
     <string name="saved_filters">저장된 필터</string>
     <string name="search_type_contains">포함하다</string>
@@ -904,10 +905,10 @@
     <string name="file_accessed_date">접근</string>
     <string name="file_open_with">로 열기</string>
     <string name="file_shortcut_target_file">대상 파일</string>
-    <string name="file_creation_date">생성된</string>
-    <string name="file_open_as">..로 실행</string>
+    <string name="file_creation_date">생성 날짜</string>
+    <string name="file_open_as">다른 앱에서 열기…</string>
     <string name="file_open_with_custom_activity">커스텀</string>
-    <string name="file_open_with_os_default_dialog">OS 기본 다이얼로그로 열기</string>
+    <string name="file_open_with_os_default_dialog">기본 선택 화면으로 열기</string>
     <string name="open_as_text">텍스트</string>
     <string name="open_as_folder">폴더</string>
     <string name="open_as_other">그 외</string>
@@ -917,7 +918,7 @@
     <string name="open_as_archive">보관소</string>
     <string name="file_cut">자르기</string>
     <string name="fm_always_open_with">항상 오픈</string>
-    <string name="waiting_for_the_phone_to_be_locked">핸드폰이 잠길 때까지 기다리는중…</string>
+    <string name="waiting_for_the_phone_to_be_locked">핸드폰이 잠길 때까지 기다리는 중…</string>
     <string name="freeze_on_phone_locked">핸드폰이 잠겨 있을 때 자동으로 앱 중지</string>
     <string name="tap_to_freeze_app">고정하기 위해 탭하기</string>
     <string name="changelog_type_improve">개선</string>
@@ -961,7 +962,7 @@
     <string name="options">옵션들</string>
     <string name="simple">단순한</string>
     <string name="verified">확인됨</string>
-    <string name="about_device">장치 정보</string>
+    <string name="about_device">디바이스 정보</string>
     <string name="restore_not_installed_msg">현재 설치되지 않은 앱의 기본 백업을 복원합니다.</string>
     <string name="backup_all_apps_msg">설치된 모든 앱을 백업합니다.</string>
     <string name="restore_latest">최신 백업 복원</string>
@@ -1022,7 +1023,7 @@
     <string name="vendor">판매 회사</string>
     <string name="unlock_app_manager">앱 관리자 잠금 해제</string>
     <string name="select_user">사용자 선택</string>
-    <string name="backup_rules_description">App Manager 내에서 설정된 백업 규칙입니다.</string>
+    <string name="backup_rules_description">App Manager 내에서 설정된 백업 규칙입니다. <font fgcolor="ff0000">권한에 따라 일부 규칙은 복원되지 않을 수 있습니다.</font> </string>
     <string name="redo_existing_backups_msg">이전 백업이 있는 설치된 앱에 대해 백업을 다시 실행합니다.</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="security_providers">보안 제공업체</string>
@@ -1200,5 +1201,36 @@
     <string name="sort_by_last_modified">최근 수정</string>
     <string name="sort_by_file_size">파일 크기</string>
     <string name="sort_by_file_type">파일 종류</string>
-    <string name="app_manager_build_expired_message">기기와 데이터의 안전을 위해, 사용 중인 앱은 만료되었습니다. 계속 사용하려면 업데이트해야 합니다. 업데이트가 불가능하다면 삭제하십시오.</string>
+    <string name="app_manager_build_expired_message">디바이스와 데이터의 안전을 위해, 이 앱 버전이 만료되었습니다. 계속 사용하려면 업데이트해야 합니다. 업데이트가 불가능하다면 앱을 제거하세요.</string>
+    <string name="calculating_file_size">크기 계산 중…</string>
+    <string name="export_option_xml">XML</string>
+    <string name="grant_overlay_permission_message">App Manager가 다른 앱 위에 표시하도록 허용해 주세요</string>
+    <string name="line_separator">개행 문자</string>
+    <string name="block_unblock_components_dots">구성 요소 차단/해제…</string>
+    <string name="unblock_components_dots">구성 요소 차단 해제…</string>
+    <string name="app_manager_build_expiring_soon_warning">이 App Manager 버전은 곧 만료됩니다. 최신 버전으로 업데이트해주세요.</string>
+    <string name="grant_required_permission">필요한 권한 부여하기</string>
+    <string name="optimize_option_force_dexopt">Dex 최적화 수행하기</string>
+    <string name="title_perform_runtime_optimization_to_apps">ART 최적화 수행하기</string>
+    <string name="empty_folder">파일이 없습니다</string>
+    <plurals name="folder_count">
+        <item quantity="other">폴더 %d개</item>
+    </plurals>
+    <plurals name="file_count">
+        <item quantity="other">파일 %d개</item>
+    </plurals>
+    <string name="create_new_file">새 파일 만들기</string>
+    <string name="create_new_folder">새 폴더 만들기</string>
+    <string name="copied_successfully">복사되었습니다.</string>
+    <string name="block_unblock_components_description">서명과 일치하는 모든 구성 요소 차단 또는 해제하기</string>
+    <plurals name="alert_failed_to_unblock_components">
+        <item quantity="other">앱 %1$d개의 구성 요소를 차단 해제할 수 없습니다</item>
+    </plurals>
+    <string name="app_can_write_and_execute_in_same_place">앱이 <a href="https://en.wikipedia.org/wiki/W%5EX">W^X 정책</a>을 위반하며 동일한 디렉토리 또는 메모리의 동일한 위치에서 작성하고 실행할 수 있습니다. 이를 통해 앱 내에 포함된 실행 파일을 수정하거나 인터넷에서 다운로드하여 임의의 실행 파일을 실행할 수 있습니다. 이것이 앱의 의도된 동작(예: 터미널 에뮬레이터)이 아닌 한 SDK 29(Android 10) 이상을 대상으로 하는 앱의 최신 버전을 찾거나 대안을 찾는 것을 권장합니다.</string>
+    <string name="change_owner_uid">소유자 (UID) 변경하기</string>
+    <string name="pref_layout_direction">레이아웃 방향</string>
+    <string name="option_display_dot_files">숨김 파일</string>
+    <string name="export_app_list">앱 목록 내보내기</string>
+    <string name="export_option_markdown">Markdown 문법</string>
+    <string name="change_group_gid">그룹 (GID) 변경하기</string>
 </resources>
