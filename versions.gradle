@@ -24,7 +24,7 @@ ext {
     jadx_version = "1.4.7"
     jb_annotation_version = "23.0.0" // Compile-only
     libadb_version = "2.2.2"
-    libsu_version = "5.1.0"
+    libsu_version = "5.2.0"
     material_version = "1.9.0"
     preferences_version = "1.2.0"
     refine_version = "4.0.0"
