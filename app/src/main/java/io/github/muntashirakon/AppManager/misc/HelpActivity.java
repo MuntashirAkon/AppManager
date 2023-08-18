@@ -65,6 +65,7 @@ public class HelpActivity extends BaseActivity implements SearchView.OnQueryText
 
         mWebView.setWebViewClient(new WebViewClientImpl());
         mWebView.setNetworkAvailable(false);
+        mWebView.getSettings().setAllowContentAccess(false);
         mWebView.loadUrl("file:///android_res/raw/index.html");
 
         mSearchContainer = findViewById(R.id.search_container);
