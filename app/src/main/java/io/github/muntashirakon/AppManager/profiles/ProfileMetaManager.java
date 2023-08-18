@@ -21,7 +21,6 @@ import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -189,7 +188,7 @@ public class ProfileMetaManager implements LocalizedString {
         return mProfile;
     }
 
-    public void appendPackages(@NonNull Collection<String> packageList) {
+    public void appendPackages(@NonNull String[] packageList) {
         List<String> uniquePackages = new ArrayList<>();
         for (String newPackage : packageList) {
             if (!ArrayUtils.contains(mProfile.packages, newPackage)) {

@@ -13,7 +13,6 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.displayShortToast
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBitmapFromDrawable;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getDimmedBitmap;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
 import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
@@ -123,8 +122,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
 import io.github.muntashirakon.AppManager.magisk.MagiskHide;
 import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
-import io.github.muntashirakon.AppManager.profiles.ProfileManager;
-import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
+import io.github.muntashirakon.AppManager.profiles.AddToProfileDialogFragment;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
@@ -523,26 +521,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .setNegativeButton(R.string.cancel, null)
                     .show();
         } else if (itemId == R.id.action_add_to_profile) {
-            List<ProfileMetaManager> profiles = ProfileManager.getProfileMetadata();
-            List<CharSequence> profileNames = new ArrayList<>(profiles.size());
-            for (ProfileMetaManager profileMetaManager : profiles) {
-                profileNames.add(new SpannableStringBuilder(profileMetaManager.getProfileName()).append("\n")
-                        .append(getSecondaryText(mActivity, getSmallerText(profileMetaManager.toLocalizedString(mActivity)))));
-            }
-            new SearchableMultiChoiceDialogBuilder<>(mActivity, profiles, profileNames)
-                    .setTitle(R.string.add_to_profile)
-                    .setNegativeButton(R.string.cancel, null)
-                    .setPositiveButton(R.string.add, (dialog, which, selectedItems) -> {
-                        for (ProfileMetaManager metaManager : selectedItems) {
-                            try {
-                                metaManager.appendPackages(Collections.singletonList(mPackageName));
-                                metaManager.writeProfile();
-                            } catch (Throwable e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    })
-                    .show();
+            AddToProfileDialogFragment dialog = AddToProfileDialogFragment.getInstance(new String[]{mPackageName});
+            dialog.show(getChildFragmentManager(), AddToProfileDialogFragment.TAG);
         } else if (itemId == R.id.action_optimize) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
                     && (SelfPermissions.isSystemOrRootOrShell() || BuildConfig.APPLICATION_ID.equals(mInstallerPackageName))) {

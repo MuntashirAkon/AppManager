@@ -2,9 +2,6 @@
 
 package io.github.muntashirakon.AppManager.main;
 
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
-
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,7 +10,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
@@ -26,7 +22,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.collection.ArrayMap;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -44,7 +39,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -63,9 +57,7 @@ import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.HelpActivity;
 import io.github.muntashirakon.AppManager.misc.LabsActivity;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
-import io.github.muntashirakon.AppManager.profiles.AppsProfileActivity;
-import io.github.muntashirakon.AppManager.profiles.ProfileManager;
-import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
+import io.github.muntashirakon.AppManager.profiles.AddToProfileDialogFragment;
 import io.github.muntashirakon.AppManager.profiles.ProfilesActivity;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
@@ -80,11 +72,9 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.AlertDialogBuilder;
-import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
-import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
 import io.github.muntashirakon.util.UiUtils;
@@ -437,49 +427,9 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         } else if (id == R.id.action_uninstall) {
             handleBatchOpWithWarning(BatchOpsManager.OP_UNINSTALL);
         } else if (id == R.id.action_add_to_profile) {
-            List<ProfileMetaManager> profiles = ProfileManager.getProfileMetadata();
-            List<CharSequence> profileNames = new ArrayList<>(profiles.size());
-            for (ProfileMetaManager profileMetaManager : profiles) {
-                profileNames.add(new SpannableStringBuilder(profileMetaManager.getProfileName()).append("\n")
-                        .append(getSecondaryText(this, getSmallerText(profileMetaManager.toLocalizedString(this)))));
-            }
-            AtomicReference<AlertDialog> dialogRef = new AtomicReference<>();
-            DialogTitleBuilder titleBuilder = new DialogTitleBuilder(this)
-                    .setTitle(R.string.add_to_profile)
-                    .setEndIconContentDescription(R.string.new_profile)
-                    .setEndIcon(R.drawable.ic_add, v -> new TextInputDialogBuilder(this, R.string.input_profile_name)
-                            .setTitle(R.string.new_profile)
-                            .setHelperText(R.string.input_profile_name_description)
-                            .setNegativeButton(R.string.cancel, null)
-                            .setPositiveButton(R.string.go, (dialog, which, profName, isChecked) -> {
-                                if (!TextUtils.isEmpty(profName)) {
-                                    //noinspection ConstantConditions
-                                    startActivity(AppsProfileActivity.getNewProfileIntent(this, profName.toString(),
-                                            viewModel.getSelectedPackages().keySet().toArray(new String[0])));
-                                    mMultiSelectionView.cancel();
-                                    if (dialogRef.get() != null) {
-                                        dialogRef.get().dismiss();
-                                    }
-                                }
-                            })
-                            .show());
-            AlertDialog alertDialog = new SearchableMultiChoiceDialogBuilder<>(this, profiles, profileNames)
-                    .setTitle(titleBuilder.build())
-                    .setNegativeButton(R.string.cancel, null)
-                    .setPositiveButton(R.string.add, (dialog, which, selectedItems) -> {
-                        for (ProfileMetaManager metaManager : selectedItems) {
-                            try {
-                                metaManager.appendPackages(viewModel.getSelectedPackages().keySet());
-                                metaManager.writeProfile();
-                            } catch (Throwable e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        UIUtils.displayShortToast(R.string.done);
-                    })
-                    .create();
-            dialogRef.set(alertDialog);
-            alertDialog.show();
+            AddToProfileDialogFragment dialog = AddToProfileDialogFragment.getInstance(viewModel.getSelectedPackages()
+                    .keySet().toArray(new String[0]));
+            dialog.show(getSupportFragmentManager(), AddToProfileDialogFragment.TAG);
         } else {
             return false;
         }
