@@ -43,6 +43,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
@@ -336,7 +337,7 @@ public class TBConverter extends Converter {
                 String fileName = inTarEntry.getName();
                 boolean isExternal = fileName.startsWith(EXTERNAL_PREFIX);
                 // Get new file name
-                fileName = fileName.replaceFirst((isExternal ? EXTERNAL_PREFIX : INTERNAL_PREFIX) + mPackageName + "/\\./", "");
+                fileName = fileName.replaceFirst((isExternal ? EXTERNAL_PREFIX : INTERNAL_PREFIX) + Pattern.quote(mPackageName + "/") + "\\./", "");
                 if (fileName.equals("")) continue;
                 // New tar entry
                 TarArchiveEntry outTarEntry = new TarArchiveEntry(fileName);
