@@ -416,7 +416,7 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
                 + "' before the '" + currSize
                 + "' bytes specified in the header were written");
         }
-        recordsWritten += (currSize / RECORD_SIZE);
+        recordsWritten += (int) (currSize / RECORD_SIZE);
         if (0 != currSize % RECORD_SIZE) {
             recordsWritten++;
         }

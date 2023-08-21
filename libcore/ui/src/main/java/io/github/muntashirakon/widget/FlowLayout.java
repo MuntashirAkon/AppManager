@@ -182,7 +182,7 @@ public class FlowLayout extends ViewGroup {
                 maxChildHeightInRow = childHeight;
             } else {
                 childNumInRow++;
-                rowWidth += childWidth + tmpSpacing;
+                rowWidth += childWidth + (int) tmpSpacing;
                 rowTotalChildWidth += childWidth;
                 maxChildHeightInRow = Math.max(maxChildHeightInRow, childHeight);
             }
@@ -341,7 +341,7 @@ public class FlowLayout extends ViewGroup {
                 int consumedWidth = childWidth + (int) spacing + marginStart + marginEnd;
                 x = x + (isRtl ? -consumedWidth : consumedWidth);
             }
-            y += rowHeight + mAdjustedRowSpacing;
+            y += rowHeight + (int) mAdjustedRowSpacing;
         }
 
         for (int i = childIdx; i < getChildCount(); i++) {

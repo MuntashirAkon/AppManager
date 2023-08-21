@@ -171,7 +171,7 @@ public class SplitInputStream extends InputStream {
                     if (mMarkBuf != null) {
                         // Accumulate data in markBuf
                         System.arraycopy(mBuf, mMarkPos, mMarkBuf, mMarkBufCount, (int) size);
-                        mMarkBufCount += size;
+                        mMarkBufCount += (int) size;
                         // Set markPos to 0 as buffer will refill
                         mMarkPos = 0;
                     }
