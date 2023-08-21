@@ -163,7 +163,7 @@ public final class DataTransmission implements Closeable {
     public void shakeHands(@NonNull String token, Role role) throws IOException {
         Objects.requireNonNull(token);
         if (role == Role.Server) {
-            FLog.log("DataTransmission#shakeHands: Token: " + token + ", Server protocol: " + PROTOCOL_VERSION);
+            FLog.log("DataTransmission#shakeHands: Server protocol: " + PROTOCOL_VERSION);
             String auth = new String(readMessage());  // <protocol-version>,<token>
             FLog.log("Received authentication: " + auth);
             String[] split = auth.split(",");
@@ -183,7 +183,7 @@ public final class DataTransmission implements Closeable {
                         "Server protocol version: " + PROTOCOL_VERSION);
             }
         } else if (role == Role.Client) {
-            Log.e("DataTransmission", "shakeHands: Token: " + token + ", Client protocol: " + PROTOCOL_VERSION);
+            Log.e("DataTransmission", "shakeHands: Client protocol: " + PROTOCOL_VERSION);
             sendMessage(PROTOCOL_VERSION + "," + token);
         }
     }
