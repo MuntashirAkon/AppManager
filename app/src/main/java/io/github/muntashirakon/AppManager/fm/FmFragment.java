@@ -587,7 +587,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             return;
         }
         // relative path
-        String goodPath = Paths.getSanitizedPath(p, false);
+        String goodPath = Paths.sanitize(p, false);
         if (goodPath == null) {
             // No relative path means current path which is already loaded
             return;

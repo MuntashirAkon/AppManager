@@ -65,7 +65,7 @@ public final class ApkUtils {
         synchronized (sLock) {
             ApplicationInfo info = packageInfo.applicationInfo;
             PackageManager pm = ctx.getPackageManager();
-            String outputName = FileUtils.getSanitizedFileName(info.loadLabel(pm).toString() + "_" +
+            String outputName = FileUtils.getSanitizedFilename(info.loadLabel(pm).toString() + "_" +
                     packageInfo.versionName, false);
             if (outputName == null) outputName = info.packageName;
             Path tmpPublicSource;
@@ -95,7 +95,7 @@ public final class ApkUtils {
                 MATCH_UNINSTALLED_PACKAGES | PackageManager.GET_SHARED_LIBRARY_FILES
                         | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle);
         ApplicationInfo info = packageInfo.applicationInfo;
-        String outputName = FileUtils.getSanitizedFileName(getFormattedApkFilename(ctx, packageInfo, pm), false);
+        String outputName = FileUtils.getSanitizedFilename(getFormattedApkFilename(ctx, packageInfo, pm), false);
         if (outputName == null) outputName = packageName;
         Path apkFile;
         if (isSplitApk(info) || hasObbFiles(packageName, userHandle)) {

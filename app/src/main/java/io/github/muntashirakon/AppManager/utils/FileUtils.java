@@ -55,13 +55,13 @@ public final class FileUtils {
 
     @AnyThread
     @NonNull
-    public static String getFileNameFromZipEntry(@NonNull ZipEntry zipEntry) {
+    public static String getFilenameFromZipEntry(@NonNull ZipEntry zipEntry) {
         return Paths.getLastPathSegment(zipEntry.getName());
     }
 
     @AnyThread
     @Nullable
-    public static String getSanitizedFileName(@NonNull String fileName, boolean replaceSpace) {
+    public static String getSanitizedFilename(@NonNull String fileName, boolean replaceSpace) {
         if (fileName.equals(".") || fileName.equals("..")) {
             return null;
         }

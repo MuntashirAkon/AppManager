@@ -120,7 +120,7 @@ final class LocalFileOverlay {
 
     @Nullable
     public static ExtendedFile getOverlayFileOrNull(@NonNull ExtendedFile file) {
-        String path = Paths.getSanitizedPath(file.getAbsolutePath(), false);
+        String path = Paths.sanitize(file.getAbsolutePath(), false);
         if (path == null) {
             return null;
         }
@@ -141,7 +141,7 @@ final class LocalFileOverlay {
 
     @Nullable
     public static String[] listChildren(@NonNull File file) {
-        return listChildrenInternal(Paths.getSanitizedPath(file.getAbsolutePath(), false));
+        return listChildrenInternal(Paths.sanitize(file.getAbsolutePath(), false));
     }
 
     @Nullable

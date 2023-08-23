@@ -363,7 +363,7 @@ public final class ApkFile implements AutoCloseable {
             while (zipEntries.hasMoreElements()) {
                 ZipEntry zipEntry = zipEntries.nextElement();
                 if (zipEntry.isDirectory()) continue;
-                String fileName = FileUtils.getFileNameFromZipEntry(zipEntry);
+                String fileName = FileUtils.getFilenameFromZipEntry(zipEntry);
                 if (fileName.endsWith(".apk")) { // APK is more likely to match
                     try (InputStream zipInputStream = mZipFile.getInputStream(zipEntry)) {
                         // Get manifest attributes
@@ -539,7 +539,7 @@ public final class ApkFile implements AutoCloseable {
     public void extractObb(Path writableObbDir) throws IOException {
         if (!hasObb() || mZipFile == null) return;
         for (ZipEntry obbEntry : mObbFiles) {
-            String fileName = FileUtils.getFileNameFromZipEntry(obbEntry);
+            String fileName = FileUtils.getFilenameFromZipEntry(obbEntry);
             Path obbDir = writableObbDir.findOrCreateFile(fileName, null);
             // Extract obb file to the destination directory
             try (InputStream zipInputStream = mZipFile.getInputStream(obbEntry);
@@ -746,7 +746,7 @@ public final class ApkFile implements AutoCloseable {
         @NonNull
         public String getFileName() {
             if (Paths.exists(mCachedFile)) return mCachedFile.getName();
-            if (mZipEntry != null) return FileUtils.getFileNameFromZipEntry(mZipEntry);
+            if (mZipEntry != null) return FileUtils.getFilenameFromZipEntry(mZipEntry);
             if (Paths.exists(mSource)) return mSource.getName();
             else throw new RuntimeException("Neither zipEntry nor source is defined.");
         }

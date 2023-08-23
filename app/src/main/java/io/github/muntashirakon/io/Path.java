@@ -215,7 +215,7 @@ public class Path implements Comparable<Path> {
                 if (parsedUri != null) {
                     Path rootPath = VirtualFileSystem.getFsRoot(parsedUri.first);
                     if (rootPath != null) {
-                        String path = Paths.getSanitizedPath(parsedUri.second, true);
+                        String path = Paths.sanitize(parsedUri.second, true);
                         if (TextUtils.isEmpty(path) || path.equals(File.separator)) {
                             // Root requested
                             documentFile = rootPath.mDocumentFile;
@@ -443,7 +443,7 @@ public class Path implements Comparable<Path> {
      */
     @NonNull
     public Path createNewFile(@NonNull String displayName, @Nullable String mimeType) throws IOException {
-        displayName = Paths.getSanitizedPath(displayName, true);
+        displayName = Paths.sanitize(displayName, true);
         if (displayName == null) {
             throw new IOException("Empty display name.");
         }
@@ -462,7 +462,7 @@ public class Path implements Comparable<Path> {
      */
     @NonNull
     public Path createNewDirectory(@NonNull String displayName) throws IOException {
-        displayName = Paths.getSanitizedPath(displayName, true);
+        displayName = Paths.sanitize(displayName, true);
         if (displayName == null) {
             throw new IOException("Empty display name.");
         }
@@ -497,7 +497,7 @@ public class Path implements Comparable<Path> {
      */
     @NonNull
     public Path createNewArbitraryFile(@NonNull String displayName, @Nullable String mimeType) throws IOException {
-        displayName = Paths.getSanitizedPath(displayName, true);
+        displayName = Paths.sanitize(displayName, true);
         if (displayName == null) {
             throw new IOException("Empty display name.");
         }
@@ -526,7 +526,7 @@ public class Path implements Comparable<Path> {
      */
     @NonNull
     public Path createDirectoriesIfRequired(@NonNull String displayName) throws IOException {
-        displayName = Paths.getSanitizedPath(displayName, true);
+        displayName = Paths.sanitize(displayName, true);
         if (displayName == null) {
             throw new IOException("Empty display name.");
         }
@@ -554,7 +554,7 @@ public class Path implements Comparable<Path> {
      */
     @NonNull
     public Path createDirectories(@NonNull String displayName) throws IOException {
-        displayName = Paths.getSanitizedPath(displayName, true);
+        displayName = Paths.sanitize(displayName, true);
         if (displayName == null) {
             throw new IOException("Empty display name.");
         }
@@ -653,7 +653,7 @@ public class Path implements Comparable<Path> {
      */
     @NonNull
     public Path findOrCreateFile(@NonNull String displayName, @Nullable String mimeType) throws IOException {
-        displayName = Paths.getSanitizedPath(displayName, true);
+        displayName = Paths.sanitize(displayName, true);
         if (displayName == null) {
             throw new IOException("Empty display name.");
         }
@@ -698,7 +698,7 @@ public class Path implements Comparable<Path> {
      */
     @NonNull
     public Path findOrCreateDirectory(@NonNull String displayName) throws IOException {
-        displayName = Paths.getSanitizedPath(displayName, true);
+        displayName = Paths.sanitize(displayName, true);
         if (displayName == null) {
             throw new IOException("Empty display name.");
         }
@@ -977,7 +977,7 @@ public class Path implements Comparable<Path> {
      * @throws UnsupportedOperationException when working with a single document
      */
     public boolean renameTo(@NonNull String displayName) {
-        displayName = Paths.getSanitizedPath(displayName, true);
+        displayName = Paths.sanitize(displayName, true);
         if (displayName == null) {
             // Empty display name
             return false;
@@ -1712,7 +1712,7 @@ public class Path implements Comparable<Path> {
 
     @Nullable
     private static DocumentFile findFileInternal(@NonNull DocumentFile documentFile, @NonNull String dirtyDisplayName) {
-        String displayName = Paths.getSanitizedPath(dirtyDisplayName, true);
+        String displayName = Paths.sanitize(dirtyDisplayName, true);
         if (displayName == null) {
             // Empty display name
             return null;

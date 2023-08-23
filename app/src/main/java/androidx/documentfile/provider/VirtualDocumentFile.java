@@ -218,7 +218,7 @@ public class VirtualDocumentFile extends DocumentFile {
     @Nullable
     @Override
     public VirtualDocumentFile findFile(@NonNull String displayName) {
-        displayName =  Paths.getSanitizedPath(displayName, true);
+        displayName =  Paths.sanitize(displayName, true);
         if (displayName == null || displayName.contains(File.separator)) {
             return null;
         }

@@ -6,8 +6,82 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
+@RunWith(RobolectricTestRunner.class)
 public class PathsTest {
+
+    @Test
+    public void sanitizePath() {
+        assertNull(Paths.sanitize("", false));
+        assertEquals("/", Paths.sanitize("/", false));
+        assertEquals("/", Paths.sanitize("//", false));
+        assertEquals("/", Paths.sanitize("///", false));
+        assertEquals("/a", Paths.sanitize("/a/", false));
+        assertEquals("/a", Paths.sanitize("//a//", false));
+        assertEquals("/a", Paths.sanitize("///a///", false));
+        assertEquals("/a/b/c", Paths.sanitize("/a/b/c", false));
+        assertEquals("/a/b/c", Paths.sanitize("/a/b//c", false));
+        assertEquals("/a/b/c", Paths.sanitize("/a/b///c", false));
+        assertEquals("/a/b/c", Paths.sanitize("/a/b/c/", false));
+        assertEquals("/a/b/c", Paths.sanitize("/a/b/c//", false));
+        assertEquals("/a/b/c", Paths.sanitize("/a/b/c///", false));
+        assertEquals("a/b/c", Paths.sanitize("././a/./b/c/./", false));
+        assertEquals("/a/b/c", Paths.sanitize("/a/b/c/.", false));
+        assertEquals("/a/b/c/..", Paths.sanitize("/a/b/c/..", false));
+        assertEquals("/a/b/c/..", Paths.sanitize("/a/b/c/../", false));
+        assertEquals("/ab/bc/ca/..", Paths.sanitize("/ab/bc/ca/..//", false));
+    }
+
+    @Test
+    public void sanitizePathOmitRoot() {
+        assertNull(Paths.sanitize("", true));
+        assertEquals("/", Paths.sanitize("/", true));
+        assertEquals("/", Paths.sanitize("//", true));
+        assertEquals("/", Paths.sanitize("///", true));
+        assertEquals("a", Paths.sanitize("a/", true));
+        assertEquals("a", Paths.sanitize("a//", true));
+        assertEquals("a", Paths.sanitize("a///", true));
+        assertEquals("a/b/c", Paths.sanitize("a/b/c", true));
+        assertEquals("a/b/c", Paths.sanitize("a/b//c", true));
+        assertEquals("a/b/c", Paths.sanitize("a/b///c", true));
+        assertEquals("a/b/c", Paths.sanitize("a/b/c/", true));
+        assertEquals("a/b/c", Paths.sanitize("a/b/c//", true));
+        assertEquals("a/b/c", Paths.sanitize("a/b/c///", true));
+        assertEquals("a/b/c", Paths.sanitize("./a/./b/c/./", true));
+        assertEquals("a/b/c", Paths.sanitize("a/b/c/.", true));
+        assertEquals("a/b/c/..", Paths.sanitize("a/b/c/..", true));
+        assertEquals("a/b/c/..", Paths.sanitize("a/b/c/../", true));
+        assertEquals("a/b/c/..", Paths.sanitize("a/b/c/..//", true));
+    }
+
+
+    @Test
+    public void normalizePath() {
+        assertNull(Paths.normalize(""));
+        assertEquals("/", Paths.normalize("/"));
+        assertEquals("/", Paths.normalize("//"));
+        assertEquals("/", Paths.normalize("///"));
+        assertEquals("/a", Paths.normalize("/a/"));
+        assertEquals("/a", Paths.normalize("//a//"));
+        assertEquals("/a", Paths.normalize("///a///"));
+        assertEquals("/a", Paths.normalize("/../a"));
+        assertEquals("/b", Paths.normalize("/a/../../../b"));
+        assertEquals("../a", Paths.normalize("../a"));
+        assertEquals("../../b", Paths.normalize("a/../../../b"));
+        assertEquals("/a/b/c", Paths.normalize("/a/b/c"));
+        assertEquals("/a/b/c", Paths.normalize("/a/b//c"));
+        assertEquals("/a/b/c", Paths.normalize("/a/b///c"));
+        assertEquals("/a/b/c", Paths.normalize("/a/b/c/"));
+        assertEquals("/a/b/c", Paths.normalize("/a/b/c//"));
+        assertEquals("/a/b/c", Paths.normalize("/a/b/c///"));
+        assertEquals("a/b/c", Paths.normalize("././a/./b/c/./"));
+        assertEquals("/a/b/c", Paths.normalize("/a/b/c/."));
+        assertEquals("/a/b", Paths.normalize("/a/b/c/.."));
+        assertEquals("/a/b", Paths.normalize("/a/b/c/../"));
+        assertEquals("/ab/bc", Paths.normalize("/ab/bc/ca/..//"));
+    }
 
     @Test
     public void getLastPathSegment() {
@@ -24,10 +98,12 @@ public class PathsTest {
         assertEquals("c", Paths.getLastPathSegment("a/b/c/"));
         assertEquals("c", Paths.getLastPathSegment("a/b/c//"));
         assertEquals("c", Paths.getLastPathSegment("a/b/c///"));
-        assertEquals(".", Paths.getLastPathSegment("a/b/c/."));
-        assertEquals("..", Paths.getLastPathSegment("a/b/c/.."));
-        assertEquals("..", Paths.getLastPathSegment("a/b/c/../"));
-        assertEquals("..", Paths.getLastPathSegment("a/b/c/..//"));
+        assertEquals("c", Paths.getLastPathSegment("a/b/c/."));
+        assertEquals("", Paths.getLastPathSegment("a/b/c/.."));
+        assertEquals("", Paths.getLastPathSegment("a/b/c/../"));
+        assertEquals("d", Paths.getLastPathSegment("a/b/c/../d"));
+        assertEquals("c", Paths.getLastPathSegment("../a/b/c"));
+        assertEquals("c", Paths.getLastPathSegment("/../a/b/c"));
         assertEquals("ewrjpoewiwfjfpwrejtp", Paths.getLastPathSegment("asdkjrejvncnmiet/eru43jffn/ewrjpoewiwfjfpwrejtp"));
         assertEquals("ewrjpoewiwfjfpwrejtp", Paths.getLastPathSegment("asdkjrejvncnmiet/eru43jffn/ewrjpoewiwfjfpwrejtp/"));
     }
@@ -41,9 +117,13 @@ public class PathsTest {
         assertEquals("", Paths.removeLastPathSegment(".ext"));
         assertEquals("/", Paths.removeLastPathSegment("/.ext"));
         assertEquals("", Paths.removeLastPathSegment("a/"));
-        assertEquals("a/b", Paths.removeLastPathSegment("a/b/."));
-        assertEquals("a/b", Paths.removeLastPathSegment("a/b//."));
-        assertEquals("a/b", Paths.removeLastPathSegment("a/b/.."));
+        assertEquals("a", Paths.removeLastPathSegment("a/b/."));
+        assertEquals("a", Paths.removeLastPathSegment("a/b//."));
+        assertEquals("a/b/..", Paths.removeLastPathSegment("a/b/.."));
+        assertEquals("a/b/../..", Paths.removeLastPathSegment("a/b/../.."));
+        assertEquals("..", Paths.removeLastPathSegment("../"));
+        assertEquals("../a", Paths.removeLastPathSegment("../a/b"));
+        assertEquals("/../a", Paths.removeLastPathSegment("/../a/b"));
         assertEquals("a", Paths.removeLastPathSegment("a/b/"));
         assertEquals("a", Paths.removeLastPathSegment("a/b.c"));
         assertEquals("a", Paths.removeLastPathSegment("a/b.c/"));
@@ -61,26 +141,26 @@ public class PathsTest {
         assertEquals("/", Paths.appendPathSegment("/", "/"));
         assertEquals("/a", Paths.appendPathSegment("/", "a"));
         assertEquals("/a", Paths.appendPathSegment("/", "/a"));
-        assertEquals("/a/", Paths.appendPathSegment("/", "a/"));
-        assertEquals("/a/", Paths.appendPathSegment("/", "/a/"));
+        assertEquals("/a", Paths.appendPathSegment("/", "a/"));
+        assertEquals("/a", Paths.appendPathSegment("/", "/a/"));
         assertEquals("/a/b/c/d", Paths.appendPathSegment("/a/b/c", "d"));
         assertEquals("/a/b/c/d", Paths.appendPathSegment("/a/b/c/", "d"));
         assertEquals("/a/b/c/d", Paths.appendPathSegment("/a/b/c/", "/d"));
-        assertEquals("/a/b/c/d/", Paths.appendPathSegment("/a/b/c/", "/d/"));
+        assertEquals("/a/b/c/d", Paths.appendPathSegment("/a/b/c/", "/d/"));
     }
 
     @Test
     public void trimPathExtension() {
         assertEquals("", Paths.trimPathExtension(""));
         assertEquals("/", Paths.trimPathExtension("/"));
-        assertEquals("/.", Paths.trimPathExtension("/."));
+        assertEquals("/", Paths.trimPathExtension("/."));
         assertEquals(".ext", Paths.trimPathExtension(".ext"));
         assertEquals("/.ext", Paths.trimPathExtension("/.ext"));
-        assertEquals("a/", Paths.trimPathExtension("a/"));
-        assertEquals("a/b/.", Paths.trimPathExtension("a/b/."));
+        assertEquals("a", Paths.trimPathExtension("a/"));
+        assertEquals("a/b", Paths.trimPathExtension("a/b/."));
         assertEquals("a/b/..", Paths.trimPathExtension("a/b/.."));
-        assertEquals("a/b/", Paths.trimPathExtension("a/b/"));
-        assertEquals("a/b/", Paths.trimPathExtension("a/b/"));
+        assertEquals("a/b", Paths.trimPathExtension("a/b/"));
+        assertEquals("a/b", Paths.trimPathExtension("a/b/"));
         assertEquals("a/b", Paths.trimPathExtension("a/b.c"));
         assertEquals("a/b", Paths.trimPathExtension("a/b.c/"));
         assertEquals("a/b.c/d", Paths.trimPathExtension("a/b.c/d"));

@@ -1227,7 +1227,7 @@ public abstract class VirtualFileSystem {
         @Nullable
         private static <T> Node<T> getLastNode(@NonNull Node<T> baseNode, @Nullable String dirtyPath) {
             if (dirtyPath == null) return baseNode;
-            String path = Paths.getSanitizedPath(dirtyPath, true);
+            String path = Paths.sanitize(dirtyPath, true);
             if (path == null) {
                 return baseNode;
             }

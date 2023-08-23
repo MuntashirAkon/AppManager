@@ -78,14 +78,18 @@ public final class TarUtils {
         try (SplitOutputStream sos = new SplitOutputStream(dest, destFilePrefix, splitSize == null ? DEFAULT_SPLIT_SIZE : splitSize);
              BufferedOutputStream bos = new BufferedOutputStream(sos)) {
             OutputStream os;
-            if (TAR_GZIP.equals(type)) {
-                os = new GzipCompressorOutputStream(bos);
-            } else if (TAR_BZIP2.equals(type)) {
-                os = new BZip2CompressorOutputStream(bos);
-            } else if (TAR_ZSTD.equals(type)) {
-                os = new ZstdOutputStream(bos);
-            } else {
-                throw new IllegalArgumentException("Invalid compression type: " + type);
+            switch (type) {
+                case TAR_GZIP:
+                    os = new GzipCompressorOutputStream(bos);
+                    break;
+                case TAR_BZIP2:
+                    os = new BZip2CompressorOutputStream(bos);
+                    break;
+                case TAR_ZSTD:
+                    os = new ZstdOutputStream(bos);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid compression type: " + type);
             }
             try (TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
@@ -158,23 +162,34 @@ public final class TarUtils {
         try (SplitInputStream sis = new SplitInputStream(sources);
              BufferedInputStream bis = new BufferedInputStream(sis)) {
             InputStream is;
-            if (TAR_GZIP.equals(type)) {
-                is = new GzipCompressorInputStream(bis, true);
-            } else if (TAR_BZIP2.equals(type)) {
-                is = new BZip2CompressorInputStream(bis, true);
-            } else if (TAR_ZSTD.equals(type)) {
-                is = new ZstdInputStream(bis);
-            } else {
-                throw new IllegalArgumentException("Invalid compression type: " + type);
+            switch (type) {
+                case TAR_GZIP:
+                    is = new GzipCompressorInputStream(bis, true);
+                    break;
+                case TAR_BZIP2:
+                    is = new BZip2CompressorInputStream(bis, true);
+                    break;
+                case TAR_ZSTD:
+                    is = new ZstdInputStream(bis);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid compression type: " + type);
             }
             try (TarArchiveInputStream tis = new TarArchiveInputStream(is)) {
                 String realDestPath = dest.getRealFilePath();
                 TarArchiveEntry entry;
                 while ((entry = tis.getNextEntry()) != null) {
+                    String filename = Paths.normalize(entry.getName());
+                    // Early zip slip vulnerability check to avoid creating any files at all
+                    if (filename == null || filename.startsWith("../")) {
+                        throw new IOException("Zip slip vulnerability detected!" +
+                                "\nExpected dest: " + new File(realDestPath, entry.getName()) +
+                                "\nActual path: " + (filename != null ? new File(realDestPath, filename) : realDestPath));
+                    }
                     Path file;
                     if (entry.isDirectory()) {
-                        file = dest.createDirectoriesIfRequired(entry.getName());
-                    } else file = dest.createNewArbitraryFile(entry.getName(), null);
+                        file = dest.createDirectoriesIfRequired(filename);
+                    } else file = dest.createNewArbitraryFile(filename, null);
                     if (!entry.isDirectory() && (!Paths.isUnderFilter(file, dest, filterPatterns)
                             || Paths.willExclude(file, dest, exclusionPatterns))) {
                         // Unlike create, there's no efficient way to detect if a directory contains any filters.
@@ -201,7 +216,7 @@ public final class TarUtils {
                         }
                         continue;  // links do not need permission fixes
                     } else {
-                        // Zip slip vulnerability check
+                        // Zip slip vulnerability might still be present
                         String realFilePath = file.getRealFilePath();
                         if (realDestPath != null && realFilePath != null && !realFilePath.startsWith(realDestPath)) {
                             throw new IOException("Zip slip vulnerability detected!" +

@@ -109,7 +109,7 @@ public class FileCache implements Closeable {
     @NonNull
     public File createCachedDir(@Nullable String prefix) {
         if (prefix != null) {
-            prefix = Paths.getSanitizedPath(prefix, true);
+            prefix = Paths.sanitize(prefix, true);
         }
         if (prefix == null) {
             prefix = "folder";

@@ -413,7 +413,7 @@ public class SBConverter extends Converter {
             ZipEntry zipEntry;
             while ((zipEntry = zis.getNextEntry()) != null) {
                 if (zipEntry.isDirectory()) continue;
-                String splitName = new File(zipEntry.getName()).getName();
+                String splitName = FileUtils.getFilenameFromZipEntry(zipEntry);
                 splits.add(splitName);
                 Path file = Objects.requireNonNull(mCachedApk.getParentFile()).findOrCreateFile(splitName, null);
                 try (OutputStream fos = file.openOutputStream()) {
