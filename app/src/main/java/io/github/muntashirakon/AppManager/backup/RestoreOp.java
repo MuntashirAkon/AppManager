@@ -184,7 +184,7 @@ class RestoreOp implements Closeable {
         Log.d(TAG, "Close called");
         mCrypto.close();
         for (Path file : mDecryptedFiles) {
-            Log.d(TAG, "Deleting " + file);
+            Log.d(TAG, "Deleting %s", file);
             file.delete();
         }
     }

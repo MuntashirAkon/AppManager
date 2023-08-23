@@ -26,7 +26,7 @@ public class ServerStatusChangeReceiver extends BroadcastReceiver {
         String token = intent.getStringExtra(ConfigParams.PARAM_TOKEN);
         if (ServerConfig.getLocalToken().equals(token)) {
             String type = intent.getStringExtra(ConfigParams.PARAM_TYPE);
-            Log.d(TAG, "onReceive --> " + action + "   " + token + "  " + type);
+            Log.d(TAG, "onReceive --> %s %s", action, type);
 
             switch (action) {
                 case ServerActions.ACTION_SERVER_STARTED:

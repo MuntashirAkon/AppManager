@@ -662,7 +662,7 @@ public class AppOpsManagerCompat {
             try {
                 addAllRelevantOpEntriesWithNoOverride(opEntries, mAppOpsService.getUidOps(uid, ops));
             } catch (NullPointerException e) {
-                Log.e("AppOpsManagerCompat", "Could not get app ops for UID " + uid, e);
+                Log.e("AppOpsManagerCompat", "Could not get app ops for UID %d", e, uid);
             }
         }
         addAllRelevantOpEntriesWithNoOverride(opEntries, mAppOpsService.getOpsForPackage(uid, packageName, ops));

@@ -181,7 +181,7 @@ public class AESCrypto implements Crypto {
             } else outputFilename = inputPath.getName() + ext;
             Path outputPath = parent.createNewFile(outputFilename, null);
             mNewFiles.add(outputPath);
-            Log.i(TAG, "Input: " + inputPath + "\nOutput: " + outputPath);
+            Log.i(TAG, "Input: %s\nOutput: %s", inputPath, outputPath);
             try (InputStream is = inputPath.openInputStream();
                  OutputStream os = outputPath.openOutputStream()) {
                 if (forEncryption) {

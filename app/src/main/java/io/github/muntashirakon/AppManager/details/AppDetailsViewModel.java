@@ -152,7 +152,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @GuardedBy("blockerLocker")
     @Override
     public void onCleared() {
-        Log.d(TAG, "On Clear called for " + mPackageName);
+        Log.d(TAG, "On Clear called for %s", mPackageName);
         super.onCleared();
         mExecutor.submit(() -> {
             synchronized (mBlockerLocker) {
@@ -238,7 +238,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @GuardedBy("blockerLocker")
     private void setPackageName(String packageName) {
         if (mPackageName != null) return;
-        Log.d(TAG, "Package name is being set for " + packageName);
+        Log.d(TAG, "Package name is being set for %s", packageName);
         mPackageName = packageName;
         if (mExternalApk) return;
         mExecutor.submit(() -> {
@@ -609,10 +609,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (packageInfo == null) return false;
         try {
             if (!permissionItem.isGranted()) {
-                Log.d(TAG, "Granting permission: " + permissionItem.name);
+                Log.d(TAG, "Granting permission: %s", permissionItem.name);
                 permissionItem.grantPermission(packageInfo, mAppOpsManager);
             } else {
-                Log.d(TAG, "Revoking permission: " + permissionItem.name);
+                Log.d(TAG, "Revoking permission: %s", permissionItem.name);
                 permissionItem.revokePermission(packageInfo, mAppOpsManager);
             }
         } catch (RemoteException | PermissionException e) {
@@ -1063,7 +1063,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     throw new PackageManager.NameNotFoundException("Package cannot be parsed");
                 }
                 if (mInstalledPackageInfo == null) {
-                    Log.d(TAG, mPackageName + " not installed for user " + mUserId);
+                    Log.d(TAG, "%s not installed for user %d", mPackageName, mUserId);
                 }
                 mPackageInfo.applicationInfo.sourceDir = mApkPath;
                 mPackageInfo.applicationInfo.publicSourceDir = mApkPath;
@@ -1496,7 +1496,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(permissionName,
                     packageInfo.packageName, PackageManager.GET_META_DATA);
             if (permissionInfo == null) {
-                Log.d(TAG, "Couldn't fetch info for permission " + permissionName);
+                Log.d(TAG, "Couldn't fetch info for permission %s", permissionName);
                 permissionInfo = new PermissionInfo();
                 permissionInfo.name = permissionName;
             }
@@ -1564,7 +1564,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                             PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(activityInfo.permission,
                                     packageInfo.packageName, PackageManager.GET_META_DATA);
                             if (permissionInfo == null) {
-                                Log.d(TAG, "Couldn't fetch info for permission " + activityInfo.permission);
+                                Log.d(TAG, "Couldn't fetch info for permission %s", activityInfo.permission);
                                 permissionInfo = new PermissionInfo();
                                 permissionInfo.name = activityInfo.permission;
                             }
@@ -1585,7 +1585,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                             PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(serviceInfo.permission,
                                     packageInfo.packageName, PackageManager.GET_META_DATA);
                             if (permissionInfo == null) {
-                                Log.d(TAG, "Couldn't fetch info for permission " + serviceInfo.permission);
+                                Log.d(TAG, "Couldn't fetch info for permission %s", serviceInfo.permission);
                                 permissionInfo = new PermissionInfo();
                                 permissionInfo.name = serviceInfo.permission;
                             }
@@ -1606,7 +1606,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                             PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(providerInfo.readPermission,
                                     packageInfo.packageName, PackageManager.GET_META_DATA);
                             if (permissionInfo == null) {
-                                Log.d(TAG, "Couldn't fetch info for permission " + providerInfo.readPermission);
+                                Log.d(TAG, "Couldn't fetch info for permission %s", providerInfo.readPermission);
                                 permissionInfo = new PermissionInfo();
                                 permissionInfo.name = providerInfo.readPermission;
                             }
@@ -1623,7 +1623,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                             PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(providerInfo.writePermission,
                                     packageInfo.packageName, PackageManager.GET_META_DATA);
                             if (permissionInfo == null) {
-                                Log.d(TAG, "Couldn't fetch info for permission " + providerInfo.writePermission);
+                                Log.d(TAG, "Couldn't fetch info for permission %s", providerInfo.writePermission);
                                 permissionInfo = new PermissionInfo();
                                 permissionInfo.name = providerInfo.writePermission;
                             }
@@ -1644,7 +1644,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                             PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(activityInfo.permission,
                                     packageInfo.packageName, PackageManager.GET_META_DATA);
                             if (permissionInfo == null) {
-                                Log.d(TAG, "Couldn't fetch info for permission " + activityInfo.permission);
+                                Log.d(TAG, "Couldn't fetch info for permission %s", activityInfo.permission);
                                 permissionInfo = new PermissionInfo();
                                 permissionInfo.name = activityInfo.permission;
                             }

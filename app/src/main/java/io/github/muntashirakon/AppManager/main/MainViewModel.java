@@ -580,7 +580,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
 
     @WorkerThread
     private void updateInfoForUid(int uid, String action) {
-        Log.d("updateInfoForUid", "Uid: " + uid);
+        Log.d("updateInfoForUid", "Uid: %d", uid);
         String[] packages;
         if (Intent.ACTION_PACKAGE_REMOVED.equals(action)) packages = getPackagesForUid(uid);
         else packages = mPackageManager.getPackagesForUid(uid);
@@ -589,7 +589,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
 
     @WorkerThread
     private void updateInfoForPackages(@Nullable String[] packages, @NonNull String action) {
-        Log.d("updateInfoForPackages", "packages: " + Arrays.toString(packages));
+        Log.d("updateInfoForPackages", "packages: %s", Arrays.toString(packages));
         if (packages == null || packages.length == 0) return;
         boolean modified = false;
         switch (action) {

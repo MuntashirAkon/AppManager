@@ -188,7 +188,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             triggerCancel();
             return;
         }
-        Log.d(TAG, "On create, intent: " + intent);
+        Log.d(TAG, "On create, intent: %s", intent);
         if (ACTION_PACKAGE_INSTALLED.equals(intent.getAction())) {
             onNewIntent(intent);
             return;
@@ -372,7 +372,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.d(TAG, "New intent called: " + intent.toString());
+        Log.d(TAG, "New intent called: %s", intent);
         // Check for action first
         if (ACTION_PACKAGE_INSTALLED.equals(intent.getAction())) {
             mSessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
@@ -380,7 +380,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             Intent confirmIntent = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_INTENT, Intent.class);
             try {
                 if (mPackageName == null || confirmIntent == null) throw new Exception("Empty confirmation intent.");
-                Log.d(TAG, "Requesting user confirmation for package " + mPackageName);
+                Log.d(TAG, "Requesting user confirmation for package %s", mPackageName);
                 mConfirmIntentLauncher.launch(confirmIntent);
             } catch (Exception e) {
                 e.printStackTrace();

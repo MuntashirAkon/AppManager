@@ -277,7 +277,7 @@ public final class ApkFile implements AutoCloseable {
         // Check type
         if (mimeType == null) mimeType = apkSource.getType();
         if (!SUPPORTED_MIMES.contains(mimeType)) {
-            Log.e(TAG, "Invalid mime: " + mimeType);
+            Log.e(TAG, "Invalid mime: %s", mimeType);
             // Check extension
             if (!SUPPORTED_EXTENSIONS.contains(apkSource.getExtension())) {
                 throw new ApkFileException("Invalid package extension.");
@@ -443,7 +443,7 @@ public final class ApkFile implements AutoCloseable {
             File[] apks = sourceDir.listFiles((dir, name) -> name.endsWith(".apk"));
             if (apks == null) {
                 // Directory might be inaccessible
-                Log.w(TAG, "No apk files found in " + sourceDir.getAbsolutePath() + ". Using default.");
+                Log.w(TAG, "No apk files found in %s. Using default.", sourceDir);
                 List<File> allApks = new ArrayList<>();
                 allApks.add(mCacheFilePath);
                 String[] splits = info.splitPublicSourceDirs;

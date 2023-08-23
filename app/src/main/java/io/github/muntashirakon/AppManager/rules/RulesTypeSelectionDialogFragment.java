@@ -84,7 +84,7 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
                             for (int i : selections) {
                                 mSelectedTypes.add(RULE_TYPES[i]);
                             }
-                            Log.d("TestImportExport", "Types: " + mSelectedTypes.toString() + "\nURI: " + mUri.toString());
+                            Log.d("TestImportExport", "Types: %s\nURI: %s", mSelectedTypes, mUri);
                             if (mActivity instanceof SettingsActivity) {
                                 ((SettingsActivity) mActivity).progressIndicator.show();
                             }

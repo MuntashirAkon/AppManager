@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
@@ -70,7 +69,7 @@ public class BackupManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.d(TAG, String.format(Locale.ROOT, "Package: %s, user: %d", targetPackage.getPackageName(), targetPackage.getUserHandle()));
+        Log.d(TAG, "Package: %s, user: %d", targetPackage.getPackageName(), targetPackage.getUserHandle());
     }
 
     public boolean requiresRestart() {
@@ -124,7 +123,7 @@ public class BackupManager {
                 // Replace illegal characters
                 backupNames[i] = backupNames[i].trim().replaceAll("[\\\\/:?\"<>|\\s]+", "_");  // [\\/:?"<>|\s]
             }
-            Log.e(TAG, "Backup names: " + Arrays.toString(backupNames));
+            Log.e(TAG, "Backup names: %s", Arrays.toString(backupNames));
             return backupNames;
         } else return null; // Overwrite existing backup
     }

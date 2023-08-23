@@ -43,7 +43,7 @@ public class WidgetHelper {
         for (int appWidgetId : appWidgetIds) {
             if (!PreferenceHelper.getWidgetExistsPreference(context, appWidgetId)) {
                 // android has a bug that sometimes keeps stale app widget ids around
-                Log.d("WidgetHelper", "Found stale app widget id " + appWidgetId + "; skipping...");
+                Log.d("WidgetHelper", "Found stale app widget id %d; skipping...", appWidgetId);
                 continue;
             }
             updateWidget(context, manager, appWidgetId, serviceRunning);

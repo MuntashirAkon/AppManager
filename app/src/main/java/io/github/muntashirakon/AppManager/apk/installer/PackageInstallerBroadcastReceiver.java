@@ -41,7 +41,7 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
         Context context = nullableContext != null ? nullableContext : ContextUtils.getContext();
         int status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, -1);
         int sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
-        Log.d(TAG, "Session ID: " + sessionId);
+        Log.d(TAG, "Session ID: %d", sessionId);
         switch (status) {
             case PackageInstaller.STATUS_PENDING_USER_ACTION:
                 Log.d(TAG, "Requesting user confirmation...");
@@ -95,13 +95,14 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
             default:
                 NotificationUtils.cancelInstallConfirmNotification(context, mConfirmNotificationId);
                 Intent broadcastError = new Intent(PackageInstallerCompat.ACTION_INSTALL_COMPLETED);
-                broadcastError.putExtra(PackageInstaller.EXTRA_STATUS_MESSAGE, intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE));
+                String statusMessage = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE);
+                broadcastError.putExtra(PackageInstaller.EXTRA_STATUS_MESSAGE, statusMessage);
                 broadcastError.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, mPackageName);
                 broadcastError.putExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
                 broadcastError.putExtra(PackageInstaller.EXTRA_STATUS, status);
                 broadcastError.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                 context.sendBroadcast(broadcastError);
-                Log.d(TAG, "Install failed! " + intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE));
+                Log.d(TAG, "Install failed! %s", statusMessage);
                 break;
         }
     }

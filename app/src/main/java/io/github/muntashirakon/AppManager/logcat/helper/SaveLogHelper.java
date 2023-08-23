@@ -57,7 +57,7 @@ public class SaveLogHelper {
                         out.println(line);
                     }
                 }
-                Log.d(TAG, "Saved temp file: " + tempFile);
+                Log.d(TAG, "Saved temp file: %s", tempFile);
                 return tempFile;
             }
         } catch (IOException e) {

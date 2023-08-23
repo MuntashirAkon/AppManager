@@ -257,7 +257,7 @@ public class KeyStoreManager {
         // Check existence of this alias in system preferences, this should be unique
         String prefAlias = getPrefAlias(alias);
         if (sSharedPreferences.contains(prefAlias) && mAmKeyStore.containsAlias(alias)) {
-            Log.w(TAG, "Alias " + alias + " exists.");
+            Log.w(TAG, "Alias %s exists.", alias);
             if (isOverride) removeItemInternal(alias);
             else return;
         }
@@ -284,7 +284,7 @@ public class KeyStoreManager {
         String prefAlias = getPrefAlias(alias);
         if (sSharedPreferences.contains(prefAlias) && mAmKeyStore.containsAlias(alias)) {
             if (!isOverride) throw new KeyStoreException("Alias " + alias + " exists.");
-            else Log.w(TAG, "Alias " + alias + " exists.");
+            else Log.w(TAG, "Alias %s exists.", alias);
         }
         char[] password = getAmKeyStorePassword();
         mAmKeyStore.setEntry(alias, new KeyStore.SecretKeyEntry(secretKey), new KeyStore.PasswordProtection(password));
@@ -411,7 +411,7 @@ public class KeyStoreManager {
             byte[] encryptedBytes = Base64.decode(encryptedPass, Base64.NO_WRAP);
             return Utils.bytesToChars(CompatUtil.decryptData(context, encryptedBytes));
         } catch (Exception e) {
-            Log.e("KS", "Could not get decrypted password for " + encryptedPass, e);
+            Log.e("KS", "Could not get decrypted password for %s", e, encryptedPass);
         }
         return null;
     }
@@ -444,7 +444,7 @@ public class KeyStoreManager {
      */
     private KeyStore getAmKeyStore() throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         KeyStore keyStore = KeyStore.getInstance(AM_KEYSTORE);
-        Log.w(TAG, "Using keystore " + AM_KEYSTORE);
+        Log.w(TAG, "Using keystore %s", AM_KEYSTORE);
         char[] realPassword = getAmKeyStorePassword();
         try {
             if (AM_KEYSTORE_FILE.exists()) {

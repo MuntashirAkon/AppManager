@@ -49,50 +49,54 @@ public class Log extends Logger {
         super(LOG_FILE, false);
     }
 
-    public static void v(@Nullable String tag, @NonNull String msg) {
-        if (BuildConfig.DEBUG) {
-            println(VERBOSE, tag, msg, null);
-            android.util.Log.v(tag, msg);
-        }
+    public static void v(@Nullable String tag, @NonNull String format, Object... args) {
+        String msg = String.format(Locale.ROOT, format, args);
+        println(VERBOSE, tag, msg, null);
+        android.util.Log.v(tag, msg);
     }
 
-    public static void v(@Nullable String tag, @Nullable String msg, @Nullable Throwable tr) {
-        if (BuildConfig.DEBUG) {
-            println(VERBOSE, tag, msg, tr);
-            android.util.Log.v(tag, msg, tr);
-        }
+    public static void v(@Nullable String tag, @Nullable String format, @Nullable Throwable tr, Object... args) {
+        String msg = format != null ? String.format(Locale.ROOT, format, args) : null;
+        println(VERBOSE, tag, msg, tr);
+        android.util.Log.v(tag, msg, tr);
     }
 
-    public static void d(@Nullable String tag, @NonNull String msg) {
+    public static void d(@Nullable String tag, @NonNull String format, Object... args) {
         if (BuildConfig.DEBUG) {
+            String msg = String.format(Locale.ROOT, format, args);
             println(DEBUG, tag, msg, null);
             android.util.Log.d(tag, msg);
         }
     }
 
-    public static void d(@Nullable String tag, @Nullable String msg, @Nullable Throwable tr) {
+    public static void d(@Nullable String tag, @Nullable String format, @Nullable Throwable tr, Object... args) {
         if (BuildConfig.DEBUG) {
+            String msg = format != null ? String.format(Locale.ROOT, format, args) : null;
             println(DEBUG, tag, msg, tr);
             android.util.Log.d(tag, msg, tr);
         }
     }
 
-    public static void i(@Nullable String tag, @NonNull String msg) {
+    public static void i(@Nullable String tag, @NonNull String format, Object... args) {
+        String msg = String.format(Locale.ROOT, format, args);
         println(INFO, tag, msg, null);
         android.util.Log.i(tag, msg);
     }
 
-    public static void i(@Nullable String tag, @Nullable String msg, @Nullable Throwable tr) {
+    public static void i(@Nullable String tag, @Nullable String format, @Nullable Throwable tr, Object... args) {
+        String msg = format != null ? String.format(Locale.ROOT, format, args) : null;
         println(INFO, tag, msg, tr);
         android.util.Log.i(tag, msg, tr);
     }
 
-    public static void w(@Nullable String tag, @NonNull String msg) {
+    public static void w(@Nullable String tag, @NonNull String format, Object... args) {
+        String msg = String.format(Locale.ROOT, format, args);
         println(WARN, tag, msg, null);
         android.util.Log.w(tag, msg);
     }
 
-    public static void w(@Nullable String tag, @Nullable String msg, @Nullable Throwable tr) {
+    public static void w(@Nullable String tag, @Nullable String format, @Nullable Throwable tr, Object... args) {
+        String msg = format != null ? String.format(Locale.ROOT, format, args) : null;
         println(WARN, tag, msg, tr);
         android.util.Log.w(tag, msg, tr);
     }
@@ -102,7 +106,8 @@ public class Log extends Logger {
         android.util.Log.w(tag, tr);
     }
 
-    public static void e(@Nullable String tag, @NonNull String msg) {
+    public static void e(@Nullable String tag, @NonNull String format, Object... args) {
+        String msg = String.format(Locale.ROOT, format, args);
         println(ERROR, tag, msg, null);
         android.util.Log.e(tag, msg);
     }
@@ -112,7 +117,8 @@ public class Log extends Logger {
         android.util.Log.e(tag, null, e);
     }
 
-    public static void e(@Nullable String tag, @Nullable String msg, @Nullable Throwable tr) {
+    public static void e(@Nullable String tag, @Nullable String format, @Nullable Throwable tr, Object... args) {
+        String msg = format != null ? String.format(Locale.ROOT, format, args) : null;
         println(ERROR, tag, msg, tr);
         android.util.Log.e(tag, msg, tr);
     }

@@ -32,7 +32,7 @@ public final class Languages {
             }
             return TextMateLanguage.create(grammarSource, languageConfiguration, themeSource);
         } catch (IOException e) {
-            Log.w("CodeEditor", "Could not load resources for language " + language, e);
+            Log.w("CodeEditor", "Could not load resources for language %s", e, language);
             return new EmptyLanguage();
         }
     }

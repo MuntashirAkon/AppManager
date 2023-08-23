@@ -140,7 +140,7 @@ public class LogcatRecordingService extends ForegroundService {
             // Empty calls
             return;
         }
-        Log.d(TAG, "Starting with intent: " + intent);
+        Log.d(TAG, "Starting with intent: %s", intent);
         String filename = intent.getStringExtra(EXTRA_FILENAME);
         String queryText = intent.getStringExtra(EXTRA_QUERY_FILTER);
         SearchCriteria searchCriteria = new SearchCriteria(queryText);

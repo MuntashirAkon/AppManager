@@ -47,7 +47,7 @@ public class BackupDataDirectoryInfo {
         if (dataDir.startsWith(dataMediaDir)) {
             return getExternalInfo(dataDir, dataMediaDir);
         }
-        Log.i(TAG, "getInfo: Unrecognized path " + dataDir + ", returning true as fallback.");
+        Log.i(TAG, "getInfo: Unrecognized path %s, returning true as fallback.", dataDir);
         return new BackupDataDirectoryInfo(dataDir, true, TYPE_UNKNOWN, TYPE_CUSTOM);
     }
 

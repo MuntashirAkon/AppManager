@@ -588,10 +588,7 @@ public final class SettingsStateV26 implements SettingsState {
                     + " package: " + packageName);
         }
 
-        if (DEBUG) {
-            Log.i(LOG_TAG, "Settings for package: " + packageName
-                    + " size: " + newSize + " bytes.");
-        }
+        Log.d(LOG_TAG, "Settings for package: %s size: %s bytes.", packageName, newSize);
 
         mPackageToMemoryUsage.put(packageName, newSize);
     }
@@ -678,7 +675,7 @@ public final class SettingsStateV26 implements SettingsState {
 
                     if (setting.isTransient()) {
                         if (DEBUG_PERSISTENCE) {
-                            Log.i(LOG_TAG, "[SKIPPED PERSISTING]" + setting.getName());
+                            Log.i(LOG_TAG, "[SKIPPED PERSISTING] %s", setting.getName());
                         }
                         continue;
                     }
@@ -689,8 +686,7 @@ public final class SettingsStateV26 implements SettingsState {
                             setting.isValuePreservedInRestore());
 
                     if (DEBUG_PERSISTENCE) {
-                        Log.i(LOG_TAG, "[PERSISTED]" + setting.getName() + "="
-                                + setting.getValue());
+                        Log.i(LOG_TAG, "[PERSISTED] %s=%s", setting.getName(), setting.getValue());
                     }
                 }
                 serializer.endTag(null, TAG_SETTINGS);
@@ -701,8 +697,7 @@ public final class SettingsStateV26 implements SettingsState {
                     String bannedHash = namespaceBannedHashes.get(namespace);
                     writeSingleNamespaceHash(serializer, namespace, bannedHash);
                     if (DEBUG_PERSISTENCE) {
-                        Log.i(LOG_TAG, "[PERSISTED] namespace=" + namespace
-                                + ", bannedHash=" + bannedHash);
+                        Log.i(LOG_TAG, "[PERSISTED] namespace=%s, bannedHash=%s",namespace, bannedHash);
                     }
                 }
                 serializer.endTag(null, TAG_NAMESPACE_HASHES);
@@ -725,9 +720,9 @@ public final class SettingsStateV26 implements SettingsState {
                         // throws more informative errors than File.mkdirs.
                         Path parentPath = Paths.get(destination.getBaseFile().getParentFile());
                         if (parentPath.mkdirs()) {
-                            Log.i(LOG_TAG, "Successfully created " + parentPath);
+                            Log.i(LOG_TAG, "Successfully created %s", parentPath);
                         } else {
-                            Log.e(LOG_TAG, "Failed to write " + parentPath + " with Files.writeDirectories");
+                            Log.e(LOG_TAG, "Failed to write %s with Files.writeDirectories", parentPath);
                         }
                     }
                 }
@@ -746,25 +741,21 @@ public final class SettingsStateV26 implements SettingsState {
 
     private static void logSettingsDirectoryInformation(Path settingsFile) {
         Path parent = settingsFile.getParentFile();
-        Log.i(LOG_TAG, "directory info for directory/file " + settingsFile
-                + " with stacktrace ", new Exception());
+        Log.i(LOG_TAG, "directory info for directory/file %s with stacktrace ", new Exception(), settingsFile);
         Path ancestorDir = parent;
         while (ancestorDir != null) {
             if (!ancestorDir.exists()) {
-                Log.i(LOG_TAG, "ancestor directory " + ancestorDir
-                        + " does not exist");
+                Log.i(LOG_TAG, "ancestor directory %s does not exist", ancestorDir);
                 ancestorDir = ancestorDir.getParentFile();
             } else {
-                Log.i(LOG_TAG, "ancestor directory " + ancestorDir
-                        + " exists");
-                Log.i(LOG_TAG, "ancestor directory " + ancestorDir
-                        + " permissions: r: " + ancestorDir.canRead() + " w: "
-                        + ancestorDir.canWrite() + " x: " + ancestorDir.canExecute());
+                Log.i(LOG_TAG, "ancestor directory %s exists", ancestorDir);
+                Log.i(LOG_TAG, "ancestor directory %s permissions: r: %s w: %s x: %s", ancestorDir,
+                        ancestorDir.canRead(), ancestorDir.canWrite(), ancestorDir.canExecute());
                 Path ancestorParent = ancestorDir.getParentFile();
                 if (ancestorParent != null) {
-                    Log.i(LOG_TAG, "ancestor's parent directory " + ancestorParent
-                            + " permissions: r: " + ancestorParent.canRead() + " w: "
-                            + ancestorParent.canWrite() + " x: " + ancestorParent.canExecute());
+                    Log.i(LOG_TAG, "ancestor's parent directory %s permissions: r: %s w: %s" + " x: %s",
+                            ancestorParent, ancestorParent.canRead(), ancestorParent.canWrite(),
+                            ancestorParent.canExecute());
                 }
                 break;
             }
@@ -864,7 +855,7 @@ public final class SettingsStateV26 implements SettingsState {
         try {
             in = file.openRead();
         } catch (IOException | RemoteException fnfe) {
-            Log.w(LOG_TAG, "No settings state " + mStatePersistFile);
+            Log.w(LOG_TAG, "No settings state %s", mStatePersistFile);
             logSettingsDirectoryInformation(mStatePersistFile);
             addHistoricalOperationLocked(HISTORICAL_OPERATION_INITIALIZE, null);
             return;
@@ -875,14 +866,13 @@ public final class SettingsStateV26 implements SettingsState {
 
         // Settings file exists but is corrupted. Retry with the fallback file
         Path statePersistFallbackFile = Paths.get(mStatePersistFile.getFilePath() + FALLBACK_FILE_SUFFIX);
-        Log.i(LOG_TAG, "Failed parsing settings file: " + mStatePersistFile
-                + ", retrying with fallback file: " + statePersistFallbackFile);
+        Log.i(LOG_TAG, "Failed parsing settings file: %s, retrying with fallback file: %s", mStatePersistFile,
+                statePersistFallbackFile);
         try {
             in = new AtomicExtendedFile(statePersistFallbackFile.getFile()).openRead();
         } catch (IOException | RemoteException fnfe) {
             final String message = "No fallback file found for: " + mStatePersistFile;
-            Log.e(LOG_TAG, message);
-            throw new IllegalStateException(message);
+            throw new IllegalStateException(message, fnfe);
         }
         if (parseStateFromXmlStreamLocked(in)) {
             // Parsed state from fallback file. Restore original file with fallback file
@@ -893,7 +883,6 @@ public final class SettingsStateV26 implements SettingsState {
             }
         } else {
             final String message = "Failed parsing settings file: " + mStatePersistFile;
-            Log.e(LOG_TAG, message);
             throw new IllegalStateException(message);
         }
     }
@@ -978,7 +967,7 @@ public final class SettingsStateV26 implements SettingsState {
                         fromSystem, id, isPreservedInRestore));
 
                 if (DEBUG_PERSISTENCE) {
-                    Log.i(LOG_TAG, "[RESTORED] " + name + "=" + value);
+                    Log.i(LOG_TAG, "[RESTORED] %s=%s", name, value);
                 }
             }
         }

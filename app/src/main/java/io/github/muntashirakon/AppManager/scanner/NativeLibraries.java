@@ -79,7 +79,7 @@ public class NativeLibraries {
             int magic = buffer.getInt();
             if (magic != ELF_MAGIC) {
                 // Invalid library
-                Log.w(TAG, String.format("Invalid header magic 0x%x at path %s", magic, path));
+                Log.w(TAG, "Invalid header magic 0x%x at path %s", magic, path);
                 return new InvalidLib(path, size, header);
             }
             ElfLib elfLib = new ElfLib(path, size);
@@ -284,7 +284,7 @@ public class NativeLibraries {
                         mLibs.add(nativeLib);
                         mUniqueLibs.add(nativeLib.getName());
                     } catch (IOException e) {
-                        Log.w(TAG, "Could not load native library " + zipEntry.getName(), e);
+                        Log.w(TAG, "Could not load native library %s", e, zipEntry.getName());
                     }
                 }
             }
@@ -302,7 +302,7 @@ public class NativeLibraries {
                         mLibs.add(nativeLib);
                         mUniqueLibs.add(nativeLib.getName());
                     } catch (IOException e) {
-                        Log.w(TAG, "Could not load native library " + zipEntry.getName(), e);
+                        Log.w(TAG, "Could not load native library %s", e, zipEntry.getName());
                     }
                 }
             }
@@ -320,7 +320,7 @@ public class NativeLibraries {
                     mLibs.add(nativeLib);
                     mUniqueLibs.add(nativeLib.getName());
                 } catch (IOException e) {
-                    Log.w(TAG, "Could not load native library " + zipEntry.getName(), e);
+                    Log.w(TAG, "Could not load native library %s", e, zipEntry.getName());
                 }
             }
         }

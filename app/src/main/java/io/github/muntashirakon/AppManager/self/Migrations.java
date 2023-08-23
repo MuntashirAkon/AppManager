@@ -7,7 +7,6 @@ import android.annotation.SuppressLint;
 import androidx.annotation.WorkerThread;
 
 import java.io.File;
-import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
@@ -23,7 +22,7 @@ public class Migrations {
     private static final MigrationTask MIGRATE_FROM_ALL_VERSION_TO_3_0_0 = new MigrationTask(-1) {
         @Override
         public void run() {
-            Log.d(TAG, String.format(Locale.ROOT, "Running MIGRATE_FROM_ALL_VERSION_TO_3_0_0 from (%d-%d) to %d", fromVersionAtLeast, fromVersionAtMost, toVersion));
+            Log.d(TAG, "Running MIGRATE_FROM_ALL_VERSION_TO_3_0_0 from (%d-%d) to %d", fromVersionAtLeast, fromVersionAtMost, toVersion);
             // Delete am database, am.jar
             File internalFilesDir = ContextUtils.getDeContext(context).getFilesDir().getParentFile();
             File[] paths = new File[]{
@@ -48,7 +47,7 @@ public class Migrations {
     private static final MigrationTask MIGRATE_FROM_3_0_0_RC01_RC04_TO_3_0_0 = new MigrationTask(403, 406) {
         @Override
         public void run() {
-            Log.d(TAG, String.format(Locale.ROOT, "Running MIGRATE_FROM_3_0_0_RC01_RC04_TO_3_0_0 from (%d-%d) to %d", fromVersionAtLeast, fromVersionAtMost, toVersion));
+            Log.d(TAG, "Running MIGRATE_FROM_3_0_0_RC01_RC04_TO_3_0_0 from (%d-%d) to %d", fromVersionAtLeast, fromVersionAtMost, toVersion);
             // Migrate DB
             File newAppsDb = context.getDatabasePath("apps.db");
             if (!newAppsDb.exists()) {

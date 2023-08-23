@@ -91,7 +91,7 @@ public final class NetworkPolicyManagerCompat {
         if (UserHandleHidden.isApp(uid)) {
             getNetPolicyManager().setUidPolicy(uid, policies);
         } else {
-            Log.w(TAG, String.format(Locale.ROOT, "Cannot set policy %d to uid %d", policies, uid));
+            Log.w(TAG, "Cannot set policy %d to uid %d", policies, uid);
         }
     }
 

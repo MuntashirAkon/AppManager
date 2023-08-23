@@ -193,7 +193,7 @@ public class OpenPGPCrypto implements Crypto {
             } else outputFilename = inputPath.getName() + GPG_EXT;
             Path outputPath = parent.createNewFile(outputFilename, null);
             mNewFiles.add(outputPath);
-            Log.i(TAG, "Input: " + inputPath + "\nOutput: " + outputPath);
+            Log.i(TAG, "Input: %s\nOutput: %s", inputPath, outputPath);
             InputStream is = inputPath.openInputStream();
             OutputStream os = outputPath.openOutputStream();
             OpenPgpApi api = new OpenPgpApi(mContext, mService.getService());
@@ -318,7 +318,7 @@ public class OpenPGPCrypto implements Crypto {
                 mErrorFlag = true;
                 OpenPgpError error = IntentCompat.getParcelableExtra(result, OpenPgpApi.RESULT_ERROR, OpenPgpError.class);
                 if (error != null) {
-                    Log.e(TAG, "handleResult: (" + error.getErrorId() + ") " + error.getMessage());
+                    Log.e(TAG, "handleResult: (%d) %s", error.getErrorId(), error.getMessage());
                 } else Log.e(TAG, "handleResult: Error occurred during en/decryption process");
                 break;
         }

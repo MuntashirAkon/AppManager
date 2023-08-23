@@ -191,7 +191,8 @@ public final class ComponentUtils {
                     PermissionCompat.grantPermission(packageName, entry.name, userHandle);
                     cb.removeEntry(entry);
                 } catch (RemoteException e) {
-                    Log.e("ComponentUtils", "Cannot revoke permission " + entry.name + " for package " + packageName, e);
+                    Log.e("ComponentUtils", "Cannot revoke permission %s for package %s", e, entry.name,
+                            packageName);
                 }
             }
         }

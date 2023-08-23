@@ -173,7 +173,7 @@ public class CodeEditorViewModel extends AndroidViewModel {
                     content = ContentIO.createFrom(is);
                     mXmlType = XML_TYPE_NONE;
                 }catch (IOException e) {
-                    Log.e(TAG, "Could not read file " + mSourceFile, e);
+                    Log.e(TAG, "Could not read file %s", e, mSourceFile);
                 }
             }
             mContentLiveData.postValue(content);
@@ -208,7 +208,7 @@ public class CodeEditorViewModel extends AndroidViewModel {
                 }
                 mSaveFileLiveData.postValue(true);
             } catch (IOException e) {
-                Log.e(TAG, "Could not write to file " + savingPath, e);
+                Log.e(TAG, "Could not write to file %s", e, savingPath);
                 mSaveFileLiveData.postValue(false);
             }
         });

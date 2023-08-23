@@ -33,28 +33,28 @@ class ServiceConnectionWrapper {
     private class ServiceConnectionImpl implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d(TAG, "service onServiceConnected: " + name);
+            Log.d(TAG, "service onServiceConnected: %s", name);
             mIBinder = service;
             onResponseReceived();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d(TAG, "service onServiceDisconnected: " + name);
+            Log.d(TAG, "service onServiceDisconnected: %s", name);
             mIBinder = null;
             onResponseReceived();
         }
 
         @Override
         public void onBindingDied(ComponentName name) {
-            Log.d(TAG, "service onBindingDied: " + name);
+            Log.d(TAG, "service onBindingDied: %s", name);
             mIBinder = null;
             onResponseReceived();
         }
 
         @Override
         public void onNullBinding(ComponentName name) {
-            Log.d(TAG, "service onNullBinding: " + name);
+            Log.d(TAG, "service onNullBinding: %s", name);
             mIBinder = null;
             onResponseReceived();
         }

@@ -109,13 +109,13 @@ public class Signer {
             builder.setV4SignatureOutputFile(mIdsigFile);
         }
         ApkSigner signer = builder.build();
-        Log.i(TAG, String.format("SignApk: %s", in));
+        Log.i(TAG, "SignApk: %s", in);
         try {
             if (alignFileSize && !ZipAlign.verify(in, ZipAlign.ALIGNMENT_4, true)) {
                 ZipAlign.align(in, ZipAlign.ALIGNMENT_4, true);
             }
             signer.sign();
-            Log.i(TAG, "The signature is complete and the output file is " + out);
+            Log.i(TAG, "The signature is complete and the output file is %s", out);
             return true;
         } catch (Exception e) {
             Log.w(TAG, e);
@@ -135,7 +135,7 @@ public class Signer {
         ApkVerifier verifier = builder.build();
         try {
             ApkVerifier.Result result = verifier.verify();
-            Log.i(TAG, apk.toString());
+            Log.i(TAG, "%s", apk);
             boolean isVerify = result.isVerified();
             if (isVerify) {
                 if (sigSchemes.v1SchemeEnabled() && result.isVerifiedUsingV1Scheme())
@@ -152,26 +152,26 @@ public class Signer {
                 else Log.w(TAG, "V4 signature verification failed/disabled.");
                 int i = 0;
                 List<X509Certificate> signerCertificates = result.getSignerCertificates();
-                Log.i(TAG, "Number of signatures: " + signerCertificates.size());
+                Log.i(TAG, "Number of signatures: %d", signerCertificates.size());
                 for (X509Certificate logCert : signerCertificates) {
                     i++;
                     logCert(logCert, "Signature" + i);
                 }
             }
             for (ApkVerifier.IssueWithParams warn : result.getWarnings()) {
-                Log.w(TAG, warn.toString());
+                Log.w(TAG, "%s", warn);
             }
             for (ApkVerifier.IssueWithParams err : result.getErrors()) {
-                Log.e(TAG, err.toString());
+                Log.e(TAG, "%s", err);
             }
             if (sigSchemes.v1SchemeEnabled()) {
                 for (ApkVerifier.Result.V1SchemeSignerInfo signer : result.getV1SchemeIgnoredSigners()) {
                     String name = signer.getName();
                     for (ApkVerifier.IssueWithParams err : signer.getErrors()) {
-                        Log.e(TAG, name + ": " + err);
+                        Log.e(TAG, "%s: %s", name, err);
                     }
                     for (ApkVerifier.IssueWithParams err : signer.getWarnings()) {
-                        Log.w(TAG, name + ": " + err);
+                        Log.w(TAG, "%s: %s", name, err);
                     }
                 }
             }
@@ -198,7 +198,7 @@ public class Signer {
     private static void logCert(@NonNull X509Certificate x509Certificate, CharSequence charSequence) throws CertificateEncodingException {
         int bitLength;
         Principal subjectDN = x509Certificate.getSubjectDN();
-        Log.i(TAG, charSequence + " - Unique distinguished name: " + subjectDN);
+        Log.i(TAG, "%s - Unique distinguished name: %s", charSequence, subjectDN);
         logEncoded(charSequence, x509Certificate.getEncoded());
         PublicKey publicKey = x509Certificate.getPublicKey();
         if (publicKey instanceof RSAKey) {
@@ -213,9 +213,9 @@ public class Signer {
         } else {
             bitLength = -1;
         }
-        Log.i(TAG, charSequence + " - key size: " + (bitLength != -1 ? String.valueOf(bitLength) : "Unknown"));
+        Log.i(TAG, "%s - key size: %s", charSequence, (bitLength != -1 ? String.valueOf(bitLength) : "Unknown"));
         String algorithm = publicKey.getAlgorithm();
-        Log.i(TAG, charSequence + " - key algorithm: " + algorithm);
+        Log.i(TAG, "%s - key algorithm: %s", charSequence, algorithm);
         logEncoded(charSequence, publicKey.getEncoded());
     }
 

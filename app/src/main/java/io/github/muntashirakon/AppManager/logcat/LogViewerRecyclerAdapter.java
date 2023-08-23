@@ -520,7 +520,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
         }
 
         public void log() {
-            Log.d(TAG, mName + " took " + (System.currentTimeMillis() - mStartTime) + " ms");
+            Log.d(TAG, "%s took %d ms", mName, (System.currentTimeMillis() - mStartTime));
         }
     }
 

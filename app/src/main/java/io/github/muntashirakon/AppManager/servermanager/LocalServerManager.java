@@ -156,7 +156,7 @@ class LocalServerManager {
             getSession().getDataTransmission().sendAndReceiveMessage(ParcelableUtil.marshall(baseCaller));
         } catch (Exception e) {
             // Since the server is closed abruptly, this should always produce error
-            Log.w(TAG, "closeBgServer: " + e.getCause() + "  " + e.getMessage());
+            Log.w(TAG, "closeBgServer: Error", e);
         }
     }
 
@@ -164,8 +164,8 @@ class LocalServerManager {
     @NonNull
     private String getExecCommand() throws IOException {
         AssetsUtils.writeScript(mContext);
-        Log.e(TAG, "classpath --> " + ServerConfig.getClassPath());
-        Log.e(TAG, "exec path --> " + ServerConfig.getExecPath());
+        Log.e(TAG, "classpath --> %s", ServerConfig.getClassPath());
+        Log.e(TAG, "exec path --> %s", ServerConfig.getExecPath());
         return "sh " + ServerConfig.getExecPath() + " " + ServerConfig.getLocalServerPort() + " " + ServerConfig.getLocalToken();
     }
 
@@ -177,7 +177,7 @@ class LocalServerManager {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(mAdbStream).openInputStream()))) {
             String s;
             while ((s = reader.readLine()) != null) {
-                Log.d(TAG, "RESPONSE: " + s);
+                Log.d(TAG, "RESPONSE: %s", s);
                 if (s.startsWith("Success!")) {
                     mAdbServerStarted = true;
                     mAdbConnectionWatcher.countDown();
@@ -200,7 +200,7 @@ class LocalServerManager {
             String adbHost = ServerConfig.getAdbHost(mContext);
             int adbPort = ServerConfig.getAdbPort();
             AdbConnectionManager manager = AdbConnectionManager.getInstance();
-            Log.d(TAG, "useAdbStartServer: Connecting using host=" + adbHost + ", port=" + adbPort);
+            Log.d(TAG, "useAdbStartServer: Connecting using host=%s, port=%d", adbHost, adbPort);
             if (!manager.isConnected() && !manager.connect(adbHost, adbPort)) {
                 throw new IOException("Could not connect to ADB.");
             }
@@ -216,7 +216,7 @@ class LocalServerManager {
         try (OutputStream os = Objects.requireNonNull(mAdbStream).openOutputStream()) {
             os.write("id\n".getBytes());
             String command = getExecCommand();
-            Log.d(TAG, "useAdbStartServer: " + command);
+            Log.d(TAG, "useAdbStartServer: %s", command);
             os.write((command + "\n").getBytes());
         }
 
@@ -232,10 +232,10 @@ class LocalServerManager {
             throw new Exception("Root access denied");
         }
         String command = getExecCommand(); // + "\n" + "supolicy --live 'allow qti_init_shell zygote_exec file execute'";
-        Log.d(TAG, "useRootStartServer: " + command);
+        Log.d(TAG, "useRootStartServer: %s", command);
         Runner.Result result = Runner.runCommand(command);
 
-        Log.d(TAG, "useRootStartServer: " + result.getOutput());
+        Log.d(TAG, "useRootStartServer: %s", result.getOutput());
         if (!result.isSuccessful()) {
             throw new Exception("Could not start server.");
         }

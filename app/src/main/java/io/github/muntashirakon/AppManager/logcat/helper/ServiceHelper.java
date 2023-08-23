@@ -33,7 +33,7 @@ public class ServiceHelper {
 
     public static synchronized void stopBackgroundServiceIfRunning(Context context) {
         boolean alreadyRunning = ServiceHelper.checkIfServiceIsRunning(context, LogcatRecordingService.class);
-        Log.d(TAG, "Is LogcatRecordingService running: " + alreadyRunning);
+        Log.d(TAG, "Is LogcatRecordingService running: %s", alreadyRunning);
         if (alreadyRunning) {
             Intent intent = new Intent(context, LogcatRecordingService.class);
             context.stopService(intent);
@@ -66,12 +66,12 @@ public class ServiceHelper {
         if (procList != null) {
             for (ActivityManager.RunningServiceInfo appProcInfo : procList) {
                 if (appProcInfo != null && componentName.equals(appProcInfo.service)) {
-                    Log.d(TAG, serviceName + " is already running.");
+                    Log.d(TAG, "%s is already running.", serviceName);
                     return true;
                 }
             }
         }
-        Log.d(TAG, serviceName + " is not running.");
+        Log.d(TAG, "%s is not running.", serviceName);
         return false;
     }
 }

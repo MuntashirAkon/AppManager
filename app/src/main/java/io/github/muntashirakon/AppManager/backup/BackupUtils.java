@@ -325,7 +325,7 @@ public final class BackupUtils {
             // /data/media/{oldUserId}/ -> /storage/emulated/{newUserId}/ or /data/media/{newUserId}/ in a multiuser system, otherwise /sdcard/
             return getExternalStorage(dataDir, oldDataMediaDir, newUserId);
         }
-        Log.i(TAG, "getWritableDataDirectory: Unrecognized path " + dataDir + ", using as is.");
+        Log.i(TAG, "getWritableDataDirectory: Unrecognized path %s, using as is.", dataDir);
         return dataDir;
     }
 

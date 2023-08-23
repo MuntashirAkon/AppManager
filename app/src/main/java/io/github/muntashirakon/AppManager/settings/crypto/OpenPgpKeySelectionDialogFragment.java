@@ -137,7 +137,7 @@ public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
                 case OpenPgpApi.RESULT_CODE_ERROR: {
                     OpenPgpError error = IntentCompat.getParcelableExtra(result, OpenPgpApi.RESULT_ERROR, OpenPgpError.class);
                     if (error != null) {
-                        Log.e(OpenPgpApi.TAG, "RESULT_CODE_ERROR: " + error.getMessage());
+                        Log.e(OpenPgpApi.TAG, "RESULT_CODE_ERROR: %s", error.getMessage());
                     }
                     mDialog.dismiss();
                     break;

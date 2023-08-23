@@ -262,7 +262,7 @@ public class AppDb {
                             | PackageManager.GET_SERVICES | MATCH_DISABLED_COMPONENTS | MATCH_UNINSTALLED_PACKAGES
                             | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
                 } catch (Exception e) {
-                    Log.e(TAG, "Could not retrieve package info list for user " + userId, e);
+                    Log.e(TAG, "Could not retrieve package info list for user %d", e, userId);
                     continue;
                 }
 

@@ -99,7 +99,7 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
             if (fragment instanceof MainPreferences) {
                 ((MainPreferences) fragment).setPrefKey(getKey(mLevel = 0));
             }
-            Log.e(TAG, "Pref selected: " + fragment.getClass().getName());
+            Log.e(TAG, "Pref selected: %s", fragment.getClass().getName());
         }
     }
 

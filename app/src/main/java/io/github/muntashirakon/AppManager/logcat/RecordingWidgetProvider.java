@@ -29,7 +29,7 @@ public class RecordingWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
-        Log.d(TAG, "onUpdate() for appWidgetIds " + Arrays.toString(appWidgetIds));
+        Log.d(TAG, "onUpdate() for appWidgetIds %s", Arrays.toString(appWidgetIds));
 
         // track which widgets were created, since there's a bug in the android system that lets
         // stale app widget ids stick around
@@ -41,7 +41,7 @@ public class RecordingWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(@NonNull final Context context, @NonNull Intent intent) {
         super.onReceive(context, intent);
-        Log.d(TAG, "onReceive called with intent " + intent);
+        Log.d(TAG, "onReceive called with intent %s", intent);
         if (ACTION_RECORD_OR_STOP.equals(intent.getAction())) {
             // Start or stop recording as necessary
             synchronized (RecordingWidgetProvider.class) {

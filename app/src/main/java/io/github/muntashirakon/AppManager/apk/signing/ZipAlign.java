@@ -58,12 +58,12 @@ public class ZipAlign {
     public static boolean verify(@NonNull File file, int alignment, boolean pageAlignSharedLibs) {
         Archive zipFile;
         boolean foundBad = false;
-        Log.d(TAG, String.format(Locale.ROOT, "Verifying alignment of %s...\n", file));
+        Log.d(TAG, "Verifying alignment of %s...", file);
 
         try {
             zipFile = new Archive(file);
         } catch (IOException e) {
-            Log.e(TAG, String.format(Locale.ROOT, "Unable to open '%s' for verification\n", file), e);
+            Log.e(TAG, "Unable to open '%s' for verification", e, file);
             return false;
         }
         List<ArchiveEntry> entries = zipFile.getEntryList();
@@ -71,23 +71,23 @@ public class ZipAlign {
             String name = pEntry.getName();
             long fileOffset = pEntry.getFileOffset();
             if (pEntry.getMethod() == ZipEntry.DEFLATED) {
-                Log.d(TAG, String.format(Locale.ROOT, "%8d %s (OK - compressed)\n", fileOffset, name));
+                Log.d(TAG, "%8d %s (OK - compressed)", fileOffset, name);
             } else if (pEntry.isDirectory()) {
                 // Directory entries do not need to be aligned.
-                Log.d(TAG, String.format(Locale.ROOT, "%8d %s (OK - directory)\n", fileOffset, name));
+                Log.d(TAG, "%8d %s (OK - directory)", fileOffset, name);
             } else {
                 int alignTo = getAlignment(pEntry, alignment, pageAlignSharedLibs);
                 if ((fileOffset % alignTo) != 0) {
-                    Log.w(TAG, String.format(Locale.ROOT, "%8d %s (BAD - %d)\n", fileOffset, name, (fileOffset % alignTo)));
+                    Log.w(TAG, "%8d %s (BAD - %d)\n", fileOffset, name, (fileOffset % alignTo));
                     foundBad = true;
                     break;
                 } else {
-                    Log.d(TAG, String.format(Locale.ROOT, "%8d %s (OK)\n", fileOffset, name));
+                    Log.d(TAG, "%8d %s (OK)\n", fileOffset, name);
                 }
             }
         }
 
-        Log.d(TAG, String.format(Locale.ROOT, "Verification %s\n", foundBad ? "FAILED" : "successful"));
+        Log.d(TAG, "Verification %s\n", foundBad ? "FAILED" : "successful");
 
         return !foundBad;
     }

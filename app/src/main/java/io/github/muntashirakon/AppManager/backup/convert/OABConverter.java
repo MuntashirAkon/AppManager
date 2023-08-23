@@ -190,7 +190,7 @@ public class OABConverter extends Converter {
                     mCrypto.close();
                 }
                 for (Path file : mDecryptedFiles) {
-                    Log.d(TAG, "Deleting " + file);
+                    Log.d(TAG, "Deleting %s", file);
                     file.delete();
                 }
                 if (backupSuccess) {

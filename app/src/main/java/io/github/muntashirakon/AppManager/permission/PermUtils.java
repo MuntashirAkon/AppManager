@@ -237,7 +237,7 @@ public class PermUtils {
         if (!permission.isReadOnly()) {
             if (permission.isGranted()) {
                 PermissionCompat.grantPermission(applicationInfo.packageName, permission.getName(), userId);
-                Log.d("PERM", "Granted " + permission.getName());
+                Log.d("PERM", "Granted %s", permission.getName());
             } else {
                 boolean isCurrentlyGranted = PermissionCompat.checkPermission(permission.getName(),
                         applicationInfo.packageName, userId) == PERMISSION_GRANTED;
@@ -248,7 +248,7 @@ public class PermUtils {
                     } else {
                         PermissionCompat.revokePermission(applicationInfo.packageName, permission.getName(), userId, revokeReason);
                     }
-                    Log.d("PERM", "Revoked " + permission.getName());
+                    Log.d("PERM", "Revoked %s", permission.getName());
                 }
             }
         }

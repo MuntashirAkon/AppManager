@@ -52,17 +52,17 @@ public final class ScreenLockChecker {
         final boolean isLocked = keyguardManager.isKeyguardLocked();
         final boolean isInteractive = powerManager.isInteractive();
         delayIndex = getSafeCheckLockDelay(delayIndex);
-        Log.i(TAG, String.format(Locale.ROOT, "checkLock: isProtected=%b, isLocked=%b, isInteractive=%b, delay=%d",
-                isProtected, isLocked, isInteractive, sCheckLockDelays[delayIndex]));
+        Log.i(TAG, "checkLock: isProtected=%b, isLocked=%b, isInteractive=%b, delay=%d",
+                isProtected, isLocked, isInteractive, sCheckLockDelays[delayIndex]);
 
         if (mCheckLockTask != null) {
-            Log.i(TAG, String.format(Locale.ROOT, "checkLock: cancelling CheckLockTask[%x]", System.identityHashCode(mCheckLockTask)));
+            Log.i(TAG, "checkLock: cancelling CheckLockTask[%x]", System.identityHashCode(mCheckLockTask));
             mCheckLockTask.cancel();
         }
 
         if (isProtected && !isLocked && !isInteractive) {
             mCheckLockTask = new CheckLockTask(delayIndex);
-            Log.i(TAG, String.format(Locale.ROOT, "checkLock: scheduling CheckLockTask[%x] for %d ms", System.identityHashCode(mCheckLockTask), sCheckLockDelays[delayIndex]));
+            Log.i(TAG, "checkLock: scheduling CheckLockTask[%x] for %d ms", System.identityHashCode(mCheckLockTask), sCheckLockDelays[delayIndex]);
             mTimer.schedule(mCheckLockTask, sCheckLockDelays[delayIndex]);
         } else {
             Log.d(TAG, "checkLock: no need to schedule CheckLockTask");
@@ -79,7 +79,7 @@ public final class ScreenLockChecker {
         if (delayIndex >= sCheckLockDelays.length) {
             safeDelayIndex = sCheckLockDelays.length - 1;
         } else safeDelayIndex = Math.max(delayIndex, 0);
-        Log.v(TAG, String.format(Locale.ROOT, "getSafeCheckLockDelay(%d) returns %d", delayIndex, safeDelayIndex));
+        Log.v(TAG, "getSafeCheckLockDelay(%d) returns %d", delayIndex, safeDelayIndex);
         return safeDelayIndex;
     }
 
@@ -92,7 +92,7 @@ public final class ScreenLockChecker {
 
         @Override
         public void run() {
-            Log.i(TAG, String.format("CLT.run [%x]: redirect intent to LockMonitor", System.identityHashCode(this)));
+            Log.i(TAG, "CLT.run [%x]: redirect intent to LockMonitor", System.identityHashCode(this));
             checkLock(getSafeCheckLockDelay(delayIndex + 1));
         }
     }

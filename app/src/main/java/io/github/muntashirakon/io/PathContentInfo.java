@@ -74,7 +74,7 @@ public class PathContentInfo {
                 return fromContentInfo(contentInfo);
             }
         } catch (Throwable e) {
-            Log.e(TAG, "Could not load MIME type for path " + path, e);
+            Log.e(TAG, "Could not load MIME type for path %s", e, path);
         }
         if (extInfo != null) {
             return withPartialOverride(fromContentInfo(extInfo), extType2);

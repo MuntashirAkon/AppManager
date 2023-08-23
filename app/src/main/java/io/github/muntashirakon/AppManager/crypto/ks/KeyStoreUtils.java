@@ -105,7 +105,7 @@ public class KeyStoreUtils {
                                                 @Nullable char[] ksPass)
             throws IOException, GeneralSecurityException {
         String keyType = TYPES[ksType];
-        Log.d(TAG, "Loading keystore " + keyType);
+        Log.d(TAG, "Loading keystore %s", keyType);
         final KeyStore ks = KeyStore.getInstance(keyType, getKeyStoreProvider(keyType));
         try (InputStream is = context.getContentResolver().openInputStream(ksUri)) {
             if (is == null) throw new FileNotFoundException(ksUri + " does not exist.");
@@ -120,7 +120,7 @@ public class KeyStoreUtils {
                                      @Nullable char[] aliasPass)
             throws GeneralSecurityException, IOException {
         String keyType = TYPES[ksType];
-        Log.d(TAG, "Loading keystore " + keyType);
+        Log.d(TAG, "Loading keystore %s", keyType);
         final KeyStore ks = KeyStore.getInstance(keyType, getKeyStoreProvider(keyType));
         try (InputStream is = context.getContentResolver().openInputStream(ksUri)) {
             if (is == null) throw new FileNotFoundException(ksUri + " does not exist.");

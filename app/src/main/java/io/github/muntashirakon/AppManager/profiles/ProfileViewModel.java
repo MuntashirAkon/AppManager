@@ -264,7 +264,7 @@ public class ProfileViewModel extends AndroidViewModel {
         setModified(true);
         synchronized (mProfileLock) {
             profile.packages = packages.toArray(new String[0]);
-            Log.e("Packages", packages.toString());
+            Log.e("Packages", "%s", packages);
             loadPackages();
         }
     }

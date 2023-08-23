@@ -350,18 +350,18 @@ public final class ComponentsBlocker extends RulesStorageManager {
         FileOutputStream rulesStream = null;
         try {
             rulesStream = mRulesFile.startWrite();
-            Log.d(TAG, "Rules: " + rules);
+            Log.d(TAG, "Rules: %s", rules);
             rulesStream.write(rules.getBytes());
             mRulesFile.finishWrite(rulesStream);
             //noinspection OctalInteger
             mRulesFile.getBaseFile().setMode(0666);
             return true;
         } catch (IOException e) {
-            Log.e(TAG, "Failed to write rules for package " + packageName, e);
+            Log.e(TAG, "Failed to write rules for package %s", e, packageName);
             mRulesFile.failWrite(rulesStream);
             return false;
         } catch (ErrnoException e) {
-            Log.w(TAG, "Failed to alter permission of IFW for package " + packageName, e);
+            Log.w(TAG, "Failed to alter permission of IFW for package %s", e, packageName);
             return true;
         }
     }
@@ -410,7 +410,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
         }
         // Enable/disable components
         List<ComponentRule> allEntries = getAllComponents();
-        Log.d(TAG, "All: " + allEntries.toString());
+        Log.d(TAG, "All: %s", allEntries);
         boolean isSuccessful = true;
         if (apply) {
             for (ComponentRule entry : allEntries) {
@@ -424,7 +424,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                             removeEntry(entry);
                         } catch (Throwable e) {
                             isSuccessful = false;
-                            Log.e(TAG, "Could not enable component: " + packageName + "/" + entry.name, e);
+                            Log.e(TAG, "Could not enable component: %s/%s", e, packageName, entry.name);
                         }
                         break;
                     case ComponentRule.COMPONENT_TO_BE_ENABLED:
@@ -436,7 +436,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                             setComponent(entry.name, entry.type, ComponentRule.COMPONENT_ENABLED);
                         } catch (Throwable e) {
                             isSuccessful = false;
-                            Log.e(TAG, "Could not disable component: " + packageName + "/" + entry.name, e);
+                            Log.e(TAG, "Could not disable component: %s/%s", e, packageName, entry.name);
                         }
                         break;
                     case ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW:
@@ -452,7 +452,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                             setComponent(entry.name, entry.type, entry.getCounterpartOfToBe());
                         } catch (Throwable e) {
                             isSuccessful = false;
-                            Log.e(TAG, "Could not disable component: " + packageName + "/" + entry.name, e);
+                            Log.e(TAG, "Could not disable component: %s/%s", e, packageName, entry.name);
                         }
                         break;
                     default:
@@ -473,7 +473,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                     } else setComponent(entry.name, entry.type, entry.getToBe());
                 } catch (Throwable e) {
                     isSuccessful = false;
-                    Log.e(TAG, "Could not enable component: " + packageName + "/" + entry.name, e);
+                    Log.e(TAG, "Could not enable component: %s/%s", e, packageName, entry.name);
                 }
             }
         }
@@ -498,7 +498,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                 appOpsManager.setMode(appOp.getOp(), uid, packageName, appOp.getMode());
             } catch (Throwable e) {
                 isSuccessful = false;
-                Log.e(TAG, "Could not set mode " + appOp.getMode() + " for app op " + appOp.getOp(), e);
+                Log.e(TAG, "Could not set mode %d for app op %d", e, appOp.getMode(), appOp.getOp());
             }
         }
         // Apply all permissions
@@ -514,7 +514,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                 }
             } catch (Throwable e) {
                 isSuccessful = false;
-                Log.e(TAG, "Could not " + (permission.isGranted() ? "grant" : "revoke") + " " + permissionRule.name, e);
+                Log.e(TAG, "Could not %s %s", e, (permission.isGranted() ? "grant" : "revoke"), permissionRule.name);
             }
         }
         return isSuccessful;
@@ -579,7 +579,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
      * available add them to the rules, overridden if necessary.
      */
     private void retrieveDisabledComponents() {
-        Log.d(TAG, "Retrieving disabled components for package " + packageName);
+        Log.d(TAG, "Retrieving disabled components for package %s", packageName);
         if (!mRulesFile.exists() || mRulesFile.getBaseFile().length() == 0) {
             // System doesn't have any rules.
             // Load the rules saved inside App Manager
@@ -594,7 +594,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                 // Override existing rule for the component if it exists
                 setComponent(componentName, components.get(componentName), ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
             }
-            Log.d(TAG, "Retrieved components for package " + packageName);
+            Log.d(TAG, "Retrieved components for package %s", packageName);
         } catch (IOException | RemoteException ignored) {
         }
     }

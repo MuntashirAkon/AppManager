@@ -94,6 +94,6 @@ class ImageFileCache {
                 if (f.delete()) ++count;
             }
         }
-        Log.d("Cache", "Deleted " + count + " images.");
+        Log.d("Cache", "Deleted %d images.", count);
     }
 }

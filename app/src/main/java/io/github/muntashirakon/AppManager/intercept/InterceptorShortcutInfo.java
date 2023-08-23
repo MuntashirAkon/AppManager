@@ -65,7 +65,7 @@ public class InterceptorShortcutInfo extends ShortcutInfo {
             Object value = extras.get(key);
             if (!isValidType(value)) {
                 // Not a valid type, remove it from intent
-                Log.w(TAG, "Removing unsupported key " + key + " (class: " + value.getClass().getName() + ", value: " + value + ")");
+                Log.w(TAG, "Removing unsupported key %s (class: %s, value: %s)", key, value.getClass().getName(), value);
                 intent.removeExtra(key);
             }
         }

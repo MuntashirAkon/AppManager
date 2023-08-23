@@ -125,7 +125,7 @@ public class LiveLogViewerFragment extends AbsLogViewerFragment implements LogVi
         if (mLogCounter % UPDATE_CHECK_INTERVAL == 0 && mLogListAdapter.getRealSize() > maxNumLogLines) {
             int numItemsToRemove = mLogListAdapter.getRealSize() - maxNumLogLines;
             mLogListAdapter.removeFirst(numItemsToRemove);
-            Log.d(TAG, "Truncating " + numItemsToRemove + " lines from log list to avoid out of memory errors");
+            Log.d(TAG, "Truncating %d lines from log list to avoid out of memory errors", numItemsToRemove);
         }
 
         if (mAutoscrollToBottom) {
