@@ -78,47 +78,43 @@ public class Log extends Logger {
     }
 
     public static void i(@Nullable String tag, @NonNull String msg) {
-        if (BuildConfig.DEBUG) {
-            println(INFO, tag, msg, null);
-            android.util.Log.i(tag, msg);
-        }
+        println(INFO, tag, msg, null);
+        android.util.Log.i(tag, msg);
     }
 
     public static void i(@Nullable String tag, @Nullable String msg, @Nullable Throwable tr) {
-        if (BuildConfig.DEBUG) {
-            println(INFO, tag, msg, tr);
-            android.util.Log.i(tag, msg, tr);
-        }
+        println(INFO, tag, msg, tr);
+        android.util.Log.i(tag, msg, tr);
     }
 
     public static void w(@Nullable String tag, @NonNull String msg) {
         println(WARN, tag, msg, null);
-        if (BuildConfig.DEBUG) android.util.Log.w(tag, msg);
+        android.util.Log.w(tag, msg);
     }
 
     public static void w(@Nullable String tag, @Nullable String msg, @Nullable Throwable tr) {
         println(WARN, tag, msg, tr);
-        if (BuildConfig.DEBUG) android.util.Log.w(tag, msg, tr);
+        android.util.Log.w(tag, msg, tr);
     }
 
     public static void w(@Nullable String tag, @Nullable Throwable tr) {
         println(WARN, tag, null, tr);
-        if (BuildConfig.DEBUG) android.util.Log.w(tag, tr);
+        android.util.Log.w(tag, tr);
     }
 
     public static void e(@Nullable String tag, @NonNull String msg) {
         println(ERROR, tag, msg, null);
-        if (BuildConfig.DEBUG) android.util.Log.e(tag, msg);
+        android.util.Log.e(tag, msg);
     }
 
     public static void e(@Nullable String tag, @NonNull Throwable e) {
         println(ERROR, tag, null, e);
-        if (BuildConfig.DEBUG) android.util.Log.e(tag, null, e);
+        android.util.Log.e(tag, null, e);
     }
 
     public static void e(@Nullable String tag, @Nullable String msg, @Nullable Throwable tr) {
         println(ERROR, tag, msg, tr);
-        if (BuildConfig.DEBUG) android.util.Log.e(tag, msg, tr);
+        android.util.Log.e(tag, msg, tr);
     }
 
     private static void println(@Level int level, @Nullable String tag, @Nullable String msg, @Nullable Throwable tr) {
