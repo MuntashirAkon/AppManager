@@ -868,7 +868,7 @@ public abstract class VirtualFileSystem {
             moveChildren(node, sourceBase, destBase);
             // Move this node
             String source = node.getFullPath();
-            String dest = new File(destBase, Paths.getRelativePath(sourceBase, source, File.separator)).getAbsolutePath();
+            String dest = new File(destBase, Paths.relativePath(sourceBase, source)).getAbsolutePath();
             Action action = new Action(ACTION_MOVE, node);
             action.setSourcePath(source);
             addAction(dest, action);

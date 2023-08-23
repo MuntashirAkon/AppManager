@@ -100,7 +100,7 @@ public final class TarUtils {
                 }
                 List<Path> files = Paths.getAll(basePath, source, filters, exclude, followLinks);
                 for (Path file : files) {
-                    String relativePath = Paths.getRelativePath(file, basePath);
+                    String relativePath = Paths.relativePath(file, basePath);
                     if (relativePath.equals("") || relativePath.equals("/")) continue;
                     // For links, check if followLinks is enabled
                     if (!followLinks && file.isSymbolicLink()) {

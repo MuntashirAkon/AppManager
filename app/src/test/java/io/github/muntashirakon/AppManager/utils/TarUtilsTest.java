@@ -414,7 +414,7 @@ public class TarUtilsTest {
     }
 
     private static void gatherFiles(@NonNull List<String> files, @NonNull Path basePath, @NonNull Path source) {
-        files.add(Paths.getRelativePath(source, basePath, File.separator));
+        files.add(Paths.relativePath(source, basePath));
         if (source.isDirectory()) {
             Path[] children = source.listFiles();
             if (children.length == 0) return;
@@ -429,6 +429,6 @@ public class TarUtilsTest {
     static String getRelativePath(@NonNull File file, @NonNull File basePath, @NonNull String separator) {
         String baseDir = basePath.toURI().getPath();
         String targetPath = file.toURI().getPath();
-        return Paths.getRelativePath(targetPath, baseDir, separator);
+        return Paths.relativePath(targetPath, baseDir, separator);
     }
 }

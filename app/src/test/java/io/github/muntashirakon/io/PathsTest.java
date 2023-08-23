@@ -190,4 +190,9 @@ public class PathsTest {
         assertNull(Paths.getPathExtension("a/b.c.d.e."));
         assertEquals("ext", Paths.getPathExtension("asdkjrejvncnmiet/eru43jffn/ewrjpoewiwfjfpwrejtp.ext"));
     }
+
+    @Test
+    public void relativePath() {
+
+    }
 }
