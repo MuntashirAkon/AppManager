@@ -197,7 +197,8 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         pathListView.setAdapter(mPathListAdapter);
         MaterialButton pathEditButton = view.findViewById(R.id.uri_edit);
         pathEditButton.setOnClickListener(v -> {
-            String path = FmUtils.getDisplayablePath(mModel.getCurrentUri());
+            Uri currentUri = mModel.getCurrentUri();
+            String path = currentUri != null ? FmUtils.getDisplayablePath(currentUri) : null;
             new TextInputDialogBuilder(mActivity, null)
                     .setTitle(R.string.go_to_path)
                     .setInputText(path)

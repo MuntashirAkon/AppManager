@@ -42,6 +42,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import io.github.muntashirakon.AppManager.compat.IntegerCompat;
+import io.github.muntashirakon.AppManager.fm.FmUtils;
 import io.github.muntashirakon.AppManager.utils.MotorolaUtils;
 
 public final class IntentCompat {
@@ -84,21 +85,29 @@ public final class IntentCompat {
             return null;
         }
         if (Intent.ACTION_SEND.equals(intent.getAction())) {
-            return getParcelableExtra(intent, Intent.EXTRA_STREAM, Uri.class);
+            return FmUtils.sanitizeContentInput(getParcelableExtra(intent, Intent.EXTRA_STREAM, Uri.class));
         }
-        return intent.getData();
+        return FmUtils.sanitizeContentInput(intent.getData());
     }
 
     @Nullable
     public static List<Uri> getDataUris(@NonNull Intent intent) {
-        if (Intent.ACTION_SEND.equals(intent.getAction())) {
-            return Collections.singletonList(getParcelableExtra(intent, Intent.EXTRA_STREAM, Uri.class));
-        } else if (Intent.ACTION_SEND_MULTIPLE.equals(intent.getAction())) {
-            return getParcelableArrayListExtra(intent, Intent.EXTRA_STREAM, Uri.class);
+        if (Intent.ACTION_SEND_MULTIPLE.equals(intent.getAction())) {
+            List<Uri> inputUris = getParcelableArrayListExtra(intent, Intent.EXTRA_STREAM, Uri.class);
+            if (inputUris == null) {
+                return null;
+            }
+            List<Uri> filteredUris = new ArrayList<>(inputUris.size());
+            for (Uri uri : inputUris) {
+                Uri fixedUri = FmUtils.sanitizeContentInput(uri);
+                if (fixedUri != null) {
+                    filteredUris.add(fixedUri);
+                }
+            }
+            return filteredUris.isEmpty() ? null : filteredUris;
         }
-        Uri data = intent.getData();
-        if (data == null) return null;
-        return Collections.singletonList(data);
+        Uri uri = getDataUri(intent);
+        return uri != null ? Collections.singletonList(uri) : null;
     }
 
     public static void removeFlags(@NonNull Intent intent, int flags) {
@@ -693,25 +702,26 @@ public final class IntentCompat {
             uri.append("android-app://");
             uri.append(intent.getPackage());
             String scheme = null;
-            if (intent.getData() != null) {
-                scheme = intent.getData().getScheme();
+            Uri data = intent.getData();
+            if (data != null) {
+                scheme = data.getScheme();
                 if (scheme != null) {
                     uri.append('/');
                     uri.append(scheme);
-                    String authority = intent.getData().getEncodedAuthority();
+                    String authority = data.getEncodedAuthority();
                     if (authority != null) {
                         uri.append('/');
                         uri.append(authority);
-                        String path = intent.getData().getEncodedPath();
+                        String path = data.getEncodedPath();
                         if (path != null) {
                             uri.append(path);
                         }
-                        String queryParams = intent.getData().getEncodedQuery();
+                        String queryParams = data.getEncodedQuery();
                         if (queryParams != null) {
                             uri.append('?');
                             uri.append(queryParams);
                         }
-                        String fragment = intent.getData().getEncodedFragment();
+                        String fragment = data.getEncodedFragment();
                         if (fragment != null) {
                             uri.append('#');
                             uri.append(fragment);
@@ -724,8 +734,9 @@ public final class IntentCompat {
             return uri.toString();
         }
         String scheme = null;
-        if (intent.getData() != null) {
-            String data = intent.getData().toString();
+        Uri dataUri = intent.getData();
+        if (dataUri != null) {
+            String data = dataUri.toString();
             if ((flags & Intent.URI_INTENT_SCHEME) != 0) {
                 final int N = data.length();
                 for (int i = 0; i < N; i++) {
@@ -767,8 +778,8 @@ public final class IntentCompat {
             // Note that for now we are not going to try to handle the
             // data part; not clear how to represent this as a URI, and
             // not much utility in it.
-            toUriInner(intent.getSelector(), frag, intent.getSelector().getData() != null
-                    ? intent.getSelector().getData().getScheme() : null, null, null, flags);
+            Uri data = intent.getSelector().getData();
+            toUriInner(intent.getSelector(), frag, data != null ? data.getScheme() : null, null, null, flags);
         }
 
         if (frag.length() > 0) {

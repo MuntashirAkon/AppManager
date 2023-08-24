@@ -47,7 +47,7 @@ public class FmProvider extends ContentProvider {
         return getContentUri(path.getUri());
     }
 
-    @VisibleForTesting
+    @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
     @NonNull
     static Uri getContentUri(@NonNull Uri uri) {
         Uri.Builder builder = uri.buildUpon()
@@ -215,7 +215,7 @@ public class FmProvider extends ContentProvider {
      *
      * @see #getContentUri(Uri)
      */
-    @VisibleForTesting
+    @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
     @NonNull
     static Uri getFileProviderPathInternal(@NonNull Uri uri) {
         List<String> pathParts = uri.getPathSegments();

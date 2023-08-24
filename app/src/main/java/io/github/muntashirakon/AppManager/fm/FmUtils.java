@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.provider.DocumentsContract;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 public final class FmUtils {
@@ -58,6 +60,54 @@ public final class FmUtils {
         return ((mode & 04) != 0 ? "r" : "-") +
                 ((mode & 02) != 0 ? "w" : "-") +
                 execMode;
+    }
+
+
+    @Nullable
+    public static Uri sanitizeContentInput(@Nullable Uri uri) {
+        if (uri == null) {
+            return null;
+        }
+        // App Manager supports three schemes: file, content and vfs (private)
+        String scheme = uri.getScheme();
+        if (scheme == null) {
+            // Scheme must be non-null unless explicitly required (such as in FmActivity)
+            return null;
+        }
+        switch (scheme) {
+            case ContentResolver.SCHEME_CONTENT:
+                // Content schemes are handled by authority.
+                if (FmProvider.AUTHORITY.equals(uri.getAuthority())) {
+                    // Sanitize the path part which must be an absolute URL
+                    Uri realUri = FmProvider.getFileProviderPathInternal(uri);
+                    Uri fixedUri = sanitizeContentInput(realUri);
+                    return fixedUri != null ? FmProvider.getContentUri(fixedUri) : null;
+                }
+                // If it's not App Manager itself, return as is.
+                return uri;
+            case ContentResolver.SCHEME_FILE: {
+                // Sanitize the path which must be an absolute URL
+                String path = uri.getPath();
+                path = Paths.relativePath(path, File.separator);
+                return uri.buildUpon().path(path).build();
+            }
+            case VirtualFileSystem.SCHEME: {
+                if (uri.getAuthority() == null) {
+                    // VFS must have an authority
+                    return null;
+                }
+                // VFS path must be absolute URL
+                String path = uri.getPath();
+                if (!path.startsWith(File.separator)) {
+                    path = File.separator + path;
+                }
+                path = Paths.relativePath(path, File.separator);
+                return uri.buildUpon().path(path).build();
+            }
+            default:
+                // Invalid path
+                return null;
+        }
     }
 
     @SuppressWarnings("SuspiciousRegexArgument") // We're not on Windows
