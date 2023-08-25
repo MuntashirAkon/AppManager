@@ -279,9 +279,10 @@ public final class Paths {
         if (path == null) {
             return null;
         }
-        if (path.length() == 0) {
+        if (path.isEmpty()) {
             return null;
         }
+        path = path.replaceAll("[\r\n]", "");
         boolean isAbsolute = path.startsWith(File.separator);
         String[] parts = path.split(File.separator);
         List<String> newParts = new ArrayList<>(parts.length);
@@ -314,9 +315,10 @@ public final class Paths {
         if (path == null) {
             return null;
         }
-        if (path.length() == 0) {
+        if (path.isEmpty()) {
             return null;
         }
+        path = path.replaceAll("[\r\n]", "");
         boolean isAbsolute = path.startsWith(File.separator);
         String[] parts = path.split(File.separator);
         Stack<String> newParts = new Stack<>();
@@ -392,6 +394,7 @@ public final class Paths {
         if (lastPathSegment.isEmpty()) {
             return path;
         }
+        lastPathSegment = lastPathSegment.replaceAll("[\r\n]", "");
         String[] parts = lastPathSegment.split(File.separator);
         List<String> newParts = new ArrayList<>(parts.length);
         for (String part : parts) {

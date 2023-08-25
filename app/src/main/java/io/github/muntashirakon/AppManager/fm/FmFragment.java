@@ -580,7 +580,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             Uri checkedUri = FmUtils.sanitizeContentInput(uncheckedUri);
             if (checkedUri != null) {
                 // Valid path
-                mModel.loadFiles(uncheckedUri);
+                mModel.loadFiles(checkedUri);
             } // else bad URI
             return;
         }

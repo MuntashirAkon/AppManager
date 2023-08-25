@@ -17,6 +17,9 @@ public class PathsTest {
         assertNull(Paths.sanitize("", false));
         assertEquals("/", Paths.sanitize("/", false));
         assertEquals("/", Paths.sanitize("//", false));
+        assertEquals("/", Paths.sanitize("/\n/", false));
+        assertEquals("/", Paths.sanitize("/\n\r/", false));
+        assertEquals("/rn", Paths.sanitize("/r\n\rn/", false));
         assertEquals("/", Paths.sanitize("///", false));
         assertEquals("/a", Paths.sanitize("/a/", false));
         assertEquals("/a", Paths.sanitize("//a//", false));
@@ -39,7 +42,10 @@ public class PathsTest {
         assertNull(Paths.sanitize("", true));
         assertEquals("/", Paths.sanitize("/", true));
         assertEquals("/", Paths.sanitize("//", true));
+        assertEquals("/", Paths.sanitize("/\n/", true));
+        assertEquals("/", Paths.sanitize("/\n\r/", true));
         assertEquals("/", Paths.sanitize("///", true));
+        assertEquals("nr", Paths.sanitize("/n\n\rr/", true));
         assertEquals("a", Paths.sanitize("a/", true));
         assertEquals("a", Paths.sanitize("a//", true));
         assertEquals("a", Paths.sanitize("a///", true));
@@ -62,7 +68,10 @@ public class PathsTest {
         assertNull(Paths.normalize(""));
         assertEquals("/", Paths.normalize("/"));
         assertEquals("/", Paths.normalize("//"));
+        assertEquals("/", Paths.normalize("/\n/"));
+        assertEquals("/", Paths.normalize("/\n\r/"));
         assertEquals("/", Paths.normalize("///"));
+        assertEquals("/rn", Paths.normalize("/r\n\rn/"));
         assertEquals("/a", Paths.normalize("/a/"));
         assertEquals("/a", Paths.normalize("//a//"));
         assertEquals("/a", Paths.normalize("///a///"));
@@ -88,7 +97,10 @@ public class PathsTest {
         assertEquals("", Paths.getLastPathSegment(""));
         assertEquals("", Paths.getLastPathSegment("/"));
         assertEquals("", Paths.getLastPathSegment("//"));
+        assertEquals("", Paths.getLastPathSegment("/\n/"));
+        assertEquals("", Paths.getLastPathSegment("/\n\r/"));
         assertEquals("", Paths.getLastPathSegment("///"));
+        assertEquals("rn", Paths.getLastPathSegment("/r\n\rn/"));
         assertEquals("a", Paths.getLastPathSegment("a/"));
         assertEquals("a", Paths.getLastPathSegment("a//"));
         assertEquals("a", Paths.getLastPathSegment("a///"));
@@ -112,7 +124,10 @@ public class PathsTest {
     public void removeLastPathSegment() {
         assertEquals("", Paths.removeLastPathSegment(""));
         assertEquals("/", Paths.removeLastPathSegment("/"));
+        assertEquals("/", Paths.removeLastPathSegment("/\n/"));
+        assertEquals("/", Paths.removeLastPathSegment("/\n\r/"));
         assertEquals("/", Paths.removeLastPathSegment("///"));
+        assertEquals("/", Paths.removeLastPathSegment("/n\n\rr/"));
         assertEquals("/", Paths.removeLastPathSegment("/."));
         assertEquals("", Paths.removeLastPathSegment(".ext"));
         assertEquals("/", Paths.removeLastPathSegment("/.ext"));
@@ -137,6 +152,9 @@ public class PathsTest {
     public void appendPathSegment() {
         assertEquals("", Paths.appendPathSegment("", ""));
         assertEquals("", Paths.appendPathSegment("", "/"));
+        assertEquals("", Paths.appendPathSegment("", "/\n"));
+        assertEquals("", Paths.appendPathSegment("", "/\n\r"));
+        assertEquals("", Paths.appendPathSegment("", "/\n\r/"));
         assertEquals("/", Paths.appendPathSegment("/", ""));
         assertEquals("/", Paths.appendPathSegment("/", "/"));
         assertEquals("/a", Paths.appendPathSegment("/", "a"));
