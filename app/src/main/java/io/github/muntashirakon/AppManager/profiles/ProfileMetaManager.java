@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.R;
@@ -336,6 +337,9 @@ public class ProfileMetaManager implements LocalizedString {
 
     @NonNull
     static String getCleanedProfileName(@NonNull String dirtyProfileName) {
-        return dirtyProfileName.trim().replaceAll("[\\\\/:?\"<>|\\s]+", "_");  // [\\/:?"<>|\s]
+        String goodProfileName = Paths.sanitizeFilename(dirtyProfileName, "_", Paths.SANITIZE_FLAG_SPACE
+                | Paths.SANITIZE_FLAG_UNIX_ILLEGAL_CHARS | Paths.SANITIZE_FLAG_UNIX_RESERVED
+                | Paths.SANITIZE_FLAG_FAT_ILLEGAL_CHARS);
+        return goodProfileName != null ? goodProfileName : UUID.randomUUID().toString();
     }
 }

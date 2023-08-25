@@ -15,7 +15,6 @@ import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.system.ErrnoException;
 import android.system.Os;
-import android.text.TextUtils;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
@@ -57,22 +56,6 @@ public final class FileUtils {
     @NonNull
     public static String getFilenameFromZipEntry(@NonNull ZipEntry zipEntry) {
         return Paths.getLastPathSegment(zipEntry.getName());
-    }
-
-    @AnyThread
-    @Nullable
-    public static String getSanitizedFilename(@NonNull String fileName, boolean replaceSpace) {
-        if (fileName.equals(".") || fileName.equals("..")) {
-            return null;
-        }
-        fileName = fileName.trim().replaceAll("[\\\\/:*?\"<>|]", "_");
-        if (replaceSpace) {
-            fileName = fileName.replaceAll("\\s", "_");
-        }
-        if (TextUtils.isEmpty(fileName)) {
-            return null;
-        }
-        return fileName;
     }
 
     @NonNull

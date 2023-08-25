@@ -40,6 +40,7 @@ import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 public class AppDetailsActivity extends BaseActivity {
     public static final String ALIAS_APP_INFO = "io.github.muntashirakon.AppManager.details.AppInfoActivity";
@@ -127,7 +128,8 @@ public class AppDetailsActivity extends BaseActivity {
             Intent intent = getIntent();
             Uri uri = IntentCompat.getDataUri(intent);
             mBackToMainPage = intent.getBooleanExtra(EXTRA_BACK_TO_MAIN, mBackToMainPage);
-            mPackageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
+            // Package name needs to be sanitized since it's also a file
+            mPackageName = Paths.sanitizeFilename(intent.getStringExtra(EXTRA_PACKAGE_NAME));
             mApkSource = uri != null
                     ? new ApkFile.ApkSource(uri, intent.getType())
                     : IntentCompat.getParcelableExtra(intent, EXTRA_APK_SOURCE, ApkFile.ApkSource.class);

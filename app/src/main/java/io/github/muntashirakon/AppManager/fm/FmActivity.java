@@ -95,6 +95,7 @@ public class FmActivity extends BaseActivity {
                 uri = null;
             }
         }
+        uri = FmUtils.sanitizeContentInput(uri);
         if (savedInstanceState == null) {
             Options options = getIntent().getExtras() != null ? BundleCompat.getParcelable(getIntent().getExtras(), EXTRA_OPTIONS, Options.class) : null;
             Integer position = null;

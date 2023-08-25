@@ -11,6 +11,7 @@ import android.system.OsConstants;
 import android.text.TextUtils;
 
 import androidx.annotation.AnyThread;
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -34,6 +35,48 @@ import io.github.muntashirakon.io.fs.VirtualFileSystem;
 @SuppressWarnings("SuspiciousRegexArgument") // Not Windows, Android is Linux
 public final class Paths {
     public static final String TAG = Paths.class.getSimpleName();
+
+    /**
+     * Replace spaces with replacement
+     */
+    public static final int SANITIZE_FLAG_SPACE = 1;
+    /**
+     * Replace {@code /} with replacement
+     */
+    public static final int SANITIZE_FLAG_UNIX_ILLEGAL_CHARS = 1 << 1;
+    /**
+     * Returns null if the filename becomes {@code .} or {@code ..} after applying all the sanitization rules
+     */
+    public static final int SANITIZE_FLAG_UNIX_RESERVED = 1 << 2;
+    /**
+     * Replace {@code :} with replacement
+     */
+    public static final int SANITIZE_FLAG_MAC_OS_ILLEGAL_CHARS = 1 << 3;
+    /**
+     * Replace {@code / ? < > \ : * | "} and control characters with replacement
+     */
+    public static final int SANITIZE_FLAG_NTFS_ILLEGAL_CHARS = 1 << 4;
+    /**
+     * Replace {@code / ? < > \ : * | " ^} and control characters with replacement
+     */
+    public static final int SANITIZE_FLAG_FAT_ILLEGAL_CHARS = 1 << 5;
+    /**
+     * Returns null if the filename becomes com1, com2, com3, com4, com5, com6, com7, com8, com9, lpt1, lpt2, lpt3,
+     * lpt4, lpt5, lpt6, lpt7, lpt8, lpt9, con, nul, or prn after applying all the sanitization rules
+     */
+    public static final int SANITIZE_FLAG_WINDOWS_RESERVED = 1 << 6;
+
+    @IntDef(flag = true, value = {
+            SANITIZE_FLAG_SPACE,
+            SANITIZE_FLAG_UNIX_ILLEGAL_CHARS,
+            SANITIZE_FLAG_UNIX_RESERVED,
+            SANITIZE_FLAG_MAC_OS_ILLEGAL_CHARS,
+            SANITIZE_FLAG_NTFS_ILLEGAL_CHARS,
+            SANITIZE_FLAG_FAT_ILLEGAL_CHARS,
+            SANITIZE_FLAG_WINDOWS_RESERVED
+    })
+    public @interface SanitizeFlags {
+    }
 
     @NonNull
     public static Path getPrimaryPath(@Nullable String path) {
@@ -157,6 +200,70 @@ public final class Paths {
             }
         }
         return path;
+    }
+
+    @Nullable
+    public static String sanitizeFilename(@Nullable String filename) {
+        return sanitizeFilename(filename, null);
+    }
+
+    @Nullable
+    public static String sanitizeFilename(@Nullable String filename, @Nullable String replacement) {
+        return sanitizeFilename(filename, replacement, SANITIZE_FLAG_UNIX_ILLEGAL_CHARS | SANITIZE_FLAG_UNIX_RESERVED);
+    }
+
+    @Nullable
+    public static String sanitizeFilename(@Nullable String filename, @Nullable String replacement, @SanitizeFlags int flags) {
+        if (filename == null) {
+            return null;
+        }
+        if (replacement == null) {
+            replacement = "";
+        }
+        boolean spaces = (flags & SANITIZE_FLAG_SPACE) != 0;
+        boolean unixIllegal = (flags & SANITIZE_FLAG_UNIX_ILLEGAL_CHARS) != 0;
+        boolean unixReserved = (flags & SANITIZE_FLAG_UNIX_RESERVED) != 0;
+        boolean macOsIllegal = (flags & SANITIZE_FLAG_MAC_OS_ILLEGAL_CHARS) != 0;
+        boolean ntfsIllegal = (flags & SANITIZE_FLAG_NTFS_ILLEGAL_CHARS) != 0;
+        boolean fatIllegal = (flags & SANITIZE_FLAG_FAT_ILLEGAL_CHARS) != 0;
+        boolean windowsReserved = (flags & SANITIZE_FLAG_WINDOWS_RESERVED) != 0;
+        String illegal = "[\n\r"; // Always replace newlines
+        if (fatIllegal) {
+            illegal += "\\\\/:*?\"<>|^\u0000-\u001f\u0080-\u009f";
+        } else if (ntfsIllegal) {
+            illegal += "\\\\/:*?\"<>|\u0000-\u001f\u0080-\u009f";
+        } else if (macOsIllegal && unixIllegal) {
+            illegal += ":/";
+        } else if (macOsIllegal) {
+            illegal += ":";
+        } else if (unixIllegal) {
+            illegal += "/";
+        }
+        if (spaces) {
+            illegal += " ";
+        }
+        illegal += "]";
+        filename = filename.trim().replaceAll(illegal, replacement);
+        if (filename.isEmpty()) {
+            return null;
+        }
+        if (unixReserved && (filename.equals(".") || filename.equals(".."))) {
+            return null;
+        }
+        if (windowsReserved && filename.matches("^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\\..*)?$")) {
+            return null;
+        }
+        if (fatIllegal) {
+            // Supports only 255 chars
+            int maxLimit = Math.min(filename.length(), 255);
+            return filename.substring(0, maxLimit);
+        }
+        if (ntfsIllegal) {
+            // Supports only 256 chars
+            int maxLimit = Math.min(filename.length(), 256);
+            return filename.substring(0, maxLimit);
+        }
+        return filename;
     }
 
     /**

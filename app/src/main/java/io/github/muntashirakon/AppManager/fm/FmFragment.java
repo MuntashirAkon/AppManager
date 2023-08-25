@@ -577,17 +577,23 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     private void goToRawPath(@NonNull String p) {
         Uri uncheckedUri = Uri.parse(p);
         if (uncheckedUri.getScheme() != null) {
-            // Valid path
-            mModel.loadFiles(uncheckedUri);
+            Uri checkedUri = FmUtils.sanitizeContentInput(uncheckedUri);
+            if (checkedUri != null) {
+                // Valid path
+                mModel.loadFiles(uncheckedUri);
+            } // else bad URI
             return;
         }
         // Bad Uri, consider it to be a file://
         if (p.startsWith(File.separator)) {
             // absolute file
-            mModel.loadFiles(uncheckedUri.buildUpon().scheme(ContentResolver.SCHEME_FILE).build());
+            Uri checkedUri = FmUtils.sanitizeContentInput(uncheckedUri.buildUpon().scheme(ContentResolver.SCHEME_FILE).build());
+            if (checkedUri != null) {
+                mModel.loadFiles(checkedUri);
+            } // else bad file
             return;
         }
-        // relative path
+        // Relative path
         String goodPath = Paths.sanitize(p, false);
         if (goodPath == null) {
             // No relative path means current path which is already loaded
