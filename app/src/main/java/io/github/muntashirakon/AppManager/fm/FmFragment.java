@@ -595,7 +595,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         }
         // Relative path
         String goodPath = Paths.sanitize(p, false);
-        if (goodPath == null) {
+        if (goodPath == null || goodPath.equals(File.separator)) {
             // No relative path means current path which is already loaded
             return;
         }
@@ -604,7 +604,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             List<String> pathSegments = currentUri.getPathSegments();
             if (pathSegments.size() == 4) {
                 // For a tree URI, the 3rd index is the path
-                String lastPathSegment = pathSegments.get(3) + File.separator + p;
+                String lastPathSegment = pathSegments.get(3) + File.separator + goodPath;
                 Uri.Builder b = new Uri.Builder()
                         .scheme(currentUri.getScheme())
                         .authority(currentUri.getAuthority())
@@ -619,7 +619,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         }
         // For others, simply append path segments at the end
         @SuppressWarnings("SuspiciousRegexArgument") // We aren't on Windows
-        String[] segments = p.split(File.separator);
+        String[] segments = goodPath.split(File.separator);
         Uri.Builder b = currentUri.buildUpon();
         for (String segment : segments) {
             b.appendPath(segment);
