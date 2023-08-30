@@ -4,15 +4,14 @@ package io.github.muntashirakon.AppManager.apk.signing;
 
 import androidx.annotation.NonNull;
 
-import com.reandroid.archive2.Archive;
-import com.reandroid.archive2.ArchiveEntry;
-import com.reandroid.archive2.writer.ApkWriter;
-import com.reandroid.archive2.writer.ZipAligner;
+import com.reandroid.archive.ArchiveEntry;
+import com.reandroid.archive.ArchiveFile;
+import com.reandroid.archive.writer.ApkFileWriter;
+import com.reandroid.archive.writer.ZipAligner;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
+import java.util.Iterator;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 
@@ -32,8 +31,9 @@ public class ZipAlign {
         if (!Paths.exists(dir)) {
             dir.mkdirs();
         }
-        Archive archive = new Archive(input);
-        try (ApkWriter apkWriter = new ApkWriter(output, archive.mapEntrySource().values())) {
+
+        try (ArchiveFile archive = new ArchiveFile(input);
+             ApkFileWriter apkWriter = new ApkFileWriter(output, archive.getInputSources())) {
             apkWriter.setZipAligner(getZipAligner(alignment, pageAlignSharedLibs));
             apkWriter.write();
         }
@@ -56,18 +56,19 @@ public class ZipAlign {
     }
 
     public static boolean verify(@NonNull File file, int alignment, boolean pageAlignSharedLibs) {
-        Archive zipFile;
+        ArchiveFile zipFile;
         boolean foundBad = false;
         Log.d(TAG, "Verifying alignment of %s...", file);
 
         try {
-            zipFile = new Archive(file);
+            zipFile = new ArchiveFile(file);
         } catch (IOException e) {
             Log.e(TAG, "Unable to open '%s' for verification", e, file);
             return false;
         }
-        List<ArchiveEntry> entries = zipFile.getEntryList();
-        for (ArchiveEntry pEntry : entries) {
+        Iterator<ArchiveEntry> entryIterator = zipFile.iterator();
+        while (entryIterator.hasNext()) {
+            ArchiveEntry pEntry = entryIterator.next();
             String name = pEntry.getName();
             long fileOffset = pEntry.getFileOffset();
             if (pEntry.getMethod() == ZipEntry.DEFLATED) {
@@ -88,11 +89,15 @@ public class ZipAlign {
         }
 
         Log.d(TAG, "Verification %s\n", foundBad ? "FAILED" : "successful");
-
+        try {
+            zipFile.close();
+        } catch (IOException e) {
+            Log.w(TAG, "Unable to close '%s'", e, file);
+        }
         return !foundBad;
     }
 
-    private static int getAlignment(@NonNull ZipEntry entry, int defaultAlignment, boolean pageAlignSharedLibs) {
+    private static int getAlignment(@NonNull ArchiveEntry entry, int defaultAlignment, boolean pageAlignSharedLibs) {
         if (!pageAlignSharedLibs) {
             return defaultAlignment;
         }

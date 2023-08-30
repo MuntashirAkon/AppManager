@@ -188,7 +188,7 @@ public final class ApkUtils {
         HashMap<String, String> manifestAttrs = new HashMap<>();
         XMLDocument xmlDocument = AndroidBinXmlDecoder.decodeToXml(manifestBytes);
         XMLElement manifestElement = xmlDocument.getDocumentElement();
-        if (!"manifest".equals(manifestElement.getTagName())) {
+        if (!"manifest".equals(manifestElement.getName())) {
             throw new ApkFile.ApkFileException("No manifest found.");
         }
         for (XMLAttribute attribute : manifestElement.listAttributes()) {
@@ -198,8 +198,8 @@ public final class ApkUtils {
             manifestAttrs.put(attribute.getName(), attribute.getValue());
         }
         XMLElement androidElement = null;
-        for (XMLElement elem : manifestElement.listChildElements()) {
-            if ("application".equals(elem.getTagName())) {
+        for (XMLElement elem : manifestElement.getChildElementList()) {
+            if ("application".equals(elem.getName())) {
                 androidElement = elem;
                 break;
             }

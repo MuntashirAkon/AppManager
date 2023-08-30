@@ -12,13 +12,11 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 import com.reandroid.apk.AndroidFrameworks;
+import com.reandroid.arsc.chunk.PackageBlock;
 import com.reandroid.arsc.chunk.xml.ResXmlDocument;
 import com.reandroid.arsc.chunk.xml.ResXmlPullParser;
-import com.reandroid.arsc.decoder.Decoder;
 import com.reandroid.arsc.io.BlockReader;
-import com.reandroid.common.TableEntryStore;
 import com.reandroid.xml.XMLDocument;
-import com.reandroid.xml.XMLException;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -76,7 +74,7 @@ public class AndroidBinXmlDecoder {
             ResXmlDocument resXmlDocument = new ResXmlDocument();
             resXmlDocument.readBytes(reader);
             try (ResXmlPullParser parser = new ResXmlPullParser()) {
-                parser.setDecoder(new Decoder(getDefaultTableEntryStore(), 0));
+                parser.setCurrentPackage(getFrameworkPackageBlock());
                 parser.setResXmlDocument(resXmlDocument);
                 StringBuilder indent = new StringBuilder(10);
                 final String indentStep = "  ";
@@ -129,9 +127,8 @@ public class AndroidBinXmlDecoder {
         ResXmlDocument xmlBlock = new ResXmlDocument();
         try (BlockReader reader = new BlockReader(byteBuffer.array())) {
             xmlBlock.readBytes(reader);
-            return xmlBlock.decodeToXml(getDefaultTableEntryStore(), 0);
-        } catch (XMLException e) {
-            throw new IOException(e);
+            xmlBlock.setPackageBlock(getFrameworkPackageBlock());
+            return xmlBlock.decodeToXml();
         }
     }
 
@@ -144,14 +141,13 @@ public class AndroidBinXmlDecoder {
     }
 
     @NonNull
-    private static TableEntryStore getDefaultTableEntryStore() throws IOException {
-        if (sDefaultTableEntryStore != null) {
-            return sDefaultTableEntryStore;
+    static PackageBlock getFrameworkPackageBlock() throws IOException {
+        if (sFrameworkPackageBlock != null) {
+            return sFrameworkPackageBlock;
         }
-        sDefaultTableEntryStore = new TableEntryStore();
-        sDefaultTableEntryStore.add(AndroidFrameworks.getLatest().getTableBlock());
-        return sDefaultTableEntryStore;
+        sFrameworkPackageBlock = AndroidFrameworks.getLatest().getTableBlock().getAllPackages().next();
+        return sFrameworkPackageBlock;
     }
 
-    private static TableEntryStore sDefaultTableEntryStore;
+    private static PackageBlock sFrameworkPackageBlock;
 }
