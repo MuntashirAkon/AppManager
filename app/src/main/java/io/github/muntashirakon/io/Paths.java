@@ -113,7 +113,7 @@ public final class Paths {
 
     @NonNull
     public static Path get(@NonNull String pathName) {
-        return new Path(ContextUtils.getContext(), pathName);
+        return new Path(ContextUtils.getContext(), Objects.requireNonNull(pathName));
     }
 
     @NonNull

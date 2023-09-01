@@ -29,6 +29,7 @@ import java.util.zip.ZipOutputStream;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
@@ -36,6 +37,8 @@ import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
 public class ApksMetadata {
+    public static final String TAG = ApksMetadata.class.getSimpleName();
+
     public static final String META_FILE = "info.json";
     public static final String ICON_FILE = "icon.png";
 
@@ -168,7 +171,14 @@ public class ApksMetadata {
                 }
                 PackageInfo packageInfo = pm.getPackageArchiveInfo(file, PackageManager.GET_SHARED_LIBRARY_FILES);
                 if (packageInfo == null) {
+                    Log.w(TAG, "Could not fetch package info for file %s", file);
                     continue;
+                }
+                if (packageInfo.applicationInfo.sourceDir == null) {
+                    packageInfo.applicationInfo.sourceDir = file;
+                }
+                if (packageInfo.applicationInfo.publicSourceDir == null) {
+                    packageInfo.applicationInfo.publicSourceDir = file;
                 }
                 // Save as APKS first
                 File tempFile = FileCache.getGlobalFileCache().createCachedFile("apks");
