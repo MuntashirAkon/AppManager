@@ -650,6 +650,7 @@
                 <action android:name="android.intent.action.INSERT_OR_EDIT" />
                 <!-- Used by camera to view photo taken -->
                 <action android:name="com.android.camera.action.REVIEW" />
+                <action android:name="com.android.camera.action.SPLIT_SCREEN_REVIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -665,6 +666,9 @@
                 <action android:name="android.intent.action.GET_CONTENT" />
                 <action android:name="android.intent.action.INSERT" />
                 <action android:name="android.intent.action.INSERT_OR_EDIT" />
+                <!-- Used by camera to view photo taken -->
+                <action android:name="com.android.camera.action.REVIEW" />
+                <action android:name="com.android.camera.action.SPLIT_SCREEN_REVIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -678,6 +682,9 @@
                 <action android:name="android.intent.action.GET_CONTENT" />
                 <action android:name="android.intent.action.INSERT" />
                 <action android:name="android.intent.action.INSERT_OR_EDIT" />
+                <!-- Used by camera to view photo taken -->
+                <action android:name="com.android.camera.action.REVIEW" />
+                <action android:name="com.android.camera.action.SPLIT_SCREEN_REVIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -690,6 +697,7 @@
                 <data android:scheme="mailto" />
                 <data android:scheme="geo" />
                 <data android:scheme="file" />
+                <data android:scheme="content" />
 
                 <data android:scheme="rtsp" />
                 <data android:scheme="rtmp" />
@@ -721,6 +729,9 @@
                 <action android:name="android.intent.action.GET_CONTENT" />
                 <action android:name="android.intent.action.INSERT" />
                 <action android:name="android.intent.action.INSERT_OR_EDIT" />
+                <!-- Used by camera to view photo taken -->
+                <action android:name="com.android.camera.action.REVIEW" />
+                <action android:name="com.android.camera.action.SPLIT_SCREEN_REVIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -733,6 +744,7 @@
                 <data android:scheme="mailto" />
                 <data android:scheme="geo" />
                 <data android:scheme="file" />
+                <data android:scheme="content" />
 
                 <data android:scheme="rtsp" />
                 <data android:scheme="rtmp" />
