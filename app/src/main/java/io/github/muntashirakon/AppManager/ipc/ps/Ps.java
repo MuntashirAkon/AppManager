@@ -2,9 +2,13 @@
 
 package io.github.muntashirakon.AppManager.ipc.ps;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.annotation.WorkerThread;
 
@@ -23,7 +27,9 @@ import io.github.muntashirakon.proc.ProcStatus;
  * This is a generic Java-way of parsing processes from /proc. This is a work in progress and by no means perfect. To
  * create this class, I extensively followed the documentation located at https://www.kernel.org/doc/Documentation/filesystems/proc.txt.
  */
-public class Ps {
+public final class Ps {
+    public static final String TAG = Ps.class.getSimpleName();
+
     @NonNull
     private final ProcFs mProcFs;
     @GuardedBy("processEntries")
@@ -61,9 +67,24 @@ public class Ps {
             // Get process info for each PID
             for (int pid : mProcFs.getPids()) {
                 ProcItem procItem = new ProcItem();
-                procItem.stat = mProcFs.getStat(pid);
-                procItem.memStat = mProcFs.getMemStat(pid);
-                procItem.status = mProcFs.getStatus(pid);
+                ProcStat procStat = mProcFs.getStat(pid);
+                ProcMemStat procMemStat = mProcFs.getMemStat(pid);
+                ProcStatus procStatus = mProcFs.getStatus(pid);
+                if (procStat == null) {
+                    Log.w(TAG, "Could not read /proc/" + pid + "/stat");
+                    continue;
+                }
+                if (procMemStat == null) {
+                    Log.w(TAG, "Could not read /proc/" + pid + "/statm");
+                    continue;
+                }
+                if (procStatus == null) {
+                    Log.w(TAG, "Could not read /proc/" + pid + "/status");
+                    continue;
+                }
+                procItem.stat = procStat;
+                procItem.memStat = procMemStat;
+                procItem.status = procStatus;
                 procItem.name = mProcFs.getCmdline(pid);
                 procItem.sepol = mProcFs.getCurrentContext(pid);
                 procItem.wchan = mProcFs.getWchan(pid);
@@ -92,7 +113,7 @@ public class Ps {
         processEntry.threadCount = procItem.stat.getInteger(ProcStat.STAT_NUM_THREADS);
         processEntry.tty = procItem.stat.getInteger(ProcStat.STAT_TTY_NR);
         processEntry.seLinuxPolicy = procItem.sepol;
-        processEntry.name = procItem.name.equals("") ? procItem.status.getString(ProcStatus.STATUS_NAME) : procItem.name;
+        processEntry.name = TextUtils.isEmpty(procItem.name) ? procItem.status.getString(ProcStatus.STATUS_NAME) : procItem.name;
         processEntry.users = new ProcessUsers(procItem.status.getString(ProcStatus.STATUS_UID), procItem.status.getString(ProcStatus.STATUS_GID));
         processEntry.cpuTimeConsumed = (procItem.stat.getInteger(ProcStat.STAT_UTIME)
                 + procItem.stat.getInteger(ProcStat.STAT_STIME)) / mClockTicks;
@@ -128,8 +149,11 @@ public class Ps {
         public ProcStat stat;
         public ProcMemStat memStat;
         public ProcStatus status;
+        @Nullable
         public String name;
+        @Nullable
         public String sepol;
+        @Nullable
         public String wchan;
     }
 }

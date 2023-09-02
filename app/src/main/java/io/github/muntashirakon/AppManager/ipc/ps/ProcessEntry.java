@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.os.ParcelCompat;
 
 import java.util.Objects;
@@ -27,6 +28,7 @@ public class ProcessEntry implements Parcelable {
     public int cpu;
     public int threadCount;
     public int tty;
+    @Nullable
     public String seLinuxPolicy;
     public String name;
     public ProcessUsers users;

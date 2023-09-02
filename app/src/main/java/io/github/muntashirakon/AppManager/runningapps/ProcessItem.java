@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.os.ParcelCompat;
 
 import java.util.Objects;
@@ -19,6 +20,7 @@ public class ProcessItem implements Parcelable {
     public final long rss;
     public final int uid;
     public final String user;
+    @Nullable
     public final String context;
 
     public String state;

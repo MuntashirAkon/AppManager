@@ -63,7 +63,9 @@ public final class ProcessParser {
                 processEntries = ps.getProcesses();
             }
             for (ProcessEntry processEntry : processEntries) {
-                if (processEntry.seLinuxPolicy.contains(":kernel:")) continue;
+                if (processEntry.seLinuxPolicy != null && processEntry.seLinuxPolicy.contains(":kernel:")) {
+                    continue;
+                }
                 try {
                     processItems.addAll(parseProcess(processEntry));
                 } catch (Exception ignore) {
