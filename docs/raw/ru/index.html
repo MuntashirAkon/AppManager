@@ -1,13 +1,14 @@
-<!doctype html><html xmlns=http://www.w3.org/1999/xhtml lang=ru xml:lang=ru><meta charset=utf-8><meta name=generator content="pandoc"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=author content="Muntashir Al-Islam"><title>App Manager</title><style>code{white-space:pre-wrap}span.smallcaps{font-variant:small-caps}div.columns{display:flex;gap:min(4vw,1.5em)}div.column{flex:auto;overflow-x:auto}div.hanging-indent{margin-left:1.5em;text-indent:-1.5em}ul.task-list{list-style:none}ul.task-list li input[type=checkbox]{width:.8em;margin:0 .8em .2em -1.6em;vertical-align:middle}.display.math{display:block;text-align:center;margin:.5rem auto}pre>code.sourceCode{white-space:pre;position:relative}pre>code.sourceCode>span{display:inline-block;line-height:1.25}pre>code.sourceCode>span:empty{height:1.2em}.sourceCode{overflow:visible}code.sourceCode>span{color:inherit;text-decoration:inherit}div.sourceCode{margin:1em 0}pre.sourceCode{margin:0}@media screen{div.sourceCode{overflow:auto}}@media print{pre>code.sourceCode{white-space:pre-wrap}pre>code.sourceCode>span{text-indent:-5em;padding-left:5em}}pre.numberSource code{counter-reset:source-line 0}pre.numberSource code>span{position:relative;left:-4em;counter-increment:source-line}pre.numberSource code>span>a:first-child::before{content:counter(source-line);position:relative;left:-1em;text-align:right;vertical-align:baseline;border:none;display:inline-block;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;padding:0 4px;width:4em}pre.numberSource{margin-left:3em;padding-left:4px}div.sourceCode{}@media screen{pre>code.sourceCode>span>a:first-child::before{text-decoration:underline}}code span.al{font-weight:700}code span.an{font-style:italic}code span.cf{font-weight:700}code span.co{font-style:italic}code span.cv{font-style:italic}code span.do{font-style:italic}code span.dt{text-decoration:underline}code span.er{font-weight:700}code span.in{font-style:italic}code span.kw{font-weight:700}code span.pp{font-weight:700}code span.wa{font-style:italic}</style><link rel=stylesheet href=../css/custom.css><header id=title-block-header><h1 class=title>App Manager</h1><p class=author>Muntashir Al-Islam</header><nav id=TOC role=doc-toc><ul class=incremental><li><span><span class=toc-section-number>1</span> <a href=#ch:introduction id=toc:ch:introduction>Введение</a></span><ul class=incremental><li><span><span class=toc-section-number>1.1</span> <a href=#sec:terminologies id=toc:sec:terminologies>Терминология</a></span><li><span><span class=toc-section-number>1.2</span> <a href=#sec:supported-versions id=toc:sec:supported-versions>Поддерживаемые версии</a></span><li><span><span class=toc-section-number>1.3</span> <a href=#sec:official-sources id=toc:sec:official-sources>Официальные
+<!doctype html><html xmlns=http://www.w3.org/1999/xhtml lang=ru xml:lang=ru><meta charset=utf-8><meta name=generator content="pandoc"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=author content="Muntashir Al-Islam"><title>App Manager</title><style>code{white-space:pre-wrap}span.smallcaps{font-variant:small-caps}div.columns{display:flex;gap:min(4vw,1.5em)}div.column{flex:auto;overflow-x:auto}div.hanging-indent{margin-left:1.5em;text-indent:-1.5em}ul.task-list[class]{list-style:none}ul.task-list li input[type=checkbox]{font-size:inherit;width:.8em;margin:0 .8em .2em -1.6em;vertical-align:middle}.display.math{display:block;text-align:center;margin:.5rem auto}pre>code.sourceCode{white-space:pre;position:relative}pre>code.sourceCode>span{display:inline-block;line-height:1.25}pre>code.sourceCode>span:empty{height:1.2em}.sourceCode{overflow:visible}code.sourceCode>span{color:inherit;text-decoration:inherit}div.sourceCode{margin:1em 0}pre.sourceCode{margin:0}@media screen{div.sourceCode{overflow:auto}}@media print{pre>code.sourceCode{white-space:pre-wrap}pre>code.sourceCode>span{text-indent:-5em;padding-left:5em}}pre.numberSource code{counter-reset:source-line 0}pre.numberSource code>span{position:relative;left:-4em;counter-increment:source-line}pre.numberSource code>span>a:first-child::before{content:counter(source-line);position:relative;left:-1em;text-align:right;vertical-align:baseline;border:none;display:inline-block;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;padding:0 4px;width:4em}pre.numberSource{margin-left:3em;padding-left:4px}div.sourceCode{}@media screen{pre>code.sourceCode>span>a:first-child::before{text-decoration:underline}}code span.al{font-weight:700}code span.an{font-style:italic}code span.cf{font-weight:700}code span.co{font-style:italic}code span.cv{font-style:italic}code span.do{font-style:italic}code span.dt{text-decoration:underline}code span.er{font-weight:700}code span.in{font-style:italic}code span.kw{font-weight:700}code span.pp{font-weight:700}code span.wa{font-style:italic}</style><link rel=stylesheet href=../css/custom.css><header id=title-block-header><h1 class=title>App Manager</h1><p class=author>Muntashir Al-Islam</header><nav id=TOC role=doc-toc><ul class=incremental><li><span><span class=toc-section-number>1</span> <a href=#ch:introduction id=toc:ch:introduction>Введение</a></span><ul class=incremental><li><span><span class=toc-section-number>1.1</span> <a href=#sec:terminologies id=toc:sec:terminologies>Терминология</a></span><li><span><span class=toc-section-number>1.2</span> <a href=#sec:supported-versions id=toc:sec:supported-versions>Поддерживаемые версии</a></span><li><span><span class=toc-section-number>1.3</span> <a href=#sec:official-sources id=toc:sec:official-sources>Официальные
 источники</a></span><ul class=incremental><li><span><span class=toc-section-number>1.3.1</span> <a href=#subsec:binary-distribution-sources id=toc:subsec:binary-distribution-sources>Источники
 распостранения</a></span><li><span><span class=toc-section-number>1.3.2</span> <a href=#subsec:links-to-source-code id=toc:subsec:links-to-source-code>Ссылки на исходный
 код</a></span><li><span><span class=toc-section-number>1.3.3</span> <a href=#subsec:translations id=toc:subsec:translations>Переводы</a></span></ul><li><span><span class=toc-section-number>1.4</span> <a href=#sec:contributing id=toc:sec:contributing>Вклад</a></span><ul class=incremental><li><span><span class=toc-section-number>1.4.1</span> <a href=#subsec:build-instructions id=toc:subsec:build-instructions>Инструкции по сборке</a></span><li><span><span class=toc-section-number>1.4.2</span> <a href=#subsec:submitting-patches id=toc:subsec:submitting-patches>Отправка исправлений</a></span></ul><li><span><span class=toc-section-number>1.5</span> <a href=#sec:donation-&-funding id=toc:sec:donation-&-funding>Пожертвование &
 Финансирование</a></span><li><span><span class=toc-section-number>1.6</span> <a href=#sec:contact id=toc:sec:contact>Связь</a></span></ul><li><span><span class=toc-section-number>2</span> <a href=#ch:pages id=toc:ch:pages>Страницы</a></span><ul class=incremental><li><span><span class=toc-section-number>2.1</span> <a href=#sec:main-page id=toc:sec:main-page>Главная страница</a></span><ul class=incremental><li><span><span class=toc-section-number>2.1.1</span> <a href=#subsec:batch-operations id=toc:subsec:batch-operations>Пакетные операции</a></span><li><span><span class=toc-section-number>2.1.2</span> <a href=#subsec:main-colour-codes id=toc:subsec:main-colour-codes>Цветовые коды</a></span><li><span><span class=toc-section-number>2.1.3</span> <a href=#subsec:main-page-application-types id=toc:subsec:main-page-application-types>Типы
 приложений</a></span><li><span><span class=toc-section-number>2.1.4</span> <a href=#subsec:main-page-version-info id=toc:subsec:main-page-version-info>Информация о
-версии</a></span><li><span><span class=toc-section-number>2.1.5</span> <a href=#subsec:main-page-options-menu id=toc:subsec:main-page-options-menu>Меню настроек</a></span></ul><li><span><span class=toc-section-number>2.2</span> <a href=#sec:app-details-page id=toc:sec:app-details-page>App Details
-Page</a></span><ul class=incremental><li><span><span class=toc-section-number>2.2.1</span> <a href=#subsec:app-details-colour-codes id=toc:subsec:app-details-colour-codes>Colour Codes</a></span><li><span><span class=toc-section-number>2.2.2</span> <a href=#subsec:app-info-tab id=toc:subsec:app-info-tab>App Info
-Tab</a></span><li><span><span class=toc-section-number>2.2.3</span> <a href=#subsec:component-tabs id=toc:subsec:component-tabs>Component
-Tabs</a></span><li><span><span class=toc-section-number>2.2.4</span> <a href=#subsec:permission-tabs id=toc:subsec:permission-tabs>Permission Tabs</a></span><li><span><span class=toc-section-number>2.2.5</span> <a href=#subsec:signatures-tab id=toc:subsec:signatures-tab>Signatures
+версии</a></span><li><span><span class=toc-section-number>2.1.5</span> <a href=#subsec:main-page-options-menu id=toc:subsec:main-page-options-menu>Меню настроек</a></span></ul><li><span><span class=toc-section-number>2.2</span> <a href=#sec:app-details-page id=toc:sec:app-details-page>Страница
+сведений о приложении</a></span><ul class=incremental><li><span><span class=toc-section-number>2.2.1</span> <a href=#subsec:app-details-colour-codes id=toc:subsec:app-details-colour-codes>Цветовые коды</a></span><li><span><span class=toc-section-number>2.2.2</span> <a href=#subsec:app-info-tab id=toc:subsec:app-info-tab>Вкладка
+"Сведения о приложении"</a></span><li><span><span class=toc-section-number>2.2.3</span> <a href=#subsec:component-tabs id=toc:subsec:component-tabs>Вкладки
+компонентов</a></span><li><span><span class=toc-section-number>2.2.4</span> <a href=#subsec:permission-tabs id=toc:subsec:permission-tabs>Вкладки
+разрешений</a></span><li><span><span class=toc-section-number>2.2.5</span> <a href=#subsec:signatures-tab id=toc:subsec:signatures-tab>Signatures
 Tab</a></span><li><span><span class=toc-section-number>2.2.6</span> <a href=#subsec:shared-libs-tab id=toc:subsec:shared-libs-tab>Shared
 Libraries Tab</a></span><li><span><span class=toc-section-number>2.2.7</span> <a href=#subsec:other-tabs id=toc:subsec:other-tabs>Other
 Tabs</a></span></ul><li><span><span class=toc-section-number>2.3</span> <a href=#sec:1-click-ops-page id=toc:sec:1-click-ops-page>1-Click Ops
@@ -130,7 +131,7 @@ Backup/Sharing</a></span><li><span><span class=toc-section-number>6.6.8</span> <
 Backup</a></span></ul></ul><li><span><span class=toc-section-number>7</span> <a href=#ch:app-ops id=toc:ch:app-ops>App Ops</a></span><ul class=incremental><li><span><span class=toc-section-number>7.1</span> <a href=#sec:app-ops-background id=toc:sec:app-ops-background>Background</a></span><li><span><span class=toc-section-number>7.2</span> <a href=#sec:introduction-to-app-ops id=toc:sec:introduction-to-app-ops>Introduction to App
 Ops</a></span><li><span><span class=toc-section-number>7.3</span> <a href=#sec:appopsmanager id=toc:sec:appopsmanager>AppOpsManager</a></span><ul class=incremental><li><span><span class=toc-section-number>7.3.1</span> <a href=#subsec:op-constants id=toc:subsec:op-constants><code>OP_*</code> Constants</a></span><li><span><span class=toc-section-number>7.3.2</span> <a href=#subsec:mode-constants id=toc:subsec:mode-constants><code>MODE_*</code>
 Constants</a></span><li><span><span class=toc-section-number>7.3.3</span> <a href=#subsec:package-ops id=toc:subsec:package-ops>PackageOps</a></span><li><span><span class=toc-section-number>7.3.4</span> <a href=#subsec:opentry id=toc:subsec:opentry>OpEntry</a></span><li><span><span class=toc-section-number>7.3.5</span> <a href=#subsec:usage id=toc:subsec:usage>Usage</a></span></ul><li><span><span class=toc-section-number>7.4</span> <a href=#sec:appopsservice id=toc:sec:appopsservice>AppOpsService</a></span><li><span><span class=toc-section-number>7.5</span> <a href=#sec:appops-xml id=toc:sec:appops-xml>appops.xml</a></span><li><span><span class=toc-section-number>7.6</span> <a href=#sec:appops-cli id=toc:sec:appops-cli>Command Line
-Interface</a></span></ul></ul></nav><div class=titlingpage><div class=center><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>Руководство пользователя</strong><p><em>v3.1.0</em><p>24 марта 2023<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“Мудро и медленно; они спотыкаются, что бегают быстро.” <span>— Брат
+Interface</a></span></ul></ul></nav><div class=titlingpage><div class=center><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>Руководство пользователя</strong><p><em>v4.0.0-alpha01</em><p>3 сентября 2023<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“Мудро и медленно; они спотыкаются, что бегают быстро.” <span>— Брат
 Лоуренс, <em>Ромео и Джульетта</em></span></blockquote></div></div><section id=ch:introduction class=level1 data-number=1><h1 data-number=1><span class=header-section-number>1</span> <a href=#toc:ch:introduction>Введение</a><a href=#ch:introduction class=anchor aria-hidden=true></a></h1><p>App Manager это продвинутый менеджер приложений для Android. Оно
 предоставляет несчётное количество возможностей, следовательно, требует
 руководство потльзователя чтобы помочь пользователям. Этот документ
@@ -321,23 +322,23 @@ Access</em>. Этот пункт меню не будет указан, если
 открывает диалоговое окно, в котором отображается более подробная
 информация.</section><section id=профили class=level4 data-number=2.1.5.7><h4 data-number=2.1.5.7><span class=header-section-number>2.1.5.7</span> Профили<a href=#профили class=anchor aria-hidden=true></a></h4><p>Этот пункт меню открывает <a href=#sec:profiles-page>profiles
 page</a>. Профили - это способ настройки регулярно используемых задач.
-Они также могут быть вызваны с помощью ярлыков.</section><section id=subsubsec:log-viewer class=level4 data-number=2.1.5.8><h4 data-number=2.1.5.8><span class=header-section-number>2.1.5.8</span> Просмотр лога<a href=#subsubsec:log-viewer class=anchor aria-hidden=true></a></h4><p>This menu item opens the log viewer page which can display and manage
-logs using the <code>logcat</code> command. By default, this page can
-only display the activities of App Manager. However, it can display logs
-from all the processes if <code>android.permission.READ_LOGS</code> is
-granted. This permission granted automatically if the current <a href=#subsec:mode-of-operation>mode of operation</a> is either root or
-ADB.</section><section id=программа-обновления-apk class=level4 data-number=2.1.5.9><h4 data-number=2.1.5.9><span class=header-section-number>2.1.5.9</span> Программа обновления APK<a href=#программа-обновления-apk class=anchor aria-hidden=true></a></h4><p>If the app <a href=https://github.com/rumboalla/apkupdater>APK
-Updater</a> is installed in the system, it can be opened directly via
-this menu item. The option remains hidden if the app is not present in
-the system.</section><section id=termux class=level4 data-number=2.1.5.10><h4 data-number=2.1.5.10><span class=header-section-number>2.1.5.10</span> Termux<a href=#termux class=anchor aria-hidden=true></a></h4><p>If the app <a href=https://github.com/termux/termux-app>Termux</a>
-is installed in the system, the running session (or a new session) can
-be opened directly via this menu item. The option remains hidden if the
-app is not present in the system.</section><section id=настройки class=level4 data-number=2.1.5.11><h4 data-number=2.1.5.11><span class=header-section-number>2.1.5.11</span> Настройки<a href=#настройки class=anchor aria-hidden=true></a></h4><p>This menu item opens the in-app <a href=#sec:settings-page>Settings
-page</a>.</section></section></section><section id=sec:app-details-page class=level2 data-number=2.2><h2 data-number=2.2><span class=header-section-number>2.2</span> <a href=#toc:sec:app-details-page>App Details Page</a><a href=#sec:app-details-page class=anchor aria-hidden=true></a></h2><p><strong>App Details</strong> page consists of 11 (eleven) tabs. It
+Они также могут быть вызваны с помощью ярлыков.</section><section id=subsubsec:log-viewer class=level4 data-number=2.1.5.8><h4 data-number=2.1.5.8><span class=header-section-number>2.1.5.8</span> Просмотр лога<a href=#subsubsec:log-viewer class=anchor aria-hidden=true></a></h4><p>Этот пункт меню открывает страницу просмотра журнала где отображаются
+логи с возможностью управлять ими с помощью команды <code>logcat</code>.
+По умолчанию эта страница может отображать только действия диспетчера
+приложений. Однако она может отображать журналы со всех обрабатываемых
+процессов если предоставлено разрешение
+<code>android.permission.READ_LOGS</code>. Это разрешение
+предоставляется автоматически, если текущий <a href=#subsec:mode-of-operation>режим работы</a> либо root, либо
+ADB.</section><section id=программа-обновления-apk class=level4 data-number=2.1.5.9><h4 data-number=2.1.5.9><span class=header-section-number>2.1.5.9</span> Программа обновления APK<a href=#программа-обновления-apk class=anchor aria-hidden=true></a></h4><p>Если в системе установлено приложение <a href=https://github.com/rumboalla/apkupdater>APK Updater</a>, его
+можно открыть через этот пункт меню. Параметр остается скрытым, если
+приложение отсутствует в системе.</section><section id=termux class=level4 data-number=2.1.5.10><h4 data-number=2.1.5.10><span class=header-section-number>2.1.5.10</span> Termux<a href=#termux class=anchor aria-hidden=true></a></h4><p>Если в системе установлено приложение <a href=https://github.com/termux/termux-app>Termux</a>, запущенный сеанс
+(или новый сеанс) можно открыть через этот пункт меню. Параметр остается
+скрытым, если приложение отсутствует в система.</section><section id=настройки class=level4 data-number=2.1.5.11><h4 data-number=2.1.5.11><span class=header-section-number>2.1.5.11</span> Настройки<a href=#настройки class=anchor aria-hidden=true></a></h4><p>This menu item opens the in-app <a href=#sec:settings-page>Settings
+page</a>.</section></section></section><section id=sec:app-details-page class=level2 data-number=2.2><h2 data-number=2.2><span class=header-section-number>2.2</span> <a href=#toc:sec:app-details-page>Страница сведений о приложении</a><a href=#sec:app-details-page class=anchor aria-hidden=true></a></h2><p><strong>App Details</strong> page consists of 11 (eleven) tabs. It
 describes almost every bit of information an application can have,
 including all attributes from its manifest, <a href=#ch:app-ops>application operations</a>, signing information,
 libraries, and so on.<section id=subsec:app-details-colour-codes class=level3 data-number=2.2.1><h3 data-number=2.2.1><span class=header-section-number>2.2.1</span>
-<a href=#toc:subsec:app-details-colour-codes>Colour Codes</a><a href=#subsec:app-details-colour-codes class=anchor aria-hidden=true></a></h3><p>List of colours used in this page, and their meaning:<ul class=incremental><li><p><span class=colorbox style=background-color:red><span style=color:#000>Red (day)</span></span> / <span class=colorbox style=background-color:#790d0d><span style=color:#fff>dark red
+<a href=#toc:subsec:app-details-colour-codes>Цветовые коды</a><a href=#subsec:app-details-colour-codes class=anchor aria-hidden=true></a></h3><p>List of colours used in this page, and their meaning:<ul class=incremental><li><p><span class=colorbox style=background-color:red><span style=color:#000>Red (day)</span></span> / <span class=colorbox style=background-color:#790d0d><span style=color:#fff>dark red
 (night)</span></span> – Denotes any app ops or permissions having the
 dangerous flag, or any components blocked within App Manager<li><p><span class=colorbox style=background-color:#ff8a80><span style=color:#000>Light red (day)</span></span> / <span class=colorbox style=background-color:#4f1c14><span style=color:#fff>very
 dark red (night)</span></span> – Denotes the components disabled outside
@@ -347,9 +348,9 @@ as disabled in its manifest. The components of a disabled application
 are also considered disabled by the system (and App Manager).</div><li><p><span class=colorbox style=background-color:#ff8017><span style=color:#000>Vivid orange (day)</span></span> / <span class=colorbox style=background-color:#ff801780><span style=color:#fff>very dark orange (night)</span></span> – Denotes
 the tracker components<li><p><span class=colorbox style=background-color:#ea80fc><span style=color:#000>Soft magenta (day)</span></span> / <span class=colorbox style=background-color:#431c5d><span style=color:#fff>very dark violet (night)</span></span> – Denotes
 the running services.</ul></section><section id=subsec:app-info-tab class=level3 data-number=2.2.2><h3 data-number=2.2.2><span class=header-section-number>2.2.2</span>
-<a href=#toc:subsec:app-info-tab>App Info Tab</a><a href=#subsec:app-info-tab class=anchor aria-hidden=true></a></h3><p><strong>App Info</strong> tab contains general information about an
+<a href=#toc:subsec:app-info-tab>Вкладка "Сведения о приложении"</a><a href=#subsec:app-info-tab class=anchor aria-hidden=true></a></h3><p><strong>App Info</strong> tab contains general information about an
 application. It also lists many actions that can be performed within
-this tab.<section id=subsubsec:app-info-general-information class=level4 data-number=2.2.2.1><h4 data-number=2.2.2.1><span class=header-section-number>2.2.2.1</span> General Information<a href=#subsubsec:app-info-general-information class=anchor aria-hidden=true></a></h4><p>The list below is in the same order as listed in the App Info
+this tab.<section id=subsubsec:app-info-general-information class=level4 data-number=2.2.2.1><h4 data-number=2.2.2.1><span class=header-section-number>2.2.2.1</span> Общая информация<a href=#subsubsec:app-info-general-information class=anchor aria-hidden=true></a></h4><p>The list below is in the same order as listed in the App Info
 tab.<ul class=incremental><li><p><strong>Application Icon.</strong> The application icon. If the
 application does not have an icon, the system default icon will be
 displayed. It is also possible to verify the APK signature via SHA or
@@ -436,7 +437,7 @@ not be trusted.</div></ul><li><p><strong>SELinux.</strong> Mandatory access cont
 set by the operating system via SELinux.<li><p><strong>Main Activity.</strong> The main entry point to the
 application. This is only visible if the application has <a href=#subsubsec:activities>activities</a> and any of those are
 openable from the Launcher. There’s also a launch button on the
-right-hand side which can be used to launch this activity.</ul></ul></section><section id=subsubsec:tags class=level4 data-number=2.2.2.2><h4 data-number=2.2.2.2><span class=header-section-number>2.2.2.2</span> Tags<a href=#subsubsec:tags class=anchor aria-hidden=true></a></h4><ul class=incremental><li><p><strong>Tracker info.</strong> Number of tracker components in
+right-hand side which can be used to launch this activity.</ul></ul></section><section id=subsubsec:tags class=level4 data-number=2.2.2.2><h4 data-number=2.2.2.2><span class=header-section-number>2.2.2.2</span> Теги<a href=#subsubsec:tags class=anchor aria-hidden=true></a></h4><ul class=incremental><li><p><strong>Tracker info.</strong> Number of tracker components in
 the application (e.g., <em>5 trackers</em>) The colour of the tag
 appears orange if the trackers are unblocked and dark cyan if they are
 blocked in App Manager. Clicking on the tag opens a dialog containing
@@ -499,7 +500,8 @@ needed.<li><p><strong>SAF.</strong> Denotes that the application has been
 granted to access one or more storage locations or files i.e. URIs via
 Storage Access Framework (SAF). Clicking on the tag opens a dialog
 containing the list of granted URIs.<li><p><strong>Play App Signing.</strong> Indicates that the application
-might be signed by Google.</ul></section><section id=subsubsec:horizontal-action-panel class=level4 data-number=2.2.2.3><h4 data-number=2.2.2.3><span class=header-section-number>2.2.2.3</span> Horizontal Action Panel<a href=#subsubsec:horizontal-action-panel class=anchor aria-hidden=true></a></h4><p>Horizontal Action Panel, as described in the previous section,
+might be signed by Google.</ul></section><section id=subsubsec:horizontal-action-panel class=level4 data-number=2.2.2.3><h4 data-number=2.2.2.3><span class=header-section-number>2.2.2.3</span> Горизонтальная панель
+действий<a href=#subsubsec:horizontal-action-panel class=anchor aria-hidden=true></a></h4><p>Horizontal Action Panel, as described in the previous section,
 consists of various application-related actions, such as–<ul class=incremental><li><p><strong>Launch.</strong> Launch the application provided it has a
 launcher <a href=#subsubsec:activities>activity</a>.<li><p><strong>Freeze.</strong> Freeze the application. This button is
 not displayed if it is already frozen or the user does not have enough
@@ -559,7 +561,7 @@ list of activities that can open the database. This option is only
 visible if the user has the required privileges.<li><p><strong>F-Droid.</strong> Open the application in the selected
 <em>F-Droid</em> client.<li><p><strong>Store.</strong> Open the application in <em>Aurora
 Store</em>. The option is only visible if <em>Aurora Store</em> is
-installed.</ul></section><section id=subsubsec:app-info-options-menu class=level4 data-number=2.2.2.4><h4 data-number=2.2.2.4><span class=header-section-number>2.2.2.4</span> Options Menu<a href=#subsubsec:app-info-options-menu class=anchor aria-hidden=true></a></h4><p>Options-menu is located in the top-right corner of the page. A
+installed.</ul></section><section id=subsubsec:app-info-options-menu class=level4 data-number=2.2.2.4><h4 data-number=2.2.2.4><span class=header-section-number>2.2.2.4</span> Меню параметров<a href=#subsubsec:app-info-options-menu class=anchor aria-hidden=true></a></h4><p>Options-menu is located in the top-right corner of the page. A
 complete description of the options present there are given below:<ul class=incremental><li><p><strong>Share.</strong> Share button can be used to share the APK
 or (if the application is has multiple splits, OBB files or any
 dependencies) <em>APKS</em> file extracted from the
@@ -584,13 +586,13 @@ Configure network policy (e.g., background data usage) for the
 application.<li><p><strong>Extract Icon.</strong> Extract and save the application’s
 icon in the shared storage.<li><p><strong>Add to profile.</strong> Add the application to one of
 the configured <a href=#sec:profile-page>profiles</a>.<li><p><strong>Install for….</strong> Install the application for
-another user and/or in the work profile if configured.</ul></section><section id=subsubsec:config-termux class=level4 data-number=2.2.2.5><h4 data-number=2.2.2.5><span class=header-section-number>2.2.2.5</span> Configuring Termux<a href=#subsubsec:config-termux class=anchor aria-hidden=true></a></h4><p>By default, Termux does not allow running commands from third-party
+another user and/or in the work profile if configured.</ul></section><section id=subsubsec:config-termux class=level4 data-number=2.2.2.5><h4 data-number=2.2.2.5><span class=header-section-number>2.2.2.5</span> Настройки Termux<a href=#subsubsec:config-termux class=anchor aria-hidden=true></a></h4><p>By default, Termux does not allow running commands from third-party
 applications. To use this option, Termux v0.96 or later is required and
 <code>allow-external-apps=true</code> must be added in
 <code>~/.termux/termux.properties</code>.<div class="amalert tip"><p><strong><em>Info.</em></strong><p>Enabling this option does not weaken Termux’ security. The
 third-party applications still need to ask the user to allow running
 arbitrary commands in Termux.</div></section></section><section id=subsec:component-tabs class=level3 data-number=2.2.3><h3 data-number=2.2.3><span class=header-section-number>2.2.3</span>
-<a href=#toc:subsec:component-tabs>Component Tabs</a><a href=#subsec:component-tabs class=anchor aria-hidden=true></a></h3><p><strong>Activities</strong>, <strong>Services</strong>,
+<a href=#toc:subsec:component-tabs>Вкладки компонентов</a><a href=#subsec:component-tabs class=anchor aria-hidden=true></a></h3><p><strong>Activities</strong>, <strong>Services</strong>,
 <strong>Receivers</strong> (i.e. broadcast receivers) and
 <strong>Providers</strong> (i.e. content providers) are collectively
 known as the application components. This is because they share similar
@@ -626,7 +628,7 @@ Details</em> page because it requires you to, at least, supply a package
 name. Since these dependencies cannot be inferred programmatically,
 these activities may not be opened via App Manager by default.</div><p>It is also possible to create shortcuts of the activities via the
 <strong>Create shortcut</strong> button.<div class="amalert danger"><p><strong><em>Caution.</em></strong><p>If you uninstall App Manager, all shortcuts created by App Manager
-will be lost.</div></section><section id=subsubsec:details:servcies class=level4 data-number=2.2.3.2><h4 data-number=2.2.3.2><span class=header-section-number>2.2.3.2</span> Services<a href=#subsubsec:details:servcies class=anchor aria-hidden=true></a></h4><p>Unlike <a href=#subsubsec:activities>activities</a> that users can
+will be lost.</div></section><section id=subsubsec:details:servcies class=level4 data-number=2.2.3.2><h4 data-number=2.2.3.2><span class=header-section-number>2.2.3.2</span> Сервисы<a href=#subsubsec:details:servcies class=anchor aria-hidden=true></a></h4><p>Unlike <a href=#subsubsec:activities>activities</a> that users can
 see, <strong>Services</strong> handle background tasks. For example, if
 you’re downloading a video from the internet using your phone’s Internet
 browser, the Internet browser is using a <em>foreground service</em> to
@@ -647,7 +649,7 @@ feature known as <em>MIUI optimisation</em>.<p>Both activities and services are 
 main looper, which means the services are not really run in the
 background. It is the task of the developer to ensure this. How do the
 application communicate with the service? It uses <a href=#subsubsec:app-details-receivers>broadcast receiver</a> or
-Binder.</section><section id=subsubsec:app-details-receivers class=level4 data-number=2.2.3.3><h4 data-number=2.2.3.3><span class=header-section-number>2.2.3.3</span> Receivers<a href=#subsubsec:app-details-receivers class=anchor aria-hidden=true></a></h4><p><strong>Receivers</strong> (also called <em>broadcast receivers</em>)
+Binder.</section><section id=subsubsec:app-details-receivers class=level4 data-number=2.2.3.3><h4 data-number=2.2.3.3><span class=header-section-number>2.2.3.3</span> Приемники<a href=#subsubsec:app-details-receivers class=anchor aria-hidden=true></a></h4><p><strong>Receivers</strong> (also called <em>broadcast receivers</em>)
 can be used to trigger execution of certain tasks when certain events
 occur. These components are called broadcast receivers because they are
 executed as soon as a broadcast message is received. These broadcast
@@ -675,8 +677,8 @@ are many content providers, including the ones provided by the system,
 to manage various content-related tasks such as database management,
 tracking, searching, etc. Each content provider has a field called
 <em>Authority</em> which is unique to the application in the entire
-Android ecosystem just as the package name.</section><section id=additional-features-for-rooted-phones class=level4 data-number=2.2.3.5><h4 data-number=2.2.3.5><span class=header-section-number>2.2.3.5</span> Additional Features for
-Rooted Phones<a href=#additional-features-for-rooted-phones class=anchor aria-hidden=true></a></h4><p>Unlike the no-root users who are mostly spectators in these tabs,
+Android ecosystem just as the package name.</section><section id=дополнительные-функции-для-устройств-с-root-доступом class=level4 data-number=2.2.3.5><h4 data-number=2.2.3.5><span class=header-section-number>2.2.3.5</span> Дополнительные функции для
+устройств с root доступом<a href=#дополнительные-функции-для-устройств-с-root-доступом class=anchor aria-hidden=true></a></h4><p>Unlike the no-root users who are mostly spectators in these tabs,
 root users can perform various operations.<section id=blocking-components class=level5 data-number=2.2.3.5.1><h5 data-number=2.2.3.5.1><span class=header-section-number>2.2.3.5.1</span> Blocking Components<a href=#blocking-components class=anchor aria-hidden=true></a></h5><p>On the right-most side of each component item, there is a switch
 which can be used to toggle the blocking status of that particular
 component. If <a href=#subsubsec:instant-component-blocking>Instant
@@ -693,7 +695,7 @@ they are blocked using the same method used for blocking any other
 components.</div><div class=seealso><p><em>Смотрите также:</em><ul class=incremental><li><p><a href=#subsec:tracker-classes-versus-tracker-components>FAQ:
 Tracker classes versus tracker components</a><li><p><a href=#sec:scanner-page>Scanner Page</a><li><p><a href=#subsec:block-unblock-trackers>1-Click Ops Page:
 Block/Unblock Trackers</a></ul></div></section></section></section><section id=subsec:permission-tabs class=level3 data-number=2.2.4><h3 data-number=2.2.4><span class=header-section-number>2.2.4</span>
-<a href=#toc:subsec:permission-tabs>Permission Tabs</a><a href=#subsec:permission-tabs class=anchor aria-hidden=true></a></h3><p><strong>App Ops</strong>, <strong>Uses Permissions</strong> and
+<a href=#toc:subsec:permission-tabs>Вкладки разрешений</a><a href=#subsec:permission-tabs class=anchor aria-hidden=true></a></h3><p><strong>App Ops</strong>, <strong>Uses Permissions</strong> and
 <strong>Permissions</strong> tabs are related to permissions. In Android
 communication across applications or processes which do not have the
 same identity (known as <em>shared ID</em>) often require permissions.
@@ -1438,15 +1440,13 @@ Card. This is useful for games and the graphical software which actually
 use these folders.<li><p><strong>Cache.</strong> Android apps have multiple cache
 directories located at every data directories (both internal and
 external). There are two types of cache: <strong>cache</strong> and
-<strong>code cache</strong>. Enabling this option excludes both cache
+<strong>code cache</strong>. Disabling this option excludes both cache
 directories from all the data directories. It is generally advised to
 exclude cache directories since most apps do not clear the cache
-regularly (for some reason, the only way an app can clear its cache is
-by deleting the entire cache directory) and usually handled by the OS
-itself. Apps such as Telegram may use a very large cache (depending on
-the storage space) which may dramatically increase the backup size. When
-it is disabled, AM also ignores the <strong>no_backup</strong>
-directories.<li><p><strong>Extras.</strong> Backup/restore app permissions, net
+regularly and usually handled by the OS itself. Apps such as Telegram
+may use a very large cache (depending on the storage space) which may
+dramatically increase the backup size. When it is disabled, AM also
+ignores the <strong>no_backup</strong> directories.<li><p><strong>Extras.</strong> Backup/restore app permissions, net
 policy, battery optimization, SSAID, etc., enabled by default. Note
 that, blocking rules are applied <em>after</em> applying the extras. So,
 if an item is present in both places, it will be overwritten (i.e., the
@@ -1739,16 +1739,16 @@ permission is granted or revoked</ul></section><section id=external class=level4
 Manager.<pre><code>    &lt;package_name&gt; &lt;component_name&gt; &lt;type&gt; &lt;mode&gt;|&lt;component_status&gt;|&lt;is_granted&gt;</code></pre><p>This the format is essentially the same as above except for the first
 item which is the name of the package.<div class="amalert danger"><p><strong><em>Caution.</em></strong><p>The exported rules have a different format than the internal one and
 should not be copied directly to the <strong>conf</strong> folder.</div></section></section></section></section><section id=ch:changelogs class=level1 data-number=6><h1 data-number=6><span class=header-section-number>6</span> <a href=#toc:ch:changelogs>Changelogs</a><a href=#ch:changelogs class=anchor aria-hidden=true></a></h1><section id=sec:v3.1.0-(423) class=level2 data-number=6.1><h2 data-number=6.1><span class=header-section-number>6.1</span> <a href=#toc:sec:v3.1.0-(423)>v3.1.0 (423)</a><a href=#sec:v3.1.0-(423) class=anchor aria-hidden=true></a></h2><p>App Manager v3.1.0 comes with a few new features and a lot of
-improvements. Visit <a href="intent://settings/about/changelog#Intent;scheme=app-manager;end">Settings
-> About > Version/Changelog</a> for details.<section id=android-13-support class=level3 data-number=6.1.1><h3 data-number=6.1.1><span class=header-section-number>6.1.1</span>
+improvements. Visit <a href=app-manager://settings/about/version>Settings > About >
+Version/Changelog</a> for details.<section id=android-13-support class=level3 data-number=6.1.1><h3 data-number=6.1.1><span class=header-section-number>6.1.1</span>
 <a href=#toc:android-13-support>Android 13 support</a><a href=#android-13-support class=anchor aria-hidden=true></a></h3><p>App Manager now targets Android 13 which means most issues in Android
 12 and 13 has been addressed, including SSAID and SAF issues as well as
 monochrome icons and other theming issues.<section id=known-issue class=level5 data-number=6.1.1.0.1><h5 data-number=6.1.1.0.1><span class=header-section-number>6.1.1.0.1</span> Known issue<a href=#known-issue class=anchor aria-hidden=true></a></h5><p>KeyStore backup/restore not working in Android 12 and later.</section></section><section id=introducing-freezeunfreeze class=level3 data-number=6.1.2><h3 data-number=6.1.2><span class=header-section-number>6.1.2</span>
 <a href=#toc:introducing-freezeunfreeze>Introducing
 freeze/unfreeze</a><a href=#introducing-freezeunfreeze class=anchor aria-hidden=true></a></h3><p>Enable/disable is replaced with freeze/unfreeze to allow greater
 control on the behaviours of an app. It supports suspend, disable and
-hide functionalities which can be controlled at <a href="intent://settings/rules_prefs/freeze_type#Intent;scheme=app-manager;end">Settings
-> Rules > Default freezing method</a>. In order to make it easy to
+hide functionalities which can be controlled at <a href=app-manager://settings/rules_prefs/freeze_type>Settings >
+Rules > Default freezing method</a>. In order to make it easy to
 freeze or unfreeze an app, shortcuts can also be created from the App
 Info tab by long clicking on the freeze or unfreeze button.</section><section id=export-app-list class=level3 data-number=6.1.3><h3 data-number=6.1.3><span class=header-section-number>6.1.3</span>
 <a href=#toc:export-app-list>Export app list</a><a href=#export-app-list class=anchor aria-hidden=true></a></h3><p>In the Main page, it is now possible to export the list of apps in
@@ -1799,8 +1799,8 @@ introduced in Android 11.</section></section><section id=others class=level3 dat
 during conversion<li><p>Improved scanning performance in the Scanner page<li><p>Improved updating the list of apps in the Main page<li><p>Scan all the available paths to detect systemless-ly installed
 system apps<li><p><code>vacuum</code> SQLite database before opening it for viewing
 or editing.</ul></section></section><section id=sec:v3.0.0-(410) class=level2 data-number=6.2><h2 data-number=6.2><span class=header-section-number>6.2</span> <a href=#toc:sec:v3.0.0-(410)>v3.0.0 (410)</a><a href=#sec:v3.0.0-(410) class=anchor aria-hidden=true></a></h2><p>App Manager v3.0.0 comes with a lot of features and improvements. See
-<a href="intent://settings/changelog#Intent;scheme=app-manager;end">Settings
-> Changelog</a> to see a more detailed changelog.<section id=material-3-and-more class=level3 data-number=6.2.1><h3 data-number=6.2.1><span class=header-section-number>6.2.1</span>
+<a href=app-manager://settings/about/version>Settings > About >
+Version/Changelog</a> to see a more detailed changelog.<section id=material-3-and-more class=level3 data-number=6.2.1><h3 data-number=6.2.1><span class=header-section-number>6.2.1</span>
 <a href=#toc:material-3-and-more>Material 3 and More</a><a href=#material-3-and-more class=anchor aria-hidden=true></a></h3><p>Material 3, somewhat similar to <em>Material You</em>, is a
 significant improvement over Material Design 2 with support for dynamic
 colours in Android 12 and later. In addition, many design changes have
@@ -2267,6 +2267,6 @@ options:
 &lt;OP&gt;      an AppOps operation.
 &lt;MODE&gt;    one of allow, ignore, deny, or default
 &lt;USER_ID&gt; the user id under which the package is installed. If --user is not
-specified, the current user is assumed.</code></pre></section></section><section id=footnotes class="footnotes footnotes-end-of-document" role=doc-endnotes><hr><ol><li id=fn1><p>Только для распостранения стабильных релизов<a href=#fnref1 class=footnote-back role=doc-backlink>↩︎</a><li id=fn2><p>GitHub pull запросы будут объединены вручную с помощью
+specified, the current user is assumed.</code></pre></section></section><aside id=footnotes class="footnotes footnotes-end-of-document" role=doc-endnotes><hr><ol><li id=fn1><p>Только для распостранения стабильных релизов<a href=#fnref1 class=footnote-back role=doc-backlink>↩︎</a><li id=fn2><p>GitHub pull запросы будут объединены вручную с помощью
 соответствующих патчей. В результате GitHub может ошибочно пометить их
-как закрытые вместо объединенных.<a href=#fnref2 class=footnote-back role=doc-backlink>↩︎</a><li id=fn3><p>Вы также можете обращаться ко мне как “Muntashir Akon”<a href=#fnref3 class=footnote-back role=doc-backlink>↩︎</a></ol></section>
+как закрытые вместо объединенных.<a href=#fnref2 class=footnote-back role=doc-backlink>↩︎</a><li id=fn3><p>Вы также можете обращаться ко мне как “Muntashir Akon”<a href=#fnref3 class=footnote-back role=doc-backlink>↩︎</a></ol></aside>

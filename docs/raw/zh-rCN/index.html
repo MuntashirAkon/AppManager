@@ -1,4 +1,4 @@
-<!doctype html><html xmlns=http://www.w3.org/1999/xhtml lang=zh-hans xml:lang=zh-Hans><meta charset=utf-8><meta name=generator content="pandoc"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=author content="Muntashir Al-Islam"><title>App Manager</title><style>code{white-space:pre-wrap}span.smallcaps{font-variant:small-caps}div.columns{display:flex;gap:min(4vw,1.5em)}div.column{flex:auto;overflow-x:auto}div.hanging-indent{margin-left:1.5em;text-indent:-1.5em}ul.task-list{list-style:none}ul.task-list li input[type=checkbox]{width:.8em;margin:0 .8em .2em -1.6em;vertical-align:middle}.display.math{display:block;text-align:center;margin:.5rem auto}pre>code.sourceCode{white-space:pre;position:relative}pre>code.sourceCode>span{display:inline-block;line-height:1.25}pre>code.sourceCode>span:empty{height:1.2em}.sourceCode{overflow:visible}code.sourceCode>span{color:inherit;text-decoration:inherit}div.sourceCode{margin:1em 0}pre.sourceCode{margin:0}@media screen{div.sourceCode{overflow:auto}}@media print{pre>code.sourceCode{white-space:pre-wrap}pre>code.sourceCode>span{text-indent:-5em;padding-left:5em}}pre.numberSource code{counter-reset:source-line 0}pre.numberSource code>span{position:relative;left:-4em;counter-increment:source-line}pre.numberSource code>span>a:first-child::before{content:counter(source-line);position:relative;left:-1em;text-align:right;vertical-align:baseline;border:none;display:inline-block;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;padding:0 4px;width:4em}pre.numberSource{margin-left:3em;padding-left:4px}div.sourceCode{}@media screen{pre>code.sourceCode>span>a:first-child::before{text-decoration:underline}}code span.al{font-weight:700}code span.an{font-style:italic}code span.cf{font-weight:700}code span.co{font-style:italic}code span.cv{font-style:italic}code span.do{font-style:italic}code span.dt{text-decoration:underline}code span.er{font-weight:700}code span.in{font-style:italic}code span.kw{font-weight:700}code span.pp{font-weight:700}code span.wa{font-style:italic}</style><link rel=stylesheet href=../css/custom.css><header id=title-block-header><h1 class=title>App Manager</h1><p class=author>Muntashir Al-Islam</header><nav id=TOC role=doc-toc><ul class=incremental><li><span><span class=toc-section-number>1</span> <a href=#ch:introduction id=toc:ch:introduction>简介</a></span><ul class=incremental><li><span><span class=toc-section-number>1.1</span> <a href=#sec:terminologies id=toc:sec:terminologies>术语</a></span><li><span><span class=toc-section-number>1.2</span> <a href=#sec:supported-versions id=toc:sec:supported-versions>受支持的版本</a></span><li><span><span class=toc-section-number>1.3</span> <a href=#sec:official-sources id=toc:sec:official-sources>官方来源</a></span><ul class=incremental><li><span><span class=toc-section-number>1.3.1</span> <a href=#subsec:binary-distribution-sources id=toc:subsec:binary-distribution-sources>二进制(可执行)分发来源</a></span><li><span><span class=toc-section-number>1.3.2</span> <a href=#subsec:links-to-source-code id=toc:subsec:links-to-source-code>源码链接</a></span><li><span><span class=toc-section-number>1.3.3</span> <a href=#subsec:translations id=toc:subsec:translations>翻译</a></span></ul><li><span><span class=toc-section-number>1.4</span> <a href=#sec:contributing id=toc:sec:contributing>贡献</a></span><ul class=incremental><li><span><span class=toc-section-number>1.4.1</span> <a href=#subsec:build-instructions id=toc:subsec:build-instructions>构建说明</a></span><li><span><span class=toc-section-number>1.4.2</span> <a href=#subsec:submitting-patches id=toc:subsec:submitting-patches>提交补丁</a></span></ul><li><span><span class=toc-section-number>1.5</span> <a href=#sec:donation-&-funding id=toc:sec:donation-&-funding>捐赠 & 资助</a></span><li><span><span class=toc-section-number>1.6</span> <a href=#sec:contact id=toc:sec:contact>联系我们</a></span></ul><li><span><span class=toc-section-number>2</span> <a href=#ch:pages id=toc:ch:pages>页面</a></span><ul class=incremental><li><span><span class=toc-section-number>2.1</span> <a href=#sec:main-page id=toc:sec:main-page>主页</a></span><ul class=incremental><li><span><span class=toc-section-number>2.1.1</span> <a href=#subsec:batch-operations id=toc:subsec:batch-operations>批处理</a></span><li><span><span class=toc-section-number>2.1.2</span> <a href=#subsec:main-colour-codes id=toc:subsec:main-colour-codes>颜色代码含义</a></span><li><span><span class=toc-section-number>2.1.3</span> <a href=#subsec:main-page-application-types id=toc:subsec:main-page-application-types>应用类型</a></span><li><span><span class=toc-section-number>2.1.4</span> <a href=#subsec:main-page-version-info id=toc:subsec:main-page-version-info>版本信息</a></span><li><span><span class=toc-section-number>2.1.5</span> <a href=#subsec:main-page-options-menu id=toc:subsec:main-page-options-menu>选项菜单</a></span></ul><li><span><span class=toc-section-number>2.2</span> <a href=#sec:app-details-page id=toc:sec:app-details-page>应用程序详情页</a></span><ul class=incremental><li><span><span class=toc-section-number>2.2.1</span> <a href=#subsec:app-details-colour-codes id=toc:subsec:app-details-colour-codes>颜色代码含义</a></span><li><span><span class=toc-section-number>2.2.2</span> <a href=#subsec:app-info-tab id=toc:subsec:app-info-tab>应用信息</a></span><li><span><span class=toc-section-number>2.2.3</span> <a href=#subsec:component-tabs id=toc:subsec:component-tabs>组件选项卡</a></span><li><span><span class=toc-section-number>2.2.4</span> <a href=#subsec:permission-tabs id=toc:subsec:permission-tabs>权限选项卡</a></span><li><span><span class=toc-section-number>2.2.5</span> <a href=#subsec:signatures-tab id=toc:subsec:signatures-tab>签名选项卡</a></span><li><span><span class=toc-section-number>2.2.6</span> <a href=#subsec:shared-libs-tab id=toc:subsec:shared-libs-tab>共享库选项卡</a></span><li><span><span class=toc-section-number>2.2.7</span> <a href=#subsec:other-tabs id=toc:subsec:other-tabs>其他选项卡</a></span></ul><li><span><span class=toc-section-number>2.3</span> <a href=#sec:1-click-ops-page id=toc:sec:1-click-ops-page>一键操作页</a></span><ul class=incremental><li><span><span class=toc-section-number>2.3.1</span> <a href=#subsec:block-unblock-trackers id=toc:subsec:block-unblock-trackers>Block/Unblock
+<!doctype html><html xmlns=http://www.w3.org/1999/xhtml lang=zh-Hans xml:lang=zh-Hans><meta charset=utf-8><meta name=generator content="pandoc"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=author content="Muntashir Al-Islam"><title>App Manager</title><style>code{white-space:pre-wrap}span.smallcaps{font-variant:small-caps}div.columns{display:flex;gap:min(4vw,1.5em)}div.column{flex:auto;overflow-x:auto}div.hanging-indent{margin-left:1.5em;text-indent:-1.5em}ul.task-list[class]{list-style:none}ul.task-list li input[type=checkbox]{font-size:inherit;width:.8em;margin:0 .8em .2em -1.6em;vertical-align:middle}.display.math{display:block;text-align:center;margin:.5rem auto}pre>code.sourceCode{white-space:pre;position:relative}pre>code.sourceCode>span{display:inline-block;line-height:1.25}pre>code.sourceCode>span:empty{height:1.2em}.sourceCode{overflow:visible}code.sourceCode>span{color:inherit;text-decoration:inherit}div.sourceCode{margin:1em 0}pre.sourceCode{margin:0}@media screen{div.sourceCode{overflow:auto}}@media print{pre>code.sourceCode{white-space:pre-wrap}pre>code.sourceCode>span{text-indent:-5em;padding-left:5em}}pre.numberSource code{counter-reset:source-line 0}pre.numberSource code>span{position:relative;left:-4em;counter-increment:source-line}pre.numberSource code>span>a:first-child::before{content:counter(source-line);position:relative;left:-1em;text-align:right;vertical-align:baseline;border:none;display:inline-block;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;padding:0 4px;width:4em}pre.numberSource{margin-left:3em;padding-left:4px}div.sourceCode{}@media screen{pre>code.sourceCode>span>a:first-child::before{text-decoration:underline}}code span.al{font-weight:700}code span.an{font-style:italic}code span.cf{font-weight:700}code span.co{font-style:italic}code span.cv{font-style:italic}code span.do{font-style:italic}code span.dt{text-decoration:underline}code span.er{font-weight:700}code span.in{font-style:italic}code span.kw{font-weight:700}code span.pp{font-weight:700}code span.wa{font-style:italic}</style><link rel=stylesheet href=../css/custom.css><header id=title-block-header><h1 class=title>App Manager</h1><p class=author>Muntashir Al-Islam</header><nav id=TOC role=doc-toc><ul class=incremental><li><span><span class=toc-section-number>1</span> <a href=#ch:introduction id=toc:ch:introduction>简介</a></span><ul class=incremental><li><span><span class=toc-section-number>1.1</span> <a href=#sec:terminologies id=toc:sec:terminologies>术语</a></span><li><span><span class=toc-section-number>1.2</span> <a href=#sec:supported-versions id=toc:sec:supported-versions>受支持的版本</a></span><li><span><span class=toc-section-number>1.3</span> <a href=#sec:official-sources id=toc:sec:official-sources>官方来源</a></span><ul class=incremental><li><span><span class=toc-section-number>1.3.1</span> <a href=#subsec:binary-distribution-sources id=toc:subsec:binary-distribution-sources>二进制(可执行)分发来源</a></span><li><span><span class=toc-section-number>1.3.2</span> <a href=#subsec:links-to-source-code id=toc:subsec:links-to-source-code>源码链接</a></span><li><span><span class=toc-section-number>1.3.3</span> <a href=#subsec:translations id=toc:subsec:translations>翻译</a></span></ul><li><span><span class=toc-section-number>1.4</span> <a href=#sec:contributing id=toc:sec:contributing>贡献</a></span><ul class=incremental><li><span><span class=toc-section-number>1.4.1</span> <a href=#subsec:build-instructions id=toc:subsec:build-instructions>构建说明</a></span><li><span><span class=toc-section-number>1.4.2</span> <a href=#subsec:submitting-patches id=toc:subsec:submitting-patches>提交补丁</a></span></ul><li><span><span class=toc-section-number>1.5</span> <a href=#sec:donation-&-funding id=toc:sec:donation-&-funding>捐赠 & 资助</a></span><li><span><span class=toc-section-number>1.6</span> <a href=#sec:contact id=toc:sec:contact>联系我们</a></span></ul><li><span><span class=toc-section-number>2</span> <a href=#ch:pages id=toc:ch:pages>页面</a></span><ul class=incremental><li><span><span class=toc-section-number>2.1</span> <a href=#sec:main-page id=toc:sec:main-page>主页</a></span><ul class=incremental><li><span><span class=toc-section-number>2.1.1</span> <a href=#subsec:batch-operations id=toc:subsec:batch-operations>批处理</a></span><li><span><span class=toc-section-number>2.1.2</span> <a href=#subsec:main-colour-codes id=toc:subsec:main-colour-codes>颜色代码含义</a></span><li><span><span class=toc-section-number>2.1.3</span> <a href=#subsec:main-page-application-types id=toc:subsec:main-page-application-types>应用类型</a></span><li><span><span class=toc-section-number>2.1.4</span> <a href=#subsec:main-page-version-info id=toc:subsec:main-page-version-info>版本信息</a></span><li><span><span class=toc-section-number>2.1.5</span> <a href=#subsec:main-page-options-menu id=toc:subsec:main-page-options-menu>选项菜单</a></span></ul><li><span><span class=toc-section-number>2.2</span> <a href=#sec:app-details-page id=toc:sec:app-details-page>应用程序详情页</a></span><ul class=incremental><li><span><span class=toc-section-number>2.2.1</span> <a href=#subsec:app-details-colour-codes id=toc:subsec:app-details-colour-codes>颜色代码含义</a></span><li><span><span class=toc-section-number>2.2.2</span> <a href=#subsec:app-info-tab id=toc:subsec:app-info-tab>应用信息</a></span><li><span><span class=toc-section-number>2.2.3</span> <a href=#subsec:component-tabs id=toc:subsec:component-tabs>组件选项卡</a></span><li><span><span class=toc-section-number>2.2.4</span> <a href=#subsec:permission-tabs id=toc:subsec:permission-tabs>权限选项卡</a></span><li><span><span class=toc-section-number>2.2.5</span> <a href=#subsec:signatures-tab id=toc:subsec:signatures-tab>签名选项卡</a></span><li><span><span class=toc-section-number>2.2.6</span> <a href=#subsec:shared-libs-tab id=toc:subsec:shared-libs-tab>共享库选项卡</a></span><li><span><span class=toc-section-number>2.2.7</span> <a href=#subsec:other-tabs id=toc:subsec:other-tabs>其他选项卡</a></span></ul><li><span><span class=toc-section-number>2.3</span> <a href=#sec:1-click-ops-page id=toc:sec:1-click-ops-page>一键操作页</a></span><ul class=incremental><li><span><span class=toc-section-number>2.3.1</span> <a href=#subsec:block-unblock-trackers id=toc:subsec:block-unblock-trackers>Block/Unblock
 Trackers</a></span><li><span><span class=toc-section-number>2.3.2</span> <a href=#subsec:block-components-dots id=toc:subsec:block-components-dots>Block Components…</a></span><li><span><span class=toc-section-number>2.3.3</span> <a href=#subsec:set-mode-for-app-ops-dots id=toc:subsec:set-mode-for-app-ops-dots>Set Mode for App
 Ops…</a></span><li><span><span class=toc-section-number>2.3.4</span> <a href=#subsec:1-click-back-up id=toc:subsec:1-click-back-up>备份</a></span><li><span><span class=toc-section-number>2.3.5</span> <a href=#subsec:1-click-restore id=toc:subsec:1-click-restore>恢复</a></span><li><span><span class=toc-section-number>2.3.6</span> <a href=#subsec:trim-caches-in-all-apps id=toc:subsec:trim-caches-in-all-apps>Trim Caches in All
 Apps</a></span></ul><li><span><span class=toc-section-number>2.4</span> <a href=#sec:profiles-page id=toc:sec:profiles-page>配置文件页面</a></span><ul class=incremental><li><span><span class=toc-section-number>2.4.1</span> <a href=#subsec:profiles-options-menu id=toc:subsec:profiles-options-menu>选项菜单</a></span></ul><li><span><span class=toc-section-number>2.5</span> <a href=#sec:profile-page id=toc:sec:profile-page>配置页</a></span><ul class=incremental><li><span><span class=toc-section-number>2.5.1</span> <a href=#subsec:profile-options-menu id=toc:subsec:profile-options-menu>选项菜单</a></span><li><span><span class=toc-section-number>2.5.2</span> <a href=#subsec:profile-apps-tab id=toc:subsec:profile-apps-tab>应用程序选项卡</a></span><li><span><span class=toc-section-number>2.5.3</span> <a href=#subsec:profile-configurations-tab id=toc:subsec:profile-configurations-tab>配置选项卡</a></span></ul><li><span><span class=toc-section-number>2.6</span> <a href=#sec:settings-page id=toc:sec:settings-page>设置页面</a></span><ul class=incremental><li><span><span class=toc-section-number>2.6.1</span> <a href=#subsec:language id=toc:subsec:language>界面语言</a></span><li><span><span class=toc-section-number>2.6.2</span> <a href=#subsec:appearance id=toc:subsec:appearance>Appearance</a></span><li><span><span class=toc-section-number>2.6.3</span> <a href=#subsec:privacy id=toc:subsec:privacy>Privacy</a></span><li><span><span class=toc-section-number>2.6.4</span> <a href=#subsec:mode-of-operation id=toc:subsec:mode-of-operation>操作模式</a></span><li><span><span class=toc-section-number>2.6.5</span> <a href=#subsec:apk-signing id=toc:subsec:apk-signing>APK
@@ -83,7 +83,7 @@ Backup/Sharing</a></span><li><span><span class=toc-section-number>6.6.8</span> <
 Backup</a></span></ul></ul><li><span><span class=toc-section-number>7</span> <a href=#ch:app-ops id=toc:ch:app-ops>App Ops</a></span><ul class=incremental><li><span><span class=toc-section-number>7.1</span> <a href=#sec:app-ops-background id=toc:sec:app-ops-background>Background</a></span><li><span><span class=toc-section-number>7.2</span> <a href=#sec:introduction-to-app-ops id=toc:sec:introduction-to-app-ops>Introduction to App
 Ops</a></span><li><span><span class=toc-section-number>7.3</span> <a href=#sec:appopsmanager id=toc:sec:appopsmanager>AppOpsManager</a></span><ul class=incremental><li><span><span class=toc-section-number>7.3.1</span> <a href=#subsec:op-constants id=toc:subsec:op-constants><code>OP_*</code> Constants</a></span><li><span><span class=toc-section-number>7.3.2</span> <a href=#subsec:mode-constants id=toc:subsec:mode-constants><code>MODE_*</code>
 Constants</a></span><li><span><span class=toc-section-number>7.3.3</span> <a href=#subsec:package-ops id=toc:subsec:package-ops>PackageOps</a></span><li><span><span class=toc-section-number>7.3.4</span> <a href=#subsec:opentry id=toc:subsec:opentry>OpEntry</a></span><li><span><span class=toc-section-number>7.3.5</span> <a href=#subsec:usage id=toc:subsec:usage>Usage</a></span></ul><li><span><span class=toc-section-number>7.4</span> <a href=#sec:appopsservice id=toc:sec:appopsservice>AppOpsService</a></span><li><span><span class=toc-section-number>7.5</span> <a href=#sec:appops-xml id=toc:sec:appops-xml>appops.xml</a></span><li><span><span class=toc-section-number>7.6</span> <a href=#sec:appops-cli id=toc:sec:appops-cli>Command Line
-Interface</a></span></ul></ul></nav><div class=titlingpage><div class=center><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>用户手册</strong><p><em>v3.1.0</em><p>24 三月 2023<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“Wisely and slow. They stumble that run fast.” <span>— Friar
+Interface</a></span></ul></ul></nav><div class=titlingpage><div class=center><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>用户手册</strong><p><em>v4.0.0-alpha01</em><p>3 九月 2023<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“Wisely and slow. They stumble that run fast.” <span>— Friar
 Laurence, <em>Romeo and Juliet</em></span></blockquote></div></div><section id=ch:introduction class=level1 data-number=1><h1 data-number=1><span class=header-section-number>1</span> <a href=#toc:ch:introduction>简介</a><a href=#ch:introduction class=anchor aria-hidden=true></a></h1><p>App Manager 是一个高级的 Android 包管理器。
 它提供了不计其数的功能，因此需要用户手册来帮助用户。本文档作为 App
 Manager 的用户手册，旨在描述 App Manager 提供的每一个功能。
@@ -94,17 +94,19 @@ Manager 的用户手册，旨在描述 App Manager 提供的每一个功能。
 可能还有其他非官方或第三方资源，如博客文章、视频、聊天、群组等。
 虽然这些资源可能对很多人有用，但它们的内容可能跟不上最新的 App Manager
 版本。 如果在 App Manager 中发现任何偏离本文档的情况，应在 <a href=https://github.com/MuntashirAkon/AppManager/issues>App Manager
-问题追踪</a>进行报告。<section id=sec:terminologies class=level2 data-number=1.1><h2 data-number=1.1><span class=header-section-number>1.1</span> <a href=#toc:sec:terminologies>术语</a><a href=#sec:terminologies class=anchor aria-hidden=true></a></h2><ul class=incremental><li><p><strong>AM</strong> — App Manager<li><p><strong>Block/Unblock</strong> — Used for component blocking or
-unblocking. How components are blocked depends on the user
-preferences.<li><p><strong>IFW</strong> — Intent Firewall (意图防火墙)<li><p><strong>Ops</strong> — operations (操作), e.g. app ops, batch
-ops, 1-click ops<li><p><strong>SSAID</strong> — <code>Settings.Secure.ANDROID_ID</code>
-- 分配给每个应用的设备标识符 (Android
-Oreo及以上版本)，由应用签名与包<code>android</code>的SSAID组合生成的。因此，除非用户选择格式化设备，否则它保证对每个应用来说都是独一无二的。它被广泛用于跟踪用户。<li><p><strong>Tracker</strong> — Denotes tracker components throughout
-the document and in App Manager except in the <a href=#sec:scanner-page>scanner page</a>. Trackers include libraries
-such as crash reporters, analytics, profiling, identification, ad,
-location, etc. Thus, they are not equal in functions. There is no
-distinction or bias between open source and closed source libraries that
-promote tracking.</ul></section><section id=sec:supported-versions class=level2 data-number=1.2><h2 data-number=1.2><span class=header-section-number>1.2</span> <a href=#toc:sec:supported-versions>受支持的版本</a><a href=#sec:supported-versions class=anchor aria-hidden=true></a></h2><p>当前，支持的版本是 v3.0.0 – v3.0.3（稳定版），v3.1.0（alpha 和 debug
+问题追踪</a>进行报告。<section id=sec:terminologies class=level2 data-number=1.1><h2 data-number=1.1><span class=header-section-number>1.1</span> <a href=#toc:sec:terminologies>术语</a><a href=#sec:terminologies class=anchor aria-hidden=true></a></h2><ul class=incremental><li><p><strong>AM</strong> — App Manager 应用<li><p><strong>Block/Unblock</strong> — 用于拦截组件或解除组件拦截。
+如何拦截取决于 用户选项。<li><p><strong>IFW</strong> — Intent Firewall (意图防火墙)<li><p><strong>Ops</strong> — operations (操作), e.g. app ops, batch
+ops, 1-click ops<li><p><strong>SAF</strong> — 存储访问框架（SAF）的缩写形式，Android
+系统所用的抽象概念，允许应用无需担忧底层文件系统便能
+使用或提供文件。<li><p><strong>SSAID</strong> — <code>Settings.Secure.ANDROID_ID</code>
+- 分配给每个应用的设备标识符 (Android Oreo及以上版本)，
+由应用签名与包<code>android</code>的SSAID组合生成。
+因此，除非用户选择格式化设备，否则它保证对每个应用来说都是独一无二的。
+它被普遍用于跟踪用户。<li><p><strong>Tracker</strong> — 在文档和 App Manager
+中均表示跟踪器组件， <a href=#sec:scanner-page>scanner page</a>
+是个例外。
+跟踪器包括用于报告崩溃、数据分析、用户画像、身份识别、广告和定位等目的的库文件。因此，这些库的功能并不相同。推广跟踪的
+开源和闭源库之间不存在区别或偏向。</ul></section><section id=sec:supported-versions class=level2 data-number=1.2><h2 data-number=1.2><span class=header-section-number>1.2</span> <a href=#toc:sec:supported-versions>受支持的版本</a><a href=#sec:supported-versions class=anchor aria-hidden=true></a></h2><p>当前，支持的版本是 v3.0.0 – v3.0.3（稳定版），v3.1.0（alpha 和 debug
 版）。先前版本的 App Manager 可能包含安全漏洞，不应继续使用。</section><section id=sec:official-sources class=level2 data-number=1.3><h2 data-number=1.3><span class=header-section-number>1.3</span> <a href=#toc:sec:official-sources>官方来源</a><a href=#sec:official-sources class=anchor aria-hidden=true></a></h2><section id=subsec:binary-distribution-sources class=level3 data-number=1.3.1><h3 data-number=1.3.1><span class=header-section-number>1.3.1</span>
 <a href=#toc:subsec:binary-distribution-sources>二进制(可执行)分发来源</a><a href=#subsec:binary-distribution-sources class=anchor aria-hidden=true></a></h3><p>App Manager 通过以下渠道发布。 非官方来源可能分发 App Manager
 的修改版本，后果自负。<ol class=incremental><li><p>F-Droid <a href=#fn1 class=footnote-ref id=fnref1 role=doc-noteref><sup>1</sup></a><br><em>Link:</em> <a href=https://f-droid.org/packages/io.github.muntashirakon.AppManager class=uri>https://f-droid.org/packages/io.github.muntashirakon.AppManager</a><li><p>GitHub repository.<br><em>Normal releases:</em> <a href=https://github.com/MuntashirAkon/AppManager/releases class=uri>https://github.com/MuntashirAkon/AppManager/releases</a><br><em>Debug releases:</em> <a href=https://github.com/MuntashirAkon/AppManager/actions class=uri>https://github.com/MuntashirAkon/AppManager/actions</a><li><p>Telegram.<br><em>Normal releases:</em> <a href=https://t.me/AppManagerChannel class=uri>https://t.me/AppManagerChannel</a><br><em>Debug releases:</em> <a href=https://t.me/AppManagerDebug class=uri>https://t.me/AppManagerDebug</a></ol></section><section id=subsec:links-to-source-code class=level3 data-number=1.3.2><h3 data-number=1.3.2><span class=header-section-number>1.3.2</span>
@@ -230,43 +232,8 @@ Manager）视为禁用(阻止)。</div><li><p><span class=colorbox style=backgro
 Intel）上为同一版本提供不同 APK
 文件的应用程序，版本号可能会产生误导，因为它们通常会为每个平台添加前缀
 .<li><p><strong>标签</strong>: (也称标签云)
-标签包括应用程序最基本、最简洁、有用的信息，如—<ul class=incremental><li><p><em>追踪器信息</em> 应用程序中跟踪器组件的数量 (如, <em>5
-个追踪器</em>).
-如果跟踪器未被阻止，则标记颜色显示为橙色，如果跟踪器在App
-Manager中被阻止，则标记颜色显示为深青色.
-单击标签会打开一个对话框，其包含跟踪器组件列表，如果 App Manager
-具有足够的权限，可以阻止或取消阻止这些组件.<li><p><em>应用类型</em>
-用户应用或系统应用。系统应用程序的更新版本和通过 Magisk
-无系统安装的应用也被认为是系统应用.<li><p><em>Split APK 信息</em> APK 中的拆分包数量，不包括基本 APK (e.g.,
-<em>5 分包</em>). 单击标签会打开一个对话框，其中包含分包 APK
-信息，例如类型和大小.<li><p><em>可调试</em> 应用可以通过
-ADB调试.可调试应用可以享受常规应用无法使用的某些功能. 应用的数据可以通过
-ADB 访问 (如使用<code>run-as</code> 命令无需任何额外权限).<li><p><em>仅测试</em> 应用是仅测试应用程序.
-仅测试应用可以享受常规应用无法使用的某些功能. 应用的数据可以通过 ADB
-访问 (如使用<code>run-as</code> 命令无需任何额外权限).<li><p><em>大(堆/Heap)内存</em> 应用将请求较大的堆内存, 即需要更多内存
-(RAM) 空间用于动态分配. 是否为应用程序分配大空间仍由操作系统决定.
-如，App Manager 请求较大的堆大小，因为它在 Android 8 之前需要在扫描的
-APK 时将整个 APK 加载到内存中App.<li><p><em>无代码</em> 该应用不含任何与之相关代码，如不含Dex文件.
-在某些系统应用中，实际代码可能位于其他位置.<li><p><em>运行中</em> 应用的一项或多项服务正在后台运行.
-单击标签将打开一个对话框，其中包含正在运行的服务列表.
-如果启用了日志查看器功能，单击任何服务会将在日志查看器中它.<li><p><em>已停止</em> 应用被强制停止.
-这可能不会阻止它以后自动启动.<li><p><em>已禁用</em> 应用被禁用 (在启动器无图标).<li><p><em>已挂起</em> 表示应用程序已挂起
-(在启动器中显示为灰色).<li><p><em>被隐藏</em> 示应用程序是隐藏的 (在启动器无图标).<li><p><em>MagiskHide</em> MagiskHide 已启用.
-单击该标签会打开一个对话框，其中包含应用程序中可以从 MagiskHide
-添加或删除的进程列表.<li><p><em>MagiskDenyList</em> 该应用程序存在于 MagiskDenyList 中.
-单击标签会打开一个对话框，其中包含应用程序中可以从 MagiskDenyList
-列表中添加或删除的进程列表.<li><p><em>密匙库</em> 应用在 Android KeyStore 中存有项目.
-单击将打开一个对话框，其中包含属于该应用程序的所有 KeyStore
-文件.<li><p><em>备份</em> 应用至少使用 App Manager 备份过一次.
-单击标签会打开一个对话框，其包含所有可用的备份以及元数据.<li><p><em>不进行电池优化</em> 电池优化对应用不生效.
-可以通过单击标签重新启用电池优化.<li><p><a href=#sec:net-policy><em>联网策略</em></a>
-为应用配置联网策略（如，后台数据使用）.
-单击标签会显示一个对话框，其中包含系统支持的策略.<li><p><a href=#sec:terminologies><em>SSAID</em></a>
-点击打开一个对话框，其中包含分配给应用程序的当前
-SSAID。若需要可以重置/重新生成 SSAID.<li><p><em>SAF</em>
-表示应用已被授权访问一个或多个存储位置或文件，即获得由存储访问框架 (SAF)
-的 URI. 单击打开一个对话框，其中包含授予的 URI.<li><p><em>被 Google Play 签名</em> 表示应用程序可能由 Google
-签名.</ul><li><p><strong>水平滚动操作面板</strong>
+标签包括应用程序最基本、最简洁、有用的信息。参阅 §<a href=#subsubsec:tags data-reference-type=ref data-reference=subsubsec:tags>2.2.2.2</a>
+查看显示在此处的完整标签列表。<li><p><strong>水平滚动操作面板</strong>
 一个操作面板，由可以对应用执行的各种操作组成,
 有关可用操作的完整列表，请参阅§<a href=#subsubsec:horizontal-action-panel data-reference-type=ref data-reference=subsubsec:horizontal-action-panel>2.2.2.3</a>.<li><p><strong>路径与目录</strong>: 应用有关路径的各种信息，包括
 <em>应用目录</em> (where the APK files reside), <em>数据目录</em>
@@ -275,7 +242,7 @@ with the split names), and <em>本机原生 JNI 库</em> (如果有). JNI
 库用于调用通常用 C/C++ 编写的本机原生代码,
 使用本机原生库可以使应用程序运行得更快或帮助应用程序使用使用非 Java
 语言编写的第三方库，同大多数游戏中一样.
-通过单击每个目录项右侧的启动图标,
+通过单击每个目录项右侧的启动按钮,
 可以通过第三方文件管理器打开目录，前提是它们支持并获得必要的权限.<li><p><strong>数据使用</strong>: 操作系统报告的应用程序使用的数据量.
 根据 Android 版本，这可能需要广泛的权限，包括 <em>访问应用使用情况</em>
 和 <em>电话</em> 权限.<li><p><strong>存储与缓存</strong>: 显示有关应用程序大小（APK
@@ -286,8 +253,7 @@ with the split names), and <em>本机原生 JNI 库</em> (如果有). JNI
 存在两个（旧设备只有一个）值: <em>最高</em> 目标 SDK 与<em>最低</em>
 最低SDK (后者不适用于旧设备). 最佳实践是使用平台当前支持的最大 SDK
 的应用程序，以确保应用程序未在兼容模式下运行(以便使用隐私规避功能). SDK
-已称为 <strong>等级(API Level)</strong>.<div class=seealso-inline><p><em>See also: <span><a href=https://en.wikipedia.org/wiki/Android_version_history#Overview>Android
-Version History</a></span></em></div><li><p><strong>标志位(Flags)</strong>: 构建应用程序时使用的应用标志,
+也称为 <strong>等级(API Level)</strong><br><li><p><strong>标志位(Flags)</strong>: 构建应用程序时使用的应用标志,
 有关标志的完整列表及其作用, 请见<a href=https://developer.android.com/reference/android/content/pm/ApplicationInfo#flags>official
 documentation</a>.<li><p><strong>安装日期</strong>: 首次安装应用的日期.<li><p><strong>更新日期</strong>: 上次更新应用程序的日期.
 如果应用程序尚未更新，这与 <em>安装日期</em> 相同.<li><p><strong>安装器</strong>: 安装此应用的应用.
@@ -759,8 +725,9 @@ Manager.<section id=subsec:language class=level3 data-number=2.6.1><h3 data-numb
 <a href=#toc:subsec:appearance>Appearance</a><a href=#subsec:appearance class=anchor aria-hidden=true></a></h3><section id=subsubsec:app-theme class=level4 data-number=2.6.2.1><h4 data-number=2.6.2.1><span class=header-section-number>2.6.2.1</span> 应用主题<a href=#subsubsec:app-theme class=anchor aria-hidden=true></a></h4><p>配置应用内主题。</section><section id=subsubsec:layout-direction class=level4 data-number=2.6.2.2><h4 data-number=2.6.2.2><span class=header-section-number>2.6.2.2</span> Layout Direction<a href=#subsubsec:layout-direction class=anchor aria-hidden=true></a></h4><p>Change layout direction, either left to right or right to left. This
 is usually set using the selected language but not everybody prefers the
 same direction.</section><section id=subsubsec:enable/disable-features class=level4 data-number=2.6.2.3><h4 data-number=2.6.2.3><span class=header-section-number>2.6.2.3</span> 启用/禁用功能<a href=#subsubsec:enable/disable-features class=anchor aria-hidden=true></a></h4><p>启用或禁用应用 App Manager 中的某些功能，如<ul class=incremental><li><p><strong>拦截器</strong><li><p><strong>Manifest 查看器</strong><li><p><strong>扫描器</strong><li><p><strong>包安装器</strong><li><p><strong>使用情况.</strong> 如关闭此功能，App Manager 永远不会请求
-<em>使用情况</em> 权限.<li><p><strong>日志查看器</strong> “探索” 选择在尝试打开 APK
-文件时不可用。<li><p><strong>使用互联网.</strong>如果关闭此功能，则所有互联网功能都将被禁用。
+<em>使用情况</em> 权限.<li><p><strong>日志查看器</strong><li><p><strong>App Eexplorer.</strong> “探索” 选择在尝试打开 APK
+文件时不可用。<li><p><strong>App info.</strong> 尝试打开 APK 文件时会显示
+“应用信息”选项<li><p><strong>使用互联网.</strong>如果关闭此功能，则所有互联网功能都将被禁用。
 目前，唯一的互联网功能是通过 VirusTotal 获取扫描报告。</ul></section></section><section id=subsec:privacy class=level3 data-number=2.6.3><h3 data-number=2.6.3><span class=header-section-number>2.6.3</span>
 <a href=#toc:subsec:privacy>Privacy</a><a href=#subsec:privacy class=anchor aria-hidden=true></a></h3><section id=subsubsec:screen-lock class=level4 data-number=2.6.3.1><h4 data-number=2.6.3.1><span class=header-section-number>2.6.3.1</span> 屏幕锁定<a href=#subsubsec:screen-lock class=anchor aria-hidden=true></a></h4><p>Lock App Manager using Android screen lock provided a screen lock is
 configured.<div class="amalert warning"><p><strong><em>Warning.</em></strong><p>If screen lock is disabled in Android after enabling this setting,
@@ -794,10 +761,10 @@ create a KeyStore yourself and import the key here. Keys generated
 within App Manager is at the risk of being deleted without a proper
 backup.</div></section></section><section id=subsec:installer class=level3 data-number=2.6.6><h3 data-number=2.6.6><span class=header-section-number>2.6.6</span>
 <a href=#toc:subsec:installer>安装器</a><a href=#subsec:installer class=anchor aria-hidden=true></a></h3><section id=在安装器中显示用户 class=level4 data-number=2.6.6.1><h4 data-number=2.6.6.1><span class=header-section-number>2.6.6.1</span> 在安装器中显示用户<a href=#在安装器中显示用户 class=anchor aria-hidden=true></a></h4><p>启用后，将在安装应用前显示用户列表。将只为特定用户 安装应用。</section><section id=签名-apk class=level4 data-number=2.6.6.2><h4 data-number=2.6.6.2><span class=header-section-number>2.6.6.2</span> 签名 APK<a href=#签名-apk class=anchor aria-hidden=true></a></h4><p>安装应用前是否对 APK 文件进行签名。可用 <a href=#subsec:apk-signing>APK 签名</a> 页面 来配置签名。</section><section id=安装位置 class=level4 data-number=2.6.6.3><h4 data-number=2.6.6.3><span class=header-section-number>2.6.6.3</span> 安装位置<a href=#安装位置 class=anchor aria-hidden=true></a></h4><p>定义 APK 安装位置，可以是 <em>自动</em>、<em>仅内部存储</em>
-和<em>偏好外部存储</em>。 在较新的 Android
-版本中，选择最后一个选项并不保证应用将被安装在外部存储中。</section><section id=安装来源 class=level4 data-number=2.6.6.4><h4 data-number=2.6.6.4><span class=header-section-number>2.6.6.4</span> 安装来源<a href=#安装来源 class=anchor aria-hidden=true></a></h4><p>选择安装程序，这对于明确检查安装程序以验证应用程序是否合法安装的应用程序很有用。
-这只适用于 root 或 ADB 用户。<div class="amalert tip"><p><strong><em>Notice.</em></strong><p>对于应用来说，检查安装包似乎并无不妥，但 Android
-框架已经在安装过程中处理了这个问题。
+和<em>偏好外部存储</em>。 在较新的 Android 版本中，选择最后一个选项
+并不保证应用将被安装在外部存储中。</section><section id=安装来源 class=level4 data-number=2.6.6.4><h4 data-number=2.6.6.4><span class=header-section-number>2.6.6.4</span> 安装来源<a href=#安装来源 class=anchor aria-hidden=true></a></h4><p>选择安装程序。这对于明确检查安装程序以验证应用程序是否合法安装的应用程序很有用。
+这只适用于 root 或 ADB 用户。<div class="amalert tip"><p><strong><em>Notice.</em></strong><p>对于应用来说，检查安装包似乎并无不妥， 但 Android
+框架已经在安装过程中处理了这个问题。因此，
 通过检查安装包是证明应用来源合法性是错误的。</div></section><section id=block-trackers-1 class=level4 data-number=2.6.6.5><h4 data-number=2.6.6.5><span class=header-section-number>2.6.6.5</span> Block Trackers<a href=#block-trackers-1 class=anchor aria-hidden=true></a></h4><p>Whether to block the tracking components immediately after installing
 the application.</section><section id=display-changes class=level4 data-number=2.6.6.6><h4 data-number=2.6.6.6><span class=header-section-number>2.6.6.6</span> Display Changes<a href=#display-changes class=anchor aria-hidden=true></a></h4><p>Whether to display changes in version, trackers, components,
 permissions, signatures, SDK, etc. in a version controlled style before
@@ -1201,15 +1168,13 @@ Card. This is useful for games and the graphical software which actually
 use these folders.<li><p><strong>Cache.</strong> Android apps have multiple cache
 directories located at every data directories (both internal and
 external). There are two types of cache: <strong>cache</strong> and
-<strong>code cache</strong>. Enabling this option excludes both cache
+<strong>code cache</strong>. Disabling this option excludes both cache
 directories from all the data directories. It is generally advised to
 exclude cache directories since most apps do not clear the cache
-regularly (for some reason, the only way an app can clear its cache is
-by deleting the entire cache directory) and usually handled by the OS
-itself. Apps such as Telegram may use a very large cache (depending on
-the storage space) which may dramatically increase the backup size. When
-it is disabled, AM also ignores the <strong>no_backup</strong>
-directories.<li><p><strong>Extras.</strong> Backup/restore app permissions, net
+regularly and usually handled by the OS itself. Apps such as Telegram
+may use a very large cache (depending on the storage space) which may
+dramatically increase the backup size. When it is disabled, AM also
+ignores the <strong>no_backup</strong> directories.<li><p><strong>Extras.</strong> Backup/restore app permissions, net
 policy, battery optimization, SSAID, etc., enabled by default. Note
 that, blocking rules are applied <em>after</em> applying the extras. So,
 if an item is present in both places, it will be overwritten (i.e., the
@@ -1494,16 +1459,16 @@ permission is granted or revoked</ul></section><section id=外部 class=level4 d
 Manager.<pre><code>    &lt;package_name&gt; &lt;component_name&gt; &lt;type&gt; &lt;mode&gt;|&lt;component_status&gt;|&lt;is_granted&gt;</code></pre><p>This the format is essentially the same as above except for the first
 item which is the name of the package.<div class="amalert danger"><p><strong><em>Caution.</em></strong><p>The exported rules have a different format than the internal one and
 should not be copied directly to the <strong>conf</strong> folder.</div></section></section></section></section><section id=ch:changelogs class=level1 data-number=6><h1 data-number=6><span class=header-section-number>6</span> <a href=#toc:ch:changelogs>更新日志</a><a href=#ch:changelogs class=anchor aria-hidden=true></a></h1><section id=sec:v3.1.0-(423) class=level2 data-number=6.1><h2 data-number=6.1><span class=header-section-number>6.1</span> <a href=#toc:sec:v3.1.0-(423)>v3.1.0 (423)</a><a href=#sec:v3.1.0-(423) class=anchor aria-hidden=true></a></h2><p>App Manager v3.1.0 comes with a few new features and a lot of
-improvements. Visit <a href="intent://settings/about/changelog#Intent;scheme=app-manager;end">Settings
-> About > Version/Changelog</a> for details.<section id=android-13-support class=level3 data-number=6.1.1><h3 data-number=6.1.1><span class=header-section-number>6.1.1</span>
+improvements. Visit <a href=app-manager://settings/about/version>Settings > About >
+Version/Changelog</a> for details.<section id=android-13-support class=level3 data-number=6.1.1><h3 data-number=6.1.1><span class=header-section-number>6.1.1</span>
 <a href=#toc:android-13-support>Android 13 support</a><a href=#android-13-support class=anchor aria-hidden=true></a></h3><p>App Manager now targets Android 13 which means most issues in Android
 12 and 13 has been addressed, including SSAID and SAF issues as well as
 monochrome icons and other theming issues.<section id=known-issue class=level5 data-number=6.1.1.0.1><h5 data-number=6.1.1.0.1><span class=header-section-number>6.1.1.0.1</span> Known issue<a href=#known-issue class=anchor aria-hidden=true></a></h5><p>KeyStore backup/restore not working in Android 12 and later.</section></section><section id=introducing-freezeunfreeze class=level3 data-number=6.1.2><h3 data-number=6.1.2><span class=header-section-number>6.1.2</span>
 <a href=#toc:introducing-freezeunfreeze>Introducing
 freeze/unfreeze</a><a href=#introducing-freezeunfreeze class=anchor aria-hidden=true></a></h3><p>Enable/disable is replaced with freeze/unfreeze to allow greater
 control on the behaviours of an app. It supports suspend, disable and
-hide functionalities which can be controlled at <a href="intent://settings/rules_prefs/freeze_type#Intent;scheme=app-manager;end">Settings
-> Rules > Default freezing method</a>. In order to make it easy to
+hide functionalities which can be controlled at <a href=app-manager://settings/rules_prefs/freeze_type>Settings >
+Rules > Default freezing method</a>. In order to make it easy to
 freeze or unfreeze an app, shortcuts can also be created from the App
 Info tab by long clicking on the freeze or unfreeze button.</section><section id=export-app-list class=level3 data-number=6.1.3><h3 data-number=6.1.3><span class=header-section-number>6.1.3</span>
 <a href=#toc:export-app-list>Export app list</a><a href=#export-app-list class=anchor aria-hidden=true></a></h3><p>In the Main page, it is now possible to export the list of apps in
@@ -1554,8 +1519,8 @@ introduced in Android 11.</section></section><section id=others class=level3 dat
 during conversion<li><p>Improved scanning performance in the Scanner page<li><p>Improved updating the list of apps in the Main page<li><p>Scan all the available paths to detect systemless-ly installed
 system apps<li><p><code>vacuum</code> SQLite database before opening it for viewing
 or editing.</ul></section></section><section id=sec:v3.0.0-(410) class=level2 data-number=6.2><h2 data-number=6.2><span class=header-section-number>6.2</span> <a href=#toc:sec:v3.0.0-(410)>v3.0.0 (410)</a><a href=#sec:v3.0.0-(410) class=anchor aria-hidden=true></a></h2><p>App Manager v3.0.0 comes with a lot of features and improvements. See
-<a href="intent://settings/changelog#Intent;scheme=app-manager;end">Settings
-> Changelog</a> to see a more detailed changelog.<section id=material-3-and-more class=level3 data-number=6.2.1><h3 data-number=6.2.1><span class=header-section-number>6.2.1</span>
+<a href=app-manager://settings/about/version>Settings > About >
+Version/Changelog</a> to see a more detailed changelog.<section id=material-3-and-more class=level3 data-number=6.2.1><h3 data-number=6.2.1><span class=header-section-number>6.2.1</span>
 <a href=#toc:material-3-and-more>Material 3 and More</a><a href=#material-3-and-more class=anchor aria-hidden=true></a></h3><p>Material 3, somewhat similar to <em>Material You</em>, is a
 significant improvement over Material Design 2 with support for dynamic
 colours in Android 12 and later. In addition, many design changes have
@@ -2022,5 +1987,5 @@ options:
 &lt;OP&gt;      an AppOps operation.
 &lt;MODE&gt;    one of allow, ignore, deny, or default
 &lt;USER_ID&gt; the user id under which the package is installed. If --user is not
-specified, the current user is assumed.</code></pre></section></section><section id=footnotes class="footnotes footnotes-end-of-document" role=doc-endnotes><hr><ol><li id=fn1><p>For distributing normal releases only<a href=#fnref1 class=footnote-back role=doc-backlink>↩︎</a><li id=fn2><p>GitHub 的 PR 将使用 git patch 进行手动合并, 因此, GitHub
-可能会错误地将它们标记为closed而不是merged.<a href=#fnref2 class=footnote-back role=doc-backlink>↩︎</a><li id=fn3><p>可称“Muntashir Akon”<a href=#fnref3 class=footnote-back role=doc-backlink>↩︎</a></ol></section>
+specified, the current user is assumed.</code></pre></section></section><aside id=footnotes class="footnotes footnotes-end-of-document" role=doc-endnotes><hr><ol><li id=fn1><p>For distributing normal releases only<a href=#fnref1 class=footnote-back role=doc-backlink>↩︎</a><li id=fn2><p>GitHub 的 PR 将使用 git patch 进行手动合并, 因此, GitHub
+可能会错误地将它们标记为closed而不是merged.<a href=#fnref2 class=footnote-back role=doc-backlink>↩︎</a><li id=fn3><p>可称“Muntashir Akon”<a href=#fnref3 class=footnote-back role=doc-backlink>↩︎</a></ol></aside>
