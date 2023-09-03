@@ -57,9 +57,8 @@ A complete description of the backup options is given below:
 
     \item \textbf{Cache.} Android apps have multiple cache directories located at every data directories (both internal and external).
     There are two types of cache: \textbf{cache} and \textbf{code cache}.
-    Enabling this option excludes both cache directories from all the data directories.
-    It is generally advised to exclude cache directories since most apps do not clear the cache regularly (for some
-    reason, the only way an app can clear its cache is by deleting the entire cache directory) and usually handled by the OS itself.
+    Disabling this option excludes both cache directories from all the data directories.
+    It is generally advised to exclude cache directories since most apps do not clear the cache regularly and usually handled by the OS itself.
     Apps such as Telegram may use a very large cache (depending on the storage space) which may dramatically increase the backup size.
     When it is disabled, AM also ignores the \textbf{no\_backup} directories.
 

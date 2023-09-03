@@ -475,7 +475,7 @@ function deploy(bool $force = false): void {
     $js_lang_html = array();
     foreach ($languages as $language) {
         $lang_code = get_IETF_language_tag($language);
-        $js_lang_html[] = "  <a href=\"$language/\" onclick=\"return setLanguage('$language')\">" . Locale::getDisplayName($lang_code, $lang_code) . "</a>";
+        $js_lang_html[] = "  <a class=\"link\" href=\"$language/\" onclick=\"return setLanguage('$language')\">" . trim(Locale::getDisplayName($lang_code, $lang_code)) . "</a>";
     }
     $html_contents = file_get_contents(RAW_DIR . '/index.html');
     $html_contents = str_replace('PLACEHOLDER_LANGUAGES_AS_ARRAY', implode('\', \'', $languages), $html_contents);
