@@ -29,6 +29,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.adapters.SelectedArrayAdapter;
 import io.github.muntashirakon.widget.MaterialSpinner;
 
 public class EditPrefItemFragment extends DialogFragment {
@@ -125,8 +126,8 @@ public class EditPrefItemFragment extends DialogFragment {
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         View view = inflater.inflate(R.layout.dialog_edit_pref_item, null);
         MaterialSpinner spinner = view.findViewById(R.id.type_selector_spinner);
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(activity, R.array.shared_pref_types,
-                io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item);
+        ArrayAdapter<CharSequence> spinnerAdapter = SelectedArrayAdapter.createFromResource(activity,
+                R.array.shared_pref_types, io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
         spinner.setOnItemClickListener((parent, view1, position, id) -> {
             for (ViewGroup layout : mLayoutTypes) layout.setVisibility(View.GONE);

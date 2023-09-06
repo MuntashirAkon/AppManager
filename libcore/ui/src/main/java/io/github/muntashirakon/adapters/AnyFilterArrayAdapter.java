@@ -17,7 +17,7 @@ import java.util.Locale;
  * An {@link ArrayAdapter} that filters using {@link String#contains(CharSequence)} (case-insensitive) rather than using
  * {@link String#startsWith(String)} (i.e. prefix matching).
  */
-public class AnyFilterArrayAdapter<T> extends ArrayAdapter<T> {
+public class AnyFilterArrayAdapter<T> extends SelectedArrayAdapter<T> {
     @NonNull
     private final List<T> mObjects;
     private final Filter mFilter = new Filter() {

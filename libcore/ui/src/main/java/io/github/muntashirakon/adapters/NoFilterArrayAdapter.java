@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * An {@link ArrayAdapter} incapable of filtering i.e. returns everything regardless of the filtered text.
  */
-public class NoFilterArrayAdapter<T> extends ArrayAdapter<T> {
+public class NoFilterArrayAdapter<T> extends SelectedArrayAdapter<T> {
     private final Filter mDummyFilter = new Filter() {
         @Override
         @Nullable

@@ -21,6 +21,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.lang.ref.WeakReference;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.adapters.SelectedArrayAdapter;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.lifecycle.SoftInputLifeCycleObserver;
 import io.github.muntashirakon.widget.MaterialSpinner;
@@ -79,7 +80,7 @@ public class NewFileDialogFragment extends DialogFragment {
         mEditText.setText(name);
         handleFilename(name, null);
         MaterialSpinner spinner = mDialogView.findViewById(R.id.type_selector_spinner);
-        ArrayAdapter<CharSequence> spinnerAdapter = new ArrayAdapter<>(requireContext(),
+        ArrayAdapter<CharSequence> spinnerAdapter = new SelectedArrayAdapter<>(requireContext(),
                 io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item, TYPE_LABELS);
         spinner.setAdapter(spinnerAdapter);
         spinner.setSelection(TYPE_TEXT);

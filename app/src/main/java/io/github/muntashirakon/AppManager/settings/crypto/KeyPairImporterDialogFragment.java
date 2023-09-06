@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.KeyListener;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -30,6 +29,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.adapters.SelectedArrayAdapter;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.widget.MaterialSpinner;
 
@@ -90,8 +90,8 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
                 mKsLocationOrPem.setText(result.toString());
             }
         }));
-        keyTypeSpinner.setAdapter(ArrayAdapter.createFromResource(mActivity, R.array.crypto_import_types,
-                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item));
+        keyTypeSpinner.setAdapter(SelectedArrayAdapter.createFromResource(mActivity, R.array.crypto_import_types,
+                io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item));
         keyTypeSpinner.setOnItemClickListener((parent, view1, position, id) -> {
                 mKsPassOrPk8.setText(null);
                 mKsLocationOrPem.setText(null);

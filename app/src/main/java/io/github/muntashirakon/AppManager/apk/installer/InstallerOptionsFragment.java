@@ -55,6 +55,7 @@ import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.adapters.SelectedArrayAdapter;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.lifecycle.SingleLiveEvent;
@@ -193,7 +194,7 @@ public class InstallerOptionsFragment extends DialogFragment {
             }
             ++i;
         }
-        ArrayAdapter<CharSequence> userAdapter = new ArrayAdapter<>(requireContext(),
+        ArrayAdapter<CharSequence> userAdapter = new SelectedArrayAdapter<>(requireContext(),
                 io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item_small, userNames);
         mUserSelectionSpinner.setAdapter(userAdapter);
         mUserSelectionSpinner.setSelection(selectedUserPosition);
@@ -217,7 +218,7 @@ public class InstallerOptionsFragment extends DialogFragment {
                 installLocationPosition = i;
             }
         }
-        ArrayAdapter<CharSequence> installerLocationAdapter = new ArrayAdapter<>(requireContext(),
+        ArrayAdapter<CharSequence> installerLocationAdapter = new SelectedArrayAdapter<>(requireContext(),
                 io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item_small, installLocationNames);
         mInstallLocationSpinner.setAdapter(installerLocationAdapter);
         mInstallLocationSpinner.setSelection(installLocationPosition);

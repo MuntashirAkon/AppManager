@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -29,6 +28,7 @@ import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.adapters.SelectedArrayAdapter;
 import io.github.muntashirakon.dialog.AlertDialogBuilder;
 import io.github.muntashirakon.widget.MaterialSpinner;
 
@@ -62,7 +62,7 @@ public class KeyPairGeneratorDialogFragment extends DialogFragment {
         MaterialSpinner keySizeSpinner = view.findViewById(R.id.key_size_selector_spinner);
         if (mKeyType.equals(CryptoUtils.MODE_RSA)) {
             mKeySize = 2048;
-            keySizeSpinner.setAdapter(new ArrayAdapter<>(activity, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+            keySizeSpinner.setAdapter(new SelectedArrayAdapter<>(activity, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
                     SUPPORTED_RSA_KEY_SIZES));
             keySizeSpinner.setOnItemClickListener((parent, view1, position, id) ->
                     mKeySize = SUPPORTED_RSA_KEY_SIZES.get(position));

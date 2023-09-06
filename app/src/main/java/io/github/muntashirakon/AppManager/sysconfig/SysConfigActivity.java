@@ -38,6 +38,7 @@ import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
+import io.github.muntashirakon.adapters.SelectedArrayAdapter;
 import io.github.muntashirakon.widget.MaterialSpinner;
 import io.github.muntashirakon.widget.RecyclerView;
 
@@ -63,7 +64,7 @@ public class SysConfigActivity extends BaseActivity {
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
 
         String[] sysConfigTypes = getResources().getStringArray(R.array.sys_config_names);
-        ArrayAdapter<String> intervalSpinnerAdapter = new ArrayAdapter<>(this,
+        ArrayAdapter<String> intervalSpinnerAdapter = new SelectedArrayAdapter<>(this,
                 io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item_small, android.R.id.text1, sysConfigTypes);
         spinner.setAdapter(intervalSpinnerAdapter);
         spinner.setOnItemClickListener((parent, view, position, id) -> {

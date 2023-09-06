@@ -32,6 +32,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.adapters.SelectedArrayAdapter;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialSpinner;
 import io.github.muntashirakon.widget.RecyclerView;
@@ -148,7 +149,7 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         // Make spinner the first item to focus on
         int currentInterval = mActivity.viewModel.getCurrentInterval();
         holder.spinner.requestFocus();
-        ArrayAdapter<CharSequence> intervalSpinnerAdapter = ArrayAdapter.createFromResource(mActivity,
+        ArrayAdapter<CharSequence> intervalSpinnerAdapter = SelectedArrayAdapter.createFromResource(mActivity,
                 R.array.usage_interval_dropdown_list, io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item_small);
         holder.spinner.setAdapter(intervalSpinnerAdapter);
         holder.spinner.setSelection(currentInterval);
