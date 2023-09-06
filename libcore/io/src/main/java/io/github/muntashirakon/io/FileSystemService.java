@@ -23,9 +23,11 @@ import android.util.LruCache;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import aosp.android.content.pm.StringParceledListSlice;
 import io.github.muntashirakon.compat.system.OsCompat;
 import io.github.muntashirakon.compat.system.StructTimespec;
 
@@ -109,8 +111,9 @@ class FileSystemService extends IFileSystemService.Stub {
     }
 
     @Override
-    public String[] list(String path) {
-        return mCache.get(path).list();
+    public StringParceledListSlice list(String path) {
+        String[] list = mCache.get(path).list();
+        return list != null ? new StringParceledListSlice(Arrays.asList(list)) : null;
     }
 
     @Override

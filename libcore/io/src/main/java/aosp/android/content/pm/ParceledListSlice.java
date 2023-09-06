@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package aosp.android.content.pm;
 
@@ -9,8 +9,6 @@ import androidx.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
-
-import io.github.muntashirakon.util.ParcelUtils;
 
 /**
  * Transfer a large list of Parcelable objects across an IPC.  Splits into

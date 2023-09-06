@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.io;
 
+import aosp.android.content.pm.StringParceledListSlice;
 import io.github.muntashirakon.io.IOResult;
 
 // Copyright 2022 John "topjohnwu" Wu
@@ -18,7 +19,7 @@ interface IFileSystemService {
     long length(String path);
     /* (err, bool) */ IOResult createNewFile(String path);
     boolean delete(String path);
-    String[] list(String path);
+    StringParceledListSlice list(String path);
     boolean mkdir(String path);
     boolean mkdirs(String path);
     boolean renameTo(String path, String dest);

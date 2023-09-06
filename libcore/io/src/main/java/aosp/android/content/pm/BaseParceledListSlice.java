@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package aosp.android.content.pm;
 
@@ -14,12 +14,10 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.muntashirakon.io.IoUtils;
-
 /**
  * Transfer a large list of Parcelable objects across an IPC.  Splits into
  * multiple transactions if needed.
- *
+ * <p>
  * Caveat: for efficiency and security, all elements must be the same concrete type.
  * In order to avoid writing the class name of each object, we must ensure that
  * each object is the same type, or else unparceling then reparceling the data may yield
@@ -31,7 +29,7 @@ abstract class BaseParceledListSlice<T> implements Parcelable {
     private static final String TAG = "ParceledListSlice";
     private static final boolean DEBUG = false;
 
-    private static final int MAX_IPC_SIZE = IoUtils.DEFAULT_BUFFER_SIZE;
+    private static final int MAX_IPC_SIZE = 1024 * 50; /*IoUtils.DEFAULT_BUFFER_SIZE*/
 
     private final List<T> mList;
 
@@ -69,7 +67,7 @@ abstract class BaseParceledListSlice<T> implements Parcelable {
 
             mList.add(parcelable);
 
-            if (DEBUG) Log.d(TAG, "Read inline #" + i + ": " + mList.get(mList.size()-1));
+            if (DEBUG) Log.d(TAG, "Read inline #" + i + ": " + mList.get(mList.size() - 1));
             i++;
         }
         if (i >= N) {
@@ -93,7 +91,7 @@ abstract class BaseParceledListSlice<T> implements Parcelable {
 
                 mList.add(parcelable);
 
-                if (DEBUG) Log.d(TAG, "Read extra #" + i + ": " + mList.get(mList.size()-1));
+                if (DEBUG) Log.d(TAG, "Read extra #" + i + ": " + mList.get(mList.size() - 1));
                 i++;
             }
             reply.recycle();
