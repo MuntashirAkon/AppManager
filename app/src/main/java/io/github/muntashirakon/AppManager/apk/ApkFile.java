@@ -67,6 +67,7 @@ import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.io.IoUtils;
@@ -707,6 +708,18 @@ public final class ApkFile implements AutoCloseable {
             else throw new RuntimeException("Neither zipEntry nor source is defined.");
         }
 
+        /**
+         * Get size of the entry or {@code -1} if unavailable
+         */
+        @WorkerThread
+        public long getFileSize(boolean signed) {
+            try {
+                return (signed ? getSignedFile() : getRealCachedFile()).length();
+            } catch (IOException e) {
+                return -1;
+            }
+        }
+
         @WorkerThread
         public File getFile(boolean signed) throws IOException {
             return signed ? getSignedFile() : getRealCachedFile();
@@ -734,12 +747,14 @@ public final class ApkFile implements AutoCloseable {
                     mIdsigFile = mFileCache.createCachedFile("idsig");
                     signer.setIdsigFile(mIdsigFile);
                 }
-                if (signer.sign(realFile, mSignedFile, -1, zipAlign)) {
-                    if (Signer.verify(sigSchemes, mSignedFile, mIdsigFile)) {
-                        return mSignedFile;
-                    }
+                if (signer.sign(realFile, mSignedFile, -1, zipAlign)
+                        && Signer.verify(sigSchemes, mSignedFile, mIdsigFile)) {
+                    DigestUtils.getHexDigest(DigestUtils.SHA_256, mSignedFile);
+                    return mSignedFile;
                 }
                 throw new IOException("Failed to sign " + realFile);
+            } catch (IOException e) {
+                throw e;
             } catch (Exception e) {
                 throw new IOException(e);
             }
