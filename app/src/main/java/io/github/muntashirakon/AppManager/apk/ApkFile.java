@@ -578,7 +578,7 @@ public final class ApkFile implements AutoCloseable {
 
         Entry(@NonNull File source, @NonNull ByteBuffer manifest) {
             mSource = Objects.requireNonNull(source);
-            id = source.getAbsolutePath();
+            id = "base-apk"; // A safe ID since others ends with `.apk`
             name = "Base.apk";
             type = APK_BASE;
             mRequired = true;
