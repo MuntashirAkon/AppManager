@@ -63,6 +63,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.ApkSource;
+import io.github.muntashirakon.AppManager.apk.CachedApkSource;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
@@ -121,7 +123,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @Nullable
     private String mApkPath;
     @Nullable
-    private ApkFile.ApkSource mApkSource;
+    private ApkSource mApkSource;
     @Nullable
     private ApkFile mApkFile;
     private int mUserId;
@@ -169,12 +171,15 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
         mReceiver = null;
         IoUtils.closeQuietly(mApkFile);
+        if (mApkSource instanceof CachedApkSource) {
+            ((CachedApkSource) mApkSource).cleanup();
+        }
         mExecutor.shutdownNow();
     }
 
     @UiThread
     @NonNull
-    public LiveData<PackageInfo> setPackage(@NonNull ApkFile.ApkSource apkSource) {
+    public LiveData<PackageInfo> setPackage(@NonNull ApkSource apkSource) {
         MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
         mApkSource = apkSource;
         mExternalApk = true;
@@ -211,7 +216,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 setPackageInfo(false);
                 PackageInfo pi = getPackageInfo();
                 if (pi == null) throw new ApkFile.ApkFileException("Package not installed.");
-                mApkSource = new ApkFile.ApkSource(pi.applicationInfo);
+                mApkSource = ApkSource.getApkSource(pi.applicationInfo);
                 mApkFile = mApkSource.resolve();
                 packageInfoLiveData.postValue(pi);
             } catch (Throwable th) {
@@ -272,7 +277,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @AnyThread
     @Nullable
-    public ApkFile.ApkSource getApkSource() {
+    public ApkSource getApkSource() {
         return mApkSource;
     }
 

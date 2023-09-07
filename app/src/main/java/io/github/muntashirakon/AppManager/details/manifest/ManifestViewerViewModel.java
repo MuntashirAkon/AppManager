@@ -20,6 +20,7 @@ import java.nio.ByteOrder;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
@@ -54,23 +55,23 @@ public class ManifestViewerViewModel extends AndroidViewModel {
         return mManifestLiveData;
     }
 
-    public void loadApkFile(@Nullable Uri packageUri, @Nullable String type, @Nullable String packageName) {
+    public void loadApkFile(@Nullable ApkSource apkSource, @Nullable String packageName) {
         mManifestLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
             final PackageManager pm = getApplication().getPackageManager();
-            ApkFile.ApkSource apkSource;
-            if (packageUri != null) {
-                apkSource = new ApkFile.ApkSource(packageUri, type);
+            ApkSource realApkSource;
+            if (apkSource != null) {
+                realApkSource = apkSource;
             } else {
                 try {
                     ApplicationInfo applicationInfo = pm.getApplicationInfo(packageName, 0);
-                    apkSource = new ApkFile.ApkSource(applicationInfo);
+                    realApkSource = ApkSource.getApkSource(applicationInfo);
                 } catch (PackageManager.NameNotFoundException e) {
                     Log.e(TAG, "Error: ", e);
                     return;
                 }
             }
             try {
-                mApkFile = apkSource.resolve();
+                mApkFile = realApkSource.resolve();
             } catch (ApkFile.ApkFileException e) {
                 Log.e(TAG, "Error: ", e);
                 return;

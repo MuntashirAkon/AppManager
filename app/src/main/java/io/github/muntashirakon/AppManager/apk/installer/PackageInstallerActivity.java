@@ -53,7 +53,8 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
-import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.ApkSource;
+import io.github.muntashirakon.AppManager.apk.CachedApkSource;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewFragment;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
@@ -98,7 +99,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     }
 
     @NonNull
-    public static Intent getLaunchableInstance(@NonNull Context context, ApkFile.ApkSource apkSource) {
+    public static Intent getLaunchableInstance(@NonNull Context context, ApkSource apkSource) {
         Intent intent = new Intent(context, PackageInstallerActivity.class);
         intent.putExtra(EXTRA_APK_FILE_LINK, apkSource);
         return intent;
@@ -136,7 +137,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     private final View.OnClickListener mAppInfoClickListener = v -> {
         assert mCurrentItem != null;
         try {
-            ApkFile.ApkSource apkSource = mCurrentItem.getApkSource();
+            ApkSource apkSource = mCurrentItem.getApkSource();
             if (apkSource == null) {
                 apkSource = mModel.getApkSource();
             }
@@ -144,7 +145,8 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             appDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(appDetailsIntent);
         } finally {
-            triggerCancel();
+            // We cannot trigger cancel here because the cached file will be deleted
+            goToNext();
         }
     };
     private final InstallerOptions mInstallerOptions = new InstallerOptions();
@@ -201,10 +203,10 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         synchronized (mApkQueue) {
             mApkQueue.addAll(ApkQueueItem.fromIntent(intent));
         }
-        ApkFile.ApkSource apkSource = IntentCompat.getParcelableExtra(intent, EXTRA_APK_FILE_LINK, ApkFile.ApkSource.class);
+        ApkSource apkSource = IntentCompat.getParcelableExtra(intent, EXTRA_APK_FILE_LINK, ApkSource.class);
         if (apkSource != null) {
             synchronized (mApkQueue) {
-                mApkQueue.add(new ApkQueueItem(apkSource));
+                mApkQueue.add(ApkQueueItem.fromApkSource(apkSource));
             }
         }
         mModel.packageInfoLiveData().observe(this, newPackageInfo -> {
@@ -242,6 +244,10 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             unbindService(mServiceConnection);
         }
         unsetInstallFinishedListener();
+        // Delete remaining cached file
+        if (mCurrentItem != null && (mCurrentItem.getApkSource() instanceof CachedApkSource)) {
+            ((CachedApkSource) mCurrentItem.getApkSource()).cleanup();
+        }
         super.onDestroy();
     }
 
@@ -457,6 +463,10 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
 
     @Override
     public void triggerCancel() {
+        // Run cleanup
+        if (mCurrentItem != null && mCurrentItem.getApkSource() instanceof CachedApkSource) {
+            ((CachedApkSource) mCurrentItem.getApkSource()).cleanup();
+        }
         goToNext();
     }
 
@@ -471,6 +481,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
      * Closes the current APK and start the next
      */
     private void goToNext() {
+        mCurrentItem = null;
         mMultiplexer.enableInstall(false);
         mMultiplexer.enableUninstall(false);
         if (hasNext()) {

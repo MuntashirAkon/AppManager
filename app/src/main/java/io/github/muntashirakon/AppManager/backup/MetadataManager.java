@@ -34,6 +34,7 @@ import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -345,7 +346,7 @@ public final class MetadataManager {
                 requestedFlags.backupExternalData(), requestedFlags.backupMediaObb());
         mMetadata.isSystem = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         mMetadata.isSplitApk = false;
-        try (ApkFile apkFile = new ApkFile.ApkSource(applicationInfo).resolve()) {
+        try (ApkFile apkFile = ApkSource.getApkSource(applicationInfo).resolve()) {
             if (apkFile.isSplit()) {
                 List<ApkFile.Entry> apkEntries = apkFile.getEntries();
                 int splitCount = apkEntries.size() - 1;

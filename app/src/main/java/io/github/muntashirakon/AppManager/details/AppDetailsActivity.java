@@ -32,7 +32,7 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.details.info.AppInfoFragment;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -69,7 +69,7 @@ public class AppDetailsActivity extends BaseActivity {
     }
 
     @NonNull
-    public static Intent getIntent(@NonNull Context context, @NonNull ApkFile.ApkSource apkSource, boolean backToMainPage) {
+    public static Intent getIntent(@NonNull Context context, @NonNull ApkSource apkSource, boolean backToMainPage) {
         Intent intent = new Intent(context, AppDetailsActivity.class);
         intent.putExtra(AppDetailsActivity.EXTRA_APK_SOURCE, apkSource);
         intent.putExtra(AppDetailsActivity.EXTRA_BACK_TO_MAIN, backToMainPage);
@@ -104,7 +104,7 @@ public class AppDetailsActivity extends BaseActivity {
     @Nullable
     private String mPackageName;
     @Nullable
-    private ApkFile.ApkSource mApkSource;
+    private ApkSource mApkSource;
     @Nullable
     private String mApkType;
     @UserIdInt
@@ -131,8 +131,8 @@ public class AppDetailsActivity extends BaseActivity {
             // Package name needs to be sanitized since it's also a file
             mPackageName = Paths.sanitizeFilename(intent.getStringExtra(EXTRA_PACKAGE_NAME));
             mApkSource = uri != null
-                    ? new ApkFile.ApkSource(uri, intent.getType())
-                    : IntentCompat.getParcelableExtra(intent, EXTRA_APK_SOURCE, ApkFile.ApkSource.class);
+                    ? ApkSource.getApkSource(uri, intent.getType())
+                    : IntentCompat.getParcelableExtra(intent, EXTRA_APK_SOURCE, ApkSource.class);
             mApkType = intent.getType();
             mUserId = intent.getIntExtra(EXTRA_USER_HANDLE, UserHandleHidden.myUserId());
         }
@@ -206,7 +206,7 @@ public class AppDetailsActivity extends BaseActivity {
         @Nullable
         private String mPackageName;
         @Nullable
-        private ApkFile.ApkSource mApkSource;
+        private ApkSource mApkSource;
         @Nullable
         private String mApkType;
         private int mUserId;
@@ -217,7 +217,7 @@ public class AppDetailsActivity extends BaseActivity {
         public SavedState(Parcel source) {
             mBackToMainPage = ParcelCompat.readBoolean(source);
             mPackageName = source.readString();
-            mApkSource = ParcelCompat.readParcelable(source, ApkFile.ApkSource.class.getClassLoader(), ApkFile.ApkSource.class);
+            mApkSource = ParcelCompat.readParcelable(source, ApkSource.class.getClassLoader(), ApkSource.class);
             mApkType = source.readString();
             mUserId = source.readInt();
         }

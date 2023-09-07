@@ -7,13 +7,12 @@ import static io.github.muntashirakon.AppManager.apk.ApkUtils.getManifestAttribu
 import static io.github.muntashirakon.AppManager.apk.ApkUtils.getManifestFromApk;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Parcel;
 import android.os.ParcelFileDescriptor;
-import android.os.Parcelable;
 import android.os.RemoteException;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -30,7 +29,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.collection.SparseArrayCompat;
-import androidx.core.os.ParcelCompat;
 
 import com.google.android.material.color.MaterialColors;
 
@@ -80,78 +78,6 @@ import io.github.muntashirakon.util.LocalizedString;
 public final class ApkFile implements AutoCloseable {
     public static final String TAG = "ApkFile";
 
-    public static class ApkSource implements Parcelable {
-        public final Uri uri;
-        @Nullable
-        public final String mimeType;
-        public final ApplicationInfo applicationInfo;
-
-        private int mApkFileKey;
-
-        public ApkSource(@NonNull Uri uri, @Nullable String mimeType) {
-            this.uri = Objects.requireNonNull(uri);
-            this.mimeType = mimeType;
-            this.applicationInfo = null;
-        }
-
-        public ApkSource(@NonNull ApplicationInfo applicationInfo) {
-            this.uri = null;
-            this.mimeType = null;
-            this.applicationInfo = Objects.requireNonNull(applicationInfo);
-        }
-
-        @AnyThread
-        @NonNull
-        public ApkFile resolve() throws ApkFileException {
-            ApkFile apkFile = getInstance(mApkFileKey);
-            if (apkFile != null && !apkFile.mClosed) {
-                // Usable past instance
-                return apkFile;
-            }
-            if (uri != null) {
-                mApkFileKey = createInstance(uri, mimeType);
-                return Objects.requireNonNull(getInstance(mApkFileKey));
-            }
-            if (applicationInfo != null) {
-                mApkFileKey = createInstance(applicationInfo);
-                return Objects.requireNonNull(getInstance(mApkFileKey));
-            }
-            throw new IllegalStateException("Both Uri and ApplicationInfo cannot be null or not null.");
-        }
-
-        protected ApkSource(Parcel in) {
-            uri = ParcelCompat.readParcelable(in, Uri.class.getClassLoader(), Uri.class);
-            mimeType = in.readString();
-            applicationInfo = ParcelCompat.readParcelable(in, ApplicationInfo.class.getClassLoader(), ApplicationInfo.class);
-            mApkFileKey = in.readInt();
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeParcelable(uri, flags);
-            dest.writeString(mimeType);
-            dest.writeParcelable(applicationInfo, flags);
-            dest.writeInt(mApkFileKey);
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        public static final Creator<ApkSource> CREATOR = new Creator<ApkSource>() {
-            @Override
-            public ApkSource createFromParcel(Parcel in) {
-                return new ApkSource(in);
-            }
-
-            @Override
-            public ApkSource[] newArray(int size) {
-                return new ApkSource[size];
-            }
-        };
-    }
-
     private static final String ATTR_IS_FEATURE_SPLIT = "android:isFeatureSplit";
     private static final String ATTR_IS_SPLIT_REQUIRED = "android:isSplitRequired";
     private static final String ATTR_ISOLATED_SPLIT = "android:isolatedSplits";
@@ -168,7 +94,7 @@ public final class ApkFile implements AutoCloseable {
 
     @AnyThread
     @Nullable
-    private static ApkFile getInstance(int sparseArrayKey) {
+    static ApkFile getInstance(int sparseArrayKey) {
         synchronized (sApkFiles) {
             ApkFile apkFile = sApkFiles.get(sparseArrayKey);
             if (apkFile == null) {
@@ -183,7 +109,7 @@ public final class ApkFile implements AutoCloseable {
     }
 
     @AnyThread
-    private static int createInstance(Uri apkUri, @Nullable String mimeType) throws ApkFileException {
+    static int createInstance(Uri apkUri, @Nullable String mimeType) throws ApkFileException {
         synchronized (sApkFiles) {
             int key = getUniqueKey();
             ApkFile apkFile = new ApkFile(apkUri, mimeType, key);
@@ -193,7 +119,7 @@ public final class ApkFile implements AutoCloseable {
     }
 
     @AnyThread
-    private static int createInstance(ApplicationInfo info) throws ApkFileException {
+    static int createInstance(ApplicationInfo info) throws ApkFileException {
         synchronized (sApkFiles) {
             int key = getUniqueKey();
             ApkFile apkFile = new ApkFile(info, key);
@@ -243,6 +169,7 @@ public final class ApkFile implements AutoCloseable {
         SUPPORTED_EXTENSIONS.add("apkm");
         SUPPORTED_EXTENSIONS.add("apks");
         SUPPORTED_EXTENSIONS.add("xapk");
+        SUPPORTED_MIMES.add("application/x-apks");
         SUPPORTED_MIMES.add("application/vnd.android.package-archive");
         SUPPORTED_MIMES.add("application/vnd.apkm");
         SUPPORTED_MIMES.add("application/xapk-package-archive");
@@ -284,11 +211,20 @@ public final class ApkFile implements AutoCloseable {
             }
             extension = Objects.requireNonNull(apkSource.getExtension());
         } else {
-            if (mimeType.equals("application/xapk-package-archive")) {
-                extension = "xapk";
-            } else if (mimeType.equals("application/vnd.apkm")) {
-                extension = "apkm";
-            } else extension = "apk";
+            switch (mimeType) {
+                case "application/x-apks":
+                    extension = "apks";
+                    break;
+                case "application/xapk-package-archive":
+                    extension = "xapk";
+                    break;
+                case "application/vnd.apkm":
+                    extension = "apkm";
+                    break;
+                default:
+                    extension = "apk";
+                    break;
+            }
         }
         if (extension.equals("apkm")) {
             try {
@@ -297,7 +233,7 @@ public final class ApkFile implements AutoCloseable {
                     // FIXME(#227): Give it a special name and verify integrity
                     extension = "apks";
                 }
-            } catch (IOException e) {
+            } catch (IOException | SecurityException e) {
                 throw new ApkFileException(e);
             }
         }
@@ -315,22 +251,28 @@ public final class ApkFile implements AutoCloseable {
                 throw new ApkFileException(e);
             }
         } else {
-            // Open file descriptor
+            // Open file descriptor if necessary
+            File cacheFilePath = null;
+            if (ContentResolver.SCHEME_FILE.equals(apkUri.getScheme())) {
+                // File scheme may not require an FD
+                cacheFilePath = new File(apkUri.getPath());
+            }
             if (!FmProvider.AUTHORITY.equals(apkUri.getAuthority())) {
+                // Content scheme has a third-party authority
                 try {
                     mFd = FileUtils.getFdFromUri(context, apkUri, "r");
+                    cacheFilePath = FileUtils.getFileFromFd(mFd);
                 } catch (FileNotFoundException e) {
                     throw new ApkFileException(e);
                 } catch (SecurityException e) {
                     Log.e(TAG, e);
                 }
             }
-            File cacheFilePath = mFd != null ? FileUtils.getFileFromFd(mFd) : null;
             if (cacheFilePath == null || !FileUtils.canReadUnprivileged(cacheFilePath)) {
                 // Cache manually
                 try {
                     mCacheFilePath = mFileCache.getCachedFile(apkSource);
-                } catch (IOException e) {
+                } catch (IOException | SecurityException e) {
                     throw new ApkFileException("Could not cache the input file.", e);
                 }
             } else mCacheFilePath = cacheFilePath;
@@ -547,6 +489,10 @@ public final class ApkFile implements AutoCloseable {
                 IoUtils.copy(zipInputStream, outputStream, -1, null);
             }
         }
+    }
+
+    public boolean isClosed() {
+        return mClosed;
     }
 
     @Override

@@ -35,6 +35,8 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.ApkSource;
+import io.github.muntashirakon.AppManager.apk.CachedApkSource;
 import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizer;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
@@ -158,7 +160,7 @@ public class PackageInstallerService extends ForegroundService {
         } else {
             // ApkFile/Uri
             ApkFile apkFile;
-            ApkFile.ApkSource apkSource = apkQueueItem.getApkSource();
+            ApkSource apkSource = apkQueueItem.getApkSource();
             if (apkSource != null) {
                 // ApkFile set
                 try {
@@ -173,6 +175,10 @@ public class PackageInstallerService extends ForegroundService {
                 return;
             }
             installer.install(apkFile, selectedSplitIds, options, mProgressHandler);
+            // Delete the cached file
+            if (apkSource instanceof CachedApkSource) {
+                ((CachedApkSource) apkSource).cleanup();
+            }
         }
     }
 

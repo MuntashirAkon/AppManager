@@ -18,6 +18,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.editor.CodeEditorFragment;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 
@@ -41,6 +42,7 @@ public class ManifestViewerActivity extends BaseActivity {
             showErrorAndFinish();
             return;
         }
+        final ApkSource apkSource = packageUri != null ? ApkSource.getApkSource(packageUri, intent.getType()) : null;
         mModel.getManifestLiveData().observe(this, manifest -> {
             CodeEditorFragment.Options options = new CodeEditorFragment.Options.Builder()
                     .setTitle(getString(R.string.manifest_viewer))
@@ -59,7 +61,7 @@ public class ManifestViewerActivity extends BaseActivity {
                     .replace(R.id.container, fragment)
                     .commit();
         });
-        mModel.loadApkFile(packageUri, intent.getType(), packageName);
+        mModel.loadApkFile(apkSource, packageName);
     }
 
     @UiThread

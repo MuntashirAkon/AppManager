@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 
 public class ApkQueueItem implements Parcelable {
@@ -36,9 +36,14 @@ public class ApkQueueItem implements Parcelable {
         }
         String mimeType = intent.getType();
         for (Uri uri : uris) {
-            apkQueueItems.add(new ApkQueueItem(new ApkFile.ApkSource(uri, mimeType)));
+            apkQueueItems.add(new ApkQueueItem(ApkSource.getCachedApkSource(uri, mimeType)));
         }
         return apkQueueItems;
+    }
+
+    @NonNull
+    public static ApkQueueItem fromApkSource(@NonNull ApkSource apkSource) {
+        return new ApkQueueItem(apkSource.toCachedSource());
     }
 
     @Nullable
@@ -47,19 +52,19 @@ public class ApkQueueItem implements Parcelable {
     private String mAppLabel;
     private boolean mInstallExisting;
     @Nullable
-    private ApkFile.ApkSource mApkSource;
+    private ApkSource mApkSource;
     @Nullable
     private InstallerOptions mInstallerOptions;
     @Nullable
     private ArrayList<String> mSelectedSplits;
 
-    ApkQueueItem(@NonNull String packageName, boolean installExisting) {
+    private ApkQueueItem(@NonNull String packageName, boolean installExisting) {
         mPackageName = Objects.requireNonNull(packageName);
         mInstallExisting = installExisting;
         assert installExisting;
     }
 
-    ApkQueueItem(@NonNull ApkFile.ApkSource apkSource) {
+    private ApkQueueItem(@NonNull ApkSource apkSource) {
         mApkSource = Objects.requireNonNull(apkSource);
     }
 
@@ -67,7 +72,7 @@ public class ApkQueueItem implements Parcelable {
         mPackageName = in.readString();
         mAppLabel = in.readString();
         mInstallExisting = in.readByte() != 0;
-        mApkSource = ParcelCompat.readParcelable(in, ApkFile.ApkSource.class.getClassLoader(), ApkFile.ApkSource.class);
+        mApkSource = ParcelCompat.readParcelable(in, ApkSource.class.getClassLoader(), ApkSource.class);
         mInstallerOptions = ParcelCompat.readParcelable(in, InstallerOptions.class.getClassLoader(), InstallerOptions.class);
         mSelectedSplits = new ArrayList<>();
         in.readStringList(mSelectedSplits);
@@ -91,11 +96,11 @@ public class ApkQueueItem implements Parcelable {
     }
 
     @Nullable
-    public ApkFile.ApkSource getApkSource() {
+    public ApkSource getApkSource() {
         return mApkSource;
     }
 
-    public void setApkSource(@Nullable ApkFile.ApkSource apkSource) {
+    public void setApkSource(@Nullable ApkSource apkSource) {
         mApkSource = apkSource;
     }
 

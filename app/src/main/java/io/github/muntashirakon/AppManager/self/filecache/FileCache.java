@@ -78,7 +78,7 @@ public class FileCache implements Closeable {
             throw new FileNotFoundException("Path " + source + " does not exist.");
         }
         File tempFile = mFileCacheMap.get(source);
-        if (tempFile == null) {
+        if (tempFile == null || !tempFile.exists()) {
             String extension = source.getExtension();
             tempFile = File.createTempFile(source.getName() + "_", "." + (extension != null ? extension : "tmp"), mCacheDir);
             mFileCacheMap.put(source, tempFile);

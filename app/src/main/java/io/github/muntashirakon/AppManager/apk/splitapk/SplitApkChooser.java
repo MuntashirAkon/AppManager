@@ -22,6 +22,7 @@ import java.util.Set;
 
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerViewModel;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
@@ -107,7 +108,7 @@ public class SplitApkChooser extends Fragment {
             // See if the app has been installed
             if (mViewModel.getInstalledPackageInfo() != null) {
                 ApplicationInfo info = mViewModel.getInstalledPackageInfo().applicationInfo;
-                try (ApkFile installedApkFile = new ApkFile.ApkSource(info).resolve()) {
+                try (ApkFile installedApkFile = ApkSource.getApkSource(info).resolve()) {
                     for (ApkFile.Entry apkEntry : installedApkFile.getEntries()) {
                         splitNames.add(apkEntry.name);
                     }

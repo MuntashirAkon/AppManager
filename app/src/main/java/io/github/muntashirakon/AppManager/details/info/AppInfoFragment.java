@@ -91,6 +91,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.accessibility.NoRootAccessibilityService;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.behavior.DexOptDialog;
 import io.github.muntashirakon.AppManager.apk.behavior.FreezeUnfreezeShortcutInfo;
@@ -580,7 +581,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void install() {
-        ApkFile.ApkSource apkSource = mMainModel != null ? mMainModel.getApkSource() : null;
+        ApkSource apkSource = mMainModel != null ? mMainModel.getApkSource() : null;
         if (apkSource == null) return;
         try {
             startActivity(PackageInstallerActivity.getLaunchableInstance(requireContext(), apkSource));

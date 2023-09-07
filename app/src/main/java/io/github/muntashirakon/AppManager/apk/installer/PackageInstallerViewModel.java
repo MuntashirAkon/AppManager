@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -40,7 +41,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     private final PackageManager mPm;
     private PackageInfo mNewPackageInfo;
     private PackageInfo mInstalledPackageInfo;
-    private ApkFile.ApkSource mApkSource;
+    private ApkSource mApkSource;
     private ApkFile mApkFile;
     private String mPackageName;
     private String mAppLabel;
@@ -138,7 +139,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         return mApkFile;
     }
 
-    public ApkFile.ApkSource getApkSource() {
+    public ApkSource getApkSource() {
         return mApkSource;
     }
 
@@ -194,7 +195,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     private void getExistingPackageInfoInternal(@NonNull String packageName) throws PackageManager.NameNotFoundException, IOException, ApkFile.ApkFileException {
         mPackageName = packageName;
         mInstalledPackageInfo = loadInstalledPackageInfo(packageName);
-        mApkSource = new ApkFile.ApkSource(mInstalledPackageInfo.applicationInfo);
+        mApkSource = ApkSource.getApkSource(mInstalledPackageInfo.applicationInfo);
         mApkFile = mApkSource.resolve();
         mNewPackageInfo = loadNewPackageInfo();
         mAppLabel = mPm.getApplicationLabel(mNewPackageInfo.applicationInfo).toString();
