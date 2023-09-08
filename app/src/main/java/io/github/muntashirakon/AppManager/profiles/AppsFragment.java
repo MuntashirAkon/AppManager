@@ -116,6 +116,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 info = pm.getApplicationInfo(packageName, 0);
             } catch (PackageManager.NameNotFoundException ignore) {
             }
+            holder.icon.setTag(packageName);
             ImageLoader.getInstance().displayImage(packageName, info, holder.icon);
             String label;
             if (info != null) {

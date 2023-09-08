@@ -1276,7 +1276,9 @@ public class ActivityInterceptor extends BaseActivity {
             String name = info.packageName + "\n" + activityName;
             holder.subtitle.setText(name);
             holder.subtitle.setTextIsSelectable(true);
-            ImageLoader.getInstance().displayImage(info.packageName + "_" + activityName, info, holder.icon);
+            String tag = info.packageName + "_" + activityName;
+            holder.icon.setTag(tag);
+            ImageLoader.getInstance().displayImage(tag, info, holder.icon);
             holder.actionIcon.setOnClickListener(v -> {
                 Intent intent = new Intent(mActivity.mMutableIntent);
                 intent.setClassName(info.packageName, activityName);

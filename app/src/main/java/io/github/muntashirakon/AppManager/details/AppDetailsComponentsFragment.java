@@ -479,7 +479,9 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                         activityName.replaceFirst(mPackageName, "") : activityName);
             }
             // Icon
-            ImageLoader.getInstance().displayImage(mPackageName + "_" + activityName, activityInfo, holder.imageView);
+            String tag = mPackageName + "_" + activityName;
+            holder.imageView.setTag(tag);
+            ImageLoader.getInstance().displayImage(tag, activityInfo, holder.imageView);
             // TaskAffinity
             holder.textView1.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.task_affinity), activityInfo.taskAffinity));
@@ -592,7 +594,9 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                         serviceInfo.name.replaceFirst(mPackageName, "") : serviceInfo.name);
             }
             // Icon
-            ImageLoader.getInstance().displayImage(mPackageName + "_" + serviceInfo.name, serviceInfo, holder.imageView);
+            String tag = mPackageName + "_" + serviceInfo.name;
+            holder.imageView.setTag(tag);
+            ImageLoader.getInstance().displayImage(tag, serviceInfo, holder.imageView);
             // Flags and Permission
             StringBuilder flagsAndPermission = new StringBuilder(Utils.getServiceFlagsString(serviceInfo.flags));
             if (flagsAndPermission.length() != 0) {
@@ -669,7 +673,9 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                         : activityInfo.name);
             }
             // Icon
-            ImageLoader.getInstance().displayImage(mPackageName + "_" + activityInfo.name, activityInfo, holder.imageView);
+            String tag = mPackageName + "_" + activityInfo.name;
+            holder.imageView.setTag(tag);
+            ImageLoader.getInstance().displayImage(tag, activityInfo, holder.imageView);
             // TaskAffinity
             holder.textView1.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.task_affinity), activityInfo.taskAffinity));
@@ -720,7 +726,9 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             // Label
             holder.labelView.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(providerName)));
             // Icon
-            ImageLoader.getInstance().displayImage(mPackageName + "_" + providerName, providerInfo, holder.imageView);
+            String tag = mPackageName + "_" + providerName;
+            holder.imageView.setTag(tag);
+            ImageLoader.getInstance().displayImage(tag, providerInfo, holder.imageView);
             // Uri permission
             holder.textView1.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.grant_uri_permission), providerInfo.grantUriPermissions));
             // Path permissions

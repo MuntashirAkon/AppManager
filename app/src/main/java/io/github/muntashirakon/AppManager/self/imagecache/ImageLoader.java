@@ -344,7 +344,10 @@ public class ImageLoader implements Closeable {
             if (imageViewReusedOrClosed(mQueueItem)) return;
             ImageView iv = mQueueItem.imageView.get();
             if (iv != null) {
-                iv.setImageBitmap(mImage);
+                Object tag = iv.getTag();
+                if (tag == null || tag.equals(mQueueItem.tag)) {
+                    iv.setImageBitmap(mImage);
+                }
             }
         }
     }

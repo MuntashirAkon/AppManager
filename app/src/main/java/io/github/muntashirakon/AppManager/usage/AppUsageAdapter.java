@@ -184,6 +184,7 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         // Set label (or package name on failure)
         holder.appLabel.setText(usageInfo.appLabel);
         // Set icon
+        holder.appIcon.setTag(usageInfo.packageName);
         ImageLoader.getInstance().displayImage(usageInfo.packageName, usageInfo.applicationInfo, holder.appIcon);
         // Set user ID
         if (mActivity.viewModel.hasMultipleUsers()) {

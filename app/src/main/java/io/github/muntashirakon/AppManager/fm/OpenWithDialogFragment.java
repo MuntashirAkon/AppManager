@@ -340,8 +340,9 @@ public class OpenWithDialogFragment extends DialogFragment {
             String activityName = resolvedInfo.name;
             String summary = resolvedInfo.appLabel + "\n" + resolvedInfo.shortName;
             holder.summary.setText(summary);
-            mImageLoader.displayImage(resolvedInfo.packageName + "_" + resolvedInfo.label, holder.icon,
-                    new ResolveInfoImageFetcher(resolvedInfo.resolveInfo));
+            String tag = resolvedInfo.packageName + "_" + resolvedInfo.label;
+            holder.icon.setTag(tag);
+            mImageLoader.displayImage(tag, holder.icon, new ResolveInfoImageFetcher(resolvedInfo.resolveInfo));
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(mIntent);
                 intent.setClassName(resolvedInfo.packageName, activityName);

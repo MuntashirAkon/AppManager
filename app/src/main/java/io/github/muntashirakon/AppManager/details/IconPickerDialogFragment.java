@@ -118,7 +118,7 @@ public class IconPickerDialogFragment extends DialogFragment {
                 view = (ImageView) convertView;
             }
             IconItemInfo info = mIcons[position];
-
+            view.setTag(info.packageName);
             ImageLoader.getInstance().displayImage(info.packageName, info, view);
             return convertView;
         }

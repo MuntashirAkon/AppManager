@@ -139,10 +139,12 @@ public class SysConfigActivity extends BaseActivity {
                     holder.packageName.setVisibility(View.VISIBLE);
                     holder.packageName.setText(info.name);
                     // Load icon
+                    holder.icon.setTag(applicationInfo.packageName);
                     ImageLoader.getInstance().displayImage(applicationInfo.packageName, applicationInfo, holder.icon);
                 } catch (PackageManager.NameNotFoundException e) {
                     holder.title.setText(info.name);
                     holder.packageName.setVisibility(View.GONE);
+                    holder.icon.setTag(info.name);
                     ImageLoader.getInstance().displayImage(info.name, null, holder.icon);
                 }
                 holder.icon.setOnClickListener(v -> {

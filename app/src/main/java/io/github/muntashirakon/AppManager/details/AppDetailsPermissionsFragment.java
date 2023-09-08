@@ -736,7 +736,9 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                         permissionInfo.name.replaceFirst(mPackageName, "") : permissionInfo.name);
             }
             // Icon
-            ImageLoader.getInstance().displayImage(mPackageName + "_" + permissionInfo.name, permissionInfo, holder.imageView);
+            String tag = mPackageName + "_" + permissionInfo.name;
+            holder.imageView.setTag(tag);
+            ImageLoader.getInstance().displayImage(tag, permissionInfo, holder.imageView);
             // Description
             CharSequence description = permissionInfo.loadDescription(packageManager);
             if (description != null) {

@@ -285,6 +285,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             holder.sha.setVisibility(View.GONE);
         }
         // Load app icon
+        holder.icon.setTag(item.packageName);
         ImageLoader.getInstance().displayImage(item.packageName, item, holder.icon);
         // Set app label
         if (!TextUtils.isEmpty(mSearchQuery) && item.label.toLowerCase(Locale.ROOT).contains(mSearchQuery)) {

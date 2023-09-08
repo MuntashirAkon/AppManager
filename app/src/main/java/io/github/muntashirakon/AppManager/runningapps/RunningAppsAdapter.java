@@ -188,6 +188,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         } else applicationInfo = null;
         String processName = processItem.name;
         // Load icon
+        holder.icon.setTag(processName);
         ImageLoader.getInstance().displayImage(processName, applicationInfo, holder.icon);
         // Set process name
         holder.processName.setText(UIUtils.getHighlightedText(processName, mModel.getQuery(), mQueryStringHighlightColor));
