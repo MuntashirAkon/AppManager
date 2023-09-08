@@ -169,7 +169,7 @@ public class OpenWithDialogFragment extends DialogFragment {
         openForThisFileOnly.setVisibility(View.GONE);
         DialogTitleBuilder titleBuilder = new DialogTitleBuilder(requireActivity())
                 .setTitle(R.string.file_open_with)
-                .setSubtitle(FmUtils.getDisplayablePath(mPath))
+                .setSubtitle(mPath.getName())
                 .setEndIcon(R.drawable.ic_open_in_new, v1 -> {
                     if (mAdapter != null && mAdapter.getIntent().resolveActivityInfo(requireActivity()
                             .getPackageManager(), 0) != null) {
