@@ -93,7 +93,9 @@ public class FmItem implements Comparable<FmItem> {
         getName();
         getLastModified();
         getSize();
-        getChildCount();
+        if (type == FileType.DIRECTORY) {
+            getChildCount();
+        } else childCount = 0;
     }
 
     @Override
