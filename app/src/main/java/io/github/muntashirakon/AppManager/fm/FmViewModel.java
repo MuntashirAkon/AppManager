@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.fm;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -309,6 +310,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             }
             // Send current URI
             mUriLiveData.postValue(mCurrentUri);
+            boolean isSaf = ContentResolver.SCHEME_CONTENT.equals(mCurrentUri.getScheme());
             Path[] children = path.listFiles();
             FolderShortInfo folderShortInfo = new FolderShortInfo();
             int count = children.length;
@@ -320,7 +322,12 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                     if (isDirectory) {
                         ++folderCount;
                     }
-                    mFmItems.add(new FmItem(child, isDirectory));
+                    FmItem fmItem = new FmItem(child, isDirectory);
+                    if (isSaf) {
+                        // Caching is necessary for SAF in order to prevent lags
+                        fmItem.cache();
+                    }
+                    mFmItems.add(fmItem);
                     if (ThreadUtils.isInterrupted()) {
                         return;
                     }
@@ -454,10 +461,10 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                 Path p1 = o1.path;
                 Path p2 = o2.path;
                 if (mSortBy == FmListOptions.SORT_BY_LAST_MODIFIED) {
-                    return -Long.compare(p1.lastModified(), p2.lastModified()) * inverse;
+                    return -Long.compare(o1.getLastModified(), o2.getLastModified()) * inverse;
                 }
                 if (mSortBy == FmListOptions.SORT_BY_SIZE) {
-                    return -Long.compare(p1.length(), p2.length()) * inverse;
+                    return -Long.compare(o1.getSize(), o2.getSize()) * inverse;
                 }
                 if (mSortBy == FmListOptions.SORT_BY_TYPE) {
                     return p1.getType().compareToIgnoreCase(p2.getType()) * inverse;

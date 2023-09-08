@@ -14,6 +14,8 @@ import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathContentInfo;
 
 public class FmItem implements Comparable<FmItem> {
+    public static final int UNRESOLVED = -2;
+
     final int type;
     @NonNull
     public final Path path;
@@ -24,6 +26,9 @@ public class FmItem implements Comparable<FmItem> {
     private PathContentInfo mContentInfo;
     @Nullable
     private String name;
+    private long lastModified = UNRESOLVED;
+    private long size = UNRESOLVED;
+    private int childCount = UNRESOLVED;
 
     FmItem(@NonNull Path path) {
         this.path = path;
@@ -54,6 +59,27 @@ public class FmItem implements Comparable<FmItem> {
         return name;
     }
 
+    public long getLastModified() {
+        if (lastModified == UNRESOLVED) {
+            lastModified = path.lastModified();
+        }
+        return lastModified;
+    }
+
+    public long getSize() {
+        if (size == UNRESOLVED) {
+            size = path.length();
+        }
+        return size;
+    }
+
+    public int getChildCount() {
+        if (childCount == UNRESOLVED) {
+            childCount = path.listFiles().length;
+        }
+        return childCount;
+    }
+
     @Nullable
     public PathContentInfo getContentInfo() {
         return mContentInfo;
@@ -61,6 +87,13 @@ public class FmItem implements Comparable<FmItem> {
 
     public void setContentInfo(@Nullable PathContentInfo contentInfo) {
         this.mContentInfo = contentInfo;
+    }
+
+    public void cache() {
+        getName();
+        getLastModified();
+        getSize();
+        getChildCount();
     }
 
     @Override
