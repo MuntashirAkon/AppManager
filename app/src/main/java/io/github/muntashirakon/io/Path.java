@@ -1536,7 +1536,10 @@ public class Path implements Comparable<Path> {
 
     @NonNull
     public OutputStream openOutputStream(boolean append) throws IOException {
-        DocumentFile documentFile = getRealDocumentFile(mDocumentFile);
+        DocumentFile documentFile = resolveFileOrNull(mDocumentFile);
+        if (documentFile == null) {
+            throw new IOException(mDocumentFile.getUri() + " is a directory");
+        }
         if (documentFile instanceof ExtendedRawDocumentFile) {
             try {
                 return Objects.requireNonNull(getFile()).newOutputStream(append);
@@ -1556,7 +1559,10 @@ public class Path implements Comparable<Path> {
 
     @NonNull
     public InputStream openInputStream() throws IOException {
-        DocumentFile documentFile = getRealDocumentFile(mDocumentFile);
+        DocumentFile documentFile = resolveFileOrNull(mDocumentFile);
+        if (documentFile == null) {
+            throw new IOException(mDocumentFile.getUri() + " is a directory");
+        }
         if (documentFile instanceof ExtendedRawDocumentFile) {
             try {
                 return Objects.requireNonNull(getFile()).newInputStream();
@@ -1574,7 +1580,10 @@ public class Path implements Comparable<Path> {
     }
 
     public FileChannel openFileChannel(int mode) throws IOException {
-        DocumentFile documentFile = getRealDocumentFile(mDocumentFile);
+        DocumentFile documentFile = resolveFileOrNull(mDocumentFile);
+        if (documentFile == null) {
+            throw new IOException(mDocumentFile.getUri() + " is a directory");
+        }
         if (documentFile instanceof ExtendedRawDocumentFile) {
             ExtendedFile file = Objects.requireNonNull(getFile());
             if (file instanceof RemoteFile) {
@@ -1768,6 +1777,19 @@ public class Path implements Comparable<Path> {
             return fsRoot.mDocumentFile;
         }
         return documentFile;
+    }
+
+    @Nullable
+    private static DocumentFile resolveFileOrNull(@NonNull DocumentFile documentFile) {
+        DocumentFile realDocumentFile = getRealDocumentFile(documentFile);
+        if (!realDocumentFile.isDirectory()) {
+            return realDocumentFile;
+        }
+        // Try original
+        if (!documentFile.isDirectory()) {
+            return documentFile;
+        }
+        return null;
     }
 
     private static void checkVfs(Uri uri) throws IOException {
