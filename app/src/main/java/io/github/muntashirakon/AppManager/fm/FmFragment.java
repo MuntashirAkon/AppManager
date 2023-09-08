@@ -46,6 +46,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
@@ -716,6 +717,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         // TODO: 27/6/23 Ideally, these should be done in a bound service
         AtomicReference<Future<?>> deletionThread = new AtomicReference<>();
         View view = View.inflate(requireContext(), R.layout.dialog_progress, null);
+        LinearProgressIndicator progress = view.findViewById(R.id.progress_linear);
         TextView label = view.findViewById(android.R.id.text1);
         TextView counter = view.findViewById(android.R.id.text2);
         counter.setText(String.format(Locale.getDefault(), "%d/%d", 0, paths.size()));
@@ -730,10 +732,17 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 .setCancelable(false)
                 .show();
         deletionThread.set(ThreadUtils.postOnBackgroundThread(() -> {
+            WeakReference<LinearProgressIndicator> progressRef = new WeakReference<>(progress);
             WeakReference<TextView> labelRef = new WeakReference<>(label);
             WeakReference<TextView> counterRef = new WeakReference<>(counter);
             WeakReference<AlertDialog> dialogRef = new WeakReference<>(dialog);
             try {
+                LinearProgressIndicator p = progressRef.get();
+                if (p != null) {
+                    p.setMax(paths.size());
+                    p.setProgress(0);
+                    p.setIndeterminate(false);
+                }
                 int i = 1;
                 for (Path path : paths) {
                     // Update label
@@ -751,11 +760,15 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                     }
                     path.delete();
                     TextView c = counterRef.get();
-                    if (c != null) {
-                        int finalI = i;
-                        ThreadUtils.postOnMainThread(() ->
-                                c.setText(String.format(Locale.getDefault(), "%d/%d", finalI, paths.size())));
-                    }
+                    int finalI = i;
+                    ThreadUtils.postOnMainThread(() -> {
+                        if (c != null) {
+                            c.setText(String.format(Locale.getDefault(), "%d/%d", finalI, paths.size()));
+                        }
+                        if (p != null) {
+                            p.setProgress(finalI);
+                        }
+                    });
                     ++i;
                     if (ThreadUtils.isInterrupted()) {
                         break;
@@ -777,6 +790,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     private void startBatchRenaming(List<Path> paths, String prefix, @Nullable String extension) {
         AtomicReference<Future<?>> renameThread = new AtomicReference<>();
         View view = View.inflate(requireContext(), R.layout.dialog_progress, null);
+        LinearProgressIndicator progress = view.findViewById(R.id.progress_linear);
         TextView label = view.findViewById(android.R.id.text1);
         TextView counter = view.findViewById(android.R.id.text2);
         counter.setText(String.format(Locale.getDefault(), "%d/%d", 0, paths.size()));
@@ -791,10 +805,17 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 .setCancelable(false)
                 .show();
         renameThread.set(ThreadUtils.postOnBackgroundThread(() -> {
+            WeakReference<LinearProgressIndicator> progressRef = new WeakReference<>(progress);
             WeakReference<TextView> labelRef = new WeakReference<>(label);
             WeakReference<TextView> counterRef = new WeakReference<>(counter);
             WeakReference<AlertDialog> dialogRef = new WeakReference<>(dialog);
             try {
+                LinearProgressIndicator p = progressRef.get();
+                if (p != null) {
+                    p.setMax(paths.size());
+                    p.setProgress(0);
+                    p.setIndeterminate(false);
+                }
                 int i = 1;
                 for (Path path : paths) {
                     // Update label
@@ -816,11 +837,15 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                         path.renameTo(displayName);
                     }
                     TextView c = counterRef.get();
-                    if (c != null) {
-                        int finalI = i;
-                        ThreadUtils.postOnMainThread(() ->
-                                c.setText(String.format(Locale.getDefault(), "%d/%d", finalI, paths.size())));
-                    }
+                    int finalI = i;
+                    ThreadUtils.postOnMainThread(() -> {
+                        if (c != null) {
+                            c.setText(String.format(Locale.getDefault(), "%d/%d", finalI, paths.size()));
+                        }
+                        if (p != null) {
+                            p.setProgress(finalI);
+                        }
+                    });
                     ++i;
                     if (ThreadUtils.isInterrupted()) {
                         break;
@@ -846,6 +871,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         }
         AtomicReference<Future<?>> pasteThread = new AtomicReference<>();
         View view = View.inflate(requireContext(), R.layout.dialog_progress, null);
+        LinearProgressIndicator progress = view.findViewById(R.id.progress_linear);
         TextView label = view.findViewById(android.R.id.text1);
         TextView counter = view.findViewById(android.R.id.text2);
         counter.setText(String.format(Locale.getDefault(), "%d/%d", 0, task.files.size()));
@@ -860,11 +886,18 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 .setCancelable(false)
                 .show();
         pasteThread.set(ThreadUtils.postOnBackgroundThread(() -> {
+            WeakReference<LinearProgressIndicator> progressRef = new WeakReference<>(progress);
             WeakReference<TextView> labelRef = new WeakReference<>(label);
             WeakReference<TextView> counterRef = new WeakReference<>(counter);
             WeakReference<AlertDialog> dialogRef = new WeakReference<>(dialog);
             Path targetPath = Paths.get(uri);
             try {
+                LinearProgressIndicator p = progressRef.get();
+                if (p != null) {
+                    p.setMax(task.files.size());
+                    p.setProgress(0);
+                    p.setIndeterminate(false);
+                }
                 int i = 1;
                 for (Path sourcePath : task.files) {
                     // Update label
@@ -901,11 +934,15 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                         }
                     }
                     TextView c = counterRef.get();
-                    if (c != null) {
-                        int finalI = i;
-                        ThreadUtils.postOnMainThread(() ->
-                                c.setText(String.format(Locale.getDefault(), "%d/%d", finalI, task.files.size())));
-                    }
+                    int finalI = i;
+                    ThreadUtils.postOnMainThread(() -> {
+                        if (c != null) {
+                            c.setText(String.format(Locale.getDefault(), "%d/%d", finalI, task.files.size()));
+                        }
+                        if (p != null) {
+                            p.setProgress(finalI);
+                        }
+                    });
                     ++i;
                     if (ThreadUtils.isInterrupted()) {
                         break;
