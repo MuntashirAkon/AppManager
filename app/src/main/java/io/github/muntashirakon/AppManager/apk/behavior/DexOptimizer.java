@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import java.util.Objects;
+
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -81,15 +83,20 @@ public class DexOptimizer {
         try {
             if (SelfPermissions.isSystemOrRoot()) {
                 // Allowed for only root/system
-                mPm.forceDexOpt(mPackageName);
-            } else {
-                // forceDexOpt only applies certain set of configurations with performDexOptMode. So, it's possible to
-                // do the same using performDexOptMode in unprivileged mode
-                // https://android.googlesource.com/platform/frameworks/base/+/eb4af72f526c8351ad22322a635507a54c9ad1b8/services/core/java/com/android/server/pm/DexOptHelper.java#495
-                return performDexOptMode(false, DexOptOptions.getDefaultCompilerFilter(), true, true, null);
+                try {
+                    mPm.forceDexOpt(mPackageName);
+                    return true;
+                } catch (IllegalArgumentException e) {
+                    if (Objects.equals(e.getMessage(), "reason -1 invalid")) {
+                        // AOSP bug: https://github.com/MuntashirAkon/AppManager/issues/1131
+                        return forceDexOptUnprivileged();
+                    }
+                    // Other valid error
+                    throw e;
+                }
             }
-            return true;
-        } catch (RemoteException | SecurityException e) {
+            return forceDexOptUnprivileged();
+        } catch (RemoteException | SecurityException | IllegalArgumentException e) {
             mLastError = e;
         } catch (IllegalStateException e) {
             String message = e.getMessage();
@@ -102,5 +109,12 @@ public class DexOptimizer {
             mLastError = e;
         }
         return false;
+    }
+
+    private boolean forceDexOptUnprivileged() {
+        // forceDexOpt only applies certain set of configurations with performDexOptMode. So, it's possible to
+        // do the same using performDexOptMode in unprivileged mode
+        // https://android.googlesource.com/platform/frameworks/base/+/eb4af72f526c8351ad22322a635507a54c9ad1b8/services/core/java/com/android/server/pm/DexOptHelper.java#495
+        return performDexOptMode(false, DexOptOptions.getDefaultCompilerFilter(), true, true, null);
     }
 }
