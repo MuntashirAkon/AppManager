@@ -50,6 +50,8 @@ import io.github.muntashirakon.io.fs.VirtualFileSystem;
 import io.github.muntashirakon.lifecycle.SingleLiveEvent;
 
 public class FmViewModel extends AndroidViewModel implements ListOptions.ListOptionActions {
+    public static final String TAG = FmViewModel.class.getSimpleName();
+
     private final Object mSizeLock = new Object();
     private final MutableLiveData<List<FmItem>> mFmItemsLiveData = new MutableLiveData<>();
     private final MutableLiveData<Throwable> mFmErrorLiveData = new MutableLiveData<>();
@@ -314,13 +316,14 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             synchronized (mFmItems) {
                 mFmItems.clear();
                 for (Path child : children) {
-                    if (child.isDirectory()) {
+                    boolean isDirectory = child.isDirectory();
+                    if (isDirectory) {
                         ++folderCount;
                     }
-                    mFmItems.add(new FmItem(child));
-                }
-                if (ThreadUtils.isInterrupted()) {
-                    return;
+                    mFmItems.add(new FmItem(child, isDirectory));
+                    if (ThreadUtils.isInterrupted()) {
+                        return;
+                    }
                 }
             }
             folderShortInfo.folderCount = folderCount;
@@ -347,9 +350,9 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
 
     public void createShortcut(@NonNull FmItem fmItem) {
         ThreadUtils.postOnBackgroundThread(() -> {
-            Bitmap bitmap = ImageLoader.getInstance().getCachedImage(fmItem.tag);
+            Bitmap bitmap = ImageLoader.getInstance().getCachedImage(fmItem.getTag());
             if (bitmap == null) {
-                ImageLoader.ImageFetcherResult result = new FmIconFetcher(fmItem).fetchImage(fmItem.tag);
+                ImageLoader.ImageFetcherResult result = new FmIconFetcher(fmItem).fetchImage(fmItem.getTag());
                 bitmap = result.bitmap != null ? result.bitmap : result.defaultImage.getImage();
             }
             mShortcutCreatorLiveData.postValue(new Pair<>(fmItem.path, bitmap));
@@ -419,8 +422,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         List<FmItem> filteredList;
         synchronized (mFmItems) {
             if (!TextUtils.isEmpty(mQueryString)) {
-                filteredList = AdvancedSearchView.matches(mQueryString, mFmItems,
-                        (AdvancedSearchView.ChoiceGenerator<FmItem>) object -> object.path.getName(),
+                filteredList = AdvancedSearchView.matches(mQueryString, mFmItems, FmItem::getName,
                         AdvancedSearchView.SEARCH_TYPE_CONTAINS);
             } else filteredList = new ArrayList<>(mFmItems);
         }
@@ -431,7 +433,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             Iterator<FmItem> iterator = filteredList.listIterator();
             while (iterator.hasNext()) {
                 FmItem fmItem = iterator.next();
-                if (fmItem.path.getName().startsWith(".")) {
+                if (fmItem.getName().startsWith(".")) {
                     iterator.remove();
                 }
             }
@@ -440,7 +442,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             return;
         }
         // Sort by name first
-        Collections.sort(filteredList, (o1, o2) -> o1.path.getName().compareToIgnoreCase(o2.path.getName()));
+        Collections.sort(filteredList, (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
         if (mSortBy == FmListOptions.SORT_BY_NAME) {
             if (mReverseSort) {
                 Collections.reverse(filteredList);
@@ -483,7 +485,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         }
         if (mScrollToFilename != null) {
             for (int i = 0; i < filteredList.size(); ++i) {
-                if (mScrollToFilename.equals(filteredList.get(i).path.getName())) {
+                if (mScrollToFilename.equals(filteredList.get(i).getName())) {
                     setScrollPosition(mCurrentUri, i);
                     break;
                 }

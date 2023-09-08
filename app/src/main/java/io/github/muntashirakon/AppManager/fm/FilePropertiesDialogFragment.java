@@ -190,7 +190,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         // Live data
         mViewModel.getFilePropertiesLiveData().observe(getViewLifecycleOwner(), this::updateProperties);
         mViewModel.getFmItemLiveData().observe(getViewLifecycleOwner(), fmItem -> {
-            ImageLoader.getInstance().displayImage(fmItem.tag, mIconView, new FmIconFetcher(fmItem));
+            ImageLoader.getInstance().displayImage(fmItem.getTag(), mIconView, new FmIconFetcher(fmItem));
             PathContentInfo contentInfo = fmItem.getContentInfo();
             if (contentInfo != null) {
                 String name = contentInfo.getName();

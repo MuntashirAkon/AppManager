@@ -81,7 +81,10 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
         holder.title.setText(item.path.getName());
         String modificationDate = DateUtils.formatDateTime(mFmActivity, item.path.lastModified());
         // Set icon
-        ImageLoader.getInstance().displayImage(item.tag, holder.icon, new FmIconFetcher(item));
+        // We're retrieving tag here which can be a bit expensive, but since we're using a recycler view, only a few
+        // operations will be done at a time which is acceptable compared to increasing loading time just to generate
+        // a tag.
+        ImageLoader.getInstance().displayImage(item.getTag(), holder.icon, new FmIconFetcher(item));
         // Set sub-icon
         // TODO: 24/5/23 Set sub-icon if needed
         if (item.type == FileType.DIRECTORY) {

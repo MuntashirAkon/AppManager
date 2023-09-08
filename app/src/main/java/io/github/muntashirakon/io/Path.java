@@ -1425,9 +1425,18 @@ public class Path implements Comparable<Path> {
             Uri mountPoint = Objects.requireNonNull(fs.getMountPoint());
             nameMountPointMap.put(mountPoint.getLastPathSegment(), mountPoint);
         }
-        // List documents at this folder and remove mount points
+        // List documents at this folder
         DocumentFile[] ss = documentFile.listFiles();
+        if (nameMountPointMap.isEmpty()) {
+            // No need to go further
+            Path[] paths = new Path[ss.length];
+            for (int i = 0; i < ss.length; ++i) {
+                paths[i] = new Path(mContext, ss[i]);
+            }
+            return paths;
+        }
         List<Path> paths = new ArrayList<>(ss.length + fileSystems.length);
+        // Remove mount points
         for (DocumentFile s : ss) {
             if (nameMountPointMap.get(s.getName()) != null) {
                 // Mount point exists, remove it from map

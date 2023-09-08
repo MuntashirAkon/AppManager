@@ -76,6 +76,7 @@ public class ImageLoader implements Closeable {
         return mImageFileCache.getImage(tag);
     }
 
+    @UiThread
     public void displayImage(@NonNull String tag, @NonNull ImageView imageView,
                              @NonNull ImageFetcherInterface imageFetcherInterface) {
         Bitmap image = mMemoryCache.get(tag);
