@@ -261,6 +261,10 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             if (mEmptyView.isShown()) {
                 mEmptyView.setVisibility(View.GONE);
             }
+            // Reset subtitle
+            if (actionBar != null) {
+                actionBar.setSubtitle(R.string.loading);
+            }
             if (uri1 == null) {
                 return;
             }
