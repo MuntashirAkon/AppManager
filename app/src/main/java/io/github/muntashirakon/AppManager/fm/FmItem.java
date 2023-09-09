@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathContentInfo;
 
@@ -29,6 +30,7 @@ public class FmItem implements Comparable<FmItem> {
     private long lastModified = UNRESOLVED;
     private long size = UNRESOLVED;
     private int childCount = UNRESOLVED;
+    private boolean cached = false;
 
     FmItem(@NonNull Path path) {
         this.path = path;
@@ -90,12 +92,29 @@ public class FmItem implements Comparable<FmItem> {
     }
 
     public void cache() {
-        getName();
-        getLastModified();
-        getSize();
-        if (type == FileType.DIRECTORY) {
-            getChildCount();
-        } else childCount = 0;
+        try {
+            getName();
+            if (ThreadUtils.isInterrupted()) {
+                return;
+            }
+            getLastModified();
+            if (ThreadUtils.isInterrupted()) {
+                return;
+            }
+            getSize();
+            if (ThreadUtils.isInterrupted()) {
+                return;
+            }
+            if (type == FileType.DIRECTORY) {
+                getChildCount();
+            } else childCount = 0;
+        } finally {
+            cached = true;
+        }
+    }
+
+    public boolean isCached() {
+        return cached;
     }
 
     @Override

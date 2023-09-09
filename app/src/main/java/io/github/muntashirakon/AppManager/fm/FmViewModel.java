@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.fm;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -310,7 +309,6 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             }
             // Send current URI
             mUriLiveData.postValue(mCurrentUri);
-            boolean isSaf = ContentResolver.SCHEME_CONTENT.equals(mCurrentUri.getScheme());
             Path[] children = path.listFiles();
             FolderShortInfo folderShortInfo = new FolderShortInfo();
             int count = children.length;
@@ -322,12 +320,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                     if (isDirectory) {
                         ++folderCount;
                     }
-                    FmItem fmItem = new FmItem(child, isDirectory);
-                    if (isSaf) {
-                        // Caching is necessary for SAF in order to prevent lags
-                        fmItem.cache();
-                    }
-                    mFmItems.add(fmItem);
+                    mFmItems.add(new FmItem(child, isDirectory));
                     if (ThreadUtils.isInterrupted()) {
                         return;
                     }

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -22,16 +23,19 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fm.icons.FmIconFetcher;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
@@ -80,15 +84,15 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
         FmItem item = mAdapterList.get(position);
         String tag = item.getTag();
         holder.icon.setTag(tag);
+        holder.itemView.setTag(tag);
         holder.title.setText(item.getName());
-        String modificationDate = DateUtils.formatDateTime(mFmActivity, item.getLastModified());
         // Set icon
         ImageLoader.getInstance().displayImage(tag, holder.icon, new FmIconFetcher(item));
         // Set sub-icon
         // TODO: 24/5/23 Set sub-icon if needed
+        // Load attributes
+        cacheAndLoadAttributes(holder, item);
         if (item.type == FileType.DIRECTORY) {
-            holder.subtitle.setText(String.format(Locale.getDefault(), "%d • %s", item.getChildCount(),
-                    modificationDate));
             holder.itemView.setOnClickListener(v -> {
                 if (isInSelectionMode()) {
                     toggleSelection(position);
@@ -97,8 +101,6 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
                 mViewModel.loadFiles(item.path.getUri());
             });
         } else {
-            holder.subtitle.setText(String.format(Locale.getDefault(), "%s • %s",
-                    Formatter.formatShortFileSize(mFmActivity, item.getSize()), modificationDate));
             holder.itemView.setOnClickListener(v -> {
                 if (isInSelectionMode()) {
                     toggleSelection(position);
@@ -140,6 +142,38 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
             return true;
         });
         super.onBindViewHolder(holder, position);
+    }
+
+    private void cacheAndLoadAttributes(@NonNull ViewHolder holder, @NonNull FmItem item) {
+        if (item.isCached()) {
+            loadAttributes(holder, item);
+        } else {
+            // TODO: 9/9/23 Store these threads in a list and cancel them when not needed
+            ThreadUtils.postOnBackgroundThread(() -> {
+                WeakReference<ViewHolder> holderRef = new WeakReference<>(holder);
+                WeakReference<FmItem> itemRef = new WeakReference<>(item);
+                item.cache();
+                ThreadUtils.postOnMainThread(() -> {
+                    ViewHolder h = holderRef.get();
+                    FmItem i = itemRef.get();
+                    if (h != null && i != null && Objects.equals(h.itemView.getTag(), i.getTag())) {
+                        loadAttributes(h, i);
+                    }
+                });
+            });
+        }
+    }
+
+    @MainThread
+    private void loadAttributes(@NonNull ViewHolder holder, @NonNull FmItem item) {
+        String modificationDate = DateUtils.formatDateTime(mFmActivity, item.getLastModified());
+        if (item.type == FileType.DIRECTORY) {
+            holder.subtitle.setText(String.format(Locale.getDefault(), "%d • %s", item.getChildCount(),
+                    modificationDate));
+        } else {
+            holder.subtitle.setText(String.format(Locale.getDefault(), "%s • %s",
+                    Formatter.formatShortFileSize(mFmActivity, item.getSize()), modificationDate));
+        }
     }
 
     @Override
