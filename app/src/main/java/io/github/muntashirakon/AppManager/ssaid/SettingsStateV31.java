@@ -735,7 +735,7 @@ public final class SettingsStateV31 implements SettingsState {
     }
 
     private static void logSettingsDirectoryInformation(Path settingsFile) {
-        Path parent = settingsFile.getParentFile();
+        Path parent = settingsFile.getParent();
         Log.i(LOG_TAG, "directory info for directory/file " + settingsFile
                 + " with stacktrace ", new Exception());
         Path ancestorDir = parent;
@@ -743,14 +743,14 @@ public final class SettingsStateV31 implements SettingsState {
             if (!ancestorDir.exists()) {
                 Log.i(LOG_TAG, "ancestor directory " + ancestorDir
                         + " does not exist");
-                ancestorDir = ancestorDir.getParentFile();
+                ancestorDir = ancestorDir.getParent();
             } else {
                 Log.i(LOG_TAG, "ancestor directory " + ancestorDir
                         + " exists");
                 Log.i(LOG_TAG, "ancestor directory " + ancestorDir
                         + " permissions: r: " + ancestorDir.canRead() + " w: "
                         + ancestorDir.canWrite() + " x: " + ancestorDir.canExecute());
-                Path ancestorParent = ancestorDir.getParentFile();
+                Path ancestorParent = ancestorDir.getParent();
                 if (ancestorParent != null) {
                     Log.i(LOG_TAG, "ancestor's parent directory " + ancestorParent
                             + " permissions: r: " + ancestorParent.canRead() + " w: "

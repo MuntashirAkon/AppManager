@@ -71,8 +71,8 @@ public class ExtendedRawDocumentFile extends DocumentFile {
         }
     }
 
-    @NonNull
     @Override
+    @NonNull
     public Uri getUri() {
         return Uri.fromFile(mFile);
     }
@@ -82,6 +82,7 @@ public class ExtendedRawDocumentFile extends DocumentFile {
     }
 
     @Override
+    @NonNull
     public String getName() {
         return mFile.getName();
     }

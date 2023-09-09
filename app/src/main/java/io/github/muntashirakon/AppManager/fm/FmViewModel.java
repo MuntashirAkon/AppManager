@@ -4,8 +4,11 @@ package io.github.muntashirakon.AppManager.fm;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.DocumentsContract;
 import android.text.TextUtils;
 
 import androidx.annotation.MainThread;
@@ -35,6 +38,7 @@ import java.util.concurrent.Future;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.dex.DexUtils;
 import io.github.muntashirakon.AppManager.fm.icons.FmIconFetcher;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
@@ -45,6 +49,7 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.PathAttributes;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 import io.github.muntashirakon.lifecycle.SingleLiveEvent;
@@ -309,25 +314,64 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             }
             // Send current URI
             mUriLiveData.postValue(mCurrentUri);
-            Path[] children = path.listFiles();
+            boolean isSaf = ContentResolver.SCHEME_CONTENT.equals(mCurrentUri.getScheme());
             FolderShortInfo folderShortInfo = new FolderShortInfo();
-            int count = children.length;
             int folderCount = 0;
             synchronized (mFmItems) {
                 mFmItems.clear();
-                for (Path child : children) {
-                    boolean isDirectory = child.isDirectory();
-                    if (isDirectory) {
-                        ++folderCount;
+                if (isSaf) {
+                    // SAF needs special handling to retrieve children
+                    ContentResolver resolver = getApplication().getContentResolver();
+                    Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(mCurrentUri,
+                            DocumentsContract.getDocumentId(mCurrentUri));
+                    Cursor c = null;
+                    try {
+                        c = resolver.query(childrenUri, null, null, null, null);
+                        String[] columns = c.getColumnNames();
+                        while (c.moveToNext()) {
+                            String documentId = null;
+                            for (int i = 0; i < columns.length; ++i) {
+                                if (DocumentsContract.Document.COLUMN_DOCUMENT_ID.equals(columns[i])) {
+                                    documentId = c.getString(i);
+                                }
+                            }
+                            if (documentId == null) {
+                                // Invalid document, probably loading still?
+                                continue;
+                            }
+                            Uri documentUri = DocumentsContract.buildDocumentUriUsingTree(mCurrentUri, documentId);
+                            Path child = Paths.getTreeDocument(path, documentUri);
+                            PathAttributes attributes = PathAttributes.fromSafTreeCursor(documentUri, c);
+                            FmItem fmItem = new FmItem(child, attributes);
+                            mFmItems.add(fmItem);
+                            if (fmItem.type == FileType.DIRECTORY) {
+                                ++folderCount;
+                            }
+                            if (ThreadUtils.isInterrupted()) {
+                                return;
+                            }
+                        }
+                    } catch (Exception ex) {
+                        Log.w(TAG, "Failed query: %s", ex);
+                    } finally {
+                        IoUtils.closeQuietly(c);
                     }
-                    mFmItems.add(new FmItem(child, isDirectory));
-                    if (ThreadUtils.isInterrupted()) {
-                        return;
+                } else {
+                    Path[] children = path.listFiles();
+                    for (Path child : children) {
+                        FmItem fmItem = new FmItem(child);
+                        mFmItems.add(fmItem);
+                        if (fmItem.type == FileType.DIRECTORY) {
+                            ++folderCount;
+                        }
+                        if (ThreadUtils.isInterrupted()) {
+                            return;
+                        }
                     }
                 }
             }
             folderShortInfo.folderCount = folderCount;
-            folderShortInfo.fileCount = count - folderCount;
+            folderShortInfo.fileCount = mFmItems.size() - folderCount;
             folderShortInfo.canRead = path.canRead();
             folderShortInfo.canWrite = path.canWrite();
             if (ThreadUtils.isInterrupted()) {

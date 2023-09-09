@@ -41,7 +41,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
@@ -96,7 +95,7 @@ public class TBConverter extends Converter {
      */
     public TBConverter(@NonNull Path propFile) {
         mPropFile = propFile;
-        mBackupLocation = propFile.getParentFile();
+        mBackupLocation = propFile.getParent();
         mUserId = UserHandleHidden.myUserId();
         String dirtyName = propFile.getName();
         int idx = dirtyName.indexOf('-');
@@ -224,7 +223,7 @@ public class TBConverter extends Converter {
             } else if (TAR_BZIP2.equals(mSourceMetadata.tarType)) {
                 is = new BZip2CompressorInputStream(bis, true);
             } else {
-                Objects.requireNonNull(baseApkFile.getParentFile()).delete();
+                baseApkFile.requireParent().delete();
                 throw new BackupException("Invalid source compression type: " + mSourceMetadata.tarType);
             }
             try (OutputStream fos = baseApkFile.openOutputStream()) {
@@ -234,7 +233,7 @@ public class TBConverter extends Converter {
                 is.close();
             }
         } catch (IOException e) {
-            Objects.requireNonNull(baseApkFile.getParentFile()).delete();
+            baseApkFile.requireParent().delete();
             throw new BackupException("Couldn't decompress " + mSourceMetadata.apkName, e);
         }
         // Get certificate checksums
@@ -255,7 +254,7 @@ public class TBConverter extends Converter {
         } catch (Throwable th) {
             throw new BackupException("APK files backup is requested but no APK files have been backed up.", th);
         } finally {
-            Objects.requireNonNull(baseApkFile.getParentFile()).delete();
+            baseApkFile.requireParent().delete();
         }
         // Overwrite with the new files
         try {

@@ -171,7 +171,7 @@ public class AESCrypto implements Crypto {
         String ext = CryptoUtils.getExtension(mParentMode);
         // Encrypt/decrypt files
         for (Path inputPath : files) {
-            Path parent = inputPath.getParentFile();
+            Path parent = inputPath.getParent();
             if (parent == null) {
                 throw new IOException("Parent of " + inputPath + " cannot be null.");
             }

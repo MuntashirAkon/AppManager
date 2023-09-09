@@ -14,7 +14,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.io.Path;
@@ -58,7 +57,7 @@ public class BackupFiles {
 
     @NonNull
     private static synchronized Path getTemporaryBackupPath(@NonNull Path originalBackupPath) throws IOException {
-        Path tmpDir = Objects.requireNonNull(originalBackupPath.getParentFile());
+        Path tmpDir = originalBackupPath.requireParent();
         String tmpFilename = "." + originalBackupPath.getName();
         String newFilename = tmpFilename;
         int i = 0;

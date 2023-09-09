@@ -183,7 +183,7 @@ public class OpenPGPCrypto implements Crypto {
             return;
         }
         for (Path inputPath : mFiles) {
-            Path parent = inputPath.getParentFile();
+            Path parent = inputPath.getParent();
             if (parent == null) {
                 throw new IOException("Parent of " + inputPath + " cannot be null.");
             }

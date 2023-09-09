@@ -835,7 +835,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                     if (ThreadUtils.isInterrupted()) {
                         break;
                     }
-                    Path basePath = path.getParentFile();
+                    Path basePath = path.getParent();
                     if (basePath != null) {
                         String displayName = findNextBestDisplayName(basePath, prefix, extension, i);
                         path.renameTo(displayName);

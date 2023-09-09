@@ -239,6 +239,15 @@ public class Path implements Comparable<Path> {
         mDocumentFile = documentFile;
     }
 
+    /**
+     * NOTE: This construct is only applicable for tree Uri
+     */
+    /* package */ Path(@Nullable Path parent, @NonNull Context context, @NonNull Uri documentUri) {
+        mContext = context;
+        DocumentFile parentDocumentFile = parent != null ? parent.mDocumentFile : null;
+        mDocumentFile = DocumentFileUtils.newTreeDocumentFile(parentDocumentFile, context, documentUri);
+    }
+
     private Path(@NonNull Context context, @NonNull DocumentFile documentFile) {
         mContext = context;
         if (documentFile instanceof ExtendedRawDocumentFile) {
@@ -263,29 +272,7 @@ public class Path implements Comparable<Path> {
         if (name != null) {
             return name;
         }
-        // For Document Uris, an invalid Uri can return no display name
-        if (DocumentFileUtils.isSingleDocumentFile(mDocumentFile)) {
-            // It's impossible to figure out the correct display name, but since this path is incorrect,
-            // return the full last path segment
-            return mDocumentFile.getUri().getLastPathSegment();
-        }
-        if (DocumentFileUtils.isTreeDocumentFile(mDocumentFile)) {
-            // The last path segment of the last path segment is the real name
-            List<String> segments = mDocumentFile.getUri().getPathSegments();
-            String primaryName = segments.get(1);
-            if (segments.size() == 2) {
-                return primaryName;
-            }
-            String secondaryName = segments.get(3);
-            if (secondaryName.startsWith(primaryName + File.separator)) {
-                secondaryName = Paths.getLastPathSegment(secondaryName.substring(primaryName.length() + 1));
-            }
-            if (!secondaryName.isEmpty()) {
-                return secondaryName;
-            }
-        }
-        // Invalid logic
-        throw new IllegalStateException("Invalid document: " + this);
+        return DocumentFileUtils.resolveAltNameForSaf(mDocumentFile);
     }
 
     @Nullable
@@ -602,9 +589,20 @@ public class Path implements Comparable<Path> {
      * directory tree might be altered by another application.
      */
     @Nullable
-    public Path getParentFile() {
+    public Path getParent() {
         DocumentFile file = getRealDocumentFile(mDocumentFile).getParentFile();
         return file == null ? null : new Path(mContext, file);
+    }
+
+    /**
+     * Return the parent file of this document. If this is a mount point,
+     * the parent is the parent of the mount point. For tree-documents,
+     * the consistency of the parent file isn't guaranteed as the underlying
+     * directory tree might be altered by another application.
+     */
+    @NonNull
+    public Path requireParent() {
+        return Objects.requireNonNull(getParent());
     }
 
     /**
@@ -721,6 +719,17 @@ public class Path implements Comparable<Path> {
         file = documentFile.createDirectory(displayName);
         if (file == null) throw new IOException("Could not create directory named " + displayName);
         return new Path(mContext, file);
+    }
+
+    @NonNull
+    public PathAttributes getAttributes() throws IOException {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            return PathAttributes.fromFile((ExtendedRawDocumentFile) mDocumentFile);
+        }
+        if (mDocumentFile instanceof VirtualDocumentFile) {
+            return PathAttributes.fromVirtual((VirtualDocumentFile) mDocumentFile);
+        }
+        return PathAttributes.fromSaf(mContext, mDocumentFile);
     }
 
     /**
@@ -1378,11 +1387,7 @@ public class Path implements Comparable<Path> {
 
     public long lastAccess() {
         if (mDocumentFile instanceof ExtendedRawDocumentFile) {
-            try {
-                return Objects.requireNonNull(getFile()).lastAccess();
-            } catch (ErrnoException e) {
-                return 0;
-            }
+            return Objects.requireNonNull(getFile()).lastAccess();
         }
         if (mDocumentFile instanceof VirtualDocumentFile) {
             return ((VirtualDocumentFile) mDocumentFile).lastAccess();
@@ -1403,11 +1408,7 @@ public class Path implements Comparable<Path> {
 
     public long creationTime() {
         if (mDocumentFile instanceof ExtendedRawDocumentFile) {
-            try {
-                return Objects.requireNonNull(getFile()).creationTime();
-            } catch (ErrnoException e) {
-                return 0;
-            }
+            return Objects.requireNonNull(getFile()).creationTime();
         }
         if (mDocumentFile instanceof VirtualDocumentFile) {
             return ((VirtualDocumentFile) mDocumentFile).creationTime();
@@ -1754,6 +1755,7 @@ public class Path implements Comparable<Path> {
         if (mountPoint == null) {
             return null;
         }
+        // FIXME: 9/9/23 This doesn't actually work for content URIs
         Uri parentUri = Paths.removeLastPathSegment(mountPoint);
         return new Path(context, parentUri).mDocumentFile;
     }

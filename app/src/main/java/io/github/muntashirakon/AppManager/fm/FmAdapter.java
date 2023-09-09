@@ -82,14 +82,8 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FmItem item = mAdapterList.get(position);
-        String tag = item.getTag();
-        holder.icon.setTag(tag);
-        holder.itemView.setTag(tag);
+        holder.itemView.setTag(item.path);
         holder.title.setText(item.getName());
-        // Set icon
-        ImageLoader.getInstance().displayImage(tag, holder.icon, new FmIconFetcher(item));
-        // Set sub-icon
-        // TODO: 24/5/23 Set sub-icon if needed
         // Load attributes
         cacheAndLoadAttributes(holder, item);
         if (item.type == FileType.DIRECTORY) {
@@ -156,7 +150,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
                 ThreadUtils.postOnMainThread(() -> {
                     ViewHolder h = holderRef.get();
                     FmItem i = itemRef.get();
-                    if (h != null && i != null && Objects.equals(h.itemView.getTag(), i.getTag())) {
+                    if (h != null && i != null && Objects.equals(h.itemView.getTag(), i.path)) {
                         loadAttributes(h, i);
                     }
                 });
@@ -166,6 +160,13 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
 
     @MainThread
     private void loadAttributes(@NonNull ViewHolder holder, @NonNull FmItem item) {
+        // Set icon
+        String tag = item.getTag();
+        holder.icon.setTag(tag);
+        ImageLoader.getInstance().displayImage(tag, holder.icon, new FmIconFetcher(item));
+        // Set sub-icon
+        // TODO: 24/5/23 Set sub-icon if needed
+        // Attrs
         String modificationDate = DateUtils.formatDateTime(mFmActivity, item.getLastModified());
         if (item.type == FileType.DIRECTORY) {
             holder.subtitle.setText(String.format(Locale.getDefault(), "%d • %s", item.getChildCount(),

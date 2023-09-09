@@ -133,7 +133,7 @@ public abstract class ExtendedFile extends File {
      * (00:00:00 GMT, January 1, 1970), or <code>0L</code> if the
      * file does not exist or if an I/O error occurs
      */
-    public abstract long creationTime() throws ErrnoException;
+    public abstract long creationTime();
 
     /**
      * Returns the time that the file denoted by this abstract pathname was last accessed.
@@ -143,7 +143,7 @@ public abstract class ExtendedFile extends File {
      * (00:00:00 GMT, January 1, 1970), or <code>0L</code> if the
      * file does not exist or if an I/O error occurs
      */
-    public abstract long lastAccess() throws ErrnoException;
+    public abstract long lastAccess();
 
     /**
      * Set the time that the file denoted by this abstract pathname was last accessed.

@@ -740,18 +740,18 @@ public final class SettingsStateV26 implements SettingsState {
     }
 
     private static void logSettingsDirectoryInformation(Path settingsFile) {
-        Path parent = settingsFile.getParentFile();
+        Path parent = settingsFile.getParent();
         Log.i(LOG_TAG, "directory info for directory/file %s with stacktrace ", new Exception(), settingsFile);
         Path ancestorDir = parent;
         while (ancestorDir != null) {
             if (!ancestorDir.exists()) {
                 Log.i(LOG_TAG, "ancestor directory %s does not exist", ancestorDir);
-                ancestorDir = ancestorDir.getParentFile();
+                ancestorDir = ancestorDir.getParent();
             } else {
                 Log.i(LOG_TAG, "ancestor directory %s exists", ancestorDir);
                 Log.i(LOG_TAG, "ancestor directory %s permissions: r: %s w: %s x: %s", ancestorDir,
                         ancestorDir.canRead(), ancestorDir.canWrite(), ancestorDir.canExecute());
-                Path ancestorParent = ancestorDir.getParentFile();
+                Path ancestorParent = ancestorDir.getParent();
                 if (ancestorParent != null) {
                     Log.i(LOG_TAG, "ancestor's parent directory %s permissions: r: %s w: %s" + " x: %s",
                             ancestorParent, ancestorParent.canRead(), ancestorParent.canWrite(),

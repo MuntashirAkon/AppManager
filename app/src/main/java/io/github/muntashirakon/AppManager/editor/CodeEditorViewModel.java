@@ -253,7 +253,7 @@ public class CodeEditorViewModel extends AndroidViewModel {
         mJavaConverterResult = ThreadUtils.postOnBackgroundThread(() -> {
             List<String> smaliContents;
             if (mSourceFile != null) {
-                Path parent = mSourceFile.getParentFile();
+                Path parent = mSourceFile.getParent();
                 String baseName = DexUtils.getClassNameWithoutInnerClasses(Paths.trimPathExtension(mSourceFile.getName()));
                 String baseSmali = baseName + ".smali";
                 String baseStartWith = baseName + "$";

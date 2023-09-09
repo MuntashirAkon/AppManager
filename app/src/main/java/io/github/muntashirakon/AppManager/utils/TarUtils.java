@@ -94,7 +94,7 @@ public final class TarUtils {
             try (TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
                 tos.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_POSIX);
-                Path basePath = source.isDirectory() ? source : source.getParentFile();
+                Path basePath = source.isDirectory() ? source : source.getParent();
                 if (basePath == null) {
                     basePath = Paths.get("/");
                 }

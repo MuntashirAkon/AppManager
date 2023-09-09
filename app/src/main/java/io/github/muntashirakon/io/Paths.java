@@ -141,6 +141,11 @@ public final class Paths {
     }
 
     @NonNull
+    public static Path getTreeDocument(@Nullable Path parent, @NonNull Uri documentUri) {
+        return new Path(parent, ContextUtils.getContext(), documentUri);
+    }
+
+    @NonNull
     public static Path[] build(@NonNull Path[] base, String... segments) {
         Path[] result = new Path[base.length];
         for (int i = 0; i < base.length; i++) {

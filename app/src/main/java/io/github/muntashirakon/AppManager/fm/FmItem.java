@@ -7,11 +7,13 @@ import android.util.Base64;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.PathAttributes;
 import io.github.muntashirakon.io.PathContentInfo;
 
 public class FmItem implements Comparable<FmItem> {
@@ -20,66 +22,71 @@ public class FmItem implements Comparable<FmItem> {
     final int type;
     @NonNull
     public final Path path;
-    @NonNull
-    private final String tag;
 
+    @Nullable
+    private String tag;
     @Nullable
     private PathContentInfo mContentInfo;
     @Nullable
-    private String name;
-    private long lastModified = UNRESOLVED;
-    private long size = UNRESOLVED;
-    private int childCount = UNRESOLVED;
-    private boolean cached = false;
+    private PathAttributes mAttributes;
+    @Nullable
+    private String mName;
+    private int mChildCount = UNRESOLVED;
+    private boolean mCached = false;
 
     FmItem(@NonNull Path path) {
         this.path = path;
+        // Regular file
         if (path.isFile()) type = FileType.FILE;
         else if (path.isDirectory()) type = FileType.DIRECTORY;
         else type = FileType.UNKNOWN;
-        tag = "fm_" + Base64.encodeToString(path.toString().getBytes(StandardCharsets.UTF_8), Base64.NO_WRAP);
     }
 
-    FmItem(@NonNull Path path, boolean isDirectory) {
+    FmItem(@NonNull Path path, @NonNull PathAttributes attributes) {
         this.path = path;
-        this.type = isDirectory ? FileType.DIRECTORY : FileType.FILE;
-        tag = "fm_" + Base64.encodeToString(path.toString().getBytes(StandardCharsets.UTF_8), Base64.NO_WRAP);
+        mAttributes = attributes;
+        mName = mAttributes.name;
+        type = mAttributes.isDirectory ? FileType.DIRECTORY : FileType.FILE;
     }
 
     @NonNull
     public String getTag() {
+        if (tag == null) {
+            tag = "fm_" + Base64.encodeToString(path.toString().getBytes(StandardCharsets.UTF_8), Base64.NO_WRAP);
+        }
         return tag;
     }
 
     @NonNull
     public String getName() {
-        if (name == null) {
-            // WARNING: The name of the file can be changed in SAF anytime from anywhere.
-            // But we don't care because speed matters more.
-            name = path.getName();
+        if (mName != null) {
+            return mName;
         }
-        return name;
+        if (mAttributes == null) {
+            fetchAttributes();
+        }
+        return mName;
     }
 
     public long getLastModified() {
-        if (lastModified == UNRESOLVED) {
-            lastModified = path.lastModified();
+        if (mAttributes == null) {
+            fetchAttributes();
         }
-        return lastModified;
+        return mAttributes != null ? mAttributes.lastModified : 0;
     }
 
     public long getSize() {
-        if (size == UNRESOLVED) {
-            size = path.length();
+        if (mAttributes == null) {
+            fetchAttributes();
         }
-        return size;
+        return mAttributes != null ? mAttributes.size : 0;
     }
 
     public int getChildCount() {
-        if (childCount == UNRESOLVED) {
-            childCount = path.listFiles().length;
+        if (mChildCount == UNRESOLVED) {
+            mChildCount = path.listFiles().length;
         }
-        return childCount;
+        return mChildCount;
     }
 
     @Nullable
@@ -93,28 +100,33 @@ public class FmItem implements Comparable<FmItem> {
 
     public void cache() {
         try {
-            getName();
-            if (ThreadUtils.isInterrupted()) {
-                return;
-            }
-            getLastModified();
-            if (ThreadUtils.isInterrupted()) {
-                return;
-            }
-            getSize();
+            getTag();
+            fetchAttributes();
             if (ThreadUtils.isInterrupted()) {
                 return;
             }
             if (type == FileType.DIRECTORY) {
                 getChildCount();
-            } else childCount = 0;
+            } else mChildCount = 0;
         } finally {
-            cached = true;
+            mCached = true;
         }
     }
 
     public boolean isCached() {
-        return cached;
+        return mCached;
+    }
+
+    private void fetchAttributes() {
+        try {
+            // WARNING: The attributes can be changed in SAF anytime from anywhere.
+            // But we don't care because speed matters more.
+            mAttributes = path.getAttributes();
+            mName = mAttributes.name;
+        } catch (IOException e) {
+            e.printStackTrace();
+            mName = path.getName();
+        }
     }
 
     @Override

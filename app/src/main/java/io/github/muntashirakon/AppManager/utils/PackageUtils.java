@@ -880,7 +880,7 @@ public final class PackageUtils {
         Path psd = Paths.get(PACKAGE_STAGING_DIRECTORY);
         if (!psd.isDirectory()) {
             // Recreate directory
-            Path parent = psd.getParentFile();
+            Path parent = psd.getParent();
             if (parent == null) {
                 throw new IllegalStateException("Parent should be /data/local");
             }
