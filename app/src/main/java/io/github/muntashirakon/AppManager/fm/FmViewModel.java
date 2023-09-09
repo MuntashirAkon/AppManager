@@ -290,7 +290,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         while (currentPath.isSymbolicLink()) {
             try {
                 Path realPath = currentPath.getRealPath();
-                if (realPath == null) {
+                if (realPath == null || realPath.equals(currentPath)) {
                     // Not a symbolic link
                     break;
                 }
@@ -314,6 +314,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             }
             // Send current URI
             mUriLiveData.postValue(mCurrentUri);
+            long s, e;
             boolean isSaf = ContentResolver.SCHEME_CONTENT.equals(mCurrentUri.getScheme());
             FolderShortInfo folderShortInfo = new FolderShortInfo();
             int folderCount = 0;
@@ -321,6 +322,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                 mFmItems.clear();
                 if (isSaf) {
                     // SAF needs special handling to retrieve children
+                    s = System.currentTimeMillis();
                     ContentResolver resolver = getApplication().getContentResolver();
                     Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(mCurrentUri,
                             DocumentsContract.getDocumentId(mCurrentUri));
@@ -351,13 +353,19 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                                 return;
                             }
                         }
+                        e = System.currentTimeMillis();
+                        Log.e(TAG, "Time to fetch files via SAF: %d ms", e - s);
                     } catch (Exception ex) {
                         Log.w(TAG, "Failed query: %s", ex);
                     } finally {
                         IoUtils.closeQuietly(c);
                     }
                 } else {
+                    s = System.currentTimeMillis();
                     Path[] children = path.listFiles();
+                    e = System.currentTimeMillis();
+                    Log.e(TAG, "Time to list files: %d ms", e - s);
+                    s = System.currentTimeMillis();
                     for (Path child : children) {
                         FmItem fmItem = new FmItem(child);
                         mFmItems.add(fmItem);
@@ -368,6 +376,8 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                             return;
                         }
                     }
+                    e = System.currentTimeMillis();
+                    Log.e(TAG, "Time to process file list: %d ms", e - s);
                 }
             }
             folderShortInfo.folderCount = folderCount;
@@ -380,7 +390,10 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             // Send folder info for the first time
             mFolderShortInfoLiveData.postValue(folderShortInfo);
             // Run filter and sorting options for fmItems
+            s = System.currentTimeMillis();
             filterAndSort();
+            e = System.currentTimeMillis();
+            Log.e(TAG, "Time to sort files: %d ms", e - s);
             synchronized (mSizeLock) {
                 // Calculate size and send folder info again
                 folderShortInfo.size = Paths.size(path);
