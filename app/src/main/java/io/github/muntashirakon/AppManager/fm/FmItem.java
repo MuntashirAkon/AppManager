@@ -19,12 +19,12 @@ import io.github.muntashirakon.io.PathContentInfo;
 public class FmItem implements Comparable<FmItem> {
     public static final int UNRESOLVED = -2;
 
-    final int type;
+    final boolean isDirectory;
     @NonNull
     public final Path path;
 
     @Nullable
-    private String tag;
+    private String mTag;
     @Nullable
     private PathContentInfo mContentInfo;
     @Nullable
@@ -36,25 +36,22 @@ public class FmItem implements Comparable<FmItem> {
 
     FmItem(@NonNull Path path) {
         this.path = path;
-        // Regular file
-        if (path.isFile()) type = FileType.FILE;
-        else if (path.isDirectory()) type = FileType.DIRECTORY;
-        else type = FileType.UNKNOWN;
+        isDirectory = path.isDirectory();
     }
 
     FmItem(@NonNull Path path, @NonNull PathAttributes attributes) {
         this.path = path;
         mAttributes = attributes;
         mName = mAttributes.name;
-        type = mAttributes.isDirectory ? FileType.DIRECTORY : FileType.FILE;
+        isDirectory = mAttributes.isDirectory;
     }
 
     @NonNull
     public String getTag() {
-        if (tag == null) {
-            tag = "fm_" + Base64.encodeToString(path.toString().getBytes(StandardCharsets.UTF_8), Base64.NO_WRAP);
+        if (mTag == null) {
+            mTag = "fm_" + Base64.encodeToString(path.toString().getBytes(StandardCharsets.UTF_8), Base64.NO_WRAP);
         }
-        return tag;
+        return mTag;
     }
 
     @NonNull
@@ -62,27 +59,30 @@ public class FmItem implements Comparable<FmItem> {
         if (mName != null) {
             return mName;
         }
-        if (mAttributes == null) {
-            fetchAttributes();
+        if (mAttributes != null) {
+            return mAttributes.name;
         }
-        return mName;
+        return path.getName();
     }
 
     public long getLastModified() {
-        if (mAttributes == null) {
-            fetchAttributes();
+        if (mAttributes != null) {
+            return mAttributes.lastModified;
         }
-        return mAttributes != null ? mAttributes.lastModified : 0;
+        return path.lastModified();
     }
 
     public long getSize() {
-        if (mAttributes == null) {
-            fetchAttributes();
+        if (mAttributes != null) {
+            return mAttributes.size;
         }
-        return mAttributes != null ? mAttributes.size : 0;
+        return path.length();
     }
 
     public int getChildCount() {
+        if (!isDirectory) {
+            return 0;
+        }
         if (mChildCount == UNRESOLVED) {
             mChildCount = path.listFiles().length;
         }
@@ -105,7 +105,7 @@ public class FmItem implements Comparable<FmItem> {
             if (ThreadUtils.isInterrupted()) {
                 return;
             }
-            if (type == FileType.DIRECTORY) {
+            if (isDirectory) {
                 getChildCount();
             } else mChildCount = 0;
         } finally {
@@ -145,10 +145,7 @@ public class FmItem implements Comparable<FmItem> {
     @Override
     public int compareTo(FmItem o) {
         if (equals(o)) return 0;
-        int typeComp;
-        if (type == o.type) typeComp = 0;
-        else if (type == FileType.DIRECTORY) typeComp = -1;
-        else typeComp = 1;
+        int typeComp = -Boolean.compare(isDirectory, o.isDirectory);
         if (typeComp == 0) {
             return path.getName().compareToIgnoreCase(o.path.getName());
         } else return typeComp;

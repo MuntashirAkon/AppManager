@@ -28,6 +28,7 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class ImageLoader implements Closeable {
+    @AnyThread
     public static void displayImage(@Nullable PackageItemInfo info, @Nullable ImageView imageView) {
         WeakReference<ImageView> ivRef = new WeakReference<>(imageView);
         ThreadUtils.postOnBackgroundThread(() -> {

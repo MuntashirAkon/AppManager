@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.DocumentsContract;
+import android.system.OsConstants;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,18 +19,22 @@ import androidx.documentfile.provider.VirtualDocumentFile;
 
 import java.io.IOException;
 
+import io.github.muntashirakon.AppManager.utils.ExUtils;
+
 public class PathAttributes {
     @NonNull
     public static PathAttributes fromFile(@NonNull ExtendedRawDocumentFile file) {
         ExtendedFile f = file.getFile();
+        int mode = ExUtils.requireNonNullElse(f::getMode, 0);
         return new PathAttributes(f.getName(), file.getType(), f.lastModified(), f.lastAccess(), f.creationTime(),
-                f.isFile(), f.isDirectory(), f.isSymlink(), f.length());
+                OsConstants.S_ISREG(mode), OsConstants.S_ISDIR(mode), OsConstants.S_ISLNK(mode), f.length());
     }
 
     @NonNull
     public static PathAttributes fromVirtual(@NonNull VirtualDocumentFile file) {
+        int mode = file.getMode();
         return new PathAttributes(file.getName(), file.getType(), file.lastModified(), file.lastAccess(), file.creationTime(),
-                file.isFile(), file.isDirectory(), false, file.length());
+                OsConstants.S_ISREG(mode), OsConstants.S_ISDIR(mode), OsConstants.S_ISLNK(mode), file.length());
     }
 
     @NonNull

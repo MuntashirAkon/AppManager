@@ -346,7 +346,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                             PathAttributes attributes = PathAttributes.fromSafTreeCursor(documentUri, c);
                             FmItem fmItem = new FmItem(child, attributes);
                             mFmItems.add(fmItem);
-                            if (fmItem.type == FileType.DIRECTORY) {
+                            if (fmItem.isDirectory) {
                                 ++folderCount;
                             }
                             if (ThreadUtils.isInterrupted()) {
@@ -354,7 +354,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                             }
                         }
                         e = System.currentTimeMillis();
-                        Log.e(TAG, "Time to fetch files via SAF: %d ms", e - s);
+                        Log.d(TAG, "Time to fetch files via SAF: %d ms", e - s);
                     } catch (Exception ex) {
                         Log.w(TAG, "Failed query: %s", ex);
                     } finally {
@@ -364,12 +364,12 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                     s = System.currentTimeMillis();
                     Path[] children = path.listFiles();
                     e = System.currentTimeMillis();
-                    Log.e(TAG, "Time to list files: %d ms", e - s);
+                    Log.d(TAG, "Time to list files: %d ms", e - s);
                     s = System.currentTimeMillis();
                     for (Path child : children) {
                         FmItem fmItem = new FmItem(child);
                         mFmItems.add(fmItem);
-                        if (fmItem.type == FileType.DIRECTORY) {
+                        if (fmItem.isDirectory) {
                             ++folderCount;
                         }
                         if (ThreadUtils.isInterrupted()) {
@@ -377,7 +377,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                         }
                     }
                     e = System.currentTimeMillis();
-                    Log.e(TAG, "Time to process file list: %d ms", e - s);
+                    Log.d(TAG, "Time to process file list: %d ms", e - s);
                 }
             }
             folderShortInfo.folderCount = folderCount;
@@ -393,7 +393,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             s = System.currentTimeMillis();
             filterAndSort();
             e = System.currentTimeMillis();
-            Log.e(TAG, "Time to sort files: %d ms", e - s);
+            Log.d(TAG, "Time to sort files: %d ms", e - s);
             synchronized (mSizeLock) {
                 // Calculate size and send folder info again
                 folderShortInfo.size = Paths.size(path);
@@ -524,18 +524,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         }
         if (foldersOnTop) {
             // Folders should be on top
-            Collections.sort(filteredList, (o1, o2) -> {
-                if (o1.type == o2.type) {
-                    return 0;
-                }
-                if (o1.type == FileType.DIRECTORY) {
-                    return -1;
-                }
-                if (o2.type == FileType.DIRECTORY) {
-                    return 1;
-                }
-                return 0;
-            });
+            Collections.sort(filteredList, (o1, o2) -> -Boolean.compare(o1.isDirectory, o2.isDirectory));
         }
         if (ThreadUtils.isInterrupted()) {
             return;

@@ -86,7 +86,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
         holder.title.setText(item.getName());
         // Load attributes
         cacheAndLoadAttributes(holder, item);
-        if (item.type == FileType.DIRECTORY) {
+        if (item.isDirectory) {
             holder.itemView.setOnClickListener(v -> {
                 if (isInSelectionMode()) {
                     toggleSelection(position);
@@ -168,7 +168,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
         // TODO: 24/5/23 Set sub-icon if needed
         // Attrs
         String modificationDate = DateUtils.formatDateTime(mFmActivity, item.getLastModified());
-        if (item.type == FileType.DIRECTORY) {
+        if (item.isDirectory) {
             holder.subtitle.setText(String.format(Locale.getDefault(), "%d • %s", item.getChildCount(),
                     modificationDate));
         } else {
