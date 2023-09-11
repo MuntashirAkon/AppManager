@@ -131,6 +131,7 @@
         android:name="android.permission.UPDATE_DOMAIN_VERIFICATION_USER_SELECTION"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.UPDATE_PACKAGES_WITHOUT_USER_ACTION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="com.termux.permission.RUN_COMMAND" />

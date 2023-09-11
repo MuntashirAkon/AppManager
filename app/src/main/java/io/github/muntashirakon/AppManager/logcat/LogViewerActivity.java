@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -63,6 +64,7 @@ import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
+import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -107,6 +109,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     @Nullable
     private SearchingInterface mSearchingInterface;
     private LogViewerViewModel mViewModel;
+    private PowerManager.WakeLock mWakeLock;
 
     private final MultithreadedExecutor mExecutor = MultithreadedExecutor.getNewInstance();
     private final BetterActivityResult<Intent, ActivityResult> mActivityLauncher =
@@ -271,6 +274,8 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
         } else if (filename != null) {
             openLogFile(filename);
         } else {
+            mWakeLock = CpuUtils.getPartialWakeLock("logcat_activity");
+            mWakeLock.acquire();
             startLiveLogViewer(false);
         }
     }
@@ -318,6 +323,9 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
 
     @Override
     public void onDestroy() {
+        if (mWakeLock != null) {
+            mWakeLock.release();
+        }
         super.onDestroy();
         mExecutor.shutdownNow();
     }

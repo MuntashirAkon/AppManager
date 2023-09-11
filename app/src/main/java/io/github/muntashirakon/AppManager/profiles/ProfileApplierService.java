@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.profiles;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.PowerManager;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
@@ -20,6 +21,7 @@ import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.N
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.progress.QueuedProgressHandler;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
+import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class ProfileApplierService extends ForegroundService {
@@ -34,9 +36,17 @@ public class ProfileApplierService extends ForegroundService {
     private String mProfileName;
     private QueuedProgressHandler mProgressHandler;
     private NotificationProgressHandler.NotificationInfo mNotificationInfo;
+    private PowerManager.WakeLock mWakeLock;
 
     public ProfileApplierService() {
         super("ProfileApplierService");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mWakeLock = CpuUtils.getPartialWakeLock("profile_applier");
+        mWakeLock.acquire();
     }
 
     @Override
@@ -102,6 +112,9 @@ public class ProfileApplierService extends ForegroundService {
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE);
         if (mProgressHandler != null) {
             mProgressHandler.onDetach(this);
+        }
+        if (mWakeLock != null) {
+            mWakeLock.release();
         }
         super.onDestroy();
     }

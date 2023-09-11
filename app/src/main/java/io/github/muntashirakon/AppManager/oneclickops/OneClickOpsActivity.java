@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.text.SpannableStringBuilder;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +43,7 @@ import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -54,6 +56,7 @@ public class OneClickOpsActivity extends BaseActivity {
     public static final String EXTRA_OP = "op";
 
     LinearProgressIndicator progressIndicator;
+    PowerManager.WakeLock wakeLock;
 
     private OneClickOpsViewModel mViewModel;
     private ListItemCreator mItemCreator;
@@ -81,6 +84,7 @@ public class OneClickOpsActivity extends BaseActivity {
         mItemCreator = new ListItemCreator(this, R.id.container);
         progressIndicator = findViewById(R.id.progress_linear);
         progressIndicator.setVisibilityAfterHide(View.GONE);
+        wakeLock = CpuUtils.getPartialWakeLock("1-click_ops");
         setItems();
         // Watch LiveData
         mViewModel.watchTrackerCount().observe(this, this::blockTrackers);
@@ -90,10 +94,12 @@ public class OneClickOpsActivity extends BaseActivity {
                 setAppOps(listPairPair.first, listPairPair.second.first, listPairPair.second.second));
         mViewModel.getClearDataCandidates().observe(this, this::clearData);
         mViewModel.watchTrimCachesResult().observe(this, isSuccessful -> {
+            wakeLock.release();
             progressIndicator.hide();
             UIUtils.displayShortToast(isSuccessful ? R.string.done : R.string.failed);
         });
         mViewModel.getAppsInstalledByAmForDexOpt().observe(this, packages -> {
+            wakeLock.release();
             progressIndicator.hide();
             DexOptDialog dialog = DexOptDialog.getInstance(packages);
             dialog.show(getSupportFragmentManager(), DexOptDialog.TAG);
@@ -108,10 +114,16 @@ public class OneClickOpsActivity extends BaseActivity {
                         .setMessage(R.string.apply_to_system_apps_question)
                         .setPositiveButton(R.string.no, (dialog, which) -> {
                             progressIndicator.show();
+                            if (!wakeLock.isHeld()) {
+                                wakeLock.acquire();
+                            }
                             mViewModel.blockTrackers(false);
                         })
                         .setNegativeButton(R.string.yes, (dialog, which) -> {
                             progressIndicator.show();
+                            if (!wakeLock.isHeld()) {
+                                wakeLock.acquire();
+                            }
                             mViewModel.blockTrackers(true);
                         })
                         .show());
@@ -124,6 +136,9 @@ public class OneClickOpsActivity extends BaseActivity {
                         .setPositiveButton(R.string.search, (dialog, which, signatureNames, systemApps) -> {
                             if (signatureNames == null) return;
                             progressIndicator.show();
+                            if (!wakeLock.isHeld()) {
+                                wakeLock.acquire();
+                            }
                             String[] signatures = signatureNames.toString().split("\\s+");
                             mViewModel.blockComponents(systemApps, signatures);
                         })
@@ -147,6 +162,9 @@ public class OneClickOpsActivity extends BaseActivity {
                         UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
                         return;
                     }
+                    if (!wakeLock.isHeld()) {
+                        wakeLock.acquire();
+                    }
                     mViewModel.clearData();
                 });
 //        mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_app_cache),
@@ -166,6 +184,9 @@ public class OneClickOpsActivity extends BaseActivity {
                             .setNegativeButton(R.string.no, null)
                             .setPositiveButton(R.string.yes, (dialog, which) -> {
                                 progressIndicator.show();
+                                if (!wakeLock.isHeld()) {
+                                    wakeLock.acquire();
+                                }
                                 mViewModel.trimCaches();
                             })
                             .show();
@@ -180,6 +201,9 @@ public class OneClickOpsActivity extends BaseActivity {
                             return;
                         }
                         progressIndicator.show();
+                        if (!wakeLock.isHeld()) {
+                            wakeLock.acquire();
+                        }
                         mViewModel.listAppsInstalledByAmForDexOpt();
                     });
         }
@@ -202,6 +226,7 @@ public class OneClickOpsActivity extends BaseActivity {
     }
 
     private void blockTrackers(@Nullable List<ItemCount> trackerCounts) {
+        wakeLock.release();
         progressIndicator.hide();
         if (trackerCounts == null) {
             UIUtils.displayShortToast(R.string.failed_to_fetch_package_info);
@@ -243,6 +268,7 @@ public class OneClickOpsActivity extends BaseActivity {
     }
 
     private void blockComponents(@Nullable List<ItemCount> componentCounts, @NonNull String[] signatures) {
+        wakeLock.release();
         progressIndicator.hide();
         if (componentCounts == null) {
             UIUtils.displayShortToast(R.string.failed_to_fetch_package_info);
@@ -325,6 +351,9 @@ public class OneClickOpsActivity extends BaseActivity {
                         return;
                     }
                     progressIndicator.show();
+                    if (!wakeLock.isHeld()) {
+                        wakeLock.acquire();
+                    }
                     mViewModel.setAppOps(appOpList, mode, systemApps);
                 })
                 .setNegativeButton(R.string.cancel, null)
@@ -332,6 +361,7 @@ public class OneClickOpsActivity extends BaseActivity {
     }
 
     private void setAppOps(@Nullable List<AppOpCount> appOpCounts, @NonNull int[] appOpList, int mode) {
+        wakeLock.release();
         progressIndicator.hide();
         if (appOpCounts == null) {
             UIUtils.displayShortToast(R.string.failed_to_fetch_package_info);
@@ -371,6 +401,7 @@ public class OneClickOpsActivity extends BaseActivity {
     }
 
     private void clearData(@NonNull List<String> candidatePackages) {
+        wakeLock.release();
         String[] packages = candidatePackages.toArray(new String[0]);
         new SearchableMultiChoiceDialogBuilder<>(this, packages, packages)
                 .setTitle(R.string.filtered_packages)
@@ -398,6 +429,14 @@ public class OneClickOpsActivity extends BaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (wakeLock != null && wakeLock.isHeld()) {
+            wakeLock.release();
+        }
+        super.onDestroy();
     }
 
     @NonNull

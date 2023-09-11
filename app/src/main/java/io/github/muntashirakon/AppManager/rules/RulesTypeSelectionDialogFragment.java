@@ -6,8 +6,8 @@ import android.annotation.UserIdInt;
 import android.app.Dialog;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.os.UserHandleHidden;
-import android.widget.Toast;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -17,6 +17,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +25,9 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
+import io.github.muntashirakon.AppManager.utils.CpuUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 
 public class RulesTypeSelectionDialogFragment extends DialogFragment {
@@ -100,36 +104,53 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
         if (mUri == null) {
             return;
         }
-        new Thread(() -> {
+        WeakReference<FragmentActivity> activityRef = new WeakReference<>(mActivity);
+        ThreadUtils.postOnBackgroundThread(() -> {
+            PowerManager.WakeLock wakeLock = CpuUtils.getPartialWakeLock("rules_exporter");
+            wakeLock.acquire();
             try {
-                RulesExporter exporter = new RulesExporter(mActivity, new ArrayList<>(mSelectedTypes), mPackages, mUserIds);
+                RulesExporter exporter = new RulesExporter(new ArrayList<>(mSelectedTypes), mPackages, mUserIds);
                 exporter.saveRules(mUri);
-                mActivity.runOnUiThread(() -> Toast.makeText(mActivity, R.string.the_export_was_successful, Toast.LENGTH_LONG).show());
+                ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.the_export_was_successful));
             } catch (IOException e) {
-                mActivity.runOnUiThread(() -> Toast.makeText(mActivity, R.string.export_failed, Toast.LENGTH_LONG).show());
+                ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.export_failed));
+            } finally {
+                wakeLock.release();
             }
-            if (mActivity instanceof SettingsActivity) {
-                mActivity.runOnUiThread(() -> ((SettingsActivity) mActivity).progressIndicator.hide());
-            }
-        }).start();
+            hideProgressBar(activityRef);
+        });
     }
 
     private void handleImport() {
         if (mUri == null) {
             return;
         }
-        new Thread(() -> {
-            try (RulesImporter importer = new RulesImporter(mActivity, new ArrayList<>(mSelectedTypes), mUserIds)) {
+        WeakReference<FragmentActivity> activityRef = new WeakReference<>(mActivity);
+        ThreadUtils.postOnBackgroundThread(() -> {
+            PowerManager.WakeLock wakeLock = CpuUtils.getPartialWakeLock("rules_exporter");
+            wakeLock.acquire();
+            try (RulesImporter importer = new RulesImporter(new ArrayList<>(mSelectedTypes), mUserIds)) {
                 importer.addRulesFromUri(mUri);
                 if (mPackages != null) importer.setPackagesToImport(mPackages);
                 importer.applyRules(true);
-                mActivity.runOnUiThread(() -> Toast.makeText(mActivity, R.string.the_import_was_successful, Toast.LENGTH_LONG).show());
+                ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.the_import_was_successful));
             } catch (IOException e) {
-                mActivity.runOnUiThread(() -> Toast.makeText(mActivity, R.string.import_failed, Toast.LENGTH_LONG).show());
+                ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.import_failed));
+            } finally {
+                wakeLock.release();
             }
-            if (mActivity instanceof SettingsActivity) {
-                mActivity.runOnUiThread(() -> ((SettingsActivity) mActivity).progressIndicator.hide());
-            }
-        }).start();
+            hideProgressBar(activityRef);
+        });
+    }
+
+    private void hideProgressBar(@NonNull WeakReference<FragmentActivity> activityRef) {
+        if (activityRef.get() instanceof SettingsActivity) {
+            ThreadUtils.postOnMainThread(() -> {
+                FragmentActivity activity = activityRef.get();
+                if (activity != null) {
+                    ((SettingsActivity) activity).progressIndicator.hide();
+                }
+            });
+        }
     }
 }

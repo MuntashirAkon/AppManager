@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.github.muntashirakon.AppManager.scanner.vt;
 
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.text.TextUtils;
 
@@ -28,6 +29,7 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 
@@ -90,18 +92,24 @@ public class VirusTotal {
                 // Scanning disabled
                 throw new FileNotFoundException("File not found in VirusTotal.");
             }
-            long fileSize = file.length();
-            if (fileSize > 32 * 1024 * 1024) {
-                throw new IOException("APK is larger than 32 MB.");
+            PowerManager.WakeLock wakeLock = CpuUtils.getPartialWakeLock("vt_upload");
+            wakeLock.acquire();
+            try {
+                long fileSize = file.length();
+                if (fileSize > 32 * 1024 * 1024) {
+                    throw new IOException("APK is larger than 32 MB.");
+                }
+                response.onScanningInitiated();
+                String filename = file.getName();
+                VtFileScanMeta scanMeta;
+                try (InputStream is = file.openInputStream()) {
+                    scanMeta = scan(filename, is);
+                }
+                response.onScanCompleted(scanMeta);
+                responseCode = VirusTotal.RESPONSE_QUEUED;
+            } finally {
+                wakeLock.release();
             }
-            response.onScanningInitiated();
-            String filename = file.getName();
-            VtFileScanMeta scanMeta;
-            try (InputStream is = file.openInputStream()) {
-                scanMeta = scan(filename, is);
-            }
-            response.onScanCompleted(scanMeta);
-            responseCode = VirusTotal.RESPONSE_QUEUED;
         } else {
             // Item is queued
             response.onReportReceived(report);

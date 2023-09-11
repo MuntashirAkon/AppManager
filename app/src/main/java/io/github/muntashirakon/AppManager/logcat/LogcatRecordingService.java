@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,7 @@ import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
 import io.github.muntashirakon.AppManager.progress.QueuedProgressHandler;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
+import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
@@ -62,6 +64,7 @@ public class LogcatRecordingService extends ForegroundService {
     private boolean mKilled;
     private Handler mHandler;
     private QueuedProgressHandler mProgressHandler;
+    private PowerManager.WakeLock mWakeLock;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -82,6 +85,8 @@ public class LogcatRecordingService extends ForegroundService {
         intentFilter.addDataScheme(URI_SCHEME);
         registerReceiver(mReceiver, intentFilter);
         mHandler = new Handler(Looper.getMainLooper());
+        mWakeLock = CpuUtils.getPartialWakeLock("logcat_recorder");
+        mWakeLock.acquire();
     }
 
 
@@ -103,6 +108,9 @@ public class LogcatRecordingService extends ForegroundService {
 
     @Override
     public void onDestroy() {
+        if (mWakeLock != null) {
+            mWakeLock.release();
+        }
         super.onDestroy();
         killProcess();
         unregisterReceiver(mReceiver);

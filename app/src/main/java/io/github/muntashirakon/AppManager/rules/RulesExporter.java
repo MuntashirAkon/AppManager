@@ -14,6 +14,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
 /**
  * Export rules to external directory either for a single package or multiple packages.
@@ -30,9 +31,9 @@ public class RulesExporter {
     @NonNull
     private final int[] mUserIds;
 
-    public RulesExporter(@NonNull Context context, @NonNull List<RuleType> typesToExport,
-                         @Nullable List<String> packagesToExport, @NonNull int[] userIds) {
-        mContext = context;
+    public RulesExporter(@NonNull List<RuleType> typesToExport, @Nullable List<String> packagesToExport,
+                         @NonNull int[] userIds) {
+        mContext = ContextUtils.getContext();
         mPackagesToExport = packagesToExport;
         mTypesToExport = typesToExport;
         mUserIds = userIds;

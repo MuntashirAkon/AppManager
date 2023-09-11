@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.settings;
 import android.app.Application;
 import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
 import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
@@ -41,6 +42,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -102,10 +104,16 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
 
     public void reloadApps() {
         ThreadUtils.postOnBackgroundThread(() -> {
-            AppDb appDb = new AppDb();
-            appDb.deleteAllApplications();
-            appDb.deleteAllBackups();
-            appDb.loadInstalledOrBackedUpApplications(getApplication());
+            PowerManager.WakeLock wakeLock = CpuUtils.getPartialWakeLock("appDbUpdater");
+            try {
+                wakeLock.acquire();
+                AppDb appDb = new AppDb();
+                appDb.deleteAllApplications();
+                appDb.deleteAllBackups();
+                appDb.loadInstalledOrBackedUpApplications(getApplication());
+            } finally {
+                wakeLock.release();
+            }
         });
     }
 

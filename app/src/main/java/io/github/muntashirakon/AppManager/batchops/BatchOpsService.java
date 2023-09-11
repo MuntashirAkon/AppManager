@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,7 @@ import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.N
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.progress.QueuedProgressHandler;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
+import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class BatchOpsService extends ForegroundService {
@@ -95,9 +97,17 @@ public class BatchOpsService extends ForegroundService {
     private String mHeader;
     private QueuedProgressHandler mProgressHandler;
     private NotificationProgressHandler.NotificationInfo mNotificationInfo;
+    private PowerManager.WakeLock mWakeLock;
 
     public BatchOpsService() {
         super("BatchOpsService");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mWakeLock = CpuUtils.getPartialWakeLock("batch_ops");
+        mWakeLock.acquire();
     }
 
     @Override
@@ -191,6 +201,9 @@ public class BatchOpsService extends ForegroundService {
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE);
         if (mProgressHandler != null) {
             mProgressHandler.onDetach(this);
+        }
+        if (mWakeLock != null) {
+            mWakeLock.release();
         }
         super.onDestroy();
     }

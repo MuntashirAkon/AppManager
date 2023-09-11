@@ -20,6 +20,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.PowerManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,6 +49,7 @@ import io.github.muntashirakon.AppManager.progress.QueuedProgressHandler;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -72,6 +74,14 @@ public class PackageInstallerService extends ForegroundService {
     private String mPackageName;
     private QueuedProgressHandler mProgressHandler;
     private NotificationInfo mNotificationInfo;
+    private PowerManager.WakeLock mWakeLock;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mWakeLock = CpuUtils.getPartialWakeLock("installer");
+        mWakeLock.acquire();
+    }
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
@@ -221,6 +231,9 @@ public class PackageInstallerService extends ForegroundService {
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE);
         if (mProgressHandler != null) {
             mProgressHandler.onDetach(this);
+        }
+        if (mWakeLock != null) {
+            mWakeLock.release();
         }
         super.onDestroy();
     }

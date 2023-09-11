@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.google.android.material.slider.Slider;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
 
 // Raw code taken from DialogMusicPlayer <https://github.com/VishnuSanal/DialogMusicPlayer>.
@@ -64,6 +66,7 @@ public class AudioPlayerDialogFragment extends CapsuleBottomSheetDialogFragment 
 
     private MediaPlayer mMediaPlayer;
     private AudioPlayerViewModel mViewModel;
+    private PowerManager.WakeLock mWakeLock;
 
     private boolean mCloseActivity;
 
@@ -106,6 +109,15 @@ public class AudioPlayerDialogFragment extends CapsuleBottomSheetDialogFragment 
         });
         mViewModel.getPlaylistLoadedLiveData().observe(getViewLifecycleOwner(), loaded -> updatePlaylistSize());
         mViewModel.addToPlaylist(uriList);
+        mWakeLock = CpuUtils.getPartialWakeLock("pasteThread");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mWakeLock != null && !mWakeLock.isHeld()) {
+            mWakeLock.acquire();
+        }
     }
 
     @Override
@@ -120,6 +132,9 @@ public class AudioPlayerDialogFragment extends CapsuleBottomSheetDialogFragment 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (mWakeLock != null) {
+            mWakeLock.release();
+        }
         if (mCloseActivity) {
             requireActivity().finish();
         }

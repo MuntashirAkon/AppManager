@@ -2,6 +2,7 @@
 <lint>
     <issue id="MissingTranslation" severity="ignore" />
     <issue id="ImpliedQuantity" severity="ignore" />
+    <issue id="WakelockTimeout" severity="ignore" />
 
     <issue id="LogConditional" severity="informational" />
     <issue id="Registered" severity="informational" />

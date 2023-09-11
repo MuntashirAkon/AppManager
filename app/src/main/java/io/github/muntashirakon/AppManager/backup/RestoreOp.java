@@ -64,7 +64,6 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
-import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -79,8 +78,6 @@ class RestoreOp implements Closeable {
     static final String TAG = RestoreOp.class.getSimpleName();
     private static final Object sLock = new Object();
 
-    @NonNull
-    private final Context mContext;
     @NonNull
     private final String mPackageName;
     @NonNull
@@ -108,7 +105,6 @@ class RestoreOp implements Closeable {
     RestoreOp(@NonNull String packageName, @NonNull MetadataManager metadataManager,
               @NonNull BackupFlags requestedFlags, @NonNull BackupFiles.BackupFile backupFile,
               int userId) throws BackupException {
-        mContext = ContextUtils.getContext();
         mPackageName = packageName;
         mRequestedFlags = requestedFlags;
         mBackupFile = backupFile;
@@ -721,7 +717,7 @@ class RestoreOp implements Closeable {
         } catch (IOException e) {
             throw new BackupException("Could not get decrypted rules file", e);
         }
-        try (RulesImporter importer = new RulesImporter(mContext, Arrays.asList(RuleType.values()), new int[]{mUserId})) {
+        try (RulesImporter importer = new RulesImporter(Arrays.asList(RuleType.values()), new int[]{mUserId})) {
             importer.addRulesFromPath(rulesFile);
             importer.setPackagesToImport(Collections.singletonList(mPackageName));
             importer.applyRules(true);

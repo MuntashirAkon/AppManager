@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.runner;
 
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.AnyThread;
@@ -22,13 +23,16 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.ProcessCompat;
+import io.github.muntashirakon.AppManager.utils.CpuUtils;
 
+// TODO: 11/9/23 Replace it with an actual terminal
 public class TermActivity extends BaseActivity {
     private final Object mLock = new Object();
     private AppCompatEditText mCommandInput;
     private AppCompatTextView mCommandOutput;
     private Process mProc;
     private OutputStream mProcessOutputStream;
+    private PowerManager.WakeLock mWakeLock;
     private final ExecutorService mExecutor = Executors.newFixedThreadPool(3);
 
     @Override
@@ -61,11 +65,16 @@ public class TermActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        if (mWakeLock != null) {
+            mWakeLock.release();
+        }
         mExecutor.shutdownNow();
         super.onDestroy();
     }
 
     private void initShell() {
+        mWakeLock = CpuUtils.getPartialWakeLock("term");
+        mWakeLock.acquire();
         mExecutor.submit(() -> {
             try {
                 mProc = ProcessCompat.exec(new String[]{"sh"}/*, new String[]{"TERM=xterm-256color"}*/);
