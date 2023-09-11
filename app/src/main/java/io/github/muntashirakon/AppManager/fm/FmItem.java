@@ -34,7 +34,7 @@ public class FmItem implements Comparable<FmItem> {
     private int mChildCount = UNRESOLVED;
     private boolean mCached = false;
 
-    FmItem(@NonNull Path path) {
+    public FmItem(@NonNull Path path) {
         this.path = path;
         isDirectory = path.isDirectory();
     }

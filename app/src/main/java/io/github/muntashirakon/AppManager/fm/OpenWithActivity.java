@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
+import io.github.muntashirakon.AppManager.fm.dialogs.OpenWithDialogFragment;
 
 public class OpenWithActivity extends BaseActivity {
     @Override

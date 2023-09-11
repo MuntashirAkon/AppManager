@@ -64,6 +64,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.fm.dialogs.FilePropertiesDialogFragment;
+import io.github.muntashirakon.AppManager.fm.dialogs.NewFileDialogFragment;
+import io.github.muntashirakon.AppManager.fm.dialogs.NewFolderDialogFragment;
+import io.github.muntashirakon.AppManager.fm.dialogs.NewSymbolicLinkDialogFragment;
+import io.github.muntashirakon.AppManager.fm.dialogs.RenameDialogFragment;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;

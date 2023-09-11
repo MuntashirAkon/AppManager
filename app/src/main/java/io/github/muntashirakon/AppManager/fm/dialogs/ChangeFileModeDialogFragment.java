@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.fm;
+package io.github.muntashirakon.AppManager.fm.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.materialswitch.MaterialSwitch;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.fm.FmUtils;
 import io.github.muntashirakon.widget.TextInputTextView;
 
 public class ChangeFileModeDialogFragment extends DialogFragment {
