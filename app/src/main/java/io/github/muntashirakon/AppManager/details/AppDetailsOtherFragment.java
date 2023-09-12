@@ -297,8 +297,8 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                 item = mAdapterList.get(index);
             }
             holder.textView1.setText(item.name);
-            if (item.vanillaItem instanceof File) {
-                File libFile = (File) item.vanillaItem;
+            if (item.mainItem instanceof File) {
+                File libFile = (File) item.mainItem;
                 StringBuilder sb = new StringBuilder(Formatter.formatFileSize(context, libFile.length()))
                         .append("\n").append(libFile.getAbsolutePath());
                 holder.textView2.setText(sb);
@@ -306,8 +306,8 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                 holder.launchBtn.setVisibility(View.VISIBLE);
                 holder.launchBtn.setIconResource(R.drawable.ic_open_in_new);
                 holder.launchBtn.setOnClickListener(openAsFolderInFM(context, libFile.getParent()));
-            } else if (item.vanillaItem instanceof PackageInfo) {
-                PackageInfo packageInfo = (PackageInfo) item.vanillaItem;
+            } else if (item.mainItem instanceof PackageInfo) {
+                PackageInfo packageInfo = (PackageInfo) item.mainItem;
                 String apkFileStr = packageInfo.applicationInfo.publicSourceDir;
                 Path apkFile = apkFileStr != null ? Paths.get(apkFileStr) : null;
                 StringBuilder sb = new StringBuilder()
@@ -329,10 +329,10 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                 } else holder.launchBtn.setVisibility(View.GONE);
                 holder.textView2.setText(sb);
                 holder.chipType.setText("APK");
-            } else if (item.vanillaItem instanceof NativeLibraries.ElfLib) {
-                holder.textView2.setText(((LocalizedString) item.vanillaItem).toLocalizedString(context));
+            } else if (item.mainItem instanceof NativeLibraries.ElfLib) {
+                holder.textView2.setText(((LocalizedString) item.mainItem).toLocalizedString(context));
                 String type;
-                switch (((NativeLibraries.ElfLib) item.vanillaItem).getType()) {
+                switch (((NativeLibraries.ElfLib) item.mainItem).getType()) {
                     case NativeLibraries.ElfLib.TYPE_DYN:
                         type = "SHARED";
                         break;
@@ -344,8 +344,8 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                 }
                 holder.chipType.setText(type);
                 holder.launchBtn.setVisibility(View.GONE);
-            } else if (item.vanillaItem instanceof NativeLibraries.InvalidLib) {
-                holder.textView2.setText(((LocalizedString) item.vanillaItem).toLocalizedString(context));
+            } else if (item.mainItem instanceof NativeLibraries.InvalidLib) {
+                holder.textView2.setText(((LocalizedString) item.mainItem).toLocalizedString(context));
                 holder.chipType.setText("⚠️");
                 holder.launchBtn.setVisibility(View.GONE);
             }
@@ -358,7 +358,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
             MaterialCardView view = (MaterialCardView) holder.itemView;
             final FeatureInfo featureInfo;
             synchronized (mAdapterList) {
-                featureInfo = (FeatureInfo) mAdapterList.get(index).vanillaItem;
+                featureInfo = (FeatureInfo) mAdapterList.get(index).mainItem;
             }
             // Currently, feature only has a single flag, which specifies whether the feature is required.
             boolean isRequired = (featureInfo.flags & FeatureInfo.FLAG_REQUIRED) != 0;
@@ -405,7 +405,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
             MaterialCardView view = (MaterialCardView) holder.itemView;
             final ConfigurationInfo configurationInfo;
             synchronized (mAdapterList) {
-                configurationInfo = (ConfigurationInfo) mAdapterList.get(index).vanillaItem;
+                configurationInfo = (ConfigurationInfo) mAdapterList.get(index).mainItem;
             }
             view.setCardBackgroundColor(index % 2 == 0 ? mCardColor1 : mCardColor0);
             // GL ES version
@@ -428,7 +428,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 item = mAdapterList.get(index);
             }
-            final X509Certificate signature = (X509Certificate) item.vanillaItem;
+            final X509Certificate signature = (X509Certificate) item.mainItem;
             final SpannableStringBuilder builder = new SpannableStringBuilder();
             if (index == 0) {
                 // Display verifier info

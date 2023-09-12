@@ -453,7 +453,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
             }
-            final ActivityInfo activityInfo = (ActivityInfo) componentItem.vanillaItem;
+            final ActivityInfo activityInfo = (ActivityInfo) componentItem.mainItem;
             final String activityName = componentItem.name;
             final boolean isDisabled = !mIsExternalApk && componentItem.isDisabled();
             // Background color: regular < tracker < disabled < blocked
@@ -565,7 +565,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 serviceItem = (AppDetailsServiceItem) mAdapterList.get(index);
             }
-            final ServiceInfo serviceInfo = (ServiceInfo) serviceItem.vanillaItem;
+            final ServiceInfo serviceInfo = (ServiceInfo) serviceItem.mainItem;
             final boolean isDisabled = !mIsExternalApk && serviceItem.isDisabled();
             // Background color: regular < tracker < disabled < blocked < running
             if (serviceItem.isRunning()) {
@@ -646,7 +646,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
             }
-            final ActivityInfo activityInfo = (ActivityInfo) componentItem.vanillaItem;
+            final ActivityInfo activityInfo = (ActivityInfo) componentItem.mainItem;
             // Background color: regular < tracker < disabled < blocked
             if (!mIsExternalApk && componentItem.isBlocked()) {
                 holder.divider.setDividerColor(ColorCodes.getComponentBlockedIndicatorColor(context));
@@ -707,7 +707,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
             }
-            final ProviderInfo providerInfo = (ProviderInfo) componentItem.vanillaItem;
+            final ProviderInfo providerInfo = (ProviderInfo) componentItem.mainItem;
             final String providerName = providerInfo.name;
             // Background color: regular < tracker < disabled < blocked
             if (!mIsExternalApk && componentItem.isBlocked()) {

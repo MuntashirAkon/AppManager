@@ -92,7 +92,7 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
     }
 
     public int getOp() {
-        return vanillaItem;
+        return mainItem;
     }
 
     @AppOpsManagerCompat.Mode
