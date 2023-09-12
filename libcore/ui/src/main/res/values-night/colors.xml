@@ -8,6 +8,7 @@
     <color name="red">#790D0D</color>
     <color name="running">@color/purple</color>
     <color name="semi_transparent">#10FFFFFF</color>
+    <color name="sixty_percent_white">#9A000000</color>
     <color name="sixty_percent_black">#9AFFFFFF</color>
     <color name="tracker">#80FF8017</color>
 </resources>

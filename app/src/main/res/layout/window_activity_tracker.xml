@@ -17,6 +17,7 @@
         style="@style/Widget.AppTheme.CardView.Outlined"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/sixty_percent_white"
         android:minWidth="200dp">
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -99,6 +100,7 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/drag"
                     style="@style/Widget.AppTheme.Button.IconButton"
                     android:layout_width="40dp"
                     android:layout_height="40dp"

@@ -3,8 +3,6 @@
 package io.github.muntashirakon.AppManager.accessibility.activity;
 
 import android.annotation.SuppressLint;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -13,6 +11,7 @@ import android.os.Build;
 import android.os.UserHandleHidden;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,10 +33,11 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 import io.github.muntashirakon.widget.TextInputTextView;
 
-public class TrackerWindow {
+public class TrackerWindow implements View.OnTouchListener {
     public final WindowManager mWindowManager;
     private final WindowManager.LayoutParams mWindowLayoutParams;
     private final View mView;
@@ -47,24 +47,31 @@ public class TrackerWindow {
     private final TextInputTextView mClassNameView;
     private final TextInputTextView mClassHierarchyView;
     private final MaterialButton mPlayPauseButton;
+    private final Point mWindowSize = new Point(0, 0);
     private final Point mWindowPosition = new Point(0, 0);
     private final Point mPressPosition = new Point(0, 0);
+    private final int mMaxWidth;
 
     public boolean mPaused = false;
+    public boolean mIconified = false;
     public boolean mViewAttached = false;
+    public boolean mDragging = false;
 
     @SuppressLint("ClickableViewAccessibility")
     public TrackerWindow(@NonNull Context context) {
-        Context themedContext = AppearanceUtils.getThemedContext(context);
+        Context themedContext = AppearanceUtils.getThemedContext(context, true);
         mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         int type = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
                 : WindowManager.LayoutParams.TYPE_PHONE;
-        int displayWidth = mWindowManager.getDefaultDisplay().getWidth();
+        Display display = mWindowManager.getDefaultDisplay();
+        int displayWidth = display.getWidth();
+        display.getRealSize(mWindowSize);
+        mMaxWidth = (displayWidth / 2) + 300; // FIXME: 5/2/23 Find a better way to represent a display
+        int flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
         mWindowLayoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT, type, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
+                WindowManager.LayoutParams.WRAP_CONTENT, type, flags, PixelFormat.TRANSLUCENT);
         mWindowLayoutParams.gravity = Gravity.CENTER;
-        mWindowLayoutParams.width = (displayWidth / 2) + 300; // FIXME: 5/2/23 Find a better way to represent a display
+        mWindowLayoutParams.width = mMaxWidth;
         mWindowLayoutParams.windowAnimations = android.R.style.Animation_Toast;
 
         mView = View.inflate(themedContext, R.layout.window_activity_tracker, null);
@@ -111,39 +118,49 @@ public class TrackerWindow {
                 UIUtils.displayLongToast(th.getMessage());
             }
         });
-        mView.findViewById(R.id.mini).setOnClickListener(v -> {
-            mPaused = true;
-            mIconView.setVisibility(View.VISIBLE);
-            mContentView.setVisibility(View.GONE);
-        });
+        mView.findViewById(R.id.mini).setOnClickListener(v -> iconify());
         mPlayPauseButton.setOnClickListener(v -> {
             mPaused = !mPaused;
             mPlayPauseButton.setIconResource(mPaused ? R.drawable.ic_play_arrow : R.drawable.ic_pause);
         });
         mView.findViewById(android.R.id.closeButton).setOnClickListener(v -> dismiss());
         mIconView.setVisibility(View.GONE);
-        mIconView.setOnClickListener(v -> {
-            mContentView.setVisibility(View.VISIBLE);
-            mIconView.setVisibility(View.GONE);
-            mPaused = false;
-        });
+        mIconView.setOnClickListener(v -> expand());
+        mView.findViewById(R.id.drag).setOnTouchListener(this);
+        mIconView.setOnTouchListener(this);
+    }
 
-        mView.setOnTouchListener((view, event) -> {
-            Point point = new Point((int) event.getRawX(), (int) event.getRawY());
-            int action = event.getAction();
-
-            if (action == MotionEvent.ACTION_DOWN) {
-                mPressPosition.set(point.x, point.y);
-                mWindowPosition.set(mWindowLayoutParams.x, mWindowLayoutParams.y);
-            } else if (action == MotionEvent.ACTION_MOVE) {
-                int delX = point.x - mPressPosition.x;
-                int delY = point.y - mPressPosition.y;
-                mWindowLayoutParams.x = mWindowPosition.x + delX;
-                mWindowLayoutParams.y = mWindowPosition.y + delY;
-                mWindowManager.updateViewLayout(view, mWindowLayoutParams);
-            }
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        Point point;
+        int action = event.getAction();
+        if (action == MotionEvent.ACTION_DOWN) {
+            mDragging = false;
+            point = new Point((int) event.getRawX(), (int) event.getRawY());
+            mPressPosition.set(point.x, point.y);
+            mWindowPosition.set(mWindowLayoutParams.x, mWindowLayoutParams.y);
             return true;
-        });
+        } else if (action == MotionEvent.ACTION_MOVE) {
+            mDragging = true;
+            point = new Point((int) event.getRawX(), (int) event.getRawY());
+            int delX = point.x - mPressPosition.x;
+            int delY = point.y - mPressPosition.y;
+            mWindowLayoutParams.x = mWindowPosition.x + delX;
+            mWindowLayoutParams.y = mWindowPosition.y + delY;
+            updateLayout();
+            return true;
+        }
+        if (!mDragging && v == mIconView && action == MotionEvent.ACTION_UP) {
+            point = new Point((int) event.getRawX(), (int) event.getRawY());
+            int delX = point.x - mPressPosition.x;
+            int delY = point.y - mPressPosition.y;
+            if (delX < 1 && delY < 1) {
+                v.performClick();
+                return true;
+            }
+        }
+        return false;
     }
 
     public void showOrUpdate(AccessibilityEvent event) {
@@ -168,10 +185,43 @@ public class TrackerWindow {
         }
     }
 
+    private void iconify() {
+        mPaused = true;
+        mIconified = true;
+        // Window position may need to be adjusted to display the icon
+        // (0,0) is middle
+        int height = -mWindowSize.y / 2;
+        if (mWindowLayoutParams.y < height) {
+            mWindowPosition.y = height;
+            mWindowLayoutParams.y = height;
+        }
+        mIconView.setVisibility(View.VISIBLE);
+        mContentView.setVisibility(View.GONE);
+        updateLayout();
+    }
+
+    private void expand() {
+        mContentView.setVisibility(View.VISIBLE);
+        mIconView.setVisibility(View.GONE);
+        mPaused = false;
+        mIconified = false;
+        // Window position may need to be adjusted to display the drag handle
+        // (0,0) is middle
+        int width = (-mWindowSize.x + mMaxWidth) / 2;
+        if (mWindowLayoutParams.x < width) {
+            mWindowPosition.x = width;
+            mWindowLayoutParams.x = width;
+        }
+        updateLayout();
+    }
+
+    private void updateLayout() {
+        mWindowLayoutParams.width = mIconified ? WindowManager.LayoutParams.WRAP_CONTENT : mMaxWidth;
+        mWindowManager.updateViewLayout(mView, mWindowLayoutParams);
+    }
+
     private void copyText(CharSequence label, CharSequence content) {
-        ClipboardManager clipboard = (ClipboardManager) mView.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-        clipboard.setPrimaryClip(ClipData.newPlainText(label, content));
-        UIUtils.displayShortToast(R.string.copied_to_clipboard);
+        Utils.copyToClipboard(mView.getContext(), label, content);
     }
 
     @NonNull

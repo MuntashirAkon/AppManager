@@ -65,11 +65,11 @@ public final class AppearanceUtils {
      * Return a {@link ContextThemeWrapper} with the default locale, layout direction, theme and night mode.
      */
     @NonNull
-    public static Context getThemedContext(@NonNull Context context) {
+    public static Context getThemedContext(@NonNull Context context, boolean transparent) {
         AppearanceOptions options = new AppearanceOptions();
         options.locale = LangUtils.getFromPreference(context);
         options.layoutDirection = Prefs.Appearance.getLayoutDirection();
-        options.theme = Prefs.Appearance.getAppTheme();
+        options.theme = transparent ? Prefs.Appearance.getTransparentAppTheme() : Prefs.Appearance.getAppTheme();
         options.nightMode = Prefs.Appearance.getNightMode();
         ContextThemeWrapper newCtx = new ContextThemeWrapper(context, options.theme);
         newCtx.applyOverrideConfiguration(createOverrideConfiguration(context, options));
