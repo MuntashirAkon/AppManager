@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.dialog;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -12,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.text.util.LinkifyCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textview.MaterialTextView;
@@ -32,29 +32,29 @@ public class ScrollableDialogBuilder {
         void onClick(DialogInterface dialog, int which, boolean isChecked);
     }
 
-    public ScrollableDialogBuilder(@NonNull FragmentActivity activity, @Nullable CharSequence message, boolean fullScreen) {
-        View view = View.inflate(activity, R.layout.dialog_scrollable_text_view, null);
+    public ScrollableDialogBuilder(@NonNull Context context, @Nullable CharSequence message, boolean fullScreen) {
+        View view = View.inflate(context, R.layout.dialog_scrollable_text_view, null);
         mMessage = view.findViewById(android.R.id.content);
         mMessage.setText(message);
         mCheckBox = view.findViewById(android.R.id.checkbox);
         mCheckBox.setVisibility(View.GONE);
-        mBuilder = new AlertDialogBuilder(activity, fullScreen).setView(view);
+        mBuilder = new AlertDialogBuilder(context, fullScreen).setView(view);
     }
 
-    public ScrollableDialogBuilder(@NonNull FragmentActivity activity, @Nullable CharSequence message) {
-        this(activity, message, false);
+    public ScrollableDialogBuilder(@NonNull Context context, @Nullable CharSequence message) {
+        this(context, message, false);
     }
 
-    public ScrollableDialogBuilder(@NonNull FragmentActivity activity, boolean fullScreen) {
-        this(activity, null, fullScreen);
+    public ScrollableDialogBuilder(@NonNull Context context, boolean fullScreen) {
+        this(context, null, fullScreen);
     }
 
-    public ScrollableDialogBuilder(@NonNull FragmentActivity activity) {
-        this(activity, null);
+    public ScrollableDialogBuilder(@NonNull Context context) {
+        this(context, null);
     }
 
-    public ScrollableDialogBuilder(@NonNull FragmentActivity activity, @StringRes int inputTextLabel) {
-        this(activity, activity.getText(inputTextLabel));
+    public ScrollableDialogBuilder(@NonNull Context context, @StringRes int inputTextLabel) {
+        this(context, context.getText(inputTextLabel));
     }
 
     public ScrollableDialogBuilder setTitle(@Nullable View title) {
