@@ -55,6 +55,7 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.Accessibilit
 import androidx.core.view.accessibility.AccessibilityViewCommand;
 import androidx.customview.view.AbsSavedState;
 import androidx.customview.widget.ViewDragHelper;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.internal.ViewUtils;
@@ -1582,12 +1583,15 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
             }
         }
         if (view instanceof ViewPager2) {
-            // FIXME: 13/2/23 This might not work as expected
-            View currentViewPagerChild = ((ViewGroup) view).getFocusedChild();
-            if (currentViewPagerChild != null) {
-                View scrollingChild = findScrollingChild(currentViewPagerChild);
-                if (scrollingChild != null) {
-                    return scrollingChild;
+            View v = ((ViewPager2) view).getChildAt(0);
+            if (v instanceof RecyclerView) {
+                View v2 = ((RecyclerView) v).getFocusedChild();
+                if (v2 == null) v2 = ((RecyclerView) v).getChildAt(0);
+                if (v2 != null) {
+                    View scrollingChild = findScrollingChild(v2);
+                    if (scrollingChild != null) {
+                        return scrollingChild;
+                    }
                 }
             }
         }

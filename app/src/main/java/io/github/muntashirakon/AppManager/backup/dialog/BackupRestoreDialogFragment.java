@@ -22,12 +22,13 @@ import androidx.annotation.UiThread;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -264,13 +265,15 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
         mTabFragments = new Fragment[mTabTitles.length()];
         mTabFragments[0] = BackupFragment.getInstance();
         mTabFragments[1] = RestoreMultipleFragment.getInstance();
-        ViewPager viewPager = getBody().findViewById(R.id.pager);
+        getBody().findViewById(R.id.container).setVisibility(View.VISIBLE);
+        ViewPager2 viewPager = getBody().findViewById(R.id.pager);
         TabLayout tabLayout = getBody().findViewById(R.id.tab_layout);
-        viewPager.setOnPageChangeListener(new ViewPagerUpdateScrollingChildListener(viewPager, getBehavior()));
-        viewPager.setVisibility(View.VISIBLE);
+        viewPager.setOffscreenPageLimit(1);
+        viewPager.registerOnPageChangeCallback(new ViewPagerUpdateScrollingChildListener(viewPager, getBehavior()));
         finishLoading();
         viewPager.setAdapter(new BackupDialogFragmentPagerAdapter(this));
-        tabLayout.setupWithViewPager(viewPager);
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> tab.setText(mTabTitles.getString(position)))
+                .attach();
     }
 
     public void updateMultipleRestoreHeader() {
@@ -307,13 +310,15 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
         mTabFragments = new Fragment[mTabTitles.length()];
         mTabFragments[0] = BackupFragment.getInstance();
         mTabFragments[1] = RestoreSingleFragment.getInstance();
-        ViewPager viewPager = getBody().findViewById(R.id.pager);
+        getBody().findViewById(R.id.container).setVisibility(View.VISIBLE);
+        ViewPager2 viewPager = getBody().findViewById(R.id.pager);
         TabLayout tabLayout = getBody().findViewById(R.id.tab_layout);
-        viewPager.setOnPageChangeListener(new ViewPagerUpdateScrollingChildListener(viewPager, getBehavior()));
-        viewPager.setVisibility(View.VISIBLE);
+        viewPager.setOffscreenPageLimit(1);
+        viewPager.registerOnPageChangeCallback(new ViewPagerUpdateScrollingChildListener(viewPager, getBehavior()));
         finishLoading();
         viewPager.setAdapter(new BackupDialogFragmentPagerAdapter(this));
-        tabLayout.setupWithViewPager(viewPager);
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> tab.setText(mTabTitles.getString(position)))
+                .attach();
     }
 
     private void updateSingleBackupHeader() {
@@ -383,34 +388,28 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
         dismiss();
     }
 
-    private class BackupDialogFragmentPagerAdapter extends FragmentPagerAdapter {
+    private class BackupDialogFragmentPagerAdapter extends FragmentStateAdapter {
         public BackupDialogFragmentPagerAdapter(@NonNull Fragment fragment) {
-            super(fragment.getChildFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+            super(fragment);
         }
 
         @NonNull
         @Override
-        public Fragment getItem(int position) {
+        public Fragment createFragment(int position) {
             return mTabFragments[position];
         }
 
         @Override
-        public int getCount() {
+        public int getItemCount() {
             return mTabTitles.length();
-        }
-
-        @Nullable
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mTabTitles.getText(position);
         }
     }
 
-    private static class ViewPagerUpdateScrollingChildListener extends ViewPager.SimpleOnPageChangeListener {
-        private final ViewPager mViewPager;
+    private static class ViewPagerUpdateScrollingChildListener extends ViewPager2.OnPageChangeCallback {
+        private final ViewPager2 mViewPager;
         private final BottomSheetBehavior<FrameLayout> mBehavior;
 
-        private ViewPagerUpdateScrollingChildListener(ViewPager viewPager, BottomSheetBehavior<FrameLayout> behavior) {
+        private ViewPagerUpdateScrollingChildListener(ViewPager2 viewPager, BottomSheetBehavior<FrameLayout> behavior) {
             mViewPager = viewPager;
             mBehavior = behavior;
         }
