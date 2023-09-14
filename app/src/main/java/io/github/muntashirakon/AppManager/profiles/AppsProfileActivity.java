@@ -23,10 +23,10 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -45,8 +45,7 @@ import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.util.UiUtils;
 
-public class AppsProfileActivity extends BaseActivity implements NavigationBarView.OnItemSelectedListener,
-        ViewPager.OnPageChangeListener {
+public class AppsProfileActivity extends BaseActivity implements NavigationBarView.OnItemSelectedListener {
 
     @NonNull
     public static Intent getProfileIntent(@NonNull Context context, @NonNull String profileName) {
@@ -85,10 +84,22 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
     private static final String EXTRA_PROFILE_NAME = "prof";
     private static final String EXTRA_STATE = "state";
 
-    private ViewPager mViewPager;
+    private ViewPager2 mViewPager;
     private NavigationBarView mBottomNavigationView;
     private MenuItem mPrevMenuItem;
     private final Fragment[] mFragments = new Fragment[3];
+    private final ViewPager2.OnPageChangeCallback mPageChangeCallback = new ViewPager2.OnPageChangeCallback() {
+        @Override
+        public void onPageSelected(int position) {
+            if (mPrevMenuItem != null) {
+                mPrevMenuItem.setChecked(false);
+            } else {
+                mBottomNavigationView.getMenu().getItem(0).setChecked(false);
+            }
+            mBottomNavigationView.getMenu().getItem(position).setChecked(true);
+            mPrevMenuItem = mBottomNavigationView.getMenu().getItem(position);
+        }
+    };
     ProfileViewModel model;
     FloatingActionButton fab;
     LinearProgressIndicator progressIndicator;
@@ -145,8 +156,9 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
             }
         }
         mViewPager = findViewById(R.id.pager);
-        mViewPager.addOnPageChangeListener(this);
-        mViewPager.setAdapter(new ProfileFragmentPagerAdapter(getSupportFragmentManager()));
+        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.registerOnPageChangeCallback(mPageChangeCallback);
+        mViewPager.setAdapter(new ProfileFragmentPagerAdapter(this));
         mBottomNavigationView = findViewById(R.id.bottom_navigation);
         mBottomNavigationView.setOnItemSelectedListener(this);
         fab.setOnClickListener(v -> {
@@ -275,7 +287,7 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
     @Override
     protected void onDestroy() {
         if (mViewPager != null) {
-            mViewPager.removeOnPageChangeListener(this);
+            mViewPager.unregisterOnPageChangeCallback(mPageChangeCallback);
         }
         super.onDestroy();
     }
@@ -284,44 +296,24 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.action_apps) {
-            mViewPager.setCurrentItem(0);
+            mViewPager.setCurrentItem(0, true);
         } else if (itemId == R.id.action_conf) {
-            mViewPager.setCurrentItem(1);
+            mViewPager.setCurrentItem(1, true);
         } else if (itemId == R.id.action_logs) {
-            mViewPager.setCurrentItem(2);
+            mViewPager.setCurrentItem(2, true);
         } else return false;
         return true;
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        if (mPrevMenuItem != null) {
-            mPrevMenuItem.setChecked(false);
-        } else {
-            mBottomNavigationView.getMenu().getItem(0).setChecked(false);
-        }
-
-        mBottomNavigationView.getMenu().getItem(position).setChecked(true);
-        mPrevMenuItem = mBottomNavigationView.getMenu().getItem(position);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-    }
-
     // For tab layout
-    private class ProfileFragmentPagerAdapter extends FragmentPagerAdapter {
-        ProfileFragmentPagerAdapter(@NonNull FragmentManager fragmentManager) {
-            super(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+    private class ProfileFragmentPagerAdapter extends FragmentStateAdapter {
+        ProfileFragmentPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+            super(fragmentActivity);
         }
 
         @NonNull
         @Override
-        public Fragment getItem(int position) {
+        public Fragment createFragment(int position) {
             Fragment fragment = mFragments[position];
             if (fragment == null) {
                 switch (position) {
@@ -337,7 +329,7 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
         }
 
         @Override
-        public int getCount() {
+        public int getItemCount() {
             return mFragments.length;
         }
     }

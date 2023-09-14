@@ -14,8 +14,6 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,7 +70,7 @@ public class SelectedArrayAdapter<T> extends ArrayAdapter<T> {
         return setSelected(v);
     }
 
-    @NotNull
+    @NonNull
     private View setSelected(@NonNull View v) {
         TextView tv;
         if (mFieldId == 0) {
