@@ -115,7 +115,7 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
             } catch (IOException e) {
                 ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.export_failed));
             } finally {
-                wakeLock.release();
+                CpuUtils.releaseWakeLock(wakeLock);
             }
             hideProgressBar(activityRef);
         });
@@ -137,7 +137,7 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
             } catch (IOException e) {
                 ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.import_failed));
             } finally {
-                wakeLock.release();
+                CpuUtils.releaseWakeLock(wakeLock);
             }
             hideProgressBar(activityRef);
         });

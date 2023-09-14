@@ -94,12 +94,12 @@ public class OneClickOpsActivity extends BaseActivity {
                 setAppOps(listPairPair.first, listPairPair.second.first, listPairPair.second.second));
         mViewModel.getClearDataCandidates().observe(this, this::clearData);
         mViewModel.watchTrimCachesResult().observe(this, isSuccessful -> {
-            wakeLock.release();
+            CpuUtils.releaseWakeLock(wakeLock);
             progressIndicator.hide();
             UIUtils.displayShortToast(isSuccessful ? R.string.done : R.string.failed);
         });
         mViewModel.getAppsInstalledByAmForDexOpt().observe(this, packages -> {
-            wakeLock.release();
+            CpuUtils.releaseWakeLock(wakeLock);
             progressIndicator.hide();
             DexOptDialog dialog = DexOptDialog.getInstance(packages);
             dialog.show(getSupportFragmentManager(), DexOptDialog.TAG);
@@ -226,7 +226,7 @@ public class OneClickOpsActivity extends BaseActivity {
     }
 
     private void blockTrackers(@Nullable List<ItemCount> trackerCounts) {
-        wakeLock.release();
+        CpuUtils.releaseWakeLock(wakeLock);
         progressIndicator.hide();
         if (trackerCounts == null) {
             UIUtils.displayShortToast(R.string.failed_to_fetch_package_info);
@@ -268,7 +268,7 @@ public class OneClickOpsActivity extends BaseActivity {
     }
 
     private void blockComponents(@Nullable List<ItemCount> componentCounts, @NonNull String[] signatures) {
-        wakeLock.release();
+        CpuUtils.releaseWakeLock(wakeLock);
         progressIndicator.hide();
         if (componentCounts == null) {
             UIUtils.displayShortToast(R.string.failed_to_fetch_package_info);
@@ -361,7 +361,7 @@ public class OneClickOpsActivity extends BaseActivity {
     }
 
     private void setAppOps(@Nullable List<AppOpCount> appOpCounts, @NonNull int[] appOpList, int mode) {
-        wakeLock.release();
+        CpuUtils.releaseWakeLock(wakeLock);
         progressIndicator.hide();
         if (appOpCounts == null) {
             UIUtils.displayShortToast(R.string.failed_to_fetch_package_info);
@@ -401,7 +401,7 @@ public class OneClickOpsActivity extends BaseActivity {
     }
 
     private void clearData(@NonNull List<String> candidatePackages) {
-        wakeLock.release();
+        CpuUtils.releaseWakeLock(wakeLock);
         String[] packages = candidatePackages.toArray(new String[0]);
         new SearchableMultiChoiceDialogBuilder<>(this, packages, packages)
                 .setTitle(R.string.filtered_packages)
@@ -433,9 +433,7 @@ public class OneClickOpsActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if (wakeLock != null && wakeLock.isHeld()) {
-            wakeLock.release();
-        }
+        CpuUtils.releaseWakeLock(wakeLock);
         super.onDestroy();
     }
 

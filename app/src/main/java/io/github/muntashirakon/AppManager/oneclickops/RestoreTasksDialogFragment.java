@@ -22,6 +22,7 @@ import java.util.concurrent.Future;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
+import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
@@ -62,9 +63,7 @@ public class RestoreTasksDialogFragment extends DialogFragment {
                     if (ThreadUtils.isInterrupted()) return;
                     ThreadUtils.postOnMainThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
                 } finally {
-                    if (wakeLock != null) {
-                        wakeLock.release();
-                    }
+                    CpuUtils.releaseWakeLock(wakeLock);
                 }
             });
         });
@@ -93,9 +92,7 @@ public class RestoreTasksDialogFragment extends DialogFragment {
                     if (ThreadUtils.isInterrupted()) return;
                     ThreadUtils.postOnMainThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
                 } finally {
-                    if (wakeLock != null) {
-                        wakeLock.release();
-                    }
+                    CpuUtils.releaseWakeLock(wakeLock);
                 }
             });
         });
@@ -125,9 +122,7 @@ public class RestoreTasksDialogFragment extends DialogFragment {
                     if (ThreadUtils.isInterrupted()) return;
                     ThreadUtils.postOnMainThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
                 } finally {
-                    if (wakeLock != null) {
-                        wakeLock.release();
-                    }
+                    CpuUtils.releaseWakeLock(wakeLock);
                 }
             });
         });

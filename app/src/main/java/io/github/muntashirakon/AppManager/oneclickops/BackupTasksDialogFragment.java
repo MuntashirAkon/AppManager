@@ -34,6 +34,7 @@ import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
+import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -81,9 +82,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                     if (ThreadUtils.isInterrupted()) return;
                     ThreadUtils.postOnMainThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
                 } finally {
-                    if (wakeLock != null) {
-                        wakeLock.release();
-                    }
+                    CpuUtils.releaseWakeLock(wakeLock);
                 }
             });
         });
@@ -112,9 +111,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                     if (ThreadUtils.isInterrupted()) return;
                     ThreadUtils.postOnMainThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
                 } finally {
-                    if (wakeLock != null) {
-                        wakeLock.release();
-                    }
+                    CpuUtils.releaseWakeLock(wakeLock);
                 }
             });
         });
@@ -143,9 +140,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                     if (ThreadUtils.isInterrupted()) return;
                     ThreadUtils.postOnMainThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
                 } finally {
-                    if (wakeLock != null) {
-                        wakeLock.release();
-                    }
+                    CpuUtils.releaseWakeLock(wakeLock);
                 }
             });
         });
@@ -186,9 +181,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                     if (ThreadUtils.isInterrupted()) return;
                     ThreadUtils.postOnMainThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
                 } finally {
-                    if (wakeLock != null) {
-                        wakeLock.release();
-                    }
+                    CpuUtils.releaseWakeLock(wakeLock);
                 }
             });
         });
@@ -250,9 +243,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                     if (ThreadUtils.isInterrupted()) return;
                     ThreadUtils.postOnMainThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
                 } finally {
-                    if (wakeLock != null) {
-                        wakeLock.release();
-                    }
+                    CpuUtils.releaseWakeLock(wakeLock);
                 }
             });
         });

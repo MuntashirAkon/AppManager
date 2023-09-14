@@ -108,7 +108,7 @@ public class VirusTotal {
                 response.onScanCompleted(scanMeta);
                 responseCode = VirusTotal.RESPONSE_QUEUED;
             } finally {
-                wakeLock.release();
+                CpuUtils.releaseWakeLock(wakeLock);
             }
         } else {
             // Item is queued

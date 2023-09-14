@@ -113,9 +113,7 @@ public class ProfileApplierService extends ForegroundService {
         if (mProgressHandler != null) {
             mProgressHandler.onDetach(this);
         }
-        if (mWakeLock != null) {
-            mWakeLock.release();
-        }
+        CpuUtils.releaseWakeLock(mWakeLock);
         super.onDestroy();
     }
 

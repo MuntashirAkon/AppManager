@@ -133,7 +133,7 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
             try {
                 processPackagesInternal(userPackagePairs);
             } finally {
-                wakeLock.release();
+                CpuUtils.releaseWakeLock(wakeLock);
             }
         });
     }

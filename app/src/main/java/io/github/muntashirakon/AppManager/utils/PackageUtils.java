@@ -151,7 +151,7 @@ public final class PackageUtils {
                 appDb.loadInstalledOrBackedUpApplications(context);
                 apps = appDb.getAllApplications();
             } finally {
-                wakeLock.release();
+                CpuUtils.releaseWakeLock(wakeLock);
             }
         }
         Map<String, Backup> backups = appDb.getBackups(false);
@@ -253,7 +253,7 @@ public final class PackageUtils {
                         appDb.loadInstalledOrBackedUpApplications(context);
                     } else appDb.updateApplications(context);
                 } finally {
-                    wakeLock.release();
+                    CpuUtils.releaseWakeLock(wakeLock);
                 }
             });
         }

@@ -131,10 +131,8 @@ public class AudioPlayerDialogFragment extends CapsuleBottomSheetDialogFragment 
 
     @Override
     public void onDestroy() {
+        CpuUtils.releaseWakeLock(mWakeLock);
         super.onDestroy();
-        if (mWakeLock != null) {
-            mWakeLock.release();
-        }
         if (mCloseActivity) {
             requireActivity().finish();
         }

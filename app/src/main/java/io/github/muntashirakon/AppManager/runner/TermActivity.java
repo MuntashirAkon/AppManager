@@ -65,9 +65,7 @@ public class TermActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if (mWakeLock != null) {
-            mWakeLock.release();
-        }
+        CpuUtils.releaseWakeLock(mWakeLock);
         mExecutor.shutdownNow();
         super.onDestroy();
     }

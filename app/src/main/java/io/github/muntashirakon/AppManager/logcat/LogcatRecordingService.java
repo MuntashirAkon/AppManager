@@ -108,9 +108,7 @@ public class LogcatRecordingService extends ForegroundService {
 
     @Override
     public void onDestroy() {
-        if (mWakeLock != null) {
-            mWakeLock.release();
-        }
+        CpuUtils.releaseWakeLock(mWakeLock);
         super.onDestroy();
         killProcess();
         unregisterReceiver(mReceiver);

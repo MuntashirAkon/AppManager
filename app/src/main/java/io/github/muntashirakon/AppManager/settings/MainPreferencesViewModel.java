@@ -112,7 +112,7 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
                 appDb.deleteAllBackups();
                 appDb.loadInstalledOrBackedUpApplications(getApplication());
             } finally {
-                wakeLock.release();
+                CpuUtils.releaseWakeLock(wakeLock);
             }
         });
     }

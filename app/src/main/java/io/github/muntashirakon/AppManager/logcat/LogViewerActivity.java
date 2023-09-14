@@ -323,9 +323,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
 
     @Override
     public void onDestroy() {
-        if (mWakeLock != null) {
-            mWakeLock.release();
-        }
+        CpuUtils.releaseWakeLock(mWakeLock);
         super.onDestroy();
         mExecutor.shutdownNow();
     }
