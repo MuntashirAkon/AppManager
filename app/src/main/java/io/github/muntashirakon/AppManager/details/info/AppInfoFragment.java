@@ -79,8 +79,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -192,9 +191,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private ImageView mIconView;
     private List<MagiskProcess> mMagiskHiddenProcesses;
     private List<MagiskProcess> mMagiskDeniedProcesses;
-
-    @Deprecated
-    private final ExecutorService mExecutor = Executors.newFixedThreadPool(3);
+    private Future<?> mTagCloudFuture;
+    private Future<?> mActionsFuture;
+    private Future<?> mListFuture;
 
     private boolean mIsExternalApk;
     private int mLoadedItemCount;
@@ -335,9 +334,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         if (mMainModel != null && !mMainModel.isExternalApk()) {
             inflater.inflate(R.menu.fragment_app_info_actions, menu);
-            menu.findItem(R.id.action_magisk_hide).setVisible(MagiskHide.available());
-            menu.findItem(R.id.action_magisk_denylist).setVisible(MagiskDenyList.available());
-            menu.findItem(R.id.action_open_in_termux).setVisible(Ops.isRoot());
         }
     }
 
@@ -348,6 +344,18 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (mApplicationInfo != null) {
             isDebuggable = (mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
         } else isDebuggable = false;
+        MenuItem magiskHideMenu = menu.findItem(R.id.action_magisk_hide);
+        if (magiskHideMenu != null) {
+            magiskHideMenu.setVisible(MagiskHide.available());
+        }
+        MenuItem magiskDenyListMenu = menu.findItem(R.id.action_magisk_denylist);
+        if (magiskDenyListMenu != null) {
+            magiskDenyListMenu.setVisible(MagiskDenyList.available());
+        }
+        MenuItem openInTermuxMenu = menu.findItem(R.id.action_open_in_termux);
+        if (openInTermuxMenu != null) {
+            openInTermuxMenu.setVisible(Ops.isRoot());
+        }
         MenuItem runInTermuxMenu = menu.findItem(R.id.action_run_in_termux);
         if (runInTermuxMenu != null) {
             runInTermuxMenu.setVisible(isDebuggable);
@@ -566,7 +574,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onDetach() {
-        mExecutor.shutdownNow();
+        if (mTagCloudFuture != null) mTagCloudFuture.cancel(true);
+        if (mActionsFuture != null) mActionsFuture.cancel(true);
+        if (mListFuture != null) mListFuture.cancel(true);
         super.onDetach();
     }
 
@@ -612,7 +622,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @MainThread
     private void setupTagCloud(@NonNull AppInfoViewModel.TagCloud tagCloud) {
-        mExecutor.submit(() -> {
+        if (mTagCloudFuture != null) mTagCloudFuture.cancel(true);
+        mTagCloudFuture = ThreadUtils.postOnBackgroundThread(() -> {
             List<TagItem> tagItems = getTagCloudItems(tagCloud);
             ThreadUtils.postOnMainThread(() -> {
                 if (isDetached()) return;
@@ -777,28 +788,29 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             runningTag.setTextRes(R.string.running)
                     .setColor(ColorCodes.getComponentRunningIndicatorColor(context))
                     .setOnClickListener(v -> {
-                        mProgressIndicator.show();
-                        mExecutor.submit(() -> {
+                        showProgressIndicator(true);
+                        ThreadUtils.postOnBackgroundThread(() -> {
                             CharSequence[] runningServices = new CharSequence[tagCloud.runningServices.size()];
                             for (int i = 0; i < runningServices.length; ++i) {
                                 runningServices[i] = new SpannableStringBuilder()
                                         .append(tagCloud.runningServices.get(i).service.getShortClassName())
                                         .append("\n")
                                         .append(getSmallerText(new SpannableStringBuilder()
-                                                .append(getStyledKeyValue(mActivity, R.string.process_name,
+                                                .append(getStyledKeyValue(v.getContext(), R.string.process_name,
                                                         tagCloud.runningServices.get(i).process)).append("\n")
                                                 .append(getStyledKeyValue(mActivity, R.string.pid,
                                                         String.valueOf(tagCloud.runningServices.get(i).pid)))));
                             }
                             boolean logViewerAvailable = FeatureController.isLogViewerEnabled()
                                     && SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.DUMP);
-                            DialogTitleBuilder titleBuilder = new DialogTitleBuilder(mActivity)
+                            DialogTitleBuilder titleBuilder = new DialogTitleBuilder(v.getContext())
                                     .setTitle(R.string.running_services);
                             if (logViewerAvailable) {
                                 titleBuilder.setSubtitle(R.string.running_services_logcat_hint);
                             }
                             ThreadUtils.postOnMainThread(() -> {
-                                mProgressIndicator.hide();
+                                if (isDetached()) return;
+                                showProgressIndicator(false);
                                 SearchableItemsDialogBuilder<CharSequence> builder = new SearchableItemsDialogBuilder<>(mActivity, runningServices)
                                         .setTitle(titleBuilder.build());
                                 if (logViewerAvailable) {
@@ -821,6 +833,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     }));
                                 }
                                 builder.setNegativeButton(R.string.close, null);
+                                if (isDetached()) return;
                                 builder.show();
                             });
                         });
@@ -1047,19 +1060,20 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @UiThread
     private void displayMagiskHideDialog() {
         SearchableMultiChoiceDialogBuilder<MagiskProcess> builder;
-        builder = getMagiskProcessDialog(mMagiskHiddenProcesses, (dialog, which, mp, isChecked) -> mExecutor.submit(() -> {
-            mp.setEnabled(isChecked);
-            if (MagiskHide.apply(mp)) {
-                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mUserId)) {
-                    cb.setMagiskHide(mp);
-                    ThreadUtils.postOnMainThread(this::refreshDetails);
-                }
-            } else {
-                mp.setEnabled(!isChecked);
-                ThreadUtils.postOnMainThread(() -> displayLongToast(isChecked ? R.string.failed_to_enable_magisk_hide
-                        : R.string.failed_to_disable_magisk_hide));
-            }
-        }));
+        builder = getMagiskProcessDialog(mMagiskHiddenProcesses, (dialog, which, mp, isChecked) ->
+                ThreadUtils.postOnBackgroundThread(() -> {
+                    mp.setEnabled(isChecked);
+                    if (MagiskHide.apply(mp)) {
+                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mUserId)) {
+                            cb.setMagiskHide(mp);
+                            ThreadUtils.postOnMainThread(this::refreshDetails);
+                        }
+                    } else {
+                        mp.setEnabled(!isChecked);
+                        ThreadUtils.postOnMainThread(() -> displayLongToast(isChecked ? R.string.failed_to_enable_magisk_hide
+                                : R.string.failed_to_disable_magisk_hide));
+                    }
+                }));
         if (builder != null) {
             builder.setTitle(R.string.magisk_hide_enabled).show();
         }
@@ -1068,19 +1082,21 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @UiThread
     private void displayMagiskDenyListDialog() {
         SearchableMultiChoiceDialogBuilder<MagiskProcess> builder;
-        builder = getMagiskProcessDialog(mMagiskDeniedProcesses, (dialog, which, mp, isChecked) -> mExecutor.submit(() -> {
-            mp.setEnabled(isChecked);
-            if (MagiskDenyList.apply(mp)) {
-                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mUserId)) {
-                    cb.setMagiskDenyList(mp);
-                    ThreadUtils.postOnMainThread(this::refreshDetails);
-                }
-            } else {
-                mp.setEnabled(!isChecked);
-                ThreadUtils.postOnMainThread(() -> displayLongToast(isChecked ? R.string.failed_to_enable_magisk_deny_list
-                        : R.string.failed_to_disable_magisk_deny_list));
-            }
-        }));
+        builder = getMagiskProcessDialog(mMagiskDeniedProcesses, (dialog, which, mp, isChecked) ->
+                ThreadUtils.postOnBackgroundThread(() -> {
+                    mp.setEnabled(isChecked);
+                    if (MagiskDenyList.apply(mp)) {
+                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mUserId)) {
+                            cb.setMagiskDenyList(mp);
+                            ThreadUtils.postOnMainThread(this::refreshDetails);
+                        }
+                    } else {
+                        mp.setEnabled(!isChecked);
+                        ThreadUtils.postOnMainThread(() -> displayLongToast(isChecked
+                                ? R.string.failed_to_enable_magisk_deny_list
+                                : R.string.failed_to_disable_magisk_deny_list));
+                    }
+                }));
         if (builder != null) {
             builder.setTitle(R.string.magisk_denylist).show();
         }
@@ -1121,7 +1137,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @MainThread
     private void setupHorizontalActions() {
-        mExecutor.submit(() -> {
+        if (mActionsFuture != null) {
+            mActionsFuture.cancel(true);
+        }
+        mActionsFuture = ThreadUtils.postOnBackgroundThread(() -> {
             List<ActionItem> actionItems = getHorizontalActions();
             ThreadUtils.postOnMainThread(() -> {
                 if (isDetached()) return;
@@ -1438,13 +1457,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
                 ActionItem dbAction = new ActionItem(R.string.databases, R.drawable.ic_database);
                 actionItems.add(dbAction);
-                dbAction.setOnClickListener(v -> new SearchableItemsDialogBuilder<>(mActivity, databases2)
+                dbAction.setOnClickListener(v -> new SearchableItemsDialogBuilder<>(v.getContext(), databases2)
                         .setTitle(R.string.databases)
-                        .setOnItemClickListener((dialog, which, item) -> mExecutor.submit(() -> {
+                        .setOnItemClickListener((dialog, which, item) -> ThreadUtils.postOnBackgroundThread(() -> {
                             // Vacuum database
                             Runner.runCommand(new String[]{"sqlite3", databases.get(which).getFilePath(), "vacuum"});
                             ThreadUtils.postOnMainThread(() -> {
                                 OpenWithDialogFragment fragment = OpenWithDialogFragment.getInstance(databases.get(which), "application/vnd.sqlite3");
+                                if (isDetached()) return;
                                 fragment.show(getChildFragmentManager(), OpenWithDialogFragment.TAG);
                             });
                         }))
@@ -1460,11 +1480,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             ActionItem fdroidItem = new ActionItem(R.string.fdroid, R.drawable.ic_frost_fdroid);
             actionItems.add(fdroidItem);
             fdroidItem.setOnClickListener(v -> {
-                        try {
-                            startActivity(fdroid_intent);
-                        } catch (Exception ignored) {
-                        }
-                    });
+                try {
+                    startActivity(fdroid_intent);
+                } catch (Exception ignored) {
+                }
+            });
         }
         // Set Aurora Store
         try {
@@ -1476,15 +1496,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             ActionItem auroraStoreAction = new ActionItem(R.string.open_in_aurora_store, R.drawable.ic_frost_aurorastore);
             actionItems.add(auroraStoreAction);
             auroraStoreAction.setOnClickListener(v -> {
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setPackage(PACKAGE_NAME_AURORA_STORE);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=" + mPackageName));
-                        try {
-                            startActivity(intent);
-                        } catch (Exception ignored) {
-                        }
-                    });
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setPackage(PACKAGE_NAME_AURORA_STORE);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=" + mPackageName));
+                try {
+                    startActivity(intent);
+                } catch (Exception ignored) {
+                }
+            });
         } catch (PackageManager.NameNotFoundException ignored) {
         }
         return actionItems;
@@ -1503,14 +1523,17 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
             new SearchableItemsDialogBuilder<>(mActivity, entryNames)
                     .setTitle(R.string.select_apk)
-                    .setOnItemClickListener((dialog, which, item) -> mExecutor.submit(() -> {
+                    .setOnItemClickListener((dialog, which, item) -> ThreadUtils.postOnBackgroundThread(() -> {
                         try {
                             File file = apkEntries.get(which).getFile(false);
                             intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton()
                                     .getMimeTypeFromExtension("apk"));
-                            ThreadUtils.postOnMainThread(() -> startActivity(intent));
+                            ThreadUtils.postOnMainThread(() -> {
+                                if (isDetached()) return;
+                                startActivity(intent);
+                            });
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            UIUtils.displayLongToast("Error: " + e.getMessage());
                         }
                     }))
                     .setNegativeButton(R.string.cancel, null)
@@ -1678,7 +1701,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @MainThread
     @GuardedBy("mListItems")
     private void setupVerticalView(AppInfoViewModel.AppInfo appInfo) {
-        mExecutor.submit(() -> {
+        if (mListFuture != null) mListFuture.cancel(true);
+        mListFuture = ThreadUtils.postOnBackgroundThread(() -> {
             synchronized (mListItems) {
                 mListItems.clear();
                 if (!mIsExternalApk) {
@@ -1697,7 +1721,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         showProgressIndicator(false);
                     }
                     if (isDetached()) return;
-                     mAdapter.setAdapterList(mListItems);
+                    mAdapter.setAdapterList(mListItems);
                 });
             }
         });

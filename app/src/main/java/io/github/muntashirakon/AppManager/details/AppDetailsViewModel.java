@@ -109,6 +109,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private final Object mBlockerLocker = new Object();
     private final ExecutorService mExecutor = Executors.newFixedThreadPool(4);
     private final CountDownLatch mPackageInfoWatcher = new CountDownLatch(1);
+    private final MutableLiveData<PackageInfo> mPackageInfoLiveData = new MutableLiveData<>();
 
     @Nullable
     private PackageInfo mPackageInfo;
@@ -180,7 +181,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @UiThread
     @NonNull
     public LiveData<PackageInfo> setPackage(@NonNull ApkSource apkSource) {
-        MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
         mApkSource = apkSource;
         mExternalApk = true;
         mExecutor.submit(() -> {
@@ -192,21 +192,20 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 if (!cachedApkFile.canRead()) throw new Exception("Cannot read " + cachedApkFile);
                 mApkPath = cachedApkFile.getAbsolutePath();
                 setPackageInfo(false);
-                packageInfoLiveData.postValue(getPackageInfo());
+                mPackageInfoLiveData.postValue(getPackageInfo());
             } catch (Throwable th) {
                 Log.e(TAG, "Could not fetch package info.", th);
-                packageInfoLiveData.postValue(null);
+                mPackageInfoLiveData.postValue(null);
             } finally {
                 mPackageInfoWatcher.countDown();
             }
         });
-        return packageInfoLiveData;
+        return mPackageInfoLiveData;
     }
 
     @UiThread
     @NonNull
     public LiveData<PackageInfo> setPackage(@NonNull String packageName) {
-        MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
         mExternalApk = false;
         mExecutor.submit(() -> {
             try {
@@ -218,15 +217,15 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 if (pi == null) throw new ApkFile.ApkFileException("Package not installed.");
                 mApkSource = ApkSource.getApkSource(pi.applicationInfo);
                 mApkFile = mApkSource.resolve();
-                packageInfoLiveData.postValue(pi);
+                mPackageInfoLiveData.postValue(pi);
             } catch (Throwable th) {
                 Log.e(TAG, "Could not fetch package info.", th);
-                packageInfoLiveData.postValue(null);
+                mPackageInfoLiveData.postValue(null);
             } finally {
                 mPackageInfoWatcher.countDown();
             }
         });
-        return packageInfoLiveData;
+        return mPackageInfoLiveData;
     }
 
     @AnyThread
@@ -862,29 +861,29 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public LiveData<List<AppDetailsItem<?>>> get(@AppDetailsFragment.Property int property) {
         switch (property) {
             case AppDetailsFragment.ACTIVITIES:
-                return getInternal(mActivities, this::loadActivities);
+                return observeInternal(mActivities);
             case AppDetailsFragment.SERVICES:
-                return getInternal(mServices, this::loadServices);
+                return observeInternal(mServices);
             case AppDetailsFragment.RECEIVERS:
-                return getInternal(mReceivers, this::loadReceivers);
+                return observeInternal(mReceivers);
             case AppDetailsFragment.PROVIDERS:
-                return getInternal(mProviders, this::loadProviders);
+                return observeInternal(mProviders);
             case AppDetailsFragment.APP_OPS:
-                return getInternal(mAppOps, this::loadAppOps);
+                return observeInternal(mAppOps);
             case AppDetailsFragment.USES_PERMISSIONS:
-                return getInternal(mUsesPermissions, this::loadUsesPermissions);
+                return observeInternal(mUsesPermissions);
             case AppDetailsFragment.PERMISSIONS:
-                return getInternal(mPermissions, this::loadPermissions);
+                return observeInternal(mPermissions);
             case AppDetailsFragment.FEATURES:
-                return getInternal(mFeatures, this::loadFeatures);
+                return observeInternal(mFeatures);
             case AppDetailsFragment.CONFIGURATIONS:
-                return getInternal(mConfigurations, this::loadConfigurations);
+                return observeInternal(mConfigurations);
             case AppDetailsFragment.SIGNATURES:
-                return getInternal(mSignatures, this::loadSignatures);
+                return observeInternal(mSignatures);
             case AppDetailsFragment.SHARED_LIBRARIES:
-                return getInternal(mSharedLibraries, this::loadSharedLibraries);
+                return observeInternal(mSharedLibraries);
             case AppDetailsFragment.APP_INFO:
-                return getInternal(appInfo, this::loadAppInfo);
+                return observeInternal(mAppInfo);
             default:
                 throw new IllegalArgumentException("Invalid property: " + property);
         }
@@ -893,10 +892,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @SuppressWarnings("unchecked")
     @AnyThread
     @NonNull
-    private MutableLiveData<List<AppDetailsItem<?>>> getInternal(@NonNull MutableLiveData<?> liveData, Runnable loader) {
-        if (liveData.getValue() == null) {
-            mExecutor.submit(loader);
-        }
+    private MutableLiveData<List<AppDetailsItem<?>>> observeInternal(@NonNull MutableLiveData<?> liveData) {
         return (MutableLiveData<List<AppDetailsItem<?>>>) liveData;
     }
 
@@ -1133,19 +1129,19 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    private final MutableLiveData<List<AppDetailsItem<PackageInfo>>> appInfo = new MutableLiveData<>();
+    private final MutableLiveData<List<AppDetailsItem<PackageInfo>>> mAppInfo = new MutableLiveData<>();
 
     @WorkerThread
     private void loadAppInfo() {
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null) {
-            appInfo.postValue(null);
+            mAppInfo.postValue(null);
             return;
         }
         AppDetailsItem<PackageInfo> appDetailsItem = new AppDetailsItem<>(packageInfo);
         appDetailsItem.name = packageInfo.packageName;
         List<AppDetailsItem<PackageInfo>> appDetailsItems = Collections.singletonList(appDetailsItem);
-        appInfo.postValue(appDetailsItems);
+        mAppInfo.postValue(appDetailsItems);
     }
 
     @NonNull
@@ -1860,9 +1856,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
         @Override
         @WorkerThread
         protected void onPackageChanged(Intent intent, @Nullable Integer uid, @Nullable String[] packages) {
-            if (uid != null && (mModel.mPackageInfo == null || mModel.mPackageInfo.applicationInfo.uid == uid)) {
-                Log.d(TAG, "Package is changed.");
-                mModel.setPackageChanged();
+            if (uid != null) {
+                if (mModel.mPackageInfo != null && mModel.mPackageInfo.applicationInfo.uid == uid) {
+                    Log.d(TAG, "Package is changed.");
+                    mModel.setPackageChanged();
+                }
             } else if (packages != null) {
                 for (String packageName : packages) {
                     if (packageName.equals(mModel.mPackageName)) {

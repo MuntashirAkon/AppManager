@@ -292,23 +292,39 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
 
         @UiThread
         void setDefaultList(@NonNull List<AppDetailsItem<?>> list) {
-            mRequestedProperty = mNeededProperty;
-            mCanStartAnyActivity = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.START_ANY_ACTIVITY);
-            if (viewModel != null) {
-                mCanModifyComponentStates = !mIsExternalApk && SelfPermissions.canModifyAppComponentStates(mUserId, viewModel.getPackageName(), viewModel.isTestOnlyApp());
-                mConstraint = viewModel.getSearchQuery();
-                mUserId = viewModel.getUserId();
-            } else {
-                mCanModifyComponentStates = false;
-                mConstraint = null;
-                mUserId = UserHandleHidden.myUserId();
-            }
-            ProgressIndicatorCompat.setVisibility(progressIndicator, false);
-            synchronized (mAdapterList) {
-                mAdapterList.clear();
-                mAdapterList.addAll(list);
-                notifyDataSetChanged();
-            }
+            ThreadUtils.postOnBackgroundThread(() -> {
+                mRequestedProperty = mNeededProperty;
+                mCanStartAnyActivity = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.START_ANY_ACTIVITY);
+                if (viewModel != null) {
+                    mCanModifyComponentStates = !mIsExternalApk && SelfPermissions.canModifyAppComponentStates(mUserId, viewModel.getPackageName(), viewModel.isTestOnlyApp());
+                    mConstraint = viewModel.getSearchQuery();
+                    mUserId = viewModel.getUserId();
+                } else {
+                    mCanModifyComponentStates = false;
+                    mConstraint = null;
+                    mUserId = UserHandleHidden.myUserId();
+                }
+                int previousSize = mAdapterList.size();
+                synchronized (mAdapterList) {
+                    mAdapterList.clear();
+                    mAdapterList.addAll(list);
+                }
+                int currentSize = mAdapterList.size();
+                ThreadUtils.postOnMainThread(() -> {
+                    if (isDetached()) return;
+                    ProgressIndicatorCompat.setVisibility(progressIndicator, false);
+                    synchronized (mAdapterList) {
+                        if (previousSize != 0) {
+                            notifyItemRangeChanged(0, previousSize);
+                        }
+                        if (previousSize < currentSize) {
+                            notifyItemRangeInserted(previousSize, currentSize - previousSize);
+                        } else if (previousSize > currentSize) {
+                            notifyItemRangeRemoved(currentSize, previousSize - currentSize);
+                        }
+                    }
+                });
+            });
         }
 
         /**

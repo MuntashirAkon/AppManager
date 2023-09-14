@@ -374,15 +374,31 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
 
         @UiThread
         void setDefaultList(@NonNull List<AppDetailsItem<?>> list) {
-            mRequestedProperty = mNeededProperty;
-            mConstraint = viewModel == null ? null : viewModel.getSearchQuery();
-            mCanModifyAppOpMode = SelfPermissions.canModifyAppOpMode();
-            ProgressIndicatorCompat.setVisibility(progressIndicator, false);
-            synchronized (mAdapterList) {
-                mAdapterList.clear();
-                mAdapterList.addAll(list);
-                notifyDataSetChanged();
-            }
+            ThreadUtils.postOnBackgroundThread(() -> {
+                mRequestedProperty = mNeededProperty;
+                mConstraint = viewModel == null ? null : viewModel.getSearchQuery();
+                mCanModifyAppOpMode = SelfPermissions.canModifyAppOpMode();
+                int previousSize = mAdapterList.size();
+                synchronized (mAdapterList) {
+                    mAdapterList.clear();
+                    mAdapterList.addAll(list);
+                }
+                int currentSize = mAdapterList.size();
+                ThreadUtils.postOnMainThread(() -> {
+                    if (isDetached()) return;
+                    ProgressIndicatorCompat.setVisibility(progressIndicator, false);
+                    synchronized (mAdapterList) {
+                        if (previousSize != 0) {
+                            notifyItemRangeChanged(0, previousSize);
+                        }
+                        if (previousSize < currentSize) {
+                            notifyItemRangeInserted(previousSize, currentSize - previousSize);
+                        } else if (previousSize > currentSize) {
+                            notifyItemRangeRemoved(currentSize, previousSize - currentSize);
+                        }
+                    }
+                });
+            });
         }
 
         /**
