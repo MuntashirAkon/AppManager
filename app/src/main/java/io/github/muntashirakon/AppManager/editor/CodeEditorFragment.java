@@ -257,7 +257,7 @@ public class CodeEditorFragment extends Fragment {
                             requireActivity().onBackPressed();
                         })
                         .setNeutralButton(R.string.save_and_exit, (dialog, which) -> {
-                            saveFile(mEditor.getText());
+                            saveFile();
                             setEnabled(false);
                             requireActivity().onBackPressed();
                         })
@@ -575,18 +575,7 @@ public class CodeEditorFragment extends Fragment {
                 return true;
             }
         } else if (id == R.id.action_save) {
-            if (!mViewModel.isBackedByAFile()) {
-                launchIntentSaver();
-            } else if (mViewModel.canWrite()) {
-                saveFile(mEditor.getText());
-            } else {
-                new MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(R.string.read_only_file)
-                        .setMessage(R.string.read_only_file_warning)
-                        .setPositiveButton(R.string.yes, (dialog, which) -> launchIntentSaver())
-                        .setNegativeButton(R.string.no, null)
-                        .show();
-            }
+            saveFile();
             return true;
         } else if (id == R.id.action_save_as) {
             launchIntentSaver();
@@ -686,8 +675,19 @@ public class CodeEditorFragment extends Fragment {
         mSearchResultCount.setText(getResources().getQuantityString(R.plurals.search_results, count, count));
     }
 
-    private void saveFile(Content content) {
-        saveFile(content, null);
+    private void saveFile() {
+        if (!mViewModel.isBackedByAFile()) {
+            launchIntentSaver();
+        } else if (mViewModel.canWrite()) {
+            saveFile(mEditor.getText(), null);
+        } else {
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.read_only_file)
+                    .setMessage(R.string.read_only_file_warning)
+                    .setPositiveButton(R.string.yes, (dialog, which) -> launchIntentSaver())
+                    .setNegativeButton(R.string.no, null)
+                    .show();
+        }
     }
 
     private void saveFile(Content content, @Nullable Uri uri) {
