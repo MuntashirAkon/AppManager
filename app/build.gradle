@@ -48,9 +48,8 @@ android {
     }
     lint {
         checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
         abortOnError false
+        checkDependencies true
     }
     compileOptions {
         encoding "UTF-8"
@@ -87,7 +86,15 @@ android {
         includeInBundle false
     }
     packagingOptions {
-        exclude 'META-INF/*.version'
+        jniLibs {
+            useLegacyPackaging true
+        }
+        resources {
+            excludes += ['META-INF/*.version']
+        }
+    }
+    buildFeatures {
+        aidl true
     }
 }
 
