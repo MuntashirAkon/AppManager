@@ -10,9 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Process;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -41,18 +39,16 @@ public class MediaDocumentFile extends SingleDocumentFile {
         if (writable) {
             return true;
         }
-        // Ignore if grant doesn't allow write
-        if (Binder.getCallingPid() != Process.myPid() && mContext.checkCallingUriPermission(mUri,
-                Intent.FLAG_GRANT_WRITE_URI_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-            return false;
+        if (Binder.getCallingPid() == Process.myPid() || mContext.checkCallingUriPermission(mUri,
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
+            // Writing is allowed
+            return true;
         }
-        // Ignore documents without MIME
-        if (TextUtils.isEmpty(getRawType(mContext, mUri))) {
-            return false;
-        }
-        // For media documents, check if the underlying file is writable
-        String path = getRealPath(mContext, mUri);
-        return path == null || Paths.get(path).canWrite();
+        // TODO: 15/9/23 Handle actual path in case no write permission is granted
+//        // For media documents, also check if the underlying file is writable as a fallback
+//        String path = getRealPath(mContext, mUri);
+//        return path == null || Paths.get(path).canWrite();
+        return false;
     }
 
     @Override
@@ -60,30 +56,18 @@ public class MediaDocumentFile extends SingleDocumentFile {
         return true;
     }
 
-    @Nullable
-    private static String getRealPath(@NonNull Context context, @NonNull Uri self) {
-        return queryForString(context, self, MediaStore.MediaColumns.DATA, null);
-    }
-
-    @Nullable
-    private static String getRawType(@NonNull Context context, @NonNull Uri self) {
-        return queryForString(context, self, DocumentsContract.Document.COLUMN_MIME_TYPE, null);
-    }
-
-    @Nullable
-    private static String queryForString(@NonNull Context context, @NonNull Uri self, @NonNull String column,
-                                         @Nullable String defaultValue) {
-        final ContentResolver resolver = context.getContentResolver();
-
-        try (Cursor c = resolver.query(self, new String[]{column}, null, null, null)) {
-            if (c != null && c.moveToFirst() && !c.isNull(0)) {
-                return c.getString(0);
-            } else {
-                return defaultValue;
-            }
-        } catch (Exception e) {
-            Log.w(TAG, "Failed query: " + e);
-            return defaultValue;
-        }
-    }
+//    @Nullable
+//    private static String getRealPath(@NonNull Context context, @NonNull Uri self) {
+//        final ContentResolver resolver = context.getContentResolver();
+//        try (Cursor c = resolver.query(self, new String[]{MediaStore.MediaColumns.DATA}, null, null, null)) {
+//            if (c != null && c.moveToFirst() && !c.isNull(0)) {
+//                return c.getString(0);
+//            } else {
+//                return null;
+//            }
+//        } catch (Exception e) {
+//            Log.w(TAG, "Failed query: " + e);
+//            return null;
+//        }
+//    }
 }
