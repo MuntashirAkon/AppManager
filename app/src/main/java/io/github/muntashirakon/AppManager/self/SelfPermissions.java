@@ -222,6 +222,10 @@ public class SelfPermissions {
                 || checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS, callingUid);
     }
 
+    public static boolean isSystem() {
+        return Users.getSelfOrRemoteUid() == Ops.SYSTEM_UID;
+    }
+
     public static boolean isSystemOrRoot() {
         int callingUid = Users.getSelfOrRemoteUid();
         return callingUid == Ops.ROOT_UID || callingUid == Ops.SYSTEM_UID;

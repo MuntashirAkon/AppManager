@@ -1690,6 +1690,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void setDataUsage(@NonNull AppInfoViewModel.AppInfo appInfo) {
         AppUsageStatsManager.DataUsage dataUsage = appInfo.dataUsage;
         if (dataUsage == null) return;
+        // Hide data usage if:
+        // 1. OS is Android 6.0 onwards, AND
+        // 2. The user is not the current user, AND
+        // 3. Remote UID is not system UID
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && mUserId != UserHandleHidden.myUserId()
+                && !SelfPermissions.isSystem()) {
+            return;
+        }
         synchronized (mListItems) {
             if (isDetached()) return;
             mListItems.add(ListItem.newGroupStart(getString(R.string.data_usage_msg)));
