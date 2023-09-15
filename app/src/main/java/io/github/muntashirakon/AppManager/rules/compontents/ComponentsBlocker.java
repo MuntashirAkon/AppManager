@@ -5,7 +5,6 @@ package io.github.muntashirakon.AppManager.rules.compontents;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 
-import android.annotation.SuppressLint;
 import android.app.AppOpsManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -26,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -70,9 +70,6 @@ public final class ComponentsBlocker extends RulesStorageManager {
         SYSTEM_RULES_PATH = Build.VERSION.SDK_INT <= Build.VERSION_CODES.M ? "/data/secure/system/ifw"
                 : "/data/system/ifw";
     }
-
-    @SuppressLint("StaticFieldLeak")
-    private static ComponentsBlocker sInstance;
 
     /**
      * Get a new or existing IMMUTABLE instance of {@link ComponentsBlocker}. The existing instance
@@ -132,23 +129,18 @@ public final class ComponentsBlocker extends RulesStorageManager {
     @NonNull
     public static ComponentsBlocker getInstance(@NonNull String packageName, int userHandle, boolean reloadFromDisk) {
         Objects.requireNonNull(packageName);
-        if (sInstance == null) {
-            sInstance = new ComponentsBlocker(packageName, userHandle);
-        } else if (reloadFromDisk || !Objects.equals(sInstance.packageName, packageName)) {
-            sInstance.close();
-            sInstance = new ComponentsBlocker(packageName, userHandle);
-        }
+        ComponentsBlocker blocker = new ComponentsBlocker(packageName, userHandle);
         if (reloadFromDisk && SelfPermissions.canBlockByIFW()) {
-            sInstance.retrieveDisabledComponents();
-            sInstance.invalidateComponents();
+            blocker.retrieveDisabledComponents();
+            blocker.invalidateComponents();
         }
-        sInstance.readOnly = true;
-        return sInstance;
+        blocker.readOnly = true;
+        return blocker;
     }
 
     @NonNull
     private final AtomicExtendedFile mRulesFile;
-    @NonNull
+    @Nullable
     private Set<String> mComponents;
     @Nullable
     private PackageInfo mPackageInfo;
@@ -165,14 +157,14 @@ public final class ComponentsBlocker extends RulesStorageManager {
         } catch (Throwable e) {
             Log.e(TAG, e.getMessage(), e);
         }
-        mComponents = PackageUtils.collectComponentClassNames(mPackageInfo).keySet();
+        mComponents = mPackageInfo != null ? PackageUtils.collectComponentClassNames(mPackageInfo).keySet() : null;
     }
 
     /**
      * Reload package components
      */
     public void reloadComponents() {
-        mComponents = PackageUtils.collectComponentClassNames(mPackageInfo).keySet();
+        mComponents = mPackageInfo != null ? PackageUtils.collectComponentClassNames(mPackageInfo).keySet() : null;
     }
 
     /**
@@ -524,7 +516,10 @@ public final class ComponentsBlocker extends RulesStorageManager {
      * Check if the components are up-to-date and remove the ones that are not up-to-date.
      */
     private void validateComponents() {
-        // Validate components
+        if (mComponents == null) {
+            // No validation required
+            return;
+        }
         List<ComponentRule> allEntries = getAllComponents();
         for (ComponentRule entry : allEntries) {
             if (!mComponents.contains(entry.name)) {
@@ -540,10 +535,11 @@ public final class ComponentsBlocker extends RulesStorageManager {
      */
     public int invalidateComponents() {
         int invalidated = 0;
+        boolean canCheckExistence = mComponents != null;
         List<ComponentRule> allEntries = getAllComponents();
         for (ComponentRule entry : allEntries) {
             // First check if it actually exists
-            if (!mComponents.contains(entry.name)) {
+            if (canCheckExistence && !mComponents.contains(entry.name)) {
                 removeEntry(entry);
                 ++invalidated;
                 continue;
@@ -590,9 +586,9 @@ public final class ComponentsBlocker extends RulesStorageManager {
         }
         try (InputStream rulesStream = mRulesFile.openRead()) {
             HashMap<String, RuleType> components = ComponentUtils.readIFWRules(rulesStream, packageName);
-            for (String componentName : components.keySet()) {
+            for (Map.Entry<String, RuleType> component : components.entrySet()) {
                 // Override existing rule for the component if it exists
-                setComponent(componentName, components.get(componentName), ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
+                setComponent(component.getKey(), component.getValue(), ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
             }
             Log.d(TAG, "Retrieved components for package %s", packageName);
         } catch (IOException | RemoteException ignored) {
