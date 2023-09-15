@@ -4,7 +4,7 @@
 Contributing
 ============
 
-You are welcome contribute to App Manager! This doesn't mean that you need
+You are welcome contribute to App Manager!  This doesn't mean that you need
 coding skills.  You can contribute to App Manager by creating helpful issues,
 attending discussions, improving documentations and translations, making icon
 for icon packs, adding unrecognised libraries or ad/tracking signatures,
@@ -46,7 +46,7 @@ Rules
   We also support most of the `commit message conventions`_ from Linux.
 
   App Manager is a legal software and its contributions are protected by
-  copyright laws. Consider using real credentials i.e. real name and email as
+  copyright laws. Consider using real credentials ie. real name and email as
   we may be required to delete your valuable contributions in the event of
   introducing new license or adding exceptions to the existing license.
 

@@ -7,12 +7,11 @@ Building App Manager
 Requirements
 ============
 
-* **Hardware:** Any computer with 4GB RAM (8GB recommended) and 20GB storage
+* **Hardware:** Any computer with 8 GB RAM and 20 GB storage
 * **Operating system:** Linux/macOS (no support for Windows)
-* **Software:** Android Studio/IntelliJ IDEA, Gradle, Latex, tex4ht, JDK 11+
-  (JDK 14 recommended)
+* **Software:** Android Studio/IntelliJ IDEA, Gradle, Latex, pandoc, JDK 17+
 * **Active network connection:** Depending on your development environment,
-  this may cross 20 Gigabytes of data.
+  you may need at least 20 GB data package.
 
 macOS
 =====
@@ -81,10 +80,10 @@ Create Bundled App
 
 To create a bundled app in APKS format, run the following command::
 
-  ./scripts/aab_to_apks.sh preRelease
+  ./scripts/aab_to_apks.sh type
 
-Replace ``prePelease`` with ``release`` or ``debug`` based on your
-requirements.  It will ask for KeyStore credentials interactively.
+Replace ``type`` with ``release`` or ``debug`` based on your requirements.
+It will ask for KeyStore credentials interactively.
 
 The script above will also generate a universal APK.
 
