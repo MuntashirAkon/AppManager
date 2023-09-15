@@ -1821,6 +1821,7 @@ public class Path implements Comparable<Path> {
     }
 
     private static class ProxyStorageCallback extends StorageManagerCompat.ProxyFileDescriptorCallbackCompat {
+        @NonNull
         private final FileChannel mChannel;
 
         private ProxyStorageCallback(String path, int modeBits, HandlerThread thread) throws IOException {
@@ -1828,12 +1829,12 @@ public class Path implements Comparable<Path> {
             try {
                 FileSystemManager fs = LocalServices.getFileSystemManager();
                 mChannel = fs.openChannel(path, modeBits);
-            } catch (RemoteException e) {
-                thread.quitSafely();
-                throw new IOException(e);
             } catch (IOException e) {
                 thread.quitSafely();
                 throw e;
+            } catch (Throwable throwable) {
+                thread.quitSafely();
+                throw new IOException(throwable);
             }
         }
 
