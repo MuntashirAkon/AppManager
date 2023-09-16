@@ -50,11 +50,15 @@ public class ProfileManager {
 
     @NonNull
     public static Path requireProfilePathById(@NonNull String profileId) throws IOException {
+        Path profilesDir = getProfilesDir();
+        if (!profilesDir.exists()) {
+            profilesDir.mkdirs();
+        }
         return getProfilesDir().findOrCreateFile(profileId + PROFILE_EXT, null);
     }
 
     public static boolean deleteProfile(@NonNull String profileId) {
-        Path profilePath = ProfileManager.findProfilePathById(profileId);
+        Path profilePath = findProfilePathById(profileId);
         return profilePath == null || !profilePath.exists() || profilePath.delete();
     }
 
@@ -127,7 +131,7 @@ public class ProfileManager {
             e.printStackTrace();
         }
         try {
-            mProfile = AppsProfile.fromPath(ProfileManager.findProfilePathById(profileId));
+            mProfile = AppsProfile.fromPath(findProfilePathById(profileId));
         } catch (IOException e) {
             if (mLogger != null) {
                 mLogger.println(null, e);
