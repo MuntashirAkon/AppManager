@@ -12,21 +12,20 @@ import io.github.muntashirakon.io.Paths;
 
 public class ProfileLogger extends Logger {
     @NonNull
-    public static File getLogFile(@NonNull String profileName) {
-        profileName = ProfileMetaManager.getCleanedProfileName(profileName);
-        return new File(getLoggingDirectory(), "profile_" + profileName + ".log");
+    public static File getLogFile(@NonNull String profileId) {
+        return new File(getLoggingDirectory(), "profile_" + profileId + ".log");
     }
 
-    public ProfileLogger(@NonNull String profileName) throws IOException {
-        super(getLogFile(profileName), true);
+    public ProfileLogger(@NonNull String profileId) throws IOException {
+        super(getLogFile(profileId), true);
     }
 
     @NonNull
-    public static String getAllLogs(@NonNull String profileName) {
-        return Paths.get(getLogFile(profileName)).getContentAsString();
+    public static String getAllLogs(@NonNull String profileId) {
+        return Paths.get(getLogFile(profileId)).getContentAsString();
     }
 
-    public static void clearLogs(@NonNull String profileName) {
-        getLogFile(profileName).delete();
+    public static void clearLogs(@NonNull String profileId) {
+        getLogFile(profileId).delete();
     }
 }

@@ -119,6 +119,20 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             if (status == AppDetailsViewModel.RULE_NOT_APPLIED) {
                 alertView.show();
             } else alertView.hide();
+            if (mBlockingToggler != null) {
+                switch (status) {
+                    case AppDetailsViewModel.RULE_APPLIED:
+                        mBlockingToggler.setVisible(!Prefs.Blocking.globalBlockingEnabled());
+                        mBlockingToggler.setTitle(R.string.menu_remove_rules);
+                        break;
+                    case AppDetailsViewModel.RULE_NOT_APPLIED:
+                        mBlockingToggler.setVisible(!Prefs.Blocking.globalBlockingEnabled());
+                        mBlockingToggler.setTitle(R.string.menu_apply_rules);
+                        break;
+                    case AppDetailsViewModel.RULE_NO_RULE:
+                        mBlockingToggler.setVisible(false);
+                }
+            }
         });
     }
 
@@ -134,20 +148,6 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                 viewModel.getUserId(), viewModel.getPackageName(), viewModel.isTestOnlyApp())) {
             inflater.inflate(R.menu.fragment_app_details_components_actions, menu);
             mBlockingToggler = menu.findItem(R.id.action_toggle_blocking);
-            viewModel.getRuleApplicationStatus().observe(activity, status -> {
-                switch (status) {
-                    case AppDetailsViewModel.RULE_APPLIED:
-                        mBlockingToggler.setVisible(!Prefs.Blocking.globalBlockingEnabled());
-                        mBlockingToggler.setTitle(R.string.menu_remove_rules);
-                        break;
-                    case AppDetailsViewModel.RULE_NOT_APPLIED:
-                        mBlockingToggler.setVisible(!Prefs.Blocking.globalBlockingEnabled());
-                        mBlockingToggler.setTitle(R.string.menu_apply_rules);
-                        break;
-                    case AppDetailsViewModel.RULE_NO_RULE:
-                        mBlockingToggler.setVisible(false);
-                }
-            });
         } else inflater.inflate(R.menu.fragment_app_details_refresh_actions, menu);
     }
 
@@ -220,7 +220,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         ThreadUtils.postOnBackgroundThread(() -> {
             List<UserPackagePair> failedPkgList = block ? ComponentUtils.blockTrackingComponents(userPackagePairs)
                     : ComponentUtils.unblockTrackingComponents(userPackagePairs);
-            if (failedPkgList.size() > 0) {
+            if (!failedPkgList.isEmpty()) {
                 ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(block ? R.string.failed_to_block_trackers
                         : R.string.failed_to_unblock_trackers));
             } else {

@@ -37,11 +37,11 @@ public class LogViewerFragment extends Fragment {
         ExtendedFloatingActionButton efab = view.findViewById(R.id.floatingActionButton);
         UiUtils.applyWindowInsetsAsMargin(efab, false, true);
         efab.setOnClickListener(v -> {
-            ProfileLogger.clearLogs(model.getProfileName());
+            ProfileLogger.clearLogs(model.getProfileId());
             tv.setText("");
         });
         model.getLogs().observe(getViewLifecycleOwner(), logs -> tv.setText(getFormattedLogs(logs)));
-        model.loadLogs();
+        model.observeProfileLoaded().observe(getViewLifecycleOwner(), profileName -> model.loadLogs());
     }
 
     @Override

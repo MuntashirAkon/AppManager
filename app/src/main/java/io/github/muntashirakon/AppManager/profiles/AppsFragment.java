@@ -21,6 +21,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
@@ -28,6 +29,34 @@ import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
 public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+    public static class AppsFragmentItem {
+        @NonNull
+        public final String packageName;
+        @Nullable
+        public CharSequence label;
+        public ApplicationInfo applicationInfo;
+
+        public AppsFragmentItem(@NonNull String packageName) {
+            this.packageName = packageName;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o instanceof String) {
+                return Objects.equals(packageName, o);
+            }
+            if (!(o instanceof AppsFragmentItem)) return false;
+            AppsFragmentItem that = (AppsFragmentItem) o;
+            return Objects.equals(packageName, that.packageName);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(packageName);
+        }
+    }
+
     private AppsProfileActivity mActivity;
     private SwipeRefreshLayout mSwipeRefresh;
     private LinearProgressIndicator mProgressIndicator;
@@ -89,13 +118,13 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     public class AppsRecyclerAdapter extends RecyclerView.Adapter<AppsRecyclerAdapter.ViewHolder> {
         PackageManager pm;
-        final ArrayList<String> packages = new ArrayList<>();
+        final ArrayList<AppsFragmentItem> packages = new ArrayList<>();
 
         private AppsRecyclerAdapter() {
             pm = mActivity.getPackageManager();
         }
 
-        void setList(List<String> list) {
+        void setList(List<AppsFragmentItem> list) {
             packages.clear();
             packages.addAll(list);
             notifyDataSetChanged();
@@ -110,24 +139,16 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            String packageName = packages.get(position);
-            ApplicationInfo info = null;
-            try {
-                info = pm.getApplicationInfo(packageName, 0);
-            } catch (PackageManager.NameNotFoundException ignore) {
-            }
-            holder.icon.setTag(packageName);
-            ImageLoader.getInstance().displayImage(packageName, info, holder.icon);
-            String label;
-            if (info != null) {
-                label = info.loadLabel(pm).toString();
-            } else label = packageName;
-            holder.title.setText(label);
-            if (packageName.equals(label)) {
-                holder.subtitle.setVisibility(View.GONE);
-            } else {
+            AppsFragmentItem fragmentItem = packages.get(position);
+            holder.icon.setTag(fragmentItem);
+            ImageLoader.getInstance().displayImage(fragmentItem.packageName, fragmentItem.applicationInfo, holder.icon);
+            CharSequence label = fragmentItem.label;
+            holder.title.setText(label != null ? label : fragmentItem.packageName);
+            if (label != null) {
                 holder.subtitle.setVisibility(View.VISIBLE);
-                holder.subtitle.setText(packageName);
+                holder.subtitle.setText(fragmentItem.packageName);
+            } else {
+                holder.subtitle.setVisibility(View.GONE);
             }
             holder.itemView.setOnClickListener(v -> {
             });
@@ -136,7 +157,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 popupMenu.setForceShowIcon(true);
                 popupMenu.getMenu().add(R.string.delete).setIcon(R.drawable.ic_trash_can)
                         .setOnMenuItemClickListener(item -> {
-                            mModel.deletePackage(packageName);
+                            mModel.deletePackage(fragmentItem.packageName);
                             return true;
                         });
                 popupMenu.show();
@@ -149,7 +170,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             return packages.size();
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder {
+        public class ViewHolder extends RecyclerView.ViewHolder {
             ImageView icon;
             TextView title;
             TextView subtitle;

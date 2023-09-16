@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceDataStore;
 import androidx.preference.PreferenceFragmentCompat;
@@ -23,6 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
+import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -36,12 +38,16 @@ public class ConfPreferences extends PreferenceFragmentCompat {
     private AppsProfileActivity mActivity;
     private ProfileViewModel mModel;
 
-    @ProfileMetaManager.ProfileState
-    private final List<String> mStates = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
+    @AppsProfile.ProfileState
+    private final List<String> mStates = Arrays.asList(AppsProfile.STATE_ON, AppsProfile.STATE_OFF);
+    @Nullable
     private String[] mComponents;
+    @Nullable
     private String[] mAppOps;
+    @Nullable
     private String[] mPermissions;
-    private ProfileMetaManager.Profile.BackupInfo mBackupInfo;
+    @Nullable
+    private AppsProfile.BackupInfo mBackupInfo;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -194,7 +200,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                     .setView(view)
                     .setPositiveButton(R.string.ok, (dialog, which) -> {
                         if (mBackupInfo == null) {
-                            mBackupInfo = new ProfileMetaManager.Profile.BackupInfo();
+                            mBackupInfo = new AppsProfile.BackupInfo();
                         }
                         CharSequence backupName = editText.getText();
                         BackupFlags backupFlags1 = new BackupFlags(backupFlags.get());
@@ -332,7 +338,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                             .addSelections(mSelectedUsers)
                             .showSelectAll(false)
                             .setPositiveButton(R.string.ok, (dialog, which, selectedUserHandles) -> {
-                                if (selectedUserHandles.size() == 0) {
+                                if (selectedUserHandles.isEmpty()) {
                                     mSelectedUsers = userHandles;
                                 } else mSelectedUsers = selectedUserHandles;
                                 pref.setSummary(TextUtilsCompat.joinSpannable(", " , getUserInfo(users, mSelectedUsers)));

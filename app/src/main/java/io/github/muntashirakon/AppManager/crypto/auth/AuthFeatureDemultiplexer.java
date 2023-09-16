@@ -54,8 +54,8 @@ public class AuthFeatureDemultiplexer extends BaseActivity {
     }
 
     public void launchProfile(@NonNull Intent intent) {
-        String profileName = intent.getStringExtra(ProfileApplierActivity.EXTRA_PROFILE_NAME);
+        String profileId = intent.getStringExtra(ProfileApplierActivity.EXTRA_PROFILE_ID);
         String state = intent.getStringExtra(ProfileApplierActivity.EXTRA_STATE);
-        startActivity(ProfileApplierActivity.getShortcutIntent(getApplicationContext(), profileName, null, state));
+        startActivity(ProfileApplierActivity.getShortcutIntent(getApplicationContext(), profileId, null, state));
     }
 }

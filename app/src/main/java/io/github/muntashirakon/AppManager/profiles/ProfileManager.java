@@ -11,79 +11,133 @@ import android.os.UserHandleHidden;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 public class ProfileManager {
     public static final String TAG = "ProfileManager";
 
+    public static final String PROFILE_EXT = ".am.json";
+
+    @NonNull
+    public static Path getProfilesDir() {
+        Context context = ContextUtils.getContext();
+        return Objects.requireNonNull(Paths.build(context.getFilesDir(), "profiles"));
+    }
+
+    @Nullable
+    public static Path findProfilePathById(@NonNull String profileId) {
+        return Paths.build(getProfilesDir(), profileId + PROFILE_EXT);
+    }
+
+    @NonNull
+    public static Path requireProfilePathById(@NonNull String profileId) throws IOException {
+        return getProfilesDir().findOrCreateFile(profileId + PROFILE_EXT, null);
+    }
+
+    public static boolean deleteProfile(@NonNull String profileId) {
+        Path profilePath = ProfileManager.findProfilePathById(profileId);
+        return profilePath == null || !profilePath.exists() || profilePath.delete();
+    }
+
+    @NonNull
+    public static String getProfileName(@NonNull String filename) {
+        int index = filename.indexOf(PROFILE_EXT);
+        if (index == -1) {
+            // Maybe only ends with .json
+            index = filename.indexOf(".json");
+        }
+        return index != -1 ? filename.substring(0, index) : filename;
+    }
+
     @NonNull
     public static ArrayList<String> getProfileNames() {
-        Path profilesPath = ProfileMetaManager.getProfilesDir();
-        String[] profilesFiles = profilesPath.listFileNames((dir, name) -> name.endsWith(ProfileMetaManager.PROFILE_EXT));
+        Path profilesPath = getProfilesDir();
+        String[] profilesFiles = profilesPath.listFileNames((dir, name) -> name.endsWith(PROFILE_EXT));
         ArrayList<String> profileNames = new ArrayList<>(profilesFiles.length);
         for (String profile : profilesFiles) {
-            int index = profile.indexOf(ProfileMetaManager.PROFILE_EXT);
-            profile = profile.substring(0, index);
-            profileNames.add(profile);
+            profileNames.add(getProfileName(profile));
         }
         return profileNames;
     }
 
     @NonNull
-    public static HashMap<String, CharSequence> getProfileSummaries(@NonNull Context context) {
-        Path profilesPath = ProfileMetaManager.getProfilesDir();
-        String[] profilesFiles = profilesPath.listFileNames((dir, name) -> name.endsWith(ProfileMetaManager.PROFILE_EXT));
-        HashMap<String, CharSequence> profiles = new HashMap<>(profilesFiles.length);
-        for (String profile : profilesFiles) {
+    public static HashMap<AppsProfile, CharSequence> getProfileSummaries(@NonNull Context context) throws IOException, JSONException {
+        Path profilesPath = getProfilesDir();
+        Path[] profilePaths = profilesPath.listFiles((dir, name) -> name.endsWith(PROFILE_EXT));
+        HashMap<AppsProfile, CharSequence> profiles = new HashMap<>(profilePaths.length);
+        for (Path profilePath : profilePaths) {
             if (ThreadUtils.isInterrupted()) {
                 // Thread interrupted, return as is
                 return profiles;
             }
-            int index = profile.indexOf(ProfileMetaManager.PROFILE_EXT);
-            profile = profile.substring(0, index);
-            ProfileMetaManager metaManager = new ProfileMetaManager(profile);
-            profiles.put(metaManager.getProfileName(), metaManager.toLocalizedString(context));
+            AppsProfile profile = AppsProfile.fromPath(profilePath);
+            profiles.put(profile, profile.toLocalizedString(context));
         }
         return profiles;
     }
 
     @NonNull
-    public static List<ProfileMetaManager> getProfileMetadata() {
-        Path profilesPath = ProfileMetaManager.getProfilesDir();
-        String[] profilesFiles = profilesPath.listFileNames((dir, name) -> name.endsWith(ProfileMetaManager.PROFILE_EXT));
-        List<ProfileMetaManager> profiles = new ArrayList<>(profilesFiles.length);
-        for (String profile : profilesFiles) {
-            int index = profile.indexOf(ProfileMetaManager.PROFILE_EXT);
-            profile = profile.substring(0, index);
-            profiles.add(new ProfileMetaManager(profile));
+    public static List<AppsProfile> getProfiles() throws IOException, JSONException {
+        Path profilesPath = getProfilesDir();
+        Path[] profilePaths = profilesPath.listFiles((dir, name) -> name.endsWith(PROFILE_EXT));
+        List<AppsProfile> profiles = new ArrayList<>(profilePaths.length);
+        for (Path profilePath : profilePaths) {
+            profiles.add(AppsProfile.fromPath(profilePath));
         }
         return profiles;
     }
 
     @NonNull
-    private final ProfileMetaManager.Profile mProfile;
+    public static String getProfileIdCompat(@NonNull String profileName) {
+        String profileId = Paths.sanitizeFilename(profileName, "_", Paths.SANITIZE_FLAG_SPACE
+                | Paths.SANITIZE_FLAG_UNIX_ILLEGAL_CHARS | Paths.SANITIZE_FLAG_UNIX_RESERVED
+                | Paths.SANITIZE_FLAG_FAT_ILLEGAL_CHARS);
+        return profileId != null ? profileId : UUID.randomUUID().toString();
+    }
+
+    @NonNull
+    private final AppsProfile mProfile;
     @Nullable
     private ProfileLogger mLogger;
     private boolean mRequiresRestart;
 
-    public ProfileManager(@NonNull ProfileMetaManager metaManager) {
-        mProfile = metaManager.getProfile();
+    public ProfileManager(@NonNull String profileId) throws IOException {
         try {
-            mLogger = new ProfileLogger(mProfile.name);
+            mLogger = new ProfileLogger(profileId);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        try {
+            mProfile = AppsProfile.fromPath(ProfileManager.findProfilePathById(profileId));
+        } catch (IOException e) {
+            if (mLogger != null) {
+                mLogger.println(null, e);
+            }
+            throw e;
+        } catch (JSONException e) {
+            if (mLogger != null) {
+                mLogger.println(null, e);
+            }
+            throw new IOException(e);
         }
     }
 
@@ -120,10 +174,10 @@ public class ProfileManager {
             args.putStringArray(BatchOpsManager.ARG_SIGNATURES, components);
             batchOpsManager.setArgs(args);
             switch (state) {
-                case ProfileMetaManager.STATE_ON:
+                case AppsProfile.STATE_ON:
                     result = batchOpsManager.performOp(BatchOpsManager.OP_BLOCK_COMPONENTS, userPackagePairs, progressHandler);
                     break;
-                case ProfileMetaManager.STATE_OFF:
+                case AppsProfile.STATE_OFF:
                 default:
                     result = batchOpsManager.performOp(BatchOpsManager.OP_UNBLOCK_COMPONENTS, userPackagePairs, progressHandler);
             }
@@ -138,10 +192,10 @@ public class ProfileManager {
             Bundle args = new Bundle();
             args.putIntArray(BatchOpsManager.ARG_APP_OPS, appOps);
             switch (state) {
-                case ProfileMetaManager.STATE_ON:
+                case AppsProfile.STATE_ON:
                     args.putInt(BatchOpsManager.ARG_APP_OP_MODE, AppOpsManager.MODE_IGNORED);
                     break;
-                case ProfileMetaManager.STATE_OFF:
+                case AppsProfile.STATE_OFF:
                 default:
                     args.putInt(BatchOpsManager.ARG_APP_OP_MODE, AppOpsManager.MODE_DEFAULT);
             }
@@ -159,10 +213,10 @@ public class ProfileManager {
             args.putStringArray(BatchOpsManager.ARG_PERMISSIONS, permissions);
             batchOpsManager.setArgs(args);
             switch (state) {
-                case ProfileMetaManager.STATE_ON:
+                case AppsProfile.STATE_ON:
                     result = batchOpsManager.performOp(BatchOpsManager.OP_REVOKE_PERMISSIONS, userPackagePairs, progressHandler);
                     break;
-                case ProfileMetaManager.STATE_OFF:
+                case AppsProfile.STATE_OFF:
                 default:
                     result = batchOpsManager.performOp(BatchOpsManager.OP_GRANT_PERMISSIONS, userPackagePairs, progressHandler);
             }
@@ -180,10 +234,10 @@ public class ProfileManager {
         if (mProfile.freeze) {
             log("====> Started freeze/unfreeze. State: " + state);
             switch (state) {
-                case ProfileMetaManager.STATE_ON:
+                case AppsProfile.STATE_ON:
                     result = batchOpsManager.performOp(BatchOpsManager.OP_FREEZE, userPackagePairs, progressHandler);
                     break;
-                case ProfileMetaManager.STATE_OFF:
+                case AppsProfile.STATE_OFF:
                 default:
                     result = batchOpsManager.performOp(BatchOpsManager.OP_UNFREEZE, userPackagePairs, progressHandler);
             }
@@ -219,10 +273,10 @@ public class ProfileManager {
         if (mProfile.blockTrackers) {
             log("====> Started block trackers. State: " + state);
             switch (state) {
-                case ProfileMetaManager.STATE_ON:
+                case AppsProfile.STATE_ON:
                     result = batchOpsManager.performOp(BatchOpsManager.OP_BLOCK_TRACKERS, userPackagePairs, progressHandler);
                     break;
-                case ProfileMetaManager.STATE_OFF:
+                case AppsProfile.STATE_OFF:
                 default:
                     result = batchOpsManager.performOp(BatchOpsManager.OP_UNBLOCK_TRACKERS, userPackagePairs, progressHandler);
             }
@@ -239,13 +293,13 @@ public class ProfileManager {
             }
         } else Log.d(TAG, "Skipped backup apk.");
         // Backup/restore data
-        ProfileMetaManager.Profile.BackupInfo backupInfo = mProfile.backupData;
+        AppsProfile.BackupInfo backupInfo = mProfile.backupData;
         if (backupInfo != null) {
             log("====> Started backup/restore.");
             BackupFlags backupFlags = new BackupFlags(backupInfo.flags);
             Bundle args = new Bundle();
             if (backupFlags.backupMultiple() && backupInfo.name != null) {
-                if (state.equals(ProfileMetaManager.STATE_OFF)) {
+                if (state.equals(AppsProfile.STATE_OFF)) {
                     args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, new String[]{UserHandleHidden.myUserId()
                             + '_' + backupInfo.name});
                 } else {
@@ -257,10 +311,10 @@ public class ProfileManager {
             args.putInt(BatchOpsManager.ARG_FLAGS, backupFlags.getFlags());
             batchOpsManager.setArgs(args);
             switch (state) {
-                case ProfileMetaManager.STATE_ON:  // Take backup
+                case AppsProfile.STATE_ON:  // Take backup
                     result = batchOpsManager.performOp(BatchOpsManager.OP_BACKUP, userPackagePairs, progressHandler);
                     break;
-                case ProfileMetaManager.STATE_OFF:  // Restore backup
+                case AppsProfile.STATE_OFF:  // Restore backup
                     result = batchOpsManager.performOp(BatchOpsManager.OP_RESTORE_BACKUP, userPackagePairs, progressHandler);
                     mRequiresRestart |= result.requiresRestart();
                     break;

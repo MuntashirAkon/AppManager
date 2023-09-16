@@ -15,15 +15,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+import io.github.muntashirakon.io.Path;
 
 public class AddToProfileDialogFragment extends DialogFragment {
     public static final String TAG = AddToProfileDialogFragment.class.getSimpleName();
@@ -42,12 +48,13 @@ public class AddToProfileDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         String[] packages = requireArguments().getStringArray(ARG_PKGS);
-        List<ProfileMetaManager> profiles = ProfileManager.getProfileMetadata();
+        // TODO: 16/9/23 Migrate to bottom sheet dialog and use loader before retrieving the profiles
+        List<AppsProfile> profiles = ExUtils.requireNonNullElse(ProfileManager::getProfiles, Collections.emptyList());
         List<CharSequence> profileNames = new ArrayList<>(profiles.size());
-        for (ProfileMetaManager profileMetaManager : profiles) {
-            profileNames.add(new SpannableStringBuilder(profileMetaManager.getProfileName()).append("\n")
-                    .append(getSecondaryText(requireContext(), getSmallerText(profileMetaManager
-                            .toLocalizedString(requireContext())))));
+        for (AppsProfile profile : profiles) {
+            profileNames.add(new SpannableStringBuilder(profile.name).append("\n")
+                    .append(getSecondaryText(requireContext(), getSmallerText(
+                            profile.toLocalizedString(requireContext())))));
         }
         AtomicReference<AlertDialog> dialogRef = new AtomicReference<>();
         DialogTitleBuilder titleBuilder = new DialogTitleBuilder(requireContext())
@@ -59,9 +66,8 @@ public class AddToProfileDialogFragment extends DialogFragment {
                         .setNegativeButton(R.string.cancel, null)
                         .setPositiveButton(R.string.go, (dialog, which, profName, isChecked) -> {
                             if (!TextUtils.isEmpty(profName)) {
-                                //noinspection ConstantConditions
-                                startActivity(AppsProfileActivity.getNewProfileIntent(requireContext(), profName.toString(),
-                                        packages));
+                                startActivity(AppsProfileActivity.getNewProfileIntent(requireContext(),
+                                        profName.toString(), packages));
                                 if (dialogRef.get() != null) {
                                     dialogRef.get().dismiss();
                                 }
@@ -71,17 +77,28 @@ public class AddToProfileDialogFragment extends DialogFragment {
         AlertDialog alertDialog = new SearchableMultiChoiceDialogBuilder<>(requireContext(), profiles, profileNames)
                 .setTitle(titleBuilder.build())
                 .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.add, (dialog, which, selectedItems) -> {
-                    for (ProfileMetaManager metaManager : selectedItems) {
-                        try {
-                            metaManager.appendPackages(packages);
-                            metaManager.writeProfile();
+                .setPositiveButton(R.string.add, (dialog, which, selectedItems) -> ThreadUtils.postOnBackgroundThread(() -> {
+                    boolean isSuccess = true;
+                    for (AppsProfile profile : selectedItems) {
+                        Path profilePath = ProfileManager.findProfilePathById(profile.profileId);
+                        if (profilePath == null) {
+                            isSuccess = false;
+                            continue;
+                        }
+                        try (OutputStream os = profilePath.openOutputStream()) {
+                            profile.appendPackages(packages);
+                            profile.write(os);
                         } catch (Throwable e) {
+                            isSuccess = false;
                             e.printStackTrace();
                         }
                     }
-                    UIUtils.displayShortToast(R.string.done);
-                })
+                    if (isSuccess) {
+                        ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.done));
+                    } else {
+                        ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed));
+                    }
+                }))
                 .create();
         dialogRef.set(alertDialog);
         return alertDialog;

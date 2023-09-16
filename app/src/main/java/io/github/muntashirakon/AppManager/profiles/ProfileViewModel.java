@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.profiles;
 
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
 
@@ -9,6 +11,7 @@ import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
@@ -23,6 +26,7 @@ import androidx.lifecycle.MutableLiveData;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,22 +40,26 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.io.Path;
 
 public class ProfileViewModel extends AndroidViewModel {
     private final Object mProfileLock = new Object();
     private final MutableLiveData<Pair<Integer, Boolean>> mToast = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<Pair<CharSequence, ApplicationInfo>>> mInstalledApps = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> mProfileLoaded = new MutableLiveData<>();
+    private final MutableLiveData<String> mProfileLoaded = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mProfileModifiedLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> mLogs = new MutableLiveData<>();
+
+    private MutableLiveData<ArrayList<AppsFragment.AppsFragmentItem>> packagesLiveData;
     @GuardedBy("profileLock")
-    private String mProfileName;
-    private boolean mIsNew;
+    @Nullable
+    private AppsProfile mProfile;
     private boolean mIsModified;
     @Nullable
     private Future<?> mLoadProfileResult;
@@ -95,7 +103,7 @@ public class ProfileViewModel extends AndroidViewModel {
         return mInstalledApps;
     }
 
-    public LiveData<Boolean> observeProfileLoaded() {
+    public LiveData<String> observeProfileLoaded() {
         return mProfileLoaded;
     }
 
@@ -118,7 +126,7 @@ public class ProfileViewModel extends AndroidViewModel {
                 ArrayList<Pair<CharSequence, ApplicationInfo>> itemPairs;
                 List<ApplicationInfo> applicationInfoList;
                 applicationInfoList = PackageUtils.getAllApplications(MATCH_UNINSTALLED_PACKAGES
-                        | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES);
+                        | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES);
                 HashSet<String> applicationInfoHashMap = new HashSet<>();
                 itemPairs = new ArrayList<>();
                 for (ApplicationInfo info : applicationInfoList) {
@@ -131,7 +139,8 @@ public class ProfileViewModel extends AndroidViewModel {
                         return;
                     }
                 }
-                List<String> selectedPackages = Arrays.asList(profile.packages);
+                List<String> selectedPackages = mProfile != null ?
+                        Arrays.asList(mProfile.packages) : Collections.emptyList();
                 Collections.sort(itemPairs, (o1, o2) -> o1.first.toString().compareToIgnoreCase(o2.first.toString()));
                 Collections.sort(itemPairs, (o1, o2) -> {
                     boolean o1Selected = selectedPackages.contains(o1.second.packageName);
@@ -154,116 +163,113 @@ public class ProfileViewModel extends AndroidViewModel {
         });
     }
 
-    @GuardedBy("profileLock")
-    public void setProfileName(String profileName, boolean isNew) {
-        synchronized (mProfileLock) {
-            mProfileName = profileName;
-            mIsNew = isNew;
-            setModified(isNew);
-        }
-    }
-
     public String getProfileName() {
-        return mProfileName;
+        return mProfile.name;
     }
 
-    @GuardedBy("profileLock")
-    private ProfileMetaManager.Profile profile;
-    @GuardedBy("profileLock")
-    private ProfileMetaManager profileMetaManager;
+    public String getProfileId() {
+        return mProfile.profileId;
+    }
 
     @AnyThread
-    public void loadProfile() {
+    public void loadProfile(@NonNull String profileId) {
         if (mLoadProfileResult != null) {
             mLoadProfileResult.cancel(true);
         }
         mLoadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
-            loadProfileInternal();
-            mProfileLoaded.postValue(profileMetaManager == null);
+            loadProfileInternal(profileId);
+            mProfileLoaded.postValue(mProfile != null ? mProfile.name : null);
         });
     }
 
     @AnyThread
     public void loadLogs() {
-        ThreadUtils.postOnBackgroundThread(() -> mLogs.postValue(ProfileLogger.getAllLogs(mProfileName)));
+        if (mProfile == null) {
+            return;
+        }
+        ThreadUtils.postOnBackgroundThread(() -> mLogs.postValue(ProfileLogger.getAllLogs(mProfile.profileId)));
     }
 
     @WorkerThread
     @GuardedBy("profileLock")
-    private void loadProfileInternal() {
+    private void loadProfileInternal(@NonNull String profileId) {
         synchronized (mProfileLock) {
-            profileMetaManager = new ProfileMetaManager(mProfileName);
-            profile = profileMetaManager.getProfile();
+            Path profilePath = ProfileManager.findProfilePathById(profileId);
+            try {
+                mProfile = AppsProfile.fromPath(profilePath);
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @WorkerThread
     @GuardedBy("profileLock")
-    public void cloneProfileInternal(String profileName) {
-        setProfileName(profileName, true);
+    private void cloneProfileInternal(@NonNull String newProfileName) {
         synchronized (mProfileLock) {
-            profileMetaManager = new ProfileMetaManager(profileName, profile);
-            profile = profileMetaManager.getProfile();
+            mProfile = AppsProfile.newProfile(newProfileName, mProfile);
         }
     }
 
     @AnyThread
-    public void cloneProfile(String profileName) {
+    public void cloneProfile(@NonNull String newProfileName) {
         if (mLoadProfileResult != null) {
             mLoadProfileResult.cancel(true);
         }
         mLoadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
-            if (profileMetaManager == null) {
-                loadProfileInternal();
-                if (ThreadUtils.isInterrupted()) {
-                    return;
-                }
+            if (mProfile == null) {
+                mToast.postValue(new Pair<>(R.string.failed, false));
+                return;
             }
-            cloneProfileInternal(profileName);
+            cloneProfileInternal(newProfileName);
             mToast.postValue(new Pair<>(R.string.done, false));
-            mProfileLoaded.postValue(profileMetaManager == null);
+            setModified(true);
+            mProfileLoaded.postValue(mProfile != null ? mProfile.name : null);
         });
     }
 
     @AnyThread
-    public void loadNewProfile(@Nullable String[] initialPackages) {
+    public void loadNewProfile(@NonNull String newProfileName, @Nullable String[] initialPackages) {
         if (mLoadProfileResult != null) {
             mLoadProfileResult.cancel(true);
         }
         mLoadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
-            loadProfileInternal();
-            if (initialPackages != null) {
-                profile.packages = initialPackages;
+            synchronized (mProfileLock) {
+                mProfile = AppsProfile.newProfile(newProfileName, null);
             }
-            mProfileLoaded.postValue(profileMetaManager == null);
+            if (initialPackages != null) {
+                mProfile.packages = initialPackages;
+            }
+            setModified(true);
+            mProfileLoaded.postValue(mProfile != null ? mProfile.name : null);
         });
     }
 
     @AnyThread
-    public void loadAndCloneProfile(@NonNull String profileName) {
+    public void loadAndCloneProfile(@NonNull String profileId, @NonNull String newProfileName) {
         if (mLoadProfileResult != null) {
             mLoadProfileResult.cancel(true);
         }
         mLoadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
-            if (profileMetaManager == null) {
-                loadProfileInternal();
+            if (mProfile == null) {
+                loadProfileInternal(profileId);
                 if (ThreadUtils.isInterrupted()) {
                     return;
                 }
             }
-            cloneProfileInternal(profileName);
-            mProfileLoaded.postValue(profileMetaManager == null);
+            cloneProfileInternal(newProfileName);
+            setModified(true);
+            mProfileLoaded.postValue(mProfile != null ? mProfile.name : null);
         });
     }
-
-    private MutableLiveData<ArrayList<String>> packagesLiveData;
 
     @AnyThread
     @GuardedBy("profileLock")
     public void setPackages(@NonNull List<String> packages) {
+        if (mProfile == null) return;
         setModified(true);
         synchronized (mProfileLock) {
-            profile.packages = packages.toArray(new String[0]);
+            mProfile.packages = packages.toArray(new String[0]);
             Log.e("Packages", "%s", packages);
             loadPackages();
         }
@@ -271,8 +277,9 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @GuardedBy("profileLock")
     public void deletePackage(@NonNull String packageName) {
+        if (mProfile == null) return;
         synchronized (mProfileLock) {
-            profile.packages = Objects.requireNonNull(ArrayUtils.removeString(profile.packages, packageName));
+            mProfile.packages = Objects.requireNonNull(ArrayUtils.removeString(mProfile.packages, packageName));
             loadPackages();
         }
     }
@@ -280,13 +287,17 @@ public class ProfileViewModel extends AndroidViewModel {
     @AnyThread
     @GuardedBy("profileLock")
     public void save(boolean exitOnSave) {
+        if (mProfile == null) return; // Should never happen
         ThreadUtils.postOnBackgroundThread(() -> {
             synchronized (mProfileLock) {
                 try {
-                    profileMetaManager.writeProfile();
-                    mToast.postValue(new Pair<>(R.string.saved_successfully, exitOnSave));
-                    setModified(false);
-                } catch (IOException | JSONException | RemoteException e) {
+                    Path profilePath = ProfileManager.requireProfilePathById(mProfile.profileId);
+                    try (OutputStream os = profilePath.openOutputStream()) {
+                        mProfile.write(os);
+                        mToast.postValue(new Pair<>(R.string.saved_successfully, exitOnSave));
+                        setModified(false);
+                    }
+                } catch (IOException e) {
                     e.printStackTrace();
                     mToast.postValue(new Pair<>(R.string.saving_failed, false));
                 }
@@ -301,7 +312,9 @@ public class ProfileViewModel extends AndroidViewModel {
         }
         mLoadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
             synchronized (mProfileLock) {
-                loadProfileInternal();
+                if (mProfile != null) {
+                    loadProfileInternal(mProfile.profileId);
+                }
                 if (ThreadUtils.isInterrupted()) {
                     return;
                 }
@@ -315,7 +328,8 @@ public class ProfileViewModel extends AndroidViewModel {
     public void delete() {
         ThreadUtils.postOnBackgroundThread(() -> {
             synchronized (mProfileLock) {
-                if (profileMetaManager.deleteProfile()) {
+                if (mProfile == null) return;
+                if (ProfileManager.deleteProfile(mProfile.profileId)) {
                     mToast.postValue(new Pair<>(R.string.deleted_successfully, true));
                 } else mToast.postValue(new Pair<>(R.string.deletion_failed, false));
             }
@@ -323,7 +337,7 @@ public class ProfileViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    public LiveData<ArrayList<String>> getPackages() {
+    public LiveData<ArrayList<AppsFragment.AppsFragmentItem>> getPackages() {
         if (packagesLiveData == null) {
             packagesLiveData = new MutableLiveData<>();
             loadPackages();
@@ -331,8 +345,11 @@ public class ProfileViewModel extends AndroidViewModel {
         return packagesLiveData;
     }
 
-    public ArrayList<String> getCurrentPackages() {
-        return new ArrayList<>(Arrays.asList(profile.packages));
+    public List<String> getCurrentPackages() {
+        if (mProfile == null) {
+            return Collections.emptyList();
+        }
+        return Arrays.asList(mProfile.packages);
     }
 
     @AnyThread
@@ -342,55 +359,89 @@ public class ProfileViewModel extends AndroidViewModel {
         }
         mLoadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
             synchronized (mProfileLock) {
-                if (profileMetaManager == null) loadProfileInternal();
-                packagesLiveData.postValue(new ArrayList<>(Arrays.asList(profile.packages)));
+                if (mProfile == null) return; // Can happen
+                ArrayList<AppsFragment.AppsFragmentItem> oldItems = packagesLiveData.getValue();
+                ArrayList<AppsFragment.AppsFragmentItem> items = new ArrayList<>(mProfile.packages.length);
+                int userId = UserHandleHidden.myUserId();
+                PackageManager pm = getApplication().getPackageManager();
+                for (String packageName : mProfile.packages) {
+                    AppsFragment.AppsFragmentItem item = new AppsFragment.AppsFragmentItem(packageName);
+                    // Check for old item for faster loading in case there are hundreds of items
+                    if (oldItems != null) {
+                        int i = oldItems.indexOf(item);
+                        if (i != -1) {
+                            AppsFragment.AppsFragmentItem oldItem = oldItems.get(i);
+                            if (oldItem.applicationInfo != null) {
+                                item.applicationInfo = oldItem.applicationInfo;
+                            }
+                        }
+                    }
+                    if (item.applicationInfo == null) {
+                        try {
+                            item.applicationInfo = PackageManagerCompat.getApplicationInfo(packageName,
+                                    MATCH_UNINSTALLED_PACKAGES | MATCH_DISABLED_COMPONENTS
+                                            | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
+                        } catch (RemoteException | PackageManager.NameNotFoundException ignore) {
+                        }
+                        if (item.applicationInfo != null) {
+                            item.label = item.applicationInfo.loadLabel(pm);
+                        }
+                        if (Objects.equals(item.label, packageName)) {
+                            item.label = null;
+                        }
+                    }
+                    items.add(item);
+                }
+                packagesLiveData.postValue(items);
             }
         });
     }
 
     public void putBoolean(@NonNull String key, boolean value) {
+        if (mProfile == null) return;
         setModified(true);
         switch (key) {
             case "freeze":
-                profile.freeze = value;
+                mProfile.freeze = value;
                 break;
             case "force_stop":
-                profile.forceStop = value;
+                mProfile.forceStop = value;
                 break;
             case "clear_cache":
-                profile.clearCache = value;
+                mProfile.clearCache = value;
                 break;
             case "clear_data":
-                profile.clearData = value;
+                mProfile.clearData = value;
                 break;
             case "block_trackers":
-                profile.blockTrackers = value;
+                mProfile.blockTrackers = value;
                 break;
             case "save_apk":
-                profile.saveApk = value;
+                mProfile.saveApk = value;
                 break;
             case "allow_routine":
-                profile.allowRoutine = value;
+                mProfile.allowRoutine = value;
                 break;
         }
     }
 
     public boolean getBoolean(@NonNull String key, boolean defValue) {
+        if (mProfile == null) return defValue;
         switch (key) {
             case "freeze":
-                return profile.freeze;
+                return mProfile.freeze;
             case "force_stop":
-                return profile.forceStop;
+                return mProfile.forceStop;
             case "clear_cache":
-                return profile.clearCache;
+                return mProfile.clearCache;
             case "clear_data":
-                return profile.clearData;
+                return mProfile.clearData;
             case "block_trackers":
-                return profile.blockTrackers;
+                return mProfile.blockTrackers;
             case "save_apk":
-                return profile.saveApk;
+                return mProfile.saveApk;
             case "allow_routine":
-                return profile.allowRoutine;
+                return mProfile.allowRoutine;
             default:
                 return defValue;
         }
@@ -398,79 +449,90 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @Nullable
     public String getComment() {
-        return profile.comment;
+        if (mProfile == null) return null;
+        return mProfile.comment;
     }
 
     public void setComment(@Nullable String comment) {
+        if (mProfile == null) return;
         setModified(true);
-        profile.comment = comment;
+        mProfile.comment = comment;
     }
 
-    public void setState(@ProfileMetaManager.ProfileState String state) {
+    public void setState(@AppsProfile.ProfileState String state) {
+        if (mProfile == null) return;
         setModified(true);
-        profile.state = state;
+        mProfile.state = state;
     }
 
     @NonNull
-    @ProfileMetaManager.ProfileState
+    @AppsProfile.ProfileState
     public String getState() {
-        return profile.state == null ? ProfileMetaManager.STATE_OFF : profile.state;
+        return mProfile == null || mProfile.state == null ? AppsProfile.STATE_OFF : mProfile.state;
     }
 
     public void setUsers(@Nullable int[] users) {
+        if (mProfile == null) return;
         setModified(true);
-        profile.users = users;
+        mProfile.users = users;
     }
 
     @WorkerThread
     @NonNull
     public int[] getUsers() {
-        return profile.users == null ? Users.getUsersIds() : profile.users;
+        return mProfile == null || mProfile.users == null ? Users.getUsersIds() : mProfile.users;
     }
 
     public void setExportRules(@Nullable Integer flags) {
+        if (mProfile == null) return;
         setModified(true);
-        profile.exportRules = flags;
+        mProfile.exportRules = flags;
     }
 
     @Nullable
     public Integer getExportRules() {
-        return profile.exportRules;
+        if (mProfile == null) return null;
+        return mProfile.exportRules;
     }
 
     public void setComponents(@Nullable String[] components) {
+        if (mProfile == null) return;
         setModified(true);
-        profile.components = components;
+        mProfile.components = components;
     }
 
     @Nullable
     public String[] getComponents() {
-        return profile.components;
+        if (mProfile == null) return null;
+        return mProfile.components;
     }
 
     public void setPermissions(@Nullable String[] permissions) {
+        if (mProfile == null) return;
         setModified(true);
         if (permissions != null) {
             for (String permission : permissions) {
                 if (permission.equals("*")) {
                     // Wildcard found, ignore all permissions in favour of global wildcard
-                    profile.permissions = new String[]{"*"};
+                    mProfile.permissions = new String[]{"*"};
                     return;
                 }
             }
         }
-        profile.permissions = permissions;
+        mProfile.permissions = permissions;
     }
 
     @Nullable
     public String[] getPermissions() {
-        return profile.permissions;
+        if (mProfile == null) return null;
+        return mProfile.permissions;
     }
 
     public void setAppOps(@Nullable String[] appOpsStr) {
+        if (mProfile == null) return;
         setModified(true);
         if (appOpsStr == null) {
-            profile.appOps = null;
+            mProfile.appOps = null;
             return;
         }
         Set<Integer> selectedAppOps = new HashSet<>(appOpsStr.length);
@@ -479,7 +541,7 @@ public class ProfileViewModel extends AndroidViewModel {
         for (CharSequence appOpStr : appOpsStr) {
             if (appOpStr.equals("*")) {
                 // Wildcard found, ignore all app ops in favour of global wildcard
-                profile.appOps = new int[]{AppOpsManagerCompat.OP_NONE};
+                mProfile.appOps = new int[]{AppOpsManagerCompat.OP_NONE};
                 return;
             }
             try {
@@ -487,12 +549,13 @@ public class ProfileViewModel extends AndroidViewModel {
             } catch (IllegalArgumentException ignore) {
             }
         }
-        profile.appOps = selectedAppOps.size() == 0 ? null : ArrayUtils.convertToIntArray(selectedAppOps);
+        mProfile.appOps = selectedAppOps.isEmpty() ? null : ArrayUtils.convertToIntArray(selectedAppOps);
     }
 
     @Nullable
     public String[] getAppOps() {
-        int[] appOps = profile.appOps;
+        if (mProfile == null) return null;
+        int[] appOps = mProfile.appOps;
         if (appOps == null) return null;
         String[] appOpsStr = new String[appOps.length];
         for (int i = 0; i < appOps.length; ++i) {
@@ -501,13 +564,15 @@ public class ProfileViewModel extends AndroidViewModel {
         return appOpsStr;
     }
 
-    public void setBackupInfo(@Nullable ProfileMetaManager.Profile.BackupInfo backupInfo) {
+    public void setBackupInfo(@Nullable AppsProfile.BackupInfo backupInfo) {
+        if (mProfile == null) return;
         setModified(true);
-        profile.backupData = backupInfo;
+        mProfile.backupData = backupInfo;
     }
 
     @Nullable
-    public ProfileMetaManager.Profile.BackupInfo getBackupInfo() {
-        return profile.backupData;
+    public AppsProfile.BackupInfo getBackupInfo() {
+        if (mProfile == null) return null;
+        return mProfile.backupData;
     }
 }

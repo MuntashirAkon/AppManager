@@ -23,6 +23,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -51,7 +53,8 @@ import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
-import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
+import io.github.muntashirakon.AppManager.profiles.ProfileManager;
+import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -384,22 +387,28 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         synchronized (mApplicationItems) {
             List<ApplicationItem> candidateApplicationItems = new ArrayList<>();
             if (mFilterProfileName != null) {
-                ProfileMetaManager profileMetaManager = new ProfileMetaManager(mFilterProfileName);
-                List<Integer> indexes = new ArrayList<>();
-                for (String packageName : profileMetaManager.getProfile().packages) {
-                    ApplicationItem item = new ApplicationItem();
-                    item.packageName = packageName;
-                    int index = mApplicationItems.indexOf(item);
-                    if (index != -1) {
-                        indexes.add(index);
+                String profileId = ProfileManager.getProfileIdCompat(mFilterProfileName);
+                Path profilePath = ProfileManager.findProfilePathById(profileId);
+                try {
+                    AppsProfile profile = AppsProfile.fromPath(profilePath);
+                    List<Integer> indexes = new ArrayList<>();
+                    for (String packageName : profile.packages) {
+                        ApplicationItem item = new ApplicationItem();
+                        item.packageName = packageName;
+                        int index = mApplicationItems.indexOf(item);
+                        if (index != -1) {
+                            indexes.add(index);
+                        }
                     }
-                }
-                Collections.sort(indexes);
-                for (int index : indexes) {
-                    ApplicationItem item = mApplicationItems.get(index);
-                    if (isAmongSelectedUsers(item)) {
-                        candidateApplicationItems.add(item);
+                    Collections.sort(indexes);
+                    for (int index : indexes) {
+                        ApplicationItem item = mApplicationItems.get(index);
+                        if (isAmongSelectedUsers(item)) {
+                            candidateApplicationItems.add(item);
+                        }
                     }
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
                 }
             } else {
                 for (ApplicationItem item : mApplicationItems) {

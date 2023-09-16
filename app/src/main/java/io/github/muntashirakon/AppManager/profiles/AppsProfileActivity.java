@@ -48,9 +48,9 @@ import io.github.muntashirakon.util.UiUtils;
 public class AppsProfileActivity extends BaseActivity implements NavigationBarView.OnItemSelectedListener {
 
     @NonNull
-    public static Intent getProfileIntent(@NonNull Context context, @NonNull String profileName) {
+    public static Intent getProfileIntent(@NonNull Context context, @NonNull String profileId) {
         Intent intent = new Intent(context, AppsProfileActivity.class);
-        intent.putExtra(EXTRA_PROFILE_NAME, profileName);
+        intent.putExtra(EXTRA_PROFILE_ID, profileId);
         return intent;
     }
 
@@ -70,10 +70,10 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
     }
 
     @NonNull
-    public static Intent getCloneProfileIntent(@NonNull Context context, @NonNull String oldProfileName,
+    public static Intent getCloneProfileIntent(@NonNull Context context, @NonNull String oldProfileId,
                                                @NonNull String newProfileName) {
         Intent intent = new Intent(context, AppsProfileActivity.class);
-        intent.putExtra(EXTRA_PROFILE_NAME, oldProfileName);
+        intent.putExtra(EXTRA_PROFILE_ID, oldProfileId);
         intent.putExtra(EXTRA_NEW_PROFILE_NAME, newProfileName);
         return intent;
     }
@@ -81,7 +81,7 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
     private static final String EXTRA_NEW_PROFILE_NAME = "new_prof";
     private static final String EXTRA_NEW_PROFILE_PACKAGES = "new_prof_pkgs";
     private static final String EXTRA_SHORTCUT_TYPE = "shortcut";
-    private static final String EXTRA_PROFILE_NAME = "prof";
+    private static final String EXTRA_PROFILE_ID = "prof";
     private static final String EXTRA_STATE = "state";
 
     private ViewPager2 mViewPager;
@@ -119,41 +119,35 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
         }
         @Nullable String newProfileName = getIntent().getStringExtra(EXTRA_NEW_PROFILE_NAME);
         @Nullable String[] initialPackages = getIntent().getStringArrayExtra(EXTRA_NEW_PROFILE_PACKAGES);
-        @Nullable String profileName = getIntent().getStringExtra(EXTRA_PROFILE_NAME);
+        @Nullable String profileId = getIntent().getStringExtra(EXTRA_PROFILE_ID);
         if (getIntent().hasExtra(EXTRA_SHORTCUT_TYPE)) {
             // Compatibility mode for shortcut
             @ProfileApplierActivity.ShortcutType String shortcutType = getIntent().getStringExtra(EXTRA_SHORTCUT_TYPE);
             @Nullable String profileState = getIntent().getStringExtra(EXTRA_STATE);
-            if (shortcutType != null && profileName != null) {
-                ProfileApplierActivity.getShortcutIntent(this, profileName, shortcutType, profileState);
+            if (shortcutType != null && profileId != null) {
+                ProfileApplierActivity.getShortcutIntent(this, profileId, shortcutType, profileState);
             }
             // Finish regardless of whether the profile applier launched or not
             finish();
             return;
         }
-        if (profileName == null && newProfileName == null) {
-            // Neither profile name is set
+        if (profileId == null && newProfileName == null) {
+            // Neither profile name/id is set
             finish();
             return;
         }
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(newProfileName != null ? newProfileName : profileName);
-        }
         // Load/clone profile
-        if (newProfileName == null) {
-            model.setProfileName(profileName, false);
-            model.loadProfile();
-        } else {
+        if (newProfileName != null) {
             // New profile requested
-            if (profileName != null) {
+            if (profileId != null) {
                 // Clone profile
-                model.setProfileName(profileName, true);
-                model.loadAndCloneProfile(newProfileName);
+                model.loadAndCloneProfile(profileId, newProfileName);
             } else {
                 // New profile
-                model.setProfileName(newProfileName, true);
-                model.loadNewProfile(initialPackages);
+                model.loadNewProfile(newProfileName, initialPackages);
             }
+        } else {
+            model.loadProfile(profileId);
         }
         mViewPager = findViewById(R.id.pager);
         mViewPager.setOffscreenPageLimit(2);
@@ -194,7 +188,10 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
                     .setNegativeButton(R.string.cancel, null)
                     .show();
         });
-        model.observeProfileLoaded().observe(this, loaded -> progressIndicator.hide());
+        model.observeProfileLoaded().observe(this, profileName -> {
+            setTitle(profileName);
+            progressIndicator.hide();
+        });
     }
 
     @Override
@@ -246,17 +243,11 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
                     .setHelperText(R.string.input_profile_name_description)
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(R.string.go, (dialog, which, profName, isChecked) -> {
-                        progressIndicator.show();
                         if (TextUtils.isEmpty(profName)) {
-                            progressIndicator.hide();
                             Toast.makeText(this, R.string.failed_to_duplicate_profile, Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        if (getSupportActionBar() != null) {
-                            //noinspection ConstantConditions
-                            getSupportActionBar().setTitle(profName.toString());
-                        }
-                        //noinspection ConstantConditions
+                        progressIndicator.show();
                         model.cloneProfile(profName.toString());
                     })
                     .show();
@@ -273,7 +264,8 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
                             return;
                         }
                         Drawable icon = Objects.requireNonNull(ContextCompat.getDrawable(this, R.drawable.ic_launcher_foreground));
-                        ProfileShortcutInfo shortcutInfo = new ProfileShortcutInfo(model.getProfileName(), shortcutTypes[which], shortcutTypesL[which]);
+                        ProfileShortcutInfo shortcutInfo = new ProfileShortcutInfo(model.getProfileId(),
+                                model.getProfileName(), shortcutTypes[which], shortcutTypesL[which]);
                         shortcutInfo.setIcon(UIUtils.getBitmapFromDrawable(icon));
                         CreateShortcutDialogFragment dialog1 = CreateShortcutDialogFragment.getInstance(shortcutInfo);
                         dialog1.show(getSupportFragmentManager(), CreateShortcutDialogFragment.TAG);
