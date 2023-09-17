@@ -13,6 +13,7 @@ import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.net.NetworkCapabilities;
 import android.net.NetworkStats;
 import android.os.Build;
 import android.os.Parcel;
@@ -43,6 +44,7 @@ import io.github.muntashirakon.AppManager.compat.NetworkStatsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.SubscriptionManagerCompat;
 import io.github.muntashirakon.AppManager.compat.UsageStatsManagerCompat;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
@@ -51,6 +53,8 @@ import io.github.muntashirakon.proc.ProcFs;
 import io.github.muntashirakon.proc.ProcUidNetStat;
 
 public class AppUsageStatsManager {
+    public static final String TAG = AppUsageStatsManager.class.getSimpleName();
+
     @Retention(RetentionPolicy.SOURCE)
     @IntDef(value = {
             TRANSPORT_CELLULAR,
@@ -167,7 +171,7 @@ public class AppUsageStatsManager {
             } catch (RemoteException e) {
                 re = e;
             }
-        } while (0 != --_try && packageUsageInfoList.size() == 0);
+        } while (0 != --_try && packageUsageInfoList.isEmpty());
         if (re != null) {
             throw re;
         }
@@ -231,7 +235,9 @@ public class AppUsageStatsManager {
         // Get events
         UsageUtils.TimeInterval interval = UsageUtils.getTimeInterval(usageInterval);
         UsageEvents events = UsageStatsManagerCompat.queryEvents(interval.getStartTime(), interval.getEndTime(), userId);
-        if (events == null) return Collections.emptyList();
+        if (events == null) {
+            return Collections.emptyList();
+        }
         UsageEvents.Event event = new UsageEvents.Event();
         long startTime;
         long endTime;
@@ -395,7 +401,7 @@ public class AppUsageStatsManager {
     }
 
     /**
-     * @return A list of subscriber IDs if networkType is {@link android.net.NetworkCapabilities#TRANSPORT_CELLULAR}, or
+     * @return A list of subscriber IDs if networkType is {@link NetworkCapabilities#TRANSPORT_CELLULAR}, or
      * a singleton array with {@code null} being the only element.
      */
     @SuppressLint({"HardwareIds", "MissingPermission"})
@@ -406,19 +412,26 @@ public class AppUsageStatsManager {
             // Unsupported API
             return Collections.singletonList(null);
         }
-        if (!context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY_SUBSCRIPTION)) {
-            // Unsupported platform
+        PackageManager pm = context.getPackageManager();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && !pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY_SUBSCRIPTION)) {
+            Log.i(TAG, "No such feature: %s", PackageManager.FEATURE_TELEPHONY_SUBSCRIPTION);
+            return Collections.emptyList();
+        } else if (!pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
+            Log.i(TAG, "No such feature: %s", PackageManager.FEATURE_TELEPHONY);
             return Collections.emptyList();
         }
-        if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.READ_PHONE_STATE))
-                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.READ_PRIVILEGED_PHONE_STATE))
-        ) {
-            // Not enough permissions
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.READ_PHONE_STATE)) {
+            Log.w(TAG, "Missing required permission: %s", Manifest.permission.READ_PHONE_STATE);
+            return Collections.emptyList();
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.READ_PRIVILEGED_PHONE_STATE)) {
+            Log.w(TAG, "Missing required permission: %s", ManifestCompat.permission.READ_PRIVILEGED_PHONE_STATE);
             return Collections.singletonList(null);
         }
         List<SubscriptionInfo> subscriptionInfoList = SubscriptionManagerCompat.getActiveSubscriptionInfoList();
         if (subscriptionInfoList == null) {
-            // No telephony services
+            Log.i(TAG, "No subscriptions found.");
             return Collections.singletonList(null);
         }
         List<String> subscriberIds = new ArrayList<>();
@@ -430,6 +443,6 @@ public class AppUsageStatsManager {
             } catch (SecurityException ignore) {
             }
         }
-        return subscriberIds.size() == 0 ? Collections.singletonList(null) : subscriberIds;
+        return subscriberIds.isEmpty() ? Collections.singletonList(null) : subscriberIds;
     }
 }
