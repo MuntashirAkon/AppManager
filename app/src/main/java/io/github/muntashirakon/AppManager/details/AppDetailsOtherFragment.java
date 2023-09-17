@@ -2,11 +2,9 @@
 
 package io.github.muntashirakon.AppManager.details;
 
-import static io.github.muntashirakon.AppManager.details.AppDetailsViewModel.OPEN_GL_ES;
 import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ConfigurationInfo;
@@ -37,7 +35,6 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.divider.MaterialDivider;
 
-import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.security.cert.CertificateEncodingException;
@@ -48,14 +45,14 @@ import java.util.Locale;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsFeatureItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
-import io.github.muntashirakon.AppManager.scanner.NativeLibraries;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsLibraryItem;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
-import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.LocalizedString;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
@@ -165,8 +162,6 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
         private final List<AppDetailsItem<?>> mAdapterList;
         @OtherProperty
         private int mRequestedProperty;
-        @Nullable
-        private String mConstraint;
         private final int mCardColor0;
         private final int mCardColor1;
         private final int mDefaultIndicatorColor;
@@ -182,7 +177,6 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
         void setDefaultList(@NonNull List<AppDetailsItem<?>> list) {
             ThreadUtils.postOnBackgroundThread(() -> {
                 mRequestedProperty = mNeededProperty;
-                mConstraint = viewModel == null ? null : viewModel.getSearchQuery();
                 int previousSize = mAdapterList.size();
                 synchronized (mAdapterList) {
                     mAdapterList.clear();
@@ -283,7 +277,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                     getFeaturesView(context, holder, position);
                     break;
                 case CONFIGURATIONS:
-                    getConfigurationView(context, holder, position);
+                    getConfigurationView(holder, position);
                     break;
                 case SIGNATURES:
                     getSignatureView(context, holder, position);
@@ -309,98 +303,80 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
         }
 
         private void getSharedLibsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
-            AppDetailsItem<?> item;
+            AppDetailsLibraryItem<?> item;
             synchronized (mAdapterList) {
-                item = mAdapterList.get(index);
+                item = (AppDetailsLibraryItem<?>) mAdapterList.get(index);
             }
             holder.textView1.setText(item.name);
-            if (item.mainItem instanceof File) {
-                File libFile = (File) item.mainItem;
-                StringBuilder sb = new StringBuilder(Formatter.formatFileSize(context, libFile.length()))
-                        .append("\n").append(libFile.getAbsolutePath());
-                holder.textView2.setText(sb);
-                holder.chipType.setText(libFile.getName().endsWith(".so") ? "SO" : "JAR");
-                holder.launchBtn.setVisibility(View.VISIBLE);
-                holder.launchBtn.setIconResource(R.drawable.ic_open_in_new);
-                holder.launchBtn.setOnClickListener(openAsFolderInFM(context, libFile.getParent()));
-            } else if (item.mainItem instanceof PackageInfo) {
-                PackageInfo packageInfo = (PackageInfo) item.mainItem;
-                String apkFileStr = packageInfo.applicationInfo.publicSourceDir;
-                Path apkFile = apkFileStr != null ? Paths.get(apkFileStr) : null;
-                StringBuilder sb = new StringBuilder()
-                        .append(packageInfo.packageName)
-                        .append("\n");
-                if (apkFile != null) {
-                    sb.append(Formatter.formatFileSize(context, apkFile.length())).append(", ");
+            holder.chipType.setText(item.type);
+            switch (item.type) {
+                case "APK": {
+                    PackageInfo packageInfo = (PackageInfo) item.mainItem;
+                    StringBuilder sb = new StringBuilder()
+                            .append(packageInfo.packageName)
+                            .append("\n");
+                    if (item.path != null) {
+                        sb.append(Formatter.formatFileSize(context, item.size)).append(", ");
+                    }
+                    sb.append(getString(R.string.version_name_with_code, packageInfo.versionName,
+                            PackageInfoCompat.getLongVersionCode(packageInfo)));
+                    if (item.path != null) {
+                        sb.append("\n").append(item.path);
+                        holder.launchBtn.setVisibility(View.VISIBLE);
+                        holder.launchBtn.setIconResource(io.github.muntashirakon.ui.R.drawable.ic_information);
+                        holder.launchBtn.setOnClickListener(v -> {
+                            Intent intent = AppDetailsActivity.getIntent(context, Paths.get(item.path), false);
+                            startActivity(intent);
+                        });
+                    } else holder.launchBtn.setVisibility(View.GONE);
+                    holder.textView2.setText(sb);
+                    break;
                 }
-                sb.append(getString(R.string.version_name_with_code, packageInfo.versionName,
-                                PackageInfoCompat.getLongVersionCode(packageInfo)));
-                if (apkFile != null) {
-                    sb.append("\n").append(apkFile.getFilePath());
+                case "⚠️":
+                case "SHARED":
+                case "EXEC":
+                case "SO": {
+                    if (item.path == null) {
+                        // Native lib
+                        holder.textView2.setText(((LocalizedString) item.mainItem).toLocalizedString(context));
+                        holder.launchBtn.setVisibility(View.GONE);
+                        break;
+                    } // else shared lib, fallthrough
+                }
+                case "JAR": {
+                    StringBuilder sb = new StringBuilder(Formatter.formatFileSize(context, item.size))
+                            .append("\n").append(item.path);
+                    holder.textView2.setText(sb);
                     holder.launchBtn.setVisibility(View.VISIBLE);
-                    holder.launchBtn.setIconResource(io.github.muntashirakon.ui.R.drawable.ic_information);
-                    holder.launchBtn.setOnClickListener(v -> {
-                        Intent intent = AppDetailsActivity.getIntent(context, apkFile, false);
-                        startActivity(intent);
-                    });
-                } else holder.launchBtn.setVisibility(View.GONE);
-                holder.textView2.setText(sb);
-                holder.chipType.setText("APK");
-            } else if (item.mainItem instanceof NativeLibraries.ElfLib) {
-                holder.textView2.setText(((LocalizedString) item.mainItem).toLocalizedString(context));
-                String type;
-                switch (((NativeLibraries.ElfLib) item.mainItem).getType()) {
-                    case NativeLibraries.ElfLib.TYPE_DYN:
-                        type = "SHARED";
-                        break;
-                    case NativeLibraries.ElfLib.TYPE_EXEC:
-                        type = "EXEC";
-                        break;
-                    default:
-                        type = "SO";
+                    holder.launchBtn.setIconResource(R.drawable.ic_open_in_new);
+                    holder.launchBtn.setOnClickListener(openAsFolderInFM(context, item.path.getParent()));
+                    break;
                 }
-                holder.chipType.setText(type);
-                holder.launchBtn.setVisibility(View.GONE);
-            } else if (item.mainItem instanceof NativeLibraries.InvalidLib) {
-                holder.textView2.setText(((LocalizedString) item.mainItem).toLocalizedString(context));
-                holder.chipType.setText("⚠️");
-                holder.launchBtn.setVisibility(View.GONE);
             }
             holder.divider.setDividerColor(mDefaultIndicatorColor);
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
-        @SuppressLint("SetTextI18n")
         private void getFeaturesView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             MaterialCardView view = (MaterialCardView) holder.itemView;
-            final FeatureInfo featureInfo;
+            final AppDetailsFeatureItem item;
             synchronized (mAdapterList) {
-                featureInfo = (FeatureInfo) mAdapterList.get(index).mainItem;
+                item = (AppDetailsFeatureItem) mAdapterList.get(index);
             }
-            // Currently, feature only has a single flag, which specifies whether the feature is required.
-            boolean isRequired = (featureInfo.flags & FeatureInfo.FLAG_REQUIRED) != 0;
-            boolean isAvailable;
-            if (featureInfo.name.equals(OPEN_GL_ES)) {
-                ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-                int glEsVersion = activityManager.getDeviceConfigurationInfo().reqGlEsVersion;
-                isAvailable = featureInfo.reqGlEsVersion <= glEsVersion;
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                isAvailable = packageManager.hasSystemFeature(featureInfo.name, featureInfo.version);
-            } else {
-                isAvailable = packageManager.hasSystemFeature(featureInfo.name);
-            }
+            FeatureInfo featureInfo = item.mainItem;
             // Set background
-            if (isRequired && !isAvailable) {
+            if (item.required && !item.available) {
                 view.setCardBackgroundColor(ContextCompat.getColor(context, io.github.muntashirakon.ui.R.color.red));
-            } else if (!isAvailable) {
+            } else if (!item.available) {
                 view.setCardBackgroundColor(ContextCompat.getColor(context, io.github.muntashirakon.ui.R.color.disabled_user));
             } else {
                 view.setCardBackgroundColor(index % 2 == 0 ? mCardColor1 : mCardColor0);
             }
-            if (featureInfo.name.equals(OPEN_GL_ES)) {
+            // Set feature name
+            if (featureInfo.name == null) {
                 // OpenGL ES
                 if (featureInfo.reqGlEsVersion == FeatureInfo.GL_ES_VERSION_UNDEFINED) {
-                    holder.textView1.setText(featureInfo.name);
+                    holder.textView1.setText(item.name);
                 } else {
                     // GL ES version
                     holder.textView1.setText(String.format(Locale.ROOT, "%s %s",
@@ -408,9 +384,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                 }
                 holder.textView3.setVisibility(View.GONE);
                 return;
-            }
-            // Set feature name
-            holder.textView1.setText(featureInfo.name);
+            } else holder.textView1.setText(item.name);
             // Feature version: 0 means any version
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && featureInfo.version != 0) {
                 holder.textView3.setVisibility(View.VISIBLE);
@@ -418,7 +392,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
             } else holder.textView3.setVisibility(View.GONE);
         }
 
-        private void getConfigurationView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
+        private void getConfigurationView(@NonNull ViewHolder holder, int index) {
             MaterialCardView view = (MaterialCardView) holder.itemView;
             final ConfigurationInfo configurationInfo;
             synchronized (mAdapterList) {

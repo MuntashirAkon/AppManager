@@ -79,6 +79,8 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
     private boolean mIsExternalApk;
     @PermissionProperty
     private int mNeededProperty;
+    private int mSortOrder;
+    private String mSearchQuery;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,6 +115,8 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             alertView.postDelayed(() -> alertView.hide(), 15_000);
         }
         if (viewModel == null) return;
+        mSortOrder = viewModel.getSortOrder(mNeededProperty);
+        mSearchQuery = viewModel.getSearchQuery();
         mPackageName = viewModel.getPackageName();
         viewModel.get(mNeededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (appDetailsItems != null && mAdapter != null && viewModel.isPackageExist()) {
@@ -280,13 +284,28 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if (viewModel != null) {
+            mSortOrder = viewModel.getSortOrder(mNeededProperty);
+            mSearchQuery = viewModel.getSearchQuery();
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (activity.searchView != null) {
-            activity.searchView.setVisibility(View.VISIBLE);
+            if (!activity.searchView.isShown()) {
+                activity.searchView.setVisibility(View.VISIBLE);
+            }
             activity.searchView.setOnQueryTextListener(this);
             if (viewModel != null) {
-                viewModel.filterAndSortItems(mNeededProperty);
+                int sortOrder = viewModel.getSortOrder(mNeededProperty);
+                String searchQuery = viewModel.getSearchQuery();
+                if (sortOrder != mSortOrder || !Objects.equals(searchQuery, mSearchQuery)) {
+                    viewModel.filterAndSortItems(mNeededProperty);
+                }
             }
         }
     }

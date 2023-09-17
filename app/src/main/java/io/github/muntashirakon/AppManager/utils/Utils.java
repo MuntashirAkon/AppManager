@@ -71,7 +71,7 @@ public class Utils {
         String[] strings = str.split("\\s");
         StringBuilder builder = new StringBuilder();
         for (String s : strings) {
-            if (s.length() > 0) builder.append(s.charAt(0));
+            if (!s.isEmpty()) builder.append(s.charAt(0));
         }
         return builder.toString().toLowerCase(Locale.ROOT);
     }
@@ -79,7 +79,7 @@ public class Utils {
     // https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/commons/lang3/StringUtils.java#L7514
     @NonNull
     public static String[] splitByCharacterType(@NonNull String str, boolean camelCase) {
-        if (str.length() == 0) return EmptyArray.STRING;
+        if (str.isEmpty()) return EmptyArray.STRING;
         char[] c = str.toCharArray();
         List<String> list = new ArrayList<>();
         int tokenStart = 0;
@@ -256,7 +256,7 @@ public class Utils {
             builder.append("Mode changed, ");
         checkStringBuilderEnd(builder);
         String result = builder.toString();
-        return result.equals("") ? "null" : result;
+        return result.isEmpty() ? "null" : result;
     }
 
     // FIXME Add translation support
@@ -282,7 +282,7 @@ public class Utils {
         }
         checkStringBuilderEnd(builder);
         String result = builder.toString();
-        return TextUtils.isEmpty(result) ? "" : ("\u2691 " + result);
+        return TextUtils.isEmpty(result) ? "" : ("⚑ " + result);
     }
 
     // FIXME Add translation support
@@ -323,7 +323,7 @@ public class Utils {
             builder.append("NotNeeded, ");
         checkStringBuilderEnd(builder);
         String result = builder.toString();
-        return result.equals("") ? "\u2690" : "\u2691 " + result;
+        return result.isEmpty() ? "⚐" : "⚑ " + result;
     }
 
     // FIXME Add translation support
@@ -392,8 +392,8 @@ public class Utils {
         if ((flag & ConfigurationInfo.INPUT_FEATURE_FIVE_WAY_NAV) != 0)
             string += "Five way nav";
         if ((flag & ConfigurationInfo.INPUT_FEATURE_HARD_KEYBOARD) != 0)
-            string += (string.length() == 0 ? "" : "|") + "Hard keyboard";
-        return string.length() == 0 ? "null" : string;
+            string += (string.isEmpty() ? "" : "|") + "Hard keyboard";
+        return string.isEmpty() ? "null" : string;
     }
 
     @StringRes

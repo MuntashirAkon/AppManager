@@ -12,6 +12,7 @@ import android.app.ActivityManager;
 import android.app.AppOpsManager;
 import android.app.Application;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
@@ -74,7 +75,9 @@ import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsAppOpItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsDefinedPermissionItem;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsFeatureItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsLibraryItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsServiceItem;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -94,12 +97,14 @@ import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.scanner.NativeLibraries;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.IoUtils;
 
 public class AppDetailsViewModel extends AndroidViewModel {
@@ -1159,9 +1164,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 mActivities.postValue(mActivityItems);
                 return;
             }
+            CharSequence appLabel = packageInfo.applicationInfo.loadLabel(mPackageManager);
+            boolean canStartAnyActivity = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.START_ANY_ACTIVITY);
             for (ActivityInfo activityInfo : packageInfo.activities) {
                 AppDetailsComponentItem componentItem = new AppDetailsComponentItem(activityInfo);
                 componentItem.name = activityInfo.name;
+                componentItem.label = getComponentLabel(activityInfo, appLabel);
                 synchronized (mBlockerLocker) {
                     if (!mExternalApk) {
                         componentItem.setRule(mBlocker.getComponent(activityInfo.name));
@@ -1169,6 +1177,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
                 componentItem.setTracker(ComponentUtils.isTracker(activityInfo.name));
                 componentItem.setDisabled(isComponentDisabled(activityInfo));
+                // An activity is allowed to launch only if it's
+                // 1) Not from an external APK
+                // 2) Root enabled or the activity is exportable
+                // 3) App or the activity is not disabled and/or blocked
+                componentItem.canLaunch = !mExternalApk && (canStartAnyActivity || activityInfo.exported)
+                        && !componentItem.isDisabled() && !componentItem.isBlocked();
                 mActivityItems.add(componentItem);
             }
             mActivities.postValue(filterAndSortComponents(mActivityItems));
@@ -1193,9 +1207,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
             List<ActivityManager.RunningServiceInfo> runningServiceInfoList;
             runningServiceInfoList = ActivityManagerCompat.getRunningServices(mPackageName, mUserId);
+            CharSequence appLabel = packageInfo.applicationInfo.loadLabel(mPackageManager);
             for (ServiceInfo serviceInfo : packageInfo.services) {
                 AppDetailsServiceItem serviceItem = new AppDetailsServiceItem(serviceInfo);
                 serviceItem.name = serviceInfo.name;
+                serviceItem.label = getComponentLabel(serviceInfo, appLabel);
                 synchronized (mBlockerLocker) {
                     if (!mExternalApk) {
                         serviceItem.setRule(mBlocker.getComponent(serviceInfo.name));
@@ -1208,6 +1224,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         serviceItem.setRunningServiceInfo(runningServiceInfo);
                     }
                 }
+                // A service is allowed to launch only if it's
+                // 1) Not from an external APK
+                // 2) Root enabled or the service is exportable without any permission
+                // 3) App or the service is not disabled and/or blocked
+                serviceItem.canLaunch = !mExternalApk && canLaunchService(serviceInfo) && !serviceItem.isDisabled()
+                        && !serviceItem.isBlocked();
                 mServiceItems.add(serviceItem);
             }
             mServices.postValue(filterAndSortComponents(mServiceItems));
@@ -1230,9 +1252,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 mReceivers.postValue(Collections.emptyList());
                 return;
             }
+            CharSequence appLabel = packageInfo.applicationInfo.loadLabel(mPackageManager);
             for (ActivityInfo activityInfo : packageInfo.receivers) {
                 AppDetailsComponentItem componentItem = new AppDetailsComponentItem(activityInfo);
                 componentItem.name = activityInfo.name;
+                componentItem.label = getComponentLabel(activityInfo, appLabel);
                 synchronized (mBlockerLocker) {
                     if (!mExternalApk) {
                         componentItem.setRule(mBlocker.getComponent(activityInfo.name));
@@ -1262,9 +1286,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 mProviders.postValue(Collections.emptyList());
                 return;
             }
+            CharSequence appLabel = packageInfo.applicationInfo.loadLabel(mPackageManager);
             for (ProviderInfo providerInfo : packageInfo.providers) {
                 AppDetailsComponentItem componentItem = new AppDetailsComponentItem(providerInfo);
                 componentItem.name = providerInfo.name;
+                componentItem.label = getComponentLabel(providerInfo, appLabel);
                 synchronized (mBlockerLocker) {
                     if (!mExternalApk) {
                         componentItem.setRule(mBlocker.getComponent(providerInfo.name));
@@ -1276,6 +1302,17 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
             mProviders.postValue(filterAndSortComponents(mProviderItems));
         }
+    }
+
+    @NonNull
+    private CharSequence getComponentLabel(@NonNull ComponentInfo componentInfo, @NonNull CharSequence appLabel) {
+        CharSequence componentLabel = componentInfo.loadLabel(mPackageManager);
+        if (componentLabel.equals(componentInfo.name) || componentLabel.equals(appLabel)) {
+            // Component label is as good as null
+            componentLabel = null;
+        }
+        return componentLabel != null ? componentLabel : Utils.camelCaseToSpaceSeparatedString(
+                Utils.getLastComponent(componentInfo.name));
     }
 
     @SuppressLint("SwitchIntDef")
@@ -1320,6 +1357,20 @@ public class AppDetailsViewModel extends AndroidViewModel {
         } catch (Throwable ignore) {
         }
         return !componentInfo.isEnabled();
+    }
+
+    private static boolean canLaunchService(@NonNull ServiceInfo info) {
+        if (info.exported && info.permission == null) {
+            return true;
+        }
+        int uid = Users.getSelfOrRemoteUid();
+        if (uid == Ops.ROOT_UID || (uid == Ops.SYSTEM_UID && info.permission == null)) {
+            return true;
+        }
+        if (info.permission == null) {
+            return false;
+        }
+        return SelfPermissions.checkSelfOrRemotePermission(info.permission, uid);
     }
 
     @NonNull
@@ -1664,13 +1715,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    private final MutableLiveData<List<AppDetailsItem<FeatureInfo>>> mFeatures = new MutableLiveData<>();
-
-    public static final String OPEN_GL_ES = "OpenGL ES";
+    private final MutableLiveData<List<AppDetailsFeatureItem>> mFeatures = new MutableLiveData<>();
 
     @WorkerThread
     private void loadFeatures() {
-        List<AppDetailsItem<FeatureInfo>> appDetailsItems = new ArrayList<>();
+        List<AppDetailsFeatureItem> appDetailsItems = new ArrayList<>();
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null || packageInfo.reqFeatures == null) {
             // No required features
@@ -1678,14 +1727,27 @@ public class AppDetailsViewModel extends AndroidViewModel {
             return;
         }
         for (FeatureInfo fi : packageInfo.reqFeatures) {
-            if (fi.name == null) fi.name = OPEN_GL_ES;
+            if (fi.name == null) fi.name = AppDetailsFeatureItem.OPEN_GL_ES;
         }
-        Arrays.sort(packageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
         for (FeatureInfo featureInfo : packageInfo.reqFeatures) {
-            AppDetailsItem<FeatureInfo> appDetailsItem = new AppDetailsItem<>(featureInfo);
-            appDetailsItem.name = featureInfo.name;
+            String name = featureInfo.name;
+            boolean isAvailable;
+            if (name == null) {
+                // At most, only one name could be null
+                name = AppDetailsFeatureItem.OPEN_GL_ES;
+                ActivityManager activityManager = (ActivityManager) getApplication().getSystemService(Context.ACTIVITY_SERVICE);
+                int glEsVersion = activityManager.getDeviceConfigurationInfo().reqGlEsVersion;
+                isAvailable = featureInfo.reqGlEsVersion <= glEsVersion;
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                isAvailable = mPackageManager.hasSystemFeature(featureInfo.name, featureInfo.version);
+            } else {
+                isAvailable = mPackageManager.hasSystemFeature(featureInfo.name);
+            }
+            AppDetailsFeatureItem appDetailsItem = new AppDetailsFeatureItem(featureInfo, isAvailable);
             appDetailsItems.add(appDetailsItem);
+            appDetailsItem.name = name;
         }
+        Collections.sort(appDetailsItems, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
         mFeatures.postValue(appDetailsItems);
     }
 
@@ -1782,36 +1844,42 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    private final MutableLiveData<List<AppDetailsItem<?>>> mSharedLibraries = new MutableLiveData<>();
+    private final MutableLiveData<List<AppDetailsLibraryItem<?>>> mSharedLibraries = new MutableLiveData<>();
 
     @WorkerThread
     private void loadSharedLibraries() {
-        List<AppDetailsItem<?>> appDetailsItems = new ArrayList<>();
+        List<AppDetailsLibraryItem<?>> appDetailsItems = new ArrayList<>();
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null || mApkFile == null) {
             mSharedLibraries.postValue(appDetailsItems);
             return;
         }
+        // Add shared libraries including the static shared libraries (which are basically APK files)
         ApplicationInfo info = packageInfo.applicationInfo;
         if (info.sharedLibraryFiles != null) {
             for (String sharedLibrary : info.sharedLibraryFiles) {
                 File sharedLib = new File(sharedLibrary);
-                AppDetailsItem<?> appDetailsItem = null;
+                AppDetailsLibraryItem<?> appDetailsItem = null;
                 if (sharedLib.exists() && sharedLib.getName().endsWith(".apk")) {
                     // APK file
                     PackageInfo packageArchiveInfo = mPackageManager.getPackageArchiveInfo(sharedLibrary, 0);
                     if (packageArchiveInfo != null) {
-                        appDetailsItem = new AppDetailsItem<>(packageArchiveInfo);
+                        appDetailsItem = new AppDetailsLibraryItem<>(packageArchiveInfo);
                         appDetailsItem.name = packageArchiveInfo.applicationInfo.loadLabel(mPackageManager).toString();
+                        appDetailsItem.type = "APK";
                     }
                 }
                 if (appDetailsItem == null) {
-                    appDetailsItem = new AppDetailsItem<>(sharedLib);
+                    appDetailsItem = new AppDetailsLibraryItem<>(sharedLib);
                     appDetailsItem.name = sharedLib.getName();
+                    appDetailsItem.type = sharedLibrary.endsWith(".so") ? "SO" : "JAR";
                 }
+                appDetailsItem.path = sharedLib;
+                appDetailsItem.size = sharedLib.length();
                 appDetailsItems.add(appDetailsItem);
             }
         }
+        // Add native libraries (shared objects)
         List<ApkFile.Entry> entries = mApkFile.getEntries();
         for (ApkFile.Entry entry : entries) {
             if (entry.type == ApkFile.APK_BASE
@@ -1828,8 +1896,20 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         nativeLibraries = new NativeLibraries(entry.getFile(false));
                     }
                     for (NativeLibraries.NativeLib nativeLib : nativeLibraries.getLibs()) {
-                        AppDetailsItem<?> appDetailsItem = new AppDetailsItem<>(nativeLib);
+                        AppDetailsLibraryItem<?> appDetailsItem = new AppDetailsLibraryItem<>(nativeLib);
                         appDetailsItem.name = nativeLib.getName();
+                        if (nativeLib instanceof NativeLibraries.ElfLib) {
+                            switch (((NativeLibraries.ElfLib) nativeLib).getType()) {
+                                case NativeLibraries.ElfLib.TYPE_DYN:
+                                    appDetailsItem.type = "SHARED";
+                                    break;
+                                case NativeLibraries.ElfLib.TYPE_EXEC:
+                                    appDetailsItem.type = "EXEC";
+                                    break;
+                                default:
+                                    appDetailsItem.type = "SO";
+                            }
+                        } else appDetailsItem.type = "⚠️";
                         appDetailsItems.add(appDetailsItem);
                     }
                 } catch (Throwable th) {

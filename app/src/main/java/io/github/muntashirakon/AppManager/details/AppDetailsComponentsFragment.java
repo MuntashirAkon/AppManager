@@ -11,7 +11,6 @@ import android.content.pm.ServiceInfo;
 import android.os.Bundle;
 import android.os.PatternMatcher;
 import android.os.UserHandleHidden;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
@@ -57,11 +57,9 @@ import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -87,6 +85,8 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
     private boolean mIsExternalApk;
     @ComponentProperty
     private int mNeededProperty;
+    private int mSortOrder;
+    private String mSearchQuery;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,6 +106,8 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         alertView.setText(helpStringRes);
         alertView.setVisibility(View.GONE);
         if (viewModel == null) return;
+        mSortOrder = viewModel.getSortOrder(mNeededProperty);
+        mSearchQuery = viewModel.getSearchQuery();
         mPackageName = viewModel.getPackageName();
         viewModel.get(mNeededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (appDetailsItems != null && mAdapter != null && viewModel.isPackageExist()) {
@@ -119,20 +121,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             if (status == AppDetailsViewModel.RULE_NOT_APPLIED) {
                 alertView.show();
             } else alertView.hide();
-            if (mBlockingToggler != null) {
-                switch (status) {
-                    case AppDetailsViewModel.RULE_APPLIED:
-                        mBlockingToggler.setVisible(!Prefs.Blocking.globalBlockingEnabled());
-                        mBlockingToggler.setTitle(R.string.menu_remove_rules);
-                        break;
-                    case AppDetailsViewModel.RULE_NOT_APPLIED:
-                        mBlockingToggler.setVisible(!Prefs.Blocking.globalBlockingEnabled());
-                        mBlockingToggler.setTitle(R.string.menu_apply_rules);
-                        break;
-                    case AppDetailsViewModel.RULE_NO_RULE:
-                        mBlockingToggler.setVisible(false);
-                }
-            }
+            updateBlockMenuItem(status);
         });
     }
 
@@ -159,6 +148,10 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         MenuItem sortItem = menu.findItem(AppDetailsFragment.sSortMenuItemIdsMap[viewModel.getSortOrder(mNeededProperty)]);
         if (sortItem != null) {
             sortItem.setChecked(true);
+        }
+        Integer status = viewModel.getRuleApplicationStatus().getValue();
+        if (status != null) {
+            updateBlockMenuItem(status);
         }
     }
 
@@ -193,13 +186,28 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if (viewModel != null) {
+            mSortOrder = viewModel.getSortOrder(mNeededProperty);
+            mSearchQuery = viewModel.getSearchQuery();
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (activity.searchView != null) {
-            activity.searchView.setVisibility(View.VISIBLE);
+            if (!activity.searchView.isShown()) {
+                activity.searchView.setVisibility(View.VISIBLE);
+            }
             activity.searchView.setOnQueryTextListener(this);
             if (viewModel != null) {
-                viewModel.filterAndSortItems(mNeededProperty);
+                int sortOrder = viewModel.getSortOrder(mNeededProperty);
+                String searchQuery = viewModel.getSearchQuery();
+                if (sortOrder != mSortOrder || !Objects.equals(searchQuery, mSearchQuery)) {
+                    viewModel.filterAndSortItems(mNeededProperty);
+                }
             }
         }
     }
@@ -212,7 +220,24 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         return true;
     }
 
-    public void blockUnblockTrackers(boolean block) {
+    private void updateBlockMenuItem(int status) {
+        if (mBlockingToggler != null) {
+            switch (status) {
+                case AppDetailsViewModel.RULE_APPLIED:
+                    mBlockingToggler.setVisible(!Prefs.Blocking.globalBlockingEnabled());
+                    mBlockingToggler.setTitle(R.string.menu_remove_rules);
+                    break;
+                case AppDetailsViewModel.RULE_NOT_APPLIED:
+                    mBlockingToggler.setVisible(!Prefs.Blocking.globalBlockingEnabled());
+                    mBlockingToggler.setTitle(R.string.menu_apply_rules);
+                    break;
+                case AppDetailsViewModel.RULE_NO_RULE:
+                    mBlockingToggler.setVisible(false);
+            }
+        }
+    }
+
+    private void blockUnblockTrackers(boolean block) {
         if (viewModel == null) return;
         // TODO: 19/3/23 Do it via ViewModel
         List<UserPackagePair> userPackagePairs = Collections.singletonList(new UserPackagePair(mPackageName,
@@ -282,11 +307,19 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         private boolean mCanModifyComponentStates;
         private boolean mCanStartAnyActivity;
         private final int mCardColor1;
+        private final int mBlockedIndicatorColor;
+        private final int mBlockedExternallyIndicatorColor;
+        private final int mTrackerIndicatorColor;
+        private final int mRunningIndicatorColor;
         private final int mDefaultIndicatorColor;
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
             mCardColor1 = ColorCodes.getListItemColor1(activity);
+            mBlockedIndicatorColor = ColorCodes.getComponentBlockedIndicatorColor(activity);
+            mBlockedExternallyIndicatorColor = ColorCodes.getComponentExternallyBlockedIndicatorColor(activity);
+            mTrackerIndicatorColor = ColorCodes.getComponentTrackerIndicatorColor(activity);
+            mRunningIndicatorColor = ColorCodes.getComponentRunningIndicatorColor(activity);
             mDefaultIndicatorColor = ColorCodes.getListItemDefaultIndicatorColor(activity);
         }
 
@@ -403,11 +436,11 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             if (mRequestedProperty == SERVICES) {
                 getServicesView(context, holder, position);
             } else if (mRequestedProperty == RECEIVERS) {
-                getReceiverView(context, holder, position);
+                getReceiverView(holder, position);
             } else if (mRequestedProperty == PROVIDERS) {
-                getProviderView(context, holder, position);
+                getProviderView(holder, position);
             } else if (mRequestedProperty == ACTIVITIES) {
-                getActivityView(context, holder, position);
+                getActivityView(holder, position);
             }
         }
 
@@ -464,7 +497,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             });
         }
 
-        private void getActivityView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
+        private void getActivityView(@NonNull ViewHolder holder, int index) {
             final AppDetailsComponentItem componentItem;
             synchronized (mAdapterList) {
                 componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
@@ -474,11 +507,11 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             final boolean isDisabled = !mIsExternalApk && componentItem.isDisabled();
             // Background color: regular < tracker < disabled < blocked
             if (!mIsExternalApk && componentItem.isBlocked()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentBlockedIndicatorColor(context));
+                holder.divider.setDividerColor(mBlockedIndicatorColor);
             } else if (isDisabled) {
-                holder.divider.setDividerColor(ColorCodes.getComponentExternallyBlockedIndicatorColor(context));
+                holder.divider.setDividerColor(mBlockedExternallyIndicatorColor);
             } else if (componentItem.isTracker()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentTrackerIndicatorColor(context));
+                holder.divider.setDividerColor(mTrackerIndicatorColor);
             } else {
                 holder.divider.setDividerColor(mDefaultIndicatorColor);
             }
@@ -512,12 +545,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                     getString(R.string.soft_input), Utils.getSoftInputString(activityInfo.softInputMode),
                     (activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission)));
             // Label
-            String appLabel = activityInfo.applicationInfo.loadLabel(packageManager).toString();
-            String activityLabel = activityInfo.loadLabel(packageManager).toString();
-            String label = (activityLabel.equals(appLabel) || TextUtils.isEmpty(activityLabel))
-                    ? Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityName))
-                    : activityLabel;
-            holder.labelView.setText(label);
+            holder.labelView.setText(componentItem.label);
             // Process name
             String processName = activityInfo.processName;
             if (processName != null && !processName.equals(mPackageName)) {
@@ -526,14 +554,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                         getString(R.string.process_name), processName));
             } else holder.processNameView.setVisibility(View.GONE);
             boolean isExported = activityInfo.exported;
-            // An activity is allowed to launch only if it's
-            // 1) Not from an external APK
-            // 2) Root enabled or the activity is exportable
-            // 3) App or the activity is not disabled and/or blocked
-            boolean canLaunch = !mIsExternalApk && (mCanStartAnyActivity || isExported)
-                    && !isDisabled
-                    && !componentItem.isBlocked();
-            if (canLaunch) {
+            if (componentItem.canLaunch) {
                 holder.launchBtn.setOnClickListener(v -> {
                     Intent intent = new Intent();
                     intent.setClassName(mPackageName, activityName);
@@ -558,7 +579,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                 }
                 holder.shortcutBtn.setOnClickListener(v -> {
                     PackageItemShortcutInfo<ActivityInfo> shortcutInfo = new PackageItemShortcutInfo<>(activityInfo, ActivityInfo.class);
-                    shortcutInfo.setName(label);
+                    shortcutInfo.setName(componentItem.label);
                     shortcutInfo.setIcon(UIUtils.getBitmapFromDrawable(activityInfo.loadIcon(packageManager)));
                     CreateShortcutDialogFragment dialog = CreateShortcutDialogFragment.getInstance(shortcutInfo);
                     dialog.show(getParentFragmentManager(), CreateShortcutDialogFragment.TAG);
@@ -585,13 +606,13 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             final boolean isDisabled = !mIsExternalApk && serviceItem.isDisabled();
             // Background color: regular < tracker < disabled < blocked < running
             if (serviceItem.isRunning()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentRunningIndicatorColor(context));
+                holder.divider.setDividerColor(mRunningIndicatorColor);
             } else if (!mIsExternalApk && serviceItem.isBlocked()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentBlockedIndicatorColor(context));
+                holder.divider.setDividerColor(mBlockedIndicatorColor);
             } else if (isDisabled) {
-                holder.divider.setDividerColor(ColorCodes.getComponentExternallyBlockedIndicatorColor(context));
+                holder.divider.setDividerColor(mBlockedExternallyIndicatorColor);
             } else if (serviceItem.isTracker()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentTrackerIndicatorColor(context));
+                holder.divider.setDividerColor(mTrackerIndicatorColor);
             } else {
                 holder.divider.setDividerColor(mDefaultIndicatorColor);
             }
@@ -600,7 +621,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                 holder.chipType.setVisibility(View.VISIBLE);
             } else holder.chipType.setVisibility(View.GONE);
             // Label
-            holder.labelView.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(serviceInfo.name)));
+            holder.labelView.setText(serviceItem.label);
             // Name
             if (mConstraint != null && serviceInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
@@ -627,15 +648,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                 holder.processNameView.setText(String.format(Locale.ROOT, "%s: %s",
                         getString(R.string.process_name), processName));
             } else holder.processNameView.setVisibility(View.GONE);
-            // A service is allowed to launch only if it's
-            // 1) Not from an external APK
-            // 2) Root enabled or the service is exportable without any permission
-            // 3) App or the service is not disabled and/or blocked
-            boolean canLaunch = !mIsExternalApk
-                    && canLaunchService(serviceInfo)
-                    && !isDisabled
-                    && !serviceItem.isBlocked();
-            if (canLaunch) {
+            if (serviceItem.canLaunch) {
                 holder.launchBtn.setOnClickListener(v -> {
                     Intent intent = new Intent();
                     intent.setClassName(mPackageName, serviceInfo.name);
@@ -657,7 +670,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
-        private void getReceiverView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
+        private void getReceiverView(@NonNull ViewHolder holder, int index) {
             final AppDetailsComponentItem componentItem;
             synchronized (mAdapterList) {
                 componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
@@ -665,11 +678,11 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             final ActivityInfo activityInfo = (ActivityInfo) componentItem.mainItem;
             // Background color: regular < tracker < disabled < blocked
             if (!mIsExternalApk && componentItem.isBlocked()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentBlockedIndicatorColor(context));
+                holder.divider.setDividerColor(mBlockedIndicatorColor);
             } else if (!mIsExternalApk && componentItem.isDisabled()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentExternallyBlockedIndicatorColor(context));
+                holder.divider.setDividerColor(mBlockedExternallyIndicatorColor);
             } else if (componentItem.isTracker()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentTrackerIndicatorColor(context));
+                holder.divider.setDividerColor(mTrackerIndicatorColor);
             } else {
                 holder.divider.setDividerColor(mDefaultIndicatorColor);
             }
@@ -678,7 +691,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                 holder.chipType.setVisibility(View.VISIBLE);
             } else holder.chipType.setVisibility(View.GONE);
             // Label
-            holder.labelView.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityInfo.name)));
+            holder.labelView.setText(componentItem.label);
             // Name
             if (mConstraint != null && activityInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
@@ -718,7 +731,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
-        private void getProviderView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
+        private void getProviderView(@NonNull ViewHolder holder, int index) {
             final AppDetailsComponentItem componentItem;
             synchronized (mAdapterList) {
                 componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
@@ -727,11 +740,11 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             final String providerName = providerInfo.name;
             // Background color: regular < tracker < disabled < blocked
             if (!mIsExternalApk && componentItem.isBlocked()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentBlockedIndicatorColor(context));
+                holder.divider.setDividerColor(mBlockedIndicatorColor);
             } else if (!mIsExternalApk && componentItem.isDisabled()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentExternallyBlockedIndicatorColor(context));
+                holder.divider.setDividerColor(mBlockedExternallyIndicatorColor);
             } else if (componentItem.isTracker()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentTrackerIndicatorColor(context));
+                holder.divider.setDividerColor(mTrackerIndicatorColor);
             } else {
                 holder.divider.setDividerColor(mDefaultIndicatorColor);
             }
@@ -740,7 +753,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                 holder.chipType.setVisibility(View.VISIBLE);
             } else holder.chipType.setVisibility(View.GONE);
             // Label
-            holder.labelView.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(providerName)));
+            holder.labelView.setText(componentItem.label);
             // Icon
             String tag = mPackageName + "_" + providerName;
             holder.imageView.setTag(tag);
@@ -801,19 +814,5 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             } else holder.toggleSwitch.setVisibility(View.GONE);
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
-    }
-
-    public static boolean canLaunchService(@NonNull ServiceInfo info) {
-        if (info.exported && info.permission == null) {
-            return true;
-        }
-        int uid = Users.getSelfOrRemoteUid();
-        if (uid == Ops.ROOT_UID || (uid == Ops.SYSTEM_UID && info.permission == null)) {
-            return true;
-        }
-        if (info.permission == null) {
-            return false;
-        }
-        return SelfPermissions.checkSelfOrRemotePermission(info.permission, uid);
     }
 }

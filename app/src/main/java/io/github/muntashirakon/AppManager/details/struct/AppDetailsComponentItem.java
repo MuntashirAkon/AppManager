@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.details.struct;
 import android.content.pm.ComponentInfo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 
@@ -12,7 +13,11 @@ import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
  * Stores individual app details component item
  */
 public class AppDetailsComponentItem extends AppDetailsItem<ComponentInfo> {
+    public CharSequence label;
+    public boolean canLaunch;
+
     private boolean mIsTracker;
+    @Nullable
     private ComponentRule mRule;
     private boolean mIsDisabled;
 
@@ -36,11 +41,12 @@ public class AppDetailsComponentItem extends AppDetailsItem<ComponentInfo> {
         return mRule.isBlocked() && (mRule.isIfw() || isDisabled());
     }
 
+    @Nullable
     public ComponentRule getRule() {
         return mRule;
     }
 
-    public void setRule(ComponentRule rule) {
+    public void setRule(@Nullable ComponentRule rule) {
         mRule = rule;
     }
 
