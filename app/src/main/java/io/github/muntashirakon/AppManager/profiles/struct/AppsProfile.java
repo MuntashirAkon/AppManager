@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.profiles.struct;
 
+import static io.github.muntashirakon.AppManager.profiles.ProfileManager.PROFILE_EXT;
+
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -30,6 +32,7 @@ import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 
 public class AppsProfile extends AbsProfile {
@@ -45,10 +48,24 @@ public class AppsProfile extends AbsProfile {
     @NonNull
     public static AppsProfile newProfile(@NonNull String newProfileName, @Nullable AppsProfile profile) {
         String profileId = generateProfileId(newProfileName);
-        if (profile != null) {
-            return new AppsProfile(profileId, newProfileName, profile);
+        // TODO: 17/9/23 TODO: Remove these once we migrated to UUID based profile ID
+        // BEGIN legacy: For legacy profile, the generated ID can be the same as an existing profile
+        Path profilesDir = ProfileManager.getProfilesDir();
+        Path profilePath = Paths.build(profilesDir, profileId + PROFILE_EXT);
+        String profileName = newProfileName;
+        int i = 1;
+        while (profilePath != null && profilePath.exists()) {
+            // Try another name
+            profileName = newProfileName + " (" + i + ")";
+            profileId = generateProfileId(profileName);
+            profilePath = Paths.build(profilesDir, profileId + PROFILE_EXT);
+            ++i;
         }
-        return new AppsProfile(profileId, newProfileName);
+        // END legacy: For legacy profile, the generated ID can be the same as an existing profile
+        if (profile != null) {
+            return new AppsProfile(profileId, profileName, profile);
+        }
+        return new AppsProfile(profileId, profileName);
     }
 
     @StringDef({STATE_ON, STATE_OFF})
@@ -111,13 +128,13 @@ public class AppsProfile extends AbsProfile {
     public boolean blockTrackers = false;  // misc.block_trackers (false = remove)
     public boolean saveApk = false;  // misc.save_apk (false = remove)
 
-    public AppsProfile(@NonNull String profileId, @NonNull String profileName) {
+    protected AppsProfile(@NonNull String profileId, @NonNull String profileName) {
         super(profileId);
         this.name = profileName;
         this.packages = EmptyArray.STRING;
     }
 
-    public AppsProfile(@NonNull String profileId, @NonNull String profileName, @NonNull AppsProfile profile) {
+    protected AppsProfile(@NonNull String profileId, @NonNull String profileName, @NonNull AppsProfile profile) {
         super(profileId);
         name = profileName;
         type = profile.type;
@@ -224,7 +241,7 @@ public class AppsProfile extends AbsProfile {
 
     @Contract("!null -> !null")
     @Nullable
-    public static AppsProfile read(@Nullable String profileStr) throws JSONException {
+    protected static AppsProfile read(@Nullable String profileStr) throws JSONException {
         if (profileStr == null) {
             return null;
         }

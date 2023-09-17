@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import io.github.muntashirakon.AppManager.R;
 
 public class ConfFragment extends Fragment {
@@ -30,7 +32,14 @@ public class ConfFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_view_tag, new ConfPreferences()).commit();
+        ProfileViewModel model = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+        model.observeProfileLoaded().observe(getViewLifecycleOwner(), profileName -> {
+            if (profileName == null) return;
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container_view_tag, new ConfPreferences())
+                    .commit();
+        });
     }
 
     @Override

@@ -482,6 +482,28 @@ public final class Paths {
                 .build();
     }
 
+    @NonNull
+    public static String findNextBestDisplayName(@NonNull Path basePath, @NonNull String prefix,
+                                                 @Nullable String extension) {
+        return findNextBestDisplayName(basePath, prefix, extension, 1);
+    }
+
+    @NonNull
+    public static String findNextBestDisplayName(@NonNull Path basePath, @NonNull String prefix,
+                                                 @Nullable String extension, int initialIndex) {
+        if (TextUtils.isEmpty(extension)) {
+            extension = "";
+        } else extension = "." + extension;
+        String displayName = prefix + extension;
+        int i = initialIndex;
+        // We need to find the next best file name if current exists
+        while (basePath.hasFile(displayName)) {
+            displayName = String.format(Locale.ROOT, "%s (%d)%s", prefix, i, extension);
+            ++i;
+        }
+        return displayName;
+    }
+
     public static long size(@Nullable Path root) {
         if (root == null) {
             return 0;

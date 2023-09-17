@@ -164,11 +164,11 @@ public class ProfileViewModel extends AndroidViewModel {
     }
 
     public String getProfileName() {
-        return mProfile.name;
+        return mProfile != null ? mProfile.name : null;
     }
 
     public String getProfileId() {
-        return mProfile.profileId;
+        return mProfile != null ? mProfile.profileId : null;
     }
 
     @AnyThread

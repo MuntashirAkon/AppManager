@@ -96,16 +96,16 @@ public class ProfilesActivity extends BaseActivity {
                 try {
                     // Verify
                     Path profilePath = Paths.get(uri);
-                    String fileContent = profilePath.getContentAsString();
-                    AppsProfile profile = AppsProfile.read(fileContent);
-                    Path innerProfilePath = ProfileManager.requireProfilePathById(profile.profileId);
+                    AppsProfile profile = AppsProfile.fromPath(profilePath);
+                    AppsProfile newProfile = AppsProfile.newProfile(profile.name, profile);
+                    Path innerProfilePath = ProfileManager.requireProfilePathById(newProfile.profileId);
                     // Save
                     try (OutputStream os = innerProfilePath.openOutputStream()) {
-                        profile.write(os);
+                        newProfile.write(os);
                     }
                     Toast.makeText(this, R.string.the_import_was_successful, Toast.LENGTH_SHORT).show();
                     // Load imported profile
-                    startActivity(AppsProfileActivity.getProfileIntent(this, profile.profileId));
+                    startActivity(AppsProfileActivity.getProfileIntent(this, newProfile.profileId));
                 } catch (IOException | JSONException e) {
                     Log.e(TAG, "Error: ", e);
                     Toast.makeText(this, R.string.import_failed, Toast.LENGTH_SHORT).show();
