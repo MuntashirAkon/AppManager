@@ -170,27 +170,31 @@ public class ConfPreferences extends PreferenceFragmentCompat {
         mBackupInfo = mModel.getBackupInfo();
         backupDataPref.setSummary(mBackupInfo != null ? R.string.enabled : R.string.disabled_app);
         backupDataPref.setOnPreferenceClickListener(preference -> {
-            View view = mActivity.getLayoutInflater().inflate(R.layout.dialog_profile_backup_restore, null);
+            View view = View.inflate(mActivity, R.layout.dialog_profile_backup_restore, null);
             final BackupFlags flags;
-            if (mBackupInfo != null) flags = new BackupFlags(mBackupInfo.flags);
-            else flags = BackupFlags.fromPref();
+            if (mBackupInfo != null) {
+                flags = new BackupFlags(mBackupInfo.flags);
+            } else flags = BackupFlags.fromPref();
             final AtomicInteger backupFlags = new AtomicInteger(flags.getFlags());
-            List<Integer> supportedBackupFlags = BackupFlags.getSupportedBackupFlagsAsArray();
-            new SearchableMultiChoiceDialogBuilder<>(requireActivity(), supportedBackupFlags, BackupFlags.getFormattedFlagNames(requireContext(), supportedBackupFlags))
-                    .setTitle(R.string.backup_options)
-                    .addSelections(flags.flagsToCheckedIndexes(supportedBackupFlags))
-                    .hideSearchBar(true)
-                    .showSelectAll(false)
-                    .setPositiveButton(R.string.save, (dialog, which, selectedItems) -> {
-                        int flagsInt = 0;
-                        for (int flag : selectedItems) {
-                            flagsInt |= flag;
-                        }
-                        flags.setFlags(flagsInt);
-                        backupFlags.set(flags.getFlags());
-                    })
-                    .setNegativeButton(R.string.cancel, null)
-                    .show();
+            view.findViewById(R.id.dialog_button).setOnClickListener(v -> {
+                List<Integer> supportedBackupFlags = BackupFlags.getSupportedBackupFlagsAsArray();
+                new SearchableMultiChoiceDialogBuilder<>(requireActivity(), supportedBackupFlags,
+                        BackupFlags.getFormattedFlagNames(requireContext(), supportedBackupFlags))
+                        .setTitle(R.string.backup_options)
+                        .addSelections(flags.flagsToCheckedIndexes(supportedBackupFlags))
+                        .hideSearchBar(true)
+                        .showSelectAll(false)
+                        .setPositiveButton(R.string.save, (dialog, which, selectedItems) -> {
+                            int flagsInt = 0;
+                            for (int flag : selectedItems) {
+                                flagsInt |= flag;
+                            }
+                            flags.setFlags(flagsInt);
+                            backupFlags.set(flags.getFlags());
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+            });
             final TextInputEditText editText = view.findViewById(android.R.id.input);
             if (mBackupInfo != null) {
                 editText.setText(mBackupInfo.name);
@@ -314,6 +318,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
     }
 
     private List<Integer> mSelectedUsers;
+
     private void handleUsersPref(Preference pref) {
         List<UserInfo> users = Users.getUsers();
         if (users.size() > 1) {
@@ -331,7 +336,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                 mSelectedUsers.add(user);
             }
             mActivity.runOnUiThread(() -> {
-                pref.setSummary(TextUtilsCompat.joinSpannable(", " , getUserInfo(users, mSelectedUsers)));
+                pref.setSummary(TextUtilsCompat.joinSpannable(", ", getUserInfo(users, mSelectedUsers)));
                 pref.setOnPreferenceClickListener(v -> {
                     new SearchableMultiChoiceDialogBuilder<>(mActivity, userHandles, userNames)
                             .setTitle(R.string.select_user)
@@ -341,7 +346,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                                 if (selectedUserHandles.isEmpty()) {
                                     mSelectedUsers = userHandles;
                                 } else mSelectedUsers = selectedUserHandles;
-                                pref.setSummary(TextUtilsCompat.joinSpannable(", " , getUserInfo(users, mSelectedUsers)));
+                                pref.setSummary(TextUtilsCompat.joinSpannable(", ", getUserInfo(users, mSelectedUsers)));
                                 mModel.setUsers(ArrayUtils.convertToIntArray(mSelectedUsers));
                             })
                             .setNegativeButton(R.string.cancel, null)
