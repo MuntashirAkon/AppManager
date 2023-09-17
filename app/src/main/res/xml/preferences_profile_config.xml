@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <Preference
+        app:key="profile_id"
+        app:title="@string/profile_id"
+        tools:summary="@tools:sample/lorem[1]"
+        app:iconSpaceReserved="false" />
+
+    <Preference
         app:key="comment"
         app:title="@string/comment"
         tools:summary="@tools:sample/lorem[9]"

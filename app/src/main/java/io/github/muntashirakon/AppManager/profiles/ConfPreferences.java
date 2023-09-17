@@ -30,6 +30,7 @@ import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
@@ -60,6 +61,13 @@ public class ConfPreferences extends PreferenceFragmentCompat {
             return;
         }
         mModel = mActivity.model;
+        // Set profile ID
+        Preference profileIdPref = Objects.requireNonNull(findPreference("profile_id"));
+        profileIdPref.setSummary(mModel.getProfileId());
+        profileIdPref.setOnPreferenceClickListener(preference -> {
+            Utils.copyToClipboard(mActivity, mModel.getProfileName(), mModel.getProfileId());
+            return true;
+        });
         // Set comment
         Preference commentPref = Objects.requireNonNull(findPreference("comment"));
         commentPref.setSummary(mModel.getComment());

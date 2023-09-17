@@ -48,6 +48,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
 import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
@@ -269,6 +270,8 @@ public class ProfilesActivity extends BaseActivity {
                     } else if (id == R.id.action_export) {
                         mActivity.mProfileId = profile.profileId;
                         mActivity.mExportProfile.launch(profile.name + ".am.json");
+                    }  else if (id == R.id.action_copy) {
+                        Utils.copyToClipboard(mActivity, profile.name, profile.profileId);
                     } else if (id == R.id.action_shortcut) {
                         final String[] shortcutTypesL = new String[]{
                                 mActivity.getString(R.string.simple),
