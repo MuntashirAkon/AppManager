@@ -173,10 +173,10 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
             }
             BackupInfo backupInfo = backupInfoMap.get(userPackagePair.getPackageName());
             if (backupInfo != null) {
-                backupInfo.userIds.add(userPackagePair.getUserHandle());
+                backupInfo.userIds.add(userPackagePair.getUserId());
                 continue;
             }
-            backupInfo = new BackupInfo(userPackagePair.getPackageName(), userPackagePair.getUserHandle());
+            backupInfo = new BackupInfo(userPackagePair.getPackageName(), userPackagePair.getUserId());
             backupInfoMap.put(userPackagePair.getPackageName(), backupInfo);
             AppDb appDb = new AppDb();
             List<App> apps = appDb.getAllApplications(userPackagePair.getPackageName());

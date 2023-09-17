@@ -74,8 +74,8 @@ public final class ComponentUtils {
     }
 
     public static void blockTrackingComponents(@NonNull UserPackagePair pair) {
-        HashMap<String, RuleType> components = ComponentUtils.getTrackerComponentsForPackage(pair.getPackageName(), pair.getUserHandle());
-        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
+        HashMap<String, RuleType> components = ComponentUtils.getTrackerComponentsForPackage(pair.getPackageName(), pair.getUserId());
+        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserId())) {
             for (String componentName : components.keySet()) {
                 cb.addComponent(componentName, Objects.requireNonNull(components.get(componentName)));
             }
@@ -99,8 +99,8 @@ public final class ComponentUtils {
     }
 
     public static void unblockTrackingComponents(@NonNull UserPackagePair pair) {
-        HashMap<String, RuleType> components = getTrackerComponentsForPackage(pair.getPackageName(), pair.getUserHandle());
-        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
+        HashMap<String, RuleType> components = getTrackerComponentsForPackage(pair.getPackageName(), pair.getUserId());
+        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserId())) {
             for (String componentName : components.keySet()) {
                 cb.removeComponent(componentName);
             }
@@ -124,8 +124,8 @@ public final class ComponentUtils {
     }
 
     public static void blockFilteredComponents(@NonNull UserPackagePair pair, String[] signatures) {
-        HashMap<String, RuleType> components = PackageUtils.getFilteredComponents(pair.getPackageName(), pair.getUserHandle(), signatures);
-        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
+        HashMap<String, RuleType> components = PackageUtils.getFilteredComponents(pair.getPackageName(), pair.getUserId(), signatures);
+        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserId())) {
             for (String componentName : components.keySet()) {
                 cb.addComponent(componentName, Objects.requireNonNull(components.get(componentName)));
             }
@@ -134,8 +134,8 @@ public final class ComponentUtils {
     }
 
     public static void unblockFilteredComponents(@NonNull UserPackagePair pair, String[] signatures) {
-        HashMap<String, RuleType> components = PackageUtils.getFilteredComponents(pair.getPackageName(), pair.getUserHandle(), signatures);
-        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
+        HashMap<String, RuleType> components = PackageUtils.getFilteredComponents(pair.getPackageName(), pair.getUserId(), signatures);
+        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserId())) {
             for (String componentName : components.keySet()) {
                 cb.removeComponent(componentName);
             }

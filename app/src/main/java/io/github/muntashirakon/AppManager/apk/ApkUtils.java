@@ -86,19 +86,19 @@ public final class ApkUtils {
      * that these are saved at /sdcard/AppManager/apks
      */
     @WorkerThread
-    public static void backupApk(@NonNull Context ctx, @NonNull String packageName, @UserIdInt int userHandle)
+    public static void backupApk(@NonNull Context ctx, @NonNull String packageName, @UserIdInt int userId)
             throws IOException, PackageManager.NameNotFoundException, RemoteException {
         Path backupPath = BackupFiles.getApkBackupDirectory();
         // Fetch package info
         PackageManager pm = ctx.getPackageManager();
         PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName,
                 MATCH_UNINSTALLED_PACKAGES | PackageManager.GET_SHARED_LIBRARY_FILES
-                        | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle);
+                        | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
         ApplicationInfo info = packageInfo.applicationInfo;
         String outputName = Paths.sanitizeFilename(getFormattedApkFilename(ctx, packageInfo, pm), "_");
         if (outputName == null) outputName = packageName;
         Path apkFile;
-        if (isSplitApk(info) || hasObbFiles(packageName, userHandle)) {
+        if (isSplitApk(info) || hasObbFiles(packageName, userId)) {
             // Split apk
             apkFile = backupPath.createNewFile(outputName + EXT_APKS, null);
             SplitApkExporter.saveApks(packageInfo, apkFile);

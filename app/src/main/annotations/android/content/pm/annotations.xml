@@ -1,0 +1,21 @@
+<!--
+  ~ SPDX-License-Identifier: GPL-3.0-or-later
+  -->
+
+<root>
+    <item name='android.content.pm.PackageInfo activities'>
+        <annotation name='androidx.annotation.Nullable' />
+    </item>
+    <item name='android.content.pm.PackageInfo permissions'>
+        <annotation name='androidx.annotation.Nullable' />
+    </item>
+    <item name='android.content.pm.PackageInfo providers'>
+        <annotation name='androidx.annotation.Nullable' />
+    </item>
+    <item name='android.content.pm.PackageInfo receivers'>
+        <annotation name='androidx.annotation.Nullable' />
+    </item>
+    <item name='android.content.pm.PackageInfo services'>
+        <annotation name='androidx.annotation.Nullable' />
+    </item>
+</root>

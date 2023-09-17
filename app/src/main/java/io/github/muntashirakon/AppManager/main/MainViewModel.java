@@ -182,13 +182,13 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         int myUserId = UserHandleHidden.myUserId();
         int[] userIds = Users.getUsersIds();
         for (String packageName : mSelectedPackageApplicationItemMap.keySet()) {
-            int[] userHandles = Objects.requireNonNull(mSelectedPackageApplicationItemMap.get(packageName)).userHandles;
-            if (userHandles.length == 0) {
+            int[] userIds1 = Objects.requireNonNull(mSelectedPackageApplicationItemMap.get(packageName)).userIds;
+            if (userIds1.length == 0) {
                 // Could be a backup only item
                 // Assign current user in it
                 userPackagePairs.add(new UserPackagePair(packageName, myUserId));
             } else {
-                for (int userHandle : userHandles) {
+                for (int userHandle : userIds1) {
                     if (!ArrayUtils.contains(userIds, userHandle)) continue;
                     userPackagePairs.add(new UserPackagePair(packageName, userHandle));
                 }
@@ -320,7 +320,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
             try (OutputStream os = path.openOutputStream()) {
                 List<PackageInfo> packageInfoList = new ArrayList<>();
                 for (String packageName : getSelectedPackages().keySet()) {
-                    int[] userIds = Objects.requireNonNull(getSelectedPackages().get(packageName)).userHandles;
+                    int[] userIds = Objects.requireNonNull(getSelectedPackages().get(packageName)).userIds;
                     for (int userId : userIds) {
                         packageInfoList.add(PackageManagerCompat.getPackageInfo(packageName,
                                 PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId));
@@ -485,7 +485,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
             return true;
         }
         for (int userId : mSelectedUsers) {
-            if (ArrayUtils.contains(applicationItem.userHandles, userId)) {
+            if (ArrayUtils.contains(applicationItem.userIds, userId)) {
                 return true;
             }
         }
@@ -699,7 +699,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 if (item.packageName == null) {
                     item.packageName = app.packageName;
                 }
-                item.userHandles = ArrayUtils.appendInt(item.userHandles, app.userId);
+                item.userIds = ArrayUtils.appendInt(item.userIds, app.userId);
                 item.isInstalled = true;
                 item.openCount += app.openCount;
                 item.screenTime += app.screenTime;

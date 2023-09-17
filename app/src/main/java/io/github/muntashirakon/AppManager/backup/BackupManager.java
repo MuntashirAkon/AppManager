@@ -69,7 +69,7 @@ public class BackupManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.d(TAG, "Package: %s, user: %d", targetPackage.getPackageName(), targetPackage.getUserHandle());
+        Log.d(TAG, "Package: %s, user: %d", targetPackage.getPackageName(), targetPackage.getUserId());
     }
 
     public boolean requiresRestart() {
@@ -91,7 +91,7 @@ public class BackupManager {
         backupNames = getProcessedBackupNames(backupNames);
         try {
             // Get backup files based on the number of backupNames
-            BackupFiles backupFiles = new BackupFiles(mTargetPackage.getPackageName(), mTargetPackage.getUserHandle(), backupNames);
+            BackupFiles backupFiles = new BackupFiles(mTargetPackage.getPackageName(), mTargetPackage.getUserId(), backupNames);
             BackupFiles.BackupFile[] backupFileList = mRequestedFlags.backupMultiple() ?
                     backupFiles.getFreshBackupPaths() : backupFiles.getBackupPaths(true);
             if (progressHandler != null) {
@@ -101,7 +101,7 @@ public class BackupManager {
             }
             for (BackupFiles.BackupFile backupFile : backupFileList) {
                 try (BackupOp backupOp = new BackupOp(mTargetPackage.getPackageName(), mMetadataManager, mRequestedFlags,
-                        backupFile, mTargetPackage.getUserHandle())) {
+                        backupFile, mTargetPackage.getUserId())) {
                     backupOp.runBackup(progressHandler);
                     BackupUtils.putBackupToDbAndBroadcast(ContextUtils.getContext(), backupOp.getMetadata());
                 }
@@ -148,11 +148,11 @@ public class BackupManager {
             throw new BackupException("Restore is requested from more than one backups!");
         }
         // The user handle with backups, this is different from the target user handle
-        int backupUserHandle = -1;
+        int backupUserId = -1;
         if (backupNames != null) {
             // Strip userHandle from backup name
             String backupName = BackupUtils.getShortBackupName(backupNames[0]);
-            backupUserHandle = BackupUtils.getUserHandleFromBackupName(backupNames[0]);
+            backupUserId = BackupUtils.getUserHandleFromBackupName(backupNames[0]);
             if (backupName != null) {
                 // There's a backup name, not just user handle
                 backupNames = new String[]{backupName};
@@ -164,11 +164,11 @@ public class BackupManager {
         }
         // Set backup userHandle to the userHandle we're working with.
         // This value is only set if backupNames is null or it consisted of only user handle
-        if (backupUserHandle == -1) backupUserHandle = mTargetPackage.getUserHandle();
+        if (backupUserId == -1) backupUserId = mTargetPackage.getUserId();
         BackupFiles backupFiles;
         BackupFiles.BackupFile[] backupFileList;
         try {
-            backupFiles = new BackupFiles(mTargetPackage.getPackageName(), backupUserHandle, backupNames);
+            backupFiles = new BackupFiles(mTargetPackage.getPackageName(), backupUserId, backupNames);
             backupFileList = backupFiles.getBackupPaths(false);
         } catch (IOException e) {
             throw new BackupException("Could not get backup files.", e);
@@ -185,7 +185,7 @@ public class BackupManager {
             }
             try (RestoreOp restoreOp = new RestoreOp(mTargetPackage.getPackageName(),
                     mMetadataManager, mRequestedFlags, backupFileList[0],
-                    mTargetPackage.getUserHandle())) {
+                    mTargetPackage.getUserId())) {
                 restoreOp.runRestore(progressHandler);
                 mRequiresRestart |= restoreOp.requiresRestart();
                 BackupUtils.putBackupToDbAndBroadcast(ContextUtils.getContext(), restoreOp.getMetadata());
@@ -202,7 +202,7 @@ public class BackupManager {
             BackupFiles.BackupFile[] backupFileList;
             try {
                 backupFiles = new BackupFiles(mTargetPackage.getPackageName(),
-                        mTargetPackage.getUserHandle(), null);
+                        mTargetPackage.getUserId(), null);
                 backupFileList = backupFiles.getBackupPaths(false);
             } catch (IOException e) {
                 throw new BackupException("Could not get backup files.", e);
@@ -249,7 +249,7 @@ public class BackupManager {
         }
         // Set backup userHandle to the userHandle we're working with.
         // This value is only set if backupNames is null or it consisted of only user handle
-        if (backupUserHandle == -1) backupUserHandle = mTargetPackage.getUserHandle();
+        if (backupUserHandle == -1) backupUserHandle = mTargetPackage.getUserId();
         BackupFiles backupFiles;
         BackupFiles.BackupFile[] backupFileList;
         try {

@@ -44,8 +44,8 @@ public class ExternalComponentsImporter {
                                                int[] appOps,
                                                @AppOpsManagerCompat.Mode int mode) throws RemoteException {
         Collection<Integer> appOpList;
-        appOpList = PackageUtils.getFilteredAppOps(pair.getPackageName(), pair.getUserHandle(), appOps, mode);
-        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
+        appOpList = PackageUtils.getFilteredAppOps(pair.getPackageName(), pair.getUserId(), appOps, mode);
+        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserId())) {
             for (int appOp : appOpList) {
                 appOpsManager.setMode(appOp, PackageUtils.getAppUid(pair), pair.getPackageName(), mode);
                 cb.setAppOp(appOp, mode);

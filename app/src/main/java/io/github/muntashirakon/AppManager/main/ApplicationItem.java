@@ -124,7 +124,7 @@ public class ApplicationItem extends PackageItemInfo {
     public boolean isSelected = false;
 
     @NonNull
-    public int[] userHandles = EmptyArray.INT;
+    public int[] userIds = EmptyArray.INT;
 
     public ApplicationItem() {
         super();
@@ -133,11 +133,11 @@ public class ApplicationItem extends PackageItemInfo {
     @WorkerThread
     @Override
     public Drawable loadIcon(PackageManager pm) {
-        if (userHandles.length > 0) {
+        if (userIds.length > 0) {
             try {
                 ApplicationInfo info = PackageManagerCompat.getApplicationInfo(packageName,
                         MATCH_UNINSTALLED_PACKAGES
-                                | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandles[0]);
+                                | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userIds[0]);
                 return info.loadIcon(pm);
             } catch (Exception ignore) {
             }

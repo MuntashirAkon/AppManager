@@ -311,7 +311,7 @@ public class BatchOpsManager {
             updateProgress(lastProgress, i + 1);
             // Do operation
             try {
-                ApkUtils.backupApk(context, pair.getPackageName(), pair.getUserHandle());
+                ApkUtils.backupApk(context, pair.getPackageName(), pair.getUserId());
             } catch (Exception e) {
                 failedPackages.add(pair);
                 log("====> op=BACKUP_APK, pkg=" + pair, e);
@@ -343,7 +343,7 @@ public class BatchOpsManager {
         try {
             String[] backupNames = mArgs.getStringArray(ARG_BACKUP_NAMES);
             for (UserPackagePair pair : mUserPackagePairs) {
-                CharSequence appLabel = PackageUtils.getPackageLabel(pm, pair.getPackageName(), pair.getUserHandle());
+                CharSequence appLabel = PackageUtils.getPackageLabel(pm, pair.getPackageName(), pair.getUserId());
                 executor.submit(() -> {
                     synchronized (i) {
                         i.set(i.get() + 1);
@@ -386,7 +386,7 @@ public class BatchOpsManager {
                     i.set(i.get() + 1);
                     updateProgress(lastProgress, i.get());
                 }
-                CharSequence appLabel = PackageUtils.getPackageLabel(pm, pair.getPackageName(), pair.getUserHandle());
+                CharSequence appLabel = PackageUtils.getPackageLabel(pm, pair.getPackageName(), pair.getUserId());
                 CharSequence title = context.getString(R.string.restoring_app, appLabel);
                 ProgressHandler subProgressHandler = newSubProgress(operationName, title);
                 BackupManager backupManager = BackupManager.getNewInstance(pair, mArgs.getInt(ARG_FLAGS));
@@ -562,9 +562,9 @@ public class BatchOpsManager {
             updateProgress(lastProgress, ++i);
             try {
                 if (freeze) {
-                    FreezeUtils.freeze(pair.getPackageName(), pair.getUserHandle());
+                    FreezeUtils.freeze(pair.getPackageName(), pair.getUserId());
                 } else {
-                    FreezeUtils.unfreeze(pair.getPackageName(), pair.getUserHandle());
+                    FreezeUtils.unfreeze(pair.getPackageName(), pair.getUserId());
                 }
             } catch (Throwable e) {
                 log("====> op=APP_FREEZE, pkg=" + pair + ", freeze = " + freeze, e);
@@ -596,7 +596,7 @@ public class BatchOpsManager {
                     appOpsManager.setMode(AppOpsManagerCompat.OP_RUN_ANY_IN_BACKGROUND, uid,
                             pair.getPackageName(), AppOpsManager.MODE_IGNORED);
                 }
-                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserId())) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         cb.setAppOp(AppOpsManagerCompat.OP_RUN_IN_BACKGROUND, AppOpsManager.MODE_IGNORED);
                     }
@@ -622,13 +622,13 @@ public class BatchOpsManager {
             for (UserPackagePair pair : mUserPackagePairs) {
                 updateProgress(lastProgress, ++i);
                 try {
-                    permissions = PackageUtils.getPermissionsForPackage(pair.getPackageName(), pair.getUserHandle());
+                    permissions = PackageUtils.getPermissionsForPackage(pair.getPackageName(), pair.getUserId());
                     if (permissions == null) continue;
                     for (String permission : permissions) {
                         if (isGrant) {
-                            PermissionCompat.grantPermission(pair.getPackageName(), permission, pair.getUserHandle());
+                            PermissionCompat.grantPermission(pair.getPackageName(), permission, pair.getUserId());
                         } else {
-                            PermissionCompat.revokePermission(pair.getPackageName(), permission, pair.getUserHandle());
+                            PermissionCompat.revokePermission(pair.getPackageName(), permission, pair.getUserId());
                         }
                     }
                 } catch (Throwable e) {
@@ -643,9 +643,9 @@ public class BatchOpsManager {
                 for (String permission : permissions) {
                     try {
                         if (isGrant) {
-                            PermissionCompat.grantPermission(pair.getPackageName(), permission, pair.getUserHandle());
+                            PermissionCompat.grantPermission(pair.getPackageName(), permission, pair.getUserId());
                         } else {
-                            PermissionCompat.revokePermission(pair.getPackageName(), permission, pair.getUserHandle());
+                            PermissionCompat.revokePermission(pair.getPackageName(), permission, pair.getUserId());
                         }
                     } catch (Throwable e) {
                         log("====> op=GRANT_OR_REVOKE_PERMISSIONS, pkg=" + pair, e);
@@ -665,7 +665,7 @@ public class BatchOpsManager {
         for (UserPackagePair pair : mUserPackagePairs) {
             updateProgress(lastProgress, ++i);
             try {
-                PackageManagerCompat.forceStopPackage(pair.getPackageName(), pair.getUserHandle());
+                PackageManagerCompat.forceStopPackage(pair.getPackageName(), pair.getUserId());
             } catch (Throwable e) {
                 log("====> op=FORCE_STOP, pkg=" + pair, e);
                 failedPackages.add(pair);
@@ -706,7 +706,7 @@ public class BatchOpsManager {
                 try {
                     List<Integer> appOpList = new ArrayList<>();
                     ApplicationInfo info = PackageManagerCompat.getApplicationInfo(pair.getPackageName(),
-                            PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, pair.getUserHandle());
+                            PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, pair.getUserId());
                     List<AppOpsManagerCompat.OpEntry> entries = AppOpsManagerCompat.getConfiguredOpsForPackage(
                             appOpsManager, info.packageName, info.uid);
                     for (AppOpsManagerCompat.OpEntry entry : entries) {
@@ -779,7 +779,7 @@ public class BatchOpsManager {
         for (UserPackagePair pair : mUserPackagePairs) {
             updateProgress(lastProgress, ++i);
             PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
-            if (!installer.uninstall(pair.getPackageName(), pair.getUserHandle(), false)) {
+            if (!installer.uninstall(pair.getPackageName(), pair.getUserId(), false)) {
                 log("====> op=UNINSTALL, pkg=" + pair);
                 failedPackages.add(pair);
             }
@@ -920,7 +920,7 @@ public class BatchOpsManager {
             mAssociatedUserHandles = new ArrayList<>();
             for (UserPackagePair userPackagePair : failedUserPackagePairs) {
                 mFailedPackages.add(userPackagePair.getPackageName());
-                mAssociatedUserHandles.add(userPackagePair.getUserHandle());
+                mAssociatedUserHandles.add(userPackagePair.getUserId());
             }
             mIsSuccessful = isSuccessful;
         }

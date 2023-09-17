@@ -53,6 +53,7 @@ import java.util.Objects;
 
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -62,6 +63,8 @@ import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public final class PackageManagerCompat {
+    public static final String TAG = PackageManagerCompat.class.getSimpleName();
+
     public static final int MATCH_STATIC_SHARED_AND_SDK_LIBRARIES = 0x04000000;
     public static final int GET_SIGNING_CERTIFICATES;
     public static final int GET_SIGNING_CERTIFICATES_APK;
@@ -117,102 +120,116 @@ public final class PackageManagerCompat {
     @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
     @WorkerThread
-    public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userHandle)
-            throws RemoteException {
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M && (flags & ~WORKING_FLAGS) != 0) {
-            // Need workaround
-            List<ApplicationInfo> applicationInfoList = getInstalledApplications(flags & WORKING_FLAGS, userHandle);
+    public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userId) throws RemoteException {
+        IPackageManager pm = getPackageManager();
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                return pm.getInstalledPackages((long) flags, userId).getList();
+            }
+            return pm.getInstalledPackages(flags, userId).getList();
+        } catch (DeadObjectException e) {
+            Log.w(TAG, "Could not fetch installed packages for user %d using getInstalledPackages(), using workaround",
+                    e, userId);
+            List<ApplicationInfo> applicationInfoList = getInstalledApplications(pm, flags & WORKING_FLAGS, userId);
             List<PackageInfo> packageInfoList = new ArrayList<>(applicationInfoList.size());
             for (int i = 0; i < applicationInfoList.size(); ++i) {
+                if (ThreadUtils.isInterrupted()) {
+                    break;
+                }
                 try {
-                    packageInfoList.add(getPackageInfo(applicationInfoList.get(i).packageName, flags, userHandle));
-                    if (i % 100 == 0) {
-                        // Prevent DeadObjectException
-                        SystemClock.sleep(300);
-                    }
-                    if (ThreadUtils.isInterrupted()) {
-                        break;
-                    }
-                } catch (Exception e) {
-                    throw new RemoteException(e.getMessage());
+                    packageInfoList.add(getPackageInfo(applicationInfoList.get(i).packageName, flags, userId));
+                } catch (Exception ex) {
+                    throw (RemoteException) new RemoteException(ex.getMessage()).initCause(ex);
+                }
+                if (i % 100 == 0) {
+                    // Prevent DeadObjectException
+                    SystemClock.sleep(300);
                 }
             }
             return packageInfoList;
         }
-        IPackageManager pm = getPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return pm.getInstalledPackages((long) flags, userHandle).getList();
-        }
-        return pm.getInstalledPackages(flags, userHandle).getList();
+    }
+
+    @WorkerThread
+    public static List<ApplicationInfo> getInstalledApplications(int flags, @UserIdInt int userId)
+            throws RemoteException {
+        return getInstalledApplications(getPackageManager(), flags, userId);
     }
 
     @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
     @WorkerThread
-    public static List<ApplicationInfo> getInstalledApplications(int flags, @UserIdInt int userHandle)
-            throws RemoteException {
-        IPackageManager pm = getPackageManager();
+    public static List<ApplicationInfo> getInstalledApplications(@NonNull IPackageManager pm, int flags,
+                                                                 @UserIdInt int userId) throws RemoteException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return pm.getInstalledApplications((long) flags, userHandle).getList();
+            return pm.getInstalledApplications((long) flags, userId).getList();
         }
-        return pm.getInstalledApplications(flags, userHandle).getList();
+        return pm.getInstalledApplications(flags, userId).getList();
     }
 
     @NonNull
-    public static PackageInfo getPackageInfo(String packageName, int flags, @UserIdInt int userHandle)
+    public static PackageInfo getPackageInfo(@NonNull String packageName, int flags, @UserIdInt int userId)
             throws RemoteException, PackageManager.NameNotFoundException {
-        IPackageManager pm = getPackageManager();
+        return getPackageInfo(getPackageManager(), packageName, flags, userId);
+    }
+
+    @NonNull
+    public static PackageInfo getPackageInfo(@NonNull IPackageManager pm, @NonNull String packageName, int flags,
+                                             @UserIdInt int userId)
+            throws RemoteException, PackageManager.NameNotFoundException {
         PackageInfo info = null;
         try {
-            info = getPackageInfoInternal(pm, packageName, flags, userHandle);
-        } catch (DeadObjectException ignore) {
+            info = getPackageInfoInternal(pm, packageName, flags, userId);
+        } catch (DeadObjectException e) {
+            Log.w(TAG, "Could not fetch info for package %s and user %d with flags 0x%X, using workaround",
+                    e, packageName, userId, flags);
         }
         if (info == null) {
             // The app might not be loaded properly due parcel size limit, try to load components separately.
             // first check the existence of the package
             int strippedFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
                     | PackageManager.GET_PROVIDERS | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
-            info = getPackageInfoInternal(pm, packageName, strippedFlags, userHandle);
+            info = getPackageInfoInternal(pm, packageName, strippedFlags, userId);
             if (info == null) {
                 // At this point, it should return package info.
                 // Returning null denotes that it failed again even after the major flags have been stripped.
                 throw new PackageManager.NameNotFoundException(String.format("Could not retrieve info for package %s with flags 0x%X for user %d",
-                        packageName, strippedFlags, userHandle));
+                        packageName, strippedFlags, userId));
             }
             // Load info for major flags
             ActivityInfo[] activities = null;
             if ((flags & PackageManager.GET_ACTIVITIES) != 0) {
                 int newFlags = flags & ~(PackageManager.GET_SERVICES | PackageManager.GET_PROVIDERS
                         | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
-                PackageInfo info1 = getPackageInfoInternal(pm, packageName, newFlags, userHandle);
+                PackageInfo info1 = getPackageInfoInternal(pm, packageName, newFlags, userId);
                 if (info1 != null) activities = info1.activities;
             }
             ServiceInfo[] services = null;
             if ((flags & PackageManager.GET_SERVICES) != 0) {
                 int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_PROVIDERS
                         | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
-                PackageInfo info1 = getPackageInfoInternal(pm, packageName, newFlags, userHandle);
+                PackageInfo info1 = getPackageInfoInternal(pm, packageName, newFlags, userId);
                 if (info1 != null) services = info1.services;
             }
             ProviderInfo[] providers = null;
             if ((flags & PackageManager.GET_PROVIDERS) != 0) {
                 int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
                         | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
-                PackageInfo info1 = getPackageInfoInternal(pm, packageName, newFlags, userHandle);
+                PackageInfo info1 = getPackageInfoInternal(pm, packageName, newFlags, userId);
                 if (info1 != null) providers = info1.providers;
             }
             ActivityInfo[] receivers = null;
             if ((flags & PackageManager.GET_RECEIVERS) != 0) {
                 int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
                         | PackageManager.GET_PROVIDERS | PackageManager.GET_PERMISSIONS);
-                PackageInfo info1 = getPackageInfoInternal(pm, packageName, newFlags, userHandle);
+                PackageInfo info1 = getPackageInfoInternal(pm, packageName, newFlags, userId);
                 if (info1 != null) receivers = info1.receivers;
             }
             PermissionInfo[] permissions = null;
             if ((flags & PackageManager.GET_PERMISSIONS) != 0) {
                 int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
                         | PackageManager.GET_PROVIDERS | PackageManager.GET_RECEIVERS);
-                PackageInfo info1 = getPackageInfoInternal(pm, packageName, newFlags, userHandle);
+                PackageInfo info1 = getPackageInfoInternal(pm, packageName, newFlags, userId);
                 if (info1 != null) permissions = info1.permissions;
             }
             info.activities = activities;
@@ -221,19 +238,19 @@ public final class PackageManagerCompat {
             info.receivers = receivers;
             info.permissions = permissions;
         }
-        // Info should never be null here but it's checked anyway.
+        // Info should never be null here, but it's checked anyway.
         return Objects.requireNonNull(info);
     }
 
     @SuppressWarnings("deprecation")
     @NonNull
-    public static ApplicationInfo getApplicationInfo(String packageName, int flags, @UserIdInt int userHandle)
+    public static ApplicationInfo getApplicationInfo(String packageName, int flags, @UserIdInt int userId)
             throws RemoteException, PackageManager.NameNotFoundException {
         IPackageManager pm = getPackageManager();
         ApplicationInfo applicationInfo;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            applicationInfo = pm.getApplicationInfo(packageName, (long) flags, userHandle);
-        } else applicationInfo = pm.getApplicationInfo(packageName, flags, userHandle);
+            applicationInfo = pm.getApplicationInfo(packageName, (long) flags, userId);
+        } else applicationInfo = pm.getApplicationInfo(packageName, flags, userId);
         if (applicationInfo == null) {
             throw new PackageManager.NameNotFoundException("Package " + packageName + " not found.");
         }
@@ -298,8 +315,7 @@ public final class PackageManagerCompat {
     }
 
     @EnabledState
-    public static int getComponentEnabledSetting(ComponentName componentName,
-                                                 @UserIdInt int userId)
+    public static int getComponentEnabledSetting(ComponentName componentName, @UserIdInt int userId)
             throws SecurityException, IllegalArgumentException {
         try {
             return getPackageManager().getComponentEnabledSetting(componentName, userId);
@@ -419,7 +435,7 @@ public final class PackageManagerCompat {
     public static void clearApplicationUserData(@NonNull UserPackagePair pair) throws AndroidException {
         IPackageManager pm = getPackageManager();
         ClearDataObserver obs = new ClearDataObserver();
-        pm.clearApplicationUserData(pair.getPackageName(), obs, pair.getUserHandle());
+        pm.clearApplicationUserData(pair.getPackageName(), obs, pair.getUserId());
         //noinspection SynchronizationOnLocalVariableOrMethodParameter
         synchronized (obs) {
             while (!obs.isCompleted()) {
@@ -432,7 +448,7 @@ public final class PackageManagerCompat {
         if (!obs.isSuccessful()) {
             throw new AndroidException("Could not clear data of package " + pair);
         }
-        if (pair.getUserHandle() != UserHandleHidden.myUserId()) {
+        if (pair.getUserId() != UserHandleHidden.myUserId()) {
             BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{pair.getPackageName()});
         }
     }
@@ -456,7 +472,7 @@ public final class PackageManagerCompat {
         IPackageManager pm = getPackageManager();
         ClearDataObserver obs = new ClearDataObserver();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            pm.deleteApplicationCacheFilesAsUser(pair.getPackageName(), pair.getUserHandle(), obs);
+            pm.deleteApplicationCacheFilesAsUser(pair.getPackageName(), pair.getUserId(), obs);
         } else pm.deleteApplicationCacheFiles(pair.getPackageName(), obs);
         //noinspection SynchronizationOnLocalVariableOrMethodParameter
         synchronized (obs) {
@@ -470,7 +486,7 @@ public final class PackageManagerCompat {
         if (!obs.isSuccessful()) {
             throw new AndroidException("Could not clear cache of package " + pair);
         }
-        if (pair.getUserHandle() != UserHandleHidden.myUserId()) {
+        if (pair.getUserId() != UserHandleHidden.myUserId()) {
             BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{pair.getPackageName()});
         }
     }

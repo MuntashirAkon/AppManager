@@ -257,9 +257,9 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         if (item.isInstalled) {
             // Set kernel user ID
             String sharedId;
-            if (item.userHandles.length > 1) {
+            if (item.userIds.length > 1) {
                 int appId = UserHandleHidden.getAppId(item.uid);
-                sharedId = item.userHandles.length + "+" + appId;
+                sharedId = item.userIds.length + "+" + appId;
             } else sharedId = String.valueOf(item.uid);
             holder.sharedId.setText(sharedId);
             // Set kernel user ID text color to orange if the package is shared
@@ -441,7 +441,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     }
 
     private void handleClick(@NonNull ApplicationItem item) {
-        if (!item.isInstalled || item.userHandles.length == 0) {
+        if (!item.isInstalled || item.userIds.length == 0) {
             // The app should not be installed. But make sure this is really true. (For current user only)
             ApplicationInfo info;
             try {
@@ -457,7 +457,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                 // The app is already installed, and we were wrong to assume that it was installed.
                 // Update data before opening it.
                 item.isInstalled = true;
-                item.userHandles = new int[]{UserHandleHidden.myUserId()};
+                item.userIds = new int[]{UserHandleHidden.myUserId()};
                 Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, UserHandleHidden.myUserId());
                 mActivity.startActivity(intent);
                 return;
@@ -503,10 +503,10 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             return;
         }
         // The app is installed
-        if (item.userHandles.length == 1) {
+        if (item.userIds.length == 1) {
             int[] userHandles = Users.getUsersIds();
-            if (ArrayUtils.contains(userHandles, item.userHandles[0])) {
-                Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, item.userHandles[0]);
+            if (ArrayUtils.contains(userHandles, item.userIds[0])) {
+                Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, item.userIds[0]);
                 mActivity.startActivity(intent);
                 return;
             }
@@ -515,11 +515,11 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             return;
         }
         // More than a user, ask the user to select one
-        CharSequence[] userNames = new String[item.userHandles.length];
+        CharSequence[] userNames = new String[item.userIds.length];
         List<UserInfo> users = Users.getUsers();
         for (UserInfo info : users) {
-            for (int i = 0; i < item.userHandles.length; ++i) {
-                if (info.id == item.userHandles[i]) {
+            for (int i = 0; i < item.userIds.length; ++i) {
+                if (info.id == item.userIds[i]) {
                     userNames[i] = info.toLocalizedString(mActivity);
                 }
             }
@@ -527,7 +527,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         new SearchableItemsDialogBuilder<>(mActivity, userNames)
                 .setTitle(R.string.select_user)
                 .setOnItemClickListener((dialog, which, item1) -> {
-                    Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, item.userHandles[which]);
+                    Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, item.userIds[which]);
                     mActivity.startActivity(intent);
                     dialog.dismiss();
                 })

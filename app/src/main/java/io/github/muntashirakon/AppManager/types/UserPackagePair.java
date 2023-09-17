@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
 public final class UserPackagePair extends Pair<String, Integer> implements Parcelable {
-    public UserPackagePair(String packageName, @UserIdInt int userHandle) {
-        super(packageName, userHandle);
+    public UserPackagePair(String packageName, @UserIdInt int userId) {
+        super(packageName, userId);
     }
 
     public String getPackageName() {
@@ -19,7 +19,7 @@ public final class UserPackagePair extends Pair<String, Integer> implements Parc
     }
 
     @UserIdInt
-    public int getUserHandle() {
+    public int getUserId() {
         return super.second;
     }
 
@@ -29,7 +29,7 @@ public final class UserPackagePair extends Pair<String, Integer> implements Parc
         return "(" + first + ", " + second + ")";
     }
 
-    protected UserPackagePair(@NonNull Parcel in) {
+    private UserPackagePair(@NonNull Parcel in) {
         super(in.readString(), in.readInt());
     }
 
@@ -55,6 +55,6 @@ public final class UserPackagePair extends Pair<String, Integer> implements Parc
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(getPackageName());
-        dest.writeInt(getUserHandle());
+        dest.writeInt(getUserId());
     }
 }

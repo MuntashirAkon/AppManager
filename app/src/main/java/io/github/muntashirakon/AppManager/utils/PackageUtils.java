@@ -113,9 +113,9 @@ public final class PackageUtils {
         ArrayList<UserPackagePair> userPackagePairList = new ArrayList<>();
         int currentUser = UserHandleHidden.myUserId();
         for (ApplicationItem item : applicationItems) {
-            if (item.userHandles.length > 0) {
-                for (int userHandle : item.userHandles)
-                    userPackagePairList.add(new UserPackagePair(item.packageName, userHandle));
+            if (item.userIds.length > 0) {
+                for (int userId : item.userIds)
+                    userPackagePairList.add(new UserPackagePair(item.packageName, userId));
             } else {
                 userPackagePairList.add(new UserPackagePair(item.packageName, currentUser));
             }
@@ -171,7 +171,7 @@ public final class PackageUtils {
                     applicationItems.put(app.packageName, item);
                     item.packageName = app.packageName;
                 }
-                item.userHandles = ArrayUtils.appendInt(item.userHandles, app.userId);
+                item.userIds = ArrayUtils.appendInt(item.userIds, app.userId);
                 item.isInstalled = true;
                 item.openCount += app.openCount;
                 item.screenTime += app.screenTime;
@@ -541,7 +541,7 @@ public final class PackageUtils {
 
     public static int getAppUid(@NonNull UserPackagePair pair) {
         return ExUtils.requireNonNullElse(() -> PackageManagerCompat.getApplicationInfo(pair.getPackageName(),
-                PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, pair.getUserHandle()).uid, -1);
+                PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, pair.getUserId()).uid, -1);
     }
 
     public static boolean isTestOnlyApp(@NonNull ApplicationInfo applicationInfo) {
