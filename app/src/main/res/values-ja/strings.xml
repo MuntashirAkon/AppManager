@@ -595,7 +595,6 @@
     <string name="new_profile">新しいプロファイル</string>
     <string name="duplicate">複製</string>
     <string name="failed_to_duplicate_profile">プロファイルを複製できませんでした</string>
-    <string name="pref_show_users_in_installer_msg">インストーラーでアプリをインストールするユーザーを選択できるようにします。RootかADBが必要です</string>
     <string name="select_user">ユーザーを選択</string>
     <string name="encryption">暗号化</string>
     <string name="pref_encryption_msg">バックアップを暗号化する</string>

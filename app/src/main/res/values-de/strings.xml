@@ -618,7 +618,6 @@
     <string name="pref_encryption_msg">Verschlüsselung für Backups.</string>
     <string name="encryption">Verschlüsselung</string>
     <string name="select_user">Benutzer auswählen</string>
-    <string name="pref_show_users_in_installer">Benutzer im Installationsprogramm anzeigen</string>
     <string name="failed_to_duplicate_profile">Konnte Profil nicht duplizieren</string>
     <string name="enabled">Aktiviert</string>
     <string name="choose">Auswählen</string>

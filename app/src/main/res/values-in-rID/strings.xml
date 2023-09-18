@@ -550,7 +550,6 @@
     <string name="pref_encryption_msg">Enkripsi untuk cadangan.</string>
     <string name="encryption">Enkripsi</string>
     <string name="select_user">Pilih Pengguna</string>
-    <string name="pref_show_users_in_installer">Tampilkan pengguna di Installer</string>
     <string name="failed_to_duplicate_profile">Tidak dapat menduplikasi profil</string>
     <string name="duplicate">Duplikat</string>
     <string name="new_profile">Profil baru</string>
