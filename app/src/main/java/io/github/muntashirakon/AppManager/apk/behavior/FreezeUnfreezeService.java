@@ -17,6 +17,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
@@ -40,6 +41,7 @@ import io.github.muntashirakon.AppManager.DummyActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.misc.ScreenLockChecker;
+import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -76,6 +78,13 @@ public class FreezeUnfreezeService extends Service {
     private boolean mIsWorking;
     @Nullable
     private Future<?> mCheckLockResult;
+    private PowerManager.WakeLock mWakeLock;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mWakeLock = CpuUtils.getPartialWakeLock("freeze_unfreeze");
+    }
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
@@ -128,6 +137,7 @@ public class FreezeUnfreezeService extends Service {
         if (mCheckLockResult != null) {
             mCheckLockResult.cancel(true);
         }
+        CpuUtils.releaseWakeLock(mWakeLock);
         super.onDestroy();
     }
 
