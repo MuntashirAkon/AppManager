@@ -6,7 +6,6 @@ import android.app.AppOpsManager;
 import android.content.pm.PackageInfo;
 import android.content.pm.PermissionInfo;
 import android.os.Build;
-import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -145,60 +144,46 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
      * Allow the app op.
      *
      * <p>This also automatically grants the permission associated with the app op.
-     *
-     * @return {@code true} iff the app op could be allowed.
      */
     @RequiresPermission(allOf = {
             "android.permission.MANAGE_APP_OPS_MODES",
             ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS,
     })
     @WorkerThread
-    public boolean allowAppOp(@NonNull PackageInfo packageInfo, @NonNull AppOpsManagerCompat appOpsManager)
-            throws RemoteException, PermissionException {
-        boolean isSuccessful;
+    public void allowAppOp(@NonNull PackageInfo packageInfo, @NonNull AppOpsManagerCompat appOpsManager)
+            throws PermissionException {
         if (hasModifiablePermission && permission != null) {
             PermUtils.grantPermission(packageInfo, permission, appOpsManager, true, true);
-            isSuccessful = true;
         } else {
-            isSuccessful = PermUtils.allowAppOp(appOpsManager, getOp(), packageInfo.packageName,
-                    packageInfo.applicationInfo.uid);
+            PermUtils.allowAppOp(appOpsManager, getOp(), packageInfo.packageName, packageInfo.applicationInfo.uid);
         }
         invalidate(appOpsManager, packageInfo);
-        return isSuccessful;
     }
 
     /**
      * Disallow the app op.
      *
      * <p>This also revokes the permission associated with the app op.
-     *
-     * @return {@code true} iff the app op could be disallowed.
      */
     @RequiresPermission(allOf = {
             "android.permission.MANAGE_APP_OPS_MODES",
             ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS,
     })
     @WorkerThread
-    public boolean disallowAppOp(@NonNull PackageInfo packageInfo, @NonNull AppOpsManagerCompat appOpsManager)
-            throws RemoteException, PermissionException {
-        boolean isSuccessful;
+    public void disallowAppOp(@NonNull PackageInfo packageInfo, @NonNull AppOpsManagerCompat appOpsManager)
+            throws PermissionException {
         if (hasModifiablePermission && permission != null) {
             PermUtils.revokePermission(packageInfo, permission, appOpsManager, true);
-            isSuccessful = true;
         } else {
-            isSuccessful = PermUtils.disallowAppOp(appOpsManager, getOp(), packageInfo.packageName,
-                    packageInfo.applicationInfo.uid);
+            PermUtils.disallowAppOp(appOpsManager, getOp(), packageInfo.packageName, packageInfo.applicationInfo.uid);
         }
         invalidate(appOpsManager, packageInfo);
-        return isSuccessful;
     }
 
     /**
      * Set mode for app op.
      *
      * <p>This also grants/revoke the permission associated with the app op.
-     *
-     * @return {@code true} iff the app op could be set.
      */
     @RequiresPermission(allOf = {
             "android.permission.MANAGE_APP_OPS_MODES",
@@ -206,9 +191,8 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
             ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS,
     })
     @WorkerThread
-    public boolean setAppOp(@NonNull PackageInfo packageInfo, @NonNull AppOpsManagerCompat appOpsManager,
-                            @AppOpsManagerCompat.Mode int mode)
-            throws RemoteException, PermissionException {
+    public void setAppOp(@NonNull PackageInfo packageInfo, @NonNull AppOpsManagerCompat appOpsManager,
+                         @AppOpsManagerCompat.Mode int mode) throws PermissionException {
         if (hasModifiablePermission && permission != null) {
             boolean isAllowed = false;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -221,17 +205,19 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
                 PermUtils.revokePermission(packageInfo, permission, appOpsManager, true);
             }
         }
-        boolean isSuccessful = PermUtils.setAppOpMode(appOpsManager, getOp(), packageInfo.packageName,
-                packageInfo.applicationInfo.uid, mode);
+        PermUtils.setAppOpMode(appOpsManager, getOp(), packageInfo.packageName, packageInfo.applicationInfo.uid, mode);
         invalidate(appOpsManager, packageInfo);
-        return isSuccessful;
     }
 
     @RequiresPermission("android.permission.MANAGE_APP_OPS_MODES")
     public void invalidate(@NonNull AppOpsManagerCompat appOpsManager, @NonNull PackageInfo packageInfo)
-            throws RemoteException {
-        List<AppOpsManagerCompat.OpEntry> opEntryList = appOpsManager.getOpsForPackage(packageInfo.applicationInfo.uid,
-                packageInfo.packageName, new int[]{getOp()}).get(0).getOps();
-        mOpEntry = opEntryList.size() > 0 ? opEntryList.get(0) : null;
+            throws PermissionException {
+        try {
+            List<AppOpsManagerCompat.OpEntry> opEntryList = appOpsManager.getOpsForPackage(packageInfo.applicationInfo.uid,
+                    packageInfo.packageName, new int[]{getOp()}).get(0).getOps();
+            mOpEntry = !opEntryList.isEmpty() ? opEntryList.get(0) : null;
+        } catch (Exception e) {
+            throw new PermissionException(e);
+        }
     }
 }

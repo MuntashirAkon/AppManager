@@ -690,7 +690,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (packageInfo == null) return false;
         try {
             // Set mode
-            mAppOpsManager.setMode(op, packageInfo.applicationInfo.uid, mPackageName, mode);
+            PermUtils.setAppOpMode(mAppOpsManager, op, mPackageName, packageInfo.applicationInfo.uid, mode);
             mExecutor.submit(() -> {
                 synchronized (mBlockerLocker) {
                     waitForBlockerOrExit();
@@ -701,7 +701,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     mBlockerLocker.notifyAll();
                 }
             });
-        } catch (Exception e) {
+        } catch (PermissionException e) {
             e.printStackTrace();
             return false;
         }
@@ -717,9 +717,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
         boolean isSuccessful = false;
         try {
             if (appOpItem.isAllowed()) {
-                isSuccessful = appOpItem.disallowAppOp(packageInfo, mAppOpsManager);
+                appOpItem.disallowAppOp(packageInfo, mAppOpsManager);
             } else {
-                isSuccessful = appOpItem.allowAppOp(packageInfo, mAppOpsManager);
+                appOpItem.allowAppOp(packageInfo, mAppOpsManager);
             }
             setAppOp(appOpItem);
             mExecutor.submit(() -> {
@@ -732,10 +732,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     mBlockerLocker.notifyAll();
                 }
             });
-        } catch (Exception e) {
+            return true;
+        } catch (PermissionException e) {
             e.printStackTrace();
+            return false;
         }
-        return isSuccessful;
     }
 
     @WorkerThread
@@ -744,9 +745,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (mExternalApk) return false;
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null) return false;
-        boolean isSuccessful = false;
         try {
-            isSuccessful = appOpItem.setAppOp(packageInfo, mAppOpsManager, mode);
+            appOpItem.setAppOp(packageInfo, mAppOpsManager, mode);
             setAppOp(appOpItem);
             mExecutor.submit(() -> {
                 synchronized (mBlockerLocker) {
@@ -758,10 +758,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     mBlockerLocker.notifyAll();
                 }
             });
-        } catch (Exception e) {
+            return true;
+        } catch (PermissionException e) {
             e.printStackTrace();
+            return false;
         }
-        return isSuccessful;
     }
 
     @WorkerThread
@@ -812,11 +813,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         if (basePermissionType == PermissionInfo.PROTECTION_DANGEROUS) {
                             // Set mode
                             try {
-                                mAppOpsManager.setMode(mAppOpItem.getOp(), packageInfo.applicationInfo.uid,
-                                        mPackageName, AppOpsManager.MODE_IGNORED);
+                                PermUtils.setAppOpMode(mAppOpsManager, mAppOpItem.getOp(), mPackageName,
+                                        packageInfo.applicationInfo.uid, AppOpsManager.MODE_IGNORED);
                                 opItems.add(mAppOpItem.getOp());
                                 mAppOpItem.invalidate(mAppOpsManager, packageInfo);
-                            } catch (Exception e) {
+                            } catch (PermissionException e) {
                                 e.printStackTrace();
                                 isSuccessful = false;
                                 break;
