@@ -694,7 +694,6 @@
     <string name="pref_encryption_msg">बैकअप के लिए एन्क्रिप्शन।</string>
     <string name="encryption">एन्क्रिप्शन</string>
     <string name="select_user">यूज़र चुनें</string>
-    <string name="pref_show_users_in_installer">इंस्टॉलर में यूज़र्स को दिखाएं</string>
     <string name="failed_to_duplicate_profile">प्रोफाइल डुप्लीकेट नहीं कर सका</string>
     <string name="duplicate">डुप्लीकेट</string>
     <string name="new_profile">नई प्रोफ़ाइल</string>

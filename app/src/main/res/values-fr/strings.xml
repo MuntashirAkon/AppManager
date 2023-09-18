@@ -84,7 +84,6 @@
     <string name="pref_encryption_msg">Chiffrement des sauvegardes.</string>
     <string name="encryption">Chiffrement</string>
     <string name="select_user">Sélectionner l\'utilisateur</string>
-    <string name="pref_show_users_in_installer">Afficher les utilisateurs dans l\'installeur</string>
     <string name="failed_to_duplicate_profile">Impossible de dupliquer le profil</string>
     <string name="duplicate">Dupliquer</string>
     <string name="new_profile">Nouveau profil</string>
@@ -1267,7 +1266,7 @@
     <plurals name="alert_failed_to_unblock_components">
         <item quantity="one">Impossible de bloquer les composants d\'une application.</item>
         <item quantity="many">Impossible de bloquer les composants de %1$d applications.</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="app_can_write_and_execute_in_same_place">Cette application enfreint la <a href="https://en.wikipedia.org/wiki/W%5EX">politique W^X</a> et peut écrire et exécuter dans le même dossier ou la même partie de mémoire. Ceci autorise l\'exécution d\'exécutables arbitraires soit par la modification des exécutables inclus dans l\'application ou en les téléchargeant depuis Internet. Sauf si c\'est le comportement attendu de l\'application (ex. émulateurs de terminal), il est recommendé de trouver une version plus récente de l\'application prévue pour SDK 29 (Android 10) et ultérieur, ou de trouver des alternatives.</string>
     <string name="app_manager_build_expired_message">Pour assurer la sécurité de votre appareil et de vos données, la version d\'App Manager que vous utilisez est arrivée à expiration. Vous devez installer la version la plus récente pour continuer à l\'utiliser, ou désinstaller cette version si aucune autre n\'est disponible.</string>
