@@ -1485,4 +1485,9 @@
     <string name="scan_report_from_pithus">Raport Pithusa</string>
     <string name="action_checking">Sprawdzanie…</string>
     <string name="report_not_available">Niedostępne</string>
+    <string name="profile_modified_are_you_sure">Profil został zmodyfikowany. Odrzucić wszystkie zmiany i wyjść\?</string>
+    <string name="apply_profile">Zastosuj profil \"%1$s\"</string>
+    <string name="copy_profile_id">Skopiuj identyfikator profilu</string>
+    <string name="profile_id">Identyfikator profilu</string>
+    <string name="choose_a_profile_state">Wybierz stan profilu</string>
 </resources>
