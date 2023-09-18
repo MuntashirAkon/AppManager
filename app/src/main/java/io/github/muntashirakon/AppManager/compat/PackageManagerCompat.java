@@ -114,40 +114,46 @@ public final class PackageManagerCompat {
     public @interface EnabledFlags {
     }
 
-    private static final int WORKING_FLAGS = PackageManager.GET_META_DATA | MATCH_UNINSTALLED_PACKAGES
-            | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES;
+    private static final int NEEDED_FLAGS = MATCH_UNINSTALLED_PACKAGES | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES;
 
-    @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
     @WorkerThread
+    @NonNull
     public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userId) throws RemoteException {
         IPackageManager pm = getPackageManager();
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                return pm.getInstalledPackages((long) flags, userId).getList();
-            }
-            return pm.getInstalledPackages(flags, userId).getList();
-        } catch (DeadObjectException e) {
-            Log.w(TAG, "Could not fetch installed packages for user %d using getInstalledPackages(), using workaround",
-                    e, userId);
-            List<ApplicationInfo> applicationInfoList = getInstalledApplications(pm, flags & WORKING_FLAGS, userId);
-            List<PackageInfo> packageInfoList = new ArrayList<>(applicationInfoList.size());
-            for (int i = 0; i < applicationInfoList.size(); ++i) {
-                if (ThreadUtils.isInterrupted()) {
-                    break;
-                }
-                try {
-                    packageInfoList.add(getPackageInfo(applicationInfoList.get(i).packageName, flags, userId));
-                } catch (Exception ex) {
-                    throw (RemoteException) new RemoteException(ex.getMessage()).initCause(ex);
-                }
-                if (i % 100 == 0) {
-                    // Prevent DeadObjectException
-                    SystemClock.sleep(300);
-                }
-            }
+        // Here we've compromised performance to fix issues in some devices where Binder transaction limit is too small.
+        List<ApplicationInfo> applicationInfoList = getInstalledApplications(pm, flags & NEEDED_FLAGS, userId);
+        List<PackageInfo> packageInfoList;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            packageInfoList = pm.getInstalledPackages((long) flags, userId).getList();
+        } else packageInfoList = pm.getInstalledPackages(flags, userId).getList();
+        if (packageInfoList.size() == applicationInfoList.size()) {
+            // Everything's loaded correctly
             return packageInfoList;
         }
+        if (packageInfoList.size() > applicationInfoList.size()) {
+            // Should never happen
+            throw new IllegalStateException("Retrieved " + packageInfoList.size() + " packages out of "
+                    + applicationInfoList.size() + " applications which is impossible");
+        }
+        Log.w(TAG, "Could not fetch installed packages for user %d using getInstalledPackages(), using workaround",
+                userId);
+        packageInfoList = new ArrayList<>(applicationInfoList.size());
+        for (int i = 0; i < applicationInfoList.size(); ++i) {
+            if (ThreadUtils.isInterrupted()) {
+                break;
+            }
+            try {
+                packageInfoList.add(getPackageInfo(pm, applicationInfoList.get(i).packageName, flags, userId));
+            } catch (Exception ex) {
+                throw (RemoteException) new RemoteException(ex.getMessage()).initCause(ex);
+            }
+            if (i % 100 == 0) {
+                // Prevent DeadObjectException
+                SystemClock.sleep(300);
+            }
+        }
+        return packageInfoList;
     }
 
     @WorkerThread
