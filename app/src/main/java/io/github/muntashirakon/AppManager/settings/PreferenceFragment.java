@@ -59,7 +59,10 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat {
         if (mPrefKey != null) {
             Preference prefToNavigate = findPreference(mPrefKey);
             if (prefToNavigate != null) {
-                prefToNavigate.performClick();
+                scrollToPreference(prefToNavigate);
+                if (prefToNavigate.getFragment() != null) {
+                    prefToNavigate.performClick();
+                }
             }
         }
     }
