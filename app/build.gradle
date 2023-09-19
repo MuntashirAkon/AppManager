@@ -148,6 +148,7 @@ dependencies {
 
     // UI
     implementation "com.google.android.material:material:${material_version}"
+    implementation "androidx.core:core:${androidx_core_version}"
     implementation "androidx.appcompat:appcompat:${appcompat_version}"
     // Fix duplicate classes issue in material
     configurations {
