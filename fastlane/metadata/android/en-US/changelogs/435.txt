@@ -1,0 +1,6 @@
+Interesting changes
+- Fixed installing APK files queued in the background
+- Fixed uploading APK files to VirusTotal
+- Improved listing files in a directory, especially Storage Access Framework (SAF)
+- Use profile ID instead of profile name for identifying each profile. If you use automation, make sure to use profile ID instead of profile name.
+- Use wakelocks in long-running tasks to keep the CPU awake

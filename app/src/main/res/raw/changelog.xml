@@ -2,6 +2,132 @@
 <changelog>
     <release
         type="alpha release"
+        version="v4.0.0-alpha02"
+        code="435"
+        date="18 September 2023">
+        <title type="medium">Main page</title>
+        <improve title="Batch ops">Added an option to create a new profile in the “Add to profile” dialog</improve>
+        <fix title="Batch ops">Fixed saving APKS with dependencies</fix>
+
+        <title type="medium">App Details page</title>
+        <improve>Improved loading performance</improve>
+        <fix>Fixed setting mode for some app ops</fix>
+        <note subtext="true">
+            In the app ops tab, the toggle button as well as the long click options attempts to alter the associated
+            permission too if it exists. [u]To bypass this behaviour, use “Set custom app op” from the three-dots menu
+            instead.[/u]
+        </note>
+
+        <title type="medium">App Info tab</title>
+        <improve>Added an option to create a new profile in the “Add to profile” dialog</improve>
+        <improve>Improved performance by loading UI contents in the background</improve>
+        <improve>Hide data usage for other users</improve>
+        <note subtext="true">
+            Data usage section is hidden if the following conditions are true:[br /]
+            1. OS is Android 6.0 onwards[br /]
+            2. The app does not belong to the current user, and[br /]
+            3. Self or remote UID is not system UID.
+        </note>
+        <fix>Fixed displaying wrong information regarding blocked trackers</fix>
+        <fix>Prevented the app from crashing on attempting to enable battery optimisation of restricted apps</fix>
+        <note subtext="true">Battery optimisation cannot be enabled for system restricted apps.</note>
+
+        <title type="medium">Debloater</title>
+        <improve>Display a loader in details dialog to avoid freezing issues</improve>
+
+        <title type="medium">Editor</title>
+        <improve>Check if the file is writable during “Save and exit”</improve>
+        <fix>Prevented erroneous display of “Read only” warning for files that support writing</fix>
+
+        <title type="medium">File Manager</title>
+        <improve>Display “Loading...” as the subtitle instead of showing previous folder info</improve>
+        <improve>Display only the filename in the “Open with…” dialog</improve>
+        <improve>Display progress for batch rename, delete and paste operations</improve>
+        <improve>Improved listing files in a directory, especially Storage Access Framework (SAF)</improve>
+        <fix>Fixed displaying search bar in the “Open with…” dialog</fix>
+        <fix>Fixed retrieving files if a folder contains thousands of files</fix>
+        <fix>Prevented looping indefinitely when an inaccessible file is a symbolic link</fix>
+
+        <title type="medium">Installer</title>
+        <fix>Fixed installing APK files queued in the background</fix>
+        <fix>Fixed installing some signed APK files</fix>
+        <note subtext="true">Some signed APKs could not be installed due size mismatch.</note>
+
+        <title type="medium">Interceptor</title>
+        <improve>Added a few intent filters related to camera</improve>
+
+        <title type="medium">Profile page</title>
+        <new>Added an option to copy profile ID</new>
+        <improve>Display exit confirmation dialog if there are unsaved changes</improve>
+        <improve>Display previously selected apps on top of the app list</improve>
+        <improve>Display warning before deleting a profile</improve>
+        <fix>Avoid creating duplicate profiles by auto-renaming the newly-created profile</fix>
+        <fix>Fixed displaying backup options in configurations tab</fix>
+
+        <title type="medium">Profiles page</title>
+        <new>Added an option to copy profile ID</new>
+        <new>Use profile ID instead of profile name for identifying each profile</new>
+        <note subtext="true">
+            In profile version 1, there's no difference between profile name and profile ID. But from profile version 2,
+            a new field [tt]id[/tt] shall be introduced which will be decoupled profile name from its ID, making it
+            possible to use any name for profile or rename it. [u]If you use automation, make sure to use profile ID
+            instead of profile name.[/u]
+        </note>
+        <improve>Auto-select the configured profile state in “Apply profile” dialog</improve>
+        <improve>Handled applying multiple profiles using a queue</improve>
+        <improve>Moved shortcut handling logic to a different activity</improve>
+        <note subtext="true">
+            To avoid opening existing tasks from Recents, shortcuts are handled in a separate task.
+        </note>
+        <improve>Optimised updating new or modified profile information</improve>
+
+        <title type="medium">Running Apps page</title>
+        <fix>Fixed listing processes when some PIDs no longer exist</fix>
+
+        <title type="medium">Security</title>
+        <improve>Check for zip-slip vulnerability before creating a folder or a symbolic link</improve>
+        <improve>Disabled access to [tt]content://[/tt] in WebView</improve>
+        <improve>Sanitize user inputs, intents when it involves files and filenames</improve>
+        <improve>Use formatted string for logging to prevent log injections</improve>
+
+        <title type="medium">Settings</title>
+        <improve>Fixed navigating one step back after a device configuration is changed</improve>
+
+        <title type="medium">UI Tracker</title>
+        <improve>Added the ability to drag the icon when iconified</improve>
+        <improve>Added the ability to drag the window outside the visible display</improve>
+        <improve>Used 60% transparent window</improve>
+
+        <title type="medium">Usage</title>
+        <improve>Fixed retrieving mobile data usage in Android 12 and earlier</improve>
+
+        <title type="medium">Others</title>
+        <improve>Enabled fast scrolling in the user manual page</improve>
+        <improve>Use definite mode of operation</improve>
+        <improve>Use wakelocks in long-running tasks to keep the CPU awake</improve>
+        <note subtext="true">
+            When the mode of operation is set to auto, App Manager will attempt to find the best mode and set it as the
+            current mode instead of “Auto” in order to improve the startup time as well as allow stable access of
+            service via upcoming App Manager SDK.
+        </note>
+        <improve>Use marquee texts in suggestions/dropdown menu</improve>
+        <fix>Fixed retrieving list of packages in some devices</fix>
+        <fix>Fixed uploading APK files to VirusTotal</fix>
+        <fix>Made setting UID/GID optional while extracting a tar archive</fix>
+        <fix>Prevented the app from crashing due to [tt]forceDexOpt[/tt] failing in Android 12</fix>
+        <note subtext="true">
+            In Android 12, [tt]forceDexOpt[/tt] always fails due to [a href="https://github.com/MuntashirAkon/AppManager/issues/1131"]a bug[/a]
+            in the Android framework. As a workaround, the optimisation is done via [tt]performDexOptMode[/tt] imitating
+            whatever [tt]forceDexOpt[/tt] does.
+        </note>
+
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v4.0.0-alpha01...v4.0.0-alpha02"]v4.0.0-alpha01...v4.0.0-alpha02[/a]
+        </note>
+    </release>
+    <release
+        type="alpha release"
         version="v4.0.0-alpha01"
         code="434"
         date="18 July 2023">
