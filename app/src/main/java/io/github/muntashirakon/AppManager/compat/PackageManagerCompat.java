@@ -51,6 +51,7 @@ import java.util.Objects;
 
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -60,6 +61,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 public final class PackageManagerCompat {
+    public static final String TAG = PackageManagerCompat.class.getSimpleName();
     @IntDef({
             COMPONENT_ENABLED_STATE_DEFAULT,
             COMPONENT_ENABLED_STATE_ENABLED,
@@ -81,33 +83,42 @@ public final class PackageManagerCompat {
 
     private static final int WORKING_FLAGS = PackageManager.GET_META_DATA | PackageUtils.flagMatchUninstalled;
 
-    @SuppressLint("NewApi")
+    @NonNull
     @SuppressWarnings("deprecation")
     @WorkerThread
     public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userHandle)
             throws RemoteException {
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M && (flags & ~WORKING_FLAGS) != 0) {
-            // Need workaround
-            List<ApplicationInfo> applicationInfoList = getInstalledApplications(flags & WORKING_FLAGS, userHandle);
-            List<PackageInfo> packageInfoList = new ArrayList<>(applicationInfoList.size());
-            for (int i = 0; i < applicationInfoList.size(); ++i) {
-                try {
-                    packageInfoList.add(getPackageInfo(applicationInfoList.get(i).packageName, flags, userHandle));
-                    if (i % 100 == 0) {
-                        // Prevent DeadObjectException
-                        SystemClock.sleep(300);
-                    }
-                } catch (Exception e) {
-                    throw new RemoteException(e.getMessage());
-                }
-            }
+        IPackageManager pm = getPackageManager();
+        // Here we've compromised performance to fix issues in some devices where Binder transaction limit is too small.
+        List<ApplicationInfo> applicationInfoList = getInstalledApplications(flags & WORKING_FLAGS, userHandle);
+        List<PackageInfo> packageInfoList;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            packageInfoList = pm.getInstalledPackages((long) flags, userHandle).getList();
+        } else packageInfoList = pm.getInstalledPackages(flags, userHandle).getList();
+        if (packageInfoList.size() == applicationInfoList.size()) {
+            // Everything's loaded correctly
             return packageInfoList;
         }
-        IPackageManager pm = getPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return pm.getInstalledPackages((long) flags, userHandle).getList();
+        if (packageInfoList.size() > applicationInfoList.size()) {
+            // Should never happen
+            throw new IllegalStateException("Retrieved " + packageInfoList.size() + " packages out of "
+                    + applicationInfoList.size() + " applications which is impossible");
         }
-        return pm.getInstalledPackages(flags, userHandle).getList();
+        Log.w(TAG, "Could not fetch installed packages for user " + userHandle
+                + " using getInstalledPackages(), using workaround");
+        packageInfoList = new ArrayList<>(applicationInfoList.size());
+        for (int i = 0; i < applicationInfoList.size(); ++i) {
+            try {
+                packageInfoList.add(getPackageInfo(applicationInfoList.get(i).packageName, flags, userHandle));
+            } catch (Exception e) {
+                throw new RemoteException(e.getMessage());
+            }
+            if (i % 100 == 0) {
+                // Prevent DeadObjectException
+                SystemClock.sleep(300);
+            }
+        }
+        return packageInfoList;
     }
 
     @SuppressLint("NewApi")
