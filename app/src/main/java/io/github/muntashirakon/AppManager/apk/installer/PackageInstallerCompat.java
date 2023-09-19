@@ -575,9 +575,10 @@ public final class PackageInstallerCompat {
             List<ApkFile.Entry> selectedEntries = apkFile.getSelectedEntries();
             Log.d(TAG, "Install: selected entries: " + selectedEntries.size());
             // Write apk files
+            boolean needSigning = apkFile.needSigning();
             for (ApkFile.Entry entry : selectedEntries) {
-                try (InputStream apkInputStream = entry.getSignedInputStream();
-                     OutputStream apkOutputStream = session.openWrite(entry.getFileName(), 0, entry.getFileSize())) {
+                try (InputStream apkInputStream = entry.getInputStream(needSigning);
+                     OutputStream apkOutputStream = session.openWrite(entry.getFileName(), 0, entry.getFileSize(needSigning))) {
                     IoUtils.copy(apkInputStream, apkOutputStream);
                     session.fsync(apkOutputStream);
                     Log.d(TAG, "Install: copied entry " + entry.name);

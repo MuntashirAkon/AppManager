@@ -188,7 +188,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     @WorkerThread
     @NonNull
     private PackageInfo loadNewPackageInfo() throws PackageManager.NameNotFoundException, IOException {
-        String apkPath = apkFile.getBaseEntry().getSignedFile().getAbsolutePath();
+        String apkPath = apkFile.getBaseEntry().getFile(apkFile.needSigning()).getAbsolutePath();
         int flags = PackageManager.GET_PERMISSIONS
                 | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                 | PackageManager.GET_SERVICES | flagDisabledComponents | flagSigningInfoApk

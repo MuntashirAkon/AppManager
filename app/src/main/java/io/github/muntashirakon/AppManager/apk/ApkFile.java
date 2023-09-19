@@ -726,6 +726,23 @@ public final class ApkFile implements AutoCloseable {
         }
 
         /**
+         * Get size of the entry or {@code -1} if unavailable
+         */
+        @WorkerThread
+        public long getFileSize(boolean signed) {
+            try {
+                return (signed ? getSignedFile() : getRealCachedFile()).length();
+            } catch (IOException e) {
+                return -1;
+            }
+        }
+
+        @WorkerThread
+        public File getFile(boolean signed) throws IOException {
+            return signed ? getSignedFile() : getRealCachedFile();
+        }
+
+        /**
          * Get signed APK file if required based on user preferences.
          *
          * @throws IOException If the APK cannot be signed or cached.
@@ -733,10 +750,6 @@ public final class ApkFile implements AutoCloseable {
         public File getSignedFile() throws IOException {
             if (Paths.exists(signedFile)) return signedFile;
             File realFile = getRealCachedFile();
-            if (!needSigning()) {
-                // Return original/real file if signing is not requested
-                return realFile;
-            }
             signedFile = fileCache.createCachedFile("apk");
             SigSchemes sigSchemes = SigSchemes.fromPref();
             try {
@@ -745,10 +758,8 @@ public final class ApkFile implements AutoCloseable {
                     idsigFile = fileCache.createCachedFile("idsig");
                     signer.setIdsigFile(idsigFile);
                 }
-                if (signer.sign(realFile, signedFile)) {
-                    if (Signer.verify(sigSchemes, signedFile, idsigFile)) {
-                        return signedFile;
-                    }
+                if (signer.sign(realFile, signedFile) && Signer.verify(sigSchemes, signedFile, idsigFile)) {
+                    return signedFile;
                 }
                 throw new IOException("Failed to sign " + realFile);
             } catch (Exception e) {
@@ -757,12 +768,12 @@ public final class ApkFile implements AutoCloseable {
         }
 
         /**
-         * Same as {@link #getSignedFile()} except that it returns an {@link InputStream}.
+         * Same as {@link #getFile(boolean)} except that it returns an {@link InputStream}.
          *
          * @throws IOException If the APK cannot be signed or cached.
          */
-        public InputStream getSignedInputStream() throws IOException {
-            if (!needSigning()) {
+        public InputStream getInputStream(boolean signed) throws IOException {
+            if (!signed) {
                 // Return original/real input stream if signing is not requested
                 return getRealInputStream();
             }
