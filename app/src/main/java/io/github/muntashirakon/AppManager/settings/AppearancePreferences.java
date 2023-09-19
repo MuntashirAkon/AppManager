@@ -54,7 +54,6 @@ public class AppearancePreferences extends PreferenceFragment {
                             currentTheme = selectedTheme;
                             Prefs.Appearance.setNightMode(currentTheme);
                             AppCompatDelegate.setDefaultNightMode(currentTheme);
-                            appTheme.setSummary(themes[THEME_CONST.indexOf(currentTheme)]);
                         }
                     })
                     .setNegativeButton(R.string.cancel, null)
