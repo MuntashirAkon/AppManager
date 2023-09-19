@@ -1,0 +1,13 @@
+Join App Manager in Matrix: https://matrix.to/#/#appmanager:matrix.org
+- [App Info] Hide data usage for other users
+- [ADB]Fixed clicking the links in the “Incomplete USB debugging” dialog
+- [Installer]Fixed installing some signed APK files
+- [Docs]Fixed links to App Manager settings page
+- [Installer]Fixed parsing unsigned APK files
+- [Settings]Fixed navigating one step back after a device configuration is changed
+- [Settings]Fixed saving a backup option: Cache
+- [Batch Ops]Fixed saving APKS with dependencies
+- Enabled fast scrolling in the user manual page
+- Fixed extracting tar archives in a volume with no support for permissions, UID and/or GID
+- Fixed navigating one step back after a device configuration is changed
+- Prevented crashes in Android 14

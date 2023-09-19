@@ -2,6 +2,37 @@
 <changelog>
     <release
         type="stable release"
+        version="v3.1.2"
+        code="425"
+        date="19 September 2023">
+        <note>App Manager is now on [a href="https://matrix.to/#/#appmanager:matrix.org"]Matrix[/a]!</note>
+        <improve title="App Info">Hide data usage for other users</improve>
+        <note subtext="true">
+            Data usage section is hidden if the following conditions are true:[br /]
+            1. OS is Android 6.0 onwards[br /]
+            2. The app does not belong to the current user.
+        </note>
+        <improve>Enabled fast scrolling in the user manual page</improve>
+
+        <fix title="ADB">Fixed clicking the links in the “Incomplete USB debugging” dialog</fix>
+        <fix title="Installer">Fixed installing some signed APK files</fix>
+        <note subtext="true">Some signed APKs could not be installed due size mismatch.</note>
+        <fix title="Docs">Fixed links to App Manager settings page</fix>
+        <fix title="Installer">Fixed parsing unsigned APK files</fix>
+        <fix title="Settings">Fixed navigating one step back after a device configuration is changed</fix>
+        <fix title="Settings">Fixed saving a backup option: Cache</fix>
+        <fix title="Batch Ops">Fixed saving APKS with dependencies</fix>
+        <fix>Fixed extracting tar archives in a volume with no support for permissions, UID and/or GID</fix>
+        <fix>Fixed navigating one step back after a device configuration is changed</fix>
+        <fix>Prevented crashes in Android 14</fix>
+
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.1.1...v3.1.2"]v3.1.1...v3.1.2[/a]
+        </note>
+    </release>
+    <release
+        type="stable release"
         version="v3.1.1"
         code="424"
         date="4 June 2023">
@@ -34,6 +65,11 @@
         <fix title="Main page">Prevented crashes when the installer feature is disabled</fix>
         <fix title="Profiles page">Fixed a crash due to lifecycle issue</fix>
         <fix title="Settings page">Fixed listing available storages in backup volume selector</fix>
+
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.1.0...v3.1.1"]v3.1.0...v3.1.1[/a]
+        </note>
     </release>
     <release
         type="stable release"

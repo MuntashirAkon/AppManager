@@ -13,8 +13,8 @@ android {
         applicationId 'io.github.muntashirakon.AppManager'
         minSdk min_sdk
         targetSdk target_sdk
-        versionCode 424
-        versionName "3.1.1"
+        versionCode 425
+        versionName "3.1.2"
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
@@ -148,7 +148,6 @@ dependencies {
 
     // UI
     implementation "com.google.android.material:material:${material_version}"
-    implementation "androidx.core:core:${androidx_core_version}"
     implementation "androidx.appcompat:appcompat:${appcompat_version}"
     // Fix duplicate classes issue in material
     configurations {

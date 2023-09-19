@@ -227,7 +227,7 @@ public final class PackageManagerCompat {
     public static InstallSourceInfoCompat getInstallSourceInfo(@NonNull String packageName, @UserIdInt int userId)
             throws RemoteException {
         IPackageManager pm = getPackageManager();
-        if (BuildCompat.isAtLeastU()) {
+        if (Build.VERSION.SDK_INT >= 34 || BuildCompat.isAtLeastU()) {
             return new InstallSourceInfoCompat(pm.getInstallSourceInfo(packageName, userId));
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
