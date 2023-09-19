@@ -30,6 +30,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.ResourceUtil;
 import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 import io.github.muntashirakon.util.UiUtils;
+import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class HelpActivity extends BaseActivity implements SearchView.OnQueryTextListener {
     private LinearLayoutCompat container;
@@ -81,6 +82,7 @@ public class HelpActivity extends BaseActivity implements SearchView.OnQueryText
         searchView.setOnQueryTextListener(this);
         nextButton.setOnClickListener(v -> webView.findNext(true));
         previousButton.setOnClickListener(v -> webView.findNext(false));
+        new FastScrollerBuilder(webView).useMd2Style().build();
     }
 
     @Override
