@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
-import android.system.ErrnoException;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
@@ -206,15 +204,15 @@ public final class TarUtils {
                         }
                     }
                     // Fix permissions
-                    Paths.setPermissions(file, entry.getMode(), entry.getUserId(), entry.getGroupId());
+                    TarArchiveEntry finalEntry = entry;
+                    ExUtils.exceptionAsIgnored(() -> Paths.setPermissions(file, finalEntry.getMode(),
+                            finalEntry.getUserId(), finalEntry.getGroupId()));
                     // Restore timestamp
                     long modificationTime = entry.getModTime().getTime();
                     if (modificationTime > 0) { // Backward-compatibility
                         file.setLastModified(entry.getModTime().getTime());
                     }
                 }
-            } catch (ErrnoException e) {
-                throw new IOException(e);
             } finally {
                 is.close();
             }
