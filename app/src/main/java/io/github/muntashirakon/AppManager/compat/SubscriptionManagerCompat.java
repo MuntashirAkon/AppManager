@@ -54,8 +54,9 @@ public class SubscriptionManagerCompat {
                 return sub.getSubscriberIdForSubscriber((int) subId);
             }
             return sub.getSubscriberIdForSubscriber(subId);
-        } catch (RemoteException | NullPointerException e) {
+        } catch (RemoteException e) {
             e.printStackTrace();
+        } catch (NullPointerException ignore) {
         }
         return null;
     }

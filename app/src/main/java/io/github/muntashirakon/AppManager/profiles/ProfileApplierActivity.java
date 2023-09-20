@@ -142,6 +142,7 @@ public class ProfileApplierActivity extends BaseActivity {
             case ST_SIMPLE:
                 Intent intent = new Intent(this, ProfileApplierService.class);
                 intent.putExtra(ProfileApplierService.EXTRA_PROFILE_ID, info.profileId);
+                intent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, info.profile.name);
                 // There must be a state
                 intent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, Objects.requireNonNull(state));
                 ContextCompat.startForegroundService(this, intent);
@@ -162,6 +163,7 @@ public class ProfileApplierActivity extends BaseActivity {
                         .setPositiveButton(R.string.ok, (dialog, which, selectedState) -> {
                             Intent aIntent = new Intent(this, ProfileApplierService.class);
                             aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_ID, info.profileId);
+                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, info.profile.name);
                             aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, selectedState);
                             ContextCompat.startForegroundService(this, aIntent);
                         })
