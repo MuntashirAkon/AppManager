@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.logcat;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -32,6 +34,7 @@ import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
@@ -40,10 +43,6 @@ import io.github.muntashirakon.widget.MultiSelectionView;
 public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogViewerRecyclerAdapter.ViewHolder>
         implements Filterable {
     public static final String TAG = LogViewerRecyclerAdapter.class.getSimpleName();
-
-    public static final int CONTEXT_MENU_FILTER_ID = 0;
-    public static final int CONTEXT_MENU_COPY_ID = 1;
-    public static final int CONTEXT_MENU_SELECT_ID = 2;
 
     private static final SparseArrayCompat<Integer> BACKGROUND_COLORS = new SparseArrayCompat<Integer>(7) {
         {
@@ -107,7 +106,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
     @GuardedBy("mLock")
     private List<LogLine> mObjects;
 
-    private ViewHolder.OnClickListener mClickListener;
+    private ViewHolder.OnSearchByClickListener mSearchByClickListener;
 
     private ArrayList<LogLine> mOriginalValues;
     private ArrayFilter mFilter;
@@ -371,7 +370,9 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
         }
 
         tag.setTextColor(getOrCreateTagColor(context, logLine.getTagName()));
-        // Allow selection
+        // Single click on the item:
+        // 1. If it is in selection mode, select the item
+        // 2. Otherwise, expand the item
         holder.itemView.setOnClickListener(v -> {
             if (isInSelectionMode()) {
                 toggleSelection(position);
@@ -380,22 +381,42 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
                 notifyItemChanged(position);
             }
         });
+        // Long click on the item:
+        // 1. If it is in selection mode, select range of item
+        // 2. Open context menu
         holder.itemView.setOnLongClickListener(v -> {
-            PopupMenu menu = new PopupMenu(v.getContext(), v);
-            menu.getMenu().add(0, CONTEXT_MENU_FILTER_ID, 0, R.string.filter_choice);
-            menu.getMenu().add(0, CONTEXT_MENU_COPY_ID, 0, R.string.copy_to_clipboard);
-            menu.getMenu().add(0, CONTEXT_MENU_SELECT_ID, 0, R.string.item_select);
-            menu.setOnMenuItemClickListener(item -> {
-                if (item.getItemId() == CONTEXT_MENU_SELECT_ID) {
-                    toggleSelection(position);
-                    return true;
-                }
-                if (mClickListener != null) {
-                    return mClickListener.onMenuItemClick(item, logLine);
-                }
-                return false;
-            });
-            menu.show();
+            if (isInSelectionMode()) {
+                int lastSelectedItemPosition = getLastSelectedItemPosition();
+                if (lastSelectedItemPosition >= 0) {
+                    // Select from last selection to this selection
+                    selectRange(lastSelectedItemPosition, position);
+                } else toggleSelection(position);
+                return true;
+            }
+            PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+            popupMenu.setForceShowIcon(true);
+            Menu menu = popupMenu.getMenu();
+            menu.add(R.string.filter_choice)
+                    .setIcon(io.github.muntashirakon.ui.R.drawable.ic_search)
+                    .setOnMenuItemClickListener(menuItem -> {
+                        if (mSearchByClickListener != null) {
+                            return mSearchByClickListener.onSearchByClick(menuItem, logLine);
+                        }
+                        return true;
+                    });
+            menu.add(R.string.copy_to_clipboard)
+                    .setIcon(R.drawable.ic_content_copy)
+                    .setOnMenuItemClickListener(menuItem -> {
+                        Utils.copyToClipboard(context, null, logLine.getOriginalLine());
+                        return true;
+                    });
+            menu.add(R.string.item_select)
+                    .setIcon(R.drawable.ic_check_circle)
+                    .setOnMenuItemClickListener(menuItem -> {
+                        toggleSelection(position);
+                        return true;
+                    });
+            popupMenu.show();
             return true;
         });
         super.onBindViewHolder(holder, position);
@@ -436,8 +457,27 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
         return mFilter;
     }
 
-    public void setClickListener(ViewHolder.OnClickListener clickListener) {
-        mClickListener = clickListener;
+    public void setClickListener(ViewHolder.OnSearchByClickListener clickListener) {
+        mSearchByClickListener = clickListener;
+    }
+
+    private int getLastSelectedItemPosition() {
+        // Last selected item is the same as the last added item.
+        Iterator<LogLine> it = mSelectedLogLines.iterator();
+        LogLine lastItem = null;
+        while (it.hasNext()) {
+            lastItem = it.next();
+        }
+        if (lastItem != null) {
+            int i = 0;
+            for (LogLine fmItem : mObjects) {
+                if (fmItem.equals(lastItem)) {
+                    return i;
+                }
+                ++i;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -539,8 +579,8 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
             pid = itemView.findViewById(R.id.pid_text);
         }
 
-        public interface OnClickListener {
-            boolean onMenuItemClick(MenuItem item, LogLine logLine);
+        public interface OnSearchByClickListener {
+            boolean onSearchByClick(MenuItem item, LogLine logLine);
         }
     }
 }
