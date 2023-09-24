@@ -154,7 +154,7 @@ public class AppDetailsActivity extends BaseActivity {
         }
         mViewPager = findViewById(R.id.pager);
         TabLayout tabLayout = findViewById(R.id.tab_layout);
-        final AlertDialog progressDialog = UIUtils.getProgressDialog(this, getText(R.string.loading));
+        final AlertDialog progressDialog = UIUtils.getProgressDialog(this, getText(R.string.loading), true);
         if (mPackageName == null) {
             // Display progress dialog only for external apk files
             progressDialog.show();

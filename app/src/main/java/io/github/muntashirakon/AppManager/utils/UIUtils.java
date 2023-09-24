@@ -236,8 +236,9 @@ public class UIUtils {
     }
 
     @NonNull
-    public static AlertDialog getProgressDialog(@NonNull FragmentActivity activity, @Nullable CharSequence text) {
-        View view = activity.getLayoutInflater().inflate(R.layout.dialog_progress2, null);
+    public static AlertDialog getProgressDialog(@NonNull FragmentActivity activity, @Nullable CharSequence text, boolean circular) {
+        int layout = circular ? R.layout.dialog_progress_circular : R.layout.dialog_progress2;
+        View view = activity.getLayoutInflater().inflate(layout, null);
         if (text != null) {
             TextView tv = view.findViewById(android.R.id.text1);
             tv.setText(text);

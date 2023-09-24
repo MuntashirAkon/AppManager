@@ -98,7 +98,7 @@ public class MainPreferences extends PreferenceFragment {
         });
         // Mode of operation
         mModePref = Objects.requireNonNull(findPreference("mode_of_operations"));
-        mModeOfOpsAlertDialog = UIUtils.getProgressDialog(mActivity, getString(R.string.loading));
+        mModeOfOpsAlertDialog = UIUtils.getProgressDialog(mActivity, getString(R.string.loading), true);
         mModes = getResources().getStringArray(R.array.modes);
         mCurrentMode = Ops.getMode();
         mModePref.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op, mModes[MODE_NAMES.indexOf(mCurrentMode)],

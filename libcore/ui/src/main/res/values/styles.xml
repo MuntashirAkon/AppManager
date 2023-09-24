@@ -313,6 +313,10 @@
 
     <!-- ProgressIndicator -->
     <style name="Widget.AppTheme.LinearProgressIndicator" parent="Widget.Material3.LinearProgressIndicator" />
+    <style name="Widget.AppTheme.CircularProgressIndicator" parent="Widget.Material3.CircularProgressIndicator" />
+    <style name="Widget.AppTheme.CircularProgressIndicator.Medium" parent="Widget.Material3.CircularProgressIndicator.Medium" />
+    <style name="Widget.AppTheme.CircularProgressIndicator.Small" parent="Widget.Material3.CircularProgressIndicator.Small" />
+    <style name="Widget.AppTheme.CircularProgressIndicator.ExtraSmall" parent="Widget.Material3.CircularProgressIndicator.ExtraSmall" />
 
     <!-- SwipeRefreshLayout -->
     <style name="Widget.AppTheme.SwipeRefreshLayout" parent="android:Widget">
