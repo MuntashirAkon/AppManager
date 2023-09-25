@@ -25,16 +25,13 @@ import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.os.BundleCompat;
 import androidx.core.os.ParcelCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
@@ -49,10 +46,10 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.transition.MaterialSharedAxis;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.PatternSyntaxException;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.app.AndroidFragment;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -74,7 +71,7 @@ import io.github.rosemoe.sora.widget.EditorSearcher.SearchOptions;
 import io.github.rosemoe.sora.widget.SymbolInputView;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 
-public class CodeEditorFragment extends Fragment {
+public class CodeEditorFragment extends AndroidFragment {
     public static final String ARG_OPTIONS = "options";
 
     public static class Options implements Parcelable {
@@ -299,11 +296,13 @@ public class CodeEditorFragment extends Fragment {
             }
             mEditor.postDelayed(this::updateLiveButtons, 50);
         });
-        mEditor.subscribeEvent(SelectionChangeEvent.class, (event, unsubscribe) -> updatePositionText());
-        mEditor.subscribeEvent(PublishSearchResultEvent.class, (event, unsubscribe) -> {
-            updatePositionText();
-            updateSearchResult();
-        });
+        mEditor.subscribeEvent(SelectionChangeEvent.class, (event, unsubscribe) -> getFragmentActivity()
+                .ifPresent(activity -> updatePositionText()));
+        mEditor.subscribeEvent(PublishSearchResultEvent.class, (event, unsubscribe) -> getFragmentActivity()
+                .ifPresent(activity -> {
+                    updatePositionText();
+                    updateSearchResult();
+                }));
         DirectAccessProps props = mEditor.getProps();
         props.useICULibToSelectWords = false;
         props.symbolPairAutoCompletion = false;
@@ -519,12 +518,12 @@ public class CodeEditorFragment extends Fragment {
             Bundle args = new Bundle();
             args.putParcelable(CodeEditorFragment.ARG_OPTIONS, options);
             fragment.setArguments(args);
-            FragmentActivity activity = requireActivity();
-            activity.getSupportFragmentManager()
+            getFragmentActivity().ifPresent(activity -> activity
+                    .getSupportFragmentManager()
                     .beginTransaction()
                     .replace(((ViewGroup) requireView().getParent()).getId(), fragment)
                     .addToBackStack(null)
-                    .commit();
+                    .commit());
         });
         mViewModel.loadFileContentIfAvailable();
     }
@@ -603,15 +602,6 @@ public class CodeEditorFragment extends Fragment {
         return false;
     }
 
-    @NonNull
-    private Optional<ActionBar> getActionBar() {
-        FragmentActivity activity = requireActivity();
-        if (activity instanceof AppCompatActivity) {
-            return Optional.ofNullable(((AppCompatActivity) activity).getSupportActionBar());
-        }
-        throw new IllegalStateException();
-    }
-
     private void showProgressIndicator(boolean show) {
         LinearProgressIndicator progressIndicator = requireActivity().findViewById(R.id.progress_linear);
         if (progressIndicator != null) {
@@ -656,6 +646,7 @@ public class CodeEditorFragment extends Fragment {
         }
     }
 
+    @MainThread
     private void updatePositionText() {
         Cursor cursor = mEditor.getCursor();
         StringBuilder text = new StringBuilder()
@@ -670,6 +661,7 @@ public class CodeEditorFragment extends Fragment {
         mPositionButton.setText(text);
     }
 
+    @MainThread
     private void updateSearchResult() {
         int count = mEditor.getSearcher().hasQuery() ? mEditor.getSearcher().getMatchedPositionCount() : 0;
         mSearchResultCount.setText(getResources().getQuantityString(R.plurals.search_results, count, count));
