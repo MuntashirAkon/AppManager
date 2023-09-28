@@ -412,7 +412,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             fragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
             fragment.show(getParentFragmentManager(), BackupRestoreDialogFragment.TAG);
         } else if (itemId == R.id.action_view_settings) {
-            startActivity(IntentUtils.getAppDetailsSettings(mPackageName));
+            try {
+                ActivityManagerCompat.startActivity(IntentUtils.getAppDetailsSettings(mPackageName), mUserId);
+            } catch (Throwable th) {
+                UIUtils.displayLongToast(th.getLocalizedMessage());
+            }
         } else if (itemId == R.id.action_export_blocking_rules) {
             final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(mActivity, System.currentTimeMillis()) + ".am.tsv";
             mExport.launch(fileName, uri -> {
@@ -1262,7 +1266,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             return true;
                         });
             }
-            boolean accessibilityServiceRunning = ServiceHelper.checkIfServiceIsRunning(mActivity, NoRootAccessibilityService.class);
+            boolean accessibilityServiceRunning = UserHandleHidden.myUserId() == mUserId && ServiceHelper
+                    .checkIfServiceIsRunning(mActivity, NoRootAccessibilityService.class);
             if (!isStaticSharedLib && (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)
                     || accessibilityServiceRunning)) {
                 // Force stop
