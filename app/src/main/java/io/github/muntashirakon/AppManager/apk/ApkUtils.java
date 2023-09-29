@@ -95,7 +95,8 @@ public final class ApkUtils {
                 MATCH_UNINSTALLED_PACKAGES | PackageManager.GET_SHARED_LIBRARY_FILES
                         | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
         ApplicationInfo info = packageInfo.applicationInfo;
-        String outputName = Paths.sanitizeFilename(getFormattedApkFilename(ctx, packageInfo, pm), "_");
+        String outputName = Paths.sanitizeFilename(getFormattedApkFilename(ctx, packageInfo, pm), "_",
+                Paths.SANITIZE_FLAG_FAT_ILLEGAL_CHARS | Paths.SANITIZE_FLAG_UNIX_RESERVED);
         if (outputName == null) outputName = packageName;
         Path apkFile;
         if (isSplitApk(info) || hasObbFiles(packageName, userId)) {
