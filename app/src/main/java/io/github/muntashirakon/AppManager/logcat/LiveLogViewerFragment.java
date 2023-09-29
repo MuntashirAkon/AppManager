@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.logcat;
 import static io.github.muntashirakon.AppManager.logcat.LogViewerActivity.UPDATE_CHECK_INTERVAL;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,7 +24,10 @@ import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
 import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
 
 // Copyright 2022 Muntashir Al-Islam
@@ -138,6 +142,11 @@ public class LiveLogViewerFragment extends AbsLogViewerFragment implements LogVi
         int id = item.getItemId();
         if (id == R.id.action_save) {
             displaySaveLogDialog(true);
+        } else if (id == R.id.action_copy) {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                String logs = TextUtils.join("\n", getSelectedLogsAsStrings());
+                ThreadUtils.postOnMainThread(() -> Utils.copyToClipboard(ContextUtils.getContext(), "Logs", logs));
+            });
         } else if (id == R.id.action_export) {
             displaySaveDebugLogsDialog(false, true);
         } else if (id == R.id.action_share) {

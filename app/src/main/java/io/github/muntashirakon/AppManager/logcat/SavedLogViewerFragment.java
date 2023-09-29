@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.logcat;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +20,9 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
 
 // Copyright 2022 Muntashir Al-Islam
@@ -90,6 +94,11 @@ public class SavedLogViewerFragment extends AbsLogViewerFragment implements LogV
         int id = item.getItemId();
         if (id == R.id.action_save) {
             displaySaveLogDialog(true);
+        } else if (id == R.id.action_copy) {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                String logs = TextUtils.join("\n", getSelectedLogsAsStrings());
+                ThreadUtils.postOnMainThread(() -> Utils.copyToClipboard(ContextUtils.getContext(), "Logs", logs));
+            });
         } else if (id == R.id.action_export) {
             displaySaveDebugLogsDialog(false, true);
         } else if (id == R.id.action_share) {

@@ -6,6 +6,11 @@
         android:title="@string/save" />
 
     <item
+        android:id="@+id/action_copy"
+        android:icon="@drawable/ic_content_copy"
+        android:title="@string/copy" />
+
+    <item
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share"
         android:title="@string/share_log" />
