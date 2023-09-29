@@ -209,7 +209,10 @@ public class SelfPermissions {
     }
 
     public static boolean checkCrossUserPermission(@UserIdInt int userId, boolean requireFullPermission, int callingUid) {
-        if (userId < 0) {
+        if (userId == UserHandleHidden.USER_NULL) {
+            userId = UserHandleHidden.myUserId();
+        }
+        if (userId < 0 && userId != UserHandleHidden.USER_ALL) {
             throw new IllegalArgumentException("Invalid userId " + userId);
         }
         if (isSystemOrRootOrShell(callingUid) || userId == UserHandleHidden.getUserId(callingUid)) {
