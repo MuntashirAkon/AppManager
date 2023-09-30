@@ -46,8 +46,10 @@ import androidx.core.os.BuildCompat;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
@@ -62,6 +64,9 @@ import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 public final class PackageManagerCompat {
     public static final String TAG = PackageManagerCompat.class.getSimpleName();
+
+    public static final int MATCH_STATIC_SHARED_AND_SDK_LIBRARIES = 0x04000000;
+
     @IntDef({
             COMPONENT_ENABLED_STATE_DEFAULT,
             COMPONENT_ENABLED_STATE_ENABLED,
@@ -81,7 +86,7 @@ public final class PackageManagerCompat {
     public @interface EnabledFlags {
     }
 
-    private static final int WORKING_FLAGS = PackageManager.GET_META_DATA | PackageUtils.flagMatchUninstalled;
+    private static final int NEEDED_FLAGS = MATCH_STATIC_SHARED_AND_SDK_LIBRARIES | PackageUtils.flagMatchUninstalled;
 
     @NonNull
     @SuppressWarnings("deprecation")
@@ -90,7 +95,7 @@ public final class PackageManagerCompat {
             throws RemoteException {
         IPackageManager pm = getPackageManager();
         // Here we've compromised performance to fix issues in some devices where Binder transaction limit is too small.
-        List<ApplicationInfo> applicationInfoList = getInstalledApplications(flags & WORKING_FLAGS, userHandle);
+        List<ApplicationInfo> applicationInfoList = getInstalledApplications(flags & NEEDED_FLAGS, userHandle);
         List<PackageInfo> packageInfoList;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             packageInfoList = pm.getInstalledPackages((long) flags, userHandle).getList();
@@ -101,6 +106,12 @@ public final class PackageManagerCompat {
         }
         if (packageInfoList.size() > applicationInfoList.size()) {
             // Should never happen
+            Set<String> pkgsFromPkgInfo = new HashSet<>(packageInfoList.size());
+            Set<String> pkgsFromAppInfo = new HashSet<>(applicationInfoList.size());
+            for (PackageInfo info : packageInfoList) pkgsFromPkgInfo.add(info.packageName);
+            for (ApplicationInfo info : applicationInfoList) pkgsFromAppInfo.add(info.packageName);
+            pkgsFromPkgInfo.removeAll(pkgsFromAppInfo);
+            Log.i(TAG, "Loaded extra packages: " + pkgsFromPkgInfo.toString());
             throw new IllegalStateException("Retrieved " + packageInfoList.size() + " packages out of "
                     + applicationInfoList.size() + " applications which is impossible");
         }
