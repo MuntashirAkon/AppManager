@@ -72,19 +72,19 @@ public class ComponentRule extends RuleEntry {
 
     @NonNull
     @ComponentStatus
-    private String mComponentStatus;
+    private final String mComponentStatus;
 
     public ComponentRule(@NonNull String packageName, @NonNull String name, RuleType componentType,
                          @NonNull @ComponentStatus String componentStatus) {
         super(packageName, name, componentType);
-        mComponentStatus = componentStatus;
+        mComponentStatus = fixComponentStatus(componentStatus);
     }
 
     public ComponentRule(@NonNull String packageName, @NonNull String name, RuleType componentType,
                          @NonNull StringTokenizer tokenizer) throws IllegalArgumentException {
         super(packageName, name, componentType);
         if (tokenizer.hasMoreElements()) {
-            mComponentStatus = tokenizer.nextElement().toString();
+            mComponentStatus = fixComponentStatus(tokenizer.nextElement().toString());
         } else throw new IllegalArgumentException("Invalid format: componentStatus not found");
     }
 
@@ -155,8 +155,22 @@ public class ComponentRule extends RuleEntry {
         }
     }
 
-    public void setComponentStatus(@NonNull @ComponentStatus String componentStatus) {
-        mComponentStatus = componentStatus;
+    private String fixComponentStatus(@ComponentStatus String componentStatus) {
+        if (type != RuleType.PROVIDER) {
+            return componentStatus;
+        }
+        // Providers do not support IFW
+        switch (componentStatus) {
+            case COMPONENT_BLOCKED_IFW_DISABLE:
+                return COMPONENT_DISABLED;
+            case COMPONENT_BLOCKED_IFW:
+                return COMPONENT_ENABLED;
+            case COMPONENT_TO_BE_BLOCKED_IFW:
+            case COMPONENT_TO_BE_BLOCKED_IFW_DISABLE:
+                return COMPONENT_TO_BE_DISABLED;
+            default:
+                return componentStatus;
+        }
     }
 
     @NonNull
