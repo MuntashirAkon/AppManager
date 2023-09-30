@@ -276,7 +276,8 @@ public final class PackageUtils {
         for (int userId : Users.getUsersIds()) {
             try {
                 applicationInfoList.addAll(PackageManagerCompat.getInstalledPackages(flags, userId));
-            } catch (RemoteException ignore) {
+            } catch (Exception e) {
+                Log.w(TAG, "Could not retrieve package info list for user " + userId, e);
             }
         }
         return applicationInfoList;

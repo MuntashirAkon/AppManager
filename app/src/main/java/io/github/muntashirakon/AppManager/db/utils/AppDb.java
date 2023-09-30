@@ -257,7 +257,7 @@ public class AppDb {
                             | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                             | PackageManager.GET_SERVICES | flagDisabledComponents | flagMatchUninstalled, userId);
                 } catch (Exception e) {
-                    Log.e(TAG, "Could not retrieve package info list for user " + userId, e);
+                    Log.w(TAG, "Could not retrieve package info list for user " + userId, e);
                     continue;
                 }
 
