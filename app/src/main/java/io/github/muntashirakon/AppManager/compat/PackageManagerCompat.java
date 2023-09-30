@@ -89,38 +89,35 @@ public final class PackageManagerCompat {
     private static final int NEEDED_FLAGS = MATCH_STATIC_SHARED_AND_SDK_LIBRARIES | PackageUtils.flagMatchUninstalled;
 
     @NonNull
-    @SuppressWarnings("deprecation")
     @WorkerThread
     public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userHandle)
             throws RemoteException {
         IPackageManager pm = getPackageManager();
         // Here we've compromised performance to fix issues in some devices where Binder transaction limit is too small.
-        List<ApplicationInfo> applicationInfoList = getInstalledApplications(flags & NEEDED_FLAGS, userHandle);
-        List<PackageInfo> packageInfoList;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            packageInfoList = pm.getInstalledPackages((long) flags, userHandle).getList();
-        } else packageInfoList = pm.getInstalledPackages(flags, userHandle).getList();
-        if (packageInfoList.size() == applicationInfoList.size()) {
+        List<PackageInfo> refPackages = getInstalledPackagesInternal(pm, flags & NEEDED_FLAGS, userHandle);
+        List<PackageInfo> packageInfoList = getInstalledPackagesInternal(pm, flags, userHandle);
+        if (packageInfoList.size() == refPackages.size()) {
             // Everything's loaded correctly
             return packageInfoList;
         }
-        if (packageInfoList.size() > applicationInfoList.size()) {
+        if (packageInfoList.size() > refPackages.size()) {
             // Should never happen
             Set<String> pkgsFromPkgInfo = new HashSet<>(packageInfoList.size());
-            Set<String> pkgsFromAppInfo = new HashSet<>(applicationInfoList.size());
+            Set<String> pkgsFromAppInfo = new HashSet<>(refPackages.size());
             for (PackageInfo info : packageInfoList) pkgsFromPkgInfo.add(info.packageName);
-            for (ApplicationInfo info : applicationInfoList) pkgsFromAppInfo.add(info.packageName);
+            for (PackageInfo info : refPackages) pkgsFromAppInfo.add(info.packageName);
             pkgsFromPkgInfo.removeAll(pkgsFromAppInfo);
-            Log.i(TAG, "Loaded extra packages: " + pkgsFromPkgInfo.toString());
-            throw new IllegalStateException("Retrieved " + packageInfoList.size() + " packages out of "
-                    + applicationInfoList.size() + " applications which is impossible");
+            Log.i(TAG, "Retrieved " + packageInfoList.size() + " packages out of " + refPackages.size()
+                    + " applications which should be impossible");
+            Log.i(TAG, "Extra loaded packages: " + pkgsFromPkgInfo.toString());
+            return packageInfoList;
         }
         Log.w(TAG, "Could not fetch installed packages for user " + userHandle
                 + " using getInstalledPackages(), using workaround");
-        packageInfoList = new ArrayList<>(applicationInfoList.size());
-        for (int i = 0; i < applicationInfoList.size(); ++i) {
+        packageInfoList = new ArrayList<>(refPackages.size());
+        for (int i = 0; i < refPackages.size(); ++i) {
             try {
-                packageInfoList.add(getPackageInfo(applicationInfoList.get(i).packageName, flags, userHandle));
+                packageInfoList.add(getPackageInfo(refPackages.get(i).packageName, flags, userHandle));
             } catch (Exception e) {
                 throw new RemoteException(e.getMessage());
             }
@@ -130,6 +127,15 @@ public final class PackageManagerCompat {
             }
         }
         return packageInfoList;
+    }
+
+    @SuppressWarnings("deprecation")
+    private static List<PackageInfo> getInstalledPackagesInternal(@NonNull IPackageManager pm, int flags,
+                                                                  @UserIdInt int userHandle) throws RemoteException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return pm.getInstalledPackages((long) flags, userHandle).getList();
+        }
+        return pm.getInstalledPackages(flags, userHandle).getList();
     }
 
     @SuppressLint("NewApi")
