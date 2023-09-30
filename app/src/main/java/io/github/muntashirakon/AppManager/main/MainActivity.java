@@ -449,7 +449,9 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
 
         // Set filter
         if (viewModel != null && mSearchView != null && !TextUtils.isEmpty(viewModel.getSearchQuery())) {
-            mSearchView.setIconified(false);
+            if (mSearchView.isIconified()) {
+                mSearchView.setIconified(false);
+            }
             mSearchView.setQuery(viewModel.getSearchQuery(), false);
         }
         // Show/hide app usage menu
