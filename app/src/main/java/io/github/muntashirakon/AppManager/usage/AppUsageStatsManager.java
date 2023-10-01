@@ -13,6 +13,7 @@ import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
 import android.app.usage.UsageEvents;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Parcel;
@@ -145,7 +146,7 @@ public class AppUsageStatsManager {
      */
     @NonNull
     public List<PackageUsageInfo> getUsageStats(@UsageUtils.IntervalType int usageInterval, @UserIdInt int userId)
-            throws RemoteException, SecurityException, PackageManager.NameNotFoundException {
+            throws RemoteException, SecurityException {
         List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
         int _try = 5; // try to get usage stats at most 5 times
         RemoteException re;
@@ -156,7 +157,7 @@ public class AppUsageStatsManager {
             } catch (RemoteException e) {
                 re = e;
             }
-        } while (0 != --_try && packageUsageInfoList.size() == 0);
+        } while (0 != --_try && packageUsageInfoList.isEmpty());
         if (re != null) {
             throw re;
         }
@@ -208,7 +209,7 @@ public class AppUsageStatsManager {
      */
     private List<PackageUsageInfo> getUsageStatsInternal(@UsageUtils.IntervalType int usageInterval,
                                                          @UserIdInt int userId)
-            throws RemoteException, PackageManager.NameNotFoundException {
+            throws RemoteException {
         List<PackageUsageInfo> screenTimeList = new ArrayList<>();
         Map<String, Long> screenTimes = new HashMap<>();
         Map<String, Long> lastUse = new HashMap<>();
@@ -270,22 +271,25 @@ public class AppUsageStatsManager {
             }
         }
         for (String packageName : screenTimes.keySet()) {
-            // Skip uninstalled packages?
-            PackageUsageInfo packageUsageInfo = new PackageUsageInfo(context, packageName, userId,
-                    PackageManagerCompat.getApplicationInfo(packageName, flagMatchUninstalled, userId));
-            packageUsageInfo.timesOpened = NonNullUtils.defeatNullable(accessCount.get(packageName));
-            packageUsageInfo.lastUsageTime = NonNullUtils.defeatNullable(lastUse.get(packageName));
-            packageUsageInfo.screenTime = NonNullUtils.defeatNullable(screenTimes.get(packageName));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                int uid = PackageUtils.getAppUid(packageUsageInfo.applicationInfo);
-                if (mobileData.containsKey(uid)) {
-                    packageUsageInfo.mobileData = mobileData.get(uid);
-                } else packageUsageInfo.mobileData = DataUsage.EMPTY;
-                if (wifiData.containsKey(uid)) {
-                    packageUsageInfo.wifiData = wifiData.get(uid);
-                } else packageUsageInfo.wifiData = DataUsage.EMPTY;
+            try {
+                ApplicationInfo applicationInfo = PackageManagerCompat.getApplicationInfo(packageName, flagMatchUninstalled, userId);
+                PackageUsageInfo packageUsageInfo = new PackageUsageInfo(context, packageName, userId, applicationInfo);
+                packageUsageInfo.timesOpened = NonNullUtils.defeatNullable(accessCount.get(packageName));
+                packageUsageInfo.lastUsageTime = NonNullUtils.defeatNullable(lastUse.get(packageName));
+                packageUsageInfo.screenTime = NonNullUtils.defeatNullable(screenTimes.get(packageName));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    int uid = PackageUtils.getAppUid(packageUsageInfo.applicationInfo);
+                    if (mobileData.containsKey(uid)) {
+                        packageUsageInfo.mobileData = mobileData.get(uid);
+                    } else packageUsageInfo.mobileData = DataUsage.EMPTY;
+                    if (wifiData.containsKey(uid)) {
+                        packageUsageInfo.wifiData = wifiData.get(uid);
+                    } else packageUsageInfo.wifiData = DataUsage.EMPTY;
+                }
+                screenTimeList.add(packageUsageInfo);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
             }
-            screenTimeList.add(packageUsageInfo);
         }
         return screenTimeList;
     }
@@ -425,7 +429,7 @@ public class AppUsageStatsManager {
                     }
                 }
             }
-            return subscriberIds.size() == 0 ? Collections.singletonList(null) : subscriberIds;
+            return subscriberIds.isEmpty() ? Collections.singletonList(null) : subscriberIds;
         } catch (SecurityException e) {
             return Collections.singletonList(null);
         }
