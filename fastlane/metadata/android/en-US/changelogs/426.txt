@@ -1,0 +1,6 @@
+Join App Manager in Matrix: https://matrix.to/#/#appmanager:matrix.org
+- Avoided fetching app list for other users if there's not enough permission
+- Fixed installing apps for users other than the main user in no-root mode
+- Fixed loading the list of packages in some devices
+- Skipped loading usage for uninstalled packages
+and some other fixes.

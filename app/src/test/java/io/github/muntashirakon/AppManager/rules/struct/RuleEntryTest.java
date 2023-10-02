@@ -151,9 +151,9 @@ public class RuleEntryTest {
     public void unflattenProviderFromString() {
         RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".provider", RuleType.PROVIDER,
                 ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE);
-        assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\t.provider\tPROVIDER\tfalse", true), rule);
-        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\t.provider\tPROVIDER\tfalse", true), rule);
-        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, ".provider\tPROVIDER\tfalse", false), rule);
+        assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\t.provider\tPROVIDER\tdis_false", true), rule);
+        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\t.provider\tPROVIDER\tdis_false", true), rule);
+        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, ".provider\tPROVIDER\tdis_false", false), rule);
     }
 
     @Test
