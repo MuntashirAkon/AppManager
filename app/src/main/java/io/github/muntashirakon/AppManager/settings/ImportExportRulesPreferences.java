@@ -77,7 +77,7 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
     private final ActivityResultLauncher<String> importFromWatt = registerForActivityResult(
             new ActivityResultContracts.GetMultipleContents(),
             uris -> {
-                if (uris == null) {
+                if (uris == null || uris.isEmpty()) {
                     // Back button pressed.
                     return;
                 }
@@ -90,7 +90,7 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
     private final ActivityResultLauncher<String> importFromBlocker = registerForActivityResult(
             new ActivityResultContracts.GetMultipleContents(),
             uris -> {
-                if (uris == null) {
+                if (uris == null || uris.isEmpty()) {
                     // Back button pressed.
                     return;
                 }
