@@ -118,6 +118,10 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                     // Back button pressed.
                     return;
                 }
+                if (mModel == null) {
+                    // Invalid state
+                    return;
+                }
                 RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
                 Bundle args = new Bundle();
                 args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);

@@ -235,7 +235,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         // Authentication was successful
         Log.d(TAG, "Authenticated");
         // Set mode of operation
-        Objects.requireNonNull(mViewModel).setModeOfOps();
+        if (mViewModel != null) {
+            mViewModel.setModeOfOps();
+        }
     }
 
     private void initPermissionChecks() {

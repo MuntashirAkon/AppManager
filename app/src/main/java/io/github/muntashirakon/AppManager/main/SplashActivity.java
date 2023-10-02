@@ -173,6 +173,8 @@ public class SplashActivity extends AppCompatActivity {
             mStateNameView.setText(R.string.initializing);
         }
         // Set mode of operation
-        mViewModel.setModeOfOps();
+        if (mViewModel != null) {
+            mViewModel.setModeOfOps();
+        }
     }
 }
