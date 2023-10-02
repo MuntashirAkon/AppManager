@@ -365,7 +365,9 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     }
 
     private void doLaunchInstallerService(@UserIdInt int userId) {
+        assert currentItem != null;
         lastUserId = userId == UserHandleHidden.USER_ALL ? UserHandleHidden.myUserId() : userId;
+        currentItem.setUserId(userId);
         boolean canDisplayNotification = Utils.canDisplayNotification(this);
         boolean alwaysOnBackground = canDisplayNotification && Prefs.Installer.installInBackground();
         Intent intent = new Intent(this, PackageInstallerService.class);
