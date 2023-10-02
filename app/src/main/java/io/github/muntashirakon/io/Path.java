@@ -25,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.core.provider.DocumentsContractCompat;
 import androidx.core.util.Pair;
 import androidx.documentfile.provider.DocumentFile;
+import androidx.documentfile.provider.DocumentFileUtils;
 import androidx.documentfile.provider.ExtendedRawDocumentFile;
 import androidx.documentfile.provider.MediaDocumentFile;
 import androidx.documentfile.provider.VirtualDocumentFile;
@@ -249,7 +250,11 @@ public class Path implements Comparable<Path> {
     @NonNull
     public String getName() {
         // Last path segment is required.
-        return Objects.requireNonNull(mDocumentFile.getName());
+        String name = mDocumentFile.getName();
+        if (name != null) {
+            return name;
+        }
+        return DocumentFileUtils.resolveAltNameForSaf(mDocumentFile);
     }
 
     @Nullable
