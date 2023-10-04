@@ -278,7 +278,8 @@ public final class PackageUtils {
                 if (ThreadUtils.isInterrupted()) {
                     break;
                 }
-            } catch (RemoteException ignore) {
+            } catch (Exception e) {
+                Log.w(TAG, "Could not retrieve package info list for user " + userId, e);
             }
         }
         return packageInfoList;
