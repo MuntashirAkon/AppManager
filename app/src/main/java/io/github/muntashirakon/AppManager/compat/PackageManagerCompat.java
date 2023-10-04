@@ -48,8 +48,10 @@ import androidx.core.os.BuildCompat;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
@@ -116,35 +118,37 @@ public final class PackageManagerCompat {
 
     private static final int NEEDED_FLAGS = MATCH_UNINSTALLED_PACKAGES | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES;
 
-    @SuppressWarnings("deprecation")
     @WorkerThread
     @NonNull
     public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userId) throws RemoteException {
         IPackageManager pm = getPackageManager();
         // Here we've compromised performance to fix issues in some devices where Binder transaction limit is too small.
-        List<ApplicationInfo> applicationInfoList = getInstalledApplications(pm, flags & NEEDED_FLAGS, userId);
-        List<PackageInfo> packageInfoList;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            packageInfoList = pm.getInstalledPackages((long) flags, userId).getList();
-        } else packageInfoList = pm.getInstalledPackages(flags, userId).getList();
-        if (packageInfoList.size() == applicationInfoList.size()) {
+        List<PackageInfo> refPackages = getInstalledPackagesInternal(pm, flags & NEEDED_FLAGS, userId);
+        List<PackageInfo> packageInfoList = getInstalledPackagesInternal(pm, flags, userId);
+        if (packageInfoList.size() == refPackages.size()) {
             // Everything's loaded correctly
             return packageInfoList;
         }
-        if (packageInfoList.size() > applicationInfoList.size()) {
+        if (packageInfoList.size() > refPackages.size()) {
             // Should never happen
+            Set<String> pkgsFromPkgInfo = new HashSet<>(packageInfoList.size());
+            Set<String> pkgsFromAppInfo = new HashSet<>(refPackages.size());
+            for (PackageInfo info : packageInfoList) pkgsFromPkgInfo.add(info.packageName);
+            for (PackageInfo info : refPackages) pkgsFromAppInfo.add(info.packageName);
+            pkgsFromPkgInfo.removeAll(pkgsFromAppInfo);
+            Log.i(TAG, "Loaded extra packages: " + pkgsFromPkgInfo.toString());
             throw new IllegalStateException("Retrieved " + packageInfoList.size() + " packages out of "
-                    + applicationInfoList.size() + " applications which is impossible");
+                    + refPackages.size() + " applications which is impossible");
         }
         Log.w(TAG, "Could not fetch installed packages for user %d using getInstalledPackages(), using workaround",
                 userId);
-        packageInfoList = new ArrayList<>(applicationInfoList.size());
-        for (int i = 0; i < applicationInfoList.size(); ++i) {
+        packageInfoList = new ArrayList<>(refPackages.size());
+        for (int i = 0; i < refPackages.size(); ++i) {
             if (ThreadUtils.isInterrupted()) {
                 break;
             }
             try {
-                packageInfoList.add(getPackageInfo(pm, applicationInfoList.get(i).packageName, flags, userId));
+                packageInfoList.add(getPackageInfo(pm, refPackages.get(i).packageName, flags, userId));
             } catch (Exception ex) {
                 throw (RemoteException) new RemoteException(ex.getMessage()).initCause(ex);
             }
@@ -154,6 +158,15 @@ public final class PackageManagerCompat {
             }
         }
         return packageInfoList;
+    }
+
+    @SuppressWarnings("deprecation")
+    private static List<PackageInfo> getInstalledPackagesInternal(@NonNull IPackageManager pm, int flags,
+                                                                  @UserIdInt int userHandle) throws RemoteException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return pm.getInstalledPackages((long) flags, userHandle).getList();
+        }
+        return pm.getInstalledPackages(flags, userHandle).getList();
     }
 
     @WorkerThread
