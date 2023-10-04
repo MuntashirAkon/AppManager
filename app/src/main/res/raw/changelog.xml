@@ -4,7 +4,7 @@
         type="stable release"
         version="v3.1.3"
         code="426"
-        date="2 October 2023">
+        date="4 October 2023">
         <fix>
             Avoided displaying “Imported” message when no file is selected during importing rules from Watt or Blocker
         </fix>

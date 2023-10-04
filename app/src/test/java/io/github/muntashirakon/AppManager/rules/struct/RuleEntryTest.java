@@ -30,8 +30,8 @@ public class RuleEntryTest {
     public void flattenProviderToString() {
         RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".provider", RuleType.PROVIDER,
                 ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE);
-        assertEquals(PACKAGE_NAME + "\t.provider\tPROVIDER\tfalse", rule.flattenToString(true));
-        assertEquals(".provider\tPROVIDER\tfalse", rule.flattenToString(false));
+        assertEquals(PACKAGE_NAME + "\t.provider\tPROVIDER\tdis_false", rule.flattenToString(true));
+        assertEquals(".provider\tPROVIDER\tdis_false", rule.flattenToString(false));
     }
 
     @Test
