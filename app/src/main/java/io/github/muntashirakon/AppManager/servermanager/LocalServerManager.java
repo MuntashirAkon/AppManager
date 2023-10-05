@@ -201,6 +201,7 @@ class LocalServerManager {
             int adbPort = ServerConfig.getAdbPort();
             AdbConnectionManager manager = AdbConnectionManager.getInstance();
             Log.d(TAG, "useAdbStartServer: Connecting using host=%s, port=%d", adbHost, adbPort);
+            manager.setTimeout(10, TimeUnit.SECONDS);
             if (!manager.isConnected() && !manager.connect(adbHost, adbPort)) {
                 throw new IOException("Could not connect to ADB.");
             }

@@ -242,12 +242,15 @@ public class Ops {
                     return initPermissionsWithSuccess();
                 case MODE_ADB_WIFI:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        return STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING;
+                        if (AdbUtils.enableWirelessDebugging(context)) {
+                            return STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING;
+                        }
+                        Log.w("ModeOfOps", "Could not ensure wireless debugging, falling back...");
                     } // else fallback to ADB over TCP
                 case MODE_ADB_OVER_TCP:
                     sIsRoot = sIsSystem = false;
                     sIsAdb = true;
-                    ServerConfig.setAdbPort(findAdbPortNoThrow(context, 10, ServerConfig.DEFAULT_ADB_PORT));
+                    ServerConfig.setAdbPort(findAdbPort(context, 10, AdbUtils.getAdbPortOrDefault()));
                     LocalServer.restart();
                     return checkRootOrIncompleteUsbDebuggingInAdb();
             }
@@ -300,7 +303,7 @@ public class Ops {
             }
             // Root is granted but Binder communication cannot be initiated
             Log.e("ROOT", "Root granted but could not use root to initiate a connection. Trying ADB...");
-            if (AdbUtils.startAdb(ServerConfig.DEFAULT_ADB_PORT)) {
+            if (AdbUtils.startAdb(AdbUtils.getAdbPortOrDefault())) {
                 Log.d("ROOT", "Started ADB over TCP via root.");
             } else {
                 Log.d("ROOT", "Could not start ADB over TCP via root.");
@@ -338,9 +341,15 @@ public class Ops {
             return;
         }
         // Check for ADB
+        if (!AdbUtils.isAdbdRunning()) {
+            // ADB not running. In auto mode, we do not attempt to enable it either
+            setMode(MODE_NO_ROOT);
+            sIsAdb = sIsSystem = sIsRoot = false;
+            return;
+        }
         sIsAdb = true; // First enable ADB if not already
         try {
-            ServerConfig.setAdbPort(findAdbPortNoThrow(context, 7, ServerConfig.getAdbPort()));
+            ServerConfig.setAdbPort(findAdbPort(context, 7, ServerConfig.getAdbPort()));
             LocalServer.restart();
         } catch (Throwable e) {
             Log.e("ADB", e);
@@ -388,7 +397,7 @@ public class Ops {
         sIsAdb = true;
         sIsSystem = sIsRoot = false;
         try {
-            ServerConfig.setAdbPort(findAdbPortNoThrow(context, 5, ServerConfig.getAdbPort()));
+            ServerConfig.setAdbPort(findAdbPort(context, 5, ServerConfig.getAdbPort()));
             LocalServer.restart();
             return checkRootOrIncompleteUsbDebuggingInAdb();
         } catch (RemoteException | IOException e) {
@@ -506,7 +515,7 @@ public class Ops {
         try {
             AdbConnectionManager.getInstance().pair(ServerConfig.getAdbHost(context), port, pairingCode.trim());
             ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.paired_successfully));
-            return connectAdb(context, findAdbPortNoThrow(context, 7, ServerConfig.getAdbPort()),
+            return connectAdb(context, findAdbPort(context, 7, ServerConfig.getAdbPort()),
                     STATUS_ADB_CONNECT_REQUIRED);
         } catch (Exception e) {
             ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed));
@@ -627,7 +636,11 @@ public class Ops {
 
     @WorkerThread
     @NoOps
-    private static int findAdbPortNoThrow(@NonNull Context context, long timeoutInSeconds, int defaultPort) {
+    private static int findAdbPort(@NonNull Context context, long timeoutInSeconds, int defaultPort)
+            throws IOException {
+        if (!AdbUtils.isAdbdRunning()) {
+            throw new IOException("ADB daemon not running.");
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // Find ADB port only in Android 11 (R) or later
             try {

@@ -40,7 +40,8 @@ public class SelfPermissions {
                 Manifest.permission.DUMP,
                 ManifestCompat.permission.GET_APP_OPS_STATS,
                 ManifestCompat.permission.INTERACT_ACROSS_USERS,
-                Manifest.permission.READ_LOGS
+                Manifest.permission.READ_LOGS,
+                Manifest.permission.WRITE_SECURE_SETTINGS
         };
         int userId = UserHandleHidden.myUserId();
         for (String permission : permissions) {
