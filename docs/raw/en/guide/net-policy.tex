@@ -15,9 +15,9 @@ However, the features it offers largely depend on Android version and ROM. A lis
     \item \textbf{None} or \textbf{\texttt{POLICY\_NONE}}: (AOSP) No specific network policy is set.
     System can still assign rules depending on the nature of the app.
 
-    \item \textbf{Reject background data} or \textbf{\texttt{POLICY\_REJECT\_METERED\_BACKGROUND}}: (AOSP) Reject network usage on metered networks when the application is in background.
+    \item \textbf{Reject background data on metered networks} or \textbf{\texttt{POLICY\_REJECT\_METERED\_BACKGROUND}}: (AOSP) Reject network usage on metered networks when the application is in background.
 
-    \item \textbf{Allow background data when Data Saver is on} or \textbf{\texttt{POLICY\_ALLOW\_METERED\_BACKGROUND}}: (AOSP) Allow metered network use in the background even when data saving mode is enabled.
+    \item \textbf{Allow background data on metered networks even when Data Saver is on} or \textbf{\texttt{POLICY\_ALLOW\_METERED\_BACKGROUND}}: (AOSP) Allow metered network use in the background even when data saving mode is enabled.
 
     \item \textbf{Reject cellular data} or \textbf{\texttt{POLICY\_REJECT\_CELLULAR}} (Android 11+) or \textbf{\texttt{POLICY\_REJECT\_ON\_DATA}} (up to Android 10): (Lineage OS) Reject mobile/cellular data.
     Signals network unavailable to the configured app as if the mobile data is inactive.
@@ -37,6 +37,13 @@ However, the features it offers largely depend on Android version and ROM. A lis
 
     \item \textbf{\texttt{POLICY\_ALLOW\_WHITELIST\_IN\_ROAMING}}: (Samsung) Possibly allow network use during roaming.
     Exact meaning is currently unknown.
+
+    \item \textbf{Reject data on metered networks} or \textbf{\texttt{POLICY\_REJECT\_METERED}}: (Motorola) Reject network usage if it is a metered network.
+
+    \item \textbf{Reject background data} or \textbf{\texttt{POLICY\_REJECT\_BACKGROUND}}: (Motorola) Reject network usage in the background.
+
+    \item \textbf{Disable network access} or \textbf{\texttt{POLICY\_REJECT\_ALL}}: (Motorola) Reject network access altogether.
+    Like Lineage OS, it blocks internet connections via iptables. But whether it signals the unavailability of network to the configured app is not known.
 \end{enumerate}
 
 \begin{tip}{Note}

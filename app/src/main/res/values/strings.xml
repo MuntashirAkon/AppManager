@@ -1048,6 +1048,9 @@
     <string name="pref_display_changes_msg">Display changes in version, trackers, components, permissions, signatures, SDK, etc. in a version controlled manner.</string>
     <string name="no_changes">No changes</string>
     <string name="netpolicy_reject_background_data">Reject background data</string>
+    <string name="netpolicy_reject_metered_background_data">Reject background data on metered networks</string>
+    <string name="netpolicy_reject_metered_data">Reject data on metered networks</string>
+    <string name="netpolicy_allow_metered_background_data">Allow background data on metered networks even when Data Saver is on</string>
     <string name="netpolicy_allow_background_data">Allow background data when Data Saver is on</string>
     <string name="netpolicy_reject_cellular_data">Reject cellular data</string>
     <string name="netpolicy_reject_vpn_data">Reject VPN data</string>
