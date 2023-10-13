@@ -1357,4 +1357,9 @@
     <string name="scan_report_from_pithus">Báo cáo Pithus</string>
     <string name="action_checking">Đang kiểm tra…</string>
     <string name="report_not_available">Không có sẵn</string>
+    <string name="profile_modified_are_you_sure">Hồ sơ đã được sửa đổi. Hủy tất cả thay đổi của bạn và thoát\?</string>
+    <string name="apply_profile">Áp dụng hồ sơ “%1$s”</string>
+    <string name="copy_profile_id">Sao chép ID hồ sơ</string>
+    <string name="profile_id">ID hồ sơ</string>
+    <string name="choose_a_profile_state">Chọn trạng thái hồ sơ</string>
 </resources>
