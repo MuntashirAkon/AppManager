@@ -650,6 +650,12 @@ public interface IPackageManager extends IInterface {
     void setComponentEnabledSetting(ComponentName componentName, int newState, int flags, int userId) throws RemoteException;
 
     /**
+     * As per {@link android.content.pm.PackageManager#setComponentEnabledSetting}.
+     */
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    void setComponentEnabledSetting(ComponentName componentName, int newState, int flags, int userId, String callingPackage) throws RemoteException;
+
+    /**
      * As per {@link android.content.pm.PackageManager#getComponentEnabledSetting}.
      */
     int getComponentEnabledSetting(ComponentName componentName, int userId) throws RemoteException;

@@ -298,7 +298,12 @@ public final class PackageManagerCompat {
                                                   @EnabledFlags int flags,
                                                   @UserIdInt int userId)
             throws RemoteException {
-        getPackageManager().setComponentEnabledSetting(componentName, newState, flags, userId);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            getPackageManager().setComponentEnabledSetting(componentName, newState, flags, userId, null);
+        }
+        else {
+            getPackageManager().setComponentEnabledSetting(componentName, newState, flags, userId);
+        }
         if (userId != UserHandleHidden.myUserId()) {
             BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{componentName.getPackageName()});
         }

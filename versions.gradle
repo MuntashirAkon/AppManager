@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 ext {
-    compile_sdk = 33
+    compile_sdk = 34
     min_sdk = 21
     target_sdk = 33
 
