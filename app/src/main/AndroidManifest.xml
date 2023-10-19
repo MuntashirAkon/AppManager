@@ -145,7 +145,6 @@
         android:dataExtractionRules="@xml/backup_rules"
         android:fullBackupContent="@xml/full_backup_rules"
         android:banner="@mipmap/ic_banner"
-        android:hasFragileUserData="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
