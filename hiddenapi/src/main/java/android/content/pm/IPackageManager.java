@@ -646,8 +646,17 @@ public interface IPackageManager extends IInterface {
 
     /**
      * As per {@link android.content.pm.PackageManager#setComponentEnabledSetting}.
+     *
+     * @deprecated Replaced by {@link #setComponentEnabledSetting(ComponentName, int, int, int, String)} in Android 14 (SDK 34)
      */
+    @Deprecated
     void setComponentEnabledSetting(ComponentName componentName, int newState, int flags, int userId) throws RemoteException;
+
+    /**
+     * As per {@link android.content.pm.PackageManager#setComponentEnabledSetting}.
+     */
+    @RequiresApi(34)
+    void setComponentEnabledSetting(ComponentName componentName, int newState, int flags, int userId, String callingPackage) throws RemoteException;
 
     /**
      * As per {@link android.content.pm.PackageManager#getComponentEnabledSetting}.
@@ -959,6 +968,7 @@ public interface IPackageManager extends IInterface {
 
     /**
      * Ask the package manager to compile layouts in the given package.
+     *
      * @deprecated Removed in API 31 (Android 12)
      */
     @RequiresApi(Build.VERSION_CODES.Q)

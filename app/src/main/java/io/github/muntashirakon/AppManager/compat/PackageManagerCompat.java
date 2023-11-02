@@ -343,13 +343,19 @@ public final class PackageManagerCompat {
         }
     }
 
+    @OptIn(markerClass = BuildCompat.PrereleaseSdkCheck.class)
+    @SuppressWarnings("deprecation")
     @RequiresPermission(value = Manifest.permission.CHANGE_COMPONENT_ENABLED_STATE)
     public static void setComponentEnabledSetting(ComponentName componentName,
                                                   @EnabledState int newState,
                                                   @EnabledFlags int flags,
                                                   @UserIdInt int userId)
             throws RemoteException {
-        getPackageManager().setComponentEnabledSetting(componentName, newState, flags, userId);
+        IPackageManager pm = getPackageManager();
+        if (BuildCompat.isAtLeastU()) {
+            String callingPackage = SelfPermissions.getCallingPackage(Users.getSelfOrRemoteUid());
+            pm.setComponentEnabledSetting(componentName, newState, flags, userId, callingPackage);
+        } else pm.setComponentEnabledSetting(componentName, newState, flags, userId);
         if (userId != UserHandleHidden.myUserId()) {
             BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{componentName.getPackageName()});
         }
