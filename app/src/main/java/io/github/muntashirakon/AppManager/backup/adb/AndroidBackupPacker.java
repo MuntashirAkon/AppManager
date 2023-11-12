@@ -22,7 +22,7 @@ public class AndroidBackupPacker {
         OutputStream os = abDest.openOutputStream();
         try (InputStream is = tarSource.openInputStream();
              OutputStream realOs = header.write(os)) {
-            IoUtils.copy(is, realOs, -1, null);
+            IoUtils.copy(is, realOs);
         } catch (IOException e) {
             throw e;
         } catch (Exception e) {

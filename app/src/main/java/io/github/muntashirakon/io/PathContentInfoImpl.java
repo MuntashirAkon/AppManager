@@ -16,8 +16,8 @@ import java.util.HashSet;
 import io.github.muntashirakon.AppManager.fm.ContentType2;
 import io.github.muntashirakon.AppManager.logs.Log;
 
-public class PathContentInfo {
-    public static final String TAG = PathContentInfo.class.getSimpleName();
+class PathContentInfoImpl extends PathContentInfo {
+    public static final String TAG = PathContentInfoImpl.class.getSimpleName();
     // Associations not present in ContentInfoUtil, they're derived from simple-name
     private static final HashMap<String, String> sSimpleNameMimeAssociations = new HashMap<String, String>() {{
         put("SQLite", "application/vnd.sqlite3");
@@ -30,7 +30,7 @@ public class PathContentInfo {
     private static ContentInfoUtil sContentInfoUtil;
 
     @NonNull
-    public static PathContentInfo fromExtension(@NonNull Path path) {
+    public static PathContentInfoImpl fromExtension(@NonNull Path path) {
         if (path.isDirectory()) {
             return DIRECTORY;
         }
@@ -47,7 +47,7 @@ public class PathContentInfo {
     }
 
     @NonNull
-    public static PathContentInfo fromPath(@NonNull Path path) {
+    public static PathContentInfoImpl fromPath(@NonNull Path path) {
         if (path.isDirectory()) {
             return DIRECTORY;
         }
@@ -64,11 +64,11 @@ public class PathContentInfo {
                 //  instead which is currently a WIP.
                 if (extInfo != null) {
                     return withPartialOverride(fromPathContentInfo(
-                            new PathContentInfo(extInfo.getName(), contentInfo.getMessage(), extInfo.getMimeType(),
+                            new PathContentInfoImpl(extInfo.getName(), contentInfo.getMessage(), extInfo.getMimeType(),
                                     extInfo.getFileExtensions(), contentInfo.isPartial())), extType2);
                 }
                 if (extType2 != null) {
-                    return fromPathContentInfo(new PathContentInfo(extType2.getSimpleName(), contentInfo.getMessage(),
+                    return fromPathContentInfo(new PathContentInfoImpl(extType2.getSimpleName(), contentInfo.getMessage(),
                             extType2.getMimeType(), extType2.getFileExtensions(), contentInfo.isPartial()));
                 }
                 return fromContentInfo(contentInfo);
@@ -85,12 +85,12 @@ public class PathContentInfo {
         return fromContentType2(ContentType2.OTHER);
     }
 
-    private static PathContentInfo withPartialOverride(@NonNull PathContentInfo contentInfo, @Nullable ContentType2 contentType2) {
+    private static PathContentInfoImpl withPartialOverride(@NonNull PathContentInfoImpl contentInfo, @Nullable ContentType2 contentType2) {
         if (contentType2 != null) {
             boolean partial = contentInfo.isPartial() || Boolean.TRUE.equals(sPartialOverrides.get(contentInfo.getMimeType()));
             if (partial) {
                 // Override MIME type, name and extension
-                return new PathContentInfo(contentType2.getSimpleName(), contentInfo.getMessage(),
+                return new PathContentInfoImpl(contentType2.getSimpleName(), contentInfo.getMessage(),
                         contentType2.getMimeType(), contentType2.getFileExtensions(), false);
             }
         }
@@ -98,7 +98,7 @@ public class PathContentInfo {
     }
 
     @NonNull
-    private static PathContentInfo fromContentInfo(@NonNull ContentInfo contentInfo) {
+    private static PathContentInfoImpl fromContentInfo(@NonNull ContentInfo contentInfo) {
         String mime = sSimpleNameMimeAssociations.get(contentInfo.getName());
         if (mime != null) {
             ContentType2 contentType2 = ContentType2.fromMimeType(mime);
@@ -110,15 +110,15 @@ public class PathContentInfo {
             if (contentType2.getFileExtensions() != null) {
                 extensions.addAll(Arrays.asList(contentType2.getFileExtensions()));
             }
-            return new PathContentInfo(contentInfo.getName(), contentInfo.getMessage(), mime,
+            return new PathContentInfoImpl(contentInfo.getName(), contentInfo.getMessage(), mime,
                     extensions.isEmpty() ? null : extensions.toArray(new String[0]), contentInfo.isPartial());
         }
-        return new PathContentInfo(contentInfo.getName(), contentInfo.getMessage(), contentInfo.getMimeType(),
+        return new PathContentInfoImpl(contentInfo.getName(), contentInfo.getMessage(), contentInfo.getMimeType(),
                 contentInfo.getFileExtensions(), contentInfo.isPartial());
     }
 
     @NonNull
-    private static PathContentInfo fromPathContentInfo(@NonNull PathContentInfo contentInfo) {
+    private static PathContentInfoImpl fromPathContentInfo(@NonNull PathContentInfoImpl contentInfo) {
         String mime = sSimpleNameMimeAssociations.get(contentInfo.getName());
         if (mime != null) {
             ContentType2 contentType2 = ContentType2.fromMimeType(mime);
@@ -130,82 +130,24 @@ public class PathContentInfo {
             if (contentType2.getFileExtensions() != null) {
                 extensions.addAll(Arrays.asList(contentType2.getFileExtensions()));
             }
-            return new PathContentInfo(contentInfo.getName(), contentInfo.getMessage(), mime,
+            return new PathContentInfoImpl(contentInfo.getName(), contentInfo.getMessage(), mime,
                     extensions.isEmpty() ? null : extensions.toArray(new String[0]), contentInfo.isPartial());
         }
         return contentInfo;
     }
 
     @NonNull
-    private static PathContentInfo fromContentType2(@NonNull ContentType2 contentType2) {
-        return new PathContentInfo(contentType2.getSimpleName(), null, contentType2.getMimeType(),
+    private static PathContentInfoImpl fromContentType2(@NonNull ContentType2 contentType2) {
+        return new PathContentInfoImpl(contentType2.getSimpleName(), null, contentType2.getMimeType(),
                 contentType2.getFileExtensions(), false);
     }
 
-    public static final PathContentInfo DIRECTORY = new PathContentInfo("Directory", null,
+    private static final PathContentInfoImpl DIRECTORY = new PathContentInfoImpl("Directory", null,
             "resource/folder", null, false);
 
-    @NonNull
-    private final String mName;
-    @Nullable
-    private final String mMessage;
-    @Nullable
-    private final String mMimeType;
-    @Nullable
-    private final String[] mFileExtensions;
-    private final boolean mPartial;
 
-    public PathContentInfo(@NonNull String name, @Nullable String message, @Nullable String mimeType,
-                           @Nullable String[] fileExtensions, boolean partial) {
-        mName = name;
-        mMessage = message;
-        mMimeType = mimeType;
-        mFileExtensions = fileExtensions;
-        mPartial = partial;
-    }
-
-    /**
-     * Returns the short name of the content either from the content-type or extracted from the message. If the
-     * content-type is known then this is a specific name string. Otherwise, this is usually the first word of the
-     * message generated by the magic file.
-     */
-    @NonNull
-    public String getName() {
-        return mName;
-    }
-
-    /**
-     * Returns the mime-type or null if none.
-     */
-    @Nullable
-    public String getMimeType() {
-        return mMimeType;
-    }
-
-    /**
-     * Returns the full message as generated by the magic matching code or null if none. This should be similar to the
-     * output from the Unix file(1) command.
-     */
-    @Nullable
-    public String getMessage() {
-        return mMessage;
-    }
-
-    /**
-     * Returns an array of associated file-extensions or null if none.
-     */
-    @Nullable
-    public String[] getFileExtensions() {
-        return mFileExtensions;
-    }
-
-    /**
-     * Whether this was a partial match. For some types, there is a main matching pattern and then more
-     * specific patterns which detect additional features of the type. A partial match means that none of the more
-     * specific patterns fully matched the content. It's probably still of the type but just not a variant that the
-     * entries from the magic file(s) know about.
-     */
-    public boolean isPartial() {
-        return mPartial;
+    private PathContentInfoImpl(@NonNull String name, @Nullable String message, @Nullable String mimeType,
+                                @Nullable String[] fileExtensions, boolean partial) {
+        super(name, message, mimeType, fileExtensions, partial);
     }
 }

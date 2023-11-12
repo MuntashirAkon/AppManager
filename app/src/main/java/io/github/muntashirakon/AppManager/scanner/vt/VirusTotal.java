@@ -205,7 +205,7 @@ public class VirusTotal {
                 .getBytes(StandardCharsets.UTF_8));
         os.write(("Content-Type: application/octet-stream\r\n").getBytes(StandardCharsets.UTF_8));
         os.write(("Content-Transfer-Encoding: chunked\r\n\r\n").getBytes(StandardCharsets.UTF_8));
-        IoUtils.copy(is, os, -1, null);
+        IoUtils.copy(is, os);
     }
 
     @WorkerThread

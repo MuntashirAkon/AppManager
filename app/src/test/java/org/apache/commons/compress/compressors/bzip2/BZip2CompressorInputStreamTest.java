@@ -51,7 +51,7 @@ public class BZip2CompressorInputStreamTest {
                 File file = new File("/tmp", entry.getName());
                 // copy TarArchiveInputStream to newPath
                 try (OutputStream os = Paths.get(file).openOutputStream()) {
-                    IoUtils.copy(tis, os, -1, null);
+                    IoUtils.copy(tis, os);
                 }
             }
         }
@@ -94,7 +94,7 @@ public class BZip2CompressorInputStreamTest {
                 File file = new File("/tmp", entry.getName());
                 // copy TarArchiveInputStream to newPath
                 try (OutputStream os = Paths.get(file).openOutputStream()) {
-                    IoUtils.copy(tis, os, -1, null);
+                    IoUtils.copy(tis, os);
                 }
             }
         }

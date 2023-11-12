@@ -487,7 +487,7 @@ public final class ApkFile implements AutoCloseable {
             // Extract obb file to the destination directory
             try (InputStream zipInputStream = mZipFile.getInputStream(obbEntry);
                  OutputStream outputStream = obbDir.openOutputStream()) {
-                IoUtils.copy(zipInputStream, outputStream, -1, null);
+                IoUtils.copy(zipInputStream, outputStream);
             }
         }
     }

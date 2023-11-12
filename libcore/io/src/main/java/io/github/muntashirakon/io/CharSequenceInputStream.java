@@ -16,7 +16,6 @@ import java.util.Objects;
  * Implements an {@link InputStream} to read from String, StringBuffer, StringBuilder or CharBuffer.
  * <p>
  * <strong>Note:</strong> Supports {@link #mark(int)} and {@link #reset()}.
- * </p>
  */
 // Copyright 2012 Apache Software Foundation
 public class CharSequenceInputStream extends InputStream {

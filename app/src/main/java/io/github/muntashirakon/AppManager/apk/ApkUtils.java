@@ -106,7 +106,7 @@ public final class ApkUtils {
         } else {
             // Regular apk
             apkFile = backupPath.createNewFile(outputName + EXT_APK, null);
-            IoUtils.copy(Paths.get(info.publicSourceDir), apkFile, null);
+            IoUtils.copy(Paths.get(info.publicSourceDir), apkFile);
         }
     }
 

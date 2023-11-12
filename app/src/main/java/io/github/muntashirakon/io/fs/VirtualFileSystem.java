@@ -1077,7 +1077,7 @@ public abstract class VirtualFileSystem {
             // The file exists physically. It has to be cached first.
             try (InputStream is = getInputStream(node);
                  FileOutputStream os = new FileOutputStream(cachedFile)) {
-                IoUtils.copy(is, os, -1, null);
+                IoUtils.copy(is, os);
             }
         }
         fileCacheItem = new FileCacheItem(cachedFile);

@@ -877,7 +877,7 @@ public final class SettingsStateV26 implements SettingsState {
         if (parseStateFromXmlStreamLocked(in)) {
             // Parsed state from fallback file. Restore original file with fallback file
             try {
-                IoUtils.copy(statePersistFallbackFile, mStatePersistFile, null);
+                IoUtils.copy(statePersistFallbackFile, mStatePersistFile);
             } catch (IOException ignored) {
                 // Failed to copy, but it's okay because we already parsed states from fallback file
             }

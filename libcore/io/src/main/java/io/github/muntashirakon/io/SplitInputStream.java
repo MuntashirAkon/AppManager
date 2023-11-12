@@ -3,6 +3,7 @@
 package io.github.muntashirakon.io;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import java.io.IOException;
@@ -30,6 +31,7 @@ public class SplitInputStream extends InputStream {
 
     // markBuf.length == markBufSize
     private int mMarkBufSize;
+    @Nullable
     private byte[] mMarkBuf;
 
     // Some value ranges:
@@ -132,7 +134,7 @@ public class SplitInputStream extends InputStream {
     }
 
     @WorkerThread
-    private synchronized int read0(byte[] b, int off, int len) throws IOException {
+    private synchronized int read0(@Nullable byte[] b, int off, int len) throws IOException {
         int n = 0;
         while (n < len) {
             if (mPos < 0) {
@@ -199,7 +201,7 @@ public class SplitInputStream extends InputStream {
         int len = b.length;
         if (len <= 0) return len;
         try {
-            if (mFiles.size() == 0) {
+            if (mFiles.isEmpty()) {
                 // No files supplied, nothing to read
                 return -1;
             } else if (mCurrentIndex == -1) {

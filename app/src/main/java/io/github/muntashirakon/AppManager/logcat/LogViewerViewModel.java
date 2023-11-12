@@ -314,7 +314,7 @@ public class LogViewerViewModel extends AndroidViewModel {
             }
             try (OutputStream output = path.openOutputStream()) {
                 try (InputStream input = sendLogDetails.getAttachment().openInputStream()) {
-                    IoUtils.copy(input, output, -1, null);
+                    IoUtils.copy(input, output);
                 }
                 mLogSavedLiveData.postValue(path);
             } catch (IOException e) {

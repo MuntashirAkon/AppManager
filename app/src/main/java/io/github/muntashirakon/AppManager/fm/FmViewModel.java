@@ -343,7 +343,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                             }
                             Uri documentUri = DocumentsContract.buildDocumentUriUsingTree(mCurrentUri, documentId);
                             Path child = Paths.getTreeDocument(path, documentUri);
-                            PathAttributes attributes = PathAttributes.fromSafTreeCursor(documentUri, c);
+                            PathAttributes attributes = Paths.getAttributesFromSafTreeCursor(documentUri, c);
                             FmItem fmItem = new FmItem(child, attributes);
                             mFmItems.add(fmItem);
                             if (fmItem.isDirectory) {

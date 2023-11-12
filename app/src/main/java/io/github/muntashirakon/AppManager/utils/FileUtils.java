@@ -32,6 +32,7 @@ import java.util.Objects;
 import java.util.zip.ZipEntry;
 
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.io.FileSystemManager;
 import io.github.muntashirakon.io.IoUtils;
@@ -113,12 +114,37 @@ public final class FileUtils {
         return files != null && files.length > 0;
     }
 
+    @AnyThread
+    public static long copy(@NonNull Path from, @NonNull Path to, @Nullable ProgressHandler progressHandler)
+            throws IOException {
+        try (InputStream in = from.openInputStream();
+             OutputStream out = to.openOutputStream()) {
+            return copy(in, out, from.length(), progressHandler);
+        }
+    }
+
+    /**
+     * Copy the contents of one stream to another.
+     *
+     * @param totalSize Total size of the stream. Only used for handling progress. Set {@code -1} if unknown.
+     */
+    @AnyThread
+    public static long copy(@NonNull InputStream in, @NonNull OutputStream out, long totalSize,
+                            @Nullable ProgressHandler progressHandler) throws IOException {
+        float lastProgress = progressHandler != null ? progressHandler.getLastProgress() : 0;
+        return IoUtils.copy(in, out, ThreadUtils.getBackgroundThreadExecutor(), progress -> {
+            if (progressHandler != null) {
+                progressHandler.postUpdate(100, lastProgress + (progress * 100f / totalSize));
+            }
+        });
+    }
+
     @WorkerThread
     public static void copyFromAsset(@NonNull Context context, @NonNull String fileName, @NonNull Path dest)
             throws IOException {
         try (InputStream is = context.getAssets().open(fileName);
              OutputStream os = dest.openOutputStream()) {
-            IoUtils.copy(is, os, -1, null);
+            IoUtils.copy(is, os);
         }
     }
 

@@ -46,7 +46,7 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
                     try (InputStream is = new FileInputStream(AM_KEYSTORE_FILE);
                          OutputStream os = mActivity.getContentResolver().openOutputStream(uri)) {
                         if (os == null) throw new IOException("Unable to open URI");
-                        IoUtils.copy(is, os, -1, null);
+                        IoUtils.copy(is, os);
                         mActivity.runOnUiThread(() -> {
                             UIUtils.displayShortToast(R.string.done);
                             dismiss();
@@ -77,7 +77,7 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
                             try (InputStream is = mActivity.getContentResolver().openInputStream(uri);
                                  OutputStream os = new FileOutputStream(AM_KEYSTORE_FILE)) {
                                 if (is == null) throw new IOException("Unable to open URI");
-                                IoUtils.copy(is, os, -1, null);
+                                IoUtils.copy(is, os);
                                 if (KeyStoreManager.hasKeyStorePassword()) {
                                     CountDownLatch waitForKs = new CountDownLatch(1);
                                     KeyStoreManager.inputKeyStorePassword(mActivity, waitForKs::countDown);

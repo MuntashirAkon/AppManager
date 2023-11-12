@@ -20,7 +20,7 @@ public class AndroidBackupUnpacker {
         InputStream is = abSource.openInputStream();
         try (OutputStream os = tarDest.openOutputStream();
              InputStream realIs = header.read(is)) {
-            IoUtils.copy(realIs, os, -1, null);
+            IoUtils.copy(realIs, os);
         } catch (Exception e) {
             ExUtils.rethrowAsIOException(e);
         }

@@ -375,7 +375,7 @@ public class OABConverter extends Converter {
                             // We need to use a temporary file
                             tmpFile = FileCache.getGlobalFileCache().createCachedFile(files[0].getExtension());
                             try (OutputStream fos = new FileOutputStream(tmpFile)) {
-                                IoUtils.copy(zis, fos, -1, null);
+                                IoUtils.copy(zis, fos);
                             }
                         }
                         String fileName = zipEntry.getName().replaceFirst(Pattern.quote(mPackageName + "/"), "");
@@ -389,7 +389,7 @@ public class OABConverter extends Converter {
                         if (tmpFile != null) {
                             // Copy from the temporary file
                             try (FileInputStream fis = new FileInputStream(tmpFile)) {
-                                IoUtils.copy(fis, tos, -1, null);
+                                IoUtils.copy(fis, tos);
                             } finally {
                                 FileCache.getGlobalFileCache().delete(tmpFile);
                             }

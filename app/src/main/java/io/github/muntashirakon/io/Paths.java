@@ -3,6 +3,7 @@
 package io.github.muntashirakon.io;
 
 import android.content.ContentResolver;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
@@ -91,7 +92,7 @@ public final class Paths {
     public static Path getUnprivileged(@NonNull File pathName) {
         Path path = null;
         try {
-            path = new Path(ContextUtils.getContext(), pathName.getAbsolutePath(), false);
+            path = new PathImpl(ContextUtils.getContext(), pathName.getAbsolutePath(), false);
         } catch (RemoteException ignore) {
             // This exception is never called in unprivileged mode.
         }
@@ -103,7 +104,7 @@ public final class Paths {
     public static Path getUnprivileged(@NonNull String pathName) {
         Path path = null;
         try {
-            path = new Path(ContextUtils.getContext(), pathName, false);
+            path = new PathImpl(ContextUtils.getContext(), pathName, false);
         } catch (RemoteException ignore) {
             // This exception is never called in unprivileged mode.
         }
@@ -113,23 +114,23 @@ public final class Paths {
 
     @NonNull
     public static Path get(@NonNull String pathName) {
-        return new Path(ContextUtils.getContext(), Objects.requireNonNull(pathName));
+        return new PathImpl(ContextUtils.getContext(), Objects.requireNonNull(pathName));
     }
 
     @NonNull
     public static Path get(@NonNull File pathName) {
-        return new Path(ContextUtils.getContext(), pathName.getAbsolutePath());
+        return new PathImpl(ContextUtils.getContext(), pathName.getAbsolutePath());
     }
 
     @NonNull
     public static Path get(@NonNull Uri pathUri) {
-        return new Path(ContextUtils.getContext(), pathUri);
+        return new PathImpl(ContextUtils.getContext(), pathUri);
     }
 
     @NonNull
     public static Path getStrict(@NonNull Uri pathUri) throws FileNotFoundException {
         try {
-            return new Path(ContextUtils.getContext(), pathUri);
+            return new PathImpl(ContextUtils.getContext(), pathUri);
         } catch (IllegalArgumentException e) {
             throw (FileNotFoundException) (new FileNotFoundException(e.getMessage())).initCause(e);
         }
@@ -137,12 +138,12 @@ public final class Paths {
 
     @NonNull
     public static Path get(@NonNull VirtualFileSystem fs) {
-        return new Path(ContextUtils.getContext(), fs);
+        return new PathImpl(ContextUtils.getContext(), fs);
     }
 
     @NonNull
     public static Path getTreeDocument(@Nullable Path parent, @NonNull Uri documentUri) {
-        return new Path(parent, ContextUtils.getContext(), documentUri);
+        return new PathImpl(parent, ContextUtils.getContext(), documentUri);
     }
 
     @NonNull
@@ -183,6 +184,11 @@ public final class Paths {
 
     public static boolean exists(@Nullable File path) {
         return path != null && path.exists();
+    }
+
+    @NonNull
+    public static PathAttributes getAttributesFromSafTreeCursor(@NonNull Uri treeUri, @NonNull Cursor c) {
+        return PathAttributesImpl.fromSafTreeCursor(treeUri, c);
     }
 
     /**

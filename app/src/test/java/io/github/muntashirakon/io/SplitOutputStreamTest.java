@@ -49,7 +49,7 @@ public class SplitOutputStreamTest {
 
     @Test
     public void write() throws IOException {
-        IoUtils.copy(inputStream, splitOutputStream, -1, null);
+        IoUtils.copy(inputStream, splitOutputStream);
         List<String> expectedHashes = getExpectedHashes();
         List<String> actualHashes = getActualHashes();
         assertEquals(expectedHashes, actualHashes);

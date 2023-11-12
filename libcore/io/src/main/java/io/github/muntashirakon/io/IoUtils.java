@@ -16,9 +16,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-
-import io.github.muntashirakon.AppManager.progress.ProgressHandler;
-import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import java.util.concurrent.Executor;
 
 public final class IoUtils {
     public static final String TAG = IoUtils.class.getSimpleName();
@@ -74,34 +72,41 @@ public final class IoUtils {
     }
 
     @AnyThread
-    public static long copy(@NonNull Path from, @NonNull Path to, @Nullable ProgressHandler progressHandler)
+    public static long copy(@NonNull Path from, @NonNull Path to)
             throws IOException {
         try (InputStream in = from.openInputStream();
              OutputStream out = to.openOutputStream()) {
-            return copy(in, out, from.length(), progressHandler);
+            return copy(in, out);
         }
     }
 
     /**
      * Copy the contents of one stream to another.
-
-     * @param totalSize Total size of the stream. Only used for handling progress. Set {@code -1} if unknown.
      */
     @AnyThread
-    public static long copy(@NonNull InputStream in, @NonNull OutputStream out, long totalSize,
-                            @Nullable ProgressHandler progressHandler) throws IOException {
+    public static long copy(@NonNull InputStream in, @NonNull OutputStream out) throws IOException {
+        return copy(in, out, null, null);
+    }
+
+    /**
+     * Copy the contents of one stream to another.
+     *
+     * @param executor         that listener events should be delivered via.
+     * @param progressListener to be periodically notified as the copy progresses.
+     */
+    @AnyThread
+    public static long copy(@NonNull InputStream in, @NonNull OutputStream out, @Nullable Executor executor,
+                            @Nullable ProgressListener progressListener) throws IOException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            float lastProgress = progressHandler != null ? progressHandler.getLastProgress() : 0;
-            return FileUtils.copy(in, out, null, ThreadUtils.getBackgroundThreadExecutor(), progress -> {
-                if (progressHandler != null) {
-                    progressHandler.postUpdate(100, lastProgress + (progress * 100f / totalSize));
+            return FileUtils.copy(in, out, null, executor, progress -> {
+                if (progressListener != null) {
+                    progressListener.onProgress(progress);
                 }
             });
         } else {
-            return copyLarge(in, out, totalSize, progressHandler);
+            return copyLarge(in, out, executor, progressListener);
         }
     }
-
 
     @AnyThread
     public static void closeQuietly(@Nullable AutoCloseable closeable) {
@@ -114,24 +119,32 @@ public final class IoUtils {
     }
 
     @AnyThread
-    private static long copyLarge(@NonNull InputStream in, @NonNull OutputStream out, long totalSize,
-                                  @Nullable ProgressHandler progressHandler) throws IOException {
+    private static long copyLarge(@NonNull InputStream in, @NonNull OutputStream out, @Nullable Executor executor,
+                                  @Nullable ProgressListener progressListener)
+            throws IOException {
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         long count = 0;
         long checkpoint = 0;
         int n;
-        float lastProgress = progressHandler != null ? progressHandler.getLastProgress() : 0;
         while ((n = in.read(buffer)) > 0) {
             out.write(buffer, 0, n);
             count += n;
             checkpoint += n;
             if (checkpoint >= (1 << 19)) { // 512 kB
-                if (progressHandler != null) {
-                    progressHandler.postUpdate(100, lastProgress + (count * 100f / totalSize));
+                if (executor != null && progressListener != null) {
+                    long countSnapshot = count;
+                    executor.execute(() -> progressListener.onProgress(countSnapshot));
                 }
                 checkpoint = 0;
             }
         }
         return count;
+    }
+
+    /**
+     * Listener that is called periodically as progress is made.
+     */
+    public interface ProgressListener {
+        void onProgress(long progress);
     }
 }

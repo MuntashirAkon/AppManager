@@ -38,7 +38,7 @@ class ImageFileCache {
     public void putImage(@NonNull String name, @NonNull InputStream inputStream) throws IOException {
         File iconFile = getImageFile(name);
         try (OutputStream os = new FileOutputStream(iconFile)) {
-            IoUtils.copy(inputStream, os, -1, null);
+            IoUtils.copy(inputStream, os);
         }
     }
 
