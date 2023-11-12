@@ -256,7 +256,7 @@ public abstract class RootService extends ContextWrapper {
     @SuppressLint("RestrictedApi")
     @Override
     public final Context getApplicationContext() {
-        return ContextUtils.getContext();
+        return ContextUtils.rootContext;
     }
 
     /**

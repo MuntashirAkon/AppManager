@@ -9,6 +9,9 @@ import android.content.ContextWrapper;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import org.jetbrains.annotations.Contract;
 
 import java.util.Objects;
 
@@ -16,32 +19,38 @@ import java.util.Objects;
 public final class ContextUtils {
     public static final String TAG = ContextUtils.class.getSimpleName();
     @SuppressLint("StaticFieldLeak")
-    public static Context context;
+    public static Context rootContext;
+    @SuppressLint("StaticFieldLeak")
+    private static Context sContext;
 
     @SuppressLint({"PrivateApi", "RestrictedApi"})
+    @NonNull
     public static Context getContext() {
-        if (context == null) {
+        if (sContext == null) {
             // Fetching ActivityThread on the main thread is no longer required on API 18+
             // See: https://cs.android.com/android/platform/frameworks/base/+/66a017b63461a22842b3678c9520f803d5ddadfc
             try {
                 Context c = (Context) Class.forName("android.app.ActivityThread")
                         .getMethod("currentApplication")
                         .invoke(null);
-                context = getContextImpl(Objects.requireNonNull(c));
+                sContext = getContextImpl(Objects.requireNonNull(c));
             } catch (Exception e) {
                 // Shall never happen
                 throw new RuntimeException(e);
             }
         }
-        return context;
+        return sContext;
     }
 
+    @Contract("!null -> !null")
     public static Context getDeContext(Context context) {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
                 context.createDeviceProtectedStorageContext() : context;
     }
 
-    public static Context getContextImpl(Context context) {
+    @Contract("!null -> !null")
+    @Nullable
+    public static Context getContextImpl(@Nullable Context context) {
         while (context instanceof ContextWrapper) {
             context = ((ContextWrapper) context).getBaseContext();
         }

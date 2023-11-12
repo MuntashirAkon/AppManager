@@ -110,7 +110,7 @@ public class RootServiceManager implements Handler.Callback {
         Bundle bundle = new Bundle();
         bundle.putBinder(BUNDLE_BINDER_KEY, binder);
         return new Intent(RECEIVER_BROADCAST)
-                .setPackage(ContextUtils.context.getPackageName())
+                .setPackage(ContextUtils.rootContext.getPackageName())
                 .addFlags(HiddenAPIs.FLAG_RECEIVER_FROM_SHELL)
                 .putExtra(INTENT_DAEMON_KEY, isDaemon)
                 .putExtra(INTENT_BUNDLE_KEY, bundle);

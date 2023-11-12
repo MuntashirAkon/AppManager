@@ -53,6 +53,7 @@ import static io.github.muntashirakon.AppManager.ipc.RootServiceManager.MSG_STOP
 public class RootServiceServer extends IRootServiceManager.Stub implements Runnable {
     public static final String TAG = RootServiceServer.class.getSimpleName();
 
+    @SuppressLint("StaticFieldLeak")
     private static RootServiceServer sInstance;
 
     public static RootServiceServer getInstance(Context context) {
@@ -67,11 +68,13 @@ public class RootServiceServer extends IRootServiceManager.Stub implements Runna
     private final Map<ComponentName, ServiceRecord> mServices = new ArrayMap<>();
     private final SparseArray<ClientProcess> mClients = new SparseArray<>();
     private final boolean mIsDaemon;
+    private final Context mContext;
 
     @SuppressWarnings("rawtypes")
     private RootServiceServer(Context context) {
         Shell.enableVerboseLogging = System.getenv(LOGGING_ENV) != null;
-        ContextUtils.context = Utils.getContextImpl(context);
+        mContext = context;
+        ContextUtils.rootContext = context;
 
         // Wait for debugger to attach if needed
         if (System.getenv(DEBUG_ENV) != null) {
@@ -144,9 +147,9 @@ public class RootServiceServer extends IRootServiceManager.Stub implements Runna
         Intent intent = RootServiceManager.getBroadcastIntent(this, mIsDaemon);
         if (Build.VERSION.SDK_INT >= 24) {
             UserHandle h = UserHandle.getUserHandleForUid(uid);
-            ContextUtils.context.sendBroadcastAsUser(intent, h);
+            mContext.sendBroadcastAsUser(intent, h);
         } else {
-            ContextUtils.context.sendBroadcast(intent);
+            mContext.sendBroadcast(intent);
         }
     }
 
@@ -197,6 +200,7 @@ public class RootServiceServer extends IRootServiceManager.Stub implements Runna
         mServices.put(service.getComponentName(), s);
     }
 
+    @Nullable
     private IBinder bindInternal(int uid, Intent intent) throws Exception {
         ClientProcess c = mClients.get(uid);
         if (c == null)
@@ -206,10 +210,10 @@ public class RootServiceServer extends IRootServiceManager.Stub implements Runna
 
         ServiceRecord s = mServices.get(name);
         if (s == null) {
-            Class<?> clz = ContextUtils.context.getClassLoader().loadClass(name.getClassName());
+            Class<?> clz = mContext.getClassLoader().loadClass(name.getClassName());
             Constructor<?> ctor = clz.getDeclaredConstructor();
             ctor.setAccessible(true);
-            HiddenAPIs.attachBaseContext(ctor.newInstance(), ContextUtils.context);
+            HiddenAPIs.attachBaseContext(ctor.newInstance(), mContext);
 
             // RootService should be registered after attachBaseContext
             s = mServices.get(name);
