@@ -209,6 +209,9 @@ public class RootServiceManager implements Handler.Callback {
                 }
             }
 
+            // Disable image dex2oat as it can be quite slow in some ROMs if triggered
+            params += " -Xnoimage-dex2oat";
+
             // Classpath
             env.append(CLASSPATH_ENV + "=").append(Ops.isSystem() ? mainJar : stagingMainJar).append(" ");
 
