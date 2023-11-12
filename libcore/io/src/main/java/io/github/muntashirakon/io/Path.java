@@ -483,7 +483,6 @@ public abstract class Path implements Comparable<Path> {
         Path[] ss = listFiles();
         ArrayList<Path> files = new ArrayList<>();
         for (Path s : ss) {
-            s.getName();
             if (filter == null || filter.accept(this, s.getName())) {
                 files.add(s);
             }
@@ -496,7 +495,6 @@ public abstract class Path implements Comparable<Path> {
         Path[] ss = listFiles();
         ArrayList<String> files = new ArrayList<>();
         for (Path s : ss) {
-            s.getName();
             files.add(s.getName());
         }
         return files.toArray(new String[0]);
@@ -507,9 +505,21 @@ public abstract class Path implements Comparable<Path> {
         Path[] ss = listFiles();
         ArrayList<String> files = new ArrayList<>();
         for (Path s : ss) {
-            s.getName();
             if (filter == null || filter.accept(s)) {
                 files.add(s.getName());
+            }
+        }
+        return files.toArray(new String[0]);
+    }
+
+    @NonNull
+    public String[] listFileNames(@Nullable FilenameFilter filter) {
+        Path[] ss = listFiles();
+        ArrayList<String> files = new ArrayList<>();
+        for (Path s : ss) {
+            String name = s.getName();
+            if (filter == null || filter.accept(this, name)) {
+                files.add(name);
             }
         }
         return files.toArray(new String[0]);
