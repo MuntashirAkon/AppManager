@@ -189,12 +189,13 @@ public final class InstallerDialogHelper {
 
     public void showSignatureMismatchReinstallWarning(CharSequence msg,
                                                       @NonNull OnClickButtonsListener onClickButtonsListener,
-                                                      @NonNull View.OnClickListener installOnlyButtonListener) {
+                                                      @NonNull View.OnClickListener installOnlyButtonListener,
+                                                      boolean isSystem) {
         // Buttons
         mNeutralBtn.setVisibility(View.VISIBLE);
         mNeutralBtn.setText(R.string.only_install);
         mNeutralBtn.setOnClickListener(installOnlyButtonListener);
-        mPositiveBtn.setVisibility(View.VISIBLE);
+        mPositiveBtn.setVisibility(isSystem ? View.GONE : View.VISIBLE);
         mPositiveBtn.setText(R.string.yes);
         mPositiveBtn.setOnClickListener(v -> onClickButtonsListener.triggerInstall());
         mNegativeBtn.setVisibility(View.VISIBLE);

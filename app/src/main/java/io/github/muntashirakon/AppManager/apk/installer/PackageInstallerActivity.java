@@ -444,21 +444,21 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         }
         // Signature is different
         ApplicationInfo info = mModel.getInstalledPackageInfo().applicationInfo;  // Installed package info is never null here.
-        if (ApplicationInfoCompat.isSystemApp(info)) {
+        boolean isSystem = ApplicationInfoCompat.isSystemApp(info);
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        if (isSystem) {
             // Cannot reinstall a system app with a different signature
-            showInstallationFinishedDialog(mModel.getPackageName(),
-                    getString(R.string.app_signing_signature_mismatch_for_system_apps), null, false);
-            return;
+            builder.append(getString(R.string.app_signing_signature_mismatch_for_system_apps));
+        } else {
+            // Offer user to uninstall and then install the app again
+            builder.append(getString(R.string.do_you_want_to_uninstall_and_install)).append(" ")
+                    .append(UIUtils.getItalicString(getString(R.string.app_data_will_be_lost)));
         }
-        // Offer user to uninstall and then install the app again
-        SpannableStringBuilder builder = new SpannableStringBuilder()
-                .append(getString(R.string.do_you_want_to_uninstall_and_install)).append(" ")
-                .append(UIUtils.getItalicString(getString(R.string.app_data_will_be_lost)))
-                .append("\n\n");
+        builder.append("\n\n");
         int start = builder.length();
         builder.append(getText(R.string.app_signing_install_without_data_loss));
         builder.setSpan(new RelativeSizeSpan(0.8f), start, builder.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        mDialogHelper.showSignatureMismatchReinstallWarning(builder, reinstallListener, v -> install());
+        mDialogHelper.showSignatureMismatchReinstallWarning(builder, reinstallListener, v -> install(), isSystem);
     }
 
     @Override
