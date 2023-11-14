@@ -23,6 +23,7 @@ import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
@@ -50,6 +51,20 @@ public class SelfPermissions {
                     PermissionCompat.grantPermission(BuildConfig.APPLICATION_ID, permission, userId);
                 } catch (Exception ignore) {
                 }
+            }
+        }
+        // Grant usage stats permission (both permission and app op needs to be granted)
+        if (FeatureController.isUsageAccessEnabled()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS)) {
+                try {
+                    PermissionCompat.grantPermission(BuildConfig.APPLICATION_ID, Manifest.permission.PACKAGE_USAGE_STATS, userId);
+                } catch (Exception ignore) {
+                }
+            }
+            try {
+                AppOpsManagerCompat appOps = new AppOpsManagerCompat();
+                appOps.setMode(AppOpsManagerHidden.OP_GET_USAGE_STATS, Process.myUid(), BuildConfig.APPLICATION_ID, AppOpsManager.MODE_ALLOWED);
+            } catch (RemoteException ignore) {
             }
         }
     }
