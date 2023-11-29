@@ -31,19 +31,16 @@
     <string name="intro$main$$donation-title">기부 \\&amp; 자금</string>
     <string name="intro$main$$contact-title">연락처</string>
     <string name="intro$main$terminologies">\\begin{itemize}
-\n \\item \\textbf{AM} --- 앱관리자의 약칭.
-\n \\item \\textbf{Block/Unblock} --- 구성 요소 차단 또는 차단 해제에 사용됩니다. 
-\n구성 요소가 차단되는 방법은 사용자 기본 설정에 따라 다릅니다.
+\n \\item \\textbf{AM} --- App Manager의 약칭.
+\n \\item \\textbf{Block/Unblock} --- 구성 요소 차단 또는 차단 해제에 사용됩니다. 구성 요소가 차단되는 방법은 사용자 기본 설정에 따라 설정됩니다.
 \n \\item \\textbf{IFW} --- 의도된 방화벽의 약식입니다.
-\n \\item \\textbf{Ops} --- 의도된 방화벽의 단축형 작업 이름(예:\\ apps, 배치 ops, 원클릭 ops)
-\n \\item \\textbf{SSAID} --- \\texttt{Settings.Secure.ANDROID\\_ID}의 짧은 형식이다. 각 앱(안드로이드 오레오 이상)에 할당된 장치 식별자이다. 
-\n앱의 서명 인증서와 패키지 \\texttt{android}에 대한 SSAID 세트의 조합에서 생성된다. 
-\n결과적으로, 사용자가 장치를 포맷하도록 선택하지 않는 한 앱에서도 동일할 것으로 보장된다. 
+\n \\item \\textbf{Ops} --- 작업의 단축형 작업 이름(예:\\ app ops, 배치 ops, 원클릭 ops)
+\n \\item \\textbf{SSAID} --- \\texttt{Settings.Secure.ANDROID\\_ID}의 짧은 형식입니다. 각 앱(안드로이드 오레오 이상)에 할당된 장치 식별자이다.
+\n앱의 서명 인증서와 패키지 \\texttt{android}에 대한 SSAID 세트의 조합에서 생성됩니다. SSAID는 사용자가 장치를 초기화하지 않는 한 그 앱의 ID는 동일합니다.
 \n그것은 추적에 널리 사용된다.
-\n \\item \\textbf{Tracker} --- \\hyperref[sec:scanner-page]{scanner page}를 제외하고 문서 전체와 장치 관리자에서 추적기 구성 요소를 나타냅니다. 
-\n추적기에는 충돌 리포터, 분석, 자료 수집, 식별, 광고, 위치 등의 라이브러리가 포함된다. 
-\n따라서, 그들은 기능 면에서 같지 않다. 
-\n추적을 촉진하는 오픈 소스 라이브러리와 클로즈드 소스 라이브러리 사이에는 차이나 편견이 없다.
+\n \\item \\textbf{Tracker} --- \\hyperref[sec:scanner-page]{scanner page}를 제외하고 문서 전체와 장치 관리자에서 추적기 구성 요소를 나타냅니다.
+\n추적기에는 충돌 리포터, 분석, 자료 수집, 식별, 광고, 위치 등의 라이브러리가 포함됩니다. 따라서, 그들은 기능 면에서 같지 않습니다.
+\n추적을 촉진하는 오픈 소스 라이브러리와 클로즈드 소스 라이브러리 사이에는 차이가 없습니다.
 \n\\end{itemize}</string>
     <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Chapter}</string>
     <string name="intro$main$source-code-links">GitHub를 제외한 모두 미러 링크입니다. 태그는 항상 최신 상태이지만, 마스터 브랜치는 최신 상태를 보장할 수 없습니다. 
@@ -59,7 +56,7 @@
 \nKey 지문: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
 \nGitHub: \\url{https://github.com/MuntashirAkon}\\\\
 \n트위터: \\url{https://twitter.com/Muntashir}</string>
-    <string name="pages$main-page$$instructions-title">지침</string>
+    <string name="pages$main-page$$instructions-title">사용 설명서</string>
     <string name="pages$main-page$$options-menu-title">옵션 메뉴</string>
     <string name="pages$main-page$$list-options-title">옵션 나열</string>
     <string name="pages$main-page$$sort-title">정렬</string>
@@ -82,7 +79,7 @@
     <string name="pages$app-details-page$$component-tabs-title">구성 요소 탭</string>
     <string name="pages$app-details-page$app-info-tab">\\textbf{앱 정보} 탭에는 앱에 대한 일반 정보가 포함되어 있습니다. 또한 이 탭에서 수행할 수 있는
 \n여러 작업도 나열됩니다.</string>
-    <string name="intro$main$supported-versions">현재 지원되는 버젼은 v3.0.0 -- v3.0.3 (안정), v3.1.0 (알파 &amp; 디버그 릴리즈)입니다.
+    <string name="intro$main$supported-versions">현재 지원되는 버전은 v3.0.4와 v3.1.0 (안정), v3.2.0 (알파 &amp; 디버그 릴리즈)입니다.
 \nApp Manager의 이전 버전에는 보안 취약점이 있을 수 있으므로 사용하지 마십시오.</string>
     <string name="pages$main-page$$colour-codes-title">색상 코드</string>
     <string name="pages$main-page$$application-types-title">앱 종류</string>
@@ -136,7 +133,7 @@
 \n \\item \\textbf{비활성화 앱.} 비활성화 앱만 표시
 \n \\item \\textbf{규칙 보유 앱.} 하나 이상의 블로킹 규칙이 있는 앱 표시
 \n \\item \\textbf{활성화 앱.} 하나 이상의 활동 기록이 있는 앱 표시
-\n \\item \\textbf{백앱 된 앱.} 하나 이상의 백업이 있는 앱 표시
+\n \\item \\textbf{백업된 앱.} 하나 이상의 백업이 있는 앱 표시
 \n \\item \\textbf{실행 중 앱.} 현재 실행 중인 앱 표시
 \n \\item \\textbf{분기 앱.} 하나 이상의 분기 APK 파일이 있는 앱 표시
 \n \\item \\textbf{설치된 앱.} 설치된 앱만 표시
@@ -160,27 +157,24 @@
 \n \\textit{Normal releases:} \\url{https://t.me/AppManagerChannel}\\\\
 \n \\textit{Debug releases:} \\url{https://t.me/AppManagerDebug}
 \n\\end{enumerate}</string>
-    <string name="intro$main$translations">App Manager는 직접적인 pull/merge 요청의 번역은 수락하지 않습니다. 번역은 Weblate를 통해서 자동으로 관리됩니다.
-\n번역에 참여하고 싶으시면, \\url{https://hosted.weblate.org/engage/app-manager/}로 가십시오.</string>
+    <string name="intro$main$translations">App Manager는 직접적인 pull/merge 요청의 번역은 수락하지 않습니다. 번역은 Hosted Weblate를 통해서 진행됩니다.
+\nApp Manager를 번역하시려면, \\url{https://hosted.weblate.org/engage/app-manager/}을 방문해 주십시오.</string>
     <string name="pages$main-page$colour-codes">\\begin{itemize}
 \n \\item \\colorbox{AMLightGreyishOrange}{\\textcolor{black}{Light greyish orange (day)}} / \\colorbox{AMDarkBlue}{
-\n \\textcolor{white}{dark blue (night)}} -- The application is selected for batch operation
+\n \\textcolor{white}{dark blue (night)}} -- 앱이 일괄 작업의 대상으로 선택되었습니다
 \n \\item \\colorbox{AMLightRed}{\\textcolor{black}{Light red (day)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}
-\n {dark red (night)}} -- Disabled app
+\n {dark red (night)}} -- Frozen app
 \n \\item \\colorbox{AMYellow}{\\textcolor{black}{Yellow Star}} -- Debuggable application
 \n \\item \\textcolor{AMOrange}{Orange \\textit{Date}} -- 이 앱은 시스템 로그 접근 권한이 있습니다
 \n \\item \\textcolor{AMOrange}{Orange \\textit{UID}} -- 사용자 ID가 여러 앱에서 공유되고 있습니다
-\n \\item \\textcolor{AMOrange}{Orange \\textit{SDK}} -- 이 앱은 클리어텍스트를 사용할 수도 있습니다 (i.e. HTTP)
+\n \\item \\textcolor{AMOrange}{Orange \\textit{SDK}} -- 이 앱은 클리어 텍스트를 사용할 수도 있습니다 (i.e. HTTP)
 \n \\item \\textcolor{red}{Red \\textit{package name}} -- 이 앱은 데이터 삭제를 허용하지 않습니다
-\n \\item \\textcolor{red}{Red \\textit{backup}} -- 제거된 앱이 App Manager에 하나 이상의
-\n백업을 가지고 있습니다
-\n \\item \\textcolor{AMOrange}{Orange \\textit{backup}} -- 오래된 백업, 즉 기존 백업이 설치된 앱의
-\n구 버전을 포함하고 있습니다
-\n \\item \\textcolor{AMDarkCyan}{Dark cyan \\textit{backup}} -- 최신 백업, 즉 기존 백입이 설치된 앱과 동일하거나
-\n상위 버전을 포함하고 있습니다.
-\n \\item \\textcolor{AMDarkCyan}{Dark cyan \\textit{package name}} -- 강제종료된 앱
-\n \\item \\textcolor{AMDarkCyan}{Dark cyan \\textit{version}} -- 비활성화 앱
-\n \\item \\textcolor{magenta}{Magenta} -- 자동실행 앱 i.e. 항상 실행 중인 앱.
+\n \\item \\textcolor{red}{Red \\textit{backup}} -- 제거된 앱이 App Manager에 하나 이상의 백업을 가지고 있습니다
+\n \\item \\textcolor{AMOrange}{Orange \\textit{backup}} -- 기존 백업이 설치된 앱의 구 버전을 포함하고 있습니다
+\n \\item \\textcolor{AMDarkCyan}{Dark cyan \\textit{backup}} -- 즉 기존 백입이 설치된 앱과 동일하거나 상위 버전을 포함하고 있습니다.
+\n \\item \\textcolor{AMDarkCyan}{Dark cyan \\textit{package name}} -- 강제 중지된 앱
+\n \\item \\textcolor{AMDarkCyan}{Dark cyan \\textit{version}} -- 비활성화된 앱
+\n \\item \\textcolor{magenta}{Magenta} -- Persistent 앱 i.e. 항상 실행 중인 앱.
 \n\\end{itemize}</string>
     <string name="pages$main-page$running-apps">이 메뉴 항목은 실행 중인 앱 또는 프로세스 목록이 표시되는 새 페이지를 엽니다. 추가적으로 현재 메모리 및
 \n캐시 사용량(있을 경우)도 표시합니다. root 또는 ADB를 App Manager에서 사용할 수 없는 경우 안드로이드
@@ -254,8 +248,8 @@
 \n \\item \\texttt{\\textasciitilde} -- 테스트 전용 앱
 \n \\item \\texttt{debug} -- 디버깅 가능 앱
 \n\\end{itemize}</string>
-    <string name="pages$main-page$instructions">\\textbf{Instructions} 를 클릭하면 App Manager 사용 설명서의 오프라인 버전이 열립니다. 해당 분할 기능
-\n(i.e.\\ \\texttt{feat\\_docs})이 설치되어 있지 않거나,설명서를 로드할 WebView가 시스템에 존재하지 않을 경우
+    <string name="pages$main-page$instructions">\\textbf{Instructions} 를 클릭하면 App Manager 사용 설명서의 오프라인 버전이 열립니다. 해당 기능
+\n(i.e.\\ \\texttt{feat\\_docs})이 설치되어 있지 않거나, 설명서를 로드할 WebView가 시스템에 존재하지 않을 경우
 \n온라인 버전이 열릴 수 있습니다.</string>
     <string name="pages$main-page$list-options">\\textbf{List options} 는 메인 페이지의 리스트 정렬 및 필터링을 하는 옵션이 있습니다.</string>
     <string name="pages$app-details-page$colour-codes">이 페이지에 사용된 색상과, 각 색상의 의미:
@@ -303,4 +297,5 @@
 \n \\item \\textbf{그룹.} 권한과 관련된 그룹 이름(있을 경우). 서로 연관된 여러 권한이
 \n그룹으로 묶일 수 있습니다.
 \n\\end{itemize}</string>
+    <string name="pages$main-page$$1-click-ops-title">원터치 작업</string>
 </resources>
