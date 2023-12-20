@@ -4,6 +4,11 @@
 # Abort on errors
 set -e
 
+{ [[ $(uname) == Darwin ]] || [[ $(uname) =~ .*BSD.* ]]; } && {
+  alias sed="gsed"
+  alias grep="ggrep"
+}
+
 # Contains all supported languages except English
 SUPPORTED_LANGUAGES=(de es ja ru zh-rCN)
 

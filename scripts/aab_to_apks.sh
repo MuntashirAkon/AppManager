@@ -3,6 +3,11 @@
 
 set -e
 
+{ [[ $(uname) == Darwin ]] || [[ $(uname) =~ .*BSD.* ]]; } && {
+  alias sed="gsed"
+  alias grep="ggrep"
+}
+
 if [[ "$#" -lt 1 ]]; then
   echo "USAGE: RELEASE_TYPE [BUILD_AAB]"
   exit 1
