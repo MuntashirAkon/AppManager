@@ -67,7 +67,6 @@ import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
-import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.io.IoUtils;
@@ -749,7 +748,6 @@ public final class ApkFile implements AutoCloseable {
                 }
                 if (signer.sign(realFile, mSignedFile, -1, zipAlign)
                         && Signer.verify(sigSchemes, mSignedFile, mIdsigFile)) {
-                    DigestUtils.getHexDigest(DigestUtils.SHA_256, mSignedFile);
                     return mSignedFile;
                 }
                 throw new IOException("Failed to sign " + realFile);
