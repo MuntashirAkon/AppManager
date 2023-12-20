@@ -92,4 +92,4 @@ The script above will also generate a universal APK.
 
 Build documentation
 ===================
-See  `docs/raw/latex/README.md <docs/raw/latex/README.md>`_
+See  `docs/raw/en/README.md <docs/raw/en/README.md>`_
