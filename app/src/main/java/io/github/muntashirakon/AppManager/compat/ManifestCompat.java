@@ -22,6 +22,7 @@ public final class ManifestCompat {
         public static final String GET_HISTORICAL_APP_OPS_STATS = "android.permission.GET_HISTORICAL_APP_OPS_STATS";
         public static final String GET_RUNTIME_PERMISSIONS = "android.permission.GET_RUNTIME_PERMISSIONS";
         public static final String GRANT_RUNTIME_PERMISSIONS = "android.permission.GRANT_RUNTIME_PERMISSIONS";
+        public static final String INJECT_EVENTS = "android.permission.INJECT_EVENTS";
         @RequiresApi(Build.VERSION_CODES.Q)
         public static final String INSTALL_EXISTING_PACKAGES = "com.android.permission.INSTALL_EXISTING_PACKAGES";
         public static final String INTERACT_ACROSS_USERS = "android.permission.INTERACT_ACROSS_USERS";

@@ -56,6 +56,8 @@
     <uses-permission
         android:name="android.permission.GRANT_RUNTIME_PERMISSIONS"
         tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.INJECT_EVENTS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission
         android:name="com.android.permission.INSTALL_EXISTING_PACKAGES"
         tools:ignore="ProtectedPermissions" />
@@ -892,7 +894,10 @@
             android:exported="true" />
         <activity
             android:name=".details.ActivityLauncherShortcutActivity"
-            android:exported="false" />
+            android:taskAffinity=""
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:theme="@style/AppTheme.TransparentBackground" />
         <activity
             android:name=".apk.behavior.FreezeUnfreezeActivity"
             android:taskAffinity=".apk.behavior.FreezeUnfreezeActivity"

@@ -282,6 +282,12 @@ public class SelfPermissions {
                 == PackageManager.PERMISSION_GRANTED;
     }
 
+    public static void requireSelfPermission(@NonNull String permissionName) throws SecurityException {
+        if (!checkSelfPermission(permissionName)) {
+            throw new SecurityException("App Manager does not have the required permission " + permissionName);
+        }
+    }
+
     @NonNull
     public static String getCallingPackage(int callingUid) {
         if (callingUid == Ops.ROOT_UID || callingUid == Ops.SHELL_UID) {

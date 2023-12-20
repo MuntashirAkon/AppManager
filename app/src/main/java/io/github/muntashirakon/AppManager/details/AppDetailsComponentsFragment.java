@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.details;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -43,10 +44,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsActivityItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsServiceItem;
@@ -60,6 +64,7 @@ import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -498,9 +503,9 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         }
 
         private void getActivityView(@NonNull ViewHolder holder, int index) {
-            final AppDetailsComponentItem componentItem;
+            final AppDetailsActivityItem componentItem;
             synchronized (mAdapterList) {
-                componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
+                componentItem = (AppDetailsActivityItem) mAdapterList.get(index);
             }
             final ActivityInfo activityInfo = (ActivityInfo) componentItem.mainItem;
             final String activityName = componentItem.name;
@@ -554,15 +559,33 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                         getString(R.string.process_name), processName));
             } else holder.processNameView.setVisibility(View.GONE);
             boolean isExported = activityInfo.exported;
-            if (componentItem.canLaunch) {
+            if (componentItem.canLaunch || componentItem.canLaunchAssist) {
                 holder.launchBtn.setOnClickListener(v -> {
-                    Intent intent = new Intent();
-                    intent.setClassName(mPackageName, activityName);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    try {
-                        ActivityManagerCompat.startActivity(intent, mUserId);
-                    } catch (Throwable e) {
-                        UIUtils.displayLongToast(e.getLocalizedMessage());
+                    ComponentName cn = new ComponentName(mPackageName, activityName);
+                    if (componentItem.canLaunch) {
+                        Intent intent = new Intent();
+                        intent.setComponent(cn);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        try {
+                            ActivityManagerCompat.startActivity(intent, mUserId);
+                        } catch (Throwable e) {
+                            UIUtils.displayLongToast(e.getLocalizedMessage());
+                        }
+                    } else if (componentItem.canLaunchAssist) {
+                        ActivityManagerCompat.startActivityViaAssist(ContextUtils.getContext(), cn, () -> {
+                            CountDownLatch waitForInteraction = new CountDownLatch(1);
+                            ThreadUtils.postOnMainThread(() -> new MaterialAlertDialogBuilder(holder.itemView.getContext())
+                                    .setTitle(R.string.launch_activity_dialog_title)
+                                    .setMessage(R.string.launch_activity_dialog_message)
+                                    .setCancelable(false)
+                                    .setOnDismissListener((dialog) -> waitForInteraction.countDown())
+                                    .setNegativeButton(R.string.close, null)
+                                    .show());
+                            try {
+                                waitForInteraction.await(10, TimeUnit.MINUTES);
+                            } catch (InterruptedException ignore) {
+                            }
+                        });
                     }
                 });
                 if (FeatureController.isInterceptorEnabled()) {
@@ -578,7 +601,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                     });
                 }
                 holder.shortcutBtn.setOnClickListener(v -> {
-                    PackageItemShortcutInfo<ActivityInfo> shortcutInfo = new PackageItemShortcutInfo<>(activityInfo, ActivityInfo.class);
+                    PackageItemShortcutInfo<ActivityInfo> shortcutInfo = new PackageItemShortcutInfo<>(activityInfo, ActivityInfo.class, !componentItem.canLaunch && componentItem.canLaunchAssist);
                     shortcutInfo.setName(componentItem.label);
                     shortcutInfo.setIcon(UIUtils.getBitmapFromDrawable(activityInfo.loadIcon(packageManager)));
                     CreateShortcutDialogFragment dialog = CreateShortcutDialogFragment.getInstance(shortcutInfo);

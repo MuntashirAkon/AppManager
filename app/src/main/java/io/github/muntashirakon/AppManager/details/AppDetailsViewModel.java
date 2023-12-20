@@ -6,6 +6,7 @@ import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.app.ActivityManager;
@@ -27,6 +28,7 @@ import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
 import android.os.Build;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 import android.text.TextUtils;
 
 import androidx.annotation.AnyThread;
@@ -72,6 +74,7 @@ import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsActivityItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsAppOpItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsDefinedPermissionItem;
@@ -1167,8 +1170,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
             CharSequence appLabel = packageInfo.applicationInfo.loadLabel(mPackageManager);
             boolean canStartAnyActivity = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.START_ANY_ACTIVITY);
+            boolean canStartViaAssist = UserHandleHidden.myUserId() == mUserId &&
+                    SelfPermissions.checkSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS);
             for (ActivityInfo activityInfo : packageInfo.activities) {
-                AppDetailsComponentItem componentItem = new AppDetailsComponentItem(activityInfo);
+                AppDetailsActivityItem componentItem = new AppDetailsActivityItem(activityInfo);
                 componentItem.name = activityInfo.name;
                 componentItem.label = getComponentLabel(activityInfo, appLabel);
                 synchronized (mBlockerLocker) {
@@ -1184,6 +1189,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 // 3) App or the activity is not disabled and/or blocked
                 componentItem.canLaunch = !mExternalApk && (canStartAnyActivity || activityInfo.exported)
                         && !componentItem.isDisabled() && !componentItem.isBlocked();
+                componentItem.canLaunchAssist = !mExternalApk && canStartViaAssist && !componentItem.isDisabled()
+                        && !componentItem.isBlocked();
                 mActivityItems.add(componentItem);
             }
             mActivities.postValue(filterAndSortComponents(mActivityItems));
@@ -1516,7 +1523,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 return;
             }
             List<AppOpsManagerCompat.OpEntry> opEntries = ExUtils.requireNonNullElse(() -> AppOpsManagerCompat
-                    .getConfiguredOpsForPackage(mAppOpsManager, packageInfo.packageName, packageInfo.applicationInfo.uid),
+                            .getConfiguredOpsForPackage(mAppOpsManager, packageInfo.packageName, packageInfo.applicationInfo.uid),
                     Collections.emptyList());
             for (int i = 0; i < packageInfo.requestedPermissions.length; ++i) {
                 AppDetailsPermissionItem permissionItem = getPermissionItem(packageInfo.requestedPermissions[i],

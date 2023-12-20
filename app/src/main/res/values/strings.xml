@@ -1454,4 +1454,6 @@
     <string name="choose_a_profile_state">Select a profile state</string>
     <string name="profile_id">Profile ID</string>
     <string name="copy_profile_id">Copy profile ID</string>
+    <string name="launch_activity_dialog_title">Launch Activity: Action Required</string>
+    <string name="launch_activity_dialog_message">App Manager is trying to launch the activity via <b>Search assistant</b> (usually Google Assistant), but it\'s unable to do so due to insufficient permission. To open the activity, please activate <b>Search assistant</b> manually (which is usually done by long clicking on the Home button). Click on the <b>Close</b> button after you\'ve finished launching the activity to revert back to the original assistant.</string>
 </resources>

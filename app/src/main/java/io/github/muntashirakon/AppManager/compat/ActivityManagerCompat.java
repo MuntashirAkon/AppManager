@@ -8,6 +8,7 @@ import android.app.ActivityManager;
 import android.app.ActivityManagerNative;
 import android.app.IActivityManager;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.IContentProvider;
 import android.content.IIntentReceiver;
@@ -17,13 +18,17 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
+import android.provider.Settings;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.RequiresPermission;
 import androidx.annotation.VisibleForTesting;
+import androidx.annotation.WorkerThread;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,8 +42,54 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public final class ActivityManagerCompat {
+    public interface ActivityLaunchUserInteractionRequiredCallback {
+        @WorkerThread
+        void onInteraction();
+    }
+
+    @RequiresPermission(allOf = {
+            Manifest.permission.WRITE_SECURE_SETTINGS,
+            ManifestCompat.permission.INJECT_EVENTS
+    })
+    @MainThread
+    public static void startActivityViaAssist(@NonNull Context context, @NonNull ComponentName activity,
+                                              @Nullable ActivityLaunchUserInteractionRequiredCallback callback)
+            throws SecurityException {
+        // Need two permissions: WRITE_SECURE_SETTINGS and INJECT_EVENTS
+        SelfPermissions.requireSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS);
+        boolean canInjectEvents = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INJECT_EVENTS);
+        ContentResolver resolver = context.getContentResolver();
+        // Backup assistant value
+        String assistantComponent = Settings.Secure.getString(resolver, "assistant");
+        if (canInjectEvents) {
+            try {
+                // Set assistant value to the target activity component
+                Settings.Secure.putString(resolver, "assistant", activity.flattenToShortString());
+                // Run it as an assistant by injecting KEYCODE_ASSIST (219)
+                InputManagerCompat.sendKeyEvent(KeyEvent.KEYCODE_ASSIST, false);
+            } finally {
+                // Restore assistant value
+                Settings.Secure.putString(resolver, "assistant", assistantComponent);
+            }
+        } else if (callback != null) {
+            // Cannot launch event by default, use callback
+            ThreadUtils.postOnBackgroundThread(() -> {
+                try {
+                    // Set assistant value to the target activity component
+                    Settings.Secure.putString(resolver, "assistant", activity.flattenToShortString());
+                    // Trigger callback
+                    callback.onInteraction();
+                } finally {
+                    // Restore assistant value
+                    Settings.Secure.putString(resolver, "assistant", assistantComponent);
+                }
+            });
+        } // else do nothing
+    }
+
     @SuppressWarnings("deprecation")
     public static int startActivity(Intent intent, @UserIdInt int userHandle) throws RemoteException {
         IActivityManager am = getActivityManager();
