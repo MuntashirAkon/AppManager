@@ -902,7 +902,6 @@
             android:name=".apk.behavior.FreezeUnfreezeActivity"
             android:taskAffinity=".apk.behavior.FreezeUnfreezeActivity"
             android:launchMode="singleInstance"
-            android:noHistory="true"
             android:excludeFromRecents="true"
             android:exported="false"
             android:theme="@style/AppTheme.TransparentBackground" />
@@ -910,7 +909,6 @@
             android:name=".profiles.ProfileApplierActivity"
             android:taskAffinity=".profiles.ProfileApplierActivity"
             android:launchMode="singleInstance"
-            android:noHistory="true"
             android:excludeFromRecents="true"
             android:exported="false"
             android:theme="@style/AppTheme.TransparentBackground" />
