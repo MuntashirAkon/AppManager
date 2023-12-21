@@ -79,6 +79,7 @@ public final class FreezeUnfreeze {
         if (launchIntent == null) {
             return;
         }
+        // launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME | Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         if ((shortcutInfo.flags & FLAG_ON_OPEN_APP_NO_TASK) != 0) {
             launchIntent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         }

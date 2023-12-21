@@ -48,7 +48,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
         mViewModel = new ViewModelProvider(this).get(FreezeUnfreezeViewModel.class);
         if (!SelfPermissions.canFreezeUnfreezePackages()) {
             UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
-            finishAndRemoveTask();
+            finish();
             return;
         }
         FreezeUnfreezeShortcutInfo i = FreezeUnfreeze.getShortcutInfo(getIntent());
@@ -57,13 +57,13 @@ public class FreezeUnfreezeActivity extends BaseActivity {
             mViewModel.addToPendingShortcuts(i);
             mViewModel.checkNextFrozen();
         } else {
-            finishAndRemoveTask();
+            finish();
             return;
         }
         mViewModel.mIsFrozenLiveData.observe(this, shortcutInfoBooleanPair -> {
             if (shortcutInfoBooleanPair == null) {
                 // End of queue reached
-                finishAndRemoveTask();
+                finish();
                 return;
             }
             FreezeUnfreezeShortcutInfo shortcutInfo = shortcutInfoBooleanPair.first;
@@ -102,7 +102,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
         super.onNewIntent(intent);
         if (!SelfPermissions.canFreezeUnfreezePackages()) {
             UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
-            finishAndRemoveTask();
+            finish();
             return;
         }
         FreezeUnfreezeShortcutInfo shortcutInfo = FreezeUnfreeze.getShortcutInfo(getIntent());

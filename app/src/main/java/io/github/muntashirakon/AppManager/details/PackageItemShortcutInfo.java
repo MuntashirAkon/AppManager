@@ -2,12 +2,14 @@
 
 package io.github.muntashirakon.AppManager.details;
 
+import android.annotation.UserIdInt;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageItemInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.core.os.ParcelCompat;
@@ -21,15 +23,18 @@ import io.github.muntashirakon.AppManager.shortcut.ShortcutInfo;
 public class PackageItemShortcutInfo<T extends PackageItemInfo & Parcelable> extends ShortcutInfo {
     private final T mPackageItemInfo;
     private final Class<T> mClazz;
+    @UserIdInt
+    private final int mUserId;
     private final boolean mLaunchViaAssist;
 
-    public PackageItemShortcutInfo(@NonNull T packageItemInfo, @NonNull Class<T> clazz) {
-        this(packageItemInfo, clazz, false);
+    public PackageItemShortcutInfo(@NonNull T packageItemInfo, @NonNull Class<T> clazz, @UserIdInt int userId) {
+        this(packageItemInfo, clazz, userId, false);
     }
 
-    public PackageItemShortcutInfo(@NonNull T packageItemInfo, @NonNull Class<T> clazz, boolean launchViaAssist) {
+    public PackageItemShortcutInfo(@NonNull T packageItemInfo, @NonNull Class<T> clazz, @UserIdInt int userId, boolean launchViaAssist) {
         mPackageItemInfo = packageItemInfo;
         mClazz = clazz;
+        mUserId = userId;
         if (packageItemInfo instanceof ActivityInfo) {
             mLaunchViaAssist = launchViaAssist;
         } else mLaunchViaAssist = false;
@@ -40,6 +45,7 @@ public class PackageItemShortcutInfo<T extends PackageItemInfo & Parcelable> ext
         super(in);
         mClazz = (Class<T>) Objects.requireNonNull(ParcelCompat.readSerializable(in, Class.class.getClassLoader(), Class.class));
         mPackageItemInfo = ParcelCompat.readParcelable(in, mClazz.getClassLoader(), mClazz);
+        mUserId = in.readInt();
         mLaunchViaAssist = ParcelCompat.readBoolean(in);
     }
 
@@ -48,6 +54,7 @@ public class PackageItemShortcutInfo<T extends PackageItemInfo & Parcelable> ext
         super.writeToParcel(dest, flags);
         dest.writeSerializable(mClazz);
         dest.writeParcelable(mPackageItemInfo, flags);
+        dest.writeInt(mUserId);
         ParcelCompat.writeBoolean(dest, mLaunchViaAssist);
     }
 
@@ -80,17 +87,11 @@ public class PackageItemShortcutInfo<T extends PackageItemInfo & Parcelable> ext
 
     @NonNull
     private Intent getProxyIntent(@NonNull Context context) {
-        Intent intent = new Intent();
-        intent.setClass(context, ActivityLauncherShortcutActivity.class);
-        intent.putExtra(ActivityLauncherShortcutActivity.EXTRA_PKG, mPackageItemInfo.packageName);
-        intent.putExtra(ActivityLauncherShortcutActivity.EXTRA_CLS, mPackageItemInfo.name);
-        intent.putExtra(ActivityLauncherShortcutActivity.EXTRA_AST, mLaunchViaAssist);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        return intent;
+        return ActivityLauncherShortcutActivity.getShortcutIntent(context, mPackageItemInfo.packageName,
+                mPackageItemInfo.name, mUserId, mLaunchViaAssist);
     }
 
     private boolean requireProxy() {
-        return !BuildConfig.APPLICATION_ID.equals(mPackageItemInfo.packageName);
+        return !BuildConfig.APPLICATION_ID.equals(mPackageItemInfo.packageName) && mUserId != UserHandleHidden.myUserId();
     }
 }

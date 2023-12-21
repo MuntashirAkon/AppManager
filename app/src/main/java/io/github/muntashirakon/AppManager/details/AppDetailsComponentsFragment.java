@@ -601,7 +601,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                     });
                 }
                 holder.shortcutBtn.setOnClickListener(v -> {
-                    PackageItemShortcutInfo<ActivityInfo> shortcutInfo = new PackageItemShortcutInfo<>(activityInfo, ActivityInfo.class, !componentItem.canLaunch && componentItem.canLaunchAssist);
+                    PackageItemShortcutInfo<ActivityInfo> shortcutInfo = new PackageItemShortcutInfo<>(activityInfo, ActivityInfo.class, mUserId, componentItem.canLaunchAssist);
                     shortcutInfo.setName(componentItem.label);
                     shortcutInfo.setIcon(UIUtils.getBitmapFromDrawable(activityInfo.loadIcon(packageManager)));
                     CreateShortcutDialogFragment dialog = CreateShortcutDialogFragment.getInstance(shortcutInfo);
