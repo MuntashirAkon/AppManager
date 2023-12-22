@@ -293,6 +293,7 @@ public final class PackageManagerCompat {
         return getPackageManager().getComponentEnabledSetting(componentName, userId);
     }
 
+    @OptIn(markerClass = BuildCompat.PrereleaseSdkCheck.class)
     public static void setComponentEnabledSetting(ComponentName componentName,
                                                   @EnabledState int newState,
                                                   @EnabledFlags int flags,
@@ -300,7 +301,7 @@ public final class PackageManagerCompat {
             throws RemoteException {
         IPackageManager pm = getPackageManager();
         if (BuildCompat.isAtLeastU()) {
-            String callingPackage = SelfPermissions.getCallingPackage(Users.getSelfOrRemoteUid());
+            String callingPackage = ActivityManagerCompat.SHELL_PACKAGE_NAME;
             pm.setComponentEnabledSetting(componentName, newState, flags, userId, callingPackage);
         } else pm.setComponentEnabledSetting(componentName, newState, flags, userId);
         if (userId != UserHandleHidden.myUserId()) {
