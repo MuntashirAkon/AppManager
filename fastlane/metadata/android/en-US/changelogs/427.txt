@@ -1,0 +1,5 @@
+Third funding campaign for App Manager is here!
+Visit https://opencollective.com/muntashir/projects/app-manager#category-ABOUT
+
+- Fixed an intermittent crash in the App Info tab
+- Fixed disabling components in Android 14

@@ -2,6 +2,18 @@
 <changelog>
     <release
         type="stable release"
+        version="v3.1.4"
+        code="427"
+        date="24 December 2023">
+        <fix>Fixed an intermittent crash in the App Info tab</fix>
+        <fix>Fixed disabling components in Android 14</fix>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.1.3...v3.1.4"]v3.1.3...v3.1.4[/a]
+        </note>
+    </release>
+    <release
+        type="stable release"
         version="v3.1.3"
         code="426"
         date="4 October 2023">
