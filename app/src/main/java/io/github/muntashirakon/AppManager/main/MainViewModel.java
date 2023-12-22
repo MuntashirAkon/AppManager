@@ -581,6 +581,8 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                         return -mode * o1.lastActionTime.compareTo(o2.lastActionTime);
                     case MainListOptions.SORT_BY_TRACKERS:
                         return -mode * o1.trackerCount.compareTo(o2.trackerCount);
+                    case MainListOptions.SORT_BY_INSTALLER_APP:
+                        return mode * o1.installerApp.compareTo(o2.installerApp);
                 }
                 return 0;
             });
