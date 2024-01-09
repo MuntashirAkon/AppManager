@@ -53,6 +53,7 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
@@ -242,6 +243,9 @@ public class Ops {
                     return initPermissionsWithSuccess();
                 case MODE_ADB_WIFI:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        if (!Utils.isWifiActive(context.getApplicationContext())) {
+                            throw new Exception("Wifi not enabled.");
+                        }
                         if (AdbUtils.enableWirelessDebugging(context)) {
                             return STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING;
                         }
