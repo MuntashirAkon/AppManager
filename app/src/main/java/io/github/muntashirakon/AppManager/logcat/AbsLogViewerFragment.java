@@ -142,7 +142,9 @@ public abstract class AbsLogViewerFragment extends Fragment implements LogViewer
     @CallSuper
     @Override
     public void onDestroy() {
-        mRecyclerView.removeOnScrollListener(mRecyclerViewScrollListener);
+        if (mRecyclerView != null) {
+            mRecyclerView.removeOnScrollListener(mRecyclerViewScrollListener);
+        }
         super.onDestroy();
     }
 
