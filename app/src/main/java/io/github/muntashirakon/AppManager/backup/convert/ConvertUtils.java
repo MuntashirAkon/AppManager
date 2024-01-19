@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.backup.convert;
 
 import android.annotation.SuppressLint;
-import android.net.Uri;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
@@ -32,14 +31,8 @@ import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.io.FileSystemManager;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.Paths;
 
 public final class ConvertUtils {
-    @NonNull
-    public static Path[] getRelevantImportFiles(@NonNull Uri uri, @ImportType int backupType) {
-        return getRelevantImportFiles(backupType, Paths.get(uri));
-    }
-
     @NonNull
     public static Converter getConversionUtil(@ImportType int backupType, Path file) {
         switch (backupType) {
@@ -55,7 +48,7 @@ public final class ConvertUtils {
     }
 
     @NonNull
-    public static Path[] getRelevantImportFiles(@ImportType int backupType, Path baseLocation) {
+    public static Path[] getRelevantImportFiles(@NonNull Path baseLocation, @ImportType int backupType) {
         switch (backupType) {
             case ImportType.OAndBackup:
                 // Package directories

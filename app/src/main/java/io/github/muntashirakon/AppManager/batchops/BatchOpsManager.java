@@ -73,6 +73,7 @@ import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 @WorkerThread
 public class BatchOpsManager {
@@ -435,7 +436,12 @@ public class BatchOpsManager {
         int userHandle = UserHandleHidden.myUserId();
         Path[] files;
         final List<UserPackagePair> failedPkgList = Collections.synchronizedList(new ArrayList<>());
-        files = ConvertUtils.getRelevantImportFiles(uri, backupType);
+        Path backupPath = Paths.get(uri);
+        if (!backupPath.isDirectory()) {
+            log("====> op=IMPORT_BACKUP, Not a directory.");
+            return new Result(Collections.emptyList(), false);
+        }
+        files = ConvertUtils.getRelevantImportFiles(backupPath, backupType);
         MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
         fixProgress(files.length);
         float lastProgress = mProgressHandler != null ? mProgressHandler.getLastProgress() : 0;
