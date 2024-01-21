@@ -42,6 +42,8 @@
         android:name="android.permission.FORCE_STOP_PACKAGES"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission
         android:name="android.permission.GET_PACKAGE_SIZE"
         android:maxSdkVersion="25" />
@@ -56,7 +58,8 @@
     <uses-permission
         android:name="android.permission.GRANT_RUNTIME_PERMISSIONS"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.INJECT_EVENTS"
+    <uses-permission
+        android:name="android.permission.INJECT_EVENTS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission
         android:name="com.android.permission.INSTALL_EXISTING_PACKAGES"
@@ -1074,19 +1077,24 @@
 
         <service
             android:name=".apk.installer.PackageInstallerService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync|specialUse" />
         <service
             android:name=".batchops.BatchOpsService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync|specialUse" />
         <service
             android:name=".profiles.ProfileApplierService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync|specialUse" />
         <service
             android:name=".logcat.LogcatRecordingService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync|specialUse" />
         <service
             android:name=".apk.behavior.FreezeUnfreezeService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync|specialUse" />
         <service
             android:name=".accessibility.NoRootAccessibilityService"
             android:exported="false"
@@ -1104,7 +1112,8 @@
             android:exported="false" />
         <service
             android:name=".session.SessionMonitoringService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync|specialUse" />
 
         <receiver
             android:name=".servermanager.ServerStatusChangeReceiver"

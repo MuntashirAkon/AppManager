@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.PendingIntentCompat;
 import androidx.core.app.ServiceCompat;
+import androidx.core.content.ContextCompat;
 
 import java.util.concurrent.Future;
 
@@ -24,6 +25,7 @@ import io.github.muntashirakon.AppManager.DummyActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.ScreenLockChecker;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
@@ -94,12 +96,14 @@ public class SessionMonitoringService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setContentIntent(defaultIntent)
                 .addAction(stopServiceAction);
-        startForeground(NotificationUtils.nextNotificationId(null), builder.build());
+        ForegroundService.start(this, NotificationUtils.nextNotificationId(null), builder.build(),
+                ForegroundService.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+                        | ForegroundService.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
         if (screenLockEnabled && Prefs.Privacy.isAutoLockEnabled()) {
             IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
             filter.addAction(Intent.ACTION_SCREEN_OFF);
             filter.addAction(Intent.ACTION_USER_PRESENT);
-            registerReceiver(mScreenLockedReceiver, filter);
+            ContextCompat.registerReceiver(this, mScreenLockedReceiver, filter, ContextCompat.RECEIVER_EXPORTED);
             mScreenLockedReceiverRegistered = true;
         }
         return START_NOT_STICKY;

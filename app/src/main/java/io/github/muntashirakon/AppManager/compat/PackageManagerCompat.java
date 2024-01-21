@@ -43,7 +43,6 @@ import androidx.annotation.OptIn;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.RequiresPermission;
 import androidx.annotation.WorkerThread;
-import androidx.core.os.BuildCompat;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -285,13 +284,12 @@ public final class PackageManagerCompat {
         }
     }
 
-    @OptIn(markerClass = BuildCompat.PrereleaseSdkCheck.class)
     @SuppressWarnings("deprecation")
     @NonNull
     public static InstallSourceInfoCompat getInstallSourceInfo(@NonNull String packageName, @UserIdInt int userId)
             throws RemoteException {
         IPackageManager pm = getPackageManager();
-        if (BuildCompat.isAtLeastU()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             return new InstallSourceInfoCompat(pm.getInstallSourceInfo(packageName, userId));
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -343,7 +341,6 @@ public final class PackageManagerCompat {
         }
     }
 
-    @OptIn(markerClass = BuildCompat.PrereleaseSdkCheck.class)
     @SuppressWarnings("deprecation")
     @RequiresPermission(value = Manifest.permission.CHANGE_COMPONENT_ENABLED_STATE)
     public static void setComponentEnabledSetting(ComponentName componentName,
@@ -352,7 +349,7 @@ public final class PackageManagerCompat {
                                                   @UserIdInt int userId)
             throws RemoteException {
         IPackageManager pm = getPackageManager();
-        if (BuildCompat.isAtLeastU()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             String callingPackage = SelfPermissions.getCallingPackage(Users.getSelfOrRemoteUid());
             pm.setComponentEnabledSetting(componentName, newState, flags, userId, callingPackage);
         } else pm.setComponentEnabledSetting(componentName, newState, flags, userId);

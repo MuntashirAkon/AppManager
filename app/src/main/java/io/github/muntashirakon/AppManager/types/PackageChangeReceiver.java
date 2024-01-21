@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
+import androidx.core.content.ContextCompat;
 import androidx.core.os.BundleCompat;
 
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
         filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
         filter.addDataScheme("package");
-        context.registerReceiver(this, filter);
+        ContextCompat.registerReceiver(context, this, filter, ContextCompat.RECEIVER_EXPORTED);
         // Other filters
         IntentFilter sdFilter = new IntentFilter();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -89,7 +90,7 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
         sdFilter.addAction(ACTION_DB_PACKAGE_ADDED);
         sdFilter.addAction(ACTION_DB_PACKAGE_REMOVED);
         sdFilter.addAction(ACTION_BATCH_OPS_COMPLETED);
-        context.registerReceiver(this, sdFilter);
+        ContextCompat.registerReceiver(context, this, sdFilter, ContextCompat.RECEIVER_EXPORTED);
     }
 
     @WorkerThread

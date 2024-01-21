@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.PendingIntentCompat;
 import androidx.core.app.ServiceCompat;
+import androidx.core.content.ContextCompat;
 
 import java.io.IOException;
 import java.util.Random;
@@ -83,7 +84,7 @@ public class LogcatRecordingService extends ForegroundService {
         super.onCreate();
         IntentFilter intentFilter = new IntentFilter(ACTION_STOP_RECORDING);
         intentFilter.addDataScheme(URI_SCHEME);
-        registerReceiver(mReceiver, intentFilter);
+        ContextCompat.registerReceiver(this, mReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
         mHandler = new Handler(Looper.getMainLooper());
         mWakeLock = CpuUtils.getPartialWakeLock("logcat_recorder");
         mWakeLock.acquire();

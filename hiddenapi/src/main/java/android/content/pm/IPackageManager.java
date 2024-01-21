@@ -486,7 +486,7 @@ public interface IPackageManager extends IInterface {
     @RequiresApi(Build.VERSION_CODES.R)
     InstallSourceInfo getInstallSourceInfo(String packageName) throws RemoteException;
 
-    @RequiresApi(34)
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     InstallSourceInfo getInstallSourceInfo(String packageName, int userId) throws RemoteException;
 
     /**
@@ -655,7 +655,7 @@ public interface IPackageManager extends IInterface {
     /**
      * As per {@link android.content.pm.PackageManager#setComponentEnabledSetting}.
      */
-    @RequiresApi(34)
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     void setComponentEnabledSetting(ComponentName componentName, int newState, int flags, int userId, String callingPackage) throws RemoteException;
 
     /**

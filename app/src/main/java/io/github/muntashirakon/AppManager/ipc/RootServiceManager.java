@@ -31,6 +31,7 @@ import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RestrictTo;
+import androidx.core.content.ContextCompat;
 
 import com.topjohnwu.superuser.Shell;
 import com.topjohnwu.superuser.ShellUtils;
@@ -160,16 +161,8 @@ public class RootServiceManager implements Handler.Callback {
             // Guard the receiver behind permission UPDATE_APP_OPS_STATS. This permission
             // is not obtainable by normal apps, making the receiver effectively non-exported,
             // but will allow any root/ADB/system process to send broadcast message.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                context.registerReceiver(new ServiceReceiver(), filter, ManifestCompat.permission.UPDATE_APP_OPS_STATS,
-                        null, Context.RECEIVER_EXPORTED);
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.registerReceiver(new ServiceReceiver(), filter, ManifestCompat.permission.UPDATE_APP_OPS_STATS,
-                        null, 0);
-            } else {
-                context.registerReceiver(new ServiceReceiver(), filter, ManifestCompat.permission.UPDATE_APP_OPS_STATS,
-                        null);
-            }
+            ContextCompat.registerReceiver(context, new ServiceReceiver(), filter,
+                    ManifestCompat.permission.UPDATE_APP_OPS_STATS, null, ContextCompat.RECEIVER_EXPORTED);
             mFlags |= RECEIVER_REGISTERED;
         }
 

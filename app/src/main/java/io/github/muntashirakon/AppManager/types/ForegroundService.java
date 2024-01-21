@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.github.muntashirakon.AppManager.types;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -16,11 +20,26 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
+import androidx.core.app.ServiceCompat;
 import androidx.core.os.BundleCompat;
 
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public abstract class ForegroundService extends Service {
+    public static final int FOREGROUND_SERVICE_TYPE_DATA_SYNC;
+    public static final int FOREGROUND_SERVICE_TYPE_SPECIAL_USE;
+
+    static {
+        FOREGROUND_SERVICE_TYPE_DATA_SYNC = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ? ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC : 0;
+        FOREGROUND_SERVICE_TYPE_SPECIAL_USE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE ? ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE : 0;
+    }
+
+    @SuppressLint("ForegroundServiceType")
+    public static void start(@NonNull Service service, int id, @NonNull Notification notification,
+                             int foregroundServiceType) {
+        ServiceCompat.startForeground(service, id, notification, foregroundServiceType);
+    }
+
     public static class Binder extends android.os.Binder {
         private final ForegroundService mService;
 

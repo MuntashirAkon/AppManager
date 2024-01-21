@@ -26,6 +26,7 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class NotificationProgressHandler extends QueuedProgressHandler {
@@ -94,7 +95,9 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
                     .setOnlyAlertOnce(true)
                     .setProgress(0, 0, false)
                     .build();
-            service.startForeground(mProgressNotificationId, notification);
+            ForegroundService.start(service, mProgressNotificationId, notification,
+                    ForegroundService.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+                            | ForegroundService.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
         }
     }
 

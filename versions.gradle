@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 ext {
-    compile_sdk = 33
+    compile_sdk = 34
     min_sdk = 21
-    target_sdk = 33
+    target_sdk = 34
 
     // Gradle plugins
     agp_version = "8.1.0"
 
     // Library dependencies
-    androidx_core_version = "1.11.0-beta02" // Added temporarily until appcompat migrates to it
-    annotation_version = "1.5.0"
+    androidx_core_version = "1.12.0" // Added temporarily until appcompat migrates to it
+    annotation_version = "1.7.1"
     apksig_version = "4.4.0"
     appcompat_version = "1.6.1"
     arsclib_version = "ece5c8a43c"
@@ -23,12 +23,12 @@ ext {
     hiddenapibypass_version = "4.3"
     jadx_version = "1.4.7"
     jb_annotation_version = "23.0.0" // Compile-only
-    libadb_version = "2.2.2"
-    libsu_version = "5.2.0"
-    material_version = "1.9.0"
-    preferences_version = "1.2.0"
+    libadb_version = "7d2d8d872d"
+    libsu_version = "5.2.2"
+    material_version = "1.11.0"
+    preferences_version = "1.2.1"
     refine_version = "4.0.0"
-    room_version = "2.5.1"
+    room_version = "2.6.1"
     simplemagic_version = "1.17"
     sora_editor_version = "0.22.1"
     speed_dial_version = "3.3.0"
@@ -36,7 +36,7 @@ ext {
     sun_security_version = "1.1"
     swipe_refresh_version = "1.2.0-alpha01"
     unapkm_version = "1.2"
-    webkit_version = "1.7.0"
+    webkit_version = "1.9.0"
     zstd_version = "1.5.5-3"
 
     // Test dependencies

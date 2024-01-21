@@ -84,7 +84,8 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(mBatchOpsBroadCastReceiver, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED));
+        ContextCompat.registerReceiver(this, mBatchOpsBroadCastReceiver,
+                new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED), ContextCompat.RECEIVER_NOT_EXPORTED);
     }
 
     @Override

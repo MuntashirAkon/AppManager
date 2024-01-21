@@ -36,6 +36,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
 import androidx.core.app.PendingIntentCompat;
+import androidx.core.content.ContextCompat;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,7 +70,6 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.MiuiUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 
 // FIXME: 21/1/23 This class has too many design issues that has to be addressed at some later time.
@@ -1171,14 +1171,16 @@ public final class PackageInstallerCompat {
         mPkgInstallerReceiver = new PackageInstallerBroadcastReceiver();
         mPkgInstallerReceiver.setAppLabel(mAppLabel);
         mPkgInstallerReceiver.setPackageName(mPackageName);
-        mContext.registerReceiver(mPkgInstallerReceiver, new IntentFilter(PackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER));
+        ContextCompat.registerReceiver(mContext, mPkgInstallerReceiver,
+                new IntentFilter(PackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER),
+                ContextCompat.RECEIVER_NOT_EXPORTED);
         // Add receivers
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ACTION_INSTALL_COMPLETED);
         intentFilter.addAction(ACTION_INSTALL_STARTED);
         intentFilter.addAction(ACTION_INSTALL_INTERACTION_BEGIN);
         intentFilter.addAction(ACTION_INSTALL_INTERACTION_END);
-        mContext.registerReceiver(mBroadcastReceiver, intentFilter);
+        ContextCompat.registerReceiver(mContext, mBroadcastReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
     }
 
     private void sendStartedBroadcast(@NonNull String packageName, int sessionId) {

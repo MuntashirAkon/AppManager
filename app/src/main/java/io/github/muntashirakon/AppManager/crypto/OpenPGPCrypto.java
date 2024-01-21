@@ -18,6 +18,7 @@ import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.PendingIntentCompat;
+import androidx.core.content.ContextCompat;
 
 import org.openintents.openpgp.IOpenPgpService2;
 import org.openintents.openpgp.OpenPgpError;
@@ -250,7 +251,7 @@ public class OpenPGPCrypto implements Crypto {
         // Start broadcast receiver
         IntentFilter filter = new IntentFilter(ACTION_OPEN_PGP_INTERACTION_BEGIN);
         filter.addAction(ACTION_OPEN_PGP_INTERACTION_END);
-        mContext.registerReceiver(mReceiver, filter);
+        ContextCompat.registerReceiver(mContext, mReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
     }
 
     @WorkerThread

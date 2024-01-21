@@ -374,7 +374,8 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
         if (mActionBeginInterface != null) {
             mActionBeginInterface.onActionBegin(operationInfo.mode);
         }
-        mActivity.registerReceiver(mBatchOpsBroadCastReceiver, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED));
+        ContextCompat.registerReceiver(mActivity, mBatchOpsBroadCastReceiver,
+                new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED), ContextCompat.RECEIVER_NOT_EXPORTED);
         // Start batch ops service
         Intent intent = new Intent(mActivity, BatchOpsService.class);
         intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, operationInfo.packageList);
