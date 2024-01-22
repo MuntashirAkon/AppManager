@@ -168,7 +168,7 @@ public final class PackageInstallerCompat {
             INSTALL_FROM_ADB,
             INSTALL_ALL_USERS,
             INSTALL_REQUEST_DOWNGRADE,
-            INSTALL_GRANT_RUNTIME_PERMISSIONS,
+            INSTALL_GRANT_ALL_REQUESTED_PERMISSIONS,
             INSTALL_ALL_WHITELIST_RESTRICTED_PERMISSIONS,
             INSTALL_FORCE_VOLUME_UUID,
             INSTALL_FORCE_PERMISSION_PROMPT,
@@ -184,6 +184,10 @@ public final class PackageInstallerCompat {
             INSTALL_ALLOW_DOWNGRADE_API29,
             INSTALL_STAGED,
             INSTALL_DRY_RUN,
+            INSTALL_BYPASS_LOW_TARGET_SDK_BLOCK,
+            INSTALL_REQUEST_UPDATE_OWNERSHIP,
+            INSTALL_FROM_MANAGED_USER_OR_PROFILE,
+            INSTALL_IGNORE_DEXOPT_PROFILE,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface InstallFlags {
@@ -251,9 +255,11 @@ public final class PackageInstallerCompat {
      * permissions should be granted to the package. If {@link #INSTALL_ALL_USERS}
      * is set the runtime permissions will be granted to all users, otherwise
      * only to the owner.
+     * <p>
+     * Previously called {@code #INSTALL_GRANT_RUNTIME_PERMISSIONS}
      */
     @RequiresApi(Build.VERSION_CODES.M)
-    public static final int INSTALL_GRANT_RUNTIME_PERMISSIONS = 0x00000100;
+    public static final int INSTALL_GRANT_ALL_REQUESTED_PERMISSIONS = 0x00000100;
 
     /**
      * Flag parameter for {@code #installPackage} to indicate that all restricted
@@ -278,9 +284,11 @@ public final class PackageInstallerCompat {
     /**
      * Flag parameter for {@code #installPackage} to indicate that this package is
      * to be installed as a lightweight "ephemeral" app.
+     * <p>
+     * Previously known as {@code #INSTALL_EPHEMERAL}
      */
     @RequiresApi(Build.VERSION_CODES.N)
-    public static final int INSTALL_INSTANT_APP = 0x00000800;  // AKA INSTALL_EPHEMERAL
+    public static final int INSTALL_INSTANT_APP = 0x00000800;
 
     /**
      * Flag parameter for {@code #installPackage} to indicate that this package contains
@@ -294,7 +302,7 @@ public final class PackageInstallerCompat {
      * Flag parameter for {@code #installPackage} to indicate that this package is an
      * upgrade to a package that refers to the SDK via release letter.
      *
-     * @deprecated Removed in API 20 (Android 10)
+     * @deprecated Removed in API 29 (Android 10)
      */
     @Deprecated
     @RequiresApi(Build.VERSION_CODES.N)
@@ -361,8 +369,12 @@ public final class PackageInstallerCompat {
     /**
      * Flag parameter for {@code #installPackage} to indicate that package should only be verified
      * but not installed.
+     *
+     * @deprecated Removed in API 30 (Android 11)
      */
+    @SuppressWarnings("DeprecatedIsStillUsed")
     @RequiresApi(Build.VERSION_CODES.Q)
+    @Deprecated
     public static final int INSTALL_DRY_RUN = 0x00800000;
 
     /**
@@ -375,6 +387,38 @@ public final class PackageInstallerCompat {
     @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
     public static final int INSTALL_ALLOW_DOWNGRADE = 0x00000080;
+
+    /**
+     * Flag parameter for {@code #installPackage} to bypass the low targer sdk version block
+     * for this install.
+     */
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    public static final int INSTALL_BYPASS_LOW_TARGET_SDK_BLOCK = 0x01000000;
+
+    /**
+     * Flag parameter for {@link PackageInstaller.SessionParams} to indicate that the
+     * update ownership enforcement is requested.
+     */
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    public static final int INSTALL_REQUEST_UPDATE_OWNERSHIP = 1 << 25;
+
+    /**
+     * Flag parameter for {@link PackageInstaller.SessionParams} to indicate that this
+     * session is from a managed user or profile.
+     */
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    public static final int INSTALL_FROM_MANAGED_USER_OR_PROFILE = 1 << 26;
+
+    /**
+     * If set, all dexopt profiles are ignored by dexopt during the installation, including the
+     * profile in the DM file and the profile embedded in the APK file. If an invalid profile is
+     * provided during installation, no warning will be reported by {@code adb install}.
+     * <p>
+     * This option does not affect later dexopt operations (e.g., background dexopt and manual `pm
+     * compile` invocations).
+     */
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    public static final int INSTALL_IGNORE_DEXOPT_PROFILE = 1 << 28;
 
     @SuppressLint({"NewApi", "InlinedApi"})
     @IntDef(flag = true, value = {
@@ -787,9 +831,12 @@ public final class PackageInstallerCompat {
 
     @InstallFlags
     private static int getInstallFlags(@UserIdInt int userId) {
-        int flags = INSTALL_ALLOW_TEST | INSTALL_REPLACE_EXISTING | INSTALL_ALLOW_DOWNGRADE;
+        int flags = INSTALL_ALLOW_TEST | INSTALL_REPLACE_EXISTING;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             flags |= INSTALL_ALLOW_DOWNGRADE_API29;
+        } else flags |= INSTALL_ALLOW_DOWNGRADE;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            flags |= INSTALL_BYPASS_LOW_TARGET_SDK_BLOCK;
         }
         if (userId == UserHandleHidden.USER_ALL) {
             flags |= INSTALL_ALL_USERS;
