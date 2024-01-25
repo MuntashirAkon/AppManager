@@ -9,6 +9,7 @@ ext {
     agp_version = "8.1.0"
 
     // Library dependencies
+    activity_version = "1.9.0-alpha02"
     androidx_core_version = "1.12.0" // Added temporarily until appcompat migrates to it
     annotation_version = "1.7.1"
     apksig_version = "4.4.0"

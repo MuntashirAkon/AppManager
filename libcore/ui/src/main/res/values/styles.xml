@@ -1,10 +1,7 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppThemeOverlay" parent="Theme.Material3.Light.NoActionBar">
-        <item name="android:statusBarColor">#99000000</item>
-        <item name="android:navigationBarColor">#99000000</item>
-    </style>
+    <style name="AppThemeOverlay" parent="Theme.Material3.Light.NoActionBar" />
 
     <style name="AppTheme" parent="AppThemeOverlay">
         <item name="navigationIcon">@drawable/ic_keyboard_backspace</item>

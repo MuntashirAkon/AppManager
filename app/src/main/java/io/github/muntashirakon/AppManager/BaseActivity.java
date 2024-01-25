@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 
+import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.CallSuper;
@@ -23,7 +24,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreActivity;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
@@ -82,6 +82,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
+        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
         if (Ops.isAuthenticated()) {
             Log.d(TAG, "Already authenticated.");

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.widget.TextView;
 
+import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.CallSuper;
@@ -60,7 +61,7 @@ public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
-        // Set theme
+        EdgeToEdge.enable(this);
         setTheme(Prefs.Appearance.isPureBlackTheme() ? R.style.AppTheme_Splash_Black : R.style.AppTheme_Splash);
         super.onCreate(savedInstanceState);
         SplashScreen.installSplashScreen(this);
