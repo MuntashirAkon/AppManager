@@ -237,6 +237,7 @@
     <style name="Widget.AppTheme.CardView.ListItem" parent="Widget.Material3.CardView.Elevated">
         <item name="cardCornerRadius">?attr/listItemCornerRadius</item>
         <item name="cardElevation">0dp</item>
+        <item name="cardBackgroundColor">@android:color/transparent</item>
     </style>
 
     <style name="Widget.AppTheme.CardView.ListItem.Padded" parent="Widget.AppTheme.CardView.ListItem">
