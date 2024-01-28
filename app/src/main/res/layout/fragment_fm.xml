@@ -29,8 +29,11 @@
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/path_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true"
+                    android:orientation="horizontal">
 
                     <io.github.muntashirakon.widget.RecyclerView
                         android:id="@+id/path_list"

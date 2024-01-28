@@ -81,7 +81,6 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setOnRefreshListener(this);
         RecyclerView recyclerView = view.findViewById(R.id.scrollView);
-        recyclerView.setFitsSystemWindows(false);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         final TextView emptyView = view.findViewById(android.R.id.empty);

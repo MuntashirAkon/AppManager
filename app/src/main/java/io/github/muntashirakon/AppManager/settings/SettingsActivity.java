@@ -28,6 +28,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.life.BuildExpiryChecker;
 import io.github.muntashirakon.AppManager.self.life.FundingCampaignChecker;
+import io.github.muntashirakon.util.UiUtils;
 
 public class SettingsActivity extends BaseActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     public static final String TAG = SettingsActivity.class.getSimpleName();
@@ -74,8 +75,10 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
 
         View buildExpiringNotice = findViewById(R.id.app_manager_expiring_notice);
         buildExpiringNotice.setVisibility(BuildExpiryChecker.buildExpired() == null ? View.VISIBLE : View.GONE);
+        UiUtils.applyWindowInsetsAsPadding(buildExpiringNotice, false, true);
         View fundingCampaignNotice = findViewById(R.id.funding_campaign_notice);
         fundingCampaignNotice.setVisibility(FundingCampaignChecker.campaignRunning() ? View.VISIBLE : View.GONE);
+        UiUtils.applyWindowInsetsAsPadding(fundingCampaignNotice, false, true);
 
         if (savedInstanceState != null) {
             clearBackStack();

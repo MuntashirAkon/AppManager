@@ -186,6 +186,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         ActionBar actionBar = mActivity.getSupportActionBar();
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setOnRefreshListener(this);
+        UiUtils.applyWindowInsetsAsPadding(view.findViewById(R.id.path_container), false, true);
         RecyclerView pathListView = view.findViewById(R.id.path_list);
         pathListView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false));
         mPathListAdapter = new FmPathListAdapter(mModel);

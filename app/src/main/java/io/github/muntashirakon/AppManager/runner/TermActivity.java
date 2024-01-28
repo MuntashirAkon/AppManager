@@ -4,9 +4,11 @@ package io.github.muntashirakon.AppManager.runner;
 
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.AnyThread;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -61,6 +63,15 @@ public class TermActivity extends BaseActivity {
             return false;
         });
         initShell();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

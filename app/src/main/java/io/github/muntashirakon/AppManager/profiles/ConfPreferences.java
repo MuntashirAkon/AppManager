@@ -12,6 +12,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceDataStore;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
@@ -34,6 +35,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+import io.github.muntashirakon.util.UiUtils;
 
 public class ConfPreferences extends PreferenceFragmentCompat {
     private AppsProfileActivity mActivity;
@@ -49,6 +51,16 @@ public class ConfPreferences extends PreferenceFragmentCompat {
     private String[] mPermissions;
     @Nullable
     private AppsProfile.BackupInfo mBackupInfo;
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // https://github.com/androidx/androidx/blob/androidx-main/preference/preference/res/layout/preference_recyclerview.xml
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setFitsSystemWindows(true);
+        recyclerView.setClipToPadding(false);
+        UiUtils.applyWindowInsetsAsPadding(recyclerView, false, true);
+    }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

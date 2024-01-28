@@ -42,6 +42,7 @@ import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.util.UiUtils;
 
 public class AppDetailsActivity extends BaseActivity {
     public static final String ALIAS_APP_INFO = "io.github.muntashirakon.AppManager.details.AppInfoActivity";
@@ -154,6 +155,7 @@ public class AppDetailsActivity extends BaseActivity {
         }
         mViewPager = findViewById(R.id.pager);
         TabLayout tabLayout = findViewById(R.id.tab_layout);
+        UiUtils.applyWindowInsetsAsPadding(tabLayout, false, true);
         final AlertDialog progressDialog = UIUtils.getProgressDialog(this, getText(R.string.loading), true);
         if (mPackageName == null) {
             // Display progress dialog only for external apk files
