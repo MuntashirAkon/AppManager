@@ -28,7 +28,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -73,6 +72,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -93,6 +94,7 @@ import io.github.muntashirakon.AppManager.apk.behavior.DexOptDialog;
 import io.github.muntashirakon.AppManager.apk.behavior.FreezeUnfreezeShortcutInfo;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
+import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
@@ -302,16 +304,22 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             .toLowerCase(Locale.ROOT);
                     if (data.matches("[0-9a-f: \n]+")) {
                         data = data.replaceAll("[: \n]+", "");
-                        Signature[] signatures = PackageUtils.getSigningInfo(mPackageInfo, mIsExternalApk);
-                        if (signatures != null && signatures.length == 1) {
-                            byte[] certBytes = signatures[0].toByteArray();
-                            Pair<String, String>[] digests = DigestUtils.getDigests(certBytes);
-                            for (Pair<String, String> digest : digests) {
-                                if (digest.second.equals(data)) {
-                                    if (digest.first.equals(DigestUtils.MD5) || digest.first.equals(DigestUtils.SHA_1)) {
-                                        ThreadUtils.postOnMainThread(() -> displayLongToast(R.string.verified_using_unreliable_hash));
-                                    } else ThreadUtils.postOnMainThread(() -> displayLongToast(R.string.verified));
-                                    return;
+                        SignerInfo signerInfo = PackageUtils.getSignerInfo(mPackageInfo, mIsExternalApk);
+                        if (signerInfo != null) {
+                            X509Certificate[] certs = signerInfo.getCurrentSignerCerts();
+                            if (certs != null && certs.length == 1) {
+                                try {
+                                    Pair<String, String>[] digests = DigestUtils.getDigests(certs[0].getEncoded());
+                                    for (Pair<String, String> digest : digests) {
+                                        if (digest.second.equals(data)) {
+                                            if (digest.first.equals(DigestUtils.MD5) || digest.first.equals(DigestUtils.SHA_1)) {
+                                                ThreadUtils.postOnMainThread(() -> displayLongToast(R.string.verified_using_unreliable_hash));
+                                            } else
+                                                ThreadUtils.postOnMainThread(() -> displayLongToast(R.string.verified));
+                                            return;
+                                        }
+                                    }
+                                } catch (CertificateEncodingException ignore) {
                                 }
                             }
                         }

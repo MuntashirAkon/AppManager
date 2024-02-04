@@ -42,6 +42,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public final class ActivityManagerCompat {
@@ -180,6 +181,7 @@ public final class ActivityManagerCompat {
         return res;
     }
 
+    @NonNull
     public static List<ActivityManager.RunningAppProcessInfo> getRunningAppProcesses() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.REAL_GET_TASKS)
@@ -189,11 +191,7 @@ public final class ActivityManagerCompat {
             return getRunningAppProcessesUsingDumpSys();
         } else {
             // For no-root, this returns app processes running in the current UID since Android M
-            try {
-                return getActivityManager().getRunningAppProcesses();
-            } catch (RemoteException e) {
-                return Collections.emptyList();
-            }
+            return ExUtils.requireNonNullElse(() -> getActivityManager().getRunningAppProcesses(), Collections.emptyList());
         }
     }
 

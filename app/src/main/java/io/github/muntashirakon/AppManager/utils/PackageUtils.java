@@ -28,7 +28,6 @@ import android.content.pm.LauncherApps;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
 import android.os.PowerManager;
@@ -77,6 +76,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import aosp.libcore.util.EmptyArray;
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
@@ -606,13 +606,6 @@ public final class PackageUtils {
                 .getString("com.android.stamp.source"));
     }
 
-    @Nullable
-    public static Signature[] getSigningInfo(@NonNull PackageInfo packageInfo, boolean isExternal) {
-        SignerInfo signerInfo = getSignerInfo(packageInfo, isExternal);
-        if (signerInfo == null) return null;
-        return signerInfo.getAllSignatures();
-    }
-
     @SuppressWarnings("deprecation")
     @Nullable
     public static SignerInfo getSignerInfo(@NonNull PackageInfo packageInfo, boolean isExternal) {
@@ -633,12 +626,8 @@ public final class PackageUtils {
             // Could be a false-negative, try with apksig library
             String apkPath = packageInfo.applicationInfo.publicSourceDir;
             if (apkPath != null) {
-                Log.w(TAG, "getSigningInfo: Using fallback method");
-                SignerInfo signerInfo = getSignerInfo(new File(apkPath));
-                if (signerInfo != null) {
-                    packageInfo.signatures = signerInfo.getCurrentSignatures();
-                }
-                return signerInfo;
+                Log.w(TAG, "getSignerInfo: Using fallback method");
+                return getSignerInfo(new File(apkPath));
             }
         }
         return new SignerInfo(packageInfo.signatures);
@@ -651,7 +640,7 @@ public final class PackageUtils {
                 .build();
         try {
             return new SignerInfo(apkVerifier.verify());
-        } catch (CertificateEncodingException | IOException | ApkFormatException | NoSuchAlgorithmException e) {
+        } catch (IOException | ApkFormatException | NoSuchAlgorithmException e) {
             e.printStackTrace();
             return null;
         }
@@ -729,14 +718,19 @@ public final class PackageUtils {
     @NonNull
     public static String[] getSigningCertChecksums(@DigestUtils.Algorithm String algo,
                                                    @Nullable SignerInfo signerInfo) {
-        Signature[] signatureArray = signerInfo == null ? null : signerInfo.getAllSignatures();
-        ArrayList<String> checksums = new ArrayList<>();
+        X509Certificate[] signatureArray = signerInfo == null ? null : signerInfo.getAllSignerCerts();
         if (signatureArray != null) {
-            for (Signature signature : signatureArray) {
-                checksums.add(DigestUtils.getHexDigest(algo, signature.toByteArray()));
+            ArrayList<String> checksums = new ArrayList<>();
+            for (X509Certificate signature : signatureArray) {
+                try {
+                    checksums.add(DigestUtils.getHexDigest(algo, signature.getEncoded()));
+                } catch (CertificateEncodingException e) {
+                    e.printStackTrace();
+                }
             }
+            return checksums.toArray(new String[0]);
         }
-        return checksums.toArray(new String[0]);
+        return EmptyArray.STRING;
     }
 
     @NonNull

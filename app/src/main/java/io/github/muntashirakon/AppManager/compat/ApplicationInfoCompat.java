@@ -357,6 +357,14 @@ public final class ApplicationInfoCompat {
         return (getPrivateFlags(info) & PRIVATE_FLAG_STATIC_SHARED_LIBRARY) != 0;
     }
 
+    public static boolean isPrivileged(@NonNull ApplicationInfo info) {
+        return (getPrivateFlags(info) & PRIVATE_FLAG_PRIVILEGED) != 0;
+    }
+
+    public static boolean hasDomainUrls(@NonNull ApplicationInfo info) {
+        return (getPrivateFlags(info) & PRIVATE_FLAG_HAS_DOMAIN_URLS) != 0;
+    }
+
     /**
      * {@link ApplicationInfo#loadLabel(PackageManager)} can throw NPE for uninstalled apps in unprivileged mode.
      *

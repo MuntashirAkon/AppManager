@@ -342,12 +342,14 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                     mConstraint = null;
                     mUserId = UserHandleHidden.myUserId();
                 }
-                int previousSize = mAdapterList.size();
+                int previousSize;
+                int currentSize;
                 synchronized (mAdapterList) {
+                    previousSize = mAdapterList.size();
                     mAdapterList.clear();
                     mAdapterList.addAll(list);
+                    currentSize = mAdapterList.size();
                 }
-                int currentSize = mAdapterList.size();
                 ThreadUtils.postOnMainThread(() -> {
                     if (isDetached()) return;
                     ProgressIndicatorCompat.setVisibility(progressIndicator, false);

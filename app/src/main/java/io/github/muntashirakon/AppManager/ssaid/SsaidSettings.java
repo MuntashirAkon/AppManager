@@ -2,9 +2,10 @@
 
 package io.github.muntashirakon.AppManager.ssaid;
 
+import static io.github.muntashirakon.AppManager.ssaid.SettingsState.SYSTEM_PACKAGE_NAME;
+
 import android.annotation.UserIdInt;
 import android.content.pm.PackageInfo;
-import android.content.pm.Signature;
 import android.os.Build;
 import android.os.HandlerThread;
 import android.os.Process;
@@ -20,18 +21,18 @@ import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.util.Objects;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import aosp.libcore.util.HexEncoding;
+import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.Path;
-
-import static io.github.muntashirakon.AppManager.ssaid.SettingsState.SYSTEM_PACKAGE_NAME;
 
 @RequiresApi(Build.VERSION_CODES.O)
 public class SsaidSettings {
@@ -135,12 +136,18 @@ public class SsaidSettings {
         }
 
         // Mac each of the developer signatures.
-        Signature[] signatures = PackageUtils.getSigningInfo(callingPkg, false);
-        if (signatures != null) {
-            for (Signature signature : signatures) {
-                byte[] sig = signature.toByteArray();
-                m.update(getLengthPrefix(sig), 0, 4);
-                m.update(sig);
+        SignerInfo signerInfo = PackageUtils.getSignerInfo(callingPkg, false);
+        if (signerInfo != null) {
+            X509Certificate[] signerCerts = signerInfo.getCurrentSignerCerts();
+            if (signerCerts != null) {
+                for (X509Certificate cert : signerCerts) {
+                    try {
+                        byte[] sig = cert.getEncoded();
+                        m.update(getLengthPrefix(sig), 0, 4);
+                        m.update(sig);
+                    } catch (Exception ignore) {
+                    }
+                }
             }
         }
 

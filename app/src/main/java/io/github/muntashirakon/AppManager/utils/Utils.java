@@ -16,7 +16,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ServiceInfo;
-import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
@@ -36,14 +35,9 @@ import androidx.annotation.StringRes;
 import androidx.core.content.pm.PermissionInfoCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +46,7 @@ import java.util.Locale;
 
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 
 public class Utils {
@@ -495,21 +490,15 @@ public class Utils {
 
     @NonNull
     public static Pair<String, String> getIssuerAndAlg(@NonNull PackageInfo p) {
-        Signature[] signatures = PackageUtils.getSigningInfo(p, false);
-        X509Certificate c;
-        if (signatures == null) return new Pair<>("", "");
-        String name = "";
-        String algoName = "";
-        for (Signature sg : signatures) {
-            try (InputStream is = new ByteArrayInputStream(sg.toByteArray())) {
-                c = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(is);
-                name = c.getIssuerX500Principal().getName();
-                algoName = c.getSigAlgName();
-                break;
-            } catch (IOException | CertificateException ignore) {
+        SignerInfo signerInfo = PackageUtils.getSignerInfo(p, false);
+        if (signerInfo != null) {
+            X509Certificate[] certs = signerInfo.getCurrentSignerCerts();
+            if (certs != null && certs.length > 0) {
+                X509Certificate c = certs[0];
+                return new Pair<>(c.getIssuerX500Principal().getName(), c.getSigAlgName());
             }
         }
-        return new Pair<>(name, algoName);
+        return new Pair<>("", "");
     }
 
     /**
