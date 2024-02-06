@@ -43,7 +43,8 @@ public class SignerInfo {
             }
         }
         // Collect source stamp certificate
-        mSourceStampCert = apkVerifierResult.getSourceStampInfo().getCertificate();
+        ApkVerifier.Result.SourceStampInfo sourceStampInfo = apkVerifierResult.getSourceStampInfo();
+        mSourceStampCert = sourceStampInfo != null ? sourceStampInfo.getCertificate() : null;
         if (mCurrentSignerCerts == null || mCurrentSignerCerts.length > 1) {
             // Skip checking rotation because the app has multiple signers or no signer at all
             mAllSignerCerts = mCurrentSignerCerts;

@@ -1830,7 +1830,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     appDetailsItems.add(item);
                 }
             }
-        } catch (IOException | ApkFormatException | NoSuchAlgorithmException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         mSignatures.postValue(appDetailsItems);
