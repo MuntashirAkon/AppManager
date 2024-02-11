@@ -32,6 +32,7 @@ import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.crypto.ks.SecretKeyCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
@@ -119,7 +120,7 @@ public class AESCryptoSelectionDialogFragment extends DialogFragment {
                     })
                     .show());
         });
-        new Thread(() -> {
+        ThreadUtils.postOnBackgroundThread(() -> {
             try {
                 mKeyStoreManager = KeyStoreManager.getInstance();
                 SecretKey secretKey = mKeyStoreManager.getSecretKey(AES_KEY_ALIAS);
@@ -135,7 +136,7 @@ public class AESCryptoSelectionDialogFragment extends DialogFragment {
             } catch (Exception e) {
                 Log.e(TAG, e);
             }
-        }).start();
+        });
         return alertDialog;
     }
 

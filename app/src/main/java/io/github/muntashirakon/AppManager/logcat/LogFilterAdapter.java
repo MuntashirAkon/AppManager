@@ -18,6 +18,7 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.entity.LogFilter;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 // Copyright 2012 Nolan Lawson
 public class LogFilterAdapter extends ArrayAdapter<LogFilter> {
@@ -61,7 +62,7 @@ public class LogFilterAdapter extends ArrayAdapter<LogFilter> {
             }
         });
         holder.actionButton.setOnClickListener(v -> {
-            new Thread(() -> AppsDb.getInstance().logFilterDao().delete(logFilter)).start();
+            ThreadUtils.postOnBackgroundThread(() -> AppsDb.getInstance().logFilterDao().delete(logFilter));
             remove(logFilter);
             notifyDataSetChanged();
         });

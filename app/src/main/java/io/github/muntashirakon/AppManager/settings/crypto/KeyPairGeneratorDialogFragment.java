@@ -27,6 +27,8 @@ import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.adapters.SelectedArrayAdapter;
 import io.github.muntashirakon.dialog.AlertDialogBuilder;
@@ -88,15 +90,14 @@ public class KeyPairGeneratorDialogFragment extends DialogFragment {
                 .setTitle(R.string.generate_key)
                 .setView(view)
                 .setExitOnButtonPress(false)
-                .setPositiveButton(R.string.generate_key, (dialog, which) -> new Thread(() -> {
+                .setPositiveButton(R.string.generate_key, (dialog, which) -> ThreadUtils.postOnBackgroundThread(() -> {
                     AtomicReference<KeyPair> keyPair = new AtomicReference<>(null);
                     String formattedSubject = getFormattedSubject(commonName.getText().toString(),
                             orgUnit.getText().toString(), orgName.getText().toString(),
                             locality.getText().toString(), state.getText().toString(),
                             country.getText().toString());
                     if (mExpiryDate == 0) {
-                        if (isDetached()) return;
-                        activity.runOnUiThread(() -> UIUtils.displayShortToast(R.string.expiry_date_cannot_be_empty));
+                        ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.expiry_date_cannot_be_empty));
                         return;
                     }
                     if (formattedSubject.isEmpty()) {
@@ -111,14 +112,12 @@ public class KeyPairGeneratorDialogFragment extends DialogFragment {
                     } catch (Exception e) {
                         Log.e(TAG, e);
                     } finally {
-                        if (!isDetached()) {
-                            activity.runOnUiThread(() -> {
-                                if (mListener != null) mListener.onGenerate(keyPair.get());
-                                dialog.dismiss();
-                            });
-                        }
+                        ThreadUtils.postOnMainThread(() -> {
+                            if (mListener != null) mListener.onGenerate(keyPair.get());
+                            ExUtils.exceptionAsIgnored(dialog::dismiss);
+                        });
                     }
-                }).start())
+                }))
                 .setNegativeButton(R.string.cancel, null);
         return builder.create();
     }

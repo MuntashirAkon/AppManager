@@ -19,6 +19,7 @@ import com.google.android.material.transition.MaterialSharedAxis;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.db.entity.App;
@@ -34,6 +35,7 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
+import io.github.muntashirakon.view.ProgressIndicatorCompat;
 
 public class ImportExportRulesPreferences extends PreferenceFragment {
     private static final String MIME_JSON = "application/json";
@@ -42,6 +44,8 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
 
     private final int mUserHandle = UserHandleHidden.myUserId();
     private SettingsActivity mActivity;
+    @Nullable
+    private Future<?> importExistingFuture;
     private final ActivityResultLauncher<String> mExportRules = registerForActivityResult(
             new ActivityResultContracts.CreateDocument(MIME_TSV),
             uri -> {
@@ -81,11 +85,10 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
                     // Back button pressed.
                     return;
                 }
-                new Thread(() -> {
+                ThreadUtils.postOnBackgroundThread(() -> {
                     List<String> failedFiles = ExternalComponentsImporter.applyFromWatt(uris, Users.getUsersIds());
-                    if (isDetached()) return;
-                    mActivity.runOnUiThread(() -> displayImportExternalRulesFailedPackagesDialog(failedFiles));
-                }).start();
+                    ThreadUtils.postOnMainThread(() -> displayImportExternalRulesFailedPackagesDialog(failedFiles));
+                });
             });
     private final ActivityResultLauncher<String> mImportFromBlocker = registerForActivityResult(
             new ActivityResultContracts.GetMultipleContents(),
@@ -94,11 +97,10 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
                     // Back button pressed.
                     return;
                 }
-                new Thread(() -> {
+                ThreadUtils.postOnBackgroundThread(() -> {
                     List<String> failedFiles = ExternalComponentsImporter.applyFromBlocker(uris, Users.getUsersIds());
-                    if (isDetached()) return;
-                    mActivity.runOnUiThread(() -> displayImportExternalRulesFailedPackagesDialog(failedFiles));
-                }).start();
+                    ThreadUtils.postOnMainThread(() -> displayImportExternalRulesFailedPackagesDialog(failedFiles));
+                });
             });
 
     @Override
@@ -147,6 +149,14 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
     }
 
     @Override
+    public void onDestroy() {
+        if (importExistingFuture != null) {
+            importExistingFuture.cancel(true);
+        }
+        super.onDestroy();
+    }
+
+    @Override
     public int getTitle() {
         return R.string.pref_import_export_blocking_rules;
     }
@@ -156,12 +166,12 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
             Toast.makeText(requireContext(), R.string.only_works_in_root_or_adb_mode, Toast.LENGTH_SHORT).show();
             return;
         }
-        mActivity.progressIndicator.show();
-        new Thread(() -> {
+        ProgressIndicatorCompat.setVisibility(mActivity.progressIndicator, true);
+        importExistingFuture = ThreadUtils.postOnBackgroundThread(() -> {
             final List<ItemCount> itemCounts = new ArrayList<>();
             ItemCount itemCount;
             for (App app : new AppDb().getAllInstalledApplications()) {
-                if (isDetached()) return;
+                if (ThreadUtils.isInterrupted()) return;
                 if (!systemApps && app.isSystemApp())
                     continue;
                 itemCount = new ItemCount();
@@ -171,45 +181,53 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
                 if (itemCount.count > 0) itemCounts.add(itemCount);
             }
             ThreadUtils.postOnMainThread(() -> displayImportExistingRulesPackageSelectionDialog(itemCounts));
-        }).start();
+        });
     }
 
     private void displayImportExistingRulesPackageSelectionDialog(@NonNull List<ItemCount> itemCounts) {
-        if (!itemCounts.isEmpty()) {
-            final List<String> packages = new ArrayList<>();
-            final CharSequence[] packagesWithItemCounts = new CharSequence[itemCounts.size()];
-            ItemCount itemCount;
-            for (int i = 0; i < itemCounts.size(); ++i) {
-                itemCount = itemCounts.get(i);
-                packages.add(itemCount.packageName);
-                packagesWithItemCounts[i] = new SpannableStringBuilder(itemCount.packageLabel).append("\n")
-                        .append(UIUtils.getSmallerText(UIUtils.getSecondaryText(requireContext(), getResources()
-                                .getQuantityString(R.plurals.no_of_components, itemCount.count,
-                                        itemCount.count))));
-            }
-            mActivity.progressIndicator.hide();
-            new SearchableMultiChoiceDialogBuilder<>(requireActivity(), packages, packagesWithItemCounts)
-                    .setTitle(R.string.filtered_packages)
-                    .setPositiveButton(R.string.apply, (dialog, which, selectedPackages) -> {
-                        mActivity.progressIndicator.show();
-                        new Thread(() -> {
-                            List<String> failedPackages = ExternalComponentsImporter
-                                    .applyFromExistingBlockList(selectedPackages, mUserHandle);
-                            ThreadUtils.postOnMainThread(() -> displayImportExistingRulesFailedPackagesDialog(failedPackages));
-                        }).start();
-                    })
-                    .setNegativeButton(R.string.cancel, null)
-                    .show();
-        } else {
-            mActivity.progressIndicator.hide();
+        if (itemCounts.isEmpty()) {
+            ProgressIndicatorCompat.setVisibility(mActivity.progressIndicator, false);
             Toast.makeText(requireContext(), R.string.no_matching_package_found, Toast.LENGTH_SHORT).show();
+            return;
         }
+        final List<String> packages = new ArrayList<>();
+        final CharSequence[] packagesWithItemCounts = new CharSequence[itemCounts.size()];
+        ItemCount itemCount;
+        for (int i = 0; i < itemCounts.size(); ++i) {
+            itemCount = itemCounts.get(i);
+            packages.add(itemCount.packageName);
+            packagesWithItemCounts[i] = new SpannableStringBuilder(itemCount.packageLabel).append("\n")
+                    .append(UIUtils.getSmallerText(UIUtils.getSecondaryText(requireContext(), getResources()
+                            .getQuantityString(R.plurals.no_of_components, itemCount.count,
+                                    itemCount.count))));
+        }
+        ProgressIndicatorCompat.setVisibility(mActivity.progressIndicator, false);
+        new SearchableMultiChoiceDialogBuilder<>(requireActivity(), packages, packagesWithItemCounts)
+                .setTitle(R.string.filtered_packages)
+                .setPositiveButton(R.string.apply, (dialog, which, selectedPackages) -> {
+                    ProgressIndicatorCompat.setVisibility(mActivity.progressIndicator, true);
+                    ThreadUtils.postOnBackgroundThread(() -> {
+                        List<String> failedPackages = ExternalComponentsImporter
+                                .applyFromExistingBlockList(selectedPackages, mUserHandle);
+                        ThreadUtils.postOnMainThread(() -> displayImportExistingRulesFailedPackagesDialog(failedPackages));
+                    });
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     private void displayImportExistingRulesFailedPackagesDialog(@NonNull List<String> failedPackages) {
-        mActivity.progressIndicator.hide();
+        if (isDetached()) {
+            if (failedPackages.isEmpty()) {
+                UIUtils.displayShortToast(R.string.the_import_was_successful);
+            } else {
+                UIUtils.displayShortToast(R.string.failed);
+            }
+            return;
+        }
+        ProgressIndicatorCompat.setVisibility(mActivity.progressIndicator, false);
         if (failedPackages.isEmpty()) {
-            Toast.makeText(requireContext(), R.string.the_import_was_successful, Toast.LENGTH_SHORT).show();
+            UIUtils.displayShortToast(R.string.the_import_was_successful);
             return;
         }
         new SearchableItemsDialogBuilder<>(requireActivity(), failedPackages)
@@ -219,9 +237,17 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
     }
 
     private void displayImportExternalRulesFailedPackagesDialog(@NonNull List<String> failedFiles) {
-        mActivity.progressIndicator.hide();
+        if (isDetached()) {
+            if (failedFiles.isEmpty()) {
+                UIUtils.displayShortToast(R.string.the_import_was_successful);
+            } else {
+                UIUtils.displayLongToastPl(R.plurals.failed_to_import_files, failedFiles.size(), failedFiles.size());
+            }
+            return;
+        }
+        ProgressIndicatorCompat.setVisibility(mActivity.progressIndicator, false);
         if (failedFiles.isEmpty()) {
-            Toast.makeText(requireContext(), R.string.the_import_was_successful, Toast.LENGTH_SHORT).show();
+            UIUtils.displayShortToast(R.string.the_import_was_successful);
             return;
         }
         new SearchableItemsDialogBuilder<>(requireActivity(), failedFiles)

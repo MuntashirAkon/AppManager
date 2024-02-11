@@ -24,6 +24,7 @@ import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 
@@ -56,11 +57,11 @@ public class ECCCryptoSelectionDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.ok, null)
                 .setNegativeButton(R.string.pref_import, null)
                 .setNeutralButton(R.string.generate_key, null);
-        new Thread(() -> {
-            if (isDetached()) return;
+        ThreadUtils.postOnBackgroundThread(() -> {
+            if (ThreadUtils.isInterrupted()) return;
             CharSequence info = getSigningInfo();
-            mActivity.runOnUiThread(() -> mBuilder.setMessage(info));
-        }).start();
+            ThreadUtils.postOnMainThread(() -> mBuilder.setMessage(info));
+        });
         AlertDialog alertDialog = mBuilder.create();
         alertDialog.setOnShowListener(dialog -> {
             AlertDialog dialog1 = (AlertDialog) dialog;
@@ -72,8 +73,8 @@ public class ECCCryptoSelectionDialogFragment extends DialogFragment {
                 Bundle args = new Bundle();
                 args.putString(KeyPairImporterDialogFragment.EXTRA_ALIAS, mTargetAlias);
                 fragment.setArguments(args);
-                fragment.setOnKeySelectedListener((keyPair) -> new Thread(() ->
-                        new Thread(() -> addKeyPair(keyPair)).start()).start());
+                fragment.setOnKeySelectedListener((keyPair) -> ThreadUtils.postOnBackgroundThread(() ->
+                        addKeyPair(keyPair)));
                 fragment.show(getParentFragmentManager(), KeyPairImporterDialogFragment.TAG);
             });
             generateButton.setOnClickListener(v -> {
@@ -81,22 +82,22 @@ public class ECCCryptoSelectionDialogFragment extends DialogFragment {
                 Bundle args = new Bundle();
                 args.putString(KeyPairGeneratorDialogFragment.EXTRA_KEY_TYPE, CryptoUtils.MODE_ECC);
                 fragment.setArguments(args);
-                fragment.setOnGenerateListener((keyPair) -> new Thread(() ->
-                        addKeyPair(keyPair)).start());
+                fragment.setOnGenerateListener((keyPair) -> ThreadUtils.postOnBackgroundThread(() ->
+                        addKeyPair(keyPair)));
                 fragment.show(getParentFragmentManager(), KeyPairGeneratorDialogFragment.TAG);
             });
-            defaultOrOkButton.setOnClickListener(v -> new Thread(() -> {
+            defaultOrOkButton.setOnClickListener(v -> ThreadUtils.postOnBackgroundThread(() -> {
                 try {
-                    if (isDetached()) return;
-                    mActivity.runOnUiThread(() -> UIUtils.displayShortToast(R.string.done));
+                    if (ThreadUtils.isInterrupted()) return;
+                    ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.done));
                     keyPairUpdated();
                 } catch (Exception e) {
                     Log.e(TAG, e);
-                    mActivity.runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_save_key));
+                    ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.failed_to_save_key));
                 } finally {
                     alertDialog.dismiss();
                 }
-            }).start());
+            }));
         });
         return alertDialog;
     }
@@ -122,15 +123,15 @@ public class ECCCryptoSelectionDialogFragment extends DialogFragment {
             }
             mKeyStoreManager = KeyStoreManager.getInstance();
             mKeyStoreManager.addKeyPair(mTargetAlias, keyPair, true);
-            if (isDetached()) return;
-            mActivity.runOnUiThread(() -> UIUtils.displayShortToast(R.string.done));
+            if (ThreadUtils.isInterrupted()) return;
+            ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.done));
             keyPairUpdated();
-            if (isDetached()) return;
+            if (ThreadUtils.isInterrupted()) return;
             CharSequence info = getSigningInfo();
-            mActivity.runOnUiThread(() -> mBuilder.setMessage(info));
+            ThreadUtils.postOnMainThread(() -> mBuilder.setMessage(info));
         } catch (Exception e) {
             Log.e(TAG, e);
-            mActivity.runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_save_key));
+            ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.failed_to_save_key));
         }
     }
 
@@ -141,7 +142,7 @@ public class ECCCryptoSelectionDialogFragment extends DialogFragment {
             if (keyPair != null) {
                 if (mListener != null) {
                     byte[] bytes = keyPair.getCertificate().getEncoded();
-                    mActivity.runOnUiThread(() -> mListener.keyPairUpdated(keyPair, bytes));
+                    ThreadUtils.postOnMainThread(() -> mListener.keyPairUpdated(keyPair, bytes));
                 }
                 return;
             }
@@ -149,7 +150,7 @@ public class ECCCryptoSelectionDialogFragment extends DialogFragment {
             Log.e(TAG, e);
         }
         if (mListener != null) {
-            mActivity.runOnUiThread(() -> mListener.keyPairUpdated(null, null));
+            ThreadUtils.postOnMainThread(() -> mListener.keyPairUpdated(null, null));
         }
     }
 

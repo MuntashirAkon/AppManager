@@ -83,7 +83,7 @@ public class RecordLogDialogFragment extends DialogFragment {
                         //noinspection ConstantConditions
                         String filename = inputText.toString();
                         Context context = mActivity.getApplicationContext();
-                        new Thread(() -> {
+                        ThreadUtils.postOnBackgroundThread(() -> {
                             Intent intent = ServiceHelper.getLogcatRecorderServiceIfNotAlreadyRunning(context, filename,
                                     mFilterQuery, mLogLevel);
                             ThreadUtils.postOnMainThread(() -> {
@@ -94,7 +94,7 @@ public class RecordLogDialogFragment extends DialogFragment {
                                     mListener.onServiceStarted();
                                 }
                             });
-                        }).start();
+                        });
                     }
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which, inputText, isChecked) ->

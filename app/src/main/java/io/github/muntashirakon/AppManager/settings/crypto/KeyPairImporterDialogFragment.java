@@ -27,6 +27,8 @@ import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.adapters.SelectedArrayAdapter;
@@ -146,18 +148,18 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
                 } else {
                     // KeyStore
                     char[] ksPassword = Utils.getChars(mKsPassOrPk8.getText());
-                    new Thread(() -> {
+                    ThreadUtils.postOnBackgroundThread(() -> {
                         try {
                             if (mKsOrPemFile == null) {
                                 throw new Exception("KeyStore file can't be null.");
                             }
                             ArrayList<String> aliases = KeyStoreUtils.listAliases(mActivity, mKsOrPemFile, mKeyType,
                                     ksPassword);
-                            if (isDetached()) return;
-                            mActivity.runOnUiThread(() -> {
-                                if (aliases.size() == 0) {
+                            if (mListener == null) return;
+                            ThreadUtils.postOnMainThread(() -> {
+                                if (aliases.isEmpty()) {
                                     UIUtils.displayLongToast(R.string.found_no_alias_in_keystore);
-                                    dialog.dismiss();
+                                    ExUtils.exceptionAsIgnored(dialog::dismiss);
                                     return;
                                 }
                                 TextInputDropdownDialogBuilder builder;
@@ -167,10 +169,9 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
                                         .setTitle(R.string.choose_an_alias)
                                         .setNegativeButton(R.string.cancel, null);
                                 builder.setPositiveButton(R.string.ok, (dialog2, which, inputText, isChecked) -> {
-                                    if (isDetached()) return;
                                     String aliasName = inputText == null ? null : inputText.toString();
                                     char[] aliasPassword = Utils.getChars(builder.getAuxiliaryInput());
-                                    new Thread(() -> {
+                                    ThreadUtils.postOnBackgroundThread(() -> {
                                         try {
                                             KeyPair keyPair = KeyStoreUtils.getKeyPair(mActivity, mKsOrPemFile, mKeyType,
                                                     aliasName, ksPassword, aliasPassword);
@@ -179,16 +180,15 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
                                             Log.e(TAG, e);
                                             mListener.onKeySelected(null);
                                         }
-                                        mActivity.runOnUiThread(dialog::dismiss);
-                                    }).start();
+                                        ThreadUtils.postOnMainThread(() -> ExUtils.exceptionAsIgnored(dialog::dismiss));
+                                    });
                                 }).show();
                             });
                         } catch (Exception e) {
                             Log.e(TAG, e);
-                            if (isDetached()) return;
-                            mActivity.runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_read_keystore));
+                            ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.failed_to_read_keystore));
                         }
-                    }).start();
+                    });
                 }
             });
         });

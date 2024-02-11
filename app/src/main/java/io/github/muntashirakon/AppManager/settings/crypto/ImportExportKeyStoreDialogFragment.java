@@ -29,6 +29,8 @@ import java.util.concurrent.TimeUnit;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.IoUtils;
 
@@ -42,22 +44,22 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
                     dismiss();
                     return;
                 }
-                new Thread(() -> {
+                ThreadUtils.postOnBackgroundThread(() -> {
                     try (InputStream is = new FileInputStream(AM_KEYSTORE_FILE);
                          OutputStream os = mActivity.getContentResolver().openOutputStream(uri)) {
                         if (os == null) throw new IOException("Unable to open URI");
                         IoUtils.copy(is, os);
-                        mActivity.runOnUiThread(() -> {
+                        ThreadUtils.postOnMainThread(() -> {
                             UIUtils.displayShortToast(R.string.done);
-                            dismiss();
+                            ExUtils.exceptionAsIgnored(this::dismiss);
                         });
                     } catch (IOException e) {
-                        mActivity.runOnUiThread(() -> {
+                        ThreadUtils.postOnMainThread(() -> {
                             UIUtils.displayShortToast(R.string.failed);
-                            dismiss();
+                            ExUtils.exceptionAsIgnored(this::dismiss);
                         });
                     }
-                }).start();
+                });
             });
     private final ActivityResultLauncher<String> mImportKeyStore = registerForActivityResult(
             new ActivityResultContracts.GetContent(), uri -> {
@@ -68,7 +70,7 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
                 new MaterialAlertDialogBuilder(mActivity)
                         .setTitle(R.string.import_keystore)
                         .setMessage(R.string.confirm_import_keystore)
-                        .setPositiveButton(R.string.yes, (dialog, which) -> new Thread(() -> {
+                        .setPositiveButton(R.string.yes, (dialog, which) -> ThreadUtils.postOnBackgroundThread(() -> {
                             // Rename old file that will be restored in case of error
                             File tmpFile = new File(AM_KEYSTORE_FILE.getAbsolutePath() + ".tmp");
                             if (AM_KEYSTORE_FILE.exists()) {
@@ -88,9 +90,9 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
                                 }
                                 KeyStoreManager.reloadKeyStore();
                                 // TODO: 21/4/21 Only import the keys that we use instead of replacing the entire keystore
-                                mActivity.runOnUiThread(() -> {
+                                ThreadUtils.postOnMainThread(() -> {
                                     UIUtils.displayShortToast(R.string.done);
-                                    dismiss();
+                                    ExUtils.exceptionAsIgnored(this::dismiss);
                                 });
                             } catch (Exception e) {
                                 if (tmpFile.exists()) {
@@ -101,12 +103,12 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
                                     } catch (Exception ignore) {
                                     }
                                 }
-                                mActivity.runOnUiThread(() -> {
+                                ThreadUtils.postOnMainThread(() -> {
                                     UIUtils.displayShortToast(R.string.failed);
-                                    dismiss();
+                                    ExUtils.exceptionAsIgnored(this::dismiss);
                                 });
                             }
-                        }).start())
+                        }))
                         .setNegativeButton(R.string.close, (dialog, which) -> dismiss())
                         .setCancelable(false)
                         .show();
