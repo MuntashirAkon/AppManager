@@ -736,6 +736,7 @@ public final class PackageInstallerCompat {
             Log.d(TAG, "Commit: Calling activity to request permission...");
             intentReceiver = null;
             Intent callbackIntent = new Intent(PackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER);
+            callbackIntent.setPackage(BuildConfig.APPLICATION_ID);
             PendingIntent pendingIntent = PendingIntentCompat.getBroadcast(mContext, 0, callbackIntent, 0, true);
             sender = pendingIntent.getIntentSender();
         }
@@ -1076,6 +1077,7 @@ public final class PackageInstallerCompat {
                 Log.d(TAG, "Uninstall: Calling activity to request permission...");
                 intentReceiver = null;
                 Intent callbackIntent = new Intent(PackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER);
+                callbackIntent.setPackage(BuildConfig.APPLICATION_ID);
                 PendingIntent pendingIntent = PendingIntentCompat.getBroadcast(mContext, 0, callbackIntent, 0, true);
                 sender = pendingIntent.getIntentSender();
             }
