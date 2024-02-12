@@ -13,7 +13,6 @@ import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +29,7 @@ import androidx.cursoradapter.widget.SimpleCursorAdapter;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -64,10 +64,12 @@ import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.UiUtils;
+import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SearchView;
 
 // Copyright 2012 Nolan Lawson
@@ -499,49 +501,46 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     }
 
     private void showFiltersDialog(List<LogFilter> filters) {
-        LogFilterAdapter logFilterAdapter = new LogFilterAdapter(this, filters);
-        ListView view = new ListView(this);
-        view.setAdapter(logFilterAdapter);
-        view.setDivider(null);
-        view.setDividerHeight(0);
-        View footer = getLayoutInflater().inflate(R.layout.header_logcat_add_filter, view, false);
-        view.addFooterView(footer);
+        LogFilterAdapter logFilterAdapter = new LogFilterAdapter(filters);
+        RecyclerView recyclerView = new RecyclerView(this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(logFilterAdapter);
 
-        footer.setOnClickListener(v -> new TextInputDropdownDialogBuilder(this, R.string.text_filter_text)
-                .setTitle(R.string.add_filter)
-                .setDropdownItems(new ArrayList<>(mSearchSuggestionsSet), -1, true)
-                .setPositiveButton(android.R.string.ok, (dialog1, which, inputText, isChecked) ->
-                        handleNewFilterText(inputText == null ? "" : inputText.toString(), logFilterAdapter))
-                .setNegativeButton(R.string.cancel, null)
-                .show());
-
-        AlertDialog alertDialog = new MaterialAlertDialogBuilder(this)
+        DialogTitleBuilder builder = new DialogTitleBuilder(this)
                 .setTitle(R.string.saved_filters)
-                .setView(view)
+                .setEndIcon(R.drawable.ic_add, v -> new TextInputDropdownDialogBuilder(this, R.string.text_filter_text)
+                        .setTitle(R.string.add_filter)
+                        .setDropdownItems(new ArrayList<>(mSearchSuggestionsSet), -1, true)
+                        .setPositiveButton(android.R.string.ok, (dialog1, which, inputText, isChecked) ->
+                                handleNewFilterText(inputText == null ? "" : inputText.toString(), logFilterAdapter))
+                        .setNegativeButton(R.string.cancel, null)
+                        .show())
+                .setEndIconContentDescription(R.string.add_filter_ellipsis);
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(this)
+                .setCustomTitle(builder.build())
+                .setView(recyclerView)
                 .setNegativeButton(R.string.ok, null)
                 .show();
 
-        logFilterAdapter.setOnItemClickListener((parent, view1, position, logFilter) -> {
+        logFilterAdapter.setOnItemClickListener((v, position, logFilter) -> {
             setSearchQuery(logFilter.name);
             alertDialog.dismiss();
         });
     }
 
-    protected void handleNewFilterText(String text, final LogFilterAdapter logFilterAdapter) {
+    protected void handleNewFilterText(@NonNull String text, final LogFilterAdapter logFilterAdapter) {
         final String trimmed = text.trim();
         if (!TextUtils.isEmpty(trimmed)) {
             mExecutor.submit(() -> {
                 LogFilterDao dao = AppsDb.getInstance().logFilterDao();
                 long id = dao.insert(trimmed);
                 LogFilter logFilter = dao.get(id);
+                if (logFilter == null) {
+                    return;
+                }
                 ThreadUtils.postOnMainThread(() -> {
-                    if (logFilter != null) {
-                        logFilterAdapter.add(logFilter);
-                        logFilterAdapter.sort(LogFilter.COMPARATOR);
-                        logFilterAdapter.notifyDataSetChanged();
-
-                        addToAutocompleteSuggestions(trimmed);
-                    }
+                    logFilterAdapter.add(logFilter);
+                    addToAutocompleteSuggestions(trimmed);
                 });
             });
         }
