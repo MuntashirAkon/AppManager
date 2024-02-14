@@ -389,7 +389,7 @@ public final class PackageInstallerCompat {
     public static final int INSTALL_ALLOW_DOWNGRADE = 0x00000080;
 
     /**
-     * Flag parameter for {@code #installPackage} to bypass the low targer sdk version block
+     * Flag parameter for {@code #installPackage} to bypass the low target sdk version block
      * for this install.
      */
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
