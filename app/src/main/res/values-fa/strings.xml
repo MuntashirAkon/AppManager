@@ -119,21 +119,28 @@
     <string name="word_wrap">تغییر وضعیت کلمه</string>
     <string name="credits_message">به نویسندگان
 \n- پروژه متن باز اندروید
-\n- <a href="https://github.com/butzist/ActivityLauncher">فعالیت های لانچر</a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">اطلاعات بسته برنامه</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">مانیتور برنامه ها</a>
-\n- <a href="https://github.com/8enet/AppOpsX">عملیات برنامه x</a>
-\n- <a href="https://github.com/billthefarmer/editor">ویرایش کننده</a>
-\n- <a href="https://github.com/k3b/intent-intercept">رهگیری قصد</a>
-\n- <a href="https://github.com/zhanghai/MaterialFiles">فایل های مواد</a>
-\n- <a href="https://github.com/pluscubed/matlog">لاگ تشک</a>
-\n- <a href="https://github.com/matrix-org/matrix-android-sdk">اندروید ماتریکس SDK</a>
-\n- <a href="https://github.com/jensstein/oandbackup">و بک آپ</a>
-\n- <a href="https://github.com/open-keychain/open-keychain">جاکلیدی را باز کنید</a>
-\n- <a href="https://github.com/Aefyr/SAI">نصب کننده اسپلیت</a>
-\n- <a href="https://github.com/RikkaApps/Shizuku">شیزوکو</a>
-\n- <a href="https://github.com/tuyafeng/Watt">چه</a>
-\nاعتبار لوگوی اصلی: <a href="https://github.com/Atrate">به نرخ</a>. </string>
+\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">اطلاعات بسته های برنامه ها </a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">نظارت بر برنامه ها</a>
+\n- <a href="https://github.com/8enet/AppOpsX">برنامه OpsX</a>
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">کتابخانه گزارش تغییر</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
+\n- <a href="https://github.com/billthefarmer/editor">ویرایشگر</a>
+\n- <a href="https://github.com/Raival-e/File-Explorer">مدیرفایل</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
+\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">فایل های متریال</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\n- <a href="https://github.com/eclipse/tm4e">tm4e</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a> </string>
     <string name="credits">اعتبارات</string>
     <string name="third_party">کتابخانه‌ها و آیکون های شخص سوم</string>
     <string name="license">لایسنس</string>
@@ -819,7 +826,7 @@
     <string name="second_degree_tracker_note">² پیشوند نشان می دهد که ردیاب ها در <a href="https://etip.exodus-privacy.eu.org/">لیست آماده به کار ETIP</a> i.e. آیا آنها ردیاب واقعی هستند هنوز در حال بررسی است.</string>
     <string name="failed_to_uninstall_app">حذف نصب ناموفق بود</string>
     <string name="community">انجمن</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">کانال تلگرام</a> • <a href="https://twitter.com/AppManagerNews">توییتر</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">تلگرام</a> • <a href="https://twitter.com/AppManagerNews">توییتر</a></string>
     <string name="input_app_ops_description_profile">نام‌های عملیات برنامه و/یا بقیه را با فاصله وارد کنید، به عنوان مثال.. <tt>قفل کردن دوربین ۶۳ ۷۲ </tt> و غیره. استفاده <tt>*</tt> برای درخواست برای همه عملیات برنامه های پیکربندی شده.</string>
     <string name="internal_data">داده های داخلی</string>
     <string name="installer_error_session_commit">نمی‌توان فایل‌های نصبی را اجرا کرد</string>
@@ -1121,4 +1128,7 @@
     <string name="hidden_api_enforcement_policy">خط مشی اجرای مخفی API</string>
     <string name="hidden_api_enf_default_policy">پیش فرض (بر اساس نوع برنامه)</string>
     <string name="hidden_api_enf_policy_none">هیچکدام (دسترسی کامل به API مخفی)</string>
+    <string name="block_unblock_components_dots">مسدود کردن / بازگشایی مجوز ها…</string>
+    <string name="block_unblock_components_description">مسدود کردن یا بازگشایی همه مجوز های شناسایی شده توسط امضا های داده شده</string>
+    <string name="unblock_components_dots">بازگشایی مجوز ها…</string>
 </resources>
