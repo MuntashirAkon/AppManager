@@ -141,29 +141,30 @@
         <item quantity="few">2 urmăritori cu clasele <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
         <item quantity="other">2 urmăritori cu clasele <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
     </plurals>
-    <string name="credits_message">Pentru autorii
-\n- The Android Open Source Project
-\n- <a href="https://github.com/zhaobozhen/libraries">Bibliotecile Absinthe</a>
-\n- <a href="https://github.com/butzist/ActivityLauncher">Lansator de activități</a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Informații despre pachetele de aplicații</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">Monitor de aplicații</a>
+    <string name="credits_message">Pentru autorii:
+\n- Proiectul Android Open Source
+\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
-\n- <a href="https://github.com/gabrielemariotti/changeloglib">Biblioteca ChangeLog</a>
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a>
 \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
 \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
 \n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
-\n- <a href="https://github.com/zhanghai/MaterialFiles">Fișiere materiale</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
 \n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/eclipse/tm4e">tm4e</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a> </string>
     <plurals name="other_trackers_and_classes">
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> urmăritor cu clasele <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
         <item quantity="few"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> urmăritori cu clasele <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
@@ -300,7 +301,7 @@
     <string name="integer_value">Valoare Integer</string>
     <string name="stopped">Oprit</string>
     <string name="data">Date</string>
-    <string name="state_multithreaded">Multithreaded</string>
+    <string name="state_multithreaded">Procese multiple</string>
     <string name="filter_apps">Aplicații</string>
     <string name="website">Site web</string>
     <string name="failed_to_deny_dangerous_app_ops">Nu s-au putut revoca toate aplicațiile de operare periculoase</string>
@@ -367,7 +368,7 @@
     <string name="backup_all_users">Toți utilizatorii</string>
     <string name="input_permissions">Permisiuni de intrare</string>
     <string name="clear_app_cache_description">Șterge memoria cache a tuturor aplicațiilor</string>
-    <string name="navigation_trackball">Trackball</string>
+    <string name="navigation_trackball">Bilă de căutare</string>
     <string name="process_state">Stare: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="am_crashed">App Manager s-a blocat</string>
     <string name="long_integer_value">Valoare Integer lungă</string>
@@ -426,7 +427,7 @@
     <string name="installer_error_incompatible">Aplicația este incompatibilă cu acest dispozitiv</string>
     <string name="input_backup_name_description">Numele backup-ului nu trebuie să înceapă cu o cifră și nici să conțină spații. Lăsați-l gol dacă doriți să utilizați data-ora curentă.</string>
     <string name="user_profile_with_id">Profil: %1$s (%2$d)</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">Canal Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="unblock">Deblochează</string>
     <string name="sort_by_backup">Mai întâi copiile Backup</string>
     <string name="failed_to_grant_permission">Nu s-a putut acorda permisiunea</string>
@@ -585,8 +586,8 @@
     <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> local pentru APK-ul de bază</string>
     <string name="choose_language">Schimbă limba</string>
     <string name="key_name">Nume Cheie</string>
-    <string name="filter_apps_with_rules">Aplicații cu reguli</string>
-    <string name="touchscreen_stylus">Stylus</string>
+    <string name="filter_apps_with_rules">Cu reguli</string>
+    <string name="touchscreen_stylus">Stylus (creion)</string>
     <string name="tap_to_submit_crash_report">Apasă pentru a trimite raportul de blocare.</string>
     <string name="launch_mode_single_top">Top unic</string>
     <string name="algorithm">Algoritm</string>
@@ -727,4 +728,20 @@
     <string name="this_action_cannot_be_undone">Această acțiune nu poate fi anulată.</string>
     <string name="keep_data_and_app_signing_signatures">Păstrarea datelor și semnăturilor</string>
     <string name="no_app_ops_permission">Nu aveți permisiunea de a afișa operațiunile aplicației</string>
+    <string name="splits">Despărțiri</string>
+    <string name="input_keystore_pass">Introdu parola KeyStore</string>
+    <string name="input_keystore_pass_msg">Atinge aici pentru a introduce parola KeyStore</string>
+    <string name="block_unblock_components_dots">Blocare/deblocare componente…</string>
+    <string name="unblock_components_dots">Deblocare componente…</string>
+    <string name="block_unblock_components_description">Blochează sau deblochează toate componentele identificate prin semnăturile date</string>
+    <plurals name="alert_failed_to_unblock_components">
+        <item quantity="one">Nu s-au putut debloca componentele pentru %1$d aplicație</item>
+        <item quantity="few">Nu s-au putut debloca componentele pentru %1$d aplicații</item>
+        <item quantity="other">Nu s-au putut debloca componentele pentru %1$d aplicații</item>
+    </plurals>
+    <string name="input_keystore_alias_pass">Parola pentru alias <b>%1$s</b></string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp verificat și identificat ca fiind din <xliff:g id="source" example="Google Play">%1$s</xliff:g>.</string>
+    <string name="input_keystore_alias_pass_msg">Apasă aici pentru a furniza parola pentru %1$s</string>
+    <string name="input_keystore_pass_description">Introdu parola App Manager KeyStore. Dacă vezi acest lucru pentru prima dată, utilizează un generator de parole pentru a genera o parolă și salveaz-o într-un loc sigur înainte de a o introduce aici.</string>
+    <string name="input_keystore_alias_pass_description">Introdu parola pentru alias-ul <b>%1$s</b>. Lasă spațiu gol dacă parola este aceeași cu parola KeyStore.</string>
 </resources>
