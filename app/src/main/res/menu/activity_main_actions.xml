@@ -26,6 +26,11 @@
         android:title="@string/one_click_ops" />
 
     <item
+        android:id="@+id/action_finder"
+        android:icon="@drawable/ic_search"
+        android:title="@string/finder_title" />
+
+    <item
         android:id="@+id/action_app_usage"
         android:icon="@drawable/ic_data_usage"
         android:title="@string/app_usage" />

@@ -33,9 +33,9 @@ public class DebloatObject {
     public @interface Removal {
     }
 
-    public static final int REMOVAL_SAFE = 0;
-    public static final int REMOVAL_REPLACE = 1;
-    public static final int REMOVAL_CAUTION = 2;
+    public static final int REMOVAL_SAFE = 1;
+    public static final int REMOVAL_REPLACE = 1 << 1;
+    public static final int REMOVAL_CAUTION = 1 << 2;
 
     @SerializedName("id")
     public String packageName;

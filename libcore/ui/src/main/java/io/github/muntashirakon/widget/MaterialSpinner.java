@@ -57,10 +57,12 @@ public class MaterialSpinner extends TextInputLayout {
     public void setSelection(int position) {
         mSelection = position;
         ListAdapter adapter = mAutoCompleteTextView.getAdapter();
-        if (adapter == null) {
-            return;
+        Object object;
+        if (adapter == null || mSelection < 0 || adapter.getCount() <= mSelection) {
+            object = null;
+        } else {
+            object = adapter.getItem(mSelection);
         }
-        Object object = mAutoCompleteTextView.getAdapter().getItem(position);
         mAutoCompleteTextView.setText(object == null ? "" : object.toString(), false);
     }
 }

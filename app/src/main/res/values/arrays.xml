@@ -238,4 +238,28 @@
         <item>@string/export_option_xml</item>
         <item>@string/export_option_markdown</item>
     </string-array>
+    <string-array name="finder_filters">
+        <item>apk_size</item>
+        <item>app_label</item>
+        <item>backup</item>
+        <item>bloatware</item>
+        <item>cache_size</item>
+        <item>components</item>
+        <item>data_size</item>
+        <item>data_usage</item>
+        <item>installed</item>
+        <item>installer</item>
+        <item>last_update</item>
+        <item>min_sdk</item>
+        <!--item>permission</item-->
+        <item>pkg_name</item>
+        <item>running_apps</item>
+        <item>screen_time</item>
+        <item>signature</item>
+        <item>target_sdk</item>
+        <item>times_opened</item>
+        <item>total_size</item>
+        <item>trackers</item>
+        <item>version_name</item>
+    </string-array>
 </resources>

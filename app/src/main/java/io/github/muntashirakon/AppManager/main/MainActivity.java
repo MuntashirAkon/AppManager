@@ -53,6 +53,7 @@ import io.github.muntashirakon.AppManager.changelog.ChangelogParser;
 import io.github.muntashirakon.AppManager.changelog.ChangelogRecyclerAdapter;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.debloat.DebloaterActivity;
+import io.github.muntashirakon.AppManager.filters.FinderActivity;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.HelpActivity;
 import io.github.muntashirakon.AppManager.misc.LabsActivity;
@@ -295,6 +296,9 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         } else if (id == R.id.action_one_click_ops) {
             Intent onClickOpsIntent = new Intent(this, OneClickOpsActivity.class);
             startActivity(onClickOpsIntent);
+        } else if (id == R.id.action_finder) {
+            Intent intent = new Intent(this, FinderActivity.class);
+            startActivity(intent);
         } else if (id == R.id.action_apk_updater) {
             try {
                 if (!getPackageManager().getApplicationInfo(PACKAGE_NAME_APK_UPDATER, 0).enabled)
