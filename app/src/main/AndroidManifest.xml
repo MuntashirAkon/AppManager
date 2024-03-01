@@ -161,6 +161,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="UnusedAttribute">
         <activity
+            android:name=".filters.FinderActivity"
+            android:exported="false"
+            android:label="@string/finder_title" />
+        <activity
             android:name=".oneclickops.OneClickOpsActivity"
             android:exported="false"
             android:label="@string/one_click_ops" />

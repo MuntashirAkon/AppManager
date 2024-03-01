@@ -1456,4 +1456,10 @@
     <string name="copy_profile_id">Copy profile ID</string>
     <string name="launch_activity_dialog_title">Launch Activity: Action Required</string>
     <string name="launch_activity_dialog_message">App Manager is trying to launch the activity via <b>Search assistant</b> (usually Google Assistant), but it\'s unable to do so due to insufficient permission. To open the activity, please activate <b>Search assistant</b> manually (which is usually done by long clicking on the Home button). Click on the <b>Close</b> button after you\'ve finished launching the activity to revert back to the original assistant.</string>
+    <string name="finder_title">Finder</string>
+    <string name="select_filter">Select a filter</string>
+    <string name="size_in_bytes">Size (bytes)</string>
+    <string name="invalid_regex">Invalid regular expression!</string>
+    <string name="value_cannot_be_empty">Value cannot be empty!</string>
+    <string name="date">Date</string>
 </resources>

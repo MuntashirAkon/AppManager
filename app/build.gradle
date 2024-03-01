@@ -170,6 +170,7 @@ dependencies {
     implementation "androidx.webkit:webkit:${webkit_version}"
     implementation "io.github.Rosemoe.sora-editor:editor:${sora_editor_version}"
     implementation "io.github.Rosemoe.sora-editor:language-textmate:${sora_editor_version}"
+    implementation "com.github.MuntashirAkon:time-duration-picker:${duration_picker}"
 
     // Utility
     implementation "com.google.code.gson:gson:${gson_version}"
