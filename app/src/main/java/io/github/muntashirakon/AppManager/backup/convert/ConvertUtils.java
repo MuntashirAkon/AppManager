@@ -36,11 +36,6 @@ import io.github.muntashirakon.io.Paths;
 
 public final class ConvertUtils {
     @NonNull
-    public static Path[] getRelevantImportFiles(@NonNull Uri uri, @ImportType int backupType) {
-        return getRelevantImportFiles(backupType, Paths.get(uri));
-    }
-
-    @NonNull
     public static Converter getConversionUtil(@ImportType int backupType, Path file) {
         switch (backupType) {
             case ImportType.OAndBackup:
@@ -55,7 +50,7 @@ public final class ConvertUtils {
     }
 
     @NonNull
-    public static Path[] getRelevantImportFiles(@ImportType int backupType, Path baseLocation) {
+    public static Path[] getRelevantImportFiles(Path baseLocation, @ImportType int backupType) {
         switch (backupType) {
             case ImportType.OAndBackup:
                 // Package directories
