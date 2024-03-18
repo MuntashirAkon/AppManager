@@ -28,6 +28,7 @@ import java.util.List;
 
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 
 public final class PermissionCompat {
     public static final int FLAG_PERMISSION_NONE = 0;
@@ -275,14 +276,15 @@ public final class PermissionCompat {
                                          @NonNull String packageName,
                                          @UserIdInt int userId) throws SecurityException {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                IPermissionManager permissionManager = getPermissionManager();
-                return permissionManager.getPermissionFlags(permissionName, packageName, userId);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                return getPermissionManager().getPermissionFlags(packageName, permissionName, userId);
+            } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.R) {
+                return getPermissionManager().getPermissionFlags(permissionName, packageName, userId);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 return PackageManagerCompat.getPackageManager().getPermissionFlags(permissionName, packageName, userId);
             }
         } catch (RemoteException e) {
-            e.printStackTrace();
+            return ExUtils.rethrowFromSystemServer(e);
         }
         return FLAG_PERMISSION_NONE;
     }
@@ -308,9 +310,11 @@ public final class PermissionCompat {
                                              boolean checkAdjustPolicyFlagPermission,
                                              @UserIdInt int userId) throws RemoteException {
         IPackageManager pm = PackageManagerCompat.getPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            IPermissionManager permissionManager = getPermissionManager();
-            permissionManager.updatePermissionFlags(permissionName, packageName, flagMask, flagValues,
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            getPermissionManager().updatePermissionFlags(packageName, permissionName, flagMask, flagValues,
+                    checkAdjustPolicyFlagPermission, userId);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            getPermissionManager().updatePermissionFlags(permissionName, packageName, flagMask, flagValues,
                     checkAdjustPolicyFlagPermission, userId);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             pm.updatePermissionFlags(permissionName, packageName, flagMask, flagValues,
