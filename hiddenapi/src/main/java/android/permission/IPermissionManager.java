@@ -41,8 +41,14 @@ public interface IPermissionManager extends IInterface {
 
     void removePermission(String name) throws RemoteException;
 
+    /**
+     * First two parameters are permuted since Android 12 (S)
+     */
     int getPermissionFlags(String permName, String packageName, int userId) throws RemoteException;
 
+    /**
+     * First two parameters are permuted since Android 12 (S)
+     */
     void updatePermissionFlags(String permName, String packageName, int flagMask,
                                int flagValues, boolean checkAdjustPolicyFlagPermission, int userId) throws RemoteException;
 
@@ -104,6 +110,9 @@ public interface IPermissionManager extends IInterface {
     void grantRuntimePermission(String packageName, String permName, int userId) throws RemoteException;
 
     void revokeRuntimePermission(String packageName, String permName, int userId, String reason) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    void revokePostNotificationPermissionWithoutKillForTest(String packageName, int userId) throws RemoteException;
 
     /**
      * @deprecated Removed in Android 12 (S)
@@ -171,15 +180,38 @@ public interface IPermissionManager extends IInterface {
     @Deprecated
     boolean isPermissionEnforced(String permName) throws RemoteException;
 
+    /**
+     * First two parameters are permuted since Android 12 (S)
+     */
     boolean shouldShowRequestPermissionRationale(String permName, String packageName, int userId)
             throws RemoteException;
 
+    /**
+     * First two parameters are permuted since Android 12 (S)
+     */
     boolean isPermissionRevokedByPolicy(String permName, String packageName, int userId) throws RemoteException;
 
     List<SplitPermissionInfoParcelable> getSplitPermissions() throws RemoteException;
 
+    /**
+     * @deprecated Replaced in Android 13 (Tiramisu) by {@link #startOneTimePermissionSession(String, int, long, long, int, int)}
+     */
+    @Deprecated
     void startOneTimePermissionSession(String packageName, int userId, long timeout,
                                        int importanceToResetTimer, int importanceToKeepSessionAlive) throws RemoteException;
+
+    /**
+     * @deprecated Replaced in Android 14 (Upside Down Cake) by {@link #startOneTimePermissionSession(String, int, long, long)}
+     */
+    @Deprecated
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    void startOneTimePermissionSession(String packageName, int userId, long timeout,
+                                       long revokeAfterKilledDelay, int importanceToResetTimer,
+                                       int importanceToKeepSessionAlive) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    void startOneTimePermissionSession(String packageName, int userId, long timeout,
+                                       long revokeAfterKilledDelay) throws RemoteException;
 
     void stopOneTimePermissionSession(String packageName, int userId) throws RemoteException;
 
