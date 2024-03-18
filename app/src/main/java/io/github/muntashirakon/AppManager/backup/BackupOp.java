@@ -387,7 +387,7 @@ class BackupOp implements Closeable {
                 boolean isGranted = (permissionFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
                 int permFlags = PermissionCompat.getPermissionFlags(info.name, mPackageName, mUserId);
                 rules.setPermission(permissions[i], isGranted, permFlags);
-            } catch (PackageManager.NameNotFoundException | RemoteException ignore) {
+            } catch (PackageManager.NameNotFoundException ignore) {
             }
         }
         // Backup app ops
