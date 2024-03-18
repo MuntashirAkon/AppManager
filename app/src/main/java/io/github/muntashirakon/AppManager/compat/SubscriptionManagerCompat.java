@@ -17,6 +17,7 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 
 public class SubscriptionManagerCompat {
     @SuppressWarnings("deprecation")
@@ -27,16 +28,22 @@ public class SubscriptionManagerCompat {
             ISub sub = getSub();
             int uid = Users.getSelfOrRemoteUid();
             String callingPackage = SelfPermissions.getCallingPackage(uid);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                try {
+                    return sub.getActiveSubscriptionInfoList(callingPackage, null);
+                } catch (NoSuchMethodError e) {
+                    // Google Pixel
+                    return sub.getActiveSubscriptionInfoList(callingPackage, null, true);
+                }
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 return sub.getActiveSubscriptionInfoList(callingPackage, null);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 return sub.getActiveSubscriptionInfoList(callingPackage);
             }
             return sub.getActiveSubscriptionInfoList();
         } catch (RemoteException e) {
-            e.printStackTrace();
+            return ExUtils.rethrowFromSystemServer(e);
         }
-        return null;
     }
 
     @SuppressWarnings("deprecation")
@@ -55,7 +62,7 @@ public class SubscriptionManagerCompat {
             }
             return sub.getSubscriberIdForSubscriber(subId);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            return ExUtils.rethrowFromSystemServer(e);
         } catch (NullPointerException ignore) {
         }
         return null;

@@ -32,6 +32,12 @@ public interface ISub extends IInterface {
     @RequiresApi(Build.VERSION_CODES.R)
     List<SubscriptionInfo> getActiveSubscriptionInfoList(String callingPackage, @Nullable String callingFeatureId) throws RemoteException;
 
+    /**
+     * Added in Google Pixel stock ROM
+     */
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    List<SubscriptionInfo> getActiveSubscriptionInfoList(String callingPackage, @Nullable String callingFeatureId, boolean allUsers) throws RemoteException;
+
     abstract class Stub {
         public static ISub asInterface(android.os.IBinder obj) {
             return HiddenUtil.throwUOE(obj);
