@@ -300,7 +300,7 @@ public final class PackageManagerCompat {
                                                   @UserIdInt int userId)
             throws RemoteException {
         IPackageManager pm = getPackageManager();
-        if (BuildCompat.isAtLeastU()) {
+        if (Build.VERSION.SDK_INT >= 34 || BuildCompat.isAtLeastU()) {
             String callingPackage = ActivityManagerCompat.SHELL_PACKAGE_NAME;
             pm.setComponentEnabledSetting(componentName, newState, flags, userId, callingPackage);
         } else pm.setComponentEnabledSetting(componentName, newState, flags, userId);
