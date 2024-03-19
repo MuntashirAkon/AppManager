@@ -1,5 +1,0 @@
-- Updated documentations
-- Ensure the existence of shared cache directory before launching App Manager
-- Added more directories to look for systemless installations in Magisk
-- Avoided caching non-existing files
-- Fixed setting default log level in log viewer preferences

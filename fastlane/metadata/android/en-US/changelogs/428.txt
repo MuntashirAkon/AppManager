@@ -1,0 +1,4 @@
+- Check if the selected item is a directory before importing backups
+- Fixed disabling components in Android 14
+- Fixed retrieving and updating permission flags in Android 12 onwards
+- Prevented the Log Viewer page from crashing on device configuration changes

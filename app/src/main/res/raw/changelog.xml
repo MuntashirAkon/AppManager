@@ -2,6 +2,20 @@
 <changelog>
     <release
         type="stable release"
+        version="v3.1.5"
+        code="428"
+        date="19 March 2024">
+        <improve>Check if the selected item is a directory before importing backups</improve>
+        <fix>Fixed disabling components in Android 14</fix>
+        <fix>Fixed retrieving and updating permission flags in Android 12 onwards</fix>
+        <fix>Prevented the Log Viewer page from crashing on device configuration changes</fix>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.1.4...v3.1.5"]v3.1.4...v3.1.5[/a]
+        </note>
+    </release>
+    <release
+        type="stable release"
         version="v3.1.4"
         code="427"
         date="24 December 2023">
