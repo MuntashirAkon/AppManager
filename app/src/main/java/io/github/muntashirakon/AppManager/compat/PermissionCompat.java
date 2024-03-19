@@ -28,6 +28,7 @@ import java.util.List;
 
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 
 public final class PermissionCompat {
@@ -276,7 +277,14 @@ public final class PermissionCompat {
                                          @NonNull String packageName,
                                          @UserIdInt int userId) throws SecurityException {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                try {
+                    return getPermissionManager().getPermissionFlags(packageName, permissionName, userId);
+                } catch (NoSuchMethodError e) {
+                    return getPermissionManager().getPermissionFlags(packageName, permissionName,
+                            ContextUtils.getContext().getDeviceId(), userId);
+                }
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 return getPermissionManager().getPermissionFlags(packageName, permissionName, userId);
             } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.R) {
                 return getPermissionManager().getPermissionFlags(permissionName, packageName, userId);
@@ -310,7 +318,15 @@ public final class PermissionCompat {
                                              boolean checkAdjustPolicyFlagPermission,
                                              @UserIdInt int userId) throws RemoteException {
         IPackageManager pm = PackageManagerCompat.getPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            try {
+                getPermissionManager().updatePermissionFlags(packageName, permissionName, flagMask, flagValues,
+                        checkAdjustPolicyFlagPermission, userId);
+            } catch (NoSuchMethodError e) {
+                getPermissionManager().updatePermissionFlags(packageName, permissionName, flagMask, flagValues,
+                        checkAdjustPolicyFlagPermission, ContextUtils.getContext().getDeviceId(), userId);
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             getPermissionManager().updatePermissionFlags(packageName, permissionName, flagMask, flagValues,
                     checkAdjustPolicyFlagPermission, userId);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -334,9 +350,15 @@ public final class PermissionCompat {
                                        @UserIdInt int userId)
             throws RemoteException {
         IPackageManager pm = PackageManagerCompat.getPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            IPermissionManager permissionManager = getPermissionManager();
-            permissionManager.grantRuntimePermission(packageName, permissionName, userId);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            try {
+                getPermissionManager().grantRuntimePermission(packageName, permissionName, userId);
+            } catch (NoSuchMethodError e) {
+                getPermissionManager().grantRuntimePermission(packageName, permissionName,
+                        ContextUtils.getContext().getDeviceId(), userId);
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            getPermissionManager().grantRuntimePermission(packageName, permissionName, userId);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             pm.grantRuntimePermission(packageName, permissionName, userId);
         } else {
@@ -364,9 +386,15 @@ public final class PermissionCompat {
                                         @UserIdInt int userId,
                                         @Nullable String reason) throws RemoteException {
         IPackageManager pm = PackageManagerCompat.getPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            IPermissionManager permissionManager = getPermissionManager();
-            permissionManager.revokeRuntimePermission(packageName, permissionName, userId, reason);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            try {
+                getPermissionManager().revokeRuntimePermission(packageName, permissionName, userId, reason);
+            } catch (NoSuchMethodError e) {
+                getPermissionManager().revokeRuntimePermission(packageName, permissionName,
+                        ContextUtils.getContext().getDeviceId(), userId, reason);
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            getPermissionManager().revokeRuntimePermission(packageName, permissionName, userId, reason);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             pm.revokeRuntimePermission(packageName, permissionName, userId);
         } else {
