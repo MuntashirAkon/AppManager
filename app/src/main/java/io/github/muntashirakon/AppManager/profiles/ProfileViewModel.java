@@ -373,6 +373,7 @@ public class ProfileViewModel extends AndroidViewModel {
                             AppsFragment.AppsFragmentItem oldItem = oldItems.get(i);
                             if (oldItem.applicationInfo != null) {
                                 item.applicationInfo = oldItem.applicationInfo;
+                                item.label = oldItem.label;
                             }
                         }
                     }
