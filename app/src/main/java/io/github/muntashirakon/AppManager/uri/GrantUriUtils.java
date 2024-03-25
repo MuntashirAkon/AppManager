@@ -29,7 +29,11 @@ public final class GrantUriUtils {
         String file;
         if (isTree) {
             file = paths.size() == 4 ? paths.get(3) : null;
-        } else file = paths.get(1);
+        } else if (paths.size() > 2) {
+            file = paths.get(1);
+        } else {
+            throw new UnsupportedOperationException("Unsupported URI: " + uri);
+        }
         SpannableStringBuilder sb = new SpannableStringBuilder();
         if (basePath != null) {
             String realPath = getRealPath(authority, basePath);
