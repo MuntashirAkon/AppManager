@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.uri;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
@@ -22,17 +23,22 @@ import io.github.muntashirakon.AppManager.R;
 public final class GrantUriUtils {
     @NonNull
     public static CharSequence toLocalisedString(@NonNull Context context, @NonNull Uri uri) {
+        if (!ContentResolver.SCHEME_CONTENT.equals(uri.getScheme())) {
+            throw new UnsupportedOperationException("Invalid URI: " + uri);
+        }
         String authority = uri.getAuthority();
         List<String> paths = uri.getPathSegments();
         boolean isTree = paths.size() >= 2 && "tree".equals(paths.get(0));
+        boolean isDocument = paths.size() >= 2 && "document".equals(paths.get(0));
         String basePath = isTree ? paths.get(1) : null;
         String file;
         if (isTree) {
             file = paths.size() == 4 ? paths.get(3) : null;
-        } else if (paths.size() > 2) {
+        } else if (isDocument) {
             file = paths.get(1);
         } else {
-            throw new UnsupportedOperationException("Unsupported URI: " + uri);
+            // Other types of file
+            file = uri.getPath();
         }
         SpannableStringBuilder sb = new SpannableStringBuilder();
         if (basePath != null) {
@@ -77,6 +83,14 @@ public final class GrantUriUtils {
             case "com.termux.documents":
                 // Same as the dirty file
                 return dirtyFile;
+            case "me.zhanghai.android.files.file_provider":
+                Uri uri = Uri.parse(dirtyFile);
+                if (uri == null || !ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
+                    // Unsupported file
+                    return dirtyFile;
+                } else {
+                    return uri.getPath();
+                }
         }
         // Others aren't supported
         return null;
