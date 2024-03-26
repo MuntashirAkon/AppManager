@@ -59,10 +59,4 @@
         app:showAsAction="never"
         android:title="@string/toggle_kill_for_system_apps" />
 
-    <item
-        android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_refresh"
-        android:title="@string/refresh"
-        app:showAsAction="never" />
-
 </menu>
