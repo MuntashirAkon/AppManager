@@ -9,6 +9,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PathPermission;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.PatternMatcher;
 import android.os.UserHandleHidden;
@@ -34,7 +35,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.divider.MaterialDivider;
 import com.google.android.material.materialswitch.MaterialSwitch;
 
 import java.lang.annotation.Retention;
@@ -64,12 +64,12 @@ import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialAlertView;
 import io.github.muntashirakon.widget.RecyclerView;
@@ -312,21 +312,17 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         private int mUserId;
         private boolean mCanModifyComponentStates;
         private boolean mCanStartAnyActivity;
-        private final int mCardColor1;
         private final int mBlockedIndicatorColor;
         private final int mBlockedExternallyIndicatorColor;
         private final int mTrackerIndicatorColor;
         private final int mRunningIndicatorColor;
-        private final int mDefaultIndicatorColor;
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
-            mCardColor1 = ColorCodes.getListItemColor1(activity);
             mBlockedIndicatorColor = ColorCodes.getComponentBlockedIndicatorColor(activity);
             mBlockedExternallyIndicatorColor = ColorCodes.getComponentExternallyBlockedIndicatorColor(activity);
             mTrackerIndicatorColor = ColorCodes.getComponentTrackerIndicatorColor(activity);
             mRunningIndicatorColor = ColorCodes.getComponentRunningIndicatorColor(activity);
-            mDefaultIndicatorColor = ColorCodes.getListItemDefaultIndicatorColor(activity);
         }
 
         @UiThread
@@ -358,6 +354,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
          * the same holder for any kind of view, and view are not all sames.
          */
         class ViewHolder extends RecyclerView.ViewHolder {
+            MaterialCardView itemView;
             TextView labelView;
             TextView nameView;
             TextView textView1;
@@ -369,11 +366,11 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             Button shortcutBtn;
             MaterialButton launchBtn;
             MaterialSwitch toggleSwitch;
-            MaterialDivider divider;
             Chip chipType;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
+                this.itemView = (MaterialCardView) itemView;
                 imageView = itemView.findViewById(R.id.icon);
                 labelView = itemView.findViewById(R.id.label);
                 nameView = itemView.findViewById(R.id.name);
@@ -383,8 +380,6 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                 toggleSwitch = itemView.findViewById(R.id.toggle_button);
                 chipType = itemView.findViewById(R.id.type);
                 launchBtn = itemView.findViewById(R.id.launch);
-
-                divider = itemView.findViewById(R.id.divider);
 
                 if (mRequestedProperty == ACTIVITIES) {
                     textView1 = itemView.findViewById(R.id.taskAffinity);
@@ -402,7 +397,6 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                     textView2 = itemView.findViewById(R.id.launchMode);
                     textView3 = itemView.findViewById(R.id.orientation);
                     textView4 = itemView.findViewById(R.id.softInput);
-                    divider = itemView.findViewById(R.id.divider);
                     launchBtn.setVisibility(View.GONE);
                     shortcutBtn.setVisibility(View.GONE);
                 } else if (mRequestedProperty == PROVIDERS) {
@@ -500,13 +494,13 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             final boolean isDisabled = !mIsExternalApk && componentItem.isDisabled();
             // Background color: regular < tracker < disabled < blocked
             if (!mIsExternalApk && componentItem.isBlocked()) {
-                holder.divider.setDividerColor(mBlockedIndicatorColor);
+                holder.itemView.setStrokeColor(mBlockedIndicatorColor);
             } else if (isDisabled) {
-                holder.divider.setDividerColor(mBlockedExternallyIndicatorColor);
+                holder.itemView.setStrokeColor(mBlockedExternallyIndicatorColor);
             } else if (componentItem.isTracker()) {
-                holder.divider.setDividerColor(mTrackerIndicatorColor);
+                holder.itemView.setStrokeColor(mTrackerIndicatorColor);
             } else {
-                holder.divider.setDividerColor(mDefaultIndicatorColor);
+                holder.itemView.setStrokeColor(Color.TRANSPARENT);
             }
             if (componentItem.isTracker()) {
                 holder.chipType.setText(R.string.tracker);
@@ -605,7 +599,6 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             if (mCanModifyComponentStates) {
                 handleBlock(holder, componentItem, RuleType.ACTIVITY);
             } else holder.toggleSwitch.setVisibility(View.GONE);
-            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
         private void getServicesView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
@@ -617,15 +610,15 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             final boolean isDisabled = !mIsExternalApk && serviceItem.isDisabled();
             // Background color: regular < tracker < disabled < blocked < running
             if (serviceItem.isRunning()) {
-                holder.divider.setDividerColor(mRunningIndicatorColor);
+                holder.itemView.setStrokeColor(mRunningIndicatorColor);
             } else if (!mIsExternalApk && serviceItem.isBlocked()) {
-                holder.divider.setDividerColor(mBlockedIndicatorColor);
+                holder.itemView.setStrokeColor(mBlockedIndicatorColor);
             } else if (isDisabled) {
-                holder.divider.setDividerColor(mBlockedExternallyIndicatorColor);
+                holder.itemView.setStrokeColor(mBlockedExternallyIndicatorColor);
             } else if (serviceItem.isTracker()) {
-                holder.divider.setDividerColor(mTrackerIndicatorColor);
+                holder.itemView.setStrokeColor(mTrackerIndicatorColor);
             } else {
-                holder.divider.setDividerColor(mDefaultIndicatorColor);
+                holder.itemView.setStrokeColor(Color.TRANSPARENT);
             }
             if (serviceItem.isTracker()) {
                 holder.chipType.setText(R.string.tracker);
@@ -678,7 +671,6 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             if (mCanModifyComponentStates) {
                 handleBlock(holder, serviceItem, RuleType.SERVICE);
             } else holder.toggleSwitch.setVisibility(View.GONE);
-            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
         private void getReceiverView(@NonNull ViewHolder holder, int index) {
@@ -689,13 +681,13 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             final ActivityInfo activityInfo = (ActivityInfo) componentItem.mainItem;
             // Background color: regular < tracker < disabled < blocked
             if (!mIsExternalApk && componentItem.isBlocked()) {
-                holder.divider.setDividerColor(mBlockedIndicatorColor);
+                holder.itemView.setStrokeColor(mBlockedIndicatorColor);
             } else if (!mIsExternalApk && componentItem.isDisabled()) {
-                holder.divider.setDividerColor(mBlockedExternallyIndicatorColor);
+                holder.itemView.setStrokeColor(mBlockedExternallyIndicatorColor);
             } else if (componentItem.isTracker()) {
-                holder.divider.setDividerColor(mTrackerIndicatorColor);
+                holder.itemView.setStrokeColor(mTrackerIndicatorColor);
             } else {
-                holder.divider.setDividerColor(mDefaultIndicatorColor);
+                holder.itemView.setStrokeColor(Color.TRANSPARENT);
             }
             if (componentItem.isTracker()) {
                 holder.chipType.setText(R.string.tracker);
@@ -739,7 +731,6 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             if (mCanModifyComponentStates) {
                 handleBlock(holder, componentItem, RuleType.RECEIVER);
             } else holder.toggleSwitch.setVisibility(View.GONE);
-            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
         private void getProviderView(@NonNull ViewHolder holder, int index) {
@@ -751,13 +742,13 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             final String providerName = providerInfo.name;
             // Background color: regular < tracker < disabled < blocked
             if (!mIsExternalApk && componentItem.isBlocked()) {
-                holder.divider.setDividerColor(mBlockedIndicatorColor);
+                holder.itemView.setStrokeColor(mBlockedIndicatorColor);
             } else if (!mIsExternalApk && componentItem.isDisabled()) {
-                holder.divider.setDividerColor(mBlockedExternallyIndicatorColor);
+                holder.itemView.setStrokeColor(mBlockedExternallyIndicatorColor);
             } else if (componentItem.isTracker()) {
-                holder.divider.setDividerColor(mTrackerIndicatorColor);
+                holder.itemView.setStrokeColor(mTrackerIndicatorColor);
             } else {
-                holder.divider.setDividerColor(mDefaultIndicatorColor);
+                holder.itemView.setStrokeColor(Color.TRANSPARENT);
             }
             if (componentItem.isTracker()) {
                 holder.chipType.setText(R.string.tracker);
@@ -823,7 +814,6 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             if (mCanModifyComponentStates) {
                 handleBlock(holder, componentItem, RuleType.PROVIDER);
             } else holder.toggleSwitch.setVisibility(View.GONE);
-            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
     }
 }

@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.runningapps;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.graphics.Color;
 import android.os.Process;
 import android.text.Spannable;
 import android.text.TextUtils;
@@ -19,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.AttrRes;
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.PopupMenu;
@@ -27,7 +27,6 @@ import androidx.appcompat.widget.PopupMenu;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
-import com.google.android.material.divider.MaterialDivider;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,17 +61,11 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
     private List<ProcessItem> mProcessItems = Collections.emptyList();
     private ProcMemoryInfo mProcMemoryInfo;
 
-    private final int mCardColor;
-    @ColorInt
-    private final int mHighlightColor;
-
     RunningAppsAdapter(@NonNull RunningAppsActivity activity) {
         super();
         mActivity = activity;
         mModel = activity.model;
-        mCardColor = ColorCodes.getListItemColor1(activity);
         mQueryStringHighlightColor = ColorCodes.getQueryStringHighlightColor(activity);
-        mHighlightColor = ColorCodes.getListItemSelectionColor(activity);
     }
 
     void setDefaultList(@NonNull List<ProcessItem> processItems) {
@@ -87,11 +80,6 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
     public void setDeviceMemoryInfo(ProcMemoryInfo procMemoryInfo) {
         mProcMemoryInfo = procMemoryInfo;
         notifyItemChanged(0);
-    }
-
-    @Override
-    public int getHighlightColor() {
-        return mHighlightColor;
     }
 
     @Override
@@ -280,12 +268,15 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
             // Display popup menu
             popupMenu.show();
         });
-        // Set background color
-        holder.itemView.setCardBackgroundColor(mCardColor);
         // Set selections
         holder.icon.setOnClickListener(v -> toggleSelection(position));
         holder.itemView.setOnLongClickListener(v -> {
-            toggleSelection(position);
+            ProcessItem lastSelectedItem = mModel.getLastSelectedItem();
+            int lastSelectedItemPosition = lastSelectedItem == null ? -1 : mProcessItems.indexOf(lastSelectedItem);
+            if (lastSelectedItemPosition >= 0) {
+                // Select from last selection to this selection
+                selectRange(lastSelectedItemPosition, position);
+            } else toggleSelection(position);
             return true;
         });
         // Open process details
@@ -296,6 +287,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
                 mModel.requestDisplayProcessDetails(processItem);
             }
         });
+        holder.itemView.setStrokeColor(Color.TRANSPARENT);
     }
 
     @Override
@@ -424,7 +416,6 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         TextView memoryUsage;
         TextView userAndStateInfo;
         TextView selinuxContext;
-        MaterialDivider divider;
 
         public BodyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -437,7 +428,6 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
             memoryUsage = itemView.findViewById(R.id.memory_usage);
             userAndStateInfo = itemView.findViewById(R.id.user_state_info);
             selinuxContext = itemView.findViewById(R.id.selinux_context);
-            divider = itemView.findViewById(R.id.divider);
         }
     }
 }

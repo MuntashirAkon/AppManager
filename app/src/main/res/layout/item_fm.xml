@@ -6,7 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?android:attr/listPreferredItemHeightSmall"
+    android:clickable="true"
     android:focusable="true"
+    android:checkable="true"
     android:layout_marginHorizontal="?attr/listItemMarginHorizontal"
     android:layout_marginVertical="?attr/listItemMarginVertical">
 

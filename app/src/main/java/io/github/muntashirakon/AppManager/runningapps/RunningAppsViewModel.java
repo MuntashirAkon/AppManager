@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -394,7 +395,17 @@ public class RunningAppsViewModel extends AndroidViewModel {
         mProcessLiveData.postValue(filteredProcessList);
     }
 
-    private final Set<ProcessItem> mSelectedItems = new HashSet<>();
+    private final Set<ProcessItem> mSelectedItems = new LinkedHashSet<>();
+
+    public ProcessItem getLastSelectedItem() {
+        // Last selected package is the same as the last added package.
+        Iterator<ProcessItem> it = mSelectedItems.iterator();
+        ProcessItem lastItem = null;
+        while (it.hasNext()) {
+            lastItem = it.next();
+        }
+        return lastItem;
+    }
 
     public int getSelectionCount() {
         return mSelectedItems.size();

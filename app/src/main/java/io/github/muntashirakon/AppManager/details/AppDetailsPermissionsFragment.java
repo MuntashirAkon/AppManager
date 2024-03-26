@@ -8,6 +8,7 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpName
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PermissionInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.util.SparseArray;
@@ -380,16 +381,10 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
         private int mRequestedProperty;
         @Nullable
         private String mConstraint;
-        private final int mCardColor0;
-        private final int mCardColor1;
-        private final int mDefaultIndicatorColor;
         private boolean mCanModifyAppOpMode;
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
-            mCardColor0 = ColorCodes.getListItemColor0(activity);
-            mCardColor1 = ColorCodes.getListItemColor1(activity);
-            mDefaultIndicatorColor = ColorCodes.getListItemDefaultIndicatorColor(activity);
         }
 
         @UiThread
@@ -413,6 +408,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
          * the same holder for any kind of view, and view are not all sames.
          */
         class ViewHolder extends RecyclerView.ViewHolder {
+            MaterialCardView itemView;
             TextView textView1;
             TextView textView2;
             TextView textView3;
@@ -423,11 +419,11 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             TextView textView8;
             ImageView imageView;
             MaterialSwitch toggleSwitch;
-            MaterialDivider divider;
             Chip chipType;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
+                this.itemView = (MaterialCardView) itemView;
                 switch (mRequestedProperty) {
                     case PERMISSIONS:
                         imageView = itemView.findViewById(R.id.icon);
@@ -436,7 +432,6 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                         textView3 = itemView.findViewById(R.id.taskAffinity);
                         textView4 = itemView.findViewById(R.id.orientation);
                         textView5 = itemView.findViewById(R.id.launchMode);
-                        divider = itemView.findViewById(R.id.divider);
                         chipType = itemView.findViewById(R.id.type);
                         itemView.findViewById(R.id.softInput).setVisibility(View.GONE);
                         itemView.findViewById(R.id.launch).setVisibility(View.GONE);
@@ -453,7 +448,6 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                         textView7 = itemView.findViewById(R.id.op_mode_running_duration);
                         textView8 = itemView.findViewById(R.id.op_accept_reject_time);
                         toggleSwitch = itemView.findViewById(R.id.perm_toggle_btn);
-                        divider = itemView.findViewById(R.id.divider);
                         break;
                     case USES_PERMISSIONS:
                         textView1 = itemView.findViewById(R.id.perm_name);
@@ -462,7 +456,6 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                         textView4 = itemView.findViewById(R.id.perm_package_name);
                         textView5 = itemView.findViewById(R.id.perm_group);
                         toggleSwitch = itemView.findViewById(R.id.perm_toggle_btn);
-                        divider = itemView.findViewById(R.id.divider);
                         break;
                     default:
                         break;
@@ -614,9 +607,9 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             }
             // Set background
             if (item.isDangerous) {
-                holder.divider.setDividerColor(ColorCodes.getPermissionDangerousIndicatorColor(context));
+                holder.itemView.setStrokeColor(ColorCodes.getPermissionDangerousIndicatorColor(context));
             } else {
-                holder.divider.setDividerColor(mDefaultIndicatorColor);
+                holder.itemView.setStrokeColor(Color.TRANSPARENT);
             }
             // Op Switch
             holder.toggleSwitch.setVisibility(mCanModifyAppOpMode ? View.VISIBLE : View.GONE);
@@ -655,7 +648,6 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                         .show();
                 return true;
             });
-            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
         private void getUsesPermissionsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
@@ -683,9 +675,9 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             holder.textView3.setText(String.format(Locale.ROOT, "⚑ %s", protectionLevel));
             // Set background color
             if (permissionItem.isDangerous) {
-                holder.divider.setDividerColor(ColorCodes.getPermissionDangerousIndicatorColor(context));
+                holder.itemView.setStrokeColor(ColorCodes.getPermissionDangerousIndicatorColor(context));
             } else {
-                holder.divider.setDividerColor(mDefaultIndicatorColor);
+                holder.itemView.setStrokeColor(Color.TRANSPARENT);
             }
             // Set package name
             if (permissionInfo.packageName != null) {
@@ -737,7 +729,6 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                 return true;
             });
             holder.itemView.setLongClickable(flags != 0);
-            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
         private void getPermissionsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
@@ -778,11 +769,10 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             holder.textView5.setText(String.format(Locale.ROOT, "⚑ %s", protectionLevel));
             // Set border color
             if (protectionLevel.contains("dangerous")) {
-                holder.divider.setDividerColor(ColorCodes.getPermissionDangerousIndicatorColor(context));
+                holder.itemView.setStrokeColor(ColorCodes.getPermissionDangerousIndicatorColor(context));
             } else {
-                holder.divider.setDividerColor(mDefaultIndicatorColor);
+                holder.itemView.setStrokeColor(Color.TRANSPARENT);
             }
-            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
         @NonNull
