@@ -116,10 +116,9 @@ public class LiveLogViewerFragment extends AbsLogViewerFragment implements LogVi
     public void onNewLogsAvailable(@NonNull List<LogLine> logLines) {
         mActivity.hideProgressBar();
         for (LogLine logLine : logLines) {
-            mLogListAdapter.addWithFilter(logLine, mQueryString, false);
+            mLogListAdapter.addWithFilter(logLine, mQueryString, true);
             mActivity.addToAutocompleteSuggestions(logLine);
         }
-        mLogListAdapter.notifyDataSetChanged();
 
         // How many logs to keep in memory, to avoid OutOfMemoryError
         int maxNumLogLines = Prefs.LogViewer.getDisplayLimit();

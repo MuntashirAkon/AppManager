@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.github.muntashirakon.ui.R;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SearchView;
 
@@ -75,7 +76,6 @@ public class SearchableSingleChoiceDialogBuilder<T> {
     public SearchableSingleChoiceDialogBuilder(@NonNull Context context, @NonNull List<T> items, @NonNull List<CharSequence> itemNames) {
         View view = View.inflate(context, R.layout.dialog_searchable_single_choice, null);
         mRecyclerView = view.findViewById(android.R.id.list);
-        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         mViewContainer = view.findViewById(R.id.container);
         mSearchView = view.findViewById(R.id.action_search);
@@ -144,7 +144,7 @@ public class SearchableSingleChoiceDialogBuilder<T> {
     }
 
     public SearchableSingleChoiceDialogBuilder<T> reloadListUi() {
-        mAdapter.notifyDataSetChanged();
+        mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount());
         return this;
     }
 
@@ -263,6 +263,7 @@ public class SearchableSingleChoiceDialogBuilder<T> {
             constraint = TextUtils.isEmpty(constraint) ? null : constraint.toLowerCase(Locale.ROOT);
             Locale locale = Locale.getDefault();
             synchronized (mFilteredItems) {
+                int previousCount = mFilteredItems.size();
                 mFilteredItems.clear();
                 for (int i = 0; i < mItems.size(); ++i) {
                     if (constraint == null
@@ -271,7 +272,7 @@ public class SearchableSingleChoiceDialogBuilder<T> {
                         mFilteredItems.add(i);
                     }
                 }
-                notifyDataSetChanged();
+                AdapterUtils.notifyDataSetChanged(this, previousCount, mFilteredItems.size());
             }
         }
 

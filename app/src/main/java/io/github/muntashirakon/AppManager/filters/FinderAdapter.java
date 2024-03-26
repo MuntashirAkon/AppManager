@@ -21,6 +21,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
+import io.github.muntashirakon.util.AdapterUtils;
 
 public class FinderAdapter extends RecyclerView.Adapter<FinderAdapter.ViewHolder> {
     private final List<FilterItem.FilteredItemInfo> mAdapterList = new ArrayList<>();
@@ -28,9 +29,7 @@ public class FinderAdapter extends RecyclerView.Adapter<FinderAdapter.ViewHolder
     @UiThread
     public void setDefaultList(List<FilterItem.FilteredItemInfo> list) {
         synchronized (mAdapterList) {
-            mAdapterList.clear();
-            mAdapterList.addAll(list);
-            notifyDataSetChanged();
+            AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
         }
     }
 

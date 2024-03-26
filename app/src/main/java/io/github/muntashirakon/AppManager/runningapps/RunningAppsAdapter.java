@@ -47,6 +47,7 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.proc.ProcMemoryInfo;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectionView.ViewHolder> {
@@ -76,9 +77,10 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
 
     void setDefaultList(@NonNull List<ProcessItem> processItems) {
         synchronized (mLock) {
+            int previousCount = mProcessItems.size();
             mProcessItems = processItems;
+            AdapterUtils.notifyDataSetChanged(this, previousCount, mProcessItems.size());
         }
-        notifyDataSetChanged();
         notifySelectionChange();
     }
 
@@ -119,7 +121,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         }
     }
 
-    public void onBindViewHolder(@NonNull HeaderViewHolder holder) {
+    private void onBindViewHolder(@NonNull HeaderViewHolder holder) {
         if (mProcMemoryInfo == null) {
             return;
         }
@@ -177,7 +179,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         holder.mSwapInfoView.setText(swapInfo);
     }
 
-    public void onBindViewHolder(@NonNull BodyViewHolder holder, int position) {
+    private void onBindViewHolder(@NonNull BodyViewHolder holder, int position) {
         ProcessItem processItem;
         synchronized (mLock) {
             processItem = mProcessItems.get(position - 1);

@@ -44,6 +44,7 @@ import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -313,13 +314,14 @@ public class OpenWithDialogFragment extends DialogFragment {
 
         private void filterItems() {
             synchronized (mFilteredItems) {
+                int lastCount = mFilteredItems.size();
                 mFilteredItems.clear();
                 for (int i = 0; i < mMatchingActivities.size(); ++i) {
                     if (mConstraint == null || mMatchingActivities.get(i).matches(mConstraint)) {
                         mFilteredItems.add(i);
                     }
                 }
-                notifyDataSetChanged();
+                AdapterUtils.notifyDataSetChanged(this, lastCount, mFilteredItems.size());
             }
         }
 

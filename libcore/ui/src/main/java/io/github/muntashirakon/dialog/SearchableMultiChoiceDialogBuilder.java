@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.github.muntashirakon.ui.R;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.CheckBox;
 import io.github.muntashirakon.widget.SearchView;
 
@@ -74,7 +75,6 @@ public class SearchableMultiChoiceDialogBuilder<T> {
     public SearchableMultiChoiceDialogBuilder(@NonNull Context context, @NonNull List<T> items, @NonNull List<CharSequence> itemNames) {
         mView = View.inflate(context, R.layout.dialog_searchable_multi_choice, null);
         RecyclerView recyclerView = mView.findViewById(android.R.id.list);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         mSearchView = mView.findViewById(R.id.action_search);
         mSelectAll = mView.findViewById(android.R.id.checkbox);
@@ -149,7 +149,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
     }
 
     public SearchableMultiChoiceDialogBuilder<T> reloadListUi() {
-        mAdapter.notifyDataSetChanged();
+        mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount());
         return this;
     }
 
@@ -279,6 +279,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         void setFilteredItems(CharSequence constraint) {
             Locale locale = Locale.getDefault();
             synchronized (mFilteredItems) {
+                int previousCount = mFilteredItems.size();
                 mFilteredItems.clear();
                 for (int i = 0; i < mItems.size(); ++i) {
                     if (mItemNames.get(i).toString().toLowerCase(locale).contains(constraint)
@@ -287,7 +288,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
                     }
                 }
                 checkSelections();
-                notifyDataSetChanged();
+                AdapterUtils.notifyDataSetChanged(this, previousCount, mFilteredItems.size());
             }
         }
 
@@ -361,7 +362,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
                     for (int index : newSelections) {
                         triggerMultiChoiceClickListener(index, true);
                     }
-                    notifyDataSetChanged();
+                    notifyItemRangeChanged(0, getItemCount());
                 }
             }
         }
@@ -381,7 +382,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
                     for (int index : oldSelections) {
                         triggerMultiChoiceClickListener(index, false);
                     }
-                    notifyDataSetChanged();
+                    notifyItemRangeChanged(0, getItemCount());
                 }
             }
         }

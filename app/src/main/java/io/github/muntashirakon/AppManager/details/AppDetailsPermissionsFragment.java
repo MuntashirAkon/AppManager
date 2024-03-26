@@ -50,6 +50,7 @@ import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.self.pref.TipsPrefs;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
@@ -397,24 +398,11 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                 mRequestedProperty = mNeededProperty;
                 mConstraint = viewModel == null ? null : viewModel.getSearchQuery();
                 mCanModifyAppOpMode = SelfPermissions.canModifyAppOpMode();
-                int previousSize = mAdapterList.size();
-                synchronized (mAdapterList) {
-                    mAdapterList.clear();
-                    mAdapterList.addAll(list);
-                }
-                int currentSize = mAdapterList.size();
                 ThreadUtils.postOnMainThread(() -> {
                     if (isDetached()) return;
                     ProgressIndicatorCompat.setVisibility(progressIndicator, false);
                     synchronized (mAdapterList) {
-                        if (previousSize != 0) {
-                            notifyItemRangeChanged(0, previousSize);
-                        }
-                        if (previousSize < currentSize) {
-                            notifyItemRangeInserted(previousSize, currentSize - previousSize);
-                        } else if (previousSize > currentSize) {
-                            notifyItemRangeRemoved(currentSize, previousSize - currentSize);
-                        }
+                        AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
                     }
                 });
             });

@@ -570,7 +570,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
 
         @AnyThread
         @Nullable
-        public OnLayoutChangeListener getLayoutChangeListener() {
+        private OnLayoutChangeListener getLayoutChangeListener() {
             return mLayoutChangeListener;
         }
 

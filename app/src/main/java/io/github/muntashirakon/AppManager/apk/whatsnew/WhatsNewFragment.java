@@ -46,8 +46,7 @@ public class WhatsNewFragment extends Fragment {
         WhatsNewDialogViewModel viewModel = new ViewModelProvider(this).get(WhatsNewDialogViewModel.class);
         PackageInfo newPkgInfo = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_NEW_PKG_INFO, PackageInfo.class));
         PackageInfo oldPkgInfo = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_OLD_PKG_INFO, PackageInfo.class));
-        RecyclerView recyclerView = (RecyclerView) view;
-        recyclerView.setHasFixedSize(true);
+        RecyclerView recyclerView = view.findViewById(android.R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         WhatsNewRecyclerAdapter adapter = new WhatsNewRecyclerAdapter(requireContext(), newPkgInfo.packageName);
         recyclerView.setAdapter(adapter);

@@ -64,6 +64,7 @@ import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -342,26 +343,11 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                     mConstraint = null;
                     mUserId = UserHandleHidden.myUserId();
                 }
-                int previousSize;
-                int currentSize;
-                synchronized (mAdapterList) {
-                    previousSize = mAdapterList.size();
-                    mAdapterList.clear();
-                    mAdapterList.addAll(list);
-                    currentSize = mAdapterList.size();
-                }
                 ThreadUtils.postOnMainThread(() -> {
                     if (isDetached()) return;
                     ProgressIndicatorCompat.setVisibility(progressIndicator, false);
                     synchronized (mAdapterList) {
-                        if (previousSize != 0) {
-                            notifyItemRangeChanged(0, previousSize);
-                        }
-                        if (previousSize < currentSize) {
-                            notifyItemRangeInserted(previousSize, currentSize - previousSize);
-                        } else if (previousSize > currentSize) {
-                            notifyItemRangeRemoved(currentSize, previousSize - currentSize);
-                        }
+                        AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
                     }
                 });
             });

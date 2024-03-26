@@ -42,6 +42,7 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
@@ -60,10 +61,8 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
     }
 
     public void setFmList(List<FmItem> list) {
-        mAdapterList.clear();
-        mAdapterList.addAll(list);
+        AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
         notifySelectionChange();
-        notifyDataSetChanged();
     }
 
     @Override

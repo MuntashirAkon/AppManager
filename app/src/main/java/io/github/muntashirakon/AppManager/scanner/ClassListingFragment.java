@@ -38,6 +38,7 @@ import io.github.muntashirakon.AppManager.editor.CodeEditorActivity;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 
@@ -168,18 +169,15 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
 
         @UiThread
         void setDefaultList(@NonNull List<String> list) {
-            synchronized (mAdapterList) {
-                mAdapterList.clear();
-                mAdapterList.addAll(list);
-            }
             mDefaultList = list;
             filter();
-            notifyDataSetChanged();
         }
 
         void filter() {
             if (!TextUtils.isEmpty(mConstraint)) {
                 filter(mConstraint, mFilterType);
+            } else {
+                AdapterUtils.notifyDataSetChanged(this, mAdapterList, mDefaultList);
             }
         }
 
@@ -246,7 +244,7 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
                         String constraint = mFilterType == SEARCH_TYPE_REGEX ? charSequence.toString()
                                 : charSequence.toString().toLowerCase(Locale.ROOT);
                         FilterResults filterResults = new FilterResults();
-                        if (constraint.length() == 0) {
+                        if (constraint.isEmpty()) {
                             filterResults.count = 0;
                             filterResults.values = null;
                             return filterResults;
@@ -269,12 +267,11 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
                         synchronized (mAdapterList) {
                             mAdapterList.clear();
                             if (filterResults.values == null) {
-                                mAdapterList.addAll(mDefaultList);
+                                AdapterUtils.notifyDataSetChanged(ClassListingAdapter.this, mAdapterList, mDefaultList);
                             } else {
                                 //noinspection unchecked
-                                mAdapterList.addAll((List<String>) filterResults.values);
+                                AdapterUtils.notifyDataSetChanged(ClassListingAdapter.this, mAdapterList, (List<String>) filterResults.values);
                             }
-                            notifyDataSetChanged();
                         }
                     }
                 };
