@@ -397,6 +397,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
 
     private final Set<ProcessItem> mSelectedItems = new LinkedHashSet<>();
 
+    @Nullable
     public ProcessItem getLastSelectedItem() {
         // Last selected package is the same as the last added package.
         Iterator<ProcessItem> it = mSelectedItems.iterator();

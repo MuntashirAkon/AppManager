@@ -3,6 +3,7 @@
 package io.github.muntashirakon.util;
 
 import android.os.Looper;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,6 +45,14 @@ public final class AdapterUtils {
         } else if (previousCount > 0) {
             // No values are added or removed
             adapter.notifyItemRangeChanged(0, previousCount);
+        }
+    }
+
+    public static void setVisible(@NonNull View v, boolean visible) {
+        if (visible && v.getVisibility() != View.VISIBLE) {
+            v.setVisibility(View.VISIBLE);
+        } else if (!visible && v.getVisibility() != View.GONE) {
+            v.setVisibility(View.GONE);
         }
     }
 }
