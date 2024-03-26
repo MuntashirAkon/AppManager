@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -33,7 +34,6 @@ import androidx.core.content.pm.PackageInfoCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.divider.MaterialDivider;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -48,13 +48,12 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsFeatureItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsLibraryItem;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.LocalizedString;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.RecyclerView;
@@ -163,15 +162,9 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
         private final List<AppDetailsItem<?>> mAdapterList;
         @OtherProperty
         private int mRequestedProperty;
-        private final int mCardColor0;
-        private final int mCardColor1;
-        private final int mDefaultIndicatorColor;
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
-            mCardColor0 = ColorCodes.getListItemColor0(activity);
-            mCardColor1 = ColorCodes.getListItemColor1(activity);
-            mDefaultIndicatorColor = ColorCodes.getListItemDefaultIndicatorColor(activity);
         }
 
         @UiThread
@@ -193,17 +186,18 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
          * the same holder for any kind of view, and view are not all sames.
          */
         class ViewHolder extends RecyclerView.ViewHolder {
+            MaterialCardView itemView;
             TextView textView1;
             TextView textView2;
             TextView textView3;
             TextView textView4;
             TextView textView5;
             MaterialButton launchBtn;
-            MaterialDivider divider;
             Chip chipType;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
+                this.itemView = (MaterialCardView) itemView;
                 switch (mRequestedProperty) {
                     case FEATURES:
                         textView1 = itemView.findViewById(R.id.name);
@@ -220,7 +214,6 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                         textView1 = itemView.findViewById(R.id.item_title);
                         textView2 = itemView.findViewById(R.id.item_subtitle);
                         launchBtn = itemView.findViewById(R.id.item_open);
-                        divider = itemView.findViewById(R.id.divider);
                         chipType = itemView.findViewById(R.id.lib_type);
                         textView1.setTextIsSelectable(true);
                         textView2.setTextIsSelectable(true);
@@ -341,12 +334,11 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                     break;
                 }
             }
-            holder.divider.setDividerColor(mDefaultIndicatorColor);
-            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
+            holder.itemView.setStrokeColor(Color.TRANSPARENT);
         }
 
         private void getFeaturesView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
-            MaterialCardView view = (MaterialCardView) holder.itemView;
+            MaterialCardView view = holder.itemView;
             final AppDetailsFeatureItem item;
             synchronized (mAdapterList) {
                 item = (AppDetailsFeatureItem) mAdapterList.get(index);
@@ -354,11 +346,11 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
             FeatureInfo featureInfo = item.mainItem;
             // Set background
             if (item.required && !item.available) {
-                view.setCardBackgroundColor(ContextCompat.getColor(context, io.github.muntashirakon.ui.R.color.red));
+                view.setStrokeColor(ContextCompat.getColor(context, io.github.muntashirakon.ui.R.color.red));
             } else if (!item.available) {
-                view.setCardBackgroundColor(ContextCompat.getColor(context, io.github.muntashirakon.ui.R.color.disabled_user));
+                view.setStrokeColor(ContextCompat.getColor(context, io.github.muntashirakon.ui.R.color.disabled_user));
             } else {
-                view.setCardBackgroundColor(index % 2 == 0 ? mCardColor1 : mCardColor0);
+                view.setStrokeColor(Color.TRANSPARENT);
             }
             // Set feature name
             if (featureInfo.name == null) {
@@ -381,12 +373,12 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
         }
 
         private void getConfigurationView(@NonNull ViewHolder holder, int index) {
-            MaterialCardView view = (MaterialCardView) holder.itemView;
+            MaterialCardView view = holder.itemView;
             final ConfigurationInfo configurationInfo;
             synchronized (mAdapterList) {
                 configurationInfo = (ConfigurationInfo) mAdapterList.get(index).mainItem;
             }
-            view.setCardBackgroundColor(index % 2 == 0 ? mCardColor1 : mCardColor0);
+            view.setStrokeColor(Color.TRANSPARENT);
             // GL ES version
             holder.textView1.setText(String.format(Locale.ROOT, "%s %s",
                     getString(R.string.gles_version), Utils.getGlEsVersion(configurationInfo.reqGlEsVersion)));
@@ -422,7 +414,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
             }
             textView.setText(builder);
             textView.setTextIsSelectable(true);
-            ((MaterialCardView) holder.itemView).setCardBackgroundColor(index % 2 == 0 ? mCardColor1 : mCardColor0);
+            holder.itemView.setStrokeColor(Color.TRANSPARENT);
         }
     }
 }

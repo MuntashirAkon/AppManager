@@ -2,11 +2,13 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Widget.AppTheme.CardView.ListItem"
+    style="@style/Widget.AppTheme.CardView.ListItem.Outlined"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardElevation="0dp"
+    android:clickable="true"
     android:focusable="true"
+    android:checkable="true"
     android:layout_marginHorizontal="?attr/listItemMarginHorizontal"
     android:layout_marginVertical="?attr/listItemMarginVertical">
 
@@ -102,11 +104,5 @@
             app:iconSize="20dp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/divider"
-        android:layout_width="?attr/listItemIndicatorWidth"
-        android:layout_height="match_parent"
-        android:layout_gravity="start" />
 
 </com.google.android.material.card.MaterialCardView>

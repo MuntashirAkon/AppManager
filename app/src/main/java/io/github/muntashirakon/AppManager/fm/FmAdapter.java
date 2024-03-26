@@ -51,23 +51,15 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
     private final List<FmItem> mAdapterList = Collections.synchronizedList(new ArrayList<>());
     private final FmViewModel mViewModel;
     private final FmActivity mFmActivity;
-    @ColorInt
-    private final int mHighlightColor;
 
     public FmAdapter(FmViewModel viewModel, FmActivity activity) {
         mViewModel = viewModel;
         mFmActivity = activity;
-        mHighlightColor = ColorCodes.getListItemSelectionColor(activity);
     }
 
     public void setFmList(List<FmItem> list) {
         AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
         notifySelectionChange();
-    }
-
-    @Override
-    public int getHighlightColor() {
-        return mHighlightColor;
     }
 
     @NonNull

@@ -35,7 +35,6 @@ import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
@@ -114,8 +113,6 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
 
     private int mLogLevelLimit = Prefs.LogViewer.getLogLevel();
     private final Set<LogLine> mSelectedLogLines = new LinkedHashSet<>();
-    @ColorInt
-    private int mHighlightColor;
 
     public LogViewerRecyclerAdapter() {
         mObjects = new ArrayList<>();
@@ -282,11 +279,6 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
     }
 
     @Override
-    public int getHighlightColor() {
-        return mHighlightColor;
-    }
-
-    @Override
     protected void select(int position) {
         synchronized (mSelectedLogLines) {
             mSelectedLogLines.add(getItem(position));
@@ -330,7 +322,6 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        mHighlightColor = ColorCodes.getListItemSelectionColor(parent.getContext());
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_logcat, parent, false);
         return new ViewHolder(v);
     }

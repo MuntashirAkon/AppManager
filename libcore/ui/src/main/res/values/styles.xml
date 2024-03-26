@@ -240,6 +240,12 @@
         <item name="cardBackgroundColor">@android:color/transparent</item>
     </style>
 
+    <style name="Widget.AppTheme.CardView.ListItem.Outlined" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardCornerRadius">?attr/listItemCornerRadius</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cardBackgroundColor">@macro/m3_comp_elevated_card_container_color</item>
+    </style>
+
     <style name="Widget.AppTheme.CardView.ListItem.Padded" parent="Widget.AppTheme.CardView.ListItem">
         <!-- Fix margin issue -->
         <item name="android:layout_marginTop">@dimen/padding_very_small</item>
