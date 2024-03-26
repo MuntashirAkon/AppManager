@@ -30,6 +30,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.adapters.SelectedArrayAdapter;
@@ -92,10 +93,8 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     void setDefaultList(List<PackageUsageInfo> list) {
         synchronized (mAdapterList) {
-            mAdapterList.clear();
-            mAdapterList.addAll(list);
+            AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
         }
-        notifyDataSetChanged();
     }
 
     @Override

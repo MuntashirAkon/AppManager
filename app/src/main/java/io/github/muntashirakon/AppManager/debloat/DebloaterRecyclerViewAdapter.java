@@ -28,6 +28,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<DebloaterRecyclerViewAdapter.ViewHolder> {
@@ -64,8 +65,9 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
 
     public void setAdapterList(List<DebloatObject> adapterList) {
         synchronized (mLock) {
+            int previousCount = mAdapterList.size();
             mAdapterList = adapterList;
-            notifyDataSetChanged();
+            AdapterUtils.notifyDataSetChanged(this, previousCount, mAdapterList.size());
         }
     }
 

@@ -120,7 +120,7 @@ public abstract class AbsLogViewerFragment extends Fragment implements LogViewer
         mViewModel.getExpandLogsLiveData().observe(getViewLifecycleOwner(), expanded -> {
             int oldFirstVisibleItem = ((LinearLayoutManager) Objects.requireNonNull(mRecyclerView.getLayoutManager())).findFirstVisibleItemPosition();
             mLogListAdapter.setCollapseMode(!expanded);
-            mLogListAdapter.notifyDataSetChanged();
+            mLogListAdapter.notifyItemRangeChanged(0, mLogListAdapter.getItemCount());
             // Scroll to bottom or the first visible item
             if (mAutoscrollToBottom) {
                 mRecyclerView.scrollToPosition(mLogListAdapter.getItemCount() - 1);

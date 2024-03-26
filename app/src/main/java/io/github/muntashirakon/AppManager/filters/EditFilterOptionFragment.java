@@ -57,6 +57,7 @@ import java.util.regex.PatternSyntaxException;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.filters.options.FilterOption;
 import io.github.muntashirakon.AppManager.filters.options.FilterOptions;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.adapters.SelectedArrayAdapter;
@@ -395,9 +396,7 @@ public class EditFilterOptionFragment extends DialogFragment {
 
         public void setFlagMap(@NonNull Map<Integer, CharSequence> flagMap) {
             mFlagMap = flagMap;
-            mFlags.clear();
-            mFlags.addAll(flagMap.keySet());
-            notifyItemRangeChanged(0, mFlags.size());
+            AdapterUtils.notifyDataSetChanged(this, mFlags, flagMap.keySet());
         }
 
         public void setFlag(int flag) {

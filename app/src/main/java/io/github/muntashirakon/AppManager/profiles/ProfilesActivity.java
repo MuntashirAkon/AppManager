@@ -54,6 +54,7 @@ import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 
@@ -194,9 +195,10 @@ public class ProfilesActivity extends BaseActivity {
 
         void setDefaultList(@NonNull HashMap<AppsProfile, CharSequence> list) {
             mDefaultList = list.keySet().toArray(new AppsProfile[0]);
+            int previousCount = getItemCount();
             mAdapterList = mDefaultList;
             mAdapterMap = list;
-            notifyDataSetChanged();
+            AdapterUtils.notifyDataSetChanged(this, previousCount, mAdapterList.length);
         }
 
         @Override
@@ -329,12 +331,13 @@ public class ProfilesActivity extends BaseActivity {
 
                     @Override
                     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                        int previousCount = mAdapterList != null ? mAdapterList.length : 0;
                         if (filterResults.values == null) {
                             mAdapterList = mDefaultList;
                         } else {
                             mAdapterList = (AppsProfile[]) filterResults.values;
                         }
-                        notifyDataSetChanged();
+                        AdapterUtils.notifyDataSetChanged(ProfilesAdapter.this, previousCount, mAdapterList.length);
                     }
                 };
             return mFilter;

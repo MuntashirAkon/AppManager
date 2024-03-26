@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.RecyclerView;
@@ -41,9 +42,7 @@ class WhatsNewRecyclerAdapter extends RecyclerView.Adapter<WhatsNewRecyclerAdapt
         }
 
         void setAdapterList(List<ApkWhatsNewFinder.Change> list) {
-            mAdapterList.clear();
-            mAdapterList.addAll(list);
-            notifyDataSetChanged();
+            AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
         }
 
         @NonNull

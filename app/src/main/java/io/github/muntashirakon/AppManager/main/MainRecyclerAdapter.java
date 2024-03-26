@@ -62,6 +62,7 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecyclerAdapter.ViewHolder>
@@ -104,10 +105,8 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     void setDefaultList(List<ApplicationItem> list) {
         if (mActivity.viewModel == null) return;
         synchronized (mAdapterList) {
-            mAdapterList.clear();
-            mAdapterList.addAll(list);
             mSearchQuery = mActivity.viewModel.getSearchQuery();
-            notifyDataSetChanged();
+            AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
             notifySelectionChange();
         }
     }
@@ -417,7 +416,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         synchronized (mAdapterList) {
             for (int i = 0; i < getItemCount(); i++) {
                 String item = mAdapterList.get(i).label;
-                if (item.length() > 0) {
+                if (!item.isEmpty()) {
                     if (item.charAt(0) == sSections.charAt(section))
                         return i;
                 }
@@ -535,7 +534,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                 .show();
     }
 
-    static class ViewHolder extends MultiSelectionView.ViewHolder {
+    public static class ViewHolder extends MultiSelectionView.ViewHolder {
         MaterialCardView itemView;
         AppCompatImageView icon;
         AppCompatImageView debugIcon;

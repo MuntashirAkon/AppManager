@@ -48,6 +48,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsFeatureItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsLibraryItem;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -177,24 +178,11 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
         void setDefaultList(@NonNull List<AppDetailsItem<?>> list) {
             ThreadUtils.postOnBackgroundThread(() -> {
                 mRequestedProperty = mNeededProperty;
-                int previousSize = mAdapterList.size();
-                synchronized (mAdapterList) {
-                    mAdapterList.clear();
-                    mAdapterList.addAll(list);
-                }
-                int currentSize = mAdapterList.size();
                 ThreadUtils.postOnMainThread(() -> {
                     if (isDetached()) return;
                     ProgressIndicatorCompat.setVisibility(progressIndicator, false);
                     synchronized (mAdapterList) {
-                        if (previousSize != 0) {
-                            notifyItemRangeChanged(0, previousSize);
-                        }
-                        if (previousSize < currentSize) {
-                            notifyItemRangeInserted(previousSize, currentSize - previousSize);
-                        } else if (previousSize > currentSize) {
-                            notifyItemRangeRemoved(currentSize, previousSize - currentSize);
-                        }
+                        AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
                     }
                 });
             });

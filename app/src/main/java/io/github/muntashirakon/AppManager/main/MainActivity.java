@@ -195,7 +195,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
 
         mAdapter = new MainRecyclerAdapter(MainActivity.this);
         mAdapter.setHasStableIds(true);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
         mMultiSelectionView = findViewById(R.id.selection_view);
@@ -521,8 +520,8 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                             return;
                         }
                         runOnUiThread(() -> {
-                            RecyclerView recyclerView = (RecyclerView) View.inflate(this, R.layout.dialog_whats_new, null);
-                            recyclerView.setHasFixedSize(true);
+                            View view = View.inflate(this, R.layout.dialog_whats_new, null);
+                            RecyclerView recyclerView = view.findViewById(android.R.id.list);
                             recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
                             ChangelogRecyclerAdapter adapter = new ChangelogRecyclerAdapter();
                             recyclerView.setAdapter(adapter);

@@ -127,6 +127,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         RecyclerView recyclerView = findViewById(R.id.scrollView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new RunningAppsAdapter(this);
+        mAdapter.setHasStableIds(true);
         recyclerView.setAdapter(mAdapter);
         // Recycler view is focused by default
         recyclerView.requestFocus();

@@ -69,6 +69,7 @@ import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -526,7 +527,7 @@ public class ActivityInterceptor extends BaseActivity {
     private void checkAndShowMatchingActivities() {
         if (mMutableIntent == null) return;
         List<ResolveInfo> resolveInfo = getMatchingActivities();
-        if (resolveInfo.size() < 1) {
+        if (resolveInfo.isEmpty()) {
             mResendIntentButton.setEnabled(false);
             mActivitiesHeader.setVisibility(View.GONE);
         } else {
@@ -1087,9 +1088,7 @@ public class ActivityInterceptor extends BaseActivity {
         }
 
         public void setDefaultList(@Nullable Collection<String> categories) {
-            mCategories.clear();
-            if (categories != null) mCategories.addAll(categories);
-            notifyDataSetChanged();
+            AdapterUtils.notifyDataSetChanged(this, mCategories, categories);
         }
 
         @NonNull
@@ -1139,9 +1138,7 @@ public class ActivityInterceptor extends BaseActivity {
         }
 
         public void setDefaultList(@Nullable Collection<String> flags) {
-            mFlags.clear();
-            if (flags != null) mFlags.addAll(flags);
-            notifyDataSetChanged();
+            AdapterUtils.notifyDataSetChanged(this, mFlags, flags);
         }
 
         @NonNull
@@ -1192,9 +1189,7 @@ public class ActivityInterceptor extends BaseActivity {
         }
 
         public void setDefaultList(@Nullable List<Pair<String, Object>> extras) {
-            mExtras.clear();
-            if (extras != null) mExtras.addAll(extras);
-            notifyDataSetChanged();
+            AdapterUtils.notifyDataSetChanged(this, mExtras, extras);
         }
 
         @NonNull
@@ -1216,7 +1211,7 @@ public class ActivityInterceptor extends BaseActivity {
                     mActivity.mMutableIntent.removeExtra(extraItem.first);
                     mActivity.showTextViewIntentData(null);
                     mExtras.remove(position);
-                    notifyDataSetChanged();
+                    notifyItemRemoved(position);
                 }
             });
         }
@@ -1255,9 +1250,7 @@ public class ActivityInterceptor extends BaseActivity {
         }
 
         public void setDefaultList(@Nullable List<ResolveInfo> matchingActivities) {
-            mMatchingActivities.clear();
-            if (matchingActivities != null) mMatchingActivities.addAll(matchingActivities);
-            notifyDataSetChanged();
+            AdapterUtils.notifyDataSetChanged(this, mMatchingActivities, matchingActivities);
         }
 
         @NonNull

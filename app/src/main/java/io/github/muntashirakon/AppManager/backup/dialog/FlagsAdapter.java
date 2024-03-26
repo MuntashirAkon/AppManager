@@ -46,7 +46,7 @@ class FlagsAdapter extends RecyclerView.Adapter<FlagsAdapter.ViewHolder> {
         mSupportedBackupFlagNames = BackupFlags.getFormattedFlagNames(context, mSupportedBackupFlags);
         mSelectedFlags = flags;
         mDisabledFlags = disabledFlags;
-        notifyDataSetChanged();
+        notifyItemRangeInserted(0, mSupportedBackupFlags.size());
     }
 
     public int getSelectedFlags() {
