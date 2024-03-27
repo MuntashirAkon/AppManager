@@ -124,12 +124,14 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         AdapterUtils.setVisible(holder.mMemoryInfoChart, totalIsNonZero);
         AdapterUtils.setVisible(holder.mMemoryShortInfoView, totalIsNonZero);
         AdapterUtils.setVisible(holder.mMemoryInfoView, totalIsNonZero);
-        holder.mMemoryInfoChart.post(() -> {
-            int width = holder.mMemoryInfoChart.getWidth();
-            setLayoutWidth(holder.mMemoryInfoChartChildren[0], (int) (width * appMemory / total));
-            setLayoutWidth(holder.mMemoryInfoChartChildren[1], (int) (width * cachedMemory / total));
-            setLayoutWidth(holder.mMemoryInfoChartChildren[2], (int) (width * buffers / total));
-        });
+        if (totalIsNonZero) {
+            holder.mMemoryInfoChart.post(() -> {
+                int width = holder.mMemoryInfoChart.getWidth();
+                setLayoutWidth(holder.mMemoryInfoChartChildren[0], (int) (width * appMemory / total));
+                setLayoutWidth(holder.mMemoryInfoChartChildren[1], (int) (width * cachedMemory / total));
+                setLayoutWidth(holder.mMemoryInfoChartChildren[2], (int) (width * buffers / total));
+            });
+        }
         holder.mMemoryShortInfoView.setText(UIUtils.getStyledKeyValue(context, R.string.memory, Formatter
                 .formatFileSize(context, mProcMemoryInfo.getUsedMemory()) + "/" + Formatter
                 .formatFileSize(context, mProcMemoryInfo.getTotalMemory())));
@@ -148,10 +150,12 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         AdapterUtils.setVisible(holder.mSwapInfoChart, totalSwapIsNonZero);
         AdapterUtils.setVisible(holder.mSwapShortInfoView, totalSwapIsNonZero);
         AdapterUtils.setVisible(holder.mSwapInfoView, totalSwapIsNonZero);
-        holder.mSwapInfoChart.post(() -> {
-            int width = holder.mSwapInfoChart.getWidth();
-            setLayoutWidth(holder.mSwapInfoChartChildren[0], (int) (width * usedSwap / totalSwap));
-        });
+        if (totalSwapIsNonZero) {
+            holder.mSwapInfoChart.post(() -> {
+                int width = holder.mSwapInfoChart.getWidth();
+                setLayoutWidth(holder.mSwapInfoChartChildren[0], (int) (width * usedSwap / totalSwap));
+            });
+        }
         holder.mSwapShortInfoView.setText(UIUtils.getStyledKeyValue(context, R.string.swap, Formatter
                 .formatFileSize(context, usedSwap) + "/" + Formatter.formatFileSize(context, totalSwap)));
         // Set color and size info
