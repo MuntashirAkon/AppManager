@@ -1,0 +1,29 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <io.github.muntashirakon.preference.TopSwitchPreference
+        app:key="use_vt"
+        app:title="@string/pref_use_vt"
+        app:persistent="false"
+        app:iconSpaceReserved="false" />
+
+    <io.github.muntashirakon.preference.DefaultAlertPreference
+        app:key="info_no_internet"
+        app:iconSpaceReserved="false"
+        app:summary="@string/pref_use_vt_no_internet" />
+
+    <Preference
+        app:key="virus_total_api_key"
+        app:title="@string/pref_vt_apikey"
+        app:iconSpaceReserved="false" />
+
+    <SwitchPreferenceCompat
+        app:key="virus_total_prompt_before_uploading"
+        app:title="@string/pref_vt_prompt_before_uploading"
+        app:iconSpaceReserved="false" />
+
+    <io.github.muntashirakon.preference.DefaultAlertPreference
+        app:key="info"
+        app:icon="@drawable/ic_information_circle"
+        app:iconSpaceReserved="false"
+        app:summary="@string/pref_vt_apikey_description" />
+</PreferenceScreen>

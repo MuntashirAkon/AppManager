@@ -14,13 +14,13 @@ import androidx.annotation.Nullable;
 import androidx.core.view.inputmethod.EditorInfoCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.google.android.material.transition.MaterialSharedAxis;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
@@ -30,6 +30,7 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+import io.github.muntashirakon.preference.TopSwitchPreference;
 
 public class LogViewerPreferences extends PreferenceFragment {
     public static final List<Integer> LOG_LEVEL_VALUES = Arrays.asList(Log.VERBOSE, Log.DEBUG, Log.INFO, Log.WARN,
@@ -50,21 +51,34 @@ public class LogViewerPreferences extends PreferenceFragment {
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
 
         FragmentActivity activity = requireActivity();
+        boolean isLogViewerEnabled = FeatureController.isLogViewerEnabled();
+        PreferenceCategory catAppearance = requirePreference("cat_appearance");
+        PreferenceCategory catConf = requirePreference("cat_conf");
+        PreferenceCategory catAdvanced = requirePreference("cat_advanced");
+        TopSwitchPreference useLogViewer = requirePreference("use_log_viewer");
+        useLogViewer.setChecked(isLogViewerEnabled);
+        useLogViewer.setOnPreferenceChangeListener((preference, newValue) -> {
+            boolean isEnabled = (boolean) newValue;
+            enablePrefs(isEnabled, catAppearance, catAdvanced, catConf);
+            FeatureController.getInstance().modifyState(FeatureController.FEAT_LOG_VIEWER, isEnabled);
+            return true;
+        });
+        enablePrefs(isLogViewerEnabled, catAppearance, catAdvanced, catConf);
 
-        SwitchPreferenceCompat expandByDefault = Objects.requireNonNull(findPreference("log_viewer_expand_by_default"));
+        SwitchPreferenceCompat expandByDefault = requirePreference("log_viewer_expand_by_default");
         expandByDefault.setChecked(Prefs.LogViewer.expandByDefault());
 
-        SwitchPreferenceCompat showPidTidTimestamp = Objects.requireNonNull(findPreference("log_viewer_show_pid_tid_timestamp"));
+        SwitchPreferenceCompat showPidTidTimestamp = requirePreference("log_viewer_show_pid_tid_timestamp");
         showPidTidTimestamp.setChecked(Prefs.LogViewer.showPidTidTimestamp());
 
-        SwitchPreferenceCompat omitSensitiveInfo = Objects.requireNonNull(findPreference("log_viewer_omit_sensitive_info"));
+        SwitchPreferenceCompat omitSensitiveInfo = requirePreference("log_viewer_omit_sensitive_info");
         omitSensitiveInfo.setChecked(Prefs.LogViewer.omitSensitiveInfo());
         omitSensitiveInfo.setOnPreferenceChangeListener((preference, newValue) -> {
             LogLine.omitSensitiveInfo = (boolean) newValue;
             return true;
         });
 
-        Preference filterPattern = Objects.requireNonNull(findPreference("log_viewer_filter_pattern"));
+        Preference filterPattern = requirePreference("log_viewer_filter_pattern");
         filterPattern.setOnPreferenceClickListener(preference -> {
             new TextInputDialogBuilder(activity, null)
                     .setTitle(R.string.pref_filter_pattern_title)
@@ -85,7 +99,7 @@ public class LogViewerPreferences extends PreferenceFragment {
             return true;
         });
 
-        Preference displayLimit = Objects.requireNonNull(findPreference("log_viewer_display_limit"));
+        Preference displayLimit = requirePreference("log_viewer_display_limit");
         displayLimit.setSummary(getString(R.string.pref_display_limit_summary, Prefs.LogViewer.getDisplayLimit()));
         displayLimit.setOnPreferenceClickListener(preference -> {
             new TextInputDialogBuilder(activity, null)
@@ -117,7 +131,7 @@ public class LogViewerPreferences extends PreferenceFragment {
             return true;
         });
 
-        Preference writePeriod = Objects.requireNonNull(findPreference("log_viewer_write_period"));
+        Preference writePeriod = requirePreference("log_viewer_write_period");
         writePeriod.setSummary(getString(R.string.pref_log_write_period_summary, Prefs.LogViewer.getLogWritingInterval()));
         writePeriod.setOnPreferenceClickListener(preference -> {
             new TextInputDialogBuilder(activity, null)
@@ -149,7 +163,7 @@ public class LogViewerPreferences extends PreferenceFragment {
             return true;
         });
 
-        Preference logLevel = Objects.requireNonNull(findPreference("log_viewer_default_log_level"));
+        Preference logLevel = requirePreference("log_viewer_default_log_level");
         logLevel.setOnPreferenceClickListener(preference -> {
             CharSequence[] logLevelsLocalised = getResources().getStringArray(R.array.log_levels);
             new SearchableSingleChoiceDialogBuilder<>(activity, LOG_LEVEL_VALUES, logLevelsLocalised)
@@ -166,13 +180,13 @@ public class LogViewerPreferences extends PreferenceFragment {
             return true;
         });
 
-        Preference logBuffers = Objects.requireNonNull(findPreference("log_viewer_buffer"));
+        Preference logBuffers = requirePreference("log_viewer_buffer");
         logBuffers.setOnPreferenceClickListener(preference -> {
             new SearchableMultiChoiceDialogBuilder<>(activity, LOG_BUFFERS, LOG_BUFFER_NAMES)
                     .setTitle(R.string.pref_buffer_title)
                     .addSelections(PreferenceHelper.getBuffers())
                     .setPositiveButton(R.string.save, (dialog, which, selectedItems) -> {
-                        if (selectedItems.size() == 0) return;
+                        if (selectedItems.isEmpty()) return;
                         int bufferFlags = 0;
                         for (int flag : selectedItems) {
                             bufferFlags |= flag;

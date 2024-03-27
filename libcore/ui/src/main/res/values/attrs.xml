@@ -13,6 +13,9 @@
     <attr name="materialSpinnerStyle" format="reference" />
     <attr name="multiSelectionActionsView" format="reference" />
 
+    <attr name="topSwitchPreferenceStyle" format="reference" />
+    <attr name="alertPreferenceStyle" format="reference" />
+
     <declare-styleable name="SearchView">
         <!-- Tint to apply to the SearchView's close icon. -->
         <attr name="closeIconTint" />

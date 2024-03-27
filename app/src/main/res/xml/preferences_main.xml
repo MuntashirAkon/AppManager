@@ -3,6 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <io.github.muntashirakon.preference.WarningAlertPreference
+        app:key="app_manager_expiring_notice"
+        app:icon="@drawable/ic_caution"
+        app:summary="@string/app_manager_build_expiring_soon_warning" />
+
+    <io.github.muntashirakon.preference.InfoAlertPreference
+        app:key="funding_campaign_notice"
+        app:icon="@drawable/ic_charity"
+        app:summary="@string/funding_campaign_text" />
+
     <Preference
         app:key="custom_locale"
         app:icon="@drawable/ic_translate"
@@ -72,10 +82,11 @@
         android:fragment="io.github.muntashirakon.AppManager.settings.RulesPreferences" />
 
     <Preference
-        app:key="vt_apikey"
+        app:key="vt"
         app:icon="@drawable/ic_vt"
-        app:title="@string/pref_vt_apikey"
-        app:summary="@string/pref_vt_apikey_summary" />
+        app:title="@string/virus_total"
+        app:summary="@string/pref_vt_apikey_summary"
+        android:fragment="io.github.muntashirakon.AppManager.settings.VirusTotalPreferences" />
 
     <Preference
         app:key="advanced_prefs"

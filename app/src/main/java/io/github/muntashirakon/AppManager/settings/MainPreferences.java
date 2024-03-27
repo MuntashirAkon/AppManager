@@ -16,23 +16,23 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 
-import com.google.android.material.transition.MaterialSharedAxis;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.DeviceInfo2;
+import io.github.muntashirakon.AppManager.self.life.BuildExpiryChecker;
+import io.github.muntashirakon.AppManager.self.life.FundingCampaignChecker;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 import io.github.muntashirakon.dialog.AlertDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
-import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+import io.github.muntashirakon.preference.InfoAlertPreference;
+import io.github.muntashirakon.preference.WarningAlertPreference;
 
 public class MainPreferences extends PreferenceFragment {
     @NonNull
@@ -66,6 +66,12 @@ public class MainPreferences extends PreferenceFragment {
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
         mModel = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
         mActivity = requireActivity();
+        // Expiry notice
+        WarningAlertPreference buildExpiringNotice = requirePreference("app_manager_expiring_notice");
+        buildExpiringNotice.setVisible(!Boolean.FALSE.equals(BuildExpiryChecker.buildExpired()));
+        // Funding campaign notice
+        InfoAlertPreference fundingCampaignNotice = requirePreference("funding_campaign_notice");
+        fundingCampaignNotice.setVisible(FundingCampaignChecker.campaignRunning());
         // Custom locale
         mCurrentLang = Prefs.Appearance.getLanguage();
         ArrayMap<String, Locale> locales = LangUtils.getAppLanguages(mActivity);
@@ -78,7 +84,7 @@ public class MainPreferences extends PreferenceFragment {
         if (localeIndex < 0) {
             localeIndex = locales.indexOfKey(LangUtils.LANG_AUTO);
         }
-        Preference locale = Objects.requireNonNull(findPreference("custom_locale"));
+        Preference locale = requirePreference("custom_locale");
         locale.setSummary(languageNames[localeIndex]);
         int finalLocaleIndex = localeIndex;
         locale.setOnPreferenceClickListener(preference -> {
@@ -97,7 +103,7 @@ public class MainPreferences extends PreferenceFragment {
             return true;
         });
         // Mode of operation
-        mModePref = Objects.requireNonNull(findPreference("mode_of_operations"));
+        mModePref = requirePreference("mode_of_operations");
         mModeOfOpsAlertDialog = UIUtils.getProgressDialog(mActivity, getString(R.string.loading), true);
         mModes = getResources().getStringArray(R.array.modes);
         mCurrentMode = Ops.getMode();
@@ -125,51 +131,18 @@ public class MainPreferences extends PreferenceFragment {
                     .show();
             return true;
         });
-        // VT API key
-        ((Preference) Objects.requireNonNull(findPreference("vt_apikey"))).setOnPreferenceClickListener(preference -> {
-            new TextInputDialogBuilder(mActivity, null)
-                    .setTitle(R.string.pref_vt_apikey)
-                    .setHelperText(getString(R.string.pref_vt_apikey_description) + "\n\n" + getString(R.string.vt_disclaimer))
-                    .setInputText(Prefs.VirusTotal.getApiKey())
-                    .setCheckboxLabel(R.string.pref_vt_prompt_before_uploading)
-                    .setChecked(Prefs.VirusTotal.promptBeforeUpload())
-                    .setNegativeButton(R.string.cancel, null)
-                    .setPositiveButton(R.string.save, (dialog, which, inputText, isChecked) -> {
-                        if (inputText != null) {
-                            Prefs.VirusTotal.setApiKey(inputText.toString());
-                        }
-                        Prefs.VirusTotal.setPromptBeforeUpload(isChecked);
-                    })
-                    .show();
+        // About device
+        requirePreference("about_device").setOnPreferenceClickListener(preference -> {
+            mModel.loadDeviceInfo(new DeviceInfo2(mActivity));
             return true;
         });
-        // About device
-        ((Preference) Objects.requireNonNull(findPreference("about_device")))
-                .setOnPreferenceClickListener(preference -> {
-                    mModel.loadDeviceInfo(new DeviceInfo2(mActivity));
-                    return true;
-                });
 
-        // Hide preferences for disabled features
-        if (!FeatureController.isInstallerEnabled()) {
-            ((Preference) Objects.requireNonNull(findPreference("installer"))).setVisible(false);
-        }
-        if (!FeatureController.isLogViewerEnabled()) {
-            ((Preference) Objects.requireNonNull(findPreference("log_viewer_prefs"))).setVisible(false);
-        }
         mModel.getOperationCompletedLiveData().observe(requireActivity(), completed -> {
             if (requireActivity() instanceof SettingsActivity) {
                 ((SettingsActivity) requireActivity()).progressIndicator.hide();
             }
             Toast.makeText(mActivity, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
         });
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setExitTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, true));
-        setReenterTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, false));
     }
 
     @Override
