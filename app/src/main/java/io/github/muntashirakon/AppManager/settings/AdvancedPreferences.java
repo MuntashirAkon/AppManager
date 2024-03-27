@@ -5,11 +5,15 @@ package io.github.muntashirakon.AppManager.settings;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.view.inputmethod.EditorInfoCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
@@ -33,9 +37,10 @@ import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+import io.github.muntashirakon.util.UiUtils;
 
 public class AdvancedPreferences extends PreferenceFragment {
-    public static final String[] APK_NAME_FORMATS = new String[] {
+    public static final String[] APK_NAME_FORMATS = new String[]{
             "%label%",
             "%package_name%",
             "%version%",
@@ -78,17 +83,24 @@ public class AdvancedPreferences extends PreferenceFragment {
                     }
                 });
             }
-            new MaterialAlertDialogBuilder(requireActivity())
+            AlertDialog dialog = new MaterialAlertDialogBuilder(requireActivity())
                     .setTitle(R.string.pref_saved_apk_name_format)
                     .setView(view)
-                    .setPositiveButton(R.string.save, (dialog, which) -> {
+                    .setPositiveButton(R.string.save, (dialog1, which) -> {
                         Editable apkFormat = inputApkNameFormat.getText();
                         if (!TextUtils.isEmpty(apkFormat)) {
                             AppPref.set(AppPref.PrefKey.PREF_SAVED_APK_FORMAT_STR, apkFormat.toString().trim());
                         }
                     })
                     .setNegativeButton(R.string.cancel, null)
-                    .show();
+                    .create();
+            dialog.setOnShowListener(dialog1 -> inputApkNameFormat.postDelayed(() -> {
+                inputApkNameFormat.requestFocus();
+                inputApkNameFormat.requestFocusFromTouch();
+                inputApkNameFormat.setSelection(inputApkNameFormat.length());
+                UiUtils.showKeyboard(inputApkNameFormat);
+            }, 200));
+            dialog.show();
             return true;
         });
         // Thread count
@@ -100,6 +112,8 @@ public class AdvancedPreferences extends PreferenceFragment {
                     .setTitle(R.string.pref_thread_count)
                     .setHelperText(getString(R.string.pref_thread_count_hint, Utils.getTotalCores()))
                     .setInputText(String.valueOf(mThreadCount))
+                    .setInputInputType(InputType.TYPE_CLASS_NUMBER)
+                    .setInputImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING)
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(R.string.save, (dialog, which, inputText, isChecked) -> {
                         if (inputText != null && TextUtils.isDigitsOnly(inputText)) {
@@ -151,7 +165,7 @@ public class AdvancedPreferences extends PreferenceFragment {
                     .setTitle(R.string.pref_selected_users)
                     .addSelections(preselectedUserIds)
                     .setPositiveButton(R.string.save, (dialog, which, selectedUserIds) -> {
-                        if (selectedUserIds.size() > 0) {
+                        if (!selectedUserIds.isEmpty()) {
                             Prefs.Misc.setSelectedUsers(ArrayUtils.convertToIntArray(selectedUserIds));
                         } else Prefs.Misc.setSelectedUsers(null);
                         Utils.relaunchApp(requireActivity());

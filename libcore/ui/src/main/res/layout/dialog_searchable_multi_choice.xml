@@ -28,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollIndicators="top|bottom"
+        android:scrollbars="none"
         app:fastScrollerEnabled="true"
         tools:ignore="UnusedAttribute"
         tools:listitem="@layout/mtrl_alert_select_dialog_multichoice" />

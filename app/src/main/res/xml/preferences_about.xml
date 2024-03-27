@@ -17,7 +17,7 @@
         app:key="license"
         app:title="@string/license"
         app:summary="@string/license_message"
-        app:iconSpaceReserved="false" />s
+        app:iconSpaceReserved="false" />
 
     <io.github.muntashirakon.preference.HyperlinkPreference
         app:title="@string/source_code"

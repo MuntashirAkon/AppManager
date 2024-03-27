@@ -4,10 +4,14 @@ package io.github.muntashirakon.AppManager.settings;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
+import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.Nullable;
+import androidx.core.view.inputmethod.EditorInfoCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreferenceCompat;
@@ -62,9 +66,11 @@ public class LogViewerPreferences extends PreferenceFragment {
 
         Preference filterPattern = Objects.requireNonNull(findPreference("log_viewer_filter_pattern"));
         filterPattern.setOnPreferenceClickListener(preference -> {
-            new TextInputDialogBuilder(activity, R.string.pref_filter_pattern_title)
+            new TextInputDialogBuilder(activity, null)
                     .setTitle(R.string.pref_filter_pattern_title)
                     .setInputText(Prefs.LogViewer.getFilterPattern())
+                    .setInputTypeface(Typeface.MONOSPACE)
+                    .setInputImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING)
                     .setPositiveButton(R.string.save, (dialog, which, inputText, isChecked) -> {
                         if (inputText == null) return;
                         Prefs.LogViewer.setFilterPattern(inputText.toString().trim());
@@ -82,10 +88,12 @@ public class LogViewerPreferences extends PreferenceFragment {
         Preference displayLimit = Objects.requireNonNull(findPreference("log_viewer_display_limit"));
         displayLimit.setSummary(getString(R.string.pref_display_limit_summary, Prefs.LogViewer.getDisplayLimit()));
         displayLimit.setOnPreferenceClickListener(preference -> {
-            new TextInputDialogBuilder(activity, R.string.pref_display_limit_title)
+            new TextInputDialogBuilder(activity, null)
                     .setTitle(R.string.pref_display_limit_title)
                     .setHelperText(getString(R.string.pref_display_limit_hint, MIN_DISPLAY_LIMIT, MAX_DISPLAY_LIMIT))
                     .setInputText(String.valueOf(Prefs.LogViewer.getDisplayLimit()))
+                    .setInputInputType(InputType.TYPE_CLASS_NUMBER)
+                    .setInputImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING)
                     .setPositiveButton(R.string.save, (dialog, which, inputText, isChecked) -> {
                         if (inputText == null) return;
                         try {
@@ -112,10 +120,12 @@ public class LogViewerPreferences extends PreferenceFragment {
         Preference writePeriod = Objects.requireNonNull(findPreference("log_viewer_write_period"));
         writePeriod.setSummary(getString(R.string.pref_log_write_period_summary, Prefs.LogViewer.getLogWritingInterval()));
         writePeriod.setOnPreferenceClickListener(preference -> {
-            new TextInputDialogBuilder(activity, R.string.pref_log_write_period_title)
+            new TextInputDialogBuilder(activity, null)
                     .setTitle(R.string.pref_log_write_period_title)
                     .setHelperText(getString(R.string.pref_log_line_period_error))
                     .setInputText(String.valueOf(Prefs.LogViewer.getLogWritingInterval()))
+                    .setInputInputType(InputType.TYPE_CLASS_NUMBER)
+                    .setInputImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING)
                     .setPositiveButton(R.string.save, (dialog, which, inputText, isChecked) -> {
                         if (inputText == null) return;
                         try {

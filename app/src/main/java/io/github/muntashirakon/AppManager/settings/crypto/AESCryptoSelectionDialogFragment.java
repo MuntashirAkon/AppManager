@@ -56,70 +56,69 @@ public class AESCryptoSelectionDialogFragment extends DialogFragment {
                 .setTitle(R.string.aes)
                 .setNeutralButton(R.string.generate_key, null)
                 .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.save, null);
-        AlertDialog alertDialog = mBuilder.create();
-        alertDialog.setOnShowListener(dialog -> {
-            AlertDialog dialog1 = (AlertDialog) dialog;
-            Button positiveButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
-            Button neutralButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
-            // Save
-            positiveButton.setOnClickListener(v -> {
-                Editable inputText = mBuilder.getInputText();
-                if (TextUtils.isEmpty(inputText)) return;
-                if (mKeyStoreManager == null) {
-                    UIUtils.displayLongToast(R.string.failed_to_initialize_key_store);
-                    return;
-                }
-                mKeyChars = new char[inputText.length()];
-                inputText.getChars(0, inputText.length(), mKeyChars, 0);
-                byte[] keyBytes;
-                try {
-                    keyBytes = HexEncoding.decode(mKeyChars);
-                } catch (IllegalArgumentException e) {
-                    UIUtils.displayLongToast(R.string.invalid_aes_key_size);
-                    return;
-                }
-                if (keyBytes.length != 16 && keyBytes.length != 32) {
-                    UIUtils.displayLongToast(R.string.invalid_aes_key_size);
-                    return;
-                }
-                SecretKey secretKey = new SecretKeySpec(keyBytes, "AES");
-                try {
-                    mKeyStoreManager.addSecretKey(AES_KEY_ALIAS, secretKey, true);
-                    Prefs.Encryption.setEncryptionMode(CryptoUtils.MODE_AES);
-                } catch (Exception e) {
-                    Log.e(TAG, e);
-                    UIUtils.displayLongToast(R.string.failed_to_save_key);
-                }
-                Utils.clearBytes(keyBytes);
-                try {
-                    SecretKeyCompat.destroy(secretKey);
-                } catch (DestroyFailedException e) {
-                    Log.e(TAG, e);
-                }
-                dialog.dismiss();
-            });
-            // Key generator
-            neutralButton.setOnClickListener(v -> new TextInputDropdownDialogBuilder(mActivity, R.string.crypto_key_size)
-                    .setDropdownItems(Arrays.asList(128, 256), 0, false)
-                    .setTitle(R.string.generate_key)
-                    .setNegativeButton(R.string.cancel, null)
-                    .setPositiveButton(R.string.generate_key, (dialog2, which, inputText, isChecked) -> {
+                .setPositiveButton(R.string.save, null)
+                .setOnShowListener(dialog -> {
+                    AlertDialog dialog1 = (AlertDialog) dialog;
+                    Button positiveButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
+                    Button neutralButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
+                    // Save
+                    positiveButton.setOnClickListener(v -> {
+                        Editable inputText = mBuilder.getInputText();
                         if (TextUtils.isEmpty(inputText)) return;
-                        int keySize = 128 / 8;
-                        try {
-                            //noinspection ConstantConditions
-                            keySize = Integer.decode(inputText.toString().trim()) / 8;
-                        } catch (NumberFormatException ignore) {
+                        if (mKeyStoreManager == null) {
+                            UIUtils.displayLongToast(R.string.failed_to_initialize_key_store);
+                            return;
                         }
-                        SecureRandom random = new SecureRandom();
-                        byte[] key = new byte[keySize];
-                        random.nextBytes(key);
-                        mKeyChars = HexEncoding.encode(key);
-                        mBuilder.setInputText(CharBuffer.wrap(mKeyChars));
-                    })
-                    .show());
-        });
+                        mKeyChars = new char[inputText.length()];
+                        inputText.getChars(0, inputText.length(), mKeyChars, 0);
+                        byte[] keyBytes;
+                        try {
+                            keyBytes = HexEncoding.decode(mKeyChars);
+                        } catch (IllegalArgumentException e) {
+                            UIUtils.displayLongToast(R.string.invalid_aes_key_size);
+                            return;
+                        }
+                        if (keyBytes.length != 16 && keyBytes.length != 32) {
+                            UIUtils.displayLongToast(R.string.invalid_aes_key_size);
+                            return;
+                        }
+                        SecretKey secretKey = new SecretKeySpec(keyBytes, "AES");
+                        try {
+                            mKeyStoreManager.addSecretKey(AES_KEY_ALIAS, secretKey, true);
+                            Prefs.Encryption.setEncryptionMode(CryptoUtils.MODE_AES);
+                        } catch (Exception e) {
+                            Log.e(TAG, e);
+                            UIUtils.displayLongToast(R.string.failed_to_save_key);
+                        }
+                        Utils.clearBytes(keyBytes);
+                        try {
+                            SecretKeyCompat.destroy(secretKey);
+                        } catch (DestroyFailedException e) {
+                            Log.e(TAG, e);
+                        }
+                        dialog.dismiss();
+                    });
+                    // Key generator
+                    neutralButton.setOnClickListener(v -> new TextInputDropdownDialogBuilder(mActivity, R.string.crypto_key_size)
+                            .setDropdownItems(Arrays.asList(128, 256), 0, false)
+                            .setTitle(R.string.generate_key)
+                            .setNegativeButton(R.string.cancel, null)
+                            .setPositiveButton(R.string.generate_key, (dialog2, which, inputText, isChecked) -> {
+                                if (TextUtils.isEmpty(inputText)) return;
+                                int keySize = 128 / 8;
+                                try {
+                                    //noinspection ConstantConditions
+                                    keySize = Integer.decode(inputText.toString().trim()) / 8;
+                                } catch (NumberFormatException ignore) {
+                                }
+                                SecureRandom random = new SecureRandom();
+                                byte[] key = new byte[keySize];
+                                random.nextBytes(key);
+                                mKeyChars = HexEncoding.encode(key);
+                                mBuilder.setInputText(CharBuffer.wrap(mKeyChars));
+                            })
+                            .show());
+                });
         ThreadUtils.postOnBackgroundThread(() -> {
             try {
                 mKeyStoreManager = KeyStoreManager.getInstance();
@@ -137,7 +136,7 @@ public class AESCryptoSelectionDialogFragment extends DialogFragment {
                 Log.e(TAG, e);
             }
         });
-        return alertDialog;
+        return mBuilder.create();
     }
 
     @Override
