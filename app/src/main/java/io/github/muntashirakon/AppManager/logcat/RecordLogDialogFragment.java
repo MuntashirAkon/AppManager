@@ -73,7 +73,7 @@ public class RecordLogDialogFragment extends DialogFragment {
         String logFilename = SaveLogHelper.createLogFilename();
         mLogLevel = Prefs.LogViewer.getLogLevel();
         mFilterQuery = "";
-        AlertDialog alertDialog = new TextInputDialogBuilder(mActivity, R.string.enter_filename)
+        return new TextInputDialogBuilder(mActivity, R.string.enter_filename)
                 .setTitle(R.string.record_log)
                 .setInputText(logFilename)
                 .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
@@ -100,16 +100,15 @@ public class RecordLogDialogFragment extends DialogFragment {
                 .setNegativeButton(R.string.cancel, (dialog, which, inputText, isChecked) ->
                         WidgetHelper.updateWidgets(mActivity))
                 .setNeutralButton(R.string.text_filter_ellipsis, null)
+                .setOnShowListener(dialog -> {
+                    AlertDialog dialog1 = (AlertDialog) dialog;
+                    Button filterButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
+                    filterButton.setOnClickListener(v -> {
+                        WidgetHelper.updateWidgets(mActivity);
+                        showFilterDialogForRecording(suggestions != null ? Arrays.asList(suggestions) : Collections.emptyList());
+                    });
+                })
                 .create();
-        alertDialog.setOnShowListener(dialog -> {
-            AlertDialog dialog1 = (AlertDialog) dialog;
-            Button filterButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
-            filterButton.setOnClickListener(v -> {
-                WidgetHelper.updateWidgets(mActivity);
-                showFilterDialogForRecording(suggestions != null ? Arrays.asList(suggestions) : Collections.emptyList());
-            });
-        });
-        return alertDialog;
     }
 
     @Override

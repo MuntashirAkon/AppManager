@@ -24,7 +24,6 @@ import androidx.annotation.RequiresApi;
 import androidx.annotation.StringDef;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
@@ -442,7 +441,7 @@ public class Ops {
     @NoOps
     public static void connectAdbInput(@NonNull FragmentActivity activity,
                                        @NonNull AdbConnectionInterface callback) {
-        AlertDialog alertDialog = new TextInputDialogBuilder(activity, R.string.port_number)
+        new TextInputDialogBuilder(activity, R.string.port_number)
                 .setTitle(R.string.wireless_debugging)
                 .setInputText(String.valueOf(ServerConfig.getAdbPort()))
                 .setHelperText(R.string.adb_connect_port_number_description)
@@ -460,9 +459,8 @@ public class Ops {
                     }
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which, inputText, isChecked) -> callback.connectAdb(-1))
-                .create();
-        alertDialog.setCancelable(false);
-        alertDialog.show();
+                .setCancelable(false)
+                .show();
     }
 
     @RequiresApi(Build.VERSION_CODES.R)

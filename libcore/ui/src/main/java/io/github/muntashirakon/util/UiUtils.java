@@ -88,6 +88,11 @@ public final class UiUtils {
         return (int) (widthDp / columnWidth + 0.5);
     }
 
+    public static void showKeyboard(@NonNull View v) {
+        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
+    }
+
     public static void hideKeyboard(@NonNull View v) {
         InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);

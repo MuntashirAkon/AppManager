@@ -23,6 +23,7 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:fontFamily="monospace"
+                android:imeOptions="actionDone|flagNoPersonalizedLearning"
                 tools:text="%label%_%version%" />
 
         </com.google.android.material.textfield.TextInputLayout>

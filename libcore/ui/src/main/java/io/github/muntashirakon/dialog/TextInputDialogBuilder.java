@@ -5,6 +5,7 @@ package io.github.muntashirakon.dialog;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.text.Editable;
 import android.view.View;
 
@@ -19,6 +20,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import io.github.muntashirakon.ui.R;
+import io.github.muntashirakon.util.UiUtils;
 
 @SuppressWarnings("unused")
 public class TextInputDialogBuilder {
@@ -32,6 +34,9 @@ public class TextInputDialogBuilder {
     private final MaterialCheckBox mCheckBox;
     @NonNull
     private final MaterialAlertDialogBuilder mBuilder;
+
+    @Nullable
+    private DialogInterface.OnShowListener mShowListener;
 
     public interface OnClickListener {
         void onClick(DialogInterface dialog, int which, @Nullable Editable inputText, boolean isChecked);
@@ -71,6 +76,21 @@ public class TextInputDialogBuilder {
 
     public TextInputDialogBuilder setInputText(@StringRes int inputText) {
         mEditText.setText(inputText);
+        return this;
+    }
+
+    public TextInputDialogBuilder setInputTypeface(Typeface tf) {
+        mEditText.setTypeface(tf);
+        return this;
+    }
+
+    public TextInputDialogBuilder setInputInputType(int inputType) {
+        mEditText.setInputType(inputType);
+        return this;
+    }
+
+    public TextInputDialogBuilder setInputImeOptions(int options) {
+        mEditText.setImeOptions(options);
         return this;
     }
 
@@ -147,6 +167,21 @@ public class TextInputDialogBuilder {
         return this;
     }
 
+    public TextInputDialogBuilder setOnShowListener(@Nullable DialogInterface.OnShowListener listener) {
+        mShowListener = listener;
+        return this;
+    }
+
+    public TextInputDialogBuilder setOnDismissListener(@Nullable DialogInterface.OnDismissListener listener) {
+        mBuilder.setOnDismissListener(listener);
+        return this;
+    }
+
+    public TextInputDialogBuilder setCancelable(boolean cancelable) {
+        mBuilder.setCancelable(cancelable);
+        return this;
+    }
+
     @Nullable
     public Editable getInputText() {
         return mEditText.getText();
@@ -154,7 +189,19 @@ public class TextInputDialogBuilder {
 
     @NonNull
     public AlertDialog create() {
-        return mBuilder.create();
+        AlertDialog dialog = mBuilder.create();
+        dialog.setOnShowListener(dialog1 -> {
+            if (mShowListener != null) {
+                mShowListener.onShow(dialog1);
+            }
+            mEditText.postDelayed(() -> {
+                mEditText.requestFocus();
+                mEditText.requestFocusFromTouch();
+                mEditText.setSelection(mEditText.length());
+                UiUtils.showKeyboard(mEditText);
+            }, 200);
+        });
+        return dialog;
     }
 
     public void show() {

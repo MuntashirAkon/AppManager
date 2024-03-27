@@ -67,15 +67,15 @@ public class KeyStoreActivity extends AppCompatActivity {
      */
     @Deprecated
     private void displayInputKeyStoreAliasPassword(@NonNull String alias) {
-        AlertDialog ksDialog = new TextInputDialogBuilder(this, getString(R.string.input_keystore_alias_pass, alias))
+        new TextInputDialogBuilder(this, getString(R.string.input_keystore_alias_pass, alias))
                 .setTitle(getString(R.string.input_keystore_alias_pass, alias))
                 .setHelperText(getString(R.string.input_keystore_alias_pass_description, alias))
                 .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) ->
                         savePass(KeyStoreManager.getPrefAlias(alias), inputText)
-                ).create();
-        ksDialog.setCancelable(false);
-        ksDialog.setOnDismissListener(dialog -> finish());
-        ksDialog.show();
+                )
+                .setCancelable(false)
+                .setOnDismissListener(dialog -> finish())
+                .show();
     }
 
     private void savePass(@NonNull String prefKey, @Nullable Editable rawPassword) {

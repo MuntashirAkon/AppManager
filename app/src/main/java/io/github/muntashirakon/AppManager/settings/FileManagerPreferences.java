@@ -8,8 +8,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.Nullable;
+import androidx.core.view.inputmethod.EditorInfoCompat;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreferenceCompat;
 
@@ -50,6 +52,7 @@ public class FileManagerPreferences extends PreferenceFragment {
             new TextInputDialogBuilder(requireContext(), null)
                     .setTitle(R.string.pref_set_home)
                     .setInputText(FmUtils.getDisplayablePath(Prefs.FileManager.getHome()))
+                    .setInputImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING)
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
                         if (TextUtils.isEmpty(inputText)) {
