@@ -44,6 +44,7 @@ public class FeatureController {
             FEAT_APP_EXPLORER,
             FEAT_APP_INFO,
             FEAT_CODE_EDITOR,
+            FEAT_VIRUS_TOTAL,
     })
     public @interface FeatureFlags {
     }
@@ -51,13 +52,14 @@ public class FeatureController {
     private static final int FEAT_INTERCEPTOR = 1;
     private static final int FEAT_MANIFEST = 1 << 1;
     private static final int FEAT_SCANNER = 1 << 2;
-    private static final int FEAT_INSTALLER = 1 << 3;
+    public static final int FEAT_INSTALLER = 1 << 3;
     public static final int FEAT_USAGE_ACCESS = 1 << 4;
-    private static final int FEAT_LOG_VIEWER = 1 << 5;
+    public static final int FEAT_LOG_VIEWER = 1 << 5;
     public static final int FEAT_INTERNET = 1 << 6;
     private static final int FEAT_APP_EXPLORER = 1 << 7;
     private static final int FEAT_APP_INFO = 1 << 8;
     private static final int FEAT_CODE_EDITOR = 1 << 9;
+    public static final int FEAT_VIRUS_TOTAL = 1 << 10;
 
     @NonNull
     public static FeatureController getInstance() {
@@ -87,8 +89,8 @@ public class FeatureController {
             put(FEAT_APP_INFO, R.string.app_info);
             featureFlags.add(FEAT_CODE_EDITOR);
             put(FEAT_CODE_EDITOR, R.string.title_code_editor);
-            featureFlags.add(FEAT_INTERNET);
-            put(FEAT_INTERNET, R.string.toggle_internet);
+            featureFlags.add(FEAT_VIRUS_TOTAL);
+            put(FEAT_VIRUS_TOTAL, R.string.virus_total);
         }
     };
 
@@ -144,6 +146,10 @@ public class FeatureController {
         return getInstance().isEnabled(FEAT_INTERNET);
     }
 
+    public static boolean isVirusTotalEnabled() {
+        return getInstance().isEnabled(FEAT_VIRUS_TOTAL);
+    }
+
     private boolean isEnabled(@FeatureFlags int key) {
         ComponentName cn;
         switch (key) {
@@ -162,6 +168,8 @@ public class FeatureController {
             case FEAT_USAGE_ACCESS:
                 // Only depends on flag
                 return (mFlags & key) != 0;
+            case FEAT_VIRUS_TOTAL:
+                return (mFlags & key) != 0 && isEnabled(FEAT_INTERNET);
             case FEAT_INTERNET:
                 return (mFlags & key) != 0 && SelfPermissions.checkSelfPermission(Manifest.permission.INTERNET);
             case FEAT_LOG_VIEWER:
@@ -198,6 +206,7 @@ public class FeatureController {
                 break;
             case FEAT_USAGE_ACCESS:
             case FEAT_INTERNET:
+            case FEAT_VIRUS_TOTAL:
                 // Only depends on flag
                 break;
             case FEAT_LOG_VIEWER:

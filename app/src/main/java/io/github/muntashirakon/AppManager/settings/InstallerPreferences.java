@@ -13,14 +13,18 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.UserHandleHidden;
+import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
+import androidx.core.view.inputmethod.EditorInfoCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -39,6 +43,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+import io.github.muntashirakon.preference.TopSwitchPreference;
 
 public class InstallerPreferences extends PreferenceFragment {
     public static final Integer[] INSTALL_LOCATIONS = new Integer[] {
@@ -65,6 +70,19 @@ public class InstallerPreferences extends PreferenceFragment {
         mModel = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
         mActivity = (SettingsActivity) requireActivity();
         mPm = mActivity.getPackageManager();
+        boolean isInstallerEnabled = FeatureController.isInstallerEnabled();
+        PreferenceCategory catGeneral = requirePreference("cat_general");
+        PreferenceCategory catAdvanced = requirePreference("cat_advanced");
+        TopSwitchPreference useInstaller = requirePreference("use_installer");
+        useInstaller.setChecked(isInstallerEnabled);
+        useInstaller.setOnPreferenceChangeListener((preference, newValue) -> {
+            boolean isEnabled = (boolean) newValue;
+            enablePrefs(isEnabled, catGeneral, catAdvanced);
+            FeatureController.getInstance().modifyState(FeatureController.FEAT_INSTALLER, isEnabled);
+            return true;
+        });
+        enablePrefs(isInstallerEnabled, catGeneral, catAdvanced);
+
         // Set installation locations
         Preference installLocationPref = Objects.requireNonNull(findPreference("installer_install_location"));
         installLocationPref.setSummary(INSTALL_LOCATION_NAMES[Prefs.Installer.getInstallLocation()]);
@@ -103,6 +121,8 @@ public class InstallerPreferences extends PreferenceFragment {
                             new TextInputDialogBuilder(requireActivity(), R.string.installer_app)
                                     .setTitle(R.string.installer_app)
                                     .setInputText(mInstallerApp)
+                                    .setInputInputType(InputType.TYPE_CLASS_TEXT)
+                                    .setInputImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING)
                                     .setPositiveButton(R.string.ok, (dialog1, which1, inputText, isChecked) -> {
                                         if (inputText == null) return;
                                         mInstallerApp = inputText.toString().trim();

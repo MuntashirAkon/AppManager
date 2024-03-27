@@ -18,6 +18,13 @@
         app:summary="@string/pref_enable_auto_lock_msg"
         app:iconSpaceReserved="false" />
 
+    <SwitchPreferenceCompat
+        app:key="toggle_internet"
+        app:title="@string/toggle_internet"
+        app:summary="@string/pref_toggle_internet_msg"
+        app:persistent="false"
+        app:iconSpaceReserved="false" />
+
     <Preference
         app:key="auth_manager"
         app:title="@string/auth_manager_title"

@@ -14,6 +14,8 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Objects;
+
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.util.UiUtils;
 
@@ -52,6 +54,19 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat {
     public void setPrefKey(@Nullable String prefKey) {
         mPrefKey = prefKey;
         updateUi();
+    }
+
+    public <T extends androidx.preference.Preference> T requirePreference(CharSequence key) {
+        return Objects.requireNonNull(findPreference(key));
+    }
+
+    protected void enablePrefs(boolean enable, Preference ...prefs) {
+        if (prefs == null) {
+            return;
+        }
+        for (Preference pref : prefs) {
+            pref.setEnabled(enable);
+        }
     }
 
     @SuppressLint("RestrictedApi")

@@ -34,8 +34,10 @@
 
         <!-- Preferences -->
         <item name="preferenceStyle">@style/Preference.M3</item>
+        <item name="alertPreferenceStyle">@style/Preference.M3.Alert</item>
         <item name="checkBoxPreferenceStyle">@style/Preference.M3.CheckBoxPreference</item>
         <item name="dialogPreferenceStyle">@style/Preference.M3.DialogPreference</item>
+        <item name="topSwitchPreferenceStyle">@style/Preference.M3.TopSwitchPreference</item>
 
         <item name="dropdownPreferenceStyle">@style/Preference.DropDown.Material</item>
 
@@ -375,6 +377,10 @@
         <item name="android:layout">@layout/m3_preference</item>
     </style>
 
+    <style name="Preference.M3.Alert" parent="Preference.Material">
+        <item name="android:layout">@layout/m3_preference_alert</item>
+    </style>
+
     <style name="Preference.M3.Category" parent="Preference.Category.Material">
         <item name="android:layout">@layout/m3_preference_category</item>
         <item name="allowDividerAbove">false</item>
@@ -403,6 +409,11 @@
     <style name="Preference.M3.SwitchPreferenceCompat" parent="Preference.SwitchPreferenceCompat.Material">
         <item name="android:layout">@layout/m3_preference</item>
         <item name="android:widgetLayout">@layout/m3_preference_widget_material_switch</item>
+    </style>
+
+    <style name="Preference.M3.TopSwitchPreference" parent="Preference.M3.SwitchPreferenceCompat">
+        <item name="android:layout">@layout/m3_preference_top_switch</item>
+        <item name="listItemPaddingVertical">@dimen/padding_medium</item>
     </style>
 
     <!-- TextInputLayout -->

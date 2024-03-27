@@ -2,46 +2,67 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <SwitchPreferenceCompat
-        app:key="installer_sign_apk"
-        app:title="@string/pref_sign_apk"
-        app:summary="@string/pref_sign_apk_msg"
+    <io.github.muntashirakon.preference.TopSwitchPreference
+        app:key="use_installer"
+        app:title="@string/pref_installer"
+        app:persistent="false"
         app:iconSpaceReserved="false" />
 
-    <Preference
-        app:key="installer_install_location"
-        app:title="@string/install_location"
-        tools:summary="Auto"
-        app:iconSpaceReserved="false" />
+    <PreferenceCategory
+        app:key="cat_general"
+        app:title="@string/pref_cat_general"
+        app:iconSpaceReserved="false">
 
-    <Preference
-        app:key="installer_installer_app"
-        app:title="@string/installer_app"
-        tools:summary="App Manager"
-        app:iconSpaceReserved="false" />
+        <Preference
+            app:key="installer_install_location"
+            app:title="@string/install_location"
+            tools:summary="Auto"
+            app:iconSpaceReserved="false" />
 
-    <SwitchPreferenceCompat
-        app:key="installer_block_trackers"
-        app:title="@string/block_trackers"
-        app:summary="@string/pref_block_trackers_msg"
-        app:iconSpaceReserved="false" />
 
-    <SwitchPreferenceCompat
-        app:key="installer_force_dex_opt"
-        app:title="@string/optimize_option_force_dexopt"
-        app:summary="@string/pref_installer_force_dexopt_description"
-        app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            app:key="installer_block_trackers"
+            app:title="@string/block_trackers"
+            app:summary="@string/pref_block_trackers_msg"
+            app:iconSpaceReserved="false" />
 
-    <SwitchPreferenceCompat
-        app:key="installer_display_changes"
-        app:title="@string/pref_display_changes"
-        app:summary="@string/pref_display_changes_msg"
-        app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            app:key="installer_display_changes"
+            app:title="@string/pref_display_changes"
+            app:summary="@string/pref_display_changes_msg"
+            app:iconSpaceReserved="false" />
 
-    <SwitchPreferenceCompat
-        app:key="installer_always_on_background"
-        app:title="@string/pref_always_on_background"
-        app:summary="@string/pref_always_on_background_msg"
-        app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="cat_advanced"
+        app:title="@string/pref_cat_advanced"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            app:key="installer_installer_app"
+            app:title="@string/installer_app"
+            tools:summary="App Manager"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="installer_sign_apk"
+            app:title="@string/pref_sign_apk"
+            app:summary="@string/pref_sign_apk_msg"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="installer_force_dex_opt"
+            app:title="@string/optimize_option_force_dexopt"
+            app:summary="@string/pref_installer_force_dexopt_description"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="installer_always_on_background"
+            app:title="@string/pref_always_on_background"
+            app:summary="@string/pref_always_on_background_msg"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

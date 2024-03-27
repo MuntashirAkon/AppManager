@@ -1,0 +1,69 @@
+<!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.AppTheme.CardView.ListItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"
+    android:focusable="true"
+    app:cardBackgroundColor="?attr/colorPrimaryContainer"
+    android:layout_marginHorizontal="@dimen/padding_large">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingVertical="?attr/listItemPaddingVertical"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+        android:clipToPadding="false"
+        android:baselineAligned="false">
+
+        <include layout="@layout/m3_preference_image_frame" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@android:id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:textColor="?attr/colorOnPrimaryContainer"
+                android:ellipsize="marquee"
+                tools:text="@tools:sample/lorem[10]" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@android:id/summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@android:id/title"
+                android:layout_alignStart="@android:id/title"
+                android:layout_alignLeft="@android:id/title"
+                android:layout_gravity="start"
+                android:maxLines="10"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                android:textColor="?attr/colorOnPrimaryContainer"
+                tools:text="@tools:sample/lorem[10]" />
+
+        </RelativeLayout>
+
+        <!-- Preference should place its actual preference widget here. -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@android:id/widget_frame"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="end|center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="0dp"
+            android:orientation="vertical" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</com.google.android.material.card.MaterialCardView>

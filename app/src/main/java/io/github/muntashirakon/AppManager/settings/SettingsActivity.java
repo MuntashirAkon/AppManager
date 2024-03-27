@@ -73,13 +73,6 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
         progressIndicator.setVisibilityAfterHide(View.GONE);
         progressIndicator.hide();
 
-        View buildExpiringNotice = findViewById(R.id.app_manager_expiring_notice);
-        buildExpiringNotice.setVisibility(BuildExpiryChecker.buildExpired() == null ? View.VISIBLE : View.GONE);
-        UiUtils.applyWindowInsetsAsPadding(buildExpiringNotice, false, true);
-        View fundingCampaignNotice = findViewById(R.id.funding_campaign_notice);
-        fundingCampaignNotice.setVisibility(FundingCampaignChecker.campaignRunning() ? View.VISIBLE : View.GONE);
-        UiUtils.applyWindowInsetsAsPadding(fundingCampaignNotice, false, true);
-
         if (savedInstanceState != null) {
             clearBackStack();
             mSavedKeys = savedInstanceState.getStringArrayList(SAVED_KEYS);
@@ -103,6 +96,12 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
 
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(
+                        R.anim.slide_in,  // enter
+                        R.anim.fade_out,  // exit
+                        R.anim.fade_in,   // popEnter
+                        R.anim.slide_out  // popExit
+                )
                 .replace(R.id.main_layout, MainPreferences.getInstance(getKey(mLevel)))
                 .commit();
     }
@@ -152,6 +151,12 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
         // The line below is kept because this is how it is handled in AndroidX library
         fragment.setTargetFragment(caller, 0);
         fragmentManager.beginTransaction()
+                .setCustomAnimations(
+                        R.anim.slide_in,  // enter
+                        R.anim.fade_out,  // exit
+                        R.anim.fade_in,   // popEnter
+                        R.anim.slide_out  // popExit
+                )
                 .replace(R.id.main_layout, fragment)
                 .addToBackStack(null)
                 .commit();

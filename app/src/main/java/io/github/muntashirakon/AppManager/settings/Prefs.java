@@ -647,9 +647,5 @@ public final class Prefs {
         public static boolean promptBeforeUpload() {
             return AppPref.getBoolean(AppPref.PrefKey.PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL);
         }
-
-        public static void setPromptBeforeUpload(boolean prompt) {
-            AppPref.set(AppPref.PrefKey.PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL, prompt);
-        }
     }
 }

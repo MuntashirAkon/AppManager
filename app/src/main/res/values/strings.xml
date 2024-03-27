@@ -1134,6 +1134,7 @@
     <string name="search_type_suffix">Suffix</string>
     <string name="search_type_regular_expressions">Regex</string>
     <string name="toggle_internet">Use the Internet</string>
+    <string name="pref_toggle_internet_msg">Activate the Internet features in App Manager</string>
     <string name="vt_checking">VirusTotal: Checking…</string>
     <string name="vt_uploading">VirusTotal: Uploading…</string>
     <string name="vt_queued">VirusTotal: Queued</string>
@@ -1462,4 +1463,10 @@
     <string name="invalid_regex">Invalid regular expression!</string>
     <string name="value_cannot_be_empty">Value cannot be empty!</string>
     <string name="date">Date</string>
+    <string name="pref_use_vt">Use VirusTotal</string>
+    <string name="virus_total">VirusTotal</string>
+    <string name="pref_use_vt_no_internet">VirusTotal requires the Internet to operate which isn\'t enabled. Please enable <a href="app-manager://settings/privacy_prefs/toggle_internet">“Use the Internet”</a> first.</string>
+    <string name="pref_use_log_viewer">Use Log Viewer</string>
+    <string name="pref_installer">Use the installer</string>
+    <string name="pref_cat_general">General</string>
 </resources>

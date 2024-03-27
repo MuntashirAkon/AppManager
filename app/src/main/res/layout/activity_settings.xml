@@ -27,37 +27,10 @@
 
     </io.github.muntashirakon.widget.AppBarLayout>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
-        <io.github.muntashirakon.widget.MaterialAlertView
-            android:id="@+id/app_manager_expiring_notice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            android:layout_marginVertical="4dp"
-            android:layout_marginHorizontal="8dp"
-            android:text="@string/app_manager_build_expiring_soon_warning"
-            app:alertType="warn" />
-
-        <io.github.muntashirakon.widget.MaterialAlertView
-            android:id="@+id/funding_campaign_notice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            android:paddingVertical="4dp"
-            android:paddingHorizontal="8dp"
-            android:text="@string/funding_campaign_text"
-            app:startIconDrawable="@drawable/ic_charity"
-            app:alertType="custom" />
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/main_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
