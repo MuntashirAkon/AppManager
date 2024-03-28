@@ -1078,7 +1078,7 @@
     <string name="vt_scan_date">Datum des Scans: %1$s</string>
     <string name="vt_slowness_warning">Je nach Internetgeschwindigkeit und Auslastung des Servers kann dies eine Weile dauern.</string>
     <string name="pref_vt_apikey_summary">Aktiviert das Scannen von APK-Dateien über VirusTotal.</string>
-    <string name="uses_play_app_signing">Play App signiert</string>
+    <string name="uses_play_app_signing">Play App-Signatur</string>
     <string name="scan_in_vt">In VirusTotal scannen</string>
     <string name="parent_process_id">Übergeordnete Prozess ID</string>
     <string name="priority">Priorität</string>
@@ -1290,4 +1290,9 @@
     <string name="unblock_components_dots">Komponenten freigeben…</string>
     <string name="block_unblock_components_dots">Komponenten blockieren/freigeben…</string>
     <string name="pref_layout_direction">Layout-Richtung</string>
+    <string name="warning_working_on_system_mode">Achtung: Es wird im system modus anstatt dem ADB modus gearbeited.</string>
+    <plurals name="alert_failed_to_unblock_components">
+        <item quantity="one">Konnte Komponenten von %1$d nicht entsperren</item>
+        <item quantity="other">Konnte Komponenten von %1$d Apps nicht entsperren</item>
+    </plurals>
 </resources>
