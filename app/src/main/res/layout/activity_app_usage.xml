@@ -14,28 +14,46 @@
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <FrameLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <io.github.muntashirakon.widget.RecyclerView
-                android:id="@+id/scrollView"
-                android:layout_width="match_parent"
+            <io.github.muntashirakon.widget.MaterialSpinner
+                style="@style/Widget.AppTheme.MaterialSpinner.Spinner.Small"
+                android:id="@+id/spinner"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
-                android:fitsSystemWindows="true"
-                app:fastScrollerEnabled="true"
-                tools:listitem="@layout/item_app_usage" />
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginVertical="@dimen/padding_small"
+                android:layout_marginHorizontal="@dimen/padding_large"
+                android:nextFocusDown="@id/recycler_view"
+                tools:hint="Interval" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@android:id/empty"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:focusable="false"
-                android:text="@string/no_usage_in_this_time_range"
-                tools:visibility="gone" />
+                android:layout_height="match_parent">
 
-        </FrameLayout>
+                <io.github.muntashirakon.widget.RecyclerView
+                    android:id="@+id/scrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true"
+                    app:fastScrollerEnabled="true"
+                    tools:listitem="@layout/item_app_usage" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@android:id/empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:focusable="false"
+                    android:text="@string/no_usage_in_this_time_range"
+                    tools:visibility="visible" />
+
+            </FrameLayout>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </io.github.muntashirakon.widget.SwipeRefreshLayout>
 
