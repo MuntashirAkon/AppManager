@@ -115,17 +115,43 @@
     </style>
 
     <!-- MaterialSpinner -->
-    <style name="Widget.AppTheme.MaterialSpinner" parent="Widget.AppTheme.TextInputLayout.ExposedDropdownMenu">
+    <style name="Widget.AppTheme.MaterialSpinner" parent="Widget.AppTheme.TextInputLayout.ExposedDropdownMenu" />
+
+    <style name="Widget.AppTheme.MaterialSpinner.Small" parent="Widget.AppTheme.TextInputLayout.ExposedDropdownMenu.Small" />
+
+    <style name="Widget.AppTheme.MaterialSpinner.Spinner" parent="Widget.AppTheme.MaterialSpinner">
         <item name="boxStrokeWidth">0dp</item>
+        <item name="boxBackgroundColor">?attr/colorPrimaryContainer</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.MaterialSpinner</item>
     </style>
 
-    <style name="Widget.AppTheme.MaterialSpinner.Small" parent="Widget.AppTheme.TextInputLayout.ExposedDropdownMenu.Small">
+    <style name="Widget.AppTheme.MaterialSpinner.Spinner.Small" parent="Widget.AppTheme.MaterialSpinner.Small">
         <item name="boxStrokeWidth">0dp</item>
+        <item name="boxBackgroundColor">?attr/colorPrimaryContainer</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.MaterialSpinner.Small</item>
     </style>
 
-    <style name="Widget.AppTheme.MaterialSpinner.Outlined" parent="Widget.AppTheme.TextInputLayout.ExposedDropdownMenu" />
+    <style name="ThemeOverlay.AppTheme.MaterialSpinner" parent="">
+        <item name="autoCompleteTextViewStyle">@style/Widget.AppTheme.MaterialSpinner.AutoCompleteTextView</item>
+    </style>
 
-    <style name="Widget.AppTheme.MaterialSpinner.Outlined.Small" parent="Widget.AppTheme.TextInputLayout.ExposedDropdownMenu.Small" />
+    <style name="ThemeOverlay.AppTheme.MaterialSpinner.Small" parent="">
+        <item name="autoCompleteTextViewStyle">@style/Widget.AppTheme.MaterialSpinner.AutoCompleteTextView.Small</item>
+        <item name="endIconMinSize">18dp</item> <!-- 34 - 8*2 -->
+    </style>
+
+    <style name="Widget.AppTheme.MaterialSpinner.AutoCompleteTextView" parent="Widget.Material3.AutoCompleteTextView.OutlinedBox.Dense">
+        <item name="simpleItemLayout">@layout/auto_complete_dropdown_item</item>
+        <item name="android:dropDownSelector">?attr/listChoiceBackgroundIndicator</item>
+    </style>
+
+    <style name="Widget.AppTheme.MaterialSpinner.AutoCompleteTextView.Small" parent="Widget.AppTheme.AutoCompleteTextView">
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:minHeight">34dp</item>
+    </style>
 
     <!-- MaterialAlertDialog -->
     <style name="MaterialAlertDialog.Material3.Body.Text.Large" parent="MaterialAlertDialog.Material3.Body.Text">
@@ -322,9 +348,13 @@
 
     <!-- ProgressIndicator -->
     <style name="Widget.AppTheme.LinearProgressIndicator" parent="Widget.Material3.LinearProgressIndicator" />
+
     <style name="Widget.AppTheme.CircularProgressIndicator" parent="Widget.Material3.CircularProgressIndicator" />
+
     <style name="Widget.AppTheme.CircularProgressIndicator.Medium" parent="Widget.Material3.CircularProgressIndicator.Medium" />
+
     <style name="Widget.AppTheme.CircularProgressIndicator.Small" parent="Widget.Material3.CircularProgressIndicator.Small" />
+
     <style name="Widget.AppTheme.CircularProgressIndicator.ExtraSmall" parent="Widget.Material3.CircularProgressIndicator.ExtraSmall" />
 
     <!-- SwipeRefreshLayout -->

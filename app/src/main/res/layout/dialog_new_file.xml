@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="@dimen/padding_small"
     android:paddingBottom="@dimen/padding_small"
     android:paddingStart="@dimen/padding_medium"
@@ -27,6 +28,7 @@
         style="@style/Widget.AppTheme.MaterialSpinner"
         android:id="@+id/type_selector_spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:boxStrokeWidth="0dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

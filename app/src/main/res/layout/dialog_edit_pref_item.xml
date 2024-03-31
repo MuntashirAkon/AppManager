@@ -13,7 +13,7 @@
         android:paddingVertical="@dimen/padding_small">
 
         <io.github.muntashirakon.widget.MaterialSpinner
-            style="@style/Widget.AppTheme.MaterialSpinner.Outlined"
+            style="@style/Widget.AppTheme.MaterialSpinner"
             android:id="@+id/type_selector_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
