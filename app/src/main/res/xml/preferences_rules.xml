@@ -25,10 +25,9 @@
         android:fragment="io.github.muntashirakon.AppManager.settings.ImportExportRulesPreferences"
         app:iconSpaceReserved="false" />
 
-    <Preference
+    <io.github.muntashirakon.preference.PrimaryButtonPreference
         app:key="remove_all_rules"
         app:title="@string/pref_remove_all_rules"
-        app:summary="@string/pref_remove_all_rules_msg"
-        app:iconSpaceReserved="false" />
+        app:icon="@drawable/ic_restore"/>
 
 </PreferenceScreen>

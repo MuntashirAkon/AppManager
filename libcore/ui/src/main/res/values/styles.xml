@@ -37,6 +37,7 @@
         <item name="alertPreferenceStyle">@style/Preference.M3.Alert</item>
         <item name="checkBoxPreferenceStyle">@style/Preference.M3.CheckBoxPreference</item>
         <item name="dialogPreferenceStyle">@style/Preference.M3.DialogPreference</item>
+        <item name="primaryButtonPreferenceStyle">@style/Preference.M3.ButtonPreference.Primary</item>
         <item name="topSwitchPreferenceStyle">@style/Preference.M3.TopSwitchPreference</item>
 
         <item name="dropdownPreferenceStyle">@style/Preference.DropDown.Material</item>
@@ -432,6 +433,10 @@
         <item name="android:layout">@layout/m3_preference</item>
     </style>
 
+    <style name="Preference.M3.ButtonPreference.Primary" parent="Preference.Material">
+        <item name="android:layout">@layout/m3_preference_button</item>
+    </style>
+
     <style name="Preference.M3.SwitchPreference" parent="Preference.SwitchPreference.Material">
         <item name="android:layout">@layout/m3_preference</item>
     </style>
@@ -515,7 +520,17 @@
 
     <style name="Widget.AppTheme.Button.FilledButton" parent="Widget.Material3.Button" />
 
+    <style name="Widget.AppTheme.Button.FilledButton.Dense" parent="Widget.AppTheme.Button.FilledButton">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+
     <style name="Widget.AppTheme.Button.FilledTonalButton" parent="Widget.Material3.Button.TonalButton" />
+
+    <style name="Widget.AppTheme.Button.FilledTonalButton.Dense" parent="Widget.AppTheme.Button.FilledTonalButton">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
 
     <style name="Widget.AppTheme.Button.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton" />
 

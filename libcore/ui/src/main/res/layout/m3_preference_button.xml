@@ -1,0 +1,28 @@
+<!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_vertical"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"
+    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+    android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+    android:layout_marginHorizontal="?attr/listItemMarginHorizontal"
+    android:paddingVertical="16dp"
+    android:clipToPadding="false"
+    android:baselineAligned="false"
+    android:orientation="vertical">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@android:id/button1"
+        style="@style/Widget.AppTheme.Button.FilledButton.Dense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:textAppearance="?attr/textAppearanceTitleMedium"
+        app:iconSize="18dp"
+        android:paddingHorizontal="16dp"
+        tools:text="Button" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>
