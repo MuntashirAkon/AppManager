@@ -150,7 +150,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         AdapterUtils.setVisible(holder.mSwapInfoChart, totalSwapIsNonZero);
         AdapterUtils.setVisible(holder.mSwapShortInfoView, totalSwapIsNonZero);
         AdapterUtils.setVisible(holder.mSwapInfoView, totalSwapIsNonZero);
-        if (totalIsNonZero) {
+        if (totalSwapIsNonZero) {
             holder.mSwapInfoChart.post(() -> {
                 int width = holder.mSwapInfoChart.getWidth();
                 setLayoutWidth(holder.mSwapInfoChartChildren[0], (int) (width * usedSwap / totalSwap));

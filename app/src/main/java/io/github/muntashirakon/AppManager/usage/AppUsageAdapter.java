@@ -12,7 +12,6 @@ import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import androidx.annotation.GuardedBy;
@@ -33,9 +32,7 @@ import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.adapters.SelectedArrayAdapter;
-import io.github.muntashirakon.view.ProgressIndicatorCompat;
-import io.github.muntashirakon.widget.MaterialSpinner;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 
 class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -47,13 +44,11 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final AppUsageActivity mActivity;
 
     static class ListHeaderViewHolder extends RecyclerView.ViewHolder {
-        final MaterialSpinner spinner;
         final MaterialTextView screenTimeView;
         final MaterialTextView usageIntervalView;
 
         public ListHeaderViewHolder(@NonNull View itemView) {
             super(itemView);
-            spinner = itemView.findViewById(R.id.spinner);
             screenTimeView = itemView.findViewById(R.id.screen_time);
             usageIntervalView = itemView.findViewById(R.id.time);
         }
@@ -147,15 +142,6 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull ListHeaderViewHolder holder) {
         // Make spinner the first item to focus on
         int currentInterval = mActivity.viewModel.getCurrentInterval();
-        holder.spinner.requestFocus();
-        ArrayAdapter<CharSequence> intervalSpinnerAdapter = SelectedArrayAdapter.createFromResource(mActivity,
-                R.array.usage_interval_dropdown_list, io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item_small);
-        holder.spinner.setAdapter(intervalSpinnerAdapter);
-        holder.spinner.setSelection(currentInterval);
-        holder.spinner.setOnItemClickListener((parent, view, position, id) -> {
-            ProgressIndicatorCompat.setVisibility(mActivity.progressIndicator, true);
-            mActivity.viewModel.setCurrentInterval(position);
-        });
 
         holder.screenTimeView.setText(DateUtils.getFormattedDuration(mActivity, mActivity.viewModel.getTotalScreenTime()));
         switch (currentInterval) {

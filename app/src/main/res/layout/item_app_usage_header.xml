@@ -1,18 +1,9 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
-
-    <io.github.muntashirakon.widget.MaterialSpinner
-        style="@style/Widget.AppTheme.MaterialSpinner.Outlined.Small"
-        android:id="@+id/spinner"
-        android:layout_width="130dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/padding_large"
-        android:nextFocusDown="@id/recycler_view" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/screen_time"

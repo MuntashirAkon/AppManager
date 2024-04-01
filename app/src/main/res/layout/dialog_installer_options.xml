@@ -14,7 +14,7 @@
 
         <io.github.muntashirakon.widget.MaterialSpinner
             android:id="@+id/user"
-            style="@style/Widget.AppTheme.MaterialSpinner.Outlined.Small"
+            style="@style/Widget.AppTheme.MaterialSpinner.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -22,7 +22,7 @@
 
         <io.github.muntashirakon.widget.MaterialSpinner
             android:id="@+id/install_location"
-            style="@style/Widget.AppTheme.MaterialSpinner.Outlined.Small"
+            style="@style/Widget.AppTheme.MaterialSpinner.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"

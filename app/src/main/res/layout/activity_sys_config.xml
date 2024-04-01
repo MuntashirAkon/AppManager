@@ -34,13 +34,16 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <io.github.muntashirakon.widget.MaterialSpinner
-            style="@style/Widget.AppTheme.MaterialSpinner.Outlined.Small"
+            style="@style/Widget.AppTheme.MaterialSpinner.Spinner.Small"
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/padding_large"
-            android:nextFocusDown="@id/recycler_view" />
+            android:minWidth="100dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginVertical="@dimen/padding_small"
+            android:layout_marginHorizontal="@dimen/padding_large"
+            android:nextFocusDown="@id/recycler_view"
+            tools:hint="permissions" />
 
         <FrameLayout
             android:layout_width="match_parent"
