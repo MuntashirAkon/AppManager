@@ -61,6 +61,8 @@ import io.github.muntashirakon.dialog.TextInputDialogBuilder;
  * Controls mode of operation and other related functions
  */
 public class Ops {
+    public static final String TAG = Ops.class.getSimpleName();
+
     @StringDef({MODE_AUTO, MODE_ROOT, MODE_ADB_OVER_TCP, MODE_ADB_WIFI, MODE_NO_ROOT})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Mode {
@@ -248,7 +250,7 @@ public class Ops {
                         if (AdbUtils.enableWirelessDebugging(context)) {
                             return STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING;
                         }
-                        Log.w("ModeOfOps", "Could not ensure wireless debugging, falling back...");
+                        Log.w(TAG, "Could not ensure wireless debugging, falling back...");
                     } // else fallback to ADB over TCP
                 case MODE_ADB_OVER_TCP:
                     sIsRoot = sIsSystem = false;
@@ -259,7 +261,7 @@ public class Ops {
                     return checkRootOrIncompleteUsbDebuggingInAdb();
             }
         } catch (Throwable e) {
-            Log.e("ModeOfOps", e);
+            Log.e(TAG, e);
             // Fallback to no-root mode for this session, this does not modify the user preference
             sIsAdb = sIsSystem = sIsRoot = false;
             ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.failed_to_use_the_current_mode_of_operation));
@@ -303,14 +305,14 @@ public class Ops {
                     return;
                 }
             } catch (RemoteException e) {
-                Log.e("ROOT", e);
+                Log.e(TAG, e);
             }
             // Root is granted but Binder communication cannot be initiated
-            Log.e("ROOT", "Root granted but could not use root to initiate a connection. Trying ADB...");
+            Log.e(TAG, "Root granted but could not use root to initiate a connection. Trying ADB...");
             if (AdbUtils.startAdb(AdbUtils.getAdbPortOrDefault())) {
-                Log.d("ROOT", "Started ADB over TCP via root.");
+                Log.i(TAG, "Started ADB over TCP via root.");
             } else {
-                Log.d("ROOT", "Could not start ADB over TCP via root.");
+                Log.w(TAG, "Could not start ADB over TCP via root.");
             }
             sIsRoot = false;
             // Fall-through, in case we can use other options
@@ -357,7 +359,7 @@ public class Ops {
             LocalServer.restart();
             LocalServices.bindServicesIfNotAlready();
         } catch (Throwable e) {
-            Log.e("ADB", e);
+            Log.e(TAG, e);
         }
         sIsAdb = LocalServices.alive();
         if (sIsAdb) {
@@ -407,13 +409,13 @@ public class Ops {
             LocalServices.bindServicesIfNotAlready();
             return checkRootOrIncompleteUsbDebuggingInAdb();
         } catch (RemoteException | IOException e) {
-            Log.e("ADB", e);
-            // Failed, fall-through
+            Log.e(TAG, "Could not auto-connect to adbd", e);
+            // Go back to the last mode
+            sIsAdb = lastAdb;
+            sIsSystem = lastSystem;
+            sIsRoot = lastRoot;
+            return returnCodeOnFailure;
         }
-        sIsAdb = lastAdb;
-        sIsSystem = lastSystem;
-        sIsRoot = lastRoot;
-        return returnCodeOnFailure;
     }
 
     @WorkerThread
@@ -432,13 +434,13 @@ public class Ops {
             LocalServices.bindServicesIfNotAlready();
             return checkRootOrIncompleteUsbDebuggingInAdb();
         } catch (RemoteException | IOException e) {
-            Log.e("ADB", e);
-            // Failed, fall-through
+            Log.e(TAG, "Could not connect to adbd using port " + port, e);
+            // Go back to the last mode
+            sIsAdb = lastAdb;
+            sIsSystem = lastSystem;
+            sIsRoot = lastRoot;
+            return returnCodeOnFailure;
         }
-        sIsAdb = lastAdb;
-        sIsSystem = lastSystem;
-        sIsRoot = lastRoot;
-        return returnCodeOnFailure;
     }
 
     @UiThread
@@ -525,7 +527,7 @@ public class Ops {
                     STATUS_ADB_CONNECT_REQUIRED);
         } catch (Exception e) {
             ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed));
-            Log.e("ADB", e);
+            Log.e(TAG, e);
             // Failed, fall-through
         }
         return STATUS_FAILURE;
@@ -573,7 +575,7 @@ public class Ops {
                 LocalServer.getInstance();
                 LocalServices.bindServicesIfNotAlready();
             } catch (RemoteException | IOException e) {
-                Log.e("CHECK", e);
+                Log.e(TAG, e);
                 // fall-through, because the remote service may still be alive
             }
         }
@@ -653,7 +655,7 @@ public class Ops {
             try {
                 return findAdbPort(context, timeoutInSeconds);
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                Log.w(TAG, "Could not find ADB port", e);
             }
         }
         return defaultPort;
