@@ -98,14 +98,13 @@ public class ScannerFragment extends Fragment {
         signaturesView.setCardBackgroundColor(cardColor);
         MaterialCardView missingLibsView = view.findViewById(R.id.missing_libs);
         missingLibsView.setCardBackgroundColor(cardColor);
-        boolean isInternetEnabled = FeatureController.isInternetEnabled();
         // VirusTotal
-        if (!isInternetEnabled || Prefs.VirusTotal.getApiKey() == null) {
+        if (!FeatureController.isVirusTotalEnabled() || Prefs.VirusTotal.getApiKey() == null) {
             mVtContainerView.setVisibility(View.GONE);
             view.findViewById(R.id.vt_disclaimer).setVisibility(View.GONE);
         }
         // Pithus
-        if (!isInternetEnabled) {
+        if (!FeatureController.isInternetEnabled()) {
             pithusContainerView.setVisibility(View.GONE);
         }
         // Checksum

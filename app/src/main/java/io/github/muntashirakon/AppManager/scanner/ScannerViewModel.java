@@ -234,24 +234,24 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     @WorkerThread
     private void generateApkChecksumsAndFetchScanReports() {
         waitForFile();
+        Path file = Paths.getUnprivileged(mApkFile);
         String pithusReportUrl = null;
-        try {
-            Path file = Paths.getUnprivileged(mApkFile);
-            Pair<String, String>[] digests = DigestUtils.getDigests(file);
-            mApkChecksumsLiveData.postValue(digests);
-            if (FeatureController.isInternetEnabled()) {
-                String md5 = digests[0].second;
-                String sha256 = digests[2].second;
-                pithusReportUrl = ExUtils.exceptionAsNull(() -> Pithus.resolveReport(sha256));
-                if (mVt == null) return;
-                mVt.fetchReportsOrScan(file, md5, this);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            mApkChecksumsLiveData.postValue(null);
-            mVtFileReportLiveData.postValue(null);
+        Pair<String, String>[] digests = ExUtils.exceptionAsNull(() -> DigestUtils.getDigests(file));
+        mApkChecksumsLiveData.postValue(digests);
+        if (digests != null && FeatureController.isInternetEnabled()) {
+            String sha256 = digests[2].second;
+            pithusReportUrl = ExUtils.exceptionAsNull(() -> Pithus.resolveReport(sha256));
         }
         mPithusReportLiveData.postValue(pithusReportUrl);
+        if (mVt != null && digests != null && FeatureController.isVirusTotalEnabled()) {
+            String md5 = digests[0].second;
+            try {
+                mVt.fetchReportsOrScan(file, md5, this);
+            } catch (IOException e) {
+                e.printStackTrace();
+                mVtFileReportLiveData.postValue(null);
+            }
+        } else mVtFileReportLiveData.postValue(null);
     }
 
     private void loadApkVerifierResult() {

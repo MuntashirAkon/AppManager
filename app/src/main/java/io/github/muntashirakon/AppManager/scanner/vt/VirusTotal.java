@@ -57,7 +57,7 @@ public class VirusTotal {
     @Nullable
     public static VirusTotal getInstance() {
         String apiKey = Prefs.VirusTotal.getApiKey();
-        if (FeatureController.isInternetEnabled() && apiKey != null) {
+        if (FeatureController.isVirusTotalEnabled() && apiKey != null) {
             return new VirusTotal(apiKey);
         }
         return null;
