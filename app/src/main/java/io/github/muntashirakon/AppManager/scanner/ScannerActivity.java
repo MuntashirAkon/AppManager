@@ -154,6 +154,12 @@ public class ScannerActivity extends BaseActivity {
     public void loadNewFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(
+                        R.animator.enter_from_left,
+                        R.animator.enter_from_right,
+                        R.animator.exit_from_right,
+                        R.animator.exit_from_left
+                )
                 .replace(R.id.main_layout, fragment)
                 .addToBackStack(null)
                 .commit();

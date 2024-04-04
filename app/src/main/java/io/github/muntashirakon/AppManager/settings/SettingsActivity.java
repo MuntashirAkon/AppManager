@@ -26,9 +26,6 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.self.life.BuildExpiryChecker;
-import io.github.muntashirakon.AppManager.self.life.FundingCampaignChecker;
-import io.github.muntashirakon.util.UiUtils;
 
 public class SettingsActivity extends BaseActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     public static final String TAG = SettingsActivity.class.getSimpleName();
@@ -97,10 +94,10 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(
-                        R.anim.slide_in,  // enter
-                        R.anim.fade_out,  // exit
-                        R.anim.fade_in,   // popEnter
-                        R.anim.slide_out  // popExit
+                        R.animator.enter_from_left,
+                        R.animator.enter_from_right,
+                        R.animator.exit_from_right,
+                        R.animator.exit_from_left
                 )
                 .replace(R.id.main_layout, MainPreferences.getInstance(getKey(mLevel)))
                 .commit();
@@ -152,10 +149,10 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
         fragment.setTargetFragment(caller, 0);
         fragmentManager.beginTransaction()
                 .setCustomAnimations(
-                        R.anim.slide_in,  // enter
-                        R.anim.fade_out,  // exit
-                        R.anim.fade_in,   // popEnter
-                        R.anim.slide_out  // popExit
+                        R.animator.enter_from_left,
+                        R.animator.enter_from_right,
+                        R.animator.exit_from_right,
+                        R.animator.exit_from_left
                 )
                 .replace(R.id.main_layout, fragment)
                 .addToBackStack(null)
