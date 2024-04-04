@@ -255,6 +255,7 @@ public class Ops {
                     sIsAdb = true;
                     ServerConfig.setAdbPort(findAdbPort(context, 10, AdbUtils.getAdbPortOrDefault()));
                     LocalServer.restart();
+                    LocalServices.bindServicesIfNotAlready();
                     return checkRootOrIncompleteUsbDebuggingInAdb();
             }
         } catch (Throwable e) {
@@ -354,6 +355,7 @@ public class Ops {
         try {
             ServerConfig.setAdbPort(findAdbPort(context, 7, ServerConfig.getAdbPort()));
             LocalServer.restart();
+            LocalServices.bindServicesIfNotAlready();
         } catch (Throwable e) {
             Log.e("ADB", e);
         }
@@ -402,6 +404,7 @@ public class Ops {
         try {
             ServerConfig.setAdbPort(findAdbPort(context, 5, ServerConfig.getAdbPort()));
             LocalServer.restart();
+            LocalServices.bindServicesIfNotAlready();
             return checkRootOrIncompleteUsbDebuggingInAdb();
         } catch (RemoteException | IOException e) {
             Log.e("ADB", e);
@@ -426,6 +429,7 @@ public class Ops {
         try {
             ServerConfig.setAdbPort(port);
             LocalServer.restart();
+            LocalServices.bindServicesIfNotAlready();
             return checkRootOrIncompleteUsbDebuggingInAdb();
         } catch (RemoteException | IOException e) {
             Log.e("ADB", e);
@@ -567,6 +571,7 @@ public class Ops {
             // Remote server is running, but local server may not be running
             try {
                 LocalServer.getInstance();
+                LocalServices.bindServicesIfNotAlready();
             } catch (RemoteException | IOException e) {
                 Log.e("CHECK", e);
                 // fall-through, because the remote service may still be alive

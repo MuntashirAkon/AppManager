@@ -1469,4 +1469,12 @@
     <string name="pref_use_log_viewer">Use Log Viewer</string>
     <string name="pref_installer">Use the installer</string>
     <string name="pref_cat_general">General</string>
+    <string name="status_remote_server_active">Remote server is active</string>
+    <string name="status_remote_server_inactive">Remote server is inactive</string>
+    <string name="status_remote_services_active">Remote services are active</string>
+    <string name="status_remote_services_inactive">Remote services are inactive</string>
+    <string name="status_connecting">Connecting…</string>
+    <string name="status_connecting_via_mode">Connecting via %s</string>
+    <string name="status_connected_via_mode">Connected via %s</string>
+    <string name="status_not_connected_via_mode">Could not connect via %s</string>
 </resources>

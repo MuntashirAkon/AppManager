@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.servermanager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.RemoteException;
 import android.os.UserHandleHidden;
 
 import androidx.annotation.AnyThread;
@@ -18,7 +17,6 @@ import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
 import io.github.muntashirakon.AppManager.server.common.Caller;
@@ -39,16 +37,13 @@ public class LocalServer {
     @GuardedBy("lockObject")
     @WorkerThread
     @NoOps(used = true)
-    public static LocalServer getInstance() throws RemoteException, IOException {
+    public static LocalServer getInstance() throws IOException {
         // Non-null check must be done outside the synchronised block to prevent deadlock on ADB over TCP mode.
         if (sLocalServer != null) return sLocalServer;
         synchronized (sLock) {
             try {
                 Log.d("IPC", "Init: Local server");
                 sLocalServer = new LocalServer();
-                // This calls the AdbShell class which has dependencies on LocalServer which might cause deadlock
-                // if not careful (see comment above on non-null check)
-                LocalServices.bindServicesIfNotAlready();
             } finally {
                 sLock.notifyAll();
             }
@@ -120,7 +115,7 @@ public class LocalServer {
         }
     }
 
-    public Shell.Result runCommand(String command) throws IOException, RemoteException {
+    public Shell.Result runCommand(String command) throws IOException {
         ShellCaller shellCaller = new ShellCaller(command);
         CallerResult callerResult = exec(shellCaller);
         Throwable th = callerResult.getThrowable();
@@ -168,13 +163,12 @@ public class LocalServer {
 
     @WorkerThread
     @NoOps(used = true)
-    public static void restart() throws IOException, RemoteException {
+    public static void restart() throws IOException {
         if (sLocalServer != null) {
             LocalServerManager manager = sLocalServer.mLocalServerManager;
             manager.closeBgServer();
             manager.stop();
             manager.start();
-            LocalServices.bindServicesIfNotAlready();
         } else {
             getInstance();
         }

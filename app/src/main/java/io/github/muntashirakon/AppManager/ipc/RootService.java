@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.Messenger;
-import android.os.RemoteException;
 import android.util.Log;
 
 import androidx.annotation.MainThread;
@@ -211,7 +210,7 @@ public abstract class RootService extends ContextWrapper {
                         Log.e(TAG, "Couldn't start service using root.");
                     }
                 }
-            } catch (IOException | RemoteException e) {
+            } catch (IOException e) {
                 Log.e(TAG, e.getMessage(), e);
             }
         };

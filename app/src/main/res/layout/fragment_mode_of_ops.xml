@@ -1,0 +1,91 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<io.github.muntashirakon.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="false">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/padding_medium">
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.AppTheme.CardView.ListItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="?attr/colorPrimaryContainer">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingVertical="16dp"
+                android:paddingHorizontal="16dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/inferred_mode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOnPrimaryContainer"
+                    android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                    tools:text="Root" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/remote_server_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnPrimaryContainer"
+                    android:drawablePadding="@dimen/padding_very_small"
+                    app:drawableTint="?attr/colorOnPrimaryContainer"
+                    tools:drawableStartCompat="@drawable/ic_caution"
+                    tools:text="Remote server inactive" />
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/remote_services_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnPrimaryContainer"
+                    android:drawablePadding="@dimen/padding_very_small"
+                    app:drawableTint="?attr/colorOnPrimaryContainer"
+                    tools:drawableStartCompat="@drawable/ic_check_circle"
+                    tools:text="Remote services active" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/op_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnPrimaryContainer"
+                    android:drawablePadding="@dimen/padding_very_small"
+                    app:drawableTint="?attr/colorOnPrimaryContainer"
+                    tools:drawableStartCompat="@drawable/ic_check_circle"
+                    tools:text="Connected via ADB over TCP" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/action_settings"
+                    style="@style/Widget.AppTheme.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:textColor="?attr/colorOnPrimaryContainer"
+                    android:text="@string/change_mode" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</io.github.muntashirakon.widget.NestedScrollView>

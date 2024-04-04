@@ -39,6 +39,7 @@
         app:key="mode_of_operations"
         app:icon="@drawable/ic_run_fast"
         app:title="@string/pref_mode_of_operations"
+        android:fragment="io.github.muntashirakon.AppManager.settings.ModeOfOpsPreference"
         tools:summary="Auto" />
 
     <Preference
