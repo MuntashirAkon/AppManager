@@ -1083,9 +1083,7 @@
     <string name="keystore_password_info">The following is the App Manager KeyStore password. Please store it in a secure place if you\'re going to back up/restore App Manager KeyStore. <b>This message will not be displayed again.</b></string>
     <string name="keystore_pass_cannot_be_empty">KeyStore password cannot be empty.</string>
     <string name="invalid_password">Invalid password, try again.</string>
-    <string name="adb_wifi_paring_code">Wi-Fi pairing code</string>
     <string name="adb_pair">Pair</string>
-    <string name="port_number_pairing_code_empty">Empty port number or pairing code.</string>
     <string name="paired_successfully">Paired.</string>
     <string name="identifier">Identifier</string>
     <string name="set_package_name_first">Set package name first!</string>
@@ -1477,4 +1475,12 @@
     <string name="status_connecting_via_mode">Connecting via %s</string>
     <string name="status_connected_via_mode">Connected via %s</string>
     <string name="status_not_connected_via_mode">Could not connect via %s</string>
+    <string name="adb_pairing_instruction">Please navigate to the developer options to enable wireless debugging and generate a pairing code.</string>
+    <string name="adb_pairing_searching_for_port">Searching…</string>
+    <string name="adb_pairing_stop_searching">Stop</string>
+    <string name="adb_pairing_input_pairing_code">Pairing code</string>
+    <string name="adb_pairing_pairing_code">Pairing code</string>
+    <string name="adb_pairing_found_pairing_service_with_port">Found a service with port %d</string>
+    <string name="adb_pairing_pairing_in_progress">Pairing…</string>
+    <string name="adb_pairing_retry_pairing">Retry</string>
 </resources>

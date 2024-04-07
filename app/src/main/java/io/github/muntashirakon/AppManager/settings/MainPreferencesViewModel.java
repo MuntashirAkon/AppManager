@@ -46,12 +46,9 @@ import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
-import io.github.muntashirakon.adb.android.AdbMdns;
 import io.github.muntashirakon.lifecycle.SingleLiveEvent;
 
 public class MainPreferencesViewModel extends AndroidViewModel implements Ops.AdbConnectionInterface {
-    private AdbMdns mAdbMdnsPairing;
-
     private final Object mRulesLock = new Object();
     private final MutableLiveData<List<UserInfo>> mSelectUsers = new SingleLiveEvent<>();
     private final MutableLiveData<Changelog> mChangeLog = new SingleLiveEvent<>();
@@ -61,7 +58,6 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
     private final MutableLiveData<ArrayMap<String, Uri>> mStorageVolumesLiveData = new SingleLiveEvent<>();
     private final MutableLiveData<String> mSigningKeySha256HashLiveData = new SingleLiveEvent<>();
     private final MutableLiveData<List<Pair<String, CharSequence>>> mPackageNameLabelPairLiveData = new SingleLiveEvent<>();
-    private final MutableLiveData<Integer> mAdbPairingPort = new SingleLiveEvent<>();
     private final ExecutorService mExecutor = Executors.newFixedThreadPool(1);
 
     public MainPreferencesViewModel(@NonNull Application application) {
@@ -229,7 +225,7 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
     @RequiresApi(Build.VERSION_CODES.R)
     public void pairAdb(@Nullable String pairingCode, int port) {
         mExecutor.submit(() -> {
-            int status = Ops.pairAdb(getApplication(), pairingCode, port);
+            int status = Ops.pairAdb(getApplication(), port);
             mModeOfOpsStatus.postValue(status);
         });
     }
@@ -237,28 +233,5 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
     @Override
     public void onStatusReceived(int status) {
         mModeOfOpsStatus.postValue(status);
-    }
-
-    @NonNull
-    @Override
-    public LiveData<Integer> startObservingAdbPairingPort() {
-        mExecutor.submit(() -> {
-            if (mAdbMdnsPairing == null) {
-                mAdbMdnsPairing = new AdbMdns(getApplication(), AdbMdns.SERVICE_TYPE_TLS_PAIRING, (hostAddress, port) -> {
-                    if (port != -1) {
-                        mAdbPairingPort.postValue(port);
-                    }
-                });
-            }
-            mAdbMdnsPairing.start();
-        });
-        return mAdbPairingPort;
-    }
-
-    @Override
-    public void stopObservingAdbPairingPort() {
-        if (mAdbMdnsPairing != null) {
-            mAdbMdnsPairing.stop();
-        }
     }
 }

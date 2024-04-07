@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 
 // Copyright 2017 Zheng Li
 public class ParcelableUtil {
-
+    @NonNull
     public static byte[] marshall(@NonNull Parcelable parcelable) {
         Parcel parcel = Parcel.obtain();
         parcelable.writeToParcel(parcel, 0);

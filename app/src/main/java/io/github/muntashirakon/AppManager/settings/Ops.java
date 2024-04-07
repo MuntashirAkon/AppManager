@@ -9,10 +9,7 @@ import android.os.Build;
 import android.os.Process;
 import android.os.RemoteException;
 import android.provider.Settings;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.EditText;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
@@ -26,21 +23,24 @@ import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
+import io.github.muntashirakon.AppManager.adb.AdbPairingService;
 import io.github.muntashirakon.AppManager.adb.AdbUtils;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
+import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
@@ -474,42 +474,19 @@ public class Ops {
     @NoOps
     public static void pairAdbInput(@NonNull FragmentActivity activity,
                                     @NonNull AdbConnectionInterface callback) {
-        View view = View.inflate(activity, R.layout.dialog_adb_pairing, null);
-        EditText adbPairingCodeInput = view.findViewById(R.id.adb_pairing_code);
-        EditText portNumberInput = view.findViewById(R.id.port_number);
-        LiveData<Integer> portNumberLiveData = callback.startObservingAdbPairingPort();
-        portNumberLiveData.observe(activity, portNumber -> portNumberInput.setText(String.valueOf(portNumber)));
         new MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.wireless_debugging)
-                .setView(view)
+                .setMessage(R.string.adb_pairing_instruction)
                 .setCancelable(false)
-                .setPositiveButton(R.string.ok, (dialog, which) -> {
-                    Editable rawPairingCode = adbPairingCodeInput.getText();
-                    Editable portString = portNumberInput.getText();
-                    if (TextUtils.isEmpty(rawPairingCode)) {
-                        UIUtils.displayShortToast(R.string.port_number_pairing_code_empty);
-                        callback.pairAdb(null, -1);
-                        return;
-                    }
-                    String pairingCode = Objects.requireNonNull(rawPairingCode).toString().trim();
-                    if (TextUtils.isEmpty(portString)) {
-                        UIUtils.displayShortToast(R.string.port_number_pairing_code_empty);
-                        callback.pairAdb(pairingCode, -1);
-                        return;
-                    }
-                    int port;
-                    try {
-                        port = Integer.decode(portString.toString().trim());
-                        callback.pairAdb(pairingCode, port);
-                    } catch (NumberFormatException e) {
-                        UIUtils.displayShortToast(R.string.port_number_invalid);
-                        callback.pairAdb(pairingCode, -1);
-                    }
-                })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> callback.pairAdb(null, -1))
-                .setOnDismissListener(dialog -> {
-                    callback.stopObservingAdbPairingPort();
-                    portNumberLiveData.removeObservers(activity);
+                .setPositiveButton(R.string.go, (dialog, which) -> {
+                    Intent developerOptionsIntent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    Intent adbPairingServiceIntent = new Intent(activity, AdbPairingService.class)
+                            .setAction(AdbPairingService.ACTION_START_PAIRING);
+                    activity.startActivity(developerOptionsIntent);
+                    ContextCompat.startForegroundService(activity, adbPairingServiceIntent);
+                    callback.pairAdb(null, 0);
                 })
                 .show();
     }
@@ -518,19 +495,60 @@ public class Ops {
     @NoOps
     @RequiresApi(Build.VERSION_CODES.R)
     @Status
-    public static int pairAdb(@NonNull Context context, @Nullable String pairingCode, int port) {
-        if (pairingCode == null || port < 0) return STATUS_FAILURE;
+    public static int pairAdb(@NonNull Context context, int port) {
+        if (port != 0) return STATUS_FAILURE;
         try {
-            AdbConnectionManager.getInstance().pair(ServerConfig.getAdbHost(context), port, pairingCode.trim());
-            ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.paired_successfully));
-            return connectAdb(context, findAdbPort(context, 7, ServerConfig.getAdbPort()),
-                    STATUS_ADB_CONNECT_REQUIRED);
+            AdbConnectionManager conn = AdbConnectionManager.getInstance();
+            int status = pairAdbInternal(context, conn);
+            if (status == STATUS_ADB_CONNECT_REQUIRED) {
+                return connectAdb(context, findAdbPort(context, 7, ServerConfig.getAdbPort()),
+                        STATUS_ADB_CONNECT_REQUIRED);
+            }
         } catch (Exception e) {
             ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed));
             Log.e(TAG, e);
             // Failed, fall-through
         }
         return STATUS_FAILURE;
+    }
+
+
+    @WorkerThread
+    @NoOps
+    @RequiresApi(Build.VERSION_CODES.R)
+    @Status
+    private static int pairAdbInternal(@NonNull Context context, @NonNull AdbConnectionManager conn) {
+        AtomicReference<CountDownLatch> observerObserver = new AtomicReference<>(new CountDownLatch(1));
+        AtomicReference<Exception> pairingError = new AtomicReference<>();
+        Observer<Exception> observer = e -> {
+            pairingError.set(e);
+            observerObserver.get().countDown();
+        };
+        ThreadUtils.postOnMainThread(() -> conn.getPairingObserver().observeForever(observer));
+        while (true) {
+            boolean success;
+            try {
+                success = observerObserver.get().await(1, TimeUnit.HOURS);
+            } catch (InterruptedException ignore) {
+                success = false;
+            }
+            if (success) {
+                if (pairingError.get() != null) {
+                    if (ServiceHelper.checkIfServiceIsRunning(context, AdbPairingService.class)) {
+                        observerObserver.set(new CountDownLatch(1));
+                        continue;
+                    }
+                    success = false;
+                }
+            }
+            ThreadUtils.postOnMainThread(() -> conn.getPairingObserver().removeObserver(observer));
+            if (success) {
+                return STATUS_ADB_CONNECT_REQUIRED;
+            } else {
+                context.stopService(new Intent(context, AdbPairingService.class));
+                return STATUS_FAILURE;
+            }
+        }
     }
 
     @UiThread
@@ -669,10 +687,5 @@ public class Ops {
         void pairAdb(@Nullable String pairingCode, int port);
 
         void onStatusReceived(@Status int status);
-
-        @NonNull
-        LiveData<Integer> startObservingAdbPairingPort();
-
-        void stopObservingAdbPairingPort();
     }
 }

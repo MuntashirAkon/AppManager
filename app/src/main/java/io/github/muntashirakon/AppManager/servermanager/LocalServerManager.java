@@ -131,7 +131,8 @@ class LocalServerManager {
     }
 
     @WorkerThread
-    private byte[] execPre(byte[] params) throws IOException {
+    @NonNull
+    private byte[] execPre(@NonNull byte[] params) throws IOException {
         try {
             return getSessionDataTransmission().sendAndReceiveMessage(params);
         } catch (IOException e) {
