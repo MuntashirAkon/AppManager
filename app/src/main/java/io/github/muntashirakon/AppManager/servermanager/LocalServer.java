@@ -9,6 +9,7 @@ import android.os.UserHandleHidden;
 import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import java.io.IOException;
@@ -23,7 +24,6 @@ import io.github.muntashirakon.AppManager.server.common.Caller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.Shell;
 import io.github.muntashirakon.AppManager.server.common.ShellCaller;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
 // Copyright 2016 Zheng Li
@@ -32,6 +32,7 @@ public class LocalServer {
     private static final Object sLock = new Object();
 
     @SuppressLint("StaticFieldLeak")
+    @Nullable
     private static LocalServer sLocalServer;
 
     @GuardedBy("lockObject")
@@ -51,19 +52,27 @@ public class LocalServer {
         return sLocalServer;
     }
 
+    public static void die() {
+        synchronized (sLock) {
+            try {
+                if (sLocalServer != null) {
+                    sLocalServer.destroy();
+                }
+            } finally {
+                sLocalServer = null;
+            }
+        }
+    }
+
     @WorkerThread
     @NoOps
     public static boolean alive(Context context) {
-        if (sLocalServer != null) {
+        try (ServerSocket socket = new ServerSocket()) {
+            socket.bind(new InetSocketAddress(ServerConfig.getLocalServerHost(context),
+                    ServerConfig.getLocalServerPort()), 1);
+            return false;
+        } catch (IOException e) {
             return true;
-        } else {
-            try (ServerSocket socket = new ServerSocket()) {
-                socket.bind(new InetSocketAddress(ServerConfig.getLocalServerHost(context),
-                        ServerConfig.getLocalServerPort()), 1);
-                return false;
-            } catch (IOException e) {
-                return true;
-            }
         }
     }
 
@@ -102,9 +111,7 @@ public class LocalServer {
             }
             mConnectStarted = true;
             try {
-                if (Ops.isPrivileged()) {
-                    mLocalServerManager.start();
-                }
+                mLocalServerManager.start();
             } catch (IOException e) {
                 mConnectStarted = false;
                 mConnectLock.notify();
@@ -172,5 +179,12 @@ public class LocalServer {
         } else {
             getInstance();
         }
+    }
+
+    @WorkerThread
+    @NonNull
+    public static String getExecCommand(@NonNull Context context) throws IOException {
+        AssetsUtils.writeScript(context);
+        return "sh " + ServerConfig.getExecPath() + " " + ServerConfig.getLocalServerPort() + " " + ServerConfig.getLocalToken();
     }
 }

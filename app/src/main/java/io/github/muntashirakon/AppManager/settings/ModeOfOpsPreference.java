@@ -5,6 +5,8 @@ package io.github.muntashirakon.AppManager.settings;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Process;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.color.MaterialColors;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.Arrays;
@@ -31,7 +34,10 @@ import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
+import io.github.muntashirakon.view.TextInputLayoutCompat;
+import io.github.muntashirakon.widget.TextInputTextView;
 
 public class ModeOfOpsPreference extends Fragment {
     private static final List<String> MODE_NAMES = Arrays.asList(
@@ -92,11 +98,14 @@ public class ModeOfOpsPreference extends Fragment {
         mRemoteServicesStatusView = view.findViewById(R.id.remote_services_status);
         mModeOfOpsView = view.findViewById(R.id.op_name);
         MaterialButton changeModeView = view.findViewById(R.id.action_settings);
+        List<String> disabledItems;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R || Utils.isTv(requireContext())) {
+            disabledItems = Collections.singletonList(Ops.MODE_ADB_WIFI);
+        } else disabledItems = null;
         changeModeView.setOnClickListener(v -> new SearchableSingleChoiceDialogBuilder<>(requireActivity(), MODE_NAMES, mModes)
                 .setTitle(R.string.pref_mode_of_operations)
                 .setSelection(mCurrentMode)
-                .addDisabledItems(Build.VERSION.SDK_INT < Build.VERSION_CODES.R ?
-                        Collections.singletonList(Ops.MODE_ADB_WIFI) : Collections.emptyList())
+                .addDisabledItems(disabledItems)
                 .setPositiveButton(R.string.apply, (dialog, which, selectedItem) -> {
                     if (selectedItem != null) {
                         mCurrentMode = selectedItem;
@@ -112,6 +121,15 @@ public class ModeOfOpsPreference extends Fragment {
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show());
+        TextInputTextView customCommand = view.findViewById(android.R.id.text1);
+        TextInputLayout customCommandLayout = TextInputLayoutCompat.fromTextInputEditText(customCommand);
+        customCommandLayout.setEndIconOnClickListener(v -> {
+            CharSequence command = customCommand.getText();
+            if (!TextUtils.isEmpty(command)) {
+                Utils.copyToClipboard(requireContext(), "command", command);
+            }
+        });
+        mModel.loadCustomCommand();
         updateViews();
         // Mode of ops
         mModel.getModeOfOpsStatus().observe(getViewLifecycleOwner(), status -> {
@@ -151,6 +169,7 @@ public class ModeOfOpsPreference extends Fragment {
                     updateViews();
             }
         });
+        mModel.getCustomCommand().observe(getViewLifecycleOwner(), customCommand::setText);
     }
 
     private void updateViews() {
@@ -167,14 +186,19 @@ public class ModeOfOpsPreference extends Fragment {
             mModeOfOpsView.setCompoundDrawablesRelativeWithIntrinsicBounds(mIconProgress, 0, 0, 0);
             mModeOfOpsView.setText(getString(R.string.status_connecting_via_mode, mModes[MODE_NAMES.indexOf(mCurrentMode)]));
         } else {
-            boolean goodMode = !badInferredMode(mCurrentMode);
+            int uid = Users.getSelfOrRemoteUid();
+            boolean goodMode = !badInferredMode(mCurrentMode, uid);
             mInferredModeView.setText(Ops.getInferredMode(requireContext()));
             if (goodMode) {
                 mInferredModeView.setTextColor(mColorActive);
                 TextViewCompat.setCompoundDrawableTintList(mModeOfOpsView, mColorActive);
                 mModeOfOpsView.setTextColor(mColorActive);
                 mModeOfOpsView.setCompoundDrawablesRelativeWithIntrinsicBounds(mIconActive, 0, 0, 0);
-                mModeOfOpsView.setText(getString(R.string.status_connected_via_mode, mModes[MODE_NAMES.indexOf(mCurrentMode)]));
+                CharSequence mode;
+                if (serverActive && uid != Process.myUid()) {
+                    mode = "remote service";
+                } else mode = mModes[MODE_NAMES.indexOf(mCurrentMode)];
+                mModeOfOpsView.setText(getString(R.string.status_connected_via_mode, mode));
             } else {
                 mInferredModeView.setTextColor(mColorError);
                 TextViewCompat.setCompoundDrawableTintList(mModeOfOpsView, mColorError);
@@ -195,7 +219,7 @@ public class ModeOfOpsPreference extends Fragment {
         mRemoteServerStatusView.setText(serverActive ? R.string.status_remote_server_active : R.string.status_remote_server_inactive);
         // Services
         if (servicesRequired) {
-            mRemoteServicesStatusView.setTextColor(servicesActive? mColorActive : mColorError);
+            mRemoteServicesStatusView.setTextColor(servicesActive ? mColorActive : mColorError);
             TextViewCompat.setCompoundDrawableTintList(mRemoteServicesStatusView, servicesActive ? mColorActive : mColorError);
         } else {
             mRemoteServicesStatusView.setTextColor(mColorInactive);
@@ -213,8 +237,7 @@ public class ModeOfOpsPreference extends Fragment {
         return !Ops.MODE_AUTO.equals(mode) && !Ops.MODE_NO_ROOT.equals(mode);
     }
 
-    private static boolean badInferredMode(@NonNull String mode) {
-        int uid = Users.getSelfOrRemoteUid();
+    private static boolean badInferredMode(@NonNull String mode, int uid) {
         switch (mode) {
             case Ops.MODE_ROOT:
                 return uid != Ops.ROOT_UID;

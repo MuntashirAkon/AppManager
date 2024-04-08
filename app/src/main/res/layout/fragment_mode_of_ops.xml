@@ -85,7 +85,44 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/padding_medium">
 
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:text="@string/mode_of_op_custom_command_title" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mode_of_op_custom_command" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.AppTheme.TextInputLayout.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:endIconContentDescription="@string/copy"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_content_copy">
+
+                <io.github.muntashirakon.widget.TextInputTextView
+                    android:id="@android:id/text1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:fontFamily="monospace"
+                    android:textIsSelectable="true"
+                    tools:text="sh /sdcard/Android/data/io.github.muntashirakon.AppManager/cache/run_server.sh 6001 yolk-good-folk" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </io.github.muntashirakon.widget.NestedScrollView>

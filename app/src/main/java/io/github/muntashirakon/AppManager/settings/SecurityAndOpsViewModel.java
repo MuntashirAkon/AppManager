@@ -7,7 +7,6 @@ import android.os.Build;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -101,10 +100,10 @@ public class SecurityAndOpsViewModel extends AndroidViewModel implements Ops.Adb
     @Override
     @AnyThread
     @RequiresApi(Build.VERSION_CODES.R)
-    public void pairAdb(@Nullable String pairingCode, int port) {
+    public void pairAdb() {
         mExecutor.submit(() -> {
             Log.d(TAG, "Before Ops::pairAdb");
-            int status = Ops.pairAdb(getApplication(), port);
+            int status = Ops.pairAdb(getApplication());
             Log.d(TAG, "After Ops::pairAdb");
             mAuthenticationStatus.postValue(status);
         });

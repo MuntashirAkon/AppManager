@@ -9,7 +9,6 @@ import android.os.PowerManager;
 import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.collection.ArrayMap;
 import androidx.core.util.Pair;
@@ -40,6 +39,7 @@ import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.misc.DeviceInfo2;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.CpuUtils;
@@ -53,6 +53,7 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
     private final MutableLiveData<List<UserInfo>> mSelectUsers = new SingleLiveEvent<>();
     private final MutableLiveData<Changelog> mChangeLog = new SingleLiveEvent<>();
     private final MutableLiveData<DeviceInfo2> mDeviceInfo = new SingleLiveEvent<>();
+    private final MutableLiveData<String> mCustomCommand = new SingleLiveEvent<>();
     private final MutableLiveData<Integer> mModeOfOpsStatus = new SingleLiveEvent<>();
     private final MutableLiveData<Boolean> mOperationCompletedLiveData = new SingleLiveEvent<>();
     private final MutableLiveData<ArrayMap<String, Uri>> mStorageVolumesLiveData = new SingleLiveEvent<>();
@@ -109,6 +110,21 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
                 appDb.loadInstalledOrBackedUpApplications(getApplication());
             } finally {
                 CpuUtils.releaseWakeLock(wakeLock);
+            }
+        });
+    }
+
+    public MutableLiveData<String> getCustomCommand() {
+        return mCustomCommand;
+    }
+
+    public void loadCustomCommand() {
+        mExecutor.submit(() -> {
+            try {
+                mCustomCommand.postValue(LocalServer.getExecCommand(getApplication()));
+            } catch (Throwable e) {
+                e.printStackTrace();
+                mCustomCommand.postValue(null);
             }
         });
     }
@@ -223,9 +239,9 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
 
     @Override
     @RequiresApi(Build.VERSION_CODES.R)
-    public void pairAdb(@Nullable String pairingCode, int port) {
+    public void pairAdb() {
         mExecutor.submit(() -> {
-            int status = Ops.pairAdb(getApplication(), port);
+            int status = Ops.pairAdb(getApplication());
             mModeOfOpsStatus.postValue(status);
         });
     }

@@ -16,7 +16,6 @@ import androidx.annotation.GuardedBy;
 import androidx.annotation.IntDef;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.StringDef;
 import androidx.annotation.UiThread;
@@ -50,6 +49,7 @@ import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.session.SessionMonitoringService;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -118,7 +118,7 @@ public class Ops {
      * @return {@code true} iff user chose to run App Manager in the privileged mode.
      */
     @AnyThread
-    public static boolean isPrivileged() {
+    private static boolean isPrivileged() {
         // Currently, root and ADB are the only privileged mode
         return sIsRoot || sIsAdb || sIsSystem;
     }
@@ -198,7 +198,7 @@ public class Ops {
         String mode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
         // Backward compatibility for v2.6.0
         if (mode.equals("adb")) {
-            mode = Ops.MODE_ADB_OVER_TCP;
+            mode = MODE_ADB_OVER_TCP;
         }
         if ((MODE_ADB_OVER_TCP.equals(mode) || MODE_ADB_WIFI.equals(mode))
                 && !SelfPermissions.checkSelfPermission(Manifest.permission.INTERNET)) {
@@ -222,15 +222,20 @@ public class Ops {
             autoDetectRootSystemOrAdbAndPersist(context);
             return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
         }
-        if (MODE_NO_ROOT.equals(mode)) {
-            sIsAdb = sIsSystem = sIsRoot = false;
-            // Also, stop existing services if any
-            LocalServices.stopServices();
-            return STATUS_SUCCESS;
-        }
         if (!force && isAMServiceUpAndRunning(context, mode)) {
             // An instance of AMService is already running
             return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
+        }
+        if (MODE_NO_ROOT.equals(mode)) {
+            sIsAdb = sIsSystem = sIsRoot = false;
+            // Also, stop existing services if any
+            ExUtils.exceptionAsIgnored(() -> {
+                if (LocalServer.alive(context)) {
+                    LocalServer.getInstance().closeBgServer();
+                }
+            });
+            LocalServices.stopServices();
+            return STATUS_SUCCESS;
         }
         try {
             switch (mode) {
@@ -238,6 +243,12 @@ public class Ops {
                     if (!hasRoot()) {
                         throw new Exception("Root is unavailable.");
                     }
+                    // Disable server first
+                    ExUtils.exceptionAsIgnored(() -> {
+                        if (LocalServer.alive(context)) {
+                            LocalServer.getInstance().closeBgServer();
+                        }
+                    });
                     sIsSystem = sIsAdb = false;
                     sIsRoot = true;
                     LocalServices.bindServicesIfNotAlready();
@@ -287,6 +298,12 @@ public class Ops {
         if (sIsRoot) {
             // Root permission was granted
             setMode(MODE_ROOT);
+            // Disable remote server
+            ExUtils.exceptionAsIgnored(() -> {
+                if (LocalServer.alive(context)) {
+                    LocalServer.getInstance().closeBgServer();
+                }
+            });
             // Disable ADB and force root
             sIsSystem = sIsAdb = false;
             if (LocalServices.alive()) {
@@ -388,8 +405,8 @@ public class Ops {
                 .setCustomTitle(builder.build())
                 .setMessage(R.string.choose_what_to_do)
                 .setCancelable(false)
-                .setPositiveButton(R.string.adb_connect, (dialog1, which1) -> callback.onStatusReceived(Ops.STATUS_ADB_CONNECT_REQUIRED))
-                .setNeutralButton(R.string.adb_pair, (dialog1, which1) -> callback.onStatusReceived(Ops.STATUS_ADB_PAIRING_REQUIRED))
+                .setPositiveButton(R.string.adb_connect, (dialog1, which1) -> callback.onStatusReceived(STATUS_ADB_CONNECT_REQUIRED))
+                .setNeutralButton(R.string.adb_pair, (dialog1, which1) -> callback.onStatusReceived(STATUS_ADB_PAIRING_REQUIRED))
                 .setNegativeButton(R.string.cancel, (dialog, which) -> callback.connectAdb(-1))
                 .show();
     }
@@ -478,7 +495,7 @@ public class Ops {
                 .setTitle(R.string.wireless_debugging)
                 .setMessage(R.string.adb_pairing_instruction)
                 .setCancelable(false)
-                .setNegativeButton(R.string.cancel, (dialog, which) -> callback.pairAdb(null, -1))
+                .setNegativeButton(R.string.cancel, (dialog, which) -> callback.onStatusReceived(STATUS_FAILURE))
                 .setPositiveButton(R.string.go, (dialog, which) -> {
                     Intent developerOptionsIntent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -486,7 +503,7 @@ public class Ops {
                             .setAction(AdbPairingService.ACTION_START_PAIRING);
                     activity.startActivity(developerOptionsIntent);
                     ContextCompat.startForegroundService(activity, adbPairingServiceIntent);
-                    callback.pairAdb(null, 0);
+                    callback.pairAdb();
                 })
                 .show();
     }
@@ -495,8 +512,7 @@ public class Ops {
     @NoOps
     @RequiresApi(Build.VERSION_CODES.R)
     @Status
-    public static int pairAdb(@NonNull Context context, int port) {
-        if (port != 0) return STATUS_FAILURE;
+    public static int pairAdb(@NonNull Context context) {
         try {
             AdbConnectionManager conn = AdbConnectionManager.getInstance();
             int status = pairAdbInternal(context, conn);
@@ -583,7 +599,7 @@ public class Ops {
         boolean lastAdb = sIsAdb;
         boolean lastSystem = sIsSystem;
         boolean lastRoot = sIsRoot;
-        // At this point, we have already checked MODE_AUTO and MODE_NO_ROOT.
+        // At this point, we have already checked MODE_AUTO, and MODE_NO_ROOT has lower priority.
         sIsRoot = MODE_ROOT.equals(mode);
         sIsAdb = !sIsRoot; // Because the rests are ADB
         sIsSystem = false;
@@ -681,10 +697,11 @@ public class Ops {
 
     @AnyThread
     public interface AdbConnectionInterface {
+        // TODO: 8/4/24 Remove the first two methods since the third method can be used instead of them
         void connectAdb(int port);
 
         @RequiresApi(Build.VERSION_CODES.R)
-        void pairAdb(@Nullable String pairingCode, int port);
+        void pairAdb();
 
         void onStatusReceived(@Status int status);
     }
