@@ -480,7 +480,7 @@
     <style name="ThemeOverlay.AppTheme.TextInputLayout.Small" parent="">
         <item name="autoCompleteTextViewStyle">@style/Widget.AppTheme.AutoCompleteTextView.Small</item>
         <item name="editTextStyle">@style/Widget.AppTheme.TextInputEditText.Small</item>
-        <item name="endIconMinSize">18dp</item> <!-- 34 - 8*2 -->
+        <item name="endIconMinSize">40dp</item>
     </style>
 
     <!-- TextInputEditText -->
