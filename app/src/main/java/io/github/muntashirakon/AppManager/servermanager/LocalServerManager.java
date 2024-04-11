@@ -80,7 +80,7 @@ class LocalServerManager {
                 try {
                     mSession = createSession();
                 } catch (Exception e) {
-                    if (!Ops.isRoot() || !Ops.isAdb()) {
+                    if (!Ops.isRoot() && !Ops.isAdb()) {
                         // Do not bother attempting to create a new session
                         throw new IOException("Could not create session", e);
                     }
