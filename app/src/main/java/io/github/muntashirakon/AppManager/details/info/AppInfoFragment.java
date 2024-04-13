@@ -126,11 +126,11 @@ import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.ssaid.ChangeSsaidDialog;
@@ -363,7 +363,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
         MenuItem openInTermuxMenu = menu.findItem(R.id.action_open_in_termux);
         if (openInTermuxMenu != null) {
-            openInTermuxMenu.setVisible(Ops.isRoot());
+            openInTermuxMenu.setVisible(RunnerUtils.isRootAvailable());
         }
         MenuItem runInTermuxMenu = menu.findItem(R.id.action_run_in_termux);
         if (runInTermuxMenu != null) {
