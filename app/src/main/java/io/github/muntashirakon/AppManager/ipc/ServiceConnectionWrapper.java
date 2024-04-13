@@ -62,7 +62,7 @@ class ServiceConnectionWrapper {
             if (mServiceBoundWatcher != null) {
                 // Should never be null
                 mServiceBoundWatcher.countDown();
-            } else throw new RuntimeException("AMService watcher should never be null!");
+            } else throw new RuntimeException("Service watcher should never be null!");
         }
     }
 

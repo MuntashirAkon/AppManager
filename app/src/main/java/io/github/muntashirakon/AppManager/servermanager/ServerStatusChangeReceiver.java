@@ -32,9 +32,9 @@ public class ServerStatusChangeReceiver extends BroadcastReceiver {
         // Verify token before doing action
         String token = intent.getStringExtra(ConfigParams.PARAM_TOKEN);
         if (ServerConfig.getLocalToken().equals(token)) {
-            String type = intent.getStringExtra(ConfigParams.PARAM_TYPE);
-            Log.d(TAG, "onReceive --> %s %s", action, type);
-            // TODO: 9/4/24 Could be root, adb, or system types
+            String uidString = intent.getStringExtra(ConfigParams.PARAM_UID);
+            Log.d(TAG, "onReceive --> %s %s", action, uidString);
+            int uid = Integer.parseInt(uidString);
 
             switch (action) {
                 case ServerActions.ACTION_SERVER_STARTED:
