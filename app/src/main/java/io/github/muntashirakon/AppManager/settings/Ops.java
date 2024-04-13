@@ -259,9 +259,12 @@ public class Ops {
                             throw new Exception("Wifi not enabled.");
                         }
                         if (AdbUtils.enableWirelessDebugging(context)) {
+                            // Wireless debugging enabled, try auto-connect
                             return STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING;
+                        } else {
+                            // Wireless debugging is turned off or there's no permission
+                            return STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED;
                         }
-                        Log.w(TAG, "Could not ensure wireless debugging, falling back...");
                     } // else fallback to ADB over TCP
                 case MODE_ADB_OVER_TCP:
                     sIsRoot = sIsSystem = false;
