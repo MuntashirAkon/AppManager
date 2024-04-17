@@ -922,7 +922,6 @@
     <string name="error_with_details">Feil: %s</string>
     <string name="files">Filer</string>
     <string name="keystore_pass_cannot_be_empty">Nøkkellager-passord kan ikke være tomt.</string>
-    <string name="adb_wifi_paring_code">Wi-Fi-parringsmodus</string>
     <string name="identifier">Identifikator</string>
     <string name="paste">Lim inn</string>
     <string name="background">Bakgrunn</string>
@@ -1091,7 +1090,6 @@
     <string name="input_permissions_description">Skriv inn tilganger inndelt med mellomrom, f.eks. <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> osv. Bruk <tt>*</tt> for å bruke for alle tilganger.</string>
     <string name="has_net_policy">Nettpraksis</string>
     <string name="input_keystore_alias_pass_description">Skriv inn passord for aliaset <b>%1$s</b>. Du kan la dette stå tomt hvis passordet er det samme som nøkkellager-passordet.</string>
-    <string name="port_number_pairing_code_empty">Tomt portnummer eller parringskode.</string>
     <string name="input_app_ops_description_profile">Skriv inn op-navn og/eller konstanter, inndelt med mellomrom, f.eks. <tt>WAKE_LOCK 63 72 CAMERA</tt> osv. Bruk <tt>*</tt> for å bruke for allle oppsatte program-op-er.</string>
     <string name="input_keystore_pass_description">Skriv inn nøkkellagerpassordet for App Manager. Hvis du ser dette for første gang bør du bruke en passordgenerator for å lage et trygt passord og lagre det på en sikker plass før du limer det inn her.</string>
     <string name="paired_successfully">Sammenkoblet.</string>

@@ -1045,8 +1045,6 @@
     <string name="failed_to_prevent_background_run">No se pudo evitar que %1$s se ejecutase en segundo plano</string>
     <string name="saf">SAF</string>
     <string name="paired_successfully">Emparejado.</string>
-    <string name="port_number_pairing_code_empty">El número de puerto o el código de emparejamiento está vacío.</string>
-    <string name="adb_wifi_paring_code">Código de emparejamiento de wifi</string>
     <string name="keystore_password_info">Esta es la contraseña del Almacén de claves del Gestor de aplicaciones. Guárdela en un lugar seguro si va a crear o restaurar copias de respaldo del Almacén de claves. <b>Este mensaje no volverá a aparecer.</b></string>
     <string name="keystore_pass_cannot_be_empty">La contraseña del almacén de claves no puede quedar vacía.</string>
     <string name="invalid_password">La contraseña no es válida. Vuelva a intentarlo.</string>

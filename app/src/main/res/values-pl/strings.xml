@@ -911,9 +911,7 @@
     <string name="paste">Wklej</string>
     <string name="set_package_name_first">Najpierw ustaw nazwę pakietu!</string>
     <string name="identifier">Identyfikator</string>
-    <string name="port_number_pairing_code_empty">Pusty numer portu lub kod parowania.</string>
     <string name="adb_pair">Paruj</string>
-    <string name="adb_wifi_paring_code">Kod parowania Wi-Fi</string>
     <string name="invalid_password">Nieprawidłowe hasło, spróbuj ponownie.</string>
     <string name="keystore_pass_cannot_be_empty">Hasło KeyStore nie może być puste.</string>
     <string name="keystore_password_info">Poniżej znajduje się hasło do KeyStore. Przechowuj je w bezpiecznym miejscu, jeżeli zamierzasz wykonać kopię zapasową/przywrócić KeyStore w App Manager. <b>Ten komunikat nie będzie wyświetlany ponownie.</b></string>

@@ -740,7 +740,6 @@
     <string name="binary_32_bit">32비트</string>
     <string name="state">프로세스 상태</string>
     <string name="failed_to_disable_magisk_deny_list">Magisk DenyList를 사용하지 않도록 설정할 수 없습니다</string>
-    <string name="port_number_pairing_code_empty">포트 번호 또는 페어링 코드가 비어 있습니다.</string>
     <string name="failed_to_change_app_op_mode">앱 모드를 변경할 수 없습니다.</string>
     <string name="port_number_empty">포트 번호가 비어 있습니다.</string>
     <string name="pref_display_limit_title">로그 표시 제한</string>
@@ -826,7 +825,6 @@
     <string name="uninstalled_apps">제거된 앱</string>
     <string name="hidden_api_enf_policy_black">시행(블랙리스트만 해당)</string>
     <string name="swap_chart_info">● %1$s 사용 ● %2$s 자유롭게</string>
-    <string name="adb_wifi_paring_code">와이파이 페어링 코드</string>
     <string name="wireless_debugging">무선 디버깅</string>
     <string name="omit_sensitive_info">민감한 정보 생략</string>
     <string name="added_to_queue">대기열에 추가됨</string>

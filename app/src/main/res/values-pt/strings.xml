@@ -1045,9 +1045,7 @@
     <string name="notice_saf">Ao contrário dos volumes, o diretório selecionado será usado para armazenar todos os ficheiros relacionados com o App Manager, incluindo APKs e cópias de segurança guardadas. O Storage Access Framework (SAF) é muito lento, por isso só deve usar esta opção quando outras não puderem ser usadas.</string>
     <string name="notice">Aviso</string>
     <string name="paired_successfully">Pareado.</string>
-    <string name="port_number_pairing_code_empty">Número da porta ou código de pareamento vazio.</string>
     <string name="adb_pair">Parear</string>
-    <string name="adb_wifi_paring_code">Código de pareamento Wi-Fi</string>
     <string name="invalid_password">Palavra-passe inválida, tente novamente.</string>
     <string name="keystore_pass_cannot_be_empty">A palavra-passe da KeyStore não pode estar vazia.</string>
     <string name="keystore_password_info">Segue-se a palavra-passe da App Manager KeyStore. Por favor guarde-a num local seguro se fizer uma cópia de segurança/restaurar a App Manager KeyStore. <b>Esta mensagem não será mostrada novamente.</b></string>

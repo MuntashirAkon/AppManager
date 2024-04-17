@@ -996,7 +996,6 @@
     <string name="running_services_logcat_hint">Klik item untuk membuka penampil log dengan ID proses yang sesuai sebagai filter default.</string>
     <string name="vt_uploading">VirusTotal: Mengunggah…</string>
     <string name="adb_pair">Pasangan</string>
-    <string name="port_number_pairing_code_empty">Kosongkan nomor port atau kode pasangan.</string>
     <string name="vt_success">TotalVirus: %1$d/%2$d</string>
     <string name="next">Berikutnya</string>
     <string name="pref_always_on_background">Instal di latar belakang</string>
@@ -1051,7 +1050,6 @@
     <string name="pref_default_blocking_method">Metode pemblokiran default</string>
     <string name="pref_default_blocking_method_description">Metode untuk digunakan secara default di tempat-tempat di mana tidak ada opsi untuk memilih metode pemblokiran.</string>
     <string name="pref_intent_firewall_and_disable_description">Blokir komponen menggunakan Intent Firewall serta nonaktifkan. Metode yang direkomendasikan untuk pengguna root.</string>
-    <string name="adb_wifi_paring_code">kode pasangan Wi-Fi</string>
     <string name="identifier">pengenal</string>
     <string name="set_package_name_first">Tetapkan nama paket terlebih dahulu!</string>
     <string name="paste">Tempel</string>

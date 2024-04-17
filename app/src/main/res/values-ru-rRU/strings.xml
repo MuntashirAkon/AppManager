@@ -1080,9 +1080,7 @@
     <string name="notice">Уведомление</string>
     <string name="keystore_password_info">Ниже приведен пароль хранилища ключей App Manager. Пожалуйста, храните его в надежном месте, если вы собираетесь делать резервное копирование/восстановление хранилища ключей App Manager. <b>Это сообщение не будет отображаться снова.</b></string>
     <string name="paired_successfully">Подключено.</string>
-    <string name="port_number_pairing_code_empty">Номер порта или код подключения пуст.</string>
     <string name="adb_pair">Подключить</string>
-    <string name="adb_wifi_paring_code">Код подключения Wi-Fi</string>
     <string name="invalid_password">Неправильный пароль, попробуйте ещё раз.</string>
     <string name="keystore_pass_cannot_be_empty">Пароль хранилища ключей не может быть пустым.</string>
     <string name="background">В фоне</string>

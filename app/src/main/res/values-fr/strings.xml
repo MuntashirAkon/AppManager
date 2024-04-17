@@ -800,7 +800,6 @@
     <string name="installer_app_installed">Application installée</string>
     <string name="paste">Coller</string>
     <string name="paired_successfully">Couplé.</string>
-    <string name="adb_wifi_paring_code">Code d\'appairage Wi-Fi</string>
     <string name="invalid_password">Mot de passe invalide, réessayez.</string>
     <string name="pref_log_viewer_msg">Configurer l\'affichage des journaux.</string>
     <string name="files">Fichiers</string>
@@ -979,7 +978,6 @@
     <string name="pref_rules_msg">Blocage instantané, importer/exporter/supprimer des règles, etc.</string>
     <string name="pref_expanded_by_default_summary">Afficher le texte complet du journal par défaut.</string>
     <string name="pref_installer_msg">Configurer le comportement de l\'installeur d\'application.</string>
-    <string name="port_number_pairing_code_empty">Numéro de port ou code d\'appariement vide.</string>
     <string name="common_name">Nom Commun (Common Name)</string>
     <string name="organization_unit">Unité d\'organisation (Organization Unit)</string>
     <string name="organization_name">Nom de l\'organisation (O)</string>

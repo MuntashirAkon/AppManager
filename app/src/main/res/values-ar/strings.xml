@@ -1144,9 +1144,7 @@
     <string name="notice_saf">على عكس وحدات التخزين، سيتم استخدام الدليل المحدد لتخزين كافة الملفات المتعلقة بـApp Manager، بما في ذلك APKs المحفوظة والنسخ الاحتياطية. إطار عمل الوصول إلى التخزين (SAF) بطيء جدا، لذلك، يجب عليك فقط استخدام هذا الخيار عندما لا يمكن استخدام الآخرين.</string>
     <string name="notice">تنويه</string>
     <string name="paired_successfully">مقترن.</string>
-    <string name="port_number_pairing_code_empty">رقم المنفذ أو رمز الاقتران فارغ.</string>
     <string name="adb_pair">اقتران</string>
-    <string name="adb_wifi_paring_code">رمز اقتران Wi-Fi</string>
     <string name="invalid_password">كلمة مرور غير صالحة، حاول مرة أخرى.</string>
     <string name="keystore_pass_cannot_be_empty">لا يمكن أن تكون كلمة مرور مخزن المفتاح فارغة.</string>
     <string name="keystore_password_info">فيما يلي كلمة مرور مخزن المفتاح لمدير التطبيقات. يرجى تخزينه في مكان آمن إذا كنت تريد إجراء نسخة احتياطية / استعادة مدير التطبيقات KeyStore.<b> لن يتم عرض هذه الرسالة مرة أخرى.</b></string>

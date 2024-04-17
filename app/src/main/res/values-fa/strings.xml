@@ -919,7 +919,6 @@
     <string name="files">فایل ها</string>
     <string name="keystore_password_info">رمز عبور فروشگاه کلید مدیریت برنامه در زیر آمده است. اگر می‌خواهید از فروشگاه کلید مدیریت برنامه پشتیبان‌گیری یا بازیابی کنید، لطفاً آن را در مکانی امن ذخیره کنید. <b>این پیام دیگر نمایش داده نخواهد شد.</b></string>
     <string name="invalid_password">رمز اشتباه، از دوباره تلاش کنید.</string>
-    <string name="adb_wifi_paring_code">کد جفت شدن وای فای</string>
     <string name="identifier">مشخص کننده</string>
     <string name="set_package_name_first">ابتدا نام بسته را تنظیم کنید!</string>
     <string name="keystore_pass_cannot_be_empty">رمز عبور فروشگاه کلید نمی تواند خالی باشد.</string>
@@ -1046,7 +1045,6 @@
     <string name="trim_caches_in_all_apps_description">فایل های کش را از همه برنامه ها از جمله سیستم اندروید حذف می کند</string>
     <string name="unknown_net_policy">حریم خصوصی ناشناخته (%1$s - %2$X)</string>
     <string name="help_permissions_tab">این مجوزها توسط این برنامه تعریف شده و قابل لغو نیستند.</string>
-    <string name="port_number_pairing_code_empty">شماره درگاه یا کد جفت شدن را خالی کنید.</string>
     <string name="help_app_ops_tab">روی یک مورد کلیک کنید تا آن را <b>اجازه دهید</b> یا <b>نادیده بگیرید</b>. برای مشاهده سایر حالت های پشتیبانی شده روی یک مورد کلیک کنید.</string>
     <string name="pref_block_trackers_msg">پس از نصب برنامه با استفاده از مدیریت برنامه، اجزای ردیابی را مسدود کنید.</string>
     <string name="pref_thread_count_hint">مقدار باید بین 0 تا %1$d باشد که 0 به معنای <i>حداکثر تعداد عملیات در زمان معین</i> است.</string>
