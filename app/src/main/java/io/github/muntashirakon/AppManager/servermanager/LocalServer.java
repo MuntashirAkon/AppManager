@@ -25,6 +25,7 @@ import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.Shell;
 import io.github.muntashirakon.AppManager.server.common.ShellCaller;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.adb.AdbPairingRequiredException;
 
 // Copyright 2016 Zheng Li
 public class LocalServer {
@@ -38,7 +39,7 @@ public class LocalServer {
     @GuardedBy("lockObject")
     @WorkerThread
     @NoOps(used = true)
-    public static LocalServer getInstance() throws IOException {
+    public static LocalServer getInstance() throws IOException, AdbPairingRequiredException {
         // Non-null check must be done outside the synchronised block to prevent deadlock on ADB over TCP mode.
         if (sLocalServer != null) return sLocalServer;
         synchronized (sLock) {
@@ -83,7 +84,7 @@ public class LocalServer {
 
     @WorkerThread
     @NoOps(used = true)
-    private LocalServer() throws IOException {
+    private LocalServer() throws IOException, AdbPairingRequiredException {
         mContext = ContextUtils.getDeContext(ContextUtils.getContext());
         mLocalServerManager = LocalServerManager.getInstance(mContext);
         // Initialise necessary files and permissions
@@ -100,7 +101,7 @@ public class LocalServer {
     @GuardedBy("connectLock")
     @WorkerThread
     @NoOps(used = true)
-    public void checkConnect() throws IOException {
+    public void checkConnect() throws IOException, AdbPairingRequiredException {
         synchronized (mConnectLock) {
             if (mConnectStarted) {
                 try {
@@ -112,10 +113,10 @@ public class LocalServer {
             mConnectStarted = true;
             try {
                 mLocalServerManager.start();
-            } catch (IOException e) {
+            } catch (IOException | AdbPairingRequiredException e) {
                 mConnectStarted = false;
                 mConnectLock.notify();
-                throw new IOException(e);
+                throw e;
             }
             mConnectStarted = false;
             mConnectLock.notify();
@@ -141,8 +142,14 @@ public class LocalServer {
             e.printStackTrace();
             closeBgServer();
             // Retry
-            checkConnect();
-            return mLocalServerManager.execNew(caller);
+            try {
+                checkConnect();
+                return mLocalServerManager.execNew(caller);
+            } catch (AdbPairingRequiredException e2) {
+                throw new IOException(e2);
+            }
+        } catch (AdbPairingRequiredException e) {
+            throw new IOException(e);
         }
     }
 
@@ -170,7 +177,7 @@ public class LocalServer {
 
     @WorkerThread
     @NoOps(used = true)
-    public static void restart() throws IOException {
+    public static void restart() throws IOException, AdbPairingRequiredException {
         if (sLocalServer != null) {
             LocalServerManager manager = sLocalServer.mLocalServerManager;
             manager.closeBgServer();

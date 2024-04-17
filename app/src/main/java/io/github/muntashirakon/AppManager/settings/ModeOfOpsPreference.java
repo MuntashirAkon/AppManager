@@ -137,7 +137,7 @@ public class ModeOfOpsPreference extends Fragment {
                 case Ops.STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         updateViews();
-                        mModel.autoConnectAdb(Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED);
+                        mModel.autoConnectWirelessDebugging();
                         return;
                     } // fall-through
                 case Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED:

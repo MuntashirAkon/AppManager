@@ -222,9 +222,9 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
-    public void autoConnectAdb(int returnCodeOnFailure) {
+    public void autoConnectWirelessDebugging() {
         mExecutor.submit(() -> {
-            int status = Ops.autoConnectAdb(getApplication(), returnCodeOnFailure);
+            int status = Ops.autoConnectWirelessDebugging(getApplication());
             mModeOfOpsStatus.postValue(status);
         });
     }

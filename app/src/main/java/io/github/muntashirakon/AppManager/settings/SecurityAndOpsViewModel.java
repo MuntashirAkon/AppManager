@@ -77,11 +77,11 @@ public class SecurityAndOpsViewModel extends AndroidViewModel implements Ops.Adb
 
     @AnyThread
     @RequiresApi(Build.VERSION_CODES.R)
-    public void autoConnectAdb(int returnCodeOnFailure) {
+    public void autoConnectWirelessDebugging() {
         mExecutor.submit(() -> {
-            Log.d(TAG, "Before Ops::autoConnectAdb");
-            int status = Ops.autoConnectAdb(getApplication(), returnCodeOnFailure);
-            Log.d(TAG, "After Ops::autoConnectAdb");
+            Log.d(TAG, "Before Ops::autoConnectWirelessDebugging");
+            int status = Ops.autoConnectWirelessDebugging(getApplication());
+            Log.d(TAG, "After Ops::autoConnectWirelessDebugging");
             mAuthenticationStatus.postValue(status);
         });
     }

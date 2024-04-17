@@ -18,6 +18,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.server.common.ConfigParams;
 import io.github.muntashirakon.AppManager.server.common.ServerActions;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.adb.AdbPairingRequiredException;
 
 // Copyright 2016 Zheng Li
 public class ServerStatusChangeReceiver extends BroadcastReceiver {
@@ -67,7 +68,7 @@ public class ServerStatusChangeReceiver extends BroadcastReceiver {
                 }
                 LocalServer.getInstance();
                 LocalServices.bindServicesIfNotAlready();
-            } catch (IOException e) {
+            } catch (IOException | AdbPairingRequiredException e) {
                 Log.w(TAG, "Failed to start server", e);
             } catch (RemoteException e) {
                 Log.w(TAG, "Failed to start services", e);

@@ -53,6 +53,7 @@ import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.adb.AdbPairingRequiredException;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
@@ -417,7 +418,7 @@ public class Ops {
     @WorkerThread
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     @Status
-    public static int autoConnectAdb(@NonNull Context context, @Status int returnCodeOnFailure) {
+    public static int autoConnectWirelessDebugging(@NonNull Context context) {
         boolean lastAdb = sIsAdb;
         boolean lastSystem = sIsSystem;
         boolean lastRoot = sIsRoot;
@@ -428,13 +429,16 @@ public class Ops {
             LocalServer.restart();
             LocalServices.bindServicesIfNotAlready();
             return checkRootOrIncompleteUsbDebuggingInAdb();
-        } catch (RemoteException | IOException e) {
+        } catch (RemoteException | IOException | AdbPairingRequiredException e) {
             Log.e(TAG, "Could not auto-connect to adbd", e);
             // Go back to the last mode
             sIsAdb = lastAdb;
             sIsSystem = lastSystem;
             sIsRoot = lastRoot;
-            return returnCodeOnFailure;
+            if (e instanceof AdbPairingRequiredException) {
+                // Only pairing is required
+                return STATUS_ADB_PAIRING_REQUIRED;
+            } else return STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED;
         }
     }
 
@@ -453,7 +457,7 @@ public class Ops {
             LocalServer.restart();
             LocalServices.bindServicesIfNotAlready();
             return checkRootOrIncompleteUsbDebuggingInAdb();
-        } catch (RemoteException | IOException e) {
+        } catch (RemoteException | IOException | AdbPairingRequiredException e) {
             Log.e(TAG, "Could not connect to adbd using port " + port, e);
             // Go back to the last mode
             sIsAdb = lastAdb;
@@ -611,7 +615,7 @@ public class Ops {
             try {
                 LocalServer.getInstance();
                 LocalServices.bindServicesIfNotAlready();
-            } catch (RemoteException | IOException e) {
+            } catch (RemoteException | IOException | AdbPairingRequiredException e) {
                 Log.e(TAG, e);
                 // fall-through, because the remote service may still be alive
             }

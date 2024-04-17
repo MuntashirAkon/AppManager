@@ -31,6 +31,7 @@ import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.DataTransmission;
 import io.github.muntashirakon.AppManager.server.common.ParcelableUtil;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.adb.AdbPairingRequiredException;
 import io.github.muntashirakon.adb.AdbStream;
 import io.github.muntashirakon.io.IoUtils;
 
@@ -74,7 +75,7 @@ class LocalServerManager {
     @WorkerThread
     @NonNull
     @NoOps(used = true)
-    private ClientSession getSession() throws IOException {
+    private ClientSession getSession() throws IOException, AdbPairingRequiredException {
         synchronized (mLock) {
             if (mSession == null || !mSession.isRunning()) {
                 try {
@@ -88,6 +89,8 @@ class LocalServerManager {
                 if (mSession == null) {
                     try {
                         startServer();
+                    } catch (AdbPairingRequiredException e) {
+                        throw e;
                     } catch (Exception e) {
                         throw new IOException("Could not start server", e);
                     }
@@ -124,14 +127,18 @@ class LocalServerManager {
 
     @WorkerThread
     @NoOps(used = true)
-    void start() throws IOException {
+    void start() throws IOException, AdbPairingRequiredException {
         getSession();
     }
 
     @WorkerThread
     @NonNull
     private DataTransmission getSessionDataTransmission() throws IOException {
-        return getSession().getDataTransmission();
+        try {
+            return getSession().getDataTransmission();
+        } catch (AdbPairingRequiredException e) {
+            throw new IOException(e);
+        }
     }
 
     @WorkerThread
