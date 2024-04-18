@@ -9,22 +9,22 @@ ext {
     agp_version = '8.2.0'
 
     // Library dependencies
-    activity_version = "1.9.0-alpha02"
-    androidx_core_version = "1.12.0" // Added temporarily until appcompat migrates to it
+    activity_version = "1.9.0" // Draw around the display cutouts
+    androidx_core_version = "1.13.0" // Added temporarily until appcompat migrates to it
     annotation_version = "1.7.1"
     apksig_version = "4.4.0"
     appcompat_version = "1.6.1"
     arsclib_version = "ece5c8a43c"
     baksmali_version = "2.5.2"
-    bouncycastle_version = "1.70"
-    desugar_jdk_version = "2.0.3"
-    documentfile_version = "1.0.1"
+    bouncycastle_version = "1.78"
+    desugar_jdk_version = "2.0.4"
+    documentfile_version = "1.1.0-alpha01" // AppCompat still includes the buggy implementation of documentfile library (1.0.0)
     duration_picker = "c3c89adf3d"
     fastscroll_version = "1.3.0"
     gson_version = "2.10.1"
     hiddenapibypass_version = "4.3"
     jadx_version = "1.4.7"
-    jb_annotation_version = "23.0.0" // Compile-only
+    jb_annotation_version = "24.1.0" // Compile-only
     libadb_version = "d88ca786bb"
     libsu_version = "5.2.2"
     material_version = "1.11.0"
@@ -34,12 +34,12 @@ ext {
     simplemagic_version = "1.17"
     sora_editor_version = "0.22.1"
     speed_dial_version = "3.3.0"
-    splashscreen_version = "1.0.1"
+    splashscreen_version = "1.2.0-alpha01"
     sun_security_version = "1.1"
     swipe_refresh_version = "1.2.0-alpha01"
     unapkm_version = "1.2"
-    webkit_version = "1.9.0"
-    zstd_version = "1.5.5-3"
+    webkit_version = "1.10.0"
+    zstd_version = "1.5.6-2"
 
     // Test dependencies
     junit_version = "4.13.2"
