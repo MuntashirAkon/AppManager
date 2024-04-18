@@ -23,12 +23,14 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    libraryVariants.configureEach { variant ->
-        variant.assembleProvider.configure() { task ->
-            task.doLast {
-                makeJars(variant.buildType.name)
+    libraryVariants.configureEach {variant ->
+        String buildType = variant.buildType.name
+        def jarTask = tasks.register("create${buildType.capitalize()}ServerJars") {
+            doLast {
+                makeJars(buildType)
             }
         }
+        javaCompileProvider.get().finalizedBy(jarTask)
     }
 }
 

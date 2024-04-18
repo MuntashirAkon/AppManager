@@ -123,13 +123,6 @@ dependencies {
     implementation "com.github.MuntashirAkon:sun-security-android:${sun_security_version}"
     implementation "org.bouncycastle:bcprov-jdk15to18:${bouncycastle_version}"
     implementation "org.bouncycastle:bcpkix-jdk15to18:${bouncycastle_version}"
-    // Remove *-jdk15on libs
-    configurations {
-        configureEach {
-            exclude group: 'org.bouncycastle', module: 'bcprov-jdk15on'
-            exclude group: 'org.bouncycastle', module: 'bcpkix-jdk15on'
-        }
-    }
     implementation "org.smali:baksmali:${baksmali_version}"
     implementation "org.smali:smali:${baksmali_version}"
     implementation "com.github.MuntashirAkon.jadx:jadx-core:${jadx_version}"
