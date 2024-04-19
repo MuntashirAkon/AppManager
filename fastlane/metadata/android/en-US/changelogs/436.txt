@@ -1,0 +1,17 @@
+_Funding campaign dates have been updated as this is going to be the last campaign in many years._
+_If you're running ADB, you may need to restart your device first._
+
+- Added full support for Android 14
+- Allowed launching non-exported activities in no-root/ADB mode
+- Enabled installing system apps with a different signature
+- Added a batch option to copy the selected logs
+- Refresh running apps every 10 seconds
+- Fixed scanning using VirusTotal
+- [Experimental] Initial support for custom command for mode of ops
+- Improved auto-connecting and pairing to ADB
+- Improved preferences and dialogs
+- Added more network policies from Motorola devices.
+- Enabled creating activity shortcuts for other users
+- Fixed blocking components in Android 14
+- Fixed blocking providers when only IFW is set
+- Fixed retrieving and updating permission flags in Android 12 onwards

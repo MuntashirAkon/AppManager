@@ -1,6 +1,161 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><!DOCTYPE changelog SYSTEM "https://raw.githubusercontent.com/MuntashirAkon/AppManager/master/schema/changlelog.dtd">
 <changelog>
     <release
+        type="beta release"
+        version="v4.0.0-beta01"
+        code="436"
+        date="19 April 2024">
+        <note>
+            Funding campaign dates have been updated as this is going to be the last campaign in
+            many years.
+        </note>
+        <note>If you're running ADB, you may need to restart your device first.</note>
+        <new>Added full support for Android 14</new>
+        <note subtext="true">
+            - Fixed compatibility issues[br /]
+            - Support installing apps that targets SDK 22 or earlier (privileged mode only)
+        </note>
+        <improve title="Experimental">Use outlines for color codes</improve>
+
+        <title type="medium">App Details page</title>
+        <new>Allowed launching non-exported activities in no-root/ADB mode</new>
+        <note subtext="true">
+            The “Search assistant” (usually set to Google Assistant) feature allows setting
+            arbitrary activity via the [tt]assistant[/tt] key-value pair stored in the secure
+            settings database. Hence, non-exported (that is, app private) activities can be launched
+            even in no-root mode by exploiting this feature. However, modifying a secure setting
+            require [tt]android.permission.WRITE_SECURE_SETTINGS[/tt] permission which is granted
+            automatically in ADB mode and has to be granted manually in no-root mode via ADB.[br /]
+
+            App Manager also cannot trigger the assistant on its own in the no-root mode, because it
+            doesn't have enough permissions (it requires [tt]android.permission.INEJECT_EVENTS[/tt]
+            permission which cannot be granted to the user applications). Activity shortcuts also
+            use this feature when they cannot be launched in privileged mode.
+        </note>
+
+        <title type="medium">App Usage page</title>
+        <fix>Make the combo-box static on top</fix>
+
+        <title type="medium">App Info tab</title>
+        <fix>Fixed handling multiple users in no-root mode</fix>
+        <fix>Fixed listing granted URIs</fix>
+        <fix>Prevent crashes in tablets running buggy GSI firmware</fix>
+
+        <title type="medium">Code Editor</title>
+        <fix>Prevented the editor from crashing if it is restarted from Recents</fix>
+
+        <title type="medium">Installer</title>
+        <improve>Enabled installing system apps with a different signature</improve>
+        <note subtext="true">
+            The “Install only” button is enabled for system apps when the signatures are different.
+            This is useful for only those who have disabled signature verification using methods,
+            such as CorePatch.
+        </note>
+
+        <title type="medium">Log Viewer</title>
+        <new>Added a batch option to copy the selected logs</new>
+        <improve>Changed list selection modes.</improve>
+        <note subtext="true">
+            1. Normal mode[br /]
+            - Click: expand/collapse text[br /]
+            - Long click: Open context menu[br /]
+            2. Selection mode[br /]
+            - Click: Select clicked item[br /]
+            - Long click: Select items between the last selected item to the clicked
+            item if possible. Otherwise, only click the item.
+        </note>
+
+        <title type="medium">Main page</title>
+        <improve>
+            Avoided reopening the keyboard while searching is active, but the keyboard was closed
+            manually
+        </improve>
+        <fix title="Batch Ops">Fixed saving some APK files due to naming issues</fix>
+
+        <title type="medium">Profiles</title>
+        <fix>Fixed applying profiles</fix>
+        <fix>Fixed loading label after refreshing the app list</fix>
+
+        <title type="medium">Running Apps page</title>
+        <improve>Refresh running apps every 10 seconds</improve>
+
+        <title type="medium">Scanner page</title>
+        <fix>Fixed scanning using VirusTotal</fix>
+
+        <title type="medium">Settings</title>
+        <new title="Experimental">Initial support for custom command for mode of ops</new>
+        <improve>Avoided auto-detecting ADB port number if Wi-Fi is inactive</improve>
+        <improve>Display ADB pairing dialog directly when a pairing may be required</improve>
+        <improve>Improved auto-connecting to ADB</improve>
+        <note subtext="true">
+            - When mode is set to auto, instead of checking the active ADB host and port first, the
+            status of the ADB daemon is checked[br /]
+            - When mode is set to “Wireless debugging”, developer settings and wireless debugging
+            are enabled automatically before attempting any connections. This requires:[br /]
+            1. [tt]android.permission.WRITE_SECURE_SETTINGS[/tt] to be granted to App Manager, OR[br /]
+            2. App Manager connected via root or ADB at least once (in which case, the permission
+            above is granted automatically)[br /]
+            - Attempt to fetch the current port for ADB over TCP via [tt]service.adb.tcp.port[/tt]
+            property instead of using the default [tt]5555[/tt] port or the previously saved value.
+        </note>
+        <improve>Pair ADB via notification</improve>
+        <improve>Improved preferences and dialogs</improve>
+        <note subtext="true">
+            - Added a dedicated page for VirusTotal[br /]
+            - Added a dedicated page for mode of operations[br /]
+            - Moved “Use the Internet” to Privacy settings[br /]
+            - Added feature toggler for Log Viewer and Installer[br /]
+            - Display build expiry and funding campaign notices only in the main settings[br /]
+            - Replace “Remove all rules” with a primary button[br /]
+            - Input boxes are focused by default[br /]
+            - For numeric inputs, only the numeric keyboard is displayed[br /]
+            - Input texts aren't added to the user suggestions.
+        </note>
+        <fix>Avoided displaying “Imported” for Watt and Blocker when nothing is selected</fix>
+        <fix>
+            Check if the selected directory is actually a directory before attempting to import a backup
+        </fix>
+        <fix>
+            Fixed displaying wireless debugging options when App Manager is unable to enable
+            Wireless Debugging
+        </fix>
+
+        <title type="medium">UI</title>
+        <improve>Draw activities around the display cutouts</improve>
+        <improve>
+            Tint combo-boxes in primary container color to match Android 12+ styles
+        </improve>
+        <improve>Used circular progress for initialization</improve>
+        <fix>Fixed styling some popup menus</fix>
+
+        <title type="medium">Others</title>
+        <improve>Added more network policies from Motorola devices.</improve>
+        <note subtext="true">
+            - POLICY_REJECT_METERED[br /]
+            - POLICY_REJECT_BACKGROUND[br /]
+            - POLICY_REJECT_ALL
+        </note>
+        <improve>Automatically grant usage stats permission in privileged mode</improve>
+        <note subtext="true">The feature, as usual, can be disabled in settings.</note>
+        <improve>Enabled creating activity shortcuts for other users</improve>
+        <fix>Avoided fetching packages for other users if there's no permission to do so</fix>
+        <fix>Fixed blocking components in Android 14</fix>
+        <fix>Fixed blocking providers when only IFW is set</fix>
+        <note subtext="true">
+            Intent Firewall (IFW) does not support blocking providers. So, when IFW-only mode was
+            enabled, it tried to apply only the IFW rules which resulted in the providers remaining
+            unblocked. From now on, the providers are blocked via “disable” option.
+        </note>
+        <fix>Fixed launching remote services in OnePlus devices</fix>
+        <fix>Fixed retrieving the list of packages in some devices</fix>
+        <fix>Fixed retrieving and updating permission flags in Android 12 onwards</fix>
+
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v4.0.0-alpha02...v4.0.0-beta01"]v4.0.0-alpha02...v4.0.0-beta01[/a]
+        </note>
+    </release>
+    <release
         type="alpha release"
         version="v4.0.0-alpha02"
         code="435"
