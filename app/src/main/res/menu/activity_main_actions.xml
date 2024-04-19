@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
+<?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
@@ -28,6 +27,7 @@
     <item
         android:id="@+id/action_finder"
         android:icon="@drawable/ic_search"
+        android:visible="false"
         android:title="@string/finder_title" />
 
     <item
