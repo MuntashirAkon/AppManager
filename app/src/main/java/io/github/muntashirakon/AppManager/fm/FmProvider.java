@@ -29,6 +29,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -89,7 +90,7 @@ public class FmProvider extends ContentProvider {
     public boolean onCreate() {
         mCallbackThread = new HandlerThread("FmProvider.HandlerThread");
         mCallbackThread.start();
-        mCallbackHandler = new Handler(mCallbackThread.getLooper());
+        mCallbackHandler = new Handler(Objects.requireNonNull(mCallbackThread.getLooper()));
         return true;
     }
 
@@ -188,7 +189,7 @@ public class FmProvider extends ContentProvider {
     @Override
     public ParcelFileDescriptor openFile(@NonNull Uri uri, @NonNull String mode) throws FileNotFoundException {
         // ContentProvider has already checked granted permissions
-        return getFileProviderPath(uri).openFileDescriptor(checkMode(mode), mCallbackThread);
+        return getFileProviderPath(uri).openFileDescriptor(checkMode(mode), mCallbackHandler);
     }
 
     private static String[] getDefaultProjection() {

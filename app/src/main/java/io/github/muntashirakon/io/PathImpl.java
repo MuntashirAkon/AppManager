@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.HandlerThread;
+import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.os.Process;
 import android.os.RemoteException;
@@ -1171,7 +1171,7 @@ class PathImpl extends Path {
     }
 
     @NonNull
-    public ParcelFileDescriptor openFileDescriptor(@NonNull String mode, @NonNull HandlerThread callbackThread)
+    public ParcelFileDescriptor openFileDescriptor(@NonNull String mode, @NonNull Handler callbackHandler)
             throws FileNotFoundException {
         DocumentFile documentFile = getRealDocumentFile(this.documentFile);
         if (documentFile instanceof ExtendedRawDocumentFile) {
@@ -1180,9 +1180,9 @@ class PathImpl extends Path {
                 int modeBits = ParcelFileDescriptor.parseMode(mode);
                 try {
                     return StorageManagerCompat.openProxyFileDescriptor(modeBits, new ProxyStorageCallback(
-                            file.getAbsolutePath(), modeBits, callbackThread));
+                            file.getAbsolutePath(), modeBits, callbackHandler));
                 } catch (IOException e) {
-                    throw (FileNotFoundException) new FileNotFoundException(e.getMessage()).initCause(e);
+                    throw (FileNotFoundException) new FileNotFoundException("Could not open file " + file).initCause(e);
                 }
             } // else use the default content provider
         } else if (documentFile instanceof VirtualDocumentFile) {
@@ -1390,16 +1390,12 @@ class PathImpl extends Path {
         @NonNull
         private final FileChannel mChannel;
 
-        private ProxyStorageCallback(String path, int modeBits, HandlerThread thread) throws IOException {
-            super(thread);
+        private ProxyStorageCallback(String path, int modeBits, @NonNull Handler handler) throws IOException {
+            super(handler);
             try {
                 FileSystemManager fs = LocalServices.getFileSystemManager();
                 mChannel = fs.openChannel(path, modeBits);
-            } catch (IOException e) {
-                thread.quitSafely();
-                throw e;
             } catch (Throwable throwable) {
-                thread.quitSafely();
                 throw new IOException(throwable);
             }
         }
@@ -1455,7 +1451,9 @@ class PathImpl extends Path {
 
         @Override
         protected void finalize() throws Throwable {
-            mChannel.close();
+            if (mChannel != null) {
+                mChannel.close();
+            }
         }
     }
 }
