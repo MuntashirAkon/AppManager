@@ -6,11 +6,13 @@
     <io.github.muntashirakon.preference.WarningAlertPreference
         app:key="app_manager_expiring_notice"
         app:icon="@drawable/ic_caution"
+        app:selectable="false"
         app:summary="@string/app_manager_build_expiring_soon_warning" />
 
     <io.github.muntashirakon.preference.InfoAlertPreference
         app:key="funding_campaign_notice"
         app:icon="@drawable/ic_charity"
+        app:selectable="false"
         app:summary="@string/funding_campaign_text" />
 
     <Preference
@@ -37,6 +39,7 @@
         app:key="mode_of_operations"
         app:icon="@drawable/ic_run_fast"
         app:title="@string/pref_mode_of_operations"
+        android:fragment="io.github.muntashirakon.AppManager.settings.ModeOfOpsPreference"
         tools:summary="Auto" />
 
     <Preference

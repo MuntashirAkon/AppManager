@@ -31,6 +31,7 @@ import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.DataTransmission;
 import io.github.muntashirakon.AppManager.server.common.ParcelableUtil;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.adb.AdbPairingRequiredException;
 import io.github.muntashirakon.adb.AdbStream;
 import io.github.muntashirakon.io.IoUtils;
 
@@ -41,7 +42,7 @@ class LocalServerManager {
     @SuppressLint("StaticFieldLeak")
     private static LocalServerManager sLocalServerManager;
 
-    @WorkerThread
+    @AnyThread
     @NoOps
     @NonNull
     static LocalServerManager getInstance(@NonNull Context context) {
@@ -59,7 +60,7 @@ class LocalServerManager {
     @Nullable
     private ClientSession mSession;
 
-    @WorkerThread
+    @AnyThread
     private LocalServerManager(@NonNull Context context) {
         mContext = context;
     }
@@ -74,18 +75,24 @@ class LocalServerManager {
     @WorkerThread
     @NonNull
     @NoOps(used = true)
-    private ClientSession getSession() throws IOException {
+    private ClientSession getSession() throws IOException, AdbPairingRequiredException {
         synchronized (mLock) {
             if (mSession == null || !mSession.isRunning()) {
                 try {
                     mSession = createSession();
-                } catch (Exception ignore) {
+                } catch (Exception e) {
+                    if (!Ops.isRoot() && !Ops.isAdb()) {
+                        // Do not bother attempting to create a new session
+                        throw new IOException("Could not create session", e);
+                    }
                 }
                 if (mSession == null) {
                     try {
                         startServer();
+                    } catch (AdbPairingRequiredException e) {
+                        throw e;
                     } catch (Exception e) {
-                        throw new IOException("Could not create session", e);
+                        throw new IOException("Could not start server", e);
                     }
                     mSession = createSession();
                 }
@@ -120,18 +127,23 @@ class LocalServerManager {
 
     @WorkerThread
     @NoOps(used = true)
-    void start() throws IOException {
+    void start() throws IOException, AdbPairingRequiredException {
         getSession();
     }
 
     @WorkerThread
     @NonNull
     private DataTransmission getSessionDataTransmission() throws IOException {
-        return getSession().getDataTransmission();
+        try {
+            return getSession().getDataTransmission();
+        } catch (AdbPairingRequiredException e) {
+            throw new IOException(e);
+        }
     }
 
     @WorkerThread
-    private byte[] execPre(byte[] params) throws IOException {
+    @NonNull
+    private byte[] execPre(@NonNull byte[] params) throws IOException {
         try {
             return getSessionDataTransmission().sendAndReceiveMessage(params);
         } catch (IOException e) {
@@ -163,10 +175,9 @@ class LocalServerManager {
     @WorkerThread
     @NonNull
     private String getExecCommand() throws IOException {
-        AssetsUtils.writeScript(mContext);
         Log.e(TAG, "classpath --> %s", ServerConfig.getClassPath());
         Log.e(TAG, "exec path --> %s", ServerConfig.getExecPath());
-        return "sh " + ServerConfig.getExecPath() + " " + ServerConfig.getLocalServerPort() + " " + ServerConfig.getLocalToken();
+        return LocalServer.getExecCommand(mContext);
     }
 
     @Nullable
@@ -271,10 +282,9 @@ class LocalServerManager {
             // Non-null check has already been done
             return Objects.requireNonNull(mSession);
         }
-        if (!Ops.isPrivileged()) {
-            throw new IOException("Root/ADB not enabled.");
-        }
-        Socket socket = new Socket(ServerConfig.getLocalServerHost(mContext), ServerConfig.getLocalServerPort());
+        String host = ServerConfig.getLocalServerHost(mContext);
+        int port = ServerConfig.getLocalServerPort();
+        Socket socket = new Socket(host, port);
         socket.setSoTimeout(1000 * 30);
         // NOTE: (CWE-319) No need for SSL since it only runs on a random port in localhost with specific authorization.
         // TODO: 5/8/23 We could use an SSL server with a randomly generated certificate per session without requiring

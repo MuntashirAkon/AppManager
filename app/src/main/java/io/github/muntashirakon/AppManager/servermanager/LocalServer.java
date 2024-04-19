@@ -4,12 +4,12 @@ package io.github.muntashirakon.AppManager.servermanager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.RemoteException;
 import android.os.UserHandleHidden;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import java.io.IOException;
@@ -18,15 +18,14 @@ import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
 import io.github.muntashirakon.AppManager.server.common.Caller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.Shell;
 import io.github.muntashirakon.AppManager.server.common.ShellCaller;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.adb.AdbPairingRequiredException;
 
 // Copyright 2016 Zheng Li
 public class LocalServer {
@@ -34,21 +33,19 @@ public class LocalServer {
     private static final Object sLock = new Object();
 
     @SuppressLint("StaticFieldLeak")
+    @Nullable
     private static LocalServer sLocalServer;
 
     @GuardedBy("lockObject")
     @WorkerThread
     @NoOps(used = true)
-    public static LocalServer getInstance() throws RemoteException, IOException {
+    public static LocalServer getInstance() throws IOException, AdbPairingRequiredException {
         // Non-null check must be done outside the synchronised block to prevent deadlock on ADB over TCP mode.
         if (sLocalServer != null) return sLocalServer;
         synchronized (sLock) {
             try {
                 Log.d("IPC", "Init: Local server");
                 sLocalServer = new LocalServer();
-                // This calls the AdbShell class which has dependencies on LocalServer which might cause deadlock
-                // if not careful (see comment above on non-null check)
-                LocalServices.bindServicesIfNotAlready();
             } finally {
                 sLock.notifyAll();
             }
@@ -56,19 +53,27 @@ public class LocalServer {
         return sLocalServer;
     }
 
+    public static void die() {
+        synchronized (sLock) {
+            try {
+                if (sLocalServer != null) {
+                    sLocalServer.destroy();
+                }
+            } finally {
+                sLocalServer = null;
+            }
+        }
+    }
+
     @WorkerThread
     @NoOps
     public static boolean alive(Context context) {
-        if (sLocalServer != null) {
+        try (ServerSocket socket = new ServerSocket()) {
+            socket.bind(new InetSocketAddress(ServerConfig.getLocalServerHost(context),
+                    ServerConfig.getLocalServerPort()), 1);
+            return false;
+        } catch (IOException e) {
             return true;
-        } else {
-            try (ServerSocket socket = new ServerSocket()) {
-                socket.bind(new InetSocketAddress(ServerConfig.getLocalServerHost(context),
-                        ServerConfig.getLocalServerPort()), 1);
-                return false;
-            } catch (IOException e) {
-                return true;
-            }
         }
     }
 
@@ -79,7 +84,7 @@ public class LocalServer {
 
     @WorkerThread
     @NoOps(used = true)
-    private LocalServer() throws IOException {
+    private LocalServer() throws IOException, AdbPairingRequiredException {
         mContext = ContextUtils.getDeContext(ContextUtils.getContext());
         mLocalServerManager = LocalServerManager.getInstance(mContext);
         // Initialise necessary files and permissions
@@ -96,7 +101,7 @@ public class LocalServer {
     @GuardedBy("connectLock")
     @WorkerThread
     @NoOps(used = true)
-    public void checkConnect() throws IOException {
+    public void checkConnect() throws IOException, AdbPairingRequiredException {
         synchronized (mConnectLock) {
             if (mConnectStarted) {
                 try {
@@ -107,20 +112,18 @@ public class LocalServer {
             }
             mConnectStarted = true;
             try {
-                if (Ops.isPrivileged()) {
-                    mLocalServerManager.start();
-                }
-            } catch (IOException e) {
+                mLocalServerManager.start();
+            } catch (IOException | AdbPairingRequiredException e) {
                 mConnectStarted = false;
                 mConnectLock.notify();
-                throw new IOException(e);
+                throw e;
             }
             mConnectStarted = false;
             mConnectLock.notify();
         }
     }
 
-    public Shell.Result runCommand(String command) throws IOException, RemoteException {
+    public Shell.Result runCommand(String command) throws IOException {
         ShellCaller shellCaller = new ShellCaller(command);
         CallerResult callerResult = exec(shellCaller);
         Throwable th = callerResult.getThrowable();
@@ -139,8 +142,14 @@ public class LocalServer {
             e.printStackTrace();
             closeBgServer();
             // Retry
-            checkConnect();
-            return mLocalServerManager.execNew(caller);
+            try {
+                checkConnect();
+                return mLocalServerManager.execNew(caller);
+            } catch (AdbPairingRequiredException e2) {
+                throw new IOException(e2);
+            }
+        } catch (AdbPairingRequiredException e) {
+            throw new IOException(e);
         }
     }
 
@@ -168,15 +177,21 @@ public class LocalServer {
 
     @WorkerThread
     @NoOps(used = true)
-    public static void restart() throws IOException, RemoteException {
+    public static void restart() throws IOException, AdbPairingRequiredException {
         if (sLocalServer != null) {
             LocalServerManager manager = sLocalServer.mLocalServerManager;
             manager.closeBgServer();
             manager.stop();
             manager.start();
-            LocalServices.bindServicesIfNotAlready();
         } else {
             getInstance();
         }
+    }
+
+    @WorkerThread
+    @NonNull
+    public static String getExecCommand(@NonNull Context context) throws IOException {
+        AssetsUtils.writeScript(context);
+        return "sh " + ServerConfig.getExecPath() + " " + ServerConfig.getLocalServerPort() + " " + ServerConfig.getLocalToken();
     }
 }

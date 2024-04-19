@@ -84,7 +84,6 @@
     <string name="pref_encryption_msg">Chiffrement des sauvegardes.</string>
     <string name="encryption">Chiffrement</string>
     <string name="select_user">Sélectionner l\'utilisateur</string>
-    <string name="pref_show_users_in_installer">Afficher les utilisateurs dans l\'installeur</string>
     <string name="failed_to_duplicate_profile">Impossible de dupliquer le profil</string>
     <string name="duplicate">Dupliquer</string>
     <string name="new_profile">Nouveau profil</string>
@@ -801,7 +800,6 @@
     <string name="installer_app_installed">Application installée</string>
     <string name="paste">Coller</string>
     <string name="paired_successfully">Couplé.</string>
-    <string name="adb_wifi_paring_code">Code d\'appairage Wi-Fi</string>
     <string name="invalid_password">Mot de passe invalide, réessayez.</string>
     <string name="pref_log_viewer_msg">Configurer l\'affichage des journaux.</string>
     <string name="files">Fichiers</string>
@@ -980,7 +978,6 @@
     <string name="pref_rules_msg">Blocage instantané, importer/exporter/supprimer des règles, etc.</string>
     <string name="pref_expanded_by_default_summary">Afficher le texte complet du journal par défaut.</string>
     <string name="pref_installer_msg">Configurer le comportement de l\'installeur d\'application.</string>
-    <string name="port_number_pairing_code_empty">Numéro de port ou code d\'appariement vide.</string>
     <string name="common_name">Nom Commun (Common Name)</string>
     <string name="organization_unit">Unité d\'organisation (Organization Unit)</string>
     <string name="organization_name">Nom de l\'organisation (O)</string>
@@ -1267,7 +1264,7 @@
     <plurals name="alert_failed_to_unblock_components">
         <item quantity="one">Impossible de bloquer les composants d\'une application.</item>
         <item quantity="many">Impossible de bloquer les composants de %1$d applications.</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="app_can_write_and_execute_in_same_place">Cette application enfreint la <a href="https://en.wikipedia.org/wiki/W%5EX">politique W^X</a> et peut écrire et exécuter dans le même dossier ou la même partie de mémoire. Ceci autorise l\'exécution d\'exécutables arbitraires soit par la modification des exécutables inclus dans l\'application ou en les téléchargeant depuis Internet. Sauf si c\'est le comportement attendu de l\'application (ex. émulateurs de terminal), il est recommendé de trouver une version plus récente de l\'application prévue pour SDK 29 (Android 10) et ultérieur, ou de trouver des alternatives.</string>
     <string name="app_manager_build_expired_message">Pour assurer la sécurité de votre appareil et de vos données, la version d\'App Manager que vous utilisez est arrivée à expiration. Vous devez installer la version la plus récente pour continuer à l\'utiliser, ou désinstaller cette version si aucune autre n\'est disponible.</string>

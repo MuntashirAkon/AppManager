@@ -56,4 +56,16 @@
 \ntài liệu và bản dịch, thêm các thư viện hoặc trình theo dõi không được công nhận, xem lại mã nguồn cũng như
 \nbáo cáo lỗ hổng bảo mật.</string>
     <string name="pages$main-page$$app-usage-title">Sử dụng ứng dụng</string>
+    <string name="pages$main-page$$sort-title">Sắp xếp</string>
+    <string name="pages$main-page$$filter-title">Lọc</string>
+    <string name="pages$main-page$$colour-codes-title">Mã màu</string>
+    <string name="pages$main-page$$application-types-title">Các loại ứng dụng</string>
+    <string name="pages$main-page$$version-info-title">Thông tin phiên bản</string>
+    <string name="pages$main-page$$options-menu-title">Trình đơn tùy chọn</string>
+    <string name="pages$main-page$$list-options-title">Tùy chọn danh sách</string>
+    <string name="pages$main-page$$profile_name-title">Tên hồ sơ</string>
+    <string name="pages$main-page$$instructions-title">Hướng dẫn sử dụng</string>
+    <string name="appendices$changelogs$$chapter-title">Nhật ký thay đổi</string>
+    <string name="faq$app-components$$tracker-classes-versus-tracker-components-title">Các lớp theo dõi so với các thành phần theo dõi</string>
+    <string name="faq$app-components$$also-blocked-by-other-tools-title">Điều gì xảy ra với các thành phần bị chặn bởi App Manager mà trước đây đã bị các công cụ khác chặn?</string>
 </resources>

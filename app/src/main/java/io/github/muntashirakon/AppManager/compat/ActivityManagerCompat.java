@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.os.UserHandleHidden;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -66,15 +67,19 @@ public final class ActivityManagerCompat {
         // Backup assistant value
         String assistantComponent = Settings.Secure.getString(resolver, "assistant");
         if (canInjectEvents) {
-            try {
-                // Set assistant value to the target activity component
-                Settings.Secure.putString(resolver, "assistant", activity.flattenToShortString());
-                // Run it as an assistant by injecting KEYCODE_ASSIST (219)
-                InputManagerCompat.sendKeyEvent(KeyEvent.KEYCODE_ASSIST, false);
-            } finally {
-                // Restore assistant value
-                Settings.Secure.putString(resolver, "assistant", assistantComponent);
-            }
+            ThreadUtils.postOnBackgroundThread(() -> {
+                try {
+                    // Set assistant value to the target activity component
+                    Settings.Secure.putString(resolver, "assistant", activity.flattenToShortString());
+                    // Run it as an assistant by injecting KEYCODE_ASSIST (219)
+                    InputManagerCompat.sendKeyEvent(KeyEvent.KEYCODE_ASSIST, false);
+                    // Wait until system opens the new assistant (i.e., activity), this is an empirical value
+                    SystemClock.sleep(500);
+                } finally {
+                    // Restore assistant value
+                    Settings.Secure.putString(resolver, "assistant", assistantComponent);
+                }
+            });
         } else if (callback != null) {
             // Cannot launch event by default, use callback
             ThreadUtils.postOnBackgroundThread(() -> {

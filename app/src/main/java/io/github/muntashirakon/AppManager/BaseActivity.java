@@ -105,7 +105,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     Log.d(TAG, "Try auto-connecting to wireless debugging.");
                     mDisplayLoader = false;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        mViewModel.autoConnectAdb(Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED);
+                        mViewModel.autoConnectWirelessDebugging();
                         return;
                     } // fall-through
                 case Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED:

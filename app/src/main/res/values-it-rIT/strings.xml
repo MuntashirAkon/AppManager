@@ -618,7 +618,6 @@
     <string name="permission_flags">Flag autorizzazioni</string>
     <string name="files">File</string>
     <string name="keystore_pass_cannot_be_empty">La password KeyStore non può essere vuota.</string>
-    <string name="port_number_pairing_code_empty">Numero di porta o codice di accoppiamento vuoto.</string>
     <string name="paired_successfully">Accoppiato.</string>
     <string name="user_root">Usa root</string>
     <string name="trim_caches_in_all_apps">Regola cache in tutte le app</string>
@@ -693,7 +692,6 @@
     <string name="storage">Archiviazione</string>
     <string name="backup_volume_dialog_description">I volumi con il prefisso <tt>/tree</tt> sono cartelle selezionate utilizzando Storage Access Framework (SAF). Ad eccezione di queste cartelle, la directory predefinita per App Manager è una sottocartella denominata <tt>AppManager</tt>.</string>
     <string name="keystore_password_info">La seguente è la password del KeyStore di App Manager. Conservala in un luogo sicuro se hai intenzione di fare il backup o il ripristino del KeyStore di App Manager. <b>Questo messaggio non verrà più visualizzato.</b></string>
-    <string name="adb_wifi_paring_code">Codice associazione Wi-Fi</string>
     <string name="paste">Incolla</string>
     <string name="rename">Rinomina</string>
     <string name="vt_queued">VirusTotal: in coda</string>
@@ -1444,4 +1442,9 @@
     <string name="scan_report_from_pithus">Rapporto Pithus</string>
     <string name="action_checking">Controllo…</string>
     <string name="report_not_available">Non disponibile</string>
+    <string name="profile_modified_are_you_sure">Il profilo è stato modificato. Annullare tutte le modifiche ed uscire\?</string>
+    <string name="apply_profile">Applica profilo “%1$s”</string>
+    <string name="copy_profile_id">Copia ID profilo</string>
+    <string name="profile_id">ID profilo</string>
+    <string name="choose_a_profile_state">Seleziona stato del profilo</string>
 </resources>

@@ -39,7 +39,7 @@
     <string name="configurations">Konfigurationen</string>
     <string name="no_configurations">Keine Konfigurationen</string>
     <string name="input_features">Eingabe-Funktionalitäten</string>
-    <string name="manifest">Erscheinungsbild</string>
+    <string name="manifest">Manifest</string>
     <string name="error">Fehler</string>
     <string name="loading">Laden…</string>
     <!-- &#8230; = ... -->
@@ -153,7 +153,7 @@
     <string name="native_library_dir">Native-JNI-Bibliotheken-Verzeichnis</string>
     <string name="process_name">Prozess-Name</string>
     <string name="no_code">Kein Code</string>
-    <string name="requested_large_heap">Große Halde</string>
+    <string name="requested_large_heap">Viel Heap-Speicher</string>
     <string name="updated_app">Aktualisiert</string>
     <string name="debuggable">Debuggbar</string>
     <string name="test_only">Nur zum Testen</string>
@@ -326,7 +326,7 @@
     <string name="update">Aktualisieren</string>
     <string name="source_code">Quellcode</string>
     <string name="pref_import_existing">Existierende Regeln importieren</string>
-    <string name="pref_import_existing_msg">Hinzufügen von Komponenten zum App Manager, die von anderen Anwendungen deaktiviert wurden. Seien Sie bei der Verwendung dieses Tools vorsichtig, da es viele Fehlalarme geben kann. Wählen Sie nur die Anwendungen aus, bei denen Sie sich sicher sind.</string>
+    <string name="pref_import_existing_msg">Hinzufügen von Komponenten zum App Manager, die von anderen Anwendungen deaktiviert wurden. Seien Sie bei der Verwendung dieses Tools vorsichtig, da es viele Fehltreffer geben kann. Wählen Sie nur die Anwendungen aus, bei denen Sie sich sicher sind.</string>
     <string name="clear_cache">Cache leeren</string>
     <string name="block_unblock_trackers_description">Blockiere oder gebe Verfolger-Komponenten aller installierter Anwendungen frei</string>
     <string name="block_components_dots">Komponenten blockieren…</string>
@@ -341,7 +341,7 @@
     <string name="input_signatures_description">Bitte die gewünschten Signaturen mit einer Leerstelle getrennt angeben, z. B. <tt>com.facebook org.app2 com.app3</tt> usw.</string>
     <string name="filtered_packages">Gefilterte Pakete</string>
     <string name="input_app_ops">App Ops</string>
-    <string name="input_app_ops_description">Geben Sie App-Op-Namen und/ oder Konstanten mit Leerzeichen (z.B. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.) ein.</string>
+    <string name="input_app_ops_description">Geben Sie App-Op-Namen und/oder Konstanten mit Leerzeichen ein, z. B. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.</string>
     <string name="only_works_in_root_or_adb_mode">Nur im Root- oder ADB-Modus verfügbar</string>
     <string name="failed_to_parse_some_numbers">Einlesen mancher Zahlen nicht möglich</string>
     <plurals name="no_of_splits">
@@ -496,7 +496,7 @@
     <string name="systemless_app">Systemlose App</string>
     <string name="cancel">Abbrechen</string>
     <string name="ok">okay</string>
-    <string name="input_backup_name_description">Die Bezeichnung der Sicherung sollte weder mit einer Ziffer beginnen, noch ein Leerzeichen enthalten. Lassen Sie es leer, wenn Sie das aktuelle Datum und die aktuelle Uhrzeit verwenden möchten.</string>
+    <string name="input_backup_name_description">Der Name der Sicherung sollte keine Leerzeichen enthalten und nicht mit einer Ziffer beginnen. Lassen Sie ihn leer, wenn Sie das aktuelle Datum und die aktuelle Uhrzeit verwenden möchten.</string>
     <string name="input_backup_name">Bezeichnung der Sicherung</string>
     <string name="downgrade">Zurückstufen</string>
     <string name="process_state_with_extra">Zustand: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
@@ -518,8 +518,8 @@
     <string name="state_device_io">Gerät I/O</string>
     <string name="state_sleeping">ruhend</string>
     <plurals name="backup_exists_are_you_sure">
-        <item quantity="one">Sind Sie sicher, dass ein Backup vorhanden ist\?</item>
-        <item quantity="other">Sind Sie sicher, dass ein Backup für mehr als eine Anwendung vorhanden ist\?</item>
+        <item quantity="one">Ein Backup ist bereits vorhanden. Sind Sie sicher, dass Sie fortfahren wollen?</item>
+        <item quantity="other">Einige Backups sind bereits vorhanden. Sind Sie sicher, dass Sie fortfahren wollen?</item>
     </plurals>
     <string name="sort_by_memory_usage">Speicherauslastung</string>
     <string name="sort_by_apps_first">Apps zuerst</string>
@@ -568,7 +568,7 @@
     <string name="do_you_want_to_uninstall_and_install">Möchten Sie die Anwendung deinstallieren und erneut installieren\?</string>
     <string name="usage_access_not_supported">Konnte keinen Nutzungszugriff anfordern, da die entsprechende Einstellungsseite nicht existiert.</string>
     <string name="sys_config">Systemkonfiguration</string>
-    <string name="tap_to_see_details">Tippen Sie , um Details zu sehen</string>
+    <string name="tap_to_see_details">Tippen Sie zum Anzeigen der Details</string>
     <string name="lib_details">Einzelheiten zur Bibliothek</string>
     <string name="no_libs">Keine Bibliotheken</string>
     <string name="scanner">Scanner</string>
@@ -593,7 +593,7 @@
         <item quantity="other">1 Verfolger mit <xliff:g id="class_no" example="50">%1$d</xliff:g> Klassen</item>
     </plurals>
     <string name="copy">Kopieren</string>
-    <string name="view_missing_signatures">Tippen Sie darauf , um Signaturen anzuzeigen oder einzusenden, die noch nicht in der Bibliotheksdatenbank des App Managers vorhanden sind.</string>
+    <string name="view_missing_signatures">Tippen Sie hier, um Signaturen anzuzeigen oder einzusenden, die in der Bibliotheksdatenbank des App Managers noch nicht vorhanden sind.</string>
     <plurals name="missing_signatures">
         <item quantity="one">%1$d Signatur fehlt</item>
         <item quantity="other">%1$d Signaturen fehlen</item>
@@ -621,7 +621,7 @@
     <string name="failed_to_duplicate_profile">Konnte Profil nicht duplizieren</string>
     <string name="enabled">Aktiviert</string>
     <string name="choose">Auswählen</string>
-    <string name="input_permissions_description">Eingabeberechtigungen mit Leerzeichen, z.B. <tt>(com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt>) etc. Verwenden Sie <tt>*</tt> für alle Berechtigungen.</string>
+    <string name="input_permissions_description">Geben Sie die Berechtigungen mit Leerzeichen getrennt ein, z.B. <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> etc., oder verwenden Sie <tt>*</tt> für alle Berechtigungen.</string>
     <string name="input_permissions">Eingabeberechtigungen</string>
     <string name="options">Optionen</string>
     <string name="off">Aus</string>
@@ -657,7 +657,7 @@
     <string name="pref_apk_signing_msg">Festlegen von Signaturschemata, benutzerdefinierten Signaturschlüsseln usw.</string>
     <string name="apk_signing">APK-Signierung</string>
     <string name="app_signing_signature_schemes">Signaturschemata</string>
-    <string name="splits">Spaltet</string>
+    <string name="splits">Teile</string>
     <string name="source_stamp_verified">Quellenstempel verifiziert.</string>
     <string name="not_verified">Nicht überprüft</string>
     <string name="verified">Überprüft</string>
@@ -668,7 +668,7 @@
     <string name="input_keystore_alias_pass_description">Geben Sie das Passwort für den Alias <b>%1$s</b> ein. Sie können dieses Feld leer lassen, wenn das Kennwort mit dem KeyStore-Kennwort übereinstimmt.</string>
     <string name="input_keystore_alias_pass">Passwort für den Alias <b>%1$s</b></string>
     <string name="input_keystore_pass_msg">Tippen Sie hier, um das KeyStore-Passwort einzugeben</string>
-    <string name="input_keystore_pass_description">Geben Sie das Passwort für den App Manager KeyStore ein. Wenn Sie dies zum ersten Mal sehen, verwenden Sie bitte einen Passwortgenerator, um ein Passwort zu generieren und es an einem sicheren Ort zu speichern, bevor Sie es hier einfügen.</string>
+    <string name="input_keystore_pass_description">Geben Sie das Passwort für den App Manager KeyStore ein. Wenn Sie diese Aufforderung zum ersten Mal sehen, erzeugen Sie bitte zunächst mit einem Passwortgenerator ein Passwort und speichern Sie es an einem sicheren Ort, bevor Sie es hier einfügen.</string>
     <string name="input_keystore_pass">KeyStore-Passwort eingeben</string>
     <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">Signaturschema</item>
@@ -723,15 +723,15 @@
     <string name="matching_activities">Passende Aktivitäten</string>
     <string name="patch_level">Patch-Level</string>
     <string name="backup_skip_signature_checks_description">Wiederherstellen von Sicherungen, die entweder die Prüfsummenüberprüfung nicht bestehen oder andere APK-Signaturen haben als die vorherigen Sicherungen.</string>
-    <string name="backup_multiple_description">Verwenden Sie ein separat <i> benanntes</i> Backup anstelle des Basis-Backups.</string>
-    <string name="backup_rules_description">Im App Manager konfigurierte Regeln sichern.</string>
-    <string name="backup_extras_description">Sichern Sie App-Berechtigungen, Batteriespar- und Datennutzungsoptionen, MagiskHide-Status, SSAID usw.</string>
-    <string name="backup_extras">Zusätze</string>
+    <string name="backup_multiple_description">Erzeugt ein separat <i> benanntes</i> Backup anstelle des Basis-Backups.</string>
+    <string name="backup_rules_description">Im App Manager konfigurierte Regeln sichern.<font fgcolor="#ff0000">Das Wiederherstellen ist je nach Berechtigungen u. U. nicht mit allen Regeln möglich.</font> </string>
+    <string name="backup_extras_description">Sichert die App-Berechtigungen, Batteriespar- und Datennutzungsoptionen, MagiskHide-Status, SSAID usw.<font fgcolor="#ff0000">Je nach Berechtigung können u. U. nicht alle Extras wiederhergegestellt werden.</font> </string>
+    <string name="backup_extras">Extras</string>
     <string name="backup_cache_description">Die Ordner <b>cache</b>, <b>no_cache</b> und <b>no_backup</b> werden gesichert.</string>
-    <string name="backup_obb_media_description">Sichern der OBB- und Medienordner.</string>
-    <string name="backup_external_data_description">Sichern Sie die externen Datenordner.</string>
-    <string name="backup_internal_data_description">Sichern Sie die Datenordner. Wenn diese Option ausgewählt ist, werden die internen Datenordner standardmäßig gesichert.</string>
-    <string name="backup_apk_files_description">Sichern Sie nur die APK-Dateien aus dem Quellverzeichnis. <b>Die Quelle</b> muss ausgewählt sein, damit dies funktioniert.</string>
+    <string name="backup_obb_media_description">Sichert die OBB- und Medienordner.</string>
+    <string name="backup_external_data_description">Sichert die externen Datenordner.</string>
+    <string name="backup_internal_data_description">Sichert die Datenordner. Wenn diese Option ausgewählt ist, werden die internen Datenordner standardmäßig gesichert.</string>
+    <string name="backup_apk_files_description">Sichert die APK-Dateien aus dem Quellverzeichnis. <b>Die Quelle</b> muss ausgewählt sein, damit dies funktioniert.</string>
     <string name="backup_custom_users_description">Backups nur für die angegebenen Benutzer durchführen</string>
     <string name="backup_custom_users">Benutzerdefinierte Nutzung</string>
     <string name="bootloader">Startprogramm</string>
@@ -820,7 +820,7 @@
     <string name="screen_lock_not_enabled">Bitte wählen Sie eine Bildschirmsperre in den Android-Einstellungen aus oder löschen Sie App-Daten.</string>
     <string name="isolated">Isoliert</string>
     <string name="working_on_adb_mode">Arbeiten im ADB-Modus</string>
-    <string name="input_app_ops_description_profile">Geben Sie App-Op-Namen und/ oder Konstanten mit Leerzeichen (z.B. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.) ein. Verwenden Sie <tt>*</tt> für alle konfigurierten App-Ops.</string>
+    <string name="input_app_ops_description_profile">Geben Sie App-Op-Namen und/oder Konstanten mit Leerzeichen (z. B. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.) ein. Verwenden Sie <tt>*</tt> für alle konfigurierten App-Ops.</string>
     <string name="filter_apps_without_backups">Ohne Sicherung</string>
     <string name="uninstalled_apps">Deinstallierte Apps</string>
     <string name="installer_app_message">Wählen Sie <b>Wählen</b>, um aus den installierten Apps auszuwählen, oder wählen Sie <b>Benutzerdefiniert</b>, um einen eigenen Paketnamen anzugeben.</string>
@@ -829,7 +829,7 @@
     <string name="internal_data">Interne Daten</string>
     <string name="pref_expanded_by_default_summary">Zeigt standardmäßig den vollständigen Protokolltext an.</string>
     <string name="pref_filter_pattern_title">Kennzeichen herausfiltern</string>
-    <string name="pref_filter_pattern_summary">Filtern Sie die ausgewählten Kennzeichen aus den Protokollen heraus.</string>
+    <string name="pref_filter_pattern_summary">Filtert die ausgewählten Kennzeichen aus den Protokollen heraus.</string>
     <string name="pref_display_limit_title">Protokollieren der Anzeigegrenze</string>
     <string name="pref_display_limit_summary">Zeigt nur die letzten %1$d Protokolle an, um Speicherplatzmangel zu vermeiden.</string>
     <string name="pref_default_log_level_title">Standard-Protokollstufe</string>
@@ -915,7 +915,7 @@
     <string name="saf">SAF</string>
     <string name="pref_rules_msg">Sofortiges Sperren, Importieren/Exportieren/Entfernen von Regeln, etc.</string>
     <string name="failed">Fehlgeschlagen</string>
-    <string name="confirm_import_keystore">Sind Sie sicher den bestehenden Schlüsselspeicher zu ersetzen\? Dies Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="confirm_import_keystore">Sind Sie sicher, dass Sie den bestehenden Schlüsselspeicher ersetzen wollen? Diese Aktion kann nicht rückgängig gemacht werden.</string>
     <string name="import_keystore">Importieren des Schlüsselspeichers</string>
     <string name="pref_import_export_keystore_msg">Importiert/exportiert den Bouncy Castle KeyStore (BKS), der intern vom App Manager verwendet wird.</string>
     <string name="pref_import_export_keystore">Importieren/Exportieren des Schlüsselspeichers</string>
@@ -967,7 +967,7 @@
     <string name="record_log">Protokoll aufzeichnen</string>
     <string name="pref_show_timestamp_title">Zeige Pid &amp; Zeitstempel</string>
     <string name="pref_show_timestamp_summary">Zeige Prozess-ID und Zeitstempel wenn aufgeklappt.</string>
-    <string name="pref_log_line_period_error">Bitte geben Sie einen Integer zwischen 1 und 1000 an.</string>
+    <string name="pref_log_line_period_error">Bitte geben Sie eine ganze Zahl zwischen 1 und 1000 ein.</string>
     <string name="pref_expanded_by_default_title">Standardmäßig aufklappen</string>
     <string name="hidden">Versteckt</string>
     <string name="no_changes">Keine Änderungen</string>
@@ -988,7 +988,7 @@
     <string name="unknown_net_policy">Unbekannte Netz-Richtlinie (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">Konnte nicht verhindern, dass %1$s im Hintergrund läuft</string>
     <string name="community">Gemeinschaft</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegrammkanal</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">Konnte %1$d Sicherung nicht importieren</item>
         <item quantity="other">Konnte %1$d Sicherung en nicht importieren</item>
@@ -999,9 +999,9 @@
     <string name="pref_import_backups">Sicherungen importieren</string>
     <string name="added_to_queue">Zur Warteschlange hinzugefügt</string>
     <string name="minimum_version">Minimale Version: %d</string>
-    <string name="help_uses_permissions_tab">Klicken Sie auf ein Element, um es <b>zu gewähren</b> oder <b>zu entziehen</b>. Nur die Berechtigungen <b>Gefahr</b> und <b>Entwicklung</b> können gewährt oder entzogen werden.</string>
+    <string name="help_uses_permissions_tab">Klicken Sie auf eine Berechtigung, um sie <b>zu gewähren</b> oder <b>zu entziehen</b>. Nur <b>gefährliche</b> und <b>Entwicklungs-</b>Berechtigungen können gewährt oder entzogen werden.</string>
     <string name="help_permissions_tab">Diese Berechtigungen werden von dieser App festgelegt und können nicht widerrufen werden.</string>
-    <string name="help_app_ops_tab">Klicken Sie auf ein Element, um es zu <b>zulassen</b> oder <b>zu ignorieren</b>. Klicken Sie lange auf ein Element, um andere unterstützte Modi anzuzeigen.</string>
+    <string name="help_app_ops_tab">Tippen Sie auf ein Element, um es <b>zuzulassen</b> oder <b>zu ignorieren</b>. Für weitere mögliche Modi halten Sie ein Element gedrückt.</string>
     <string name="error_with_details">Fehler: %s</string>
     <string name="saved_filters">Gespeicherte Filter</string>
     <string name="permission_flags">Berechtigungskennzeichen</string>
@@ -1012,12 +1012,10 @@
     <string name="notice_saf">Im Gegensatz zu den Laufwerken wird das ausgewählte Verzeichnis zum Speichern aller mit dem App Manager verbundenen Dateien verwendet, einschließlich gespeicherter APKs und Backups. Das Storage Access Framework (SAF) ist sehr langsam, daher sollte diese Option nur verwendet werden, wenn keine andere zur Verfügung steht.</string>
     <string name="notice">Benachrichtigung</string>
     <string name="paired_successfully">Gekoppelt.</string>
-    <string name="adb_wifi_paring_code">WiFi-pairing Code</string>
-    <string name="port_number_pairing_code_empty">Leere Port-Nummer oder Pairing-Code.</string>
     <string name="adb_pair">Paar</string>
     <string name="invalid_password">Ungültiges Passwort, versuchen Sie es erneut.</string>
     <string name="keystore_pass_cannot_be_empty">Das KeyStore-Passwort darf nicht leer sein.</string>
-    <string name="keystore_password_info">Nachfolgend finden Sie das Passwort für den App Manager KeyStore. Bitte bewahren Sie es an einem sicheren Ort auf, wenn Sie den App Manager KeyStore sichern/ wiederherstellen möchten. <b>Diese Meldung wird nicht mehr angezeigt.</b></string>
+    <string name="keystore_password_info">Nachfolgend finden Sie das Passwort für den App Manager KeyStore. Bitte bewahren Sie es an einem sicheren Ort auf, wenn Sie den App Manager KeyStore sichern/ wiederherstellen möchten. <b>Diese Meldung wird nicht noch einmal angezeigt.</b></string>
     <string name="running_services_logcat_hint">Klicken Sie auf ein Element, um die Protokollanzeige mit der entsprechenden Prozess-ID als Standardfilter zu öffnen.</string>
     <string name="pid">Prozess-ID</string>
     <plurals name="pref_thread_count_msg">
@@ -1028,9 +1026,9 @@
     <string name="pref_thread_count">Parallele Ausführung</string>
     <string name="type_uri_array_list">Liste der URIs</string>
     <string name="type_uri_array">Array von URIs</string>
-    <string name="pref_always_on_background_msg">Installieren Sie Anwendungen immer im Hintergrund. Eine Benachrichtigung zeigt an, wenn sie fertig sind.</string>
+    <string name="pref_always_on_background_msg">Installiert Anwendungen immer im Hintergrund. Eine Benachrichtigung zeigt an, wenn die Installation fertig ist.</string>
     <string name="pref_always_on_background">Installieren im Hintergrund</string>
-    <string name="pref_block_trackers_msg">Blockieren Sie nach der Installation einer App Tracking-Komponenten mit dem App-Manager.</string>
+    <string name="pref_block_trackers_msg">Blockiert nach der Installation einer App mit dem App-Manager deren Tracking-Komponenten.</string>
     <string name="next">Nächster</string>
     <string name="installer_app_installed">App ist installiert</string>
     <string name="staging_apk_files">Ausführen…</string>
@@ -1065,7 +1063,7 @@
     <string name="search_type_suffix">Suffix</string>
     <string name="search_type_prefix">Prefix</string>
     <string name="search_type_regular_expressions">Regulärer Ausdruck</string>
-    <string name="pref_intent_firewall_and_disable_description">Blockieren Sie Komponenten mit der Intent Firewall und deaktivieren Sie sie. Empfohlene Methode für Root-Benutzer.</string>
+    <string name="pref_intent_firewall_and_disable_description">Komponenten per Intent Firewall blockieren und deaktivieren. Empfohlene Methode für Root-Benutzer.</string>
     <string name="pref_intent_firewall_description">Komponenten nur mit Intent Firewall blockieren. Nicht empfohlen, da einige Systemanwendungen Firewalls umgehen können.</string>
     <plurals name="usage_seconds">
         <item quantity="one">%1$d Sekunde</item>
@@ -1077,8 +1075,8 @@
     <string name="vt_success">VirusTotal: %1$d/%2$d</string>
     <string name="vt_scan_date">Datum des Scans: %1$s</string>
     <string name="vt_slowness_warning">Je nach Internetgeschwindigkeit und Auslastung des Servers kann dies eine Weile dauern.</string>
-    <string name="pref_vt_apikey_summary">Aktivieren Sie das Scannen von APK-Dateien über VirusTotal.</string>
-    <string name="uses_play_app_signing">Play App signieren</string>
+    <string name="pref_vt_apikey_summary">Aktiviert das Scannen von APK-Dateien über VirusTotal.</string>
+    <string name="uses_play_app_signing">Play App-Signatur</string>
     <string name="scan_in_vt">In VirusTotal scannen</string>
     <string name="parent_process_id">Übergeordnete Prozess ID</string>
     <string name="priority">Priorität</string>
@@ -1124,7 +1122,7 @@
     <string name="hidden_api_enf_default_policy">Standard (je nach Anwendungstyp)</string>
     <string name="hidden_api_enf_policy_dark_grey_and_black">Erzwingen (dunkelgraue und schwarze Listen)</string>
     <string name="endianness_little_endian">Little endian</string>
-    <string name="file_modified_are_you_sure">Die Datei wurde geändert. Verwerfen Sie alle Ihre Änderungen und beenden Sie\?</string>
+    <string name="file_modified_are_you_sure">Die Datei wurde geändert. Möchten Sie die Bearbeitung beenden und alle Ihre Änderungen verwerfen?</string>
     <string name="hidden_api_enf_policy_warn">Warnen (voller Zugriff auf die versteckte API, gibt aber Warnungen aus)</string>
     <string name="pref_saved_apk_name_format">Namensformat des gespeicherten APK</string>
     <string name="pref_saved_apk_name_format_msg">Das Format, das für die Benennung der APK-Dateien beim Speichern verwendet werden soll.</string>
@@ -1139,21 +1137,21 @@
     <string name="tracker">Tracker</string>
     <string name="input_ssaid_instruction">SSAID ist eine %1$d-Byte-Hexadezimalzahl, d.h. eine Zeichenkette der Länge %2$d mit 0 bis 9 und a bis f.</string>
     <string name="screen_time">Zeit am Bildschirm</string>
-    <string name="backup_volume_unavailable_warning">Das ausgewählte Sicherungsmedium ist derzeit nicht verfügbar. Wenn es sich auf einem externen Speicher befindet, legen Sie es bitte ein oder ändern Sie das Sicherungsmedium.</string>
+    <string name="backup_volume_unavailable_warning">Das ausgewählte Sicherungsmedium ist derzeit nicht verfügbar. Wenn es sich auf einem externen Speicher befindet, legen Sie diesen bitte ein oder wählen Sie ein anderes Sicherungsmedium.</string>
     <string name="sort_by_installation_date">Installationsdatum</string>
     <string name="pref_vt_prompt_before_uploading">Eingabeaufforderung vor dem Hochladen einer Datei anzeigen.</string>
     <string name="vt_confirm_uploading_file">Die Datei wurde nicht in der VirusTotal-Datenbank gefunden. Möchten Sie sie hochladen\?</string>
     <string name="vt_confirm_upload_and_scan">Ja, hochladen und scannen</string>
     <string name="open_in_new_window">Neues Fenster</string>
     <string name="type_string_set">Satz von Zeichenfolgen</string>
-    <string name="item_select">Asuwählen</string>
+    <string name="item_select">Auswählen</string>
     <string name="log_stop_recording">Aufnahme stoppen</string>
     <string name="apk_checksums">APK Prüfsumme</string>
     <string name="app_explorer">AppExplorer</string>
     <string name="netpolicy_cannot_be_modified_for_core_apps">Die Netz-Richtlinie kann für Android-Kernanwendungen nicht geändert werden.</string>
     <string name="pref_pure_black_theme">Rein schwarzes Thema</string>
     <string name="open_developer_options_page">Öffnen Sie die Seite mit den Entwickleroptionen in den Android-Einstellungen</string>
-    <string name="pref_pure_black_theme_msg">Verwenden Sie einen komplett schwarzen Hintergrund, wenn der Nachtmodus aktiviert ist.</string>
+    <string name="pref_pure_black_theme_msg">Verwendet einen komplett schwarzen Hintergrund, wenn der Nachtmodus aktiviert ist.</string>
     <string name="usage_wifi_data">Wi-Fi-Daten</string>
     <string name="usage_mobile_data">Mobile Daten</string>
     <string name="usage_times_opened">Geöffnete Zeiten</string>
@@ -1167,7 +1165,7 @@
     <string name="backup_apps_cannot_be_backed_up">Die folgenden Apps sind nicht installiert und können nicht gesichert werden:</string>
     <string name="restart_device">Gerät neustarten</string>
     <string name="import_backups_warning_delete_backups_after_import">Backups löschen, nachdem sie in App Manager importiert wurden\? Jedes Backup wird nach erfolgreichem Import einzeln gelöscht. Wählen Sie <b>Nein</b>, wenn Sie sich nicht sicher sind.</string>
-    <string name="pref_reload_apps_msg">Laden Sie die Liste der in der App-Manager-Datenbank gespeicherten Anwendungen neu, wenn unerwartetes Verhalten auftritt.</string>
+    <string name="pref_reload_apps_msg">Bei unerwartetem Verhalten aktualisieren Sie hier die Liste der in der App-Manager-Datenbank gespeicherten Anwendungen.</string>
     <string name="changelog_type_fix">Lösung</string>
     <string name="troubleshooting">Fehlerbehebung</string>
     <string name="pref_reload_apps">Apps neu laden</string>
@@ -1289,4 +1287,10 @@
     <string name="block_unblock_components_description">Alle Komponenten, die durch die angegebenen Signaturen identifiziert werden, blockieren oder freigeben</string>
     <string name="unblock_components_dots">Komponenten freigeben…</string>
     <string name="block_unblock_components_dots">Komponenten blockieren/freigeben…</string>
+    <string name="pref_layout_direction">Layout-Richtung</string>
+    <string name="warning_working_on_system_mode">Achtung: Es wird im system modus anstatt dem ADB modus gearbeited.</string>
+    <plurals name="alert_failed_to_unblock_components">
+        <item quantity="one">Konnte Komponenten von %1$d nicht entsperren</item>
+        <item quantity="other">Konnte Komponenten von %1$d Apps nicht entsperren</item>
+    </plurals>
 </resources>

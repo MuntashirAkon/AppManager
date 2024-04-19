@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="disclaimer_footer">© 2020–2022 Muntashir Al-Islam</string>
+    <string name="disclaimer_footer">© 2020–2023 Muntashir Al-Islam</string>
     <string name="disclaimer_agree_forever">Nu mai arăta asta niciodată</string>
     <string name="disclaimer_agree">Sunt de acord</string>
     <string name="disclaimer_exit">Ieșire</string>
-    <string name="disclaimer_header">Act de renunțare</string>
+    <string name="disclaimer_header">Declinare a răspunderii</string>
+    <string name="disclaimer_body">Managerul de aplicații oferă funcții de acces root care ar putea dăuna dispozitivului dacă sunt utilizate incorect. Managerul de aplicații nu este responsabil pentru nicio daună produsă prin utilizarea acestei aplicații. Dacă nu știi pe deplin cum funcționează accesul root, atunci ar trebui să eviți să utilizezi opțiunile root până când ești pe deplin conștient de riscuri.
+\n
+\nOrice link pe care îl ofer către alte aplicații și site-uri web este în beneficiul utilizatorilor. Nu sunt responsabil pentru niciun conținut pe care îl poți găsi accesând link-uri externe.
+\n
+\nFolosind App Manager, accepți întreaga responsabilitate pentru propria utilizare și nu soliciți daune sau valoare monetară, nu ai pretenții din cauza utilizării.</string>
 </resources>

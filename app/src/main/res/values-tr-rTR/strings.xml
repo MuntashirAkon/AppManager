@@ -533,7 +533,7 @@
     <string name="toggle_class_listing">Sınıf Listesini Aç/Kapat</string>
     <string name="class_viewer">Sınıf Görüntüleyici</string>
     <string name="word_wrap">Sözcük kaydırmayı aç/kapat</string>
-    <string name="credits_message">Aşağıdaki projelerin yazarlarına
+    <string name="credits_message">Aşağıdaki projelerin yazarlarına:
 \n- The Android Open Source Project
 \n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
@@ -543,6 +543,7 @@
 \n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a>
 \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
 \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
@@ -554,8 +555,8 @@
 \n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nOrijinal logo: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/eclipse/tm4e">tm4e</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a> </string>
     <string name="credits">Teşekkürler</string>
     <string name="paths_and_directories">Yollar ve Dizinler</string>
     <string name="create_shortcut">Kısayol Oluştur</string>
@@ -616,7 +617,6 @@
     <string name="pref_encryption_msg">Yedeklemeler için şifreleme.</string>
     <string name="encryption">Şifreleme</string>
     <string name="select_user">Kullanıcı seç</string>
-    <string name="pref_show_users_in_installer">Kurucuda kullanıcıları göster</string>
     <string name="failed_to_duplicate_profile">Profil kopyalanamadı</string>
     <string name="send_selected">Seçileni gönder</string>
     <string name="user_profile_with_id">Profil: %1$s (%2$d)</string>
@@ -724,8 +724,8 @@
     <string name="patch_level">Yama seviyesi</string>
     <string name="backup_skip_signature_checks_description">Sağlama toplamı doğrulamasında başarısız olan veya önceki yedeklerinden farklı APK imzalarına sahip yedekleri geri yükleyin.</string>
     <string name="backup_multiple_description">Temel yedekleme yerine ayrı bir <i>adlandırılmış</i> yedekleme oluşturun.</string>
-    <string name="backup_rules_description">App Manager içinde yapılandırılan kuralları yedekleyin.</string>
-    <string name="backup_extras_description">Uygulama izinlerini, pil tasarrufu ve veri kullanım seçeneklerini, MagiskHide durumunu, SSAID vs. yedekleyin.</string>
+    <string name="backup_rules_description">Uygulama Yöneticisi içinde yapılandırılan kuralları yedekleyin. <font fgcolor="#ff0000">İzinlere bağlı olarak, geri yükleme sırasında tüm kurallar yeniden uygulanamayabilir.</font> </string>
+    <string name="backup_extras_description">Uygulama izinlerini, pil tasarrufu ve veri kullanım seçeneklerini, MagiskHide durumunu, SSAID vs. yedekleyin. <font fgcolor="#ff0000">İzinlere bağlı olarak, tüm ekler geri yüklenemez.</font> </string>
     <string name="backup_extras">Ekstralar</string>
     <string name="backup_cache_description"><b>Önbellek</b>, <b>no_cache</b> ve <b>no_backup</b> klasörlerini yedekleyin.</string>
     <string name="backup_obb_media_description">OBB ve medya klasörlerini yedekleyin.</string>
@@ -987,7 +987,7 @@
     <string name="wireless_debugging">Kablosuz hata ayıklama</string>
     <string name="unknown_net_policy">Bilinmeyen ağ politikası (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">%1$s arka planda çalışması engellenemedi</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram kanalı</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Topluluk</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">%1$d yedek içe aktarılamadı</item>
@@ -1012,9 +1012,7 @@
     <string name="storage">Depolama</string>
     <string name="notice">Dikkat</string>
     <string name="paired_successfully">Eşleştirildi.</string>
-    <string name="port_number_pairing_code_empty">Boş bağlantı noktası numarası veya eşleştirme kodu.</string>
     <string name="adb_pair">Eşleştir</string>
-    <string name="adb_wifi_paring_code">Wi-Fi eşleştirme kodu</string>
     <string name="invalid_password">Geçersiz parola, tekrar deneyin.</string>
     <string name="keystore_pass_cannot_be_empty">KeyStore parolası boş olamaz.</string>
     <string name="keystore_password_info">Aşağıdaki, App Manager KeyStore parolasıdır. App Manager KeyStore\'u yedekleyecek/geri yükleyecekseniz lütfen güvenli bir yerde saklayın. <b>Bu mesaj tekrar görüntülenmeyecek.</b></string>
@@ -1290,4 +1288,119 @@
     <string name="title_domains_supported_by_the_app">Desteklenen Etki Alanları</string>
     <string name="app_info_tag_open_links">Açık bağlantılar</string>
     <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp doğrulandı ve <xliff:g id="source" example="Google Play">%1$s</xliff:g> kaynağından olduğu belirlendi.</string>
+    <string name="block_unblock_components_description">Verilen imzalarla tanımlanan tüm bileşenleri engelleyin veya engelini kaldırın</string>
+    <string name="warning_working_on_system_mode">Uyarı: ADB modu yerine sistem üzerinde çalışıyor.</string>
+    <plurals name="alert_failed_to_unblock_components">
+        <item quantity="one">%1$d uygulama için bileşenlerin engellemesi kaldırılamadı</item>
+        <item quantity="other">%1$d uygulamalar için bileşenlerin engellemesi kaldırılamadı</item>
+    </plurals>
+    <string name="unblock_components_dots">Bileşenlerin engellemesini kaldırın…</string>
+    <string name="block_unblock_components_dots">Bileşenleri engelle/engelini kaldır…</string>
+    <string name="pref_layout_direction">Düzen yönü</string>
+    <string name="title_alternatives_to_bloatware">Alternatifler</string>
+    <string name="browse_files">Göz at</string>
+    <string name="pref_files_msg">Dosya yöneticisini yapılandır.</string>
+    <string name="pref_files_remember_last_path">Son açılan yol ve konumunu hatırla</string>
+    <string name="pref_files_remember_last_path_msg">Bu seçenek etkinleştirildiğinde, yeni bir pencere açıldığında ev klasörü yerine son açılan klasör açılır.</string>
+    <string name="pref_set_home">Ev klasörünü ayarla</string>
+    <string name="pref_enable_auto_lock">Otomatik kilitlenme</string>
+    <string name="debloat_list_misc">Çeşitli</string>
+    <string name="title_code_editor">Kod Düzenleyici</string>
+    <string name="read_only_file_warning">Uygulama Yöneticisi, dosyanın bulunduğu konumda yazma yetkisine sahip olmadığı için değişiklikler dosyaya aktarılamıyor. Farklı bir konuma kaydetmek ister misiniz?</string>
+    <string name="pref_enable_auto_lock_msg">AYgıt kilitlendiğinde Uygulama Yöneticisi\'ni kilitle.</string>
+    <string name="profile_modified_are_you_sure">Profil değiştirildi. Tüm değişiklikler iptal edilsin ve çıkılsın mı?</string>
+    <string name="pref_zip_align_msg">Bir APK dosyasını hizalamak, APK içindeki dosyalara verileri RAM\'a kopyalamadan doğrudan erişilebilmesini sağlayarak bellek kullanımını azaltır. Bu adım, <tt>extractNativeLibs</tt> <tt>true</tt> olarak ayarlanmışsa gereklidir.</string>
+    <string name="replacement_text">Değişim</string>
+    <string name="search_option_match_case">Büyük/küçük harf eşleştir</string>
+    <string name="search_option_whole_word">Bütün sözcük</string>
+    <string name="search_option_regex">Düzenli ifade</string>
+    <string name="uninstall_app">%1$s kaldır</string>
+    <string name="debloat_list_type">Liste</string>
+    <string name="debloat_removal_type">Tür</string>
+    <string name="system_app_put_back">Geri koy</string>
+    <string name="debloater_title">Temizleyici</string>
+    <string name="debloat_list_carrier">Operatör/İnternet Servis Sağlayıcısı</string>
+    <string name="debloat_list_google">Google</string>
+    <string name="debloat_list_pending">Beklemede</string>
+    <string name="debloat_removal_safe">Güvenli</string>
+    <string name="debloat_removal_caution">Dikkat</string>
+    <string name="static_shared_library">Statik paylaşımlı kütüphane</string>
+    <string name="installing_package">%1$s kuruluyor…</string>
+    <string name="backing_up_app">%1$s yedekleniyor…</string>
+    <string name="restoring_app">%1$s geri yükleniyor…</string>
+    <string name="pref_installer_force_dexopt_description">DEX iyileştirmesini, sistem boştayken sistemin yapmasını beklemeden uygulamayı kurduktan hemen sonra gerçekleştirin.</string>
+    <string name="folder">Klasör</string>
+    <string name="symbolic_link">Sembolik bağlantı</string>
+    <string name="create_new_symbolic_link">Yeni sembolik bağlantı</string>
+    <string name="title_confirm_deletion">Silme işlemini onayla</string>
+    <string name="copy_keep_both_file">İkisini de tut</string>
+    <string name="copied_successfully">Kopyalandı.</string>
+    <string name="title_change_selinux_context">SELinux bağlamını değiştir</string>
+    <string name="apply_recursively">Kapsanan dosyalara uygula</string>
+    <string name="pref_send_notifications_to_connected_devices">Bağlı aygıtlara bildirim gönder</string>
+    <plurals name="search_results">
+        <item quantity="one">%d sonuç</item>
+        <item quantity="other">%d sonuç</item>
+    </plurals>
+    <string name="create_new_file">Yeni dosya</string>
+    <string name="pref_zip_align">APK dosyalarını hizala</string>
+    <string name="path_not_a_folder">“%1$s” bir klasör değil</string>
+    <string name="action_checking">Denetleniyor…</string>
+    <string name="report_not_available">Kullanılabilir değil</string>
+    <string name="symbolic_link_not_supported">Bu klasör sembolik bağlantı oluşturmayı desteklemiyor.</string>
+    <string name="redo">Geri Al</string>
+    <plurals name="folder_count">
+        <item quantity="one">%d klasör</item>
+        <item quantity="other">%d klasör</item>
+    </plurals>
+    <string name="action_replace_all">Tümünü Değiştir</string>
+    <string name="uninstall_app_again_message">Uygulama verileri ve imzası temizlenmeden kaldırıldı. Tamamen kaldırmak istiyor musunuz?</string>
+    <string name="create_new_folder">Yeni klasör</string>
+    <string name="moved_successfully">Taşındı</string>
+    <string name="pref_files_display_in_launcher">Uygulama çekmecesinde “Dosyalar” uygulamasını göster</string>
+    <string name="tap_to_open_notification_settings">Gizlemek için dokun</string>
+    <string name="action_lock_app">Kilitle</string>
+    <string name="path_does_not_exist">“%1$s” mevcut değil</string>
+    <string name="scan_report_from_pithus">Pithus raporu</string>
+    <string name="empty_folder">Boş</string>
+    <string name="go_to_path">Git…</string>
+    <string name="apply_profile">“%1$s” profilini uygula</string>
+    <string name="choose_a_profile_state">Bir profil durumu seçin</string>
+    <string name="profile_id">Profil kimliği</string>
+    <string name="copy_profile_id">Profil kimliğini kopyala</string>
+    <string name="line_separator">Satır ayırıcı</string>
+    <string name="debloat_list_aosp">AOSP</string>
+    <string name="read_only_file">Salt okunur dosya</string>
+    <string name="debloat_list_oem">OEM</string>
+    <string name="debloat_removal_replace">Değiştir</string>
+    <plurals name="file_count">
+        <item quantity="one">%d dosya</item>
+        <item quantity="other">%d dosya</item>
+    </plurals>
+    <string name="copy_this_path">Yolu kopyala</string>
+    <string name="title_audio_player">Ses Oynatıcı</string>
+    <string name="filter_force_stopped_apps">Durdurulan uygulamalar</string>
+    <string name="enter_symbolic_link_name">Bağlantı adı</string>
+    <string name="enter_target_path">Hedef yol</string>
+    <string name="invalid_target_path">Geçersiz yol</string>
+    <string name="copy_these_paths">Yolları kopyala</string>
+    <string name="conflict_detected_while_copying">Çakışma tespit edildi</string>
+    <string name="conflict_detected_while_copying_message">Bu konumda zaten \"%1$s\" adında bir öge var. Onu değiştirmek istiyor musunuz?</string>
+    <string name="failed_to_copy_specified_file">“%1$s” kopyalanamadı.</string>
+    <string name="failed_to_delete_specified_file_after_copying">Muhtemelen yeterli izin olmaması nedeniyle kopyalandıktan sonra \"%1$s\" silinemedi.</string>
+    <string name="change_owner_uid">Sahibi (UID) değiştir</string>
+    <string name="change_group_gid">Grubu (GID) değiştir</string>
+    <string name="change_mode">Modu değiştir</string>
+    <string name="pref_send_notification_to_connected_devices_msg">Giyilebilir aygıtlar gibi bağlı aygıtlara bildirim gönderip göndermemeyi ayarlayın.</string>
+    <string name="installer_options">Kurulum seçenekleri</string>
+    <string name="debloat_removal_safe_short_description">Güvenli bir şekilde kaldırılabilir</string>
+    <string name="debloat_removal_caution_short_description">Dikkatli olun</string>
+    <string name="debloat_removal_replace_short_description">Alternatif ile değiştirin</string>
+    <string name="xposed_module_info">Xposed Modül Bilgisi</string>
+    <string name="title_description">Açıklama</string>
+    <string name="module_name">Modül adı</string>
+    <string name="app_manager_is_running">Uygulama Yöneticisi çalışıyor</string>
+    <string name="app_manager_is_unlocked">Uygulama Yöneticisi kilidi açıldı</string>
+    <string name="pref_enable_persistent_session">Uygulama Yöneticisini arka planda çalıştır</string>
+    <string name="pref_enable_persistent_session_msg">Uygulama Yöneticisi\'ni arka planda çalıştırmak, başlatma gecikmesini azaltır. Uygulama Yöneticisi\'ni sık sık kullanıyorsanız faydalıdır.</string>
 </resources>

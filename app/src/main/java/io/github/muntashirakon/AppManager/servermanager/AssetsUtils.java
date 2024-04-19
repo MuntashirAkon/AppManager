@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.servermanager;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.text.TextUtils;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
@@ -19,10 +20,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.SecureRandom;
 
-import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.server.common.ConfigParams;
 import io.github.muntashirakon.AppManager.server.common.Constants;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.IoUtils;
 
@@ -108,9 +110,13 @@ class AssetsUtils {
     @AnyThread
     @NonNull
     static String generateToken() {
+        Context context = ContextUtils.getContext();
+        String[] wordList = context.getResources().getStringArray(R.array.word_list);
         SecureRandom secureRandom = new SecureRandom();
-        byte[] bytes = new byte[16];
-        secureRandom.nextBytes(bytes);
-        return HexEncoding.encodeToString(bytes, false /* lowercase */);
+        String[] tokenItems = new String[3 + secureRandom.nextInt(3)];
+        for (int i = 0; i < tokenItems.length; ++i) {
+            tokenItems[i] = wordList[secureRandom.nextInt(wordList.length)];
+        }
+        return TextUtils.join("-", tokenItems);
     }
 }

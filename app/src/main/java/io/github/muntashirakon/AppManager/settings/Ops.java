@@ -9,38 +9,37 @@ import android.os.Build;
 import android.os.Process;
 import android.os.RemoteException;
 import android.provider.Settings;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.EditText;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.IntDef;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.StringDef;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
+import io.github.muntashirakon.AppManager.adb.AdbPairingService;
 import io.github.muntashirakon.AppManager.adb.AdbUtils;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
+import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
@@ -50,9 +49,11 @@ import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.session.SessionMonitoringService;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.adb.AdbPairingRequiredException;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
@@ -61,6 +62,8 @@ import io.github.muntashirakon.dialog.TextInputDialogBuilder;
  * Controls mode of operation and other related functions
  */
 public class Ops {
+    public static final String TAG = Ops.class.getSimpleName();
+
     @StringDef({MODE_AUTO, MODE_ROOT, MODE_ADB_OVER_TCP, MODE_ADB_WIFI, MODE_NO_ROOT})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Mode {
@@ -116,7 +119,7 @@ public class Ops {
      * @return {@code true} iff user chose to run App Manager in the privileged mode.
      */
     @AnyThread
-    public static boolean isPrivileged() {
+    private static boolean isPrivileged() {
         // Currently, root and ADB are the only privileged mode
         return sIsRoot || sIsAdb || sIsSystem;
     }
@@ -196,7 +199,7 @@ public class Ops {
         String mode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
         // Backward compatibility for v2.6.0
         if (mode.equals("adb")) {
-            mode = Ops.MODE_ADB_OVER_TCP;
+            mode = MODE_ADB_OVER_TCP;
         }
         if ((MODE_ADB_OVER_TCP.equals(mode) || MODE_ADB_WIFI.equals(mode))
                 && !SelfPermissions.checkSelfPermission(Manifest.permission.INTERNET)) {
@@ -220,15 +223,20 @@ public class Ops {
             autoDetectRootSystemOrAdbAndPersist(context);
             return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
         }
-        if (MODE_NO_ROOT.equals(mode)) {
-            sIsAdb = sIsSystem = sIsRoot = false;
-            // Also, stop existing services if any
-            LocalServices.stopServices();
-            return STATUS_SUCCESS;
-        }
         if (!force && isAMServiceUpAndRunning(context, mode)) {
             // An instance of AMService is already running
             return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
+        }
+        if (MODE_NO_ROOT.equals(mode)) {
+            sIsAdb = sIsSystem = sIsRoot = false;
+            // Also, stop existing services if any
+            ExUtils.exceptionAsIgnored(() -> {
+                if (LocalServer.alive(context)) {
+                    LocalServer.getInstance().closeBgServer();
+                }
+            });
+            LocalServices.stopServices();
+            return STATUS_SUCCESS;
         }
         try {
             switch (mode) {
@@ -236,6 +244,12 @@ public class Ops {
                     if (!hasRoot()) {
                         throw new Exception("Root is unavailable.");
                     }
+                    // Disable server first
+                    ExUtils.exceptionAsIgnored(() -> {
+                        if (LocalServer.alive(context)) {
+                            LocalServer.getInstance().closeBgServer();
+                        }
+                    });
                     sIsSystem = sIsAdb = false;
                     sIsRoot = true;
                     LocalServices.bindServicesIfNotAlready();
@@ -246,19 +260,23 @@ public class Ops {
                             throw new Exception("Wifi not enabled.");
                         }
                         if (AdbUtils.enableWirelessDebugging(context)) {
+                            // Wireless debugging enabled, try auto-connect
                             return STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING;
+                        } else {
+                            // Wireless debugging is turned off or there's no permission
+                            return STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED;
                         }
-                        Log.w("ModeOfOps", "Could not ensure wireless debugging, falling back...");
                     } // else fallback to ADB over TCP
                 case MODE_ADB_OVER_TCP:
                     sIsRoot = sIsSystem = false;
                     sIsAdb = true;
                     ServerConfig.setAdbPort(findAdbPort(context, 10, AdbUtils.getAdbPortOrDefault()));
                     LocalServer.restart();
+                    LocalServices.bindServicesIfNotAlready();
                     return checkRootOrIncompleteUsbDebuggingInAdb();
             }
         } catch (Throwable e) {
-            Log.e("ModeOfOps", e);
+            Log.e(TAG, e);
             // Fallback to no-root mode for this session, this does not modify the user preference
             sIsAdb = sIsSystem = sIsRoot = false;
             ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.failed_to_use_the_current_mode_of_operation));
@@ -284,6 +302,12 @@ public class Ops {
         if (sIsRoot) {
             // Root permission was granted
             setMode(MODE_ROOT);
+            // Disable remote server
+            ExUtils.exceptionAsIgnored(() -> {
+                if (LocalServer.alive(context)) {
+                    LocalServer.getInstance().closeBgServer();
+                }
+            });
             // Disable ADB and force root
             sIsSystem = sIsAdb = false;
             if (LocalServices.alive()) {
@@ -302,14 +326,14 @@ public class Ops {
                     return;
                 }
             } catch (RemoteException e) {
-                Log.e("ROOT", e);
+                Log.e(TAG, e);
             }
             // Root is granted but Binder communication cannot be initiated
-            Log.e("ROOT", "Root granted but could not use root to initiate a connection. Trying ADB...");
+            Log.e(TAG, "Root granted but could not use root to initiate a connection. Trying ADB...");
             if (AdbUtils.startAdb(AdbUtils.getAdbPortOrDefault())) {
-                Log.d("ROOT", "Started ADB over TCP via root.");
+                Log.i(TAG, "Started ADB over TCP via root.");
             } else {
-                Log.d("ROOT", "Could not start ADB over TCP via root.");
+                Log.w(TAG, "Could not start ADB over TCP via root.");
             }
             sIsRoot = false;
             // Fall-through, in case we can use other options
@@ -354,8 +378,9 @@ public class Ops {
         try {
             ServerConfig.setAdbPort(findAdbPort(context, 7, ServerConfig.getAdbPort()));
             LocalServer.restart();
+            LocalServices.bindServicesIfNotAlready();
         } catch (Throwable e) {
-            Log.e("ADB", e);
+            Log.e(TAG, e);
         }
         sIsAdb = LocalServices.alive();
         if (sIsAdb) {
@@ -384,8 +409,8 @@ public class Ops {
                 .setCustomTitle(builder.build())
                 .setMessage(R.string.choose_what_to_do)
                 .setCancelable(false)
-                .setPositiveButton(R.string.adb_connect, (dialog1, which1) -> callback.onStatusReceived(Ops.STATUS_ADB_CONNECT_REQUIRED))
-                .setNeutralButton(R.string.adb_pair, (dialog1, which1) -> callback.onStatusReceived(Ops.STATUS_ADB_PAIRING_REQUIRED))
+                .setPositiveButton(R.string.adb_connect, (dialog1, which1) -> callback.onStatusReceived(STATUS_ADB_CONNECT_REQUIRED))
+                .setNeutralButton(R.string.adb_pair, (dialog1, which1) -> callback.onStatusReceived(STATUS_ADB_PAIRING_REQUIRED))
                 .setNegativeButton(R.string.cancel, (dialog, which) -> callback.connectAdb(-1))
                 .show();
     }
@@ -393,7 +418,7 @@ public class Ops {
     @WorkerThread
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     @Status
-    public static int autoConnectAdb(@NonNull Context context, @Status int returnCodeOnFailure) {
+    public static int autoConnectWirelessDebugging(@NonNull Context context) {
         boolean lastAdb = sIsAdb;
         boolean lastSystem = sIsSystem;
         boolean lastRoot = sIsRoot;
@@ -402,15 +427,19 @@ public class Ops {
         try {
             ServerConfig.setAdbPort(findAdbPort(context, 5, ServerConfig.getAdbPort()));
             LocalServer.restart();
+            LocalServices.bindServicesIfNotAlready();
             return checkRootOrIncompleteUsbDebuggingInAdb();
-        } catch (RemoteException | IOException e) {
-            Log.e("ADB", e);
-            // Failed, fall-through
+        } catch (RemoteException | IOException | AdbPairingRequiredException e) {
+            Log.e(TAG, "Could not auto-connect to adbd", e);
+            // Go back to the last mode
+            sIsAdb = lastAdb;
+            sIsSystem = lastSystem;
+            sIsRoot = lastRoot;
+            if (e instanceof AdbPairingRequiredException) {
+                // Only pairing is required
+                return STATUS_ADB_PAIRING_REQUIRED;
+            } else return STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED;
         }
-        sIsAdb = lastAdb;
-        sIsSystem = lastSystem;
-        sIsRoot = lastRoot;
-        return returnCodeOnFailure;
     }
 
     @WorkerThread
@@ -426,15 +455,16 @@ public class Ops {
         try {
             ServerConfig.setAdbPort(port);
             LocalServer.restart();
+            LocalServices.bindServicesIfNotAlready();
             return checkRootOrIncompleteUsbDebuggingInAdb();
-        } catch (RemoteException | IOException e) {
-            Log.e("ADB", e);
-            // Failed, fall-through
+        } catch (RemoteException | IOException | AdbPairingRequiredException e) {
+            Log.e(TAG, "Could not connect to adbd using port " + port, e);
+            // Go back to the last mode
+            sIsAdb = lastAdb;
+            sIsSystem = lastSystem;
+            sIsRoot = lastRoot;
+            return returnCodeOnFailure;
         }
-        sIsAdb = lastAdb;
-        sIsSystem = lastSystem;
-        sIsRoot = lastRoot;
-        return returnCodeOnFailure;
     }
 
     @UiThread
@@ -468,42 +498,19 @@ public class Ops {
     @NoOps
     public static void pairAdbInput(@NonNull FragmentActivity activity,
                                     @NonNull AdbConnectionInterface callback) {
-        View view = View.inflate(activity, R.layout.dialog_adb_pairing, null);
-        EditText adbPairingCodeInput = view.findViewById(R.id.adb_pairing_code);
-        EditText portNumberInput = view.findViewById(R.id.port_number);
-        LiveData<Integer> portNumberLiveData = callback.startObservingAdbPairingPort();
-        portNumberLiveData.observe(activity, portNumber -> portNumberInput.setText(String.valueOf(portNumber)));
         new MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.wireless_debugging)
-                .setView(view)
+                .setMessage(R.string.adb_pairing_instruction)
                 .setCancelable(false)
-                .setPositiveButton(R.string.ok, (dialog, which) -> {
-                    Editable rawPairingCode = adbPairingCodeInput.getText();
-                    Editable portString = portNumberInput.getText();
-                    if (TextUtils.isEmpty(rawPairingCode)) {
-                        UIUtils.displayShortToast(R.string.port_number_pairing_code_empty);
-                        callback.pairAdb(null, -1);
-                        return;
-                    }
-                    String pairingCode = Objects.requireNonNull(rawPairingCode).toString().trim();
-                    if (TextUtils.isEmpty(portString)) {
-                        UIUtils.displayShortToast(R.string.port_number_pairing_code_empty);
-                        callback.pairAdb(pairingCode, -1);
-                        return;
-                    }
-                    int port;
-                    try {
-                        port = Integer.decode(portString.toString().trim());
-                        callback.pairAdb(pairingCode, port);
-                    } catch (NumberFormatException e) {
-                        UIUtils.displayShortToast(R.string.port_number_invalid);
-                        callback.pairAdb(pairingCode, -1);
-                    }
-                })
-                .setNegativeButton(R.string.cancel, (dialog, which) -> callback.pairAdb(null, -1))
-                .setOnDismissListener(dialog -> {
-                    callback.stopObservingAdbPairingPort();
-                    portNumberLiveData.removeObservers(activity);
+                .setNegativeButton(R.string.cancel, (dialog, which) -> callback.onStatusReceived(STATUS_FAILURE))
+                .setPositiveButton(R.string.go, (dialog, which) -> {
+                    Intent developerOptionsIntent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    Intent adbPairingServiceIntent = new Intent(activity, AdbPairingService.class)
+                            .setAction(AdbPairingService.ACTION_START_PAIRING);
+                    activity.startActivity(developerOptionsIntent);
+                    ContextCompat.startForegroundService(activity, adbPairingServiceIntent);
+                    callback.pairAdb();
                 })
                 .show();
     }
@@ -512,19 +519,59 @@ public class Ops {
     @NoOps
     @RequiresApi(Build.VERSION_CODES.R)
     @Status
-    public static int pairAdb(@NonNull Context context, @Nullable String pairingCode, int port) {
-        if (pairingCode == null || port < 0) return STATUS_FAILURE;
+    public static int pairAdb(@NonNull Context context) {
         try {
-            AdbConnectionManager.getInstance().pair(ServerConfig.getAdbHost(context), port, pairingCode.trim());
-            ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.paired_successfully));
-            return connectAdb(context, findAdbPort(context, 7, ServerConfig.getAdbPort()),
-                    STATUS_ADB_CONNECT_REQUIRED);
+            AdbConnectionManager conn = AdbConnectionManager.getInstance();
+            int status = pairAdbInternal(context, conn);
+            if (status == STATUS_ADB_CONNECT_REQUIRED) {
+                return connectAdb(context, findAdbPort(context, 7, ServerConfig.getAdbPort()),
+                        STATUS_ADB_CONNECT_REQUIRED);
+            }
         } catch (Exception e) {
             ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed));
-            Log.e("ADB", e);
+            Log.e(TAG, e);
             // Failed, fall-through
         }
         return STATUS_FAILURE;
+    }
+
+
+    @WorkerThread
+    @NoOps
+    @RequiresApi(Build.VERSION_CODES.R)
+    @Status
+    private static int pairAdbInternal(@NonNull Context context, @NonNull AdbConnectionManager conn) {
+        AtomicReference<CountDownLatch> observerObserver = new AtomicReference<>(new CountDownLatch(1));
+        AtomicReference<Exception> pairingError = new AtomicReference<>();
+        Observer<Exception> observer = e -> {
+            pairingError.set(e);
+            observerObserver.get().countDown();
+        };
+        ThreadUtils.postOnMainThread(() -> conn.getPairingObserver().observeForever(observer));
+        while (true) {
+            boolean success;
+            try {
+                success = observerObserver.get().await(1, TimeUnit.HOURS);
+            } catch (InterruptedException ignore) {
+                success = false;
+            }
+            if (success) {
+                if (pairingError.get() != null) {
+                    if (ServiceHelper.checkIfServiceIsRunning(context, AdbPairingService.class)) {
+                        observerObserver.set(new CountDownLatch(1));
+                        continue;
+                    }
+                    success = false;
+                }
+            }
+            ThreadUtils.postOnMainThread(() -> conn.getPairingObserver().removeObserver(observer));
+            if (success) {
+                return STATUS_ADB_CONNECT_REQUIRED;
+            } else {
+                context.stopService(new Intent(context, AdbPairingService.class));
+                return STATUS_FAILURE;
+            }
+        }
     }
 
     @UiThread
@@ -559,7 +606,7 @@ public class Ops {
         boolean lastAdb = sIsAdb;
         boolean lastSystem = sIsSystem;
         boolean lastRoot = sIsRoot;
-        // At this point, we have already checked MODE_AUTO and MODE_NO_ROOT.
+        // At this point, we have already checked MODE_AUTO, and MODE_NO_ROOT has lower priority.
         sIsRoot = MODE_ROOT.equals(mode);
         sIsAdb = !sIsRoot; // Because the rests are ADB
         sIsSystem = false;
@@ -567,8 +614,9 @@ public class Ops {
             // Remote server is running, but local server may not be running
             try {
                 LocalServer.getInstance();
-            } catch (RemoteException | IOException e) {
-                Log.e("CHECK", e);
+                LocalServices.bindServicesIfNotAlready();
+            } catch (RemoteException | IOException | AdbPairingRequiredException e) {
+                Log.e(TAG, e);
                 // fall-through, because the remote service may still be alive
             }
         }
@@ -648,7 +696,7 @@ public class Ops {
             try {
                 return findAdbPort(context, timeoutInSeconds);
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                Log.w(TAG, "Could not find ADB port", e);
             }
         }
         return defaultPort;
@@ -656,16 +704,12 @@ public class Ops {
 
     @AnyThread
     public interface AdbConnectionInterface {
+        // TODO: 8/4/24 Remove the first two methods since the third method can be used instead of them
         void connectAdb(int port);
 
         @RequiresApi(Build.VERSION_CODES.R)
-        void pairAdb(@Nullable String pairingCode, int port);
+        void pairAdb();
 
         void onStatusReceived(@Status int status);
-
-        @NonNull
-        LiveData<Integer> startObservingAdbPairingPort();
-
-        void stopObservingAdbPairingPort();
     }
 }

@@ -184,26 +184,7 @@ public class RootServiceManager implements Handler.Callback {
             FileUtils.chmod644(mainJar);
 
             StringBuilder env = new StringBuilder();
-            String params = "";
-
-            if (Utils.vLog()) {
-                env.append(LOGGING_ENV + "=1 ");
-            }
-
-            // Only support debugging on SDK >= 27
-            if (Build.VERSION.SDK_INT >= 27 && Debug.isDebuggerConnected()) {
-                env.append(DEBUG_ENV + "=1 ");
-                // Reference of the params to start jdwp:
-                // https://developer.android.com/ndk/guides/wrap-script#debugging_when_using_wrapsh
-                if (Build.VERSION.SDK_INT == 27) {
-                    params = API_27_DEBUG;
-                } else {
-                    params = API_28_DEBUG;
-                }
-            }
-
-            // Disable image dex2oat as it can be quite slow in some ROMs if triggered
-            params += " -Xnoimage-dex2oat";
+            String params = getParams(env);
 
             // Classpath
             env.append(CLASSPATH_ENV + "=").append(Ops.isSystem() ? mainJar : stagingMainJar).append(" ");
@@ -219,6 +200,31 @@ public class RootServiceManager implements Handler.Callback {
             // the command runs in the background, we don't need to wait and
             // can just return.
         };
+    }
+
+    @SuppressLint("RestrictedApi")
+    @NonNull
+    private static String getParams(StringBuilder env) {
+        String params = "";
+
+        if (Utils.vLog()) {
+            env.append(LOGGING_ENV + "=1 ");
+        }
+
+        // Only support debugging on SDK >= 27
+        if (Build.VERSION.SDK_INT >= 27 && Debug.isDebuggerConnected()) {
+            env.append(DEBUG_ENV + "=1 ");
+            // Reference of the params to start jdwp:
+            // https://developer.android.com/ndk/guides/wrap-script#debugging_when_using_wrapsh
+            if (Build.VERSION.SDK_INT == 27) {
+                params = API_27_DEBUG;
+            } else {
+                params = API_28_DEBUG;
+            }
+        }
+
+        // Disable image dex2oat as it can be quite slow in some ROMs if triggered
+        return params + " -Xnoimage-dex2oat";
     }
 
     @NonNull

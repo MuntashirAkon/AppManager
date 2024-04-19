@@ -225,8 +225,14 @@
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
+\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
 \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
@@ -234,8 +240,8 @@
 \n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nमूल लोगो रचयिता: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/eclipse/tm4e">tm4e</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a> </string>
     <string name="credits">श्रेय</string>
     <string name="third_party">थर्ड पार्टी लाइब्रेरी और आइकन्स</string>
     <string name="license">लाइसेंस</string>
@@ -314,7 +320,7 @@
     <string name="trackers">ट्रैकर्स</string>
     <string name="installed_version">इंस्टॉल्ड संस्करण</string>
     <string name="select_all">सभी का चयन करें</string>
-    <string name="filter_apps_with_rules">ऐप्स रूल्स के साथ</string>
+    <string name="filter_apps_with_rules">नियमों के साथ</string>
     <string name="filter_system_apps">सिस्टम ऐप्स</string>
     <string name="filter_user_apps">यूज़र ऐप्स</string>
     <string name="filter">फ़िल्टर</string>
@@ -694,7 +700,6 @@
     <string name="pref_encryption_msg">बैकअप के लिए एन्क्रिप्शन।</string>
     <string name="encryption">एन्क्रिप्शन</string>
     <string name="select_user">यूज़र चुनें</string>
-    <string name="pref_show_users_in_installer">इंस्टॉलर में यूज़र्स को दिखाएं</string>
     <string name="failed_to_duplicate_profile">प्रोफाइल डुप्लीकेट नहीं कर सका</string>
     <string name="duplicate">डुप्लीकेट</string>
     <string name="new_profile">नई प्रोफ़ाइल</string>
@@ -732,8 +737,8 @@
     <string name="patch_level">पैच स्तर</string>
     <string name="backup_skip_signature_checks_description">उन बैकअप को पुनर्स्थापित करें जो या तो चेकसम सत्यापन को विफल करते हैं या उनके पिछले बैकअप की तुलना में भिन्न एपीके हस्ताक्षर हैं।</string>
     <string name="backup_multiple_description">बेस बैकअप के बजाय एक अलग <i>नामित</i> बैकअप बनाएं।</string>
-    <string name="backup_rules_description">ऐप मैनेजर के भीतर कॉन्फ़िगर किए गए नियमों का बैकअप करें।</string>
-    <string name="backup_extras_description">ऐप अनुमतियां, बैटरी की बचत, डेटा उपयोग विकल्प, मैजिस्कहाइड स्थिति, SSAID, आदि बैकअप करें।</string>
+    <string name="backup_rules_description">ऐप मैनेजर के भीतर कॉन्फ़िगर किए गए नियमों का बैकअप लें। <font fgcolor="#ff0000">अनुमतियों के आधार पर, पुनर्स्थापना के दौरान सभी नियमों को दोबारा लागू नहीं किया जा सकता है।</font> </string>
+    <string name="backup_extras_description">ऐप अनुमतियां, बैटरी की बचत, डेटा उपयोग विकल्प, मैजिस्कहाइड स्थिति, SSAID, आदि बैकअप करें। <font fgcolor="#ff0000"> अनुमतियों के आधार पर, सभी अतिरिक्त सुविधाएं बहाल नहीं की जा सकतीं।</font>। </string>
     <string name="backup_extras">एक्स्ट्रास</string>
     <string name="backup_cache_description"><b>cache</b>, <b>no_cache</b> और <b>no_backup</b> फ़ोल्डर का बैकअप न करें।</string>
     <string name="backup_obb_media_description">ओबीबी और मीडिया फ़ोल्डर्स बैकअप करें।</string>
@@ -760,10 +765,7 @@
     </plurals>
     <string name="subject_log_report">इस्तेमाल का विवरण</string>
     <string name="community">कम्युनिटी</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">
-\nटेलीग्राम चैनल </a> •
-\n<a href="https://twitter.com/AppManagerNews">
-\nट्विटर</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">मैट्रिक्स</a> • <a href="https://t.me/AppManagerChannel">टेलीग्राम</a> • <a href="https://twitter.com/AppManagerNews">ट्विटर</a></string>
     <string name="failed_to_uninstall_app">अनइंस्टॉल विफल</string>
     <string name="input_keystore_alias_pass_msg">%1$s के लिए पासवर्ड प्रदान करने के लिए यहाँ टैप करें</string>
     <string name="internal_data">आंतरिक डेटा</string>
@@ -775,14 +777,10 @@
     <string name="input_app_ops_description_profile">इनपुट ऐप सेशन नाम और/या रिक्त स्थान के साथ स्थिरांक, उदा। <tt>WAKE_LOCK 63 72 CAMERA</tt> आदि। सभी कॉन्फ़िगर किए गए ऐप ऑप्स के लिए आवेदन करने के लिए <tt>*</tt> का उपयोग करें।</string>
     <string name="app_signing_signature_schemes">हस्ताक्षर योजनाएं</string>
     <string name="pref_backup_restore_msg">बैकअप/पुनर्स्थापना अनुकूलित करें।</string>
-    <string name="source_code_links">गिटहब: https://github.com/MuntashirAkon/AppManager
-\n
-\nगिटलैब: https://gitlab.com/muntashir/AppManager
-\n
-\nराइज अप:
-\nhttps://0xacab.org/muntashir/AppManager
-\n
-\nकोडबर्ग: https://codeberg.org/muntashir/AppManager</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> •
+\n<a href="https://gitlab.com/muntashir/AppManager">GitLab</a> •
+\n<a href="https://0xacab.org/muntashir/AppManager">Riseup</a> •
+\n<a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="no_volumes_found">लिखित अनुमति के साथ कोई वॉल्यूम नहीं मिला।</string>
     <string name="backup_volume">बैकअप वॉल्यूम</string>
     <string name="encrypted">एन्क्रिप्टेड</string>
@@ -829,7 +827,7 @@
     <string name="verified_using_unreliable_hash">अविश्वसनीय हैश का उपयोग करके सत्यापित किया गया</string>
     <string name="backup_apps_without_backups_msg">बिना किसी पिछले बैकअप के ऐप्स का बैकअप लें।</string>
     <string name="type_component_name">घटक का नाम</string>
-    <string name="backup_all_apps_msg">"सभी स्थापित का बैकअप करें  |"</string>
+    <string name="backup_all_apps_msg">सभी इंस्टॉल किए गए ऐप्स का बैकअप लें।</string>
     <string name="restore_all">सभी ऐप्स को पुनर्स्थापित करें</string>
     <string name="restore_latest_msg">पहले से इंस्टॉल किए गए ऐप्स को पुनर्स्थापित करें जिनके संस्करण कोड इंस्टॉल किए गए संस्करण कोड से अधिक हैं।</string>
     <string name="crypto_key_size">कुंजी आकार</string>
@@ -934,7 +932,7 @@
     <string name="no_saved_logs">लॉगस नहीं है.</string>
     <string name="manage_saved_logs">बचाया गए हुए लॉगस को मैनेज करे</string>
     <string name="log_level">लॉग स्तर</string>
-    <string name="source_stamp_verified_and_identified_to_be_from_source">सोर्स स्टाम्प <xliff:g id="source" example="Google Play">%1$s</xliff:g> से है ऐसा पहचाना और साबित किया गया है</string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">सोर्स स्टैम्प <xliff:g id="source" example="Google Play">%1$s</xliff:g> से है ऐसा पहचाना और सत्यापित किया गया है।</string>
     <string name="pref_display_limit_summary" tools:ignore="PluralsCandidate">सिर्फ पिछले %1$d लॉगस दिखाओ ताकि \'आउट ऑफ मेमोरी\' से बचे.</string>
     <string name="pref_filter_pattern_title">टॉगस छान निकाले</string>
     <string name="pref_display_limit_title">लॉगस का प्रदर्शन सीमा</string>
@@ -967,4 +965,8 @@
     <string name="pref_display_limit_hint" tools:ignore="PluralsCandidate">%1$d और %2$d के बीच कोई पूर्ण अंक डालिए.</string>
     <string name="widget_start_recording">रिकॉर्ड
 \nलॉग</string>
+    <string name="view_logs">लॉग्स देखे</string>
+    <string name="share_log">भेजे</string>
+    <string name="action_checking">जाँच की जा रही है…</string>
+    <string name="report_not_available">उपलब्ध नहीं है</string>
 </resources>

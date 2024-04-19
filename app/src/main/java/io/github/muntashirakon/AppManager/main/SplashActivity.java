@@ -89,7 +89,7 @@ public class SplashActivity extends AppCompatActivity {
                 case Ops.STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING:
                     Log.d(TAG, "Try auto-connecting to wireless debugging.");
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        mViewModel.autoConnectAdb(Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED);
+                        mViewModel.autoConnectWirelessDebugging();
                         return;
                     } // fall-through
                 case Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED:

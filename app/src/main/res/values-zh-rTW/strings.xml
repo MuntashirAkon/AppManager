@@ -253,7 +253,6 @@
     <string name="pref_encryption_msg">為備份加密。</string>
     <string name="encryption">加密</string>
     <string name="select_user">選擇使用者</string>
-    <string name="pref_show_users_in_installer">在安裝程式中顯示使用者</string>
     <string name="failed_to_duplicate_profile">無法複製設定檔</string>
     <string name="duplicate">複製</string>
     <string name="new_profile">新的配置檔案</string>
@@ -968,9 +967,7 @@
     <string name="keystore_password_info">以下是 App Manager KeyStore 密碼。如果您要備份/還原 App Manager KeyStore，請將其存放在安全的地方。 <b>此訊息將不再顯示。</b></string>
     <string name="keystore_pass_cannot_be_empty">KeyStore 密碼不能為空。</string>
     <string name="invalid_password">密碼無效，請再試一次。</string>
-    <string name="adb_wifi_paring_code">Wi-Fi 配對碼</string>
     <string name="adb_pair">配對</string>
-    <string name="port_number_pairing_code_empty">連接埠或配對碼為空。</string>
     <string name="paired_successfully">已配對。</string>
     <string name="pem_and_pk8">PEM 與 PKCS #8 (PK8)</string>
     <string name="pref_block_trackers_msg">使用App Manager安裝應用後封鎖跟蹤元件。</string>

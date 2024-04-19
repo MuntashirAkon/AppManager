@@ -1144,9 +1144,7 @@
     <string name="notice_saf">على عكس وحدات التخزين، سيتم استخدام الدليل المحدد لتخزين كافة الملفات المتعلقة بـApp Manager، بما في ذلك APKs المحفوظة والنسخ الاحتياطية. إطار عمل الوصول إلى التخزين (SAF) بطيء جدا، لذلك، يجب عليك فقط استخدام هذا الخيار عندما لا يمكن استخدام الآخرين.</string>
     <string name="notice">تنويه</string>
     <string name="paired_successfully">مقترن.</string>
-    <string name="port_number_pairing_code_empty">رقم المنفذ أو رمز الاقتران فارغ.</string>
     <string name="adb_pair">اقتران</string>
-    <string name="adb_wifi_paring_code">رمز اقتران Wi-Fi</string>
     <string name="invalid_password">كلمة مرور غير صالحة، حاول مرة أخرى.</string>
     <string name="keystore_pass_cannot_be_empty">لا يمكن أن تكون كلمة مرور مخزن المفتاح فارغة.</string>
     <string name="keystore_password_info">فيما يلي كلمة مرور مخزن المفتاح لمدير التطبيقات. يرجى تخزينه في مكان آمن إذا كنت تريد إجراء نسخة احتياطية / استعادة مدير التطبيقات KeyStore.<b> لن يتم عرض هذه الرسالة مرة أخرى.</b></string>
@@ -1572,4 +1570,9 @@
     <string name="path_not_a_folder">\"%1$s\" ليس مجلدا</string>
     <string name="scan_report_from_pithus">تقرير بيثوس</string>
     <string name="action_checking">التحقق…</string>
+    <string name="profile_modified_are_you_sure">تم تعديل الملف الشخصي. تجاهل كل التغييرات الخاصة بك والخروج؟</string>
+    <string name="apply_profile">تطبيق الملف الشخصي \"%1$s\"</string>
+    <string name="copy_profile_id">نسخ معرف الملف السخصي</string>
+    <string name="profile_id">معرف الملف الشخصي</string>
+    <string name="choose_a_profile_state">حدد حالة الملف الشخصي</string>
 </resources>

@@ -6,9 +6,11 @@
         app:persistent="false"
         app:iconSpaceReserved="false" />
 
-    <io.github.muntashirakon.preference.DefaultAlertPreference
+    <io.github.muntashirakon.preference.WarningAlertPreference
         app:key="info_no_internet"
+        app:icon="@drawable/ic_caution"
         app:iconSpaceReserved="false"
+        app:selectable="false"
         app:summary="@string/pref_use_vt_no_internet" />
 
     <Preference
@@ -25,5 +27,6 @@
         app:key="info"
         app:icon="@drawable/ic_information_circle"
         app:iconSpaceReserved="false"
+        app:selectable="false"
         app:summary="@string/pref_vt_apikey_description" />
 </PreferenceScreen>

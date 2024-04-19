@@ -911,9 +911,7 @@
     <string name="paste">Wklej</string>
     <string name="set_package_name_first">Najpierw ustaw nazwę pakietu!</string>
     <string name="identifier">Identyfikator</string>
-    <string name="port_number_pairing_code_empty">Pusty numer portu lub kod parowania.</string>
     <string name="adb_pair">Paruj</string>
-    <string name="adb_wifi_paring_code">Kod parowania Wi-Fi</string>
     <string name="invalid_password">Nieprawidłowe hasło, spróbuj ponownie.</string>
     <string name="keystore_pass_cannot_be_empty">Hasło KeyStore nie może być puste.</string>
     <string name="keystore_password_info">Poniżej znajduje się hasło do KeyStore. Przechowuj je w bezpiecznym miejscu, jeżeli zamierzasz wykonać kopię zapasową/przywrócić KeyStore w App Manager. <b>Ten komunikat nie będzie wyświetlany ponownie.</b></string>
@@ -1320,8 +1318,7 @@
     <string name="unix_file_permissions">Tryb</string>
     <string name="calculating_file_size">Obliczanie…</string>
     <string name="export_option_markdown">Markdown (formatowanie tekstu)</string>
-    <string name="funding_campaign_dialog_message">Prowadzimy <b>kampanię finansowania</b> dla aplikacji App Manager przez ograniczony czas. Odwiedź
-\n stronę <a href="https://opencollective.com/app-manager#category-ABOUT">opencollective.com/app-manager</a>, aby dowiedzieć się więcej o kampanii. To powiadomienie nie zostanie wyświetlone ponownie, ale można je znaleźć na stronie ustawień podczas trwania kampanii.</string>
+    <string name="funding_campaign_dialog_message">Prowadzimy <b>kampanię finansowania</b> dla aplikacji App Manager przez ograniczony czas. Odwiedź stronę <a href="https://opencollective.com/app-manager#category-ABOUT">opencollective.com/app-manager</a>, aby dowiedzieć się więcej o kampanii. To powiadomienie nie zostanie wyświetlone ponownie, ale można je znaleźć na stronie ustawień podczas trwania kampanii.</string>
     <string name="sort_by_data_usage">Użycie danych</string>
     <string name="install_for_another_user">Zainstaluj dla…</string>
     <string name="confirm_uninstallation">Potwierdź odinstalowanie</string>
@@ -1485,4 +1482,9 @@
     <string name="scan_report_from_pithus">Raport Pithusa</string>
     <string name="action_checking">Sprawdzanie…</string>
     <string name="report_not_available">Niedostępne</string>
+    <string name="profile_modified_are_you_sure">Profil został zmodyfikowany. Odrzucić wszystkie zmiany i wyjść\?</string>
+    <string name="apply_profile">Zastosuj profil \"%1$s\"</string>
+    <string name="copy_profile_id">Skopiuj identyfikator profilu</string>
+    <string name="profile_id">Identyfikator profilu</string>
+    <string name="choose_a_profile_state">Wybierz stan profilu</string>
 </resources>

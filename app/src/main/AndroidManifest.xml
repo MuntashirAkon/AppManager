@@ -42,8 +42,8 @@
         android:name="android.permission.FORCE_STOP_PACKAGES"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission
         android:name="android.permission.GET_PACKAGE_SIZE"
         android:maxSdkVersion="25" />
@@ -1118,11 +1118,15 @@
             android:name=".session.SessionMonitoringService"
             android:exported="false"
             android:foregroundServiceType="dataSync|specialUse" />
+        <service
+            android:name=".adb.AdbPairingService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync|specialUse" />
 
         <receiver
             android:name=".servermanager.ServerStatusChangeReceiver"
             android:exported="true"
-            tools:ignore="ExportedReceiver" />
+            android:permission="android.permission.UPDATE_APP_OPS_STATS" />
         <receiver
             android:name=".usage.ScreenTimeAppWidget"
             android:exported="true"

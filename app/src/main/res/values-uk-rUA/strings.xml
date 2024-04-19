@@ -658,7 +658,6 @@
     <string name="pref_encryption_msg">Шифрування резервних копій.</string>
     <string name="encryption">Шифрування</string>
     <string name="select_user">Виберіть користувача</string>
-    <string name="pref_show_users_in_installer">Показати користувачів у програмі встановлення</string>
     <string name="failed_to_duplicate_profile">Не вдалося дублювати профіль</string>
     <string name="user_profile_with_id">Профіль: %1$s (%2$d)</string>
     <string name="choose">Вибрати</string>
@@ -1081,9 +1080,7 @@
     <string name="saved_filters">Збережені фільтри</string>
     <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram канал</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="paired_successfully">Сполучено.</string>
-    <string name="port_number_pairing_code_empty">Порожній номер порту або код сполучення.</string>
     <string name="adb_pair">Сполука</string>
-    <string name="adb_wifi_paring_code">Код сполучення Wi-Fi</string>
     <string name="invalid_password">Недійсний пароль, повторіть спробу.</string>
     <string name="keystore_pass_cannot_be_empty">Пароль сховища ключів не може бути порожнім.</string>
     <string name="keystore_password_info">Нижче наведено пароль сховища ключів App Manager. Збережіть його в захищеному місці, якщо ви збираєтеся створити резервну копію/відновлювати сховище ключів App Manager. <b>Це повідомлення більше не відображатиметься.</b></string>

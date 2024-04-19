@@ -30,6 +30,7 @@ import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wra
 public class SearchView extends androidx.appcompat.widget.SearchView implements Shapeable {
     private static final int DEF_STYLE_RES = R.style.Widget_AppTheme_SearchView;
 
+    @SuppressLint("RestrictedApi")
     private final SearchAutoComplete mSearchSrcTextView;
     private final LinearLayout mSearchEditFrame;
     private final ImageView mCloseButton;

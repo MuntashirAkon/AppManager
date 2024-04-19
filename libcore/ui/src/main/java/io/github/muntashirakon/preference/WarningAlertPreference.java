@@ -15,21 +15,24 @@ import androidx.preference.PreferenceViewHolder;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
 
+import io.github.muntashirakon.ui.R;
+
 public class WarningAlertPreference extends DefaultAlertPreference {
     public WarningAlertPreference(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        setAddSpaceBetweenIconAndText(false);
     }
 
     public WarningAlertPreference(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        this(context, attrs, defStyleAttr, R.style.Preference_M3_Alert);
     }
 
     public WarningAlertPreference(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, R.attr.alertPreferenceStyle);
     }
 
     public WarningAlertPreference(@NonNull Context context) {
-        super(context);
+        this(context, null);
     }
 
     @Override

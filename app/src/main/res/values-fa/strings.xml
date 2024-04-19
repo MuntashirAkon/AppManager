@@ -119,21 +119,28 @@
     <string name="word_wrap">تغییر وضعیت کلمه</string>
     <string name="credits_message">به نویسندگان
 \n- پروژه متن باز اندروید
-\n- <a href="https://github.com/butzist/ActivityLauncher">فعالیت های لانچر</a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">اطلاعات بسته برنامه</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">مانیتور برنامه ها</a>
-\n- <a href="https://github.com/8enet/AppOpsX">عملیات برنامه x</a>
-\n- <a href="https://github.com/billthefarmer/editor">ویرایش کننده</a>
-\n- <a href="https://github.com/k3b/intent-intercept">رهگیری قصد</a>
-\n- <a href="https://github.com/zhanghai/MaterialFiles">فایل های مواد</a>
-\n- <a href="https://github.com/pluscubed/matlog">لاگ تشک</a>
-\n- <a href="https://github.com/matrix-org/matrix-android-sdk">اندروید ماتریکس SDK</a>
-\n- <a href="https://github.com/jensstein/oandbackup">و بک آپ</a>
-\n- <a href="https://github.com/open-keychain/open-keychain">جاکلیدی را باز کنید</a>
-\n- <a href="https://github.com/Aefyr/SAI">نصب کننده اسپلیت</a>
-\n- <a href="https://github.com/RikkaApps/Shizuku">شیزوکو</a>
-\n- <a href="https://github.com/tuyafeng/Watt">چه</a>
-\nاعتبار لوگوی اصلی: <a href="https://github.com/Atrate">به نرخ</a>. </string>
+\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">اطلاعات بسته های برنامه ها </a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">نظارت بر برنامه ها</a>
+\n- <a href="https://github.com/8enet/AppOpsX">برنامه OpsX</a>
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">کتابخانه گزارش تغییر</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
+\n- <a href="https://github.com/billthefarmer/editor">ویرایشگر</a>
+\n- <a href="https://github.com/Raival-e/File-Explorer">مدیرفایل</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
+\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">فایل های متریال</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\n- <a href="https://github.com/eclipse/tm4e">tm4e</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a> </string>
     <string name="credits">اعتبارات</string>
     <string name="third_party">کتابخانه‌ها و آیکون های شخص سوم</string>
     <string name="license">لایسنس</string>
@@ -819,7 +826,7 @@
     <string name="second_degree_tracker_note">² پیشوند نشان می دهد که ردیاب ها در <a href="https://etip.exodus-privacy.eu.org/">لیست آماده به کار ETIP</a> i.e. آیا آنها ردیاب واقعی هستند هنوز در حال بررسی است.</string>
     <string name="failed_to_uninstall_app">حذف نصب ناموفق بود</string>
     <string name="community">انجمن</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">کانال تلگرام</a> • <a href="https://twitter.com/AppManagerNews">توییتر</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">تلگرام</a> • <a href="https://twitter.com/AppManagerNews">توییتر</a></string>
     <string name="input_app_ops_description_profile">نام‌های عملیات برنامه و/یا بقیه را با فاصله وارد کنید، به عنوان مثال.. <tt>قفل کردن دوربین ۶۳ ۷۲ </tt> و غیره. استفاده <tt>*</tt> برای درخواست برای همه عملیات برنامه های پیکربندی شده.</string>
     <string name="internal_data">داده های داخلی</string>
     <string name="installer_error_session_commit">نمی‌توان فایل‌های نصبی را اجرا کرد</string>
@@ -912,7 +919,6 @@
     <string name="files">فایل ها</string>
     <string name="keystore_password_info">رمز عبور فروشگاه کلید مدیریت برنامه در زیر آمده است. اگر می‌خواهید از فروشگاه کلید مدیریت برنامه پشتیبان‌گیری یا بازیابی کنید، لطفاً آن را در مکانی امن ذخیره کنید. <b>این پیام دیگر نمایش داده نخواهد شد.</b></string>
     <string name="invalid_password">رمز اشتباه، از دوباره تلاش کنید.</string>
-    <string name="adb_wifi_paring_code">کد جفت شدن وای فای</string>
     <string name="identifier">مشخص کننده</string>
     <string name="set_package_name_first">ابتدا نام بسته را تنظیم کنید!</string>
     <string name="keystore_pass_cannot_be_empty">رمز عبور فروشگاه کلید نمی تواند خالی باشد.</string>
@@ -1039,7 +1045,6 @@
     <string name="trim_caches_in_all_apps_description">فایل های کش را از همه برنامه ها از جمله سیستم اندروید حذف می کند</string>
     <string name="unknown_net_policy">حریم خصوصی ناشناخته (%1$s - %2$X)</string>
     <string name="help_permissions_tab">این مجوزها توسط این برنامه تعریف شده و قابل لغو نیستند.</string>
-    <string name="port_number_pairing_code_empty">شماره درگاه یا کد جفت شدن را خالی کنید.</string>
     <string name="help_app_ops_tab">روی یک مورد کلیک کنید تا آن را <b>اجازه دهید</b> یا <b>نادیده بگیرید</b>. برای مشاهده سایر حالت های پشتیبانی شده روی یک مورد کلیک کنید.</string>
     <string name="pref_block_trackers_msg">پس از نصب برنامه با استفاده از مدیریت برنامه، اجزای ردیابی را مسدود کنید.</string>
     <string name="pref_thread_count_hint">مقدار باید بین 0 تا %1$d باشد که 0 به معنای <i>حداکثر تعداد عملیات در زمان معین</i> است.</string>
@@ -1121,4 +1126,7 @@
     <string name="hidden_api_enforcement_policy">خط مشی اجرای مخفی API</string>
     <string name="hidden_api_enf_default_policy">پیش فرض (بر اساس نوع برنامه)</string>
     <string name="hidden_api_enf_policy_none">هیچکدام (دسترسی کامل به API مخفی)</string>
+    <string name="block_unblock_components_dots">مسدود کردن / بازگشایی مجوز ها…</string>
+    <string name="block_unblock_components_description">مسدود کردن یا بازگشایی همه مجوز های شناسایی شده توسط امضا های داده شده</string>
+    <string name="unblock_components_dots">بازگشایی مجوز ها…</string>
 </resources>

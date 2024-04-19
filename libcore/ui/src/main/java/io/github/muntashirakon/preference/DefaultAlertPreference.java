@@ -19,6 +19,8 @@ import androidx.preference.PreferenceViewHolder;
 import io.github.muntashirakon.ui.R;
 
 public class DefaultAlertPreference extends Preference {
+    private boolean mAddSpaceBetweenIconAndText = true;
+
     public DefaultAlertPreference(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
@@ -51,9 +53,19 @@ public class DefaultAlertPreference extends Preference {
         }
         View empty = holder.findViewById(android.R.id.empty);
         if (empty != null) {
-            if (imageFrame != null && imageFrame.getVisibility() == View.GONE) {
+            if (mAddSpaceBetweenIconAndText && imageFrame != null && imageFrame.getVisibility() != View.GONE) {
+                empty.setVisibility(View.VISIBLE);
+            } else {
                 empty.setVisibility(View.GONE);
-            } else empty.setVisibility(View.VISIBLE);
+            }
         }
+    }
+
+    public void setAddSpaceBetweenIconAndText(boolean addSpaceBetweenIconAndText) {
+        mAddSpaceBetweenIconAndText = addSpaceBetweenIconAndText;
+    }
+
+    public boolean isAddSpaceBetweenIconAndText() {
+        return mAddSpaceBetweenIconAndText;
     }
 }

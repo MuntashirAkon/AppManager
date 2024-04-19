@@ -319,9 +319,9 @@
     <string name="update">アップデート</string>
     <string name="source_code">ソースコード</string>
     <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
-        \nGitLab: https://gitlab.com/muntashir/AppManager
-        \nRiseup: https://0xacab.org/muntashir/AppManager
-        \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+\nGitLab: https://gitlab.com/muntashir/AppManager
+\nRiseup: https://0xacab.org/muntashir/AppManager
+\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
     <string name="pref_import_existing">既存のルールをインポート</string>
     <string name="pref_import_existing_msg">他のアプリによって無効にされたコンポーネントを追加します。
         多くのご検知が発生する場合があるのでご注意ください。 </string>
@@ -976,10 +976,8 @@
     <string name="notice_saf">選択したディレクトリには、保存されたAPKやバックアップなど、App Managerに関連するすべてのファイルが保存されます。Storage Access Framework（SAF）は非常に低速であるため、他のオプションが使用できない場合にのみこのオプションを使用してください。</string>
     <string name="files">ファイル</string>
     <string name="storage">ストレージ</string>
-    <string name="port_number_pairing_code_empty">空のポート番号またはペアリングコード</string>
     <string name="paired_successfully">ペア完了</string>
     <string name="adb_pair">ペア</string>
-    <string name="adb_wifi_paring_code">Wi-Fiペア設定コード</string>
     <string name="invalid_password">無効なパスワードです、再試行してください。</string>
     <string name="keystore_pass_cannot_be_empty">キーストアのパスワードは空白にすることができません。</string>
     <string name="keystore_password_info">こちらは、App Managerのキーストアのパスワードです。キーストアのバックアップ/リストアを行う場合は、安全な場所に保管してください。<b>このメッセージは再度表示されません</b></string>

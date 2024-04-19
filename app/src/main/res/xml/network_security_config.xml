@@ -3,17 +3,17 @@
     <base-config cleartextTrafficPermitted="false" />
     <domain-config>
         <domain includeSubdomains="true">www.virustotal.com</domain>
-        <pin-set expiration="2031-04-13">
+        <pin-set expiration="2038-01-15">
             <!-- DigiCert Global Root CA -->
             <pin digest="SHA-256">r/mIkG3eEpVdm+u/ko/cwxzOMo1bk4TyHIlByibiA5E=</pin>
 
-            <!-- DigiCert TLS RSA SHA256 2020 CA1 -->
-            <pin digest="SHA-256">RQeZkB42znUfsDIIFWIRiYEcKl7nHwNFwWCrnMMJbVc=</pin>
+            <!-- DigiCert Global Root G2 -->
+            <pin digest="SHA-256">i7WTqTvh0OioIruIfFR4kMPnBqrS2rdiVPl/s2uC/CY=</pin>
         </pin-set>
     </domain-config>
     <domain-config>
         <domain includeSubdomains="true">beta.pithus.org</domain>
-        <pin-set expiration="2024-10-01">
+        <pin-set expiration="2035-01-03">
             <!--
             Resources:
             https://letsencrypt.org/certificates/

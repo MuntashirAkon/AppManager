@@ -883,7 +883,6 @@
     <string name="aes">AES</string>
     <string name="pref_encryption_msg">Criptografia para backups.</string>
     <string name="encryption">Criptografia</string>
-    <string name="pref_show_users_in_installer">Mostrar utilizadores no instalador</string>
     <string name="un_apkm">UnApkm</string>
     <string name="select_apk">Selecionar APK</string>
     <string name="send_crash_report">Enviar relatório de paragem</string>
@@ -1046,9 +1045,7 @@
     <string name="notice_saf">Ao contrário dos volumes, o diretório selecionado será usado para armazenar todos os ficheiros relacionados com o App Manager, incluindo APKs e cópias de segurança guardadas. O Storage Access Framework (SAF) é muito lento, por isso só deve usar esta opção quando outras não puderem ser usadas.</string>
     <string name="notice">Aviso</string>
     <string name="paired_successfully">Pareado.</string>
-    <string name="port_number_pairing_code_empty">Número da porta ou código de pareamento vazio.</string>
     <string name="adb_pair">Parear</string>
-    <string name="adb_wifi_paring_code">Código de pareamento Wi-Fi</string>
     <string name="invalid_password">Palavra-passe inválida, tente novamente.</string>
     <string name="keystore_pass_cannot_be_empty">A palavra-passe da KeyStore não pode estar vazia.</string>
     <string name="keystore_password_info">Segue-se a palavra-passe da App Manager KeyStore. Por favor guarde-a num local seguro se fizer uma cópia de segurança/restaurar a App Manager KeyStore. <b>Esta mensagem não será mostrada novamente.</b></string>
@@ -1069,7 +1066,7 @@
     <string name="installer_app_installed">Aplicativo instalado</string>
     <string name="staging_apk_files">Aguardando arquivos de aplicativo…</string>
     <string name="background">Segundo plano</string>
-    <string name="trim_caches_in_all_apps_description">Deleta arquivos cache de todas as aplicações, incluindo sistema android</string>
+    <string name="trim_caches_in_all_apps_description">Apaga ficheiros de cache de todas as aplicações, incluindo sistema android</string>
     <string name="trim_caches_in_all_apps">Ajustar caches em todas as aplicações</string>
     <string name="user_root">Usar root</string>
     <string name="paste">Colar</string>
@@ -1162,7 +1159,7 @@
     <string name="binary_64_bit">64 Bit</string>
     <string name="change_backup_volume">Alterar volume</string>
     <string name="pref_saved_apk_name_format">Nome do formato APK salvo</string>
-    <string name="pref_saved_apk_name_format_msg">O formato usado para nomear os arquivos APK estão salvá-los.</string>
+    <string name="pref_saved_apk_name_format_msg">O formato usado para nomear os ficheiros APK ao gravá-los.</string>
     <string name="sort_by_installation_date">Data de instalação</string>
     <string name="external">Externo</string>
     <string name="so_type_executable">Executável</string>
@@ -1360,4 +1357,53 @@
         <item quantity="many">%d pastas</item>
         <item quantity="other">%d outras pastas</item>
     </plurals>
+    <string name="block_unblock_components_description">Bloquear ou desbloquear todos os componentes identificados pelas assinaturas fornecidas</string>
+    <string name="unblock_components_dots">Desbloquear componentes…</string>
+    <string name="block_unblock_components_dots">Bloquear/Desbloquear componentes…</string>
+    <string name="pref_zip_align">Alinhar ficheiros APK</string>
+    <string name="title_code_editor">Editor de Código</string>
+    <string name="filter_force_stopped_apps">Parar apps</string>
+    <string name="restoring_app">Restaurando %1$s…</string>
+    <string name="folder">Pasta</string>
+    <string name="create_new_folder">Nova pasta</string>
+    <string name="title_confirm_deletion">Confirmar exclusão</string>
+    <string name="conflict_detected_while_copying">Conflito detectado</string>
+    <string name="copy_keep_both_file">Manter ambos</string>
+    <string name="change_mode">Alterar modo</string>
+    <string name="installing_package">Instalando %1$s…</string>
+    <string name="redo">Refazer</string>
+    <string name="line_separator">Separador de linha</string>
+    <plurals name="search_results">
+        <item quantity="one">%d resultado</item>
+        <item quantity="many">%d resultados</item>
+        <item quantity="other">%d resultados</item>
+    </plurals>
+    <string name="backing_up_app">Fazendo backup de %1$s…</string>
+    <string name="symbolic_link">Link simbólico</string>
+    <string name="create_new_symbolic_link">Novo link simbólico</string>
+    <string name="create_new_file">Novo ficheiro</string>
+    <string name="invalid_target_path">Caminho inválido</string>
+    <string name="enter_symbolic_link_name">Nome do link</string>
+    <string name="enter_target_path">Caminho de destino</string>
+    <string name="copy_these_paths">Copiar caminhos</string>
+    <string name="moved_successfully">Movido</string>
+    <string name="copied_successfully">Copiado</string>
+    <plurals name="alert_failed_to_unblock_components">
+        <item quantity="one">Não foi possível desbloquear componentes para %1$d app</item>
+        <item quantity="many">Não foi possível desbloquear componentes para %1$d apps</item>
+        <item quantity="other">Não foi possível desbloquear componentes para %1$d apps</item>
+    </plurals>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp verificado e identificado como sendo de <xliff:g id="source" example="Google Play">%1$s</xliff:g>.</string>
+    <string name="pref_layout_direction">Direção do layout</string>
+    <string name="warning_working_on_system_mode">Aviso: Trabalhando no modo sistema em vez do modo ADB.</string>
+    <string name="app_info_tag_open_links">Abrir links</string>
+    <string name="installer_options">Opções do instalador</string>
+    <string name="debloat_removal_safe_short_description">Seguro para remover</string>
+    <string name="debloat_removal_caution_short_description">Tenha cautela</string>
+    <string name="title_domains_supported_by_the_app">Domínios Suportados</string>
+    <string name="read_only_file">Ficheiro somente leitura</string>
+    <string name="read_only_file_warning">As alterações não podem ser gravadas no ficheiro, possivelmente porque está localizado num volume no qual o App Manager não tem permissão para gravar. Quer gravá-lo num lugar diferente?</string>
+    <string name="replacement_text">Substituição</string>
+    <string name="action_replace_all">Substituir Todos</string>
+    <string name="conflict_detected_while_copying_message">Um item chamado \"%1$s\" já existe nesse local. Deseja substituí-lo?</string>
 </resources>

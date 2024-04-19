@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.util.stream.Collectors
+
 plugins {
     id('com.android.library')
 }
@@ -19,12 +23,14 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    libraryVariants.configureEach { variant ->
-        variant.assembleProvider.configure() {
-            it.doLast {
-                makeJars(variant.buildType.name)
+    libraryVariants.configureEach {variant ->
+        String buildType = variant.buildType.name
+        def jarTask = tasks.register("create${buildType.capitalize()}ServerJars") {
+            doLast {
+                makeJars(buildType)
             }
         }
+        javaCompileProvider.get().finalizedBy(jarTask)
     }
 }
 
@@ -36,78 +42,44 @@ dependencies {
     implementation "androidx.annotation:annotation:${annotation_version}"
 }
 
-def makeJars(String buildType) {
-    println("Build type ${buildType}")
+void makeJars(String buildType) {
+    println("Build type: ${buildType}")
 
-    if (!isModified()) {
-        println("Files aren't modified, skip creating jar files.")
-        return
-    }
+    String rootDir = project.rootDir.absolutePath
+    String serverPkg = "io/github/muntashirakon/AppManager/server"
+    String intermediatePath = "build/intermediates/javac/${buildType}/compile${buildType.capitalize()}JavaWithJavac/classes"
+    String serverClassDir = "${rootDir}/server/${intermediatePath}/${serverPkg}/"
+    String libserverClassDir = "${rootDir}/libserver/${intermediatePath}/${serverPkg}/common"
+    String androidJar = "${android.sdkDirectory.path}/platforms/android-${target_sdk}/android.jar"
+    String amJar = "${rootDir}/app/src/main/assets/am.jar"
+    String mainJar = "${rootDir}/app/src/main/assets/main.jar"
 
-    String debugClassDir = project.rootDir.absolutePath + '/server/build/intermediates/javac/' + buildType + '/classes'
-    String libserverClassDir = project.rootDir.absolutePath + '/libserver/build/intermediates/javac/' + buildType + '/classes'
-    def amJar = project.rootDir.absolutePath + '/app/src/main/assets/am.jar'
-    def mainJar = project.rootDir.absolutePath + '/app/src/main/assets/main.jar'
-
-    println("Build success, creating am.jar...")
-    def buildArgs = ['--release', '--output', amJar]
-    buildArgs.addAll(getClassFiles(libserverClassDir, ["io/github/muntashirakon/AppManager/server/common/"]))
-    buildArgs.addAll(getClassFiles(debugClassDir, ["io/github/muntashirakon/AppManager/server/"]))
-    buildArgs.addAll(['--lib', "${android.sdkDirectory.path}/platforms/android-${target_sdk}/android.jar"])
-    println(buildArgs.toString())
+    println("Creating am.jar...")
+    def buildArgs = ['--release', '--output', amJar, '--classpath', androidJar]
+    buildArgs.addAll(Files.list(Paths.get(libserverClassDir)).filter {
+        !it.fileName.toString().startsWith("IRootServiceManager")
+    }.map { it.toString() }.collect(Collectors.toList()))
+    buildArgs.addAll(Files.list(Paths.get(serverClassDir)).filter {
+        !it.fileName.toString().startsWith("RootServiceMain")
+    }.map { it.toString() }.collect(Collectors.toList()))
     exec {
         workingDir = project.rootDir
         executable = file("${android.sdkDirectory.path}/build-tools/${android.buildToolsVersion}/d8")
         args = buildArgs
     }
     println("Created ${amJar}")
+
     println("Creating main.jar...")
-    buildArgs = ['--release', '--output', mainJar]
-    buildArgs.add("${debugClassDir}/io/github/muntashirakon/AppManager/server/RootServiceMain.class")
-    buildArgs.add("${libserverClassDir}/io/github/muntashirakon/AppManager/server/common/ServerUtils.class")
-    buildArgs.addAll(['--lib', "${android.sdkDirectory.path}/platforms/android-${target_sdk}/android.jar"])
+    buildArgs = ['--release', '--output', mainJar, '--classpath', androidJar]
+    buildArgs.add("${serverClassDir}/RootServiceMain.class")
+    buildArgs.add("${libserverClassDir}/IRootServiceManager.class")
+    buildArgs.add("${libserverClassDir}/ServerUtils.class")
     exec {
         workingDir = project.rootDir
         executable = file("${android.sdkDirectory.path}/build-tools/${android.buildToolsVersion}/d8")
         args = buildArgs
     }
     println("Created ${mainJar}")
-}
-
-def isModified() {
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        workingDir = project.rootDir
-        executable = "${project.rootDir}/scripts/check_am_server.sh"
-        standardOutput = stdout
-    }
-    return stdout.toString().trim() == "M"
-}
-
-def getClassFiles(String path, List<String> pkgPath) {
-    def ret = []
-    pkgPath.forEach {
-        it ->
-            def file = new File(path, it)
-            loadClsFiles(file, ret)
-    }
-    return ret
-}
-
-def loadClsFiles(File f, List paths) {
-    File[] files = f.listFiles()
-    if (files != null) {
-        files.each {
-            file ->
-                if (file.file) {
-                    if (file.name.endsWith(".class") && !file.name.startsWith("IPCMain")) {
-                        paths.add(file.path)
-                    }
-                } else {
-                    loadClsFiles(file, paths)
-                }
-        }
-    }
 }
 
 tasks.register('cleanupJar') {

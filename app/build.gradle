@@ -98,6 +98,7 @@ android {
     }
     buildFeatures {
         aidl true
+        buildConfig true
     }
 }
 
@@ -120,8 +121,8 @@ dependencies {
     implementation "com.github.REAndroid:ARSCLib:${arsclib_version}"
     implementation "com.github.MuntashirAkon:apksig-android:${apksig_version}"
     implementation "com.github.MuntashirAkon:sun-security-android:${sun_security_version}"
-    implementation "org.bouncycastle:bcprov-jdk15on:${bouncycastle_version}"
-    implementation "org.bouncycastle:bcpkix-jdk15on:${bouncycastle_version}"
+    implementation "org.bouncycastle:bcprov-jdk15to18:${bouncycastle_version}"
+    implementation "org.bouncycastle:bcpkix-jdk15to18:${bouncycastle_version}"
     implementation "org.smali:baksmali:${baksmali_version}"
     implementation "org.smali:smali:${baksmali_version}"
     implementation "com.github.MuntashirAkon.jadx:jadx-core:${jadx_version}"
@@ -162,9 +163,7 @@ dependencies {
             exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
         }
     }
-    // AppCompat 1.5.0 still includes the buggy implementation of documentfile library (1.0.0)
     implementation "androidx.documentfile:documentfile:${documentfile_version}"
-    // Draw around the display cutouts
     implementation "androidx.activity:activity:${activity_version}"
     implementation "androidx.core:core-splashscreen:${splashscreen_version}"
     implementation "androidx.webkit:webkit:${webkit_version}"
