@@ -39,7 +39,6 @@ import android.util.AndroidException;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.OptIn;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.RequiresPermission;
 import androidx.annotation.WorkerThread;
@@ -47,6 +46,7 @@ import androidx.annotation.WorkerThread;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -162,10 +162,15 @@ public final class PackageManagerCompat {
     @SuppressWarnings("deprecation")
     private static List<PackageInfo> getInstalledPackagesInternal(@NonNull IPackageManager pm, int flags,
                                                                   @UserIdInt int userHandle) throws RemoteException {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return pm.getInstalledPackages((long) flags, userHandle).getList();
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                return pm.getInstalledPackages((long) flags, userHandle).getList();
+            }
+            return pm.getInstalledPackages(flags, userHandle).getList();
+        } catch (Throwable e) {
+            Log.w(TAG, "Failed to getInstalledPackages.", e);
+            return Collections.emptyList();
         }
-        return pm.getInstalledPackages(flags, userHandle).getList();
     }
 
     @WorkerThread
