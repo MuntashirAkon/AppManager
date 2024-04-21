@@ -81,7 +81,7 @@ class LocalServerManager {
                 try {
                     mSession = createSession();
                 } catch (Exception e) {
-                    if (!Ops.isRoot() && !Ops.isAdb()) {
+                    if (!Ops.isDirectRoot() && !Ops.isAdb()) {
                         // Do not bother attempting to create a new session
                         throw new IOException("Could not create session", e);
                     }
@@ -263,7 +263,7 @@ class LocalServerManager {
     private void startServer() throws Exception {
         if (Ops.isAdb()) {
             useAdbStartServer();
-        } else if (Ops.isRoot()) {
+        } else if (Ops.isDirectRoot()) {
             useRootStartServer();
         } else throw new Exception("Neither root nor ADB mode is enabled.");
     }

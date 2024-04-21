@@ -210,7 +210,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
             Menu menu = popupMenu.getMenu();
             // Set kill
             MenuItem killItem = menu.findItem(R.id.action_kill);
-            if ((processItem.uid >= Process.FIRST_APPLICATION_UID || Prefs.RunningApps.enableKillForSystemApps()) && Ops.isRoot()) {
+            if ((processItem.uid >= Process.FIRST_APPLICATION_UID || Prefs.RunningApps.enableKillForSystemApps()) && Ops.isWorkingUidRoot()) {
                 killItem.setVisible(true).setOnMenuItemClickListener(item -> {
                     mModel.killProcess(processItem);
                     return true;
