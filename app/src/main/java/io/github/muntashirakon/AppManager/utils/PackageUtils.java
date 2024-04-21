@@ -268,18 +268,13 @@ public final class PackageUtils {
     @NonNull
     public static List<PackageInfo> getAllPackages(int flags, boolean currentUserOnly) {
         if (currentUserOnly) {
-            return ExUtils.requireNonNullElse(() -> PackageManagerCompat.getInstalledPackages(flags,
-                    UserHandleHidden.myUserId()), Collections.emptyList());
+            return PackageManagerCompat.getInstalledPackages(flags, UserHandleHidden.myUserId());
         }
         List<PackageInfo> packageInfoList = new ArrayList<>();
         for (int userId : Users.getUsersIds()) {
-            try {
-                packageInfoList.addAll(PackageManagerCompat.getInstalledPackages(flags, userId));
-                if (ThreadUtils.isInterrupted()) {
-                    break;
-                }
-            } catch (Exception e) {
-                Log.w(TAG, "Could not retrieve package info list for user " + userId, e);
+            packageInfoList.addAll(PackageManagerCompat.getInstalledPackages(flags, userId));
+            if (ThreadUtils.isInterrupted()) {
+                break;
             }
         }
         return packageInfoList;

@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class FinderViewModel extends AndroidViewModel {
@@ -82,16 +81,12 @@ public class FinderViewModel extends AndroidViewModel {
         List<FilterableAppInfo> filterableAppInfoList = new ArrayList<>();
         for (int userId : userIds) {
             if (ThreadUtils.isInterrupted()) return;
-            List<PackageInfo> packageInfoList;
-            try {
-                packageInfoList = PackageManagerCompat.getInstalledPackages(PackageManager.GET_META_DATA
-                        | GET_SIGNING_CERTIFICATES | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
-                        | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES | MATCH_DISABLED_COMPONENTS
-                        | MATCH_UNINSTALLED_PACKAGES | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
-            } catch (Exception e) {
-                Log.w(TAG, "Could not retrieve package info list for user %d", e, userId);
-                continue;
-            }
+            List<PackageInfo> packageInfoList = PackageManagerCompat.getInstalledPackages(
+                    PackageManager.GET_META_DATA | GET_SIGNING_CERTIFICATES
+                            | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
+                            | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
+                            | MATCH_DISABLED_COMPONENTS | MATCH_UNINSTALLED_PACKAGES
+                            | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
             for (PackageInfo packageInfo : packageInfoList) {
                 // Interrupt thread on request
                 if (ThreadUtils.isInterrupted()) return;
