@@ -14,7 +14,7 @@ ext {
     apksig_version = "4.4.0"
     appcompat_version = "1.6.1"
     baksmali_version = "2.5.2"
-    bouncycastle_version = "1.70"
+    bouncycastle_version = "1.78"
     desugar_jdk_version = "2.0.3"
     documentfile_version = "1.0.1"
     fastscroll_version = "1.2.0"
