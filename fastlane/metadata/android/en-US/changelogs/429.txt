@@ -1,0 +1,2 @@
+- Funding campaign dates have been updated as this is going to be the last campaign in many years.
+- [Security] Update vulnerable dependencies.

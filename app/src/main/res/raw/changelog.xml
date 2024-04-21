@@ -2,6 +2,21 @@
 <changelog>
     <release
         type="stable release"
+        version="v3.1.6"
+        code="429"
+        date="21 April 2024">
+        <note>
+            Funding campaign dates have been updated as this is going to be the last campaign in
+            many years.
+        </note>
+        <fix title="Security">Update vulnerable dependencies</fix>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.1.5...v3.1.6"]v3.1.5...v3.1.6[/a]
+        </note>
+    </release>
+    <release
+        type="stable release"
         version="v3.1.5"
         code="428"
         date="19 March 2024">
