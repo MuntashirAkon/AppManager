@@ -40,6 +40,7 @@ import io.github.muntashirakon.AppManager.misc.DeviceInfo2;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.CpuUtils;
@@ -121,6 +122,7 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
     public void loadCustomCommand() {
         mExecutor.submit(() -> {
             try {
+                ServerConfig.init(getApplication(), UserHandleHidden.myUserId());
                 mCustomCommand.postValue(LocalServer.getExecCommand(getApplication()));
             } catch (Throwable e) {
                 e.printStackTrace();

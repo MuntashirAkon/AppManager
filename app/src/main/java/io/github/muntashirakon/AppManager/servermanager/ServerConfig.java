@@ -3,6 +3,8 @@
 package io.github.muntashirakon.AppManager.servermanager;
 
 import android.annotation.SuppressLint;
+import android.annotation.UserIdInt;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -38,9 +40,9 @@ public final class ServerConfig {
             .getSharedPreferences("server_config", Context.MODE_PRIVATE);
     private static volatile boolean sInitialised = false;
 
-    @AnyThread
+    @WorkerThread
     @NoOps
-    static void init(Context context, int userHandle) throws IOException {
+    public static void init(@NonNull Context context, @UserIdInt int userHandle) throws IOException {
         if (sInitialised) {
             return;
         }
