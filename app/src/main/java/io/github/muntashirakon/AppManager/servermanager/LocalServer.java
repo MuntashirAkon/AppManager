@@ -17,7 +17,6 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
 
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
 import io.github.muntashirakon.AppManager.server.common.Caller;
@@ -89,8 +88,6 @@ public class LocalServer {
         mLocalServerManager = LocalServerManager.getInstance(mContext);
         // Initialise necessary files and permissions
         ServerConfig.init(mContext, UserHandleHidden.myUserId());
-        // Check if am.jar is in the right place
-        checkFile();
         // Start server if not already
         checkConnect();
     }
@@ -169,13 +166,6 @@ public class LocalServer {
     }
 
     @WorkerThread
-    @NoOps
-    private void checkFile() throws IOException {
-        AssetsUtils.copyFile(mContext, ServerConfig.JAR_NAME, ServerConfig.getDestJarFile(), BuildConfig.DEBUG);
-        AssetsUtils.writeScript(mContext);
-    }
-
-    @WorkerThread
     @NoOps(used = true)
     public static void restart() throws IOException, AdbPairingRequiredException {
         if (sLocalServer != null) {
@@ -186,12 +176,5 @@ public class LocalServer {
         } else {
             getInstance();
         }
-    }
-
-    @WorkerThread
-    @NonNull
-    public static String getExecCommand(@NonNull Context context) throws IOException {
-        AssetsUtils.writeScript(context);
-        return "sh " + ServerConfig.getExecPath() + " " + ServerConfig.getLocalServerPort() + " " + ServerConfig.getLocalToken();
     }
 }

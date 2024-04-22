@@ -208,6 +208,16 @@ public final class FileUtils {
     }
 
     @AnyThread
+    public static void chmod711(@NonNull File file) throws IOException {
+        try {
+            Os.chmod(file.getAbsolutePath(), 457);
+        } catch (ErrnoException e) {
+            Log.e("IOUtils", "Failed to apply mode 711 to " + file);
+            throw new IOException(e);
+        }
+    }
+
+    @AnyThread
     public static void chmod644(@NonNull File file) throws IOException {
         try {
             Os.chmod(file.getAbsolutePath(), 420);

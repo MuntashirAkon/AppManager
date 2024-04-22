@@ -39,7 +39,6 @@ import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.misc.DeviceInfo2;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -54,7 +53,8 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
     private final MutableLiveData<List<UserInfo>> mSelectUsers = new SingleLiveEvent<>();
     private final MutableLiveData<Changelog> mChangeLog = new SingleLiveEvent<>();
     private final MutableLiveData<DeviceInfo2> mDeviceInfo = new SingleLiveEvent<>();
-    private final MutableLiveData<String> mCustomCommand = new SingleLiveEvent<>();
+    private final MutableLiveData<String> mCustomCommand0 = new SingleLiveEvent<>();
+    private final MutableLiveData<String> mCustomCommand1 = new SingleLiveEvent<>();
     private final MutableLiveData<Integer> mModeOfOpsStatus = new SingleLiveEvent<>();
     private final MutableLiveData<Boolean> mOperationCompletedLiveData = new SingleLiveEvent<>();
     private final MutableLiveData<ArrayMap<String, Uri>> mStorageVolumesLiveData = new SingleLiveEvent<>();
@@ -115,18 +115,24 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
         });
     }
 
-    public MutableLiveData<String> getCustomCommand() {
-        return mCustomCommand;
+    public MutableLiveData<String> getCustomCommand0() {
+        return mCustomCommand0;
     }
 
-    public void loadCustomCommand() {
+    public MutableLiveData<String> getCustomCommand1() {
+        return mCustomCommand1;
+    }
+
+    public void loadCustomCommands() {
         mExecutor.submit(() -> {
             try {
                 ServerConfig.init(getApplication(), UserHandleHidden.myUserId());
-                mCustomCommand.postValue(LocalServer.getExecCommand(getApplication()));
+                mCustomCommand0.postValue(ServerConfig.getServerRunnerCommand(0));
+                mCustomCommand1.postValue(ServerConfig.getServerRunnerCommand(1));
             } catch (Throwable e) {
                 e.printStackTrace();
-                mCustomCommand.postValue(null);
+                mCustomCommand0.postValue(null);
+                mCustomCommand1.postValue(null);
             }
         });
     }

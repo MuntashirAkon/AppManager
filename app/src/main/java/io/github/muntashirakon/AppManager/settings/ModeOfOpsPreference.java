@@ -121,15 +121,23 @@ public class ModeOfOpsPreference extends Fragment {
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show());
-        TextInputTextView customCommand = view.findViewById(android.R.id.text1);
-        TextInputLayout customCommandLayout = TextInputLayoutCompat.fromTextInputEditText(customCommand);
-        customCommandLayout.setEndIconOnClickListener(v -> {
-            CharSequence command = customCommand.getText();
+        TextInputTextView customCommand0 = view.findViewById(android.R.id.text1);
+        TextInputLayout customCommand0Layout = TextInputLayoutCompat.fromTextInputEditText(customCommand0);
+        customCommand0Layout.setEndIconOnClickListener(v -> {
+            CharSequence command = customCommand0.getText();
             if (!TextUtils.isEmpty(command)) {
                 Utils.copyToClipboard(requireContext(), "command", command);
             }
         });
-        mModel.loadCustomCommand();
+        TextInputTextView customCommand1 = view.findViewById(android.R.id.text2);
+        TextInputLayout customCommand1Layout = TextInputLayoutCompat.fromTextInputEditText(customCommand1);
+        customCommand1Layout.setEndIconOnClickListener(v -> {
+            CharSequence command = customCommand1.getText();
+            if (!TextUtils.isEmpty(command)) {
+                Utils.copyToClipboard(requireContext(), "command", command);
+            }
+        });
+        mModel.loadCustomCommands();
         updateViews();
         // Mode of ops
         mModel.getModeOfOpsStatus().observe(getViewLifecycleOwner(), status -> {
@@ -169,7 +177,8 @@ public class ModeOfOpsPreference extends Fragment {
                     updateViews();
             }
         });
-        mModel.getCustomCommand().observe(getViewLifecycleOwner(), customCommand::setText);
+        mModel.getCustomCommand0().observe(getViewLifecycleOwner(), customCommand0::setText);
+        mModel.getCustomCommand1().observe(getViewLifecycleOwner(), customCommand1::setText);
     }
 
     @Override
