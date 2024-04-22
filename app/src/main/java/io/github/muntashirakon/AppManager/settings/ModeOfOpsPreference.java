@@ -172,6 +172,12 @@ public class ModeOfOpsPreference extends Fragment {
         mModel.getCustomCommand().observe(getViewLifecycleOwner(), customCommand::setText);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        requireActivity().setTitle(R.string.pref_mode_of_operations);
+    }
+
     private void updateViews() {
         boolean serverActive = LocalServer.alive(requireContext());
         boolean serverRequired = requireRemoteServer(mCurrentMode);
