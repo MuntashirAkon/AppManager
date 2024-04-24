@@ -161,26 +161,26 @@ public final class FileUtils {
         Context context = ContextUtils.getContext();
         try {
             return getExternalCachePath(context);
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
             return context.getCacheDir();
         }
     }
 
     @AnyThread
     @NonNull
-    public static File getExternalCachePath(@NonNull Context context) throws IOException {
+    public static File getExternalCachePath(@NonNull Context context) throws FileNotFoundException {
         return getBestExternalPath(context.getExternalCacheDirs());
     }
 
     @AnyThread
     @NonNull
-    public static File getExternalMediaPath(@NonNull Context context) throws IOException {
+    public static File getExternalMediaPath(@NonNull Context context) throws FileNotFoundException {
         return getBestExternalPath(context.getExternalMediaDirs());
     }
 
     @AnyThread
     @NonNull
-    public static File getBestExternalPath(@Nullable File[] extDirs) throws IOException {
+    public static File getBestExternalPath(@Nullable File[] extDirs) throws FileNotFoundException {
         if (extDirs == null) {
             throw new FileNotFoundException("Shared storage unavailable.");
         }
