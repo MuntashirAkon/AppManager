@@ -58,9 +58,10 @@ public class ProxyBinder implements IBinder {
                 newData.writeInterfaceToken(IRootServiceManager.class.getName());
                 newData.writeStrongBinder(mOriginal);
                 newData.writeInt(code);
+                newData.writeInt(flags);
                 newData.appendFrom(data, 0, data.dataSize());
                 // Transact via AMService
-                LocalServices.getAmService().asBinder().transact(PROXY_BINDER_TRANSACT_CODE, newData, reply, flags);
+                LocalServices.getAmService().asBinder().transact(PROXY_BINDER_TRANSACT_CODE, newData, reply, 0);
             } finally {
                 newData.recycle();
             }
