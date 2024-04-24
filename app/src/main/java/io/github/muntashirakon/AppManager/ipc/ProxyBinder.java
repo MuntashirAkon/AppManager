@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.server.common.IRootServiceManager;
+import io.github.muntashirakon.compat.os.ParcelCompat2;
 
 // Copyright 2020 Rikka
 public class ProxyBinder implements IBinder {
@@ -53,7 +54,8 @@ public class ProxyBinder implements IBinder {
     @Override
     public boolean transact(int code, @NonNull Parcel data, @Nullable Parcel reply, int flags) throws RemoteException {
         if (LocalServices.alive()) {
-            Parcel newData = Parcel.obtain();
+            IBinder targetBinder = LocalServices.getAmService().asBinder();
+            Parcel newData = ParcelCompat2.obtain(targetBinder);
             try {
                 newData.writeInterfaceToken(IRootServiceManager.class.getName());
                 newData.writeStrongBinder(mOriginal);
@@ -61,7 +63,7 @@ public class ProxyBinder implements IBinder {
                 newData.writeInt(flags);
                 newData.appendFrom(data, 0, data.dataSize());
                 // Transact via AMService
-                LocalServices.getAmService().asBinder().transact(PROXY_BINDER_TRANSACT_CODE, newData, reply, 0);
+                targetBinder.transact(PROXY_BINDER_TRANSACT_CODE, newData, reply, 0);
             } finally {
                 newData.recycle();
             }

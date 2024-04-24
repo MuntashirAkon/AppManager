@@ -3,6 +3,7 @@
 package aosp.android.content.pm;
 
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,9 +11,13 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.github.muntashirakon.compat.os.ParcelCompat2;
+import io.github.muntashirakon.io.IoUtils;
 
 /**
  * Transfer a large list of Parcelable objects across an IPC.  Splits into
@@ -29,7 +34,13 @@ abstract class BaseParceledListSlice<T> implements Parcelable {
     private static final String TAG = "ParceledListSlice";
     private static final boolean DEBUG = false;
 
-    private static final int MAX_IPC_SIZE = 1024 * 50; /*IoUtils.DEFAULT_BUFFER_SIZE*/
+    private static final int MAX_IPC_SIZE;
+
+    static {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            MAX_IPC_SIZE = IBinder.getSuggestedMaxIpcSizeBytes();
+        } else MAX_IPC_SIZE = IoUtils.DEFAULT_BUFFER_SIZE;
+    }
 
     private final List<T> mList;
 
@@ -39,7 +50,7 @@ abstract class BaseParceledListSlice<T> implements Parcelable {
         mList = list;
     }
 
-    BaseParceledListSlice(Parcel p) {
+    BaseParceledListSlice(@NonNull Parcel p) {
         // Unlike the Android frameworks, we have no access to certain remote class
         ClassLoader loader = BaseParceledListSlice.class.getClassLoader();
         final int N = p.readInt();
@@ -76,8 +87,8 @@ abstract class BaseParceledListSlice<T> implements Parcelable {
         final IBinder retriever = p.readStrongBinder();
         while (i < N) {
             if (DEBUG) Log.d(TAG, "Reading more @" + i + " of " + N + ": retriever=" + retriever);
-            Parcel data = Parcel.obtain();
-            Parcel reply = Parcel.obtain();
+            Parcel data = ParcelCompat2.obtain(retriever);
+            Parcel reply = ParcelCompat2.obtain(retriever);
             data.writeInt(i);
             try {
                 retriever.transact(IBinder.FIRST_CALL_TRANSACTION, data, reply, 0);
@@ -100,7 +111,7 @@ abstract class BaseParceledListSlice<T> implements Parcelable {
     }
 
     @SuppressWarnings("unchecked")
-    private T readCreator(Parcelable.Creator<?> creator, Parcel p, ClassLoader loader) {
+    private T readCreator(Parcelable.Creator<?> creator, Parcel p, @Nullable ClassLoader loader) {
         if (creator instanceof Parcelable.ClassLoaderCreator<?>) {
             Parcelable.ClassLoaderCreator<?> classLoaderCreator =
                     (Parcelable.ClassLoaderCreator<?>) creator;
@@ -109,7 +120,7 @@ abstract class BaseParceledListSlice<T> implements Parcelable {
         return (T) creator.createFromParcel(p);
     }
 
-    private static void verifySameType(final Class<?> expected, final Class<?> actual) {
+    private static void verifySameType(@Nullable final Class<?> expected, @NonNull final Class<?> actual) {
         if (!actual.equals(expected)) {
             throw new IllegalArgumentException("Can't unparcel type "
                     + actual.getName() + " in list of type "
@@ -192,5 +203,5 @@ abstract class BaseParceledListSlice<T> implements Parcelable {
 
     protected abstract void writeParcelableCreator(T parcelable, Parcel dest);
 
-    protected abstract Parcelable.Creator<?> readParcelableCreator(Parcel from, ClassLoader loader);
+    protected abstract Parcelable.Creator<?> readParcelableCreator(Parcel from, @Nullable ClassLoader loader);
 }

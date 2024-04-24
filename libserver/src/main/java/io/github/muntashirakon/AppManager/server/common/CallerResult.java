@@ -6,21 +6,28 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 // Copyright 2017 Zheng Li
 public class CallerResult implements Parcelable {
+    @Nullable
     private byte[] mReply;
+    @Nullable
     private Throwable mThrowable;
+    @Nullable
     private Object mReplyObj;
 
+    @Nullable
     public byte[] getReply() {
         return mReply;
     }
 
+    @Nullable
     public Throwable getThrowable() {
         return mThrowable;
     }
 
+    @Nullable
     public Object getReplyObj() {
         if (mReplyObj == null && mReply != null) {
             mReplyObj = ParcelableUtil.readValue(mReply);
