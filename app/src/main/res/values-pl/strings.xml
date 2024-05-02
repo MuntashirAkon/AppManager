@@ -1134,7 +1134,8 @@
     <string name="search_type_suffix">Przyrostek</string>
     <string name="search_type_regular_expressions">Regex</string>
     <string name="vt_success">VirusTotal: %1$d/%2$d</string>
-    <string name="pref_default_blocking_method_description">Metoda domyślnie stosowana w miejscach, w których nie ma możliwości wybrania metody blokowania.</string>
+    <string name="pref_default_blocking_method_description">Metoda domyślnie stosowana w miejscach, w których nie ma możliwości wybrania metody blokowania.
+\n<b>Uwaga:</b> \"IFW\" nie działa z dostawcami, zamiast tego używane jest \"wyłączono\".</string>
     <string name="search_type_contains">Zawiera</string>
     <string name="pref_intent_firewall_and_disable_description">Blokowanie składników za pomocą zapory sieciowej oraz ich wyłączanie. Metoda zalecana dla użytkowników z uprawnieniami roota.</string>
     <string name="pref_intent_firewall_description">Blokuj komponenty tylko za pomocą umyślnej zapory sieciowej. Nie jest to zalecane, ponieważ niektóre aplikacje systemowe mogą omijać zapory.</string>
@@ -1521,5 +1522,6 @@
     <string name="adb_pairing_pairing_code">Kod parowania</string>
     <string name="adb_pairing_found_pairing_service_with_port">Znaleziono usługę z portem %d</string>
     <string name="mode_of_op_custom_command_title">Własna komenda</string>
-    <string name="mode_of_op_custom_command">Jeśli nie możesz użyć żadnego z trybów, możesz uruchomić poniższe polecenie przy użyciu dowolnej obsługiwanej powłoki, aby uruchomić App Manager w trybie uprzywilejowanym:</string>
+    <string name="mode_of_op_custom_command">Jeśli nie możesz użyć żadnego z trybów, możesz uruchomić następujące polecenie w dowolnej obsługiwanej powłoce, aby uruchomić App Manager w trybie uprzywilejowanym:</string>
+    <string name="mode_of_op_alternative_custom_command">Jeśli po wykonaniu powyższego polecenia pojawi się błąd \"odmowa uprawnień\", uruchom następujące polecenie:</string>
 </resources>
