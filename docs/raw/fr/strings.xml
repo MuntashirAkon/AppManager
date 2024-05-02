@@ -20,8 +20,8 @@
 \nWeblate. Pour rejoindre l\'équipe de traduction, allez sur \\url{https://hosted.weblate.org/engage/app-manager/}.</string>
     <string name="intro$main$buiding">Des instructions de build sont disponibles dans le fichier BUILDING situé à la racine du code source.</string>
     <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Chapitre}</string>
-    <string name="keywords$see_also">\\newcommand{\\KeywordSeeAlso}{Voir aussi:}</string>
-    <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\KeywordEndOfKeyWordInAlert}{:}</string>
+    <string name="keywords$see_also">\\newcommand{\\KeywordSeeAlso}{Voir aussi :}</string>
+    <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\KeywordEndOfKeyWordInAlert}{ :}</string>
     <string name="titlepage$user_manual">{\\huge\\bfseries Manuel Utilisateur\\par}</string>
     <string name="intro$main$$introduction-chapter-title">Introduction</string>
     <string name="intro$main$supported-versions">Actuellement, les versions maintenues sont v2.6.0 (stable), v3.0.0 (versions alpha et debug). Les versions précédentes de App
