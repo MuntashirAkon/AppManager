@@ -533,30 +533,30 @@
     <string name="toggle_class_listing">Sınıf Listesini Aç/Kapat</string>
     <string name="class_viewer">Sınıf Görüntüleyici</string>
     <string name="word_wrap">Sözcük kaydırmayı aç/kapat</string>
-    <string name="credits_message">Aşağıdaki projelerin yazarlarına:
-\n- The Android Open Source Project
-\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
-\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
-\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
-\n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a>
-\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
-\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
-\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
-\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
-\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
-\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
-\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
-\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/eclipse/tm4e">tm4e</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a> </string>
+    <string name="credits_message">Aşağıdaki projelerin yazarlarına: 
+\n- The Android Open Source Project 
+\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a> 
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a> 
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a> 
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a> 
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a> 
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a> 
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a> 
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a> 
+\n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a> 
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a> 
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a> 
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> 
+\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a> 
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a> 
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a> 
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a> 
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a> 
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a> 
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a> 
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a> 
+\n- <a href="https://github.com/eclipse/tm4e">tm4e</a> 
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a></string>
     <string name="credits">Teşekkürler</string>
     <string name="paths_and_directories">Yollar ve Dizinler</string>
     <string name="create_shortcut">Kısayol Oluştur</string>
@@ -724,8 +724,8 @@
     <string name="patch_level">Yama seviyesi</string>
     <string name="backup_skip_signature_checks_description">Sağlama toplamı doğrulamasında başarısız olan veya önceki yedeklerinden farklı APK imzalarına sahip yedekleri geri yükleyin.</string>
     <string name="backup_multiple_description">Temel yedekleme yerine ayrı bir <i>adlandırılmış</i> yedekleme oluşturun.</string>
-    <string name="backup_rules_description">Uygulama Yöneticisi içinde yapılandırılan kuralları yedekleyin. <font fgcolor="#ff0000">İzinlere bağlı olarak, geri yükleme sırasında tüm kurallar yeniden uygulanamayabilir.</font> </string>
-    <string name="backup_extras_description">Uygulama izinlerini, pil tasarrufu ve veri kullanım seçeneklerini, MagiskHide durumunu, SSAID vs. yedekleyin. <font fgcolor="#ff0000">İzinlere bağlı olarak, tüm ekler geri yüklenemez.</font> </string>
+    <string name="backup_rules_description">Uygulama Yöneticisi içinde yapılandırılan kuralları yedekleyin. <font fgcolor="#ff0000">İzinlere bağlı olarak, geri yükleme sırasında tüm kurallar yeniden uygulanamayabilir.</font></string>
+    <string name="backup_extras_description">Uygulama izinlerini, pil tasarrufu ve veri kullanım seçeneklerini, MagiskHide durumunu, SSAID vs. yedekleyin. <font fgcolor="#ff0000">İzinlere bağlı olarak, tüm ekler geri yüklenemez.</font></string>
     <string name="backup_extras">Ekstralar</string>
     <string name="backup_cache_description"><b>Önbellek</b>, <b>no_cache</b> ve <b>no_backup</b> klasörlerini yedekleyin.</string>
     <string name="backup_obb_media_description">OBB ve medya klasörlerini yedekleyin.</string>
@@ -1403,4 +1403,40 @@
     <string name="app_manager_is_unlocked">Uygulama Yöneticisi kilidi açıldı</string>
     <string name="pref_enable_persistent_session">Uygulama Yöneticisini arka planda çalıştır</string>
     <string name="pref_enable_persistent_session_msg">Uygulama Yöneticisi\'ni arka planda çalıştırmak, başlatma gecikmesini azaltır. Uygulama Yöneticisi\'ni sık sık kullanıyorsanız faydalıdır.</string>
+    <string name="netpolicy_reject_metered_data">Kotalı ağlarda verileri reddet</string>
+    <string name="netpolicy_allow_metered_background_data">Veri Tasarrufu açıkken bile kotalı ağlarda arka plan verilerine izin ver</string>
+    <string name="pref_toggle_internet_msg">Uygulama Yöneticisi\'nde İnternet özelliklerini etkinleştir</string>
+    <string name="finder_title">Bulucu</string>
+    <string name="launch_activity_dialog_message">Uygulama Yöneticisi, <b>Arama yardımcısı</b> (genellikle Google Yardımcı) aracılığıyla etkinliği başlatmaya çalışıyor, ancak yetersiz izin nedeniyle bunu yapamıyor. Etkinliği açmak için lütfen <b>Arama yardımcısını</b> elle etkinleştirin (bu genellikle Ana Ekran düğmesine uzun tıklayarak yapılır). Orijinal yardımcıya geri dönmek için etkinliği başlatmayı bitirdikten sonra <b>Kapat</b> düğmesine tıklayın.</string>
+    <string name="select_filter">Filtre seç</string>
+    <string name="size_in_bytes">Boyut (bayt)</string>
+    <string name="invalid_regex">Geçersiz düzenli ifade!</string>
+    <string name="value_cannot_be_empty">Değer boş olamaz!</string>
+    <string name="date">Tarih</string>
+    <string name="pref_use_vt">VirusTotal Kullan</string>
+    <string name="virus_total">VirusTotal</string>
+    <string name="pref_use_log_viewer">Günlük Görüntüleyici Kullan</string>
+    <string name="pref_installer">Kurucuyu kullan</string>
+    <string name="mode_of_op_custom_command_title">Özel Komut</string>
+    <string name="mode_of_op_custom_command">Modlardan herhangi birini kullanamıyorsanız, Uygulama Yöneticisi\'ni ayrıcalıklı modda çalıştırmak için desteklenen herhangi bir kabuğu kullanarak aşağıdaki şu çalıştırabilirsiniz:</string>
+    <string name="netpolicy_reject_metered_background_data">Kotalı ağlarda arka plan verilerini reddet</string>
+    <string name="launch_activity_dialog_title">Etkinlik Başlat: Eylem Gerekli</string>
+    <string name="pref_use_vt_no_internet">VirusTotal\'ın çalışması için internet gerekli ancak etkin değil. Lütfen önce <a href="app-manager://settings/privacy_prefs/toggle_internet">“İnterneti kullan”</a> seçeneğini etkinleştirin.</string>
+    <string name="pref_cat_general">Genel</string>
+    <string name="status_remote_server_active">Uzak sunucu etkin</string>
+    <string name="status_remote_services_active">Uzak hizmetler etkin</string>
+    <string name="adb_pairing_searching_for_port">Aranıyor…</string>
+    <string name="adb_pairing_pairing_in_progress">Eşleştiriliyor…</string>
+    <string name="status_remote_server_inactive">Uzak sunucu etkin değil</string>
+    <string name="status_remote_services_inactive">Uzak hizmetler etkin değil</string>
+    <string name="adb_pairing_stop_searching">Durdur</string>
+    <string name="adb_pairing_input_pairing_code">Eşleştirme kodu</string>
+    <string name="adb_pairing_found_pairing_service_with_port">%d bağlantı noktasıyla bir hizmet bulundu</string>
+    <string name="status_connecting">Bağlanıyor…</string>
+    <string name="status_connecting_via_mode">%s ile bağlanıyor</string>
+    <string name="status_connected_via_mode">%s ile bağlandı</string>
+    <string name="status_not_connected_via_mode">%s ile bağlanamadı</string>
+    <string name="adb_pairing_instruction">Kablosuz hata ayıklamayı etkinleştirmek ve bir eşleştirme kodu oluşturmak için lütfen geliştirici seçeneklerine gidin.</string>
+    <string name="adb_pairing_pairing_code">Eşleştirme kodu</string>
+    <string name="adb_pairing_retry_pairing">Yeniden dene</string>
 </resources>
