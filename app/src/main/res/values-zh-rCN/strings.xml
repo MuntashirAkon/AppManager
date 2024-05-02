@@ -87,30 +87,30 @@
     <string name="license">许可协议</string>
     <string name="third_party">第三方库和图标</string>
     <string name="credits">鸣谢</string>
-    <string name="credits_message">致谢下列项目作者：
-\n- The Android Open Source Project
-\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
-\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
-\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
-\n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a>
-\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
-\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
-\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
-\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
-\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
-\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
-\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
-\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/eclipse/tm4e">tm4e</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a> </string>
+    <string name="credits_message">致谢下列项目作者： 
+\n- The Android Open Source Project 
+\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a> 
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a> 
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a> 
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a> 
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a> 
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a> 
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a> 
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a> 
+\n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a> 
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a> 
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a> 
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> 
+\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a> 
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a> 
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a> 
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a> 
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a> 
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a> 
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a> 
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a> 
+\n- <a href="https://github.com/eclipse/tm4e">tm4e</a> 
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a></string>
     <string name="word_wrap">自动换行</string>
     <string name="class_viewer">类查看器</string>
     <string name="toggle_class_listing">切换类列表</string>
@@ -693,8 +693,8 @@
     <string name="patch_level">安全补丁级别</string>
     <string name="backup_skip_signature_checks_description">还原校验和验证失败或具有与先前备份不同的 APK 签名的备份。</string>
     <string name="backup_multiple_description">使用一个单独<i>命名的</i>备份，而不是基本备份。</string>
-    <string name="backup_rules_description">备份 App Manager 内配置的规则。<font fgcolor="#ff0000">取决于权限，并非所有规则都可以在还原期间被重新应用。</font> </string>
-    <string name="backup_extras_description">备份应用权限、节电和数据使用选项、MagiskHide 状态、SSAID 等。<font fgcolor="#ff0000">取决于权限，并非所有提取的应用都可以被还原。</font>。 </string>
+    <string name="backup_rules_description">备份 App Manager 内配置的规则。<font fgcolor="#ff0000">取决于权限，并非所有规则都可以在还原期间被重新应用。</font></string>
+    <string name="backup_extras_description">备份应用权限、节电和数据使用选项、MagiskHide 状态、SSAID 等。<font fgcolor="#ff0000">取决于权限，并非所有提取的应用都可以被还原。</font></string>
     <string name="backup_extras">附加</string>
     <string name="backup_cache_description">备份<b>缓存</b>、<b>no_cache</b> 和 <b>no_backup</b> 文件夹。</string>
     <string name="backup_obb_media_description">备份 OBB 和媒体文件夹。</string>
@@ -950,7 +950,7 @@
     <string name="netpolicy_reject_background_data">拒绝后台数据</string>
     <string name="port_number_invalid">无效的端口号。</string>
     <string name="port_number_empty">端口号为空。</string>
-    <string name="adb_connect_port_number_description">端口号位于 <b>IP地址&amp;端口</b>部分，这部分在<b>设备名称</b>部分的下方。</string>
+    <string name="adb_connect_port_number_description">端口号位于 <b>IP地址&amp;端口</b>部分， 这部分在<b>设备名称</b>部分的下方。</string>
     <string name="port_number">端口</string>
     <string name="adb_connect">连接</string>
     <string name="wireless_debugging">无线调试</string>
