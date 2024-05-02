@@ -227,7 +227,6 @@
     <string name="select_all">Zaznacz wszystko</string>
     <string name="filter_apps_with_rules">Z regułami</string>
     <string name="filter_system_apps">Aplikacje systemowe</string>
-    <string name="cache">Wyklucz pamięć podręczną</string>
     <string name="blocking_rules">Reguły blokowania</string>
     <string name="whats_new">Co nowego</string>
     <string name="components">Komponenty</string>
@@ -560,7 +559,7 @@
     <string name="enable_battery_optimization">Włączyć optymalizację baterii\?</string>
     <string name="type_uri">URI</string>
     <string name="receivers">Odbiorniki</string>
-    <string name="backup_extras_description">Utwórz kopię zapasową uprawnień aplikacji, oszczędzania baterii, opcji wykorzystania danych, statusu MagiskHide, SSAID itp. <font fgcolor="#ff0000">W zależności od uprawnień, nie wszystkie dodatki mogą zostać przywrócone.</font> </string>
+    <string name="backup_extras_description">Utwórz kopię zapasową uprawnień aplikacji, oszczędzania baterii, opcji wykorzystania danych, statusu MagiskHide, SSAID itp. <font fgcolor="#ff0000">W zależności od uprawnień, nie wszystkie dodatki mogą zostać przywrócone.</font></string>
     <string name="backup_internal_data_description">Utwórz kopię zapasową folderów danych. Jeśli ta opcja jest wybrana, kopie zapasowe wewnętrznych folderów danych zostaną utworzone.</string>
     <string name="window_size">Rozmiar okna</string>
     <string name="refresh_rate">Częstotliwość odświeżania</string>
@@ -617,7 +616,7 @@
     <string name="pref_backup_android_keystore_msg">Nie wszystkie aplikacje będą działać po przywróceniu. Przywracanie KeyStore nie działa na większości urządzeń.</string>
     <string name="pref_backup_android_keystore">Twórz kopie zapasowe aplikacji używających Android KeyStore</string>
     <string name="backup_multiple_description">Utwórz oddzielną kopię zapasową <i> o nazwie</i> zamiast podstawowej kopii zapasowej.</string>
-    <string name="backup_rules_description">Utwórz kopię zapasową reguł skonfigurowanych w App Manager. <font fgcolor="#ff0000">W zależności od uprawnień, nie wszystkie reguły można ponownie zastosować podczas przywracania.</font> </string>
+    <string name="backup_rules_description">Utwórz kopię zapasową reguł skonfigurowanych w App Manager. <font fgcolor="#ff0000">W zależności od uprawnień, nie wszystkie reguły można ponownie zastosować podczas przywracania.</font></string>
     <string name="backup_external_data_description">Utwórz kopię zapasową zewnętrznych folderów danych.</string>
     <string name="backup_apk_files_description">Utwórz kopię zapasową tylko plików APK z katalogu źródłowego. <b>Źródło</b> musi być wybrane, aby to zadziałało.</string>
     <string name="vendor">Producent</string>
@@ -815,7 +814,7 @@
     <string name="app_signing_signatures">Sygnatury</string>
     <string name="soft_input">Tryb delikatnego wprowadzenia</string>
     <string name="authority">Autorytet</string>
-    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Kanał Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Społeczność</string>
     <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="subject">Temat</string>
@@ -1487,4 +1486,40 @@
     <string name="copy_profile_id">Skopiuj identyfikator profilu</string>
     <string name="profile_id">Identyfikator profilu</string>
     <string name="choose_a_profile_state">Wybierz stan profilu</string>
+    <string name="netpolicy_reject_metered_background_data">Odrzucaj dane podstawowe w sieciach pomiarowych</string>
+    <string name="pref_toggle_internet_msg">Aktywuj funkcje internetowe w App Manager</string>
+    <string name="launch_activity_dialog_message">App Manager próbuje uruchomić aktywność za pośrednictwem <b>asystenta wyszukiwania</b> (zwykle Asystenta Google), ale nie może tego zrobić z powodu niewystarczających uprawnień. Aby otworzyć aktywność, należy ręcznie aktywować <b>asystenta wyszukiwania</b> (co zwykle odbywa się poprzez przytrzymanie przycisku Ekran główny). Dotknij <b>Zamknij</b> po zakończeniu uruchamiania aktywności, aby powrócić do oryginalnego asystenta.</string>
+    <string name="status_remote_services_active">Usługi zdalne są aktywne</string>
+    <string name="status_remote_services_inactive">Usługi zdalne są nieaktywne</string>
+    <string name="status_connecting">Łączenie…</string>
+    <string name="status_not_connected_via_mode">Nie udało się połączyć przez %s</string>
+    <string name="adb_pairing_instruction">Przejdź do opcji programisty, aby włączyć debugowanie bezprzewodowe i wygenerować kod parowania.</string>
+    <string name="adb_pairing_pairing_in_progress">Parowanie…</string>
+    <string name="adb_pairing_retry_pairing">Ponów</string>
+    <string name="netpolicy_reject_metered_data">Odrzucaj dane w sieciach z pomiarem</string>
+    <string name="netpolicy_allow_metered_background_data">Zezwalaj na transmisję danych w tle w sieciach z pomiarem, nawet gdy włączone jest oszczędzanie danych</string>
+    <string name="launch_activity_dialog_title">Uruchom aktywność: Wymagane działanie</string>
+    <string name="finder_title">Wyszukiwarka</string>
+    <string name="select_filter">Wybierz filtr</string>
+    <string name="size_in_bytes">Rozmiar (bajty)</string>
+    <string name="invalid_regex">Nieprawidłowe wyrażenie regularne!</string>
+    <string name="value_cannot_be_empty">Wartość nie może być pusta!</string>
+    <string name="date">Data</string>
+    <string name="pref_use_vt">Używaj VirusTotal</string>
+    <string name="virus_total">VirusTotal</string>
+    <string name="pref_use_vt_no_internet">VirusTotal wymaga do działania Internetu, który nie jest włączony. Najpierw włącz opcję <a href="app-manager://settings/privacy_prefs/toggle_internet">\"Korzystaj z Internetu\"</a>.</string>
+    <string name="pref_use_log_viewer">Korzystaj z przeglądarki dziennika</string>
+    <string name="pref_installer">Używaj instalatora</string>
+    <string name="pref_cat_general">Ogólne</string>
+    <string name="status_remote_server_active">Zdalny serwer jest aktywny</string>
+    <string name="status_remote_server_inactive">Zdalny serwer jest nieaktywny</string>
+    <string name="status_connecting_via_mode">Łączenie przez %s</string>
+    <string name="status_connected_via_mode">Połączono przez %s</string>
+    <string name="adb_pairing_searching_for_port">Wyszukiwanie…</string>
+    <string name="adb_pairing_stop_searching">Zatrzymaj</string>
+    <string name="adb_pairing_input_pairing_code">Kod parowania</string>
+    <string name="adb_pairing_pairing_code">Kod parowania</string>
+    <string name="adb_pairing_found_pairing_service_with_port">Znaleziono usługę z portem %d</string>
+    <string name="mode_of_op_custom_command_title">Własna komenda</string>
+    <string name="mode_of_op_custom_command">Jeśli nie możesz użyć żadnego z trybów, możesz uruchomić poniższe polecenie przy użyciu dowolnej obsługiwanej powłoki, aby uruchomić App Manager w trybie uprzywilejowanym:</string>
 </resources>
