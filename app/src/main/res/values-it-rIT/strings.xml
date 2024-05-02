@@ -300,30 +300,30 @@
     </plurals>
     <string name="toggle_class_listing">Attiva o disattiva elenco classi</string>
     <string name="class_viewer">Visualizzatore classi</string>
-    <string name="credits_message">Agli autori di
-\n- Il progetto open source Android
-\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
-\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
-\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
-\n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a>
-\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
-\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
-\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
-\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
-\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
-\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
-\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
-\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/eclipse/tm4e">tm4e</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a> </string>
+    <string name="credits_message">Agli autori di 
+\n- Il progetto open source Android 
+\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a> 
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a> 
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a> 
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a> 
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a> 
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a> 
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a> 
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a> 
+\n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a> 
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a> 
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a> 
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> 
+\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a> 
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a> 
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a> 
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a> 
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a> 
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a> 
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a> 
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a> 
+\n- <a href="https://github.com/eclipse/tm4e">tm4e</a> 
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a></string>
     <string name="credits">Crediti</string>
     <string name="sdk_flags">Flag</string>
     <string name="sort_by_domain">Prima le app utente</string>
@@ -952,8 +952,8 @@
     <string name="enabled">Abilitato</string>
     <string name="install_location_prefer_external">Preferisci esterni</string>
     <string name="backup_multiple_description">Crea un backup separato denominato <i>named</i> invece del backup di base.</string>
-    <string name="backup_extras_description">Esegui il backup delle autorizzazioni delle app, del risparmio della batteria e delle opzioni di utilizzo dei dati, lo stato di MagiskHide, SSAID, etc. <font fgcolor="#ff0000">A seconda delle autorizzazioni, non tutti gli extra possono essere ripristinati.</font> </string>
-    <string name="backup_rules_description">Esegui il backup delle regole configurate in App Manager. <font fgcolor="#ff0000">A seconda delle autorizzazioni, non tutte le regole possono essere riapplicate durante il ripristino.</font> </string>
+    <string name="backup_extras_description">Esegui il backup delle autorizzazioni delle app, del risparmio della batteria e delle opzioni di utilizzo dei dati, lo stato di MagiskHide, SSAID, etc. <font fgcolor="#ff0000">A seconda delle autorizzazioni, non tutti gli extra possono essere ripristinati.</font></string>
+    <string name="backup_rules_description">Esegui il backup delle regole configurate in App Manager. <font fgcolor="#ff0000">A seconda delle autorizzazioni, non tutte le regole possono essere riapplicate durante il ripristino.</font></string>
     <string name="unlock_app_manager">Sblocca App Manager</string>
     <string name="screen_lock_msg">Blocca App Manager utilizzando il blocco schermo Android</string>
     <string name="type_component_name">Nome componente</string>
@@ -966,7 +966,6 @@
     <string name="input_key_password">Password chiave</string>
     <string name="organization_name">Nome organizzazione (O)</string>
     <string name="common_name">Nome comune (CN)</string>
-    <string name="cache">Cache</string>
     <string name="orientation_user_landscape">Panorama utente</string>
     <string name="navigation_dial_pad">Tastiera telefono</string>
     <string name="install_location">Posizione di installazione</string>
@@ -1447,4 +1446,40 @@
     <string name="copy_profile_id">Copia ID profilo</string>
     <string name="profile_id">ID profilo</string>
     <string name="choose_a_profile_state">Seleziona stato del profilo</string>
+    <string name="netpolicy_reject_metered_background_data">Rifiuta dati in background sulle reti a consumo</string>
+    <string name="netpolicy_reject_metered_data">Rifiuta dati sulle reti a consumo</string>
+    <string name="netpolicy_allow_metered_background_data">Consenti dati in background su reti a consumo anche quando è attivo il Risparmio dati</string>
+    <string name="pref_toggle_internet_msg">Attiva funzionalità Internet in Gestione app</string>
+    <string name="launch_activity_dialog_message">App Manager sta tentando di avviare l\'attività tramite <b>Assistente di ricerca</b> (solitamente Assistente Google), ma non è in grado di farlo a causa di autorizzazioni insufficienti. Per aprire l\'attività, attiva manualmente l\'<b>Assistente di ricerca</b> (di solito facendo clic a lungo sul pulsante Home). Fai clic sul pulsante <b>Chiudi</b> dopo aver finito di avviare l\'attività per tornare all\'assistente originale.</string>
+    <string name="select_filter">Seleziona un filtro</string>
+    <string name="size_in_bytes">Dimensioni (byte)</string>
+    <string name="invalid_regex">Espressione regolare non valida!</string>
+    <string name="value_cannot_be_empty">Il valore non può essere vuoto!</string>
+    <string name="date">Data</string>
+    <string name="pref_use_vt">Usa VirusTotal</string>
+    <string name="virus_total">VirusTotal</string>
+    <string name="finder_title">Trovatore</string>
+    <string name="launch_activity_dialog_title">Attività di lancio: azione richiesta</string>
+    <string name="pref_use_vt_no_internet">VirusTotal richiede il funzionamento di Internet, che non è abilitato. Abilita prima <a href="app-manager://settings/privacy_prefs/toggle_internet">\"Usa Internet\"</a>.</string>
+    <string name="pref_use_log_viewer">Usa visualizzatore registro</string>
+    <string name="pref_installer">Usa programma di installazione</string>
+    <string name="pref_cat_general">Generale</string>
+    <string name="status_remote_server_active">Il server remoto è attivo</string>
+    <string name="status_remote_server_inactive">Il server remoto è inattivo</string>
+    <string name="status_remote_services_active">I servizi remoti sono attivi</string>
+    <string name="status_remote_services_inactive">I servizi remoti sono inattivi</string>
+    <string name="status_connecting">Connessione…</string>
+    <string name="status_connecting_via_mode">Connessione tramite %s</string>
+    <string name="status_connected_via_mode">Connesso tramite %s</string>
+    <string name="status_not_connected_via_mode">Impossibile connettersi tramite %s</string>
+    <string name="adb_pairing_instruction">Vai alle opzioni sviluppatore per abilitare il debug wireless e generare un codice di accoppiamento.</string>
+    <string name="adb_pairing_searching_for_port">Ricerca…</string>
+    <string name="adb_pairing_stop_searching">Ferma</string>
+    <string name="adb_pairing_input_pairing_code">Codice abbinamento</string>
+    <string name="adb_pairing_pairing_code">Codice abbinamento</string>
+    <string name="adb_pairing_found_pairing_service_with_port">Trovato un servizio con porta %d</string>
+    <string name="adb_pairing_pairing_in_progress">Accoppiamento…</string>
+    <string name="adb_pairing_retry_pairing">Riprova</string>
+    <string name="mode_of_op_custom_command_title">Comando personalizzato</string>
+    <string name="mode_of_op_custom_command">Se non riesci a utilizzare nessuna delle modalità, puoi eseguire il comando seguente utilizzando qualsiasi shell supportata per eseguire App Manager in modalità privilegiata:</string>
 </resources>
