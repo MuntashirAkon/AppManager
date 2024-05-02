@@ -44,30 +44,30 @@
     <string name="toggle_class_listing">تبديل قائمة الفصل</string>
     <string name="class_viewer">عارض الفصل</string>
     <string name="word_wrap">تفعيل التفاف النص</string>
-    <string name="credits_message">لمؤلفي
-\n- مشروع Android مفتوح المصدر
-\n- <a href="https://github.com/zhaobozhen/libraries"> مكتبات شراب مسكر </a>
-\n- <a href="https://github.com/butzist/ActivityLauncher"> مشغل النشاط </a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info"> معلومات Apps_packages </a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor"> AppsMonitor </a>
-\n- <a href="https://github.com/8enet/AppOpsX"> AppOpsX </a>
-\n- مكتبة سجل التغيير <a href="https://github.com/gabrielemariotti/changeloglib"> </a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus"> ClassySharkAndroid </a>
-\n- محرر <a href="https://github.com/billthefarmer/editor"> </a>
-\n- <a href="https://github.com/Raival-e/File-Explorer"> مستكشف الملفات </a>
-\n- <a href="https://github.com/nex3z/FlowLayout"> FlowLayout </a>
-\n- <a href="https://github.com/k3b/intent-intercept"> اعتراض النية </a>
-\n- <a href="https://github.com/YarikSOffice/lingver"> Lingver </a>
-\n- <a href="https://github.com/topjohnwu/Magisk"> Magisk </a>
-\n- <a href="https://github.com/zhanghai/MaterialFiles"> ملفات المواد </a>
-\n- <a href="https://github.com/pluscubed/matlog"> MatLog </a>
-\n- <a href="https://github.com/matrix-org/matrix-android-sdk"> Matrix Android SDK </a>
-\n- <a href="https://github.com/jensstein/oandbackup"> OAndBackup </a>
-\n- <a href="https://github.com/open-keychain/open-keychain"> Open Keychain </a>
-\n- <a href="https://github.com/Aefyr/SAI"> SAI </a>
-\n- <a href="https://github.com/RikkaApps/Shizuku"> شيزوكو </a>
-\n- <a href="https://github.com/eclipse/tm4e"> tm4e </a>
-\n- <a href="https://github.com/tuyafeng/Watt"> واط </a> </string>
+    <string name="credits_message">لمؤلفي 
+\n- مشروع Android مفتوح المصدر 
+\n- <a href="https://github.com/zhaobozhen/libraries"> مكتبات شراب مسكر </a> 
+\n- <a href="https://github.com/butzist/ActivityLauncher"> مشغل النشاط </a> 
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info"> معلومات Apps_packages </a> 
+\n- <a href="https://github.com/zhaobao/AppsMonitor"> AppsMonitor </a> 
+\n- <a href="https://github.com/8enet/AppOpsX"> AppOpsX </a> 
+\n- مكتبة سجل التغيير <a href="https://github.com/gabrielemariotti/changeloglib"> </a> 
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus"> ClassySharkAndroid </a> 
+\n- محرر <a href="https://github.com/billthefarmer/editor"> </a> 
+\n- <a href="https://github.com/Raival-e/File-Explorer"> مستكشف الملفات </a> 
+\n- <a href="https://github.com/nex3z/FlowLayout"> FlowLayout </a> 
+\n- <a href="https://github.com/k3b/intent-intercept"> اعتراض النية </a> 
+\n- <a href="https://github.com/YarikSOffice/lingver"> Lingver </a> 
+\n- <a href="https://github.com/topjohnwu/Magisk"> Magisk </a> 
+\n- <a href="https://github.com/zhanghai/MaterialFiles"> ملفات المواد </a> 
+\n- <a href="https://github.com/pluscubed/matlog"> MatLog </a> 
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk"> Matrix Android SDK </a> 
+\n- <a href="https://github.com/jensstein/oandbackup"> OAndBackup </a> 
+\n- <a href="https://github.com/open-keychain/open-keychain"> Open Keychain </a> 
+\n- <a href="https://github.com/Aefyr/SAI"> SAI </a> 
+\n- <a href="https://github.com/RikkaApps/Shizuku"> شيزوكو </a> 
+\n- <a href="https://github.com/eclipse/tm4e"> tm4e </a> 
+\n- <a href="https://github.com/tuyafeng/Watt"> واط </a></string>
     <string name="credits">الإشادات</string>
     <string name="third_party">مكتبات وأيقونات الطرف الثالث</string>
     <string name="license">الرخصة</string>
@@ -305,7 +305,7 @@
     <string name="block_unblock_trackers_description">حظر أو إلغاء حظر الإعلانات ومكونات التتبع في جميع التطبيقات المثبتة</string>
     <string name="clear_cache">مسح التخزين المؤقت</string>
     <string name="pref_import_existing">استيراد القواعد الموجودة</string>
-    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager"> GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager"> GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager"> Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager"> Codeberg</a></string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">جيتهب</a> • <a href="https://gitlab.com/muntashir/AppManager">جيتلاب</a> • <a href="https://0xacab.org/muntashir/AppManager">ارتق</a> • <a href="https://codeberg.org/muntashir/AppManager">كودبيرق</a></string>
     <string name="source_code">الشفرة المصدرية</string>
     <string name="update">تحديث</string>
     <string name="install">تثبيت</string>
@@ -905,8 +905,8 @@
     <string name="backup_obb_media_description">النسخ الاحتياطي لمجلدات OBB والوسائط.</string>
     <string name="backup_cache_description">نسخ <b> ذاكرة التخزين المؤقت</b>، <b>no_cache</b> و <b>no_backup</b> المجلدات.</string>
     <string name="backup_extras">إضافية</string>
-    <string name="backup_extras_description">قم بعمل نسخة احتياطية من أذونات التطبيق ، وتوفير البطارية وخيارات استخدام البيانات ، وحالة MagiskHide ، و SSAID ، وما إلى ذلك. <font fgcolor="#ff0000"> اعتمادا على الأذونات ، لا يمكن استعادة جميع الإضافات. </font> </string>
-    <string name="backup_rules_description">قواعد النسخ الاحتياطي التي تم تكوينها داخل مدير التطبيقات. <font fgcolor="#ff0000"> اعتمادًا على الأذونات ، لا يمكن إعادة تطبيق جميع القواعد أثناء الاستعادة. </font> </string>
+    <string name="backup_extras_description">نسخ احتياطي لأذونات التطبيق، وتوفير البطارية وخيارات استخدام البيانات، وحالة MagiskHide، وSSAID، وما إلى ذلك. <font fgcolor="#ff0000">اعتمادًا على الأذونات، لا يمكن استعادة جميع الإضافات.</font></string>
+    <string name="backup_rules_description">قواعد النسخ الاحتياطي التي تم تكوينها داخل مدير التطبيقات. <font fgcolor="#ff0000"> اعتمادًا على الأذونات ، لا يمكن إعادة تطبيق جميع القواعد أثناء الاستعادة. </font></string>
     <string name="backup_multiple_description">قم بإنشاء نسخة احتياطية منفصلة <i> باسم </i> بدلاً من النسخة الاحتياطية الأساسية.</string>
     <string name="patch_level">مستوى التصحيح</string>
     <string name="selinux">امان لينكس المحسن</string>
@@ -1109,13 +1109,13 @@
     <string name="netpolicy_reject_background_data">ارفض بيانات الخلفية</string>
     <string name="port_number_invalid">رقم المنفذ غير صحيح.</string>
     <string name="port_number_empty">رقم المنفذ فارغ.</string>
-    <string name="adb_connect_port_number_description">يوجد رقم المنفذ أسفل قسم <b>عنوان IP &amp; المنفذ</b> أسفل قسم <b>اسم الجهاز</b> مباشرةً.</string>
+    <string name="adb_connect_port_number_description">يوجد رقم المنفذ ضمن <b>عنوان IP &amp; قسم المنفذ</b> أسفل قسم <b>اسم الجهاز</b> مباشرة.</string>
     <string name="port_number">المنفذ</string>
     <string name="adb_connect">اتصال</string>
     <string name="wireless_debugging">التصحيح اللاسلكي</string>
     <string name="unknown_net_policy">سياسة شبكة غير معروفة (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">تعذر منع %1$s من العمل في الخلفية</string>
-    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org"> ماتريكس </a> • <a href="https://t.me/AppManagerChannel"> تيليجرام </a> • <a href="https://twitter.com/AppManagerNews"> تويتر </a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">ماتريكس</a> • <a href="https://t.me/AppManagerChannel">تيلجرام</a> • <a href="https://twitter.com/AppManagerNews">تويتر</a></string>
     <string name="community">المجتمع</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="zero">تعذر استيراد %1$d نسخة احتياطية</item>
@@ -1575,4 +1575,40 @@
     <string name="copy_profile_id">نسخ معرف الملف السخصي</string>
     <string name="profile_id">معرف الملف الشخصي</string>
     <string name="choose_a_profile_state">حدد حالة الملف الشخصي</string>
+    <string name="pref_toggle_internet_msg">قم بتنشيط ميزات الإنترنت في مدير التطبيقات</string>
+    <string name="pref_use_vt_no_internet">يتطلب فايروس توتال وجود إنترنت لكي يعمل، وهو أمر غير ممكّن. الرجاء تمكين <a href="app-manager://settings/privacy_prefs/toggle_internet">\"استخدام الإنترنت\"</a> أولاً.</string>
+    <string name="netpolicy_reject_metered_background_data">رفض بيانات الخلفية على الشبكات المقننة</string>
+    <string name="netpolicy_reject_metered_data">رفض البيانات على الشبكات المقننة</string>
+    <string name="netpolicy_allow_metered_background_data">السماح ببيانات الخلفية على الشبكات المقننة حتى عند تشغيل توفير البيانات</string>
+    <string name="launch_activity_dialog_title">إطلاق النشاط: الإجراء مطلوب</string>
+    <string name="launch_activity_dialog_message">يحاول مدير التطبيقات تشغيل النشاط عبر <b>مساعد البحث</b> (مساعد Google عادةً)، لكنه غير قادر على القيام بذلك بسبب عدم كفاية الإذونات المطلوبة. لفتح النشاط، يرجى تنشيط <b>مساعد البحث</b> يدويًا (والذي يتم عادةً عن طريق النقر لفترة طويلة على زر الصفحة الرئيسية). انقر فوق الزر <b>إغلاق</b> بعد الانتهاء من تشغيل النشاط للعودة إلى المساعد الأصلي.</string>
+    <string name="finder_title">الباحث</string>
+    <string name="select_filter">اختر مرشحا</string>
+    <string name="size_in_bytes">الحجم (بايت)</string>
+    <string name="invalid_regex">تعبير عادي غير صالح!</string>
+    <string name="value_cannot_be_empty">لا يمكن أن تكون القيمة فارغة!</string>
+    <string name="date">التاريخ</string>
+    <string name="pref_use_vt">استخدم فايروس توتال</string>
+    <string name="virus_total">فايروس توتال</string>
+    <string name="pref_use_log_viewer">استخدم عارض السجل</string>
+    <string name="pref_installer">استخدم المثبت</string>
+    <string name="pref_cat_general">عامّ</string>
+    <string name="status_remote_server_active">الخادم البعيد نشط</string>
+    <string name="status_remote_server_inactive">الخادم البعيد غير نشط</string>
+    <string name="status_remote_services_active">الخدمات البعيدة نشطة</string>
+    <string name="status_remote_services_inactive">الخدمات البعيدة غير نشطة</string>
+    <string name="status_connecting">جارِ الاتصال…</string>
+    <string name="status_connecting_via_mode">الاتصال عبر %s</string>
+    <string name="status_connected_via_mode">متصل عبر %s</string>
+    <string name="status_not_connected_via_mode">تعذر الاتصال عبر %s</string>
+    <string name="adb_pairing_instruction">يرجى الانتقال إلى خيارات المطور لتمكين تصحيح الأخطاء اللاسلكية وإنشاء رمز الاقتران.</string>
+    <string name="adb_pairing_searching_for_port">جار البحث…</string>
+    <string name="adb_pairing_stop_searching">توقَّف</string>
+    <string name="adb_pairing_input_pairing_code">رمز الاقتران</string>
+    <string name="adb_pairing_pairing_code">رمز الاقتران</string>
+    <string name="adb_pairing_found_pairing_service_with_port">تم العثور على خدمة بالمنفذ %d</string>
+    <string name="adb_pairing_pairing_in_progress">قيد الإقتران…</string>
+    <string name="mode_of_op_custom_command_title">أمر مخصص</string>
+    <string name="mode_of_op_custom_command">إذا لم تتمكن من استخدام أي من الأوضاع، فيمكنك تشغيل الأمر التالي باستخدام أي Shell مدعوم لتشغيل مدير التطبيقات في الوضع المميز:</string>
+    <string name="adb_pairing_retry_pairing">حاول مرَّةً أخرى</string>
 </resources>
