@@ -1196,7 +1196,9 @@
     <string name="search_type_contains">يحتوي على</string>
     <string name="search_type_prefix">بادئه</string>
     <string name="search_type_suffix">لاحقة</string>
-    <string name="pref_default_blocking_method_description">طريقة للاستخدام افتراضيًا في الأماكن التي لا يوجد فيها خيار لتحديد طريقة الحظر.</string>
+    <string name="pref_default_blocking_method_description">طريقة يتم استخدامها بشكل افتراضي في الأماكن التي لا يوجد فيها خيار لتحديد طريقة الحظر.
+\n
+\n<b>ملاحظة:</b> لا يعمل \"IFW\" مع مقدمي الخدمة، ويتم استخدام \"disable\" بدلاً من ذلك.</string>
     <string name="intent_firewall">IFW</string>
     <string name="pref_intent_firewall_description">منع المكونات باستخدام Intent Firewall فقط. لا يوصى به لأن بعض تطبيقات النظام يمكنها تجاوز جدران الحماية.</string>
     <string name="search_type_regular_expressions">ريجيس</string>
@@ -1609,6 +1611,7 @@
     <string name="adb_pairing_found_pairing_service_with_port">تم العثور على خدمة بالمنفذ %d</string>
     <string name="adb_pairing_pairing_in_progress">قيد الإقتران…</string>
     <string name="mode_of_op_custom_command_title">أمر مخصص</string>
-    <string name="mode_of_op_custom_command">إذا لم تتمكن من استخدام أي من الأوضاع، فيمكنك تشغيل الأمر التالي باستخدام أي Shell مدعوم لتشغيل مدير التطبيقات في الوضع المميز:</string>
+    <string name="mode_of_op_custom_command">إذا لم تتمكن من استخدام أي من الأوضاع، فيمكنك تشغيل الأمر التالي باستخدام أي طرفية مدعومة لتشغيل مدير التطبيقات في الوضع المميز:</string>
     <string name="adb_pairing_retry_pairing">حاول مرَّةً أخرى</string>
+    <string name="mode_of_op_alternative_custom_command">إذا تلقيت خطأ \"تم رفض الإذن\" في الأمر أعلاه، فقم بتشغيل الأمر التالي بدلاً من ذلك:</string>
 </resources>
