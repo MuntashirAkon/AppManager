@@ -6,8 +6,8 @@
     <string name="intro$main$$contributing-title">贡献</string>
     <string name="intro$main$buiding">在位于源码根目录下的BUILDING文件中可以获得编译指导。</string>
     <string name="titlepage$user_manual">{\\huge\\bfseries 用户手册\\par}</string>
-    <string name="intro$main$translations">App Manager 不接受直接通过PR/MR进行的翻译。翻译仅通过 Weblate 进行自动化管理。
-\n要加入翻译团队，请访问 \\url{https://hosted.weblate.org/engage/app-manager/}。</string>
+    <string name="intro$main$translations">App Manager 不接受直接通过pull/merge进行的翻译。翻译通过Hosted Weblate进行管理。
+\n要翻译App Manager，请访问 \\url{https://hosted.weblate.org/engage/app-manager/}。</string>
     <string name="intro$main$supported-versions">当前，支持的版本是 v3.0.0 -- v3.0.3（稳定版），v3.1.0（alpha 和 debug 版）。先前版本的 App
 \nManager 可能包含安全漏洞，不应继续使用。</string>
     <string name="intro$main$intro">App Manager 是一个高级的 Android 包管理器。
@@ -116,16 +116,17 @@
 \n \\item \\colorbox{AMYellow}{\\textcolor{black}{黄色星标}} -- 可调试的应用
 \n \\item \\textcolor{AMOrange}{橙色 \\textit{日期}} -- 应用可读取日志
 \n \\item \\textcolor{AMOrange}{橙色 \\textit{UID}} -- 用户 ID 在应用间被共享
-\n \\item \\textcolor{AMOrange}{橙色 \\textit{SDK}} -- 使用明文网络通信(如 HTTP)
+\n \\item \\textcolor{AMOrange}{橙色 \\textit{SDK}} -- 使用明文网络通信(即 HTTP)
 \n \\item \\textcolor{red}{红色 \\textit{包名}} -- 应用禁止清除数据
 \n \\item \\textcolor{red}{红色\\textit{备份标识}} -- 已卸载的应用存在一个或多个备份
+\n 在App Manager中
 \n \\item \\textcolor{AMOrange}{橙色\\textit{备份标识}} -- 备份过期,
-\n 如基本备份中包含已安装的应用的旧版本
+\n 即基本备份中包含已安装的应用的旧版本
 \n \\item \\textcolor{AMDarkCyan}{深蓝绿色 \\textit{备份标识}} -- 备份在期,
-\n 如基本备份中包含已安装应用的相同或更高版本
+\n 即基本备份中包含已安装应用的相同或更高版本
 \n \\item \\textcolor{AMDarkCyan}{深蓝绿色 \\textit{包名}} -- 已强行停止运行的应用
 \n \\item \\textcolor{AMDarkCyan}{深蓝绿色 \\textit{版本}} -- 不活跃的应用
-\n \\item \\textcolor{magenta}{紫红} -- 常驻应用(一直运行的应用)
+\n \\item \\textcolor{magenta}{紫红} -- 常驻应用(即一直运行的应用)
 \n\\end{itemize}</string>
     <string name="pages$main-page$instructions">点击 \\textbf{指南} 打开离线版的App Manager用户手册. 
 \n它也可能打开在线版本如果如果相应的功能拆分\\texttt{feat\\_docs}未安装, 
@@ -161,24 +162,26 @@
 \n使用列表选项中的 \\hyperlink{par:main-page-sort}{排序} ，可以选择应用列表的排序方式，退出应用后仍会保留排序方式。
 \n使用列表选项中的 \\hyperlink{par:main-page-filter}{过滤}，可以过滤列表选项。
 \n筛选也可以通过搜索栏进行过滤，并支持正则表达式。</string>
-    <string name="pages$main-page$batch-operations">批处理也可以在这个页面内进行。
+    <string name="pages$main-page$batch-operations">批处理或者多应用处理也可以在这个页面内进行。
 \n多选模式可以由点击任何应用图标或长按列表中的任何一项进入。
 \n进入后，仅需单击列表中的任何一项便可选中，而不是打开应用程序详情页。
-\n该模式下，批处理操作位于位于页面底部的多选菜单，包括包括：
+\n该模式下，批处理操作位于页面底部的多选菜单。操作包括：
 \n\\begin{itemize}
 \n \\item 将选中应用添加到 \\hyperref[sec:profiles-page]{配置}
 \n \\item \\hyperref[sec:backup-restore]{备份、恢复或删除}应用程序
 \n \\item 阻止应用中的追踪器
 \n \\item 清除应用数据或缓存
+\n \\item 导出App Manager中的屏蔽规则
+\n \\item 以MarkDown或XML格式导出应用列表
 \n \\item 启用/停用/强制停止/卸载应用程序
-\n \\item 导出屏蔽规则
 \n \\item 阻止应用的后台操作 (Android 7 及更高版本)
 \n \\item 导出APK文件到 \\texttt{AppManager/apks}
 \n \\item 设置\\hyperref[sec:net-policy]{联网规则}
 \n\\end{itemize}
 \n
 \n\\begin{tip}{无障碍}
-\n 进入多选模式后，键盘或遥控器的左右键呼出多选菜单。
+\n 进入多选模式后。
+\n 可以使用键盘或遥控器的左右键呼出多选菜单。
 \n\\end{tip}</string>
     <string name="pages$main-page$application-types">一个应用程序可以是 \\textbf{用户} 或 \\textbf{系统} 应用，同时存在以下后缀:
 \n\\begin{itemize}
@@ -658,4 +661,11 @@
     <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Chapter}</string>
     <string name="pages$main-page$1-click-ops">\\textbf{1-Click Ops}代表单击操作。
 \n这将在新活动中打开\\hyperref[sec:1-click-ops-page]{相应页面}。</string>
+    <string name="keywords$see_also">\\newcommand{\\KeywordSeeAlso}{另见:}</string>
+    <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\KeywordEndOfKeyWordInAlert}{.}</string>
+    <string name="titlepage$quotation">\\begin{quotation
+\n 睿智而缓慢。跑得快的人会跌倒。
+\n %\\sourceatright
+\n {---劳伦斯修士，\\textit{罗密欧与朱丽叶}}
+\n \\end{quotation}</string>
 </resources>
