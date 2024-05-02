@@ -1293,4 +1293,8 @@
         <item quantity="one">Konnte Komponenten von %1$d nicht entsperren</item>
         <item quantity="other">Konnte Komponenten von %1$d Apps nicht entsperren</item>
     </plurals>
+    <string name="netpolicy_reject_metered_background_data">Hintergrund Datennutzung in Mobilfunknetzwerken ablehnen</string>
+    <string name="netpolicy_reject_metered_data">Daten in Mobilfunknetzwerken zurückweisen</string>
+    <string name="netpolicy_allow_metered_background_data">Hintergrunddatennutzung in Mobilfunknetzwerken erlauben, selbst wenn der Datensparmodus aktiv ist</string>
+    <string name="pref_toggle_internet_msg">Internet Fähigkeiten von App Manager aktivieren</string>
 </resources>
