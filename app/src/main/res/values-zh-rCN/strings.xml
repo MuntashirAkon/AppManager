@@ -1362,7 +1362,7 @@
     <string name="title_description">描述</string>
     <string name="debloat_removal_replace_short_description">使用备选代替</string>
     <string name="pref_toggle_internet_msg">在App Manager中激活互联网功能</string>
-    <string name="launch_activity_dialog_title">启动活动：需要采取措施</string>
+    <string name="launch_activity_dialog_title">启动活动：需要采取操作</string>
     <string name="launch_activity_dialog_message">App Manager正在尝试通过<b>搜索助手</b>（通常为Google Assistant）启动活动，但由于权限不足而无法执行该操作。要打开活动，请手动打开<b>搜索助手</b>（通常通过长按Home键来完成）。在你启动活动完成后，点击<b>关闭</b>按钮以恢复为原始助手。</string>
     <string name="pref_use_vt">使用VirusTotal</string>
     <string name="virus_total">VirusTotal</string>
