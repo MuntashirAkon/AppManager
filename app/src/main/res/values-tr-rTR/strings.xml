@@ -1056,7 +1056,8 @@
     <string name="intent_firewall_and_disable">IFW + devre dışı bırak</string>
     <string name="intent_firewall">IFW</string>
     <string name="pref_default_blocking_method">Öntanımlı engelleme yöntemi</string>
-    <string name="pref_default_blocking_method_description">Engelleme yöntemi seçme seçeneğinin olmadığı yerlerde öntanımlı olarak kullanılacak yöntem.</string>
+    <string name="pref_default_blocking_method_description">Engelleme yöntemi seçme seçeneğinin olmadığı yerlerde öntanımlı olarak kullanılacak yöntem.
+\n<b>Not:</b> “IFW” sağlayıcılarla çalışmaz, bunun yerine “devre dışı bırak” kullanılır.</string>
     <string name="pref_intent_firewall_description">Bileşenleri yalnızca Intent Firewall kullanarak engelle. Bazı sistem uygulamaları güvenlik duvarlarını atlayabildiğinden tavsiye edilmez.</string>
     <string name="authenticating">Kimlik doğrulanıyor…</string>
     <string name="search_type_contains">İçerir</string>
@@ -1418,7 +1419,7 @@
     <string name="pref_use_log_viewer">Günlük Görüntüleyici Kullan</string>
     <string name="pref_installer">Kurucuyu kullan</string>
     <string name="mode_of_op_custom_command_title">Özel Komut</string>
-    <string name="mode_of_op_custom_command">Modlardan herhangi birini kullanamıyorsanız, Uygulama Yöneticisi\'ni ayrıcalıklı modda çalıştırmak için desteklenen herhangi bir kabuğu kullanarak aşağıdaki şu çalıştırabilirsiniz:</string>
+    <string name="mode_of_op_custom_command">Modlardan herhangi birini kullanamıyorsanız, Uygulama Yöneticisi\'ni ayrıcalıklı modda çalıştırmak için desteklenen herhangi bir kabukta şu komutu çalıştırabilirsiniz:</string>
     <string name="netpolicy_reject_metered_background_data">Kotalı ağlarda arka plan verilerini reddet</string>
     <string name="launch_activity_dialog_title">Etkinlik Başlat: Eylem Gerekli</string>
     <string name="pref_use_vt_no_internet">VirusTotal\'ın çalışması için internet gerekli ancak etkin değil. Lütfen önce <a href="app-manager://settings/privacy_prefs/toggle_internet">“İnterneti kullan”</a> seçeneğini etkinleştirin.</string>
@@ -1439,4 +1440,5 @@
     <string name="adb_pairing_instruction">Kablosuz hata ayıklamayı etkinleştirmek ve bir eşleştirme kodu oluşturmak için lütfen geliştirici seçeneklerine gidin.</string>
     <string name="adb_pairing_pairing_code">Eşleştirme kodu</string>
     <string name="adb_pairing_retry_pairing">Yeniden dene</string>
+    <string name="mode_of_op_alternative_custom_command">Yukarıdaki komutla “permission denied” hatası alırsanız, bunun yerine şu komutu çalıştırın:</string>
 </resources>
