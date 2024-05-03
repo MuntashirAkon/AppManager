@@ -1023,7 +1023,8 @@
     <string name="pref_default_blocking_method">默认拦截方式</string>
     <string name="intent_firewall_and_disable">IFW + PM Disable</string>
     <string name="intent_firewall">IFW</string>
-    <string name="pref_default_blocking_method_description">在没有拦截选项可选的情况下默认使用的方法。</string>
+    <string name="pref_default_blocking_method_description">在没有拦截选项可选的情况下默认使用的方法。
+\n<b>注意：</b> “IFW” 无法应用于 provider，使用的是“禁用”。</string>
     <string name="pref_intent_firewall_and_disable_description">使用 Intent Firewall 阻断组件并通过 PM 禁用它们。推荐 root 用户使用该方法。</string>
     <string name="pref_intent_firewall_description">仅使用 Intent Firewall 阻断组件。不推荐，因为有些系统程序可以绕过 IFW。</string>
     <string name="pref_disable_description">禁用组件。不推荐 root 用户使用，因为程序可以绕过这个。在 ADB 模式下，可以使用此方法禁用仅测试应用程序。</string>
@@ -1395,6 +1396,7 @@
     <string name="adb_pairing_pairing_in_progress">配对中…</string>
     <string name="adb_pairing_retry_pairing">重试</string>
     <string name="mode_of_op_custom_command_title">自定义命令</string>
-    <string name="mode_of_op_custom_command">如果您无法使用任何模式，您可以使用任何支持的 shell 运行以下命令，以在特权模式下运行App Manager：</string>
+    <string name="mode_of_op_custom_command">如果您无法使用任何模式，您可以在任何受支持的 shell 中运行以下命令，以在特权模式下运行App Manager：</string>
     <string name="finder_title">访达</string>
+    <string name="mode_of_op_alternative_custom_command">如果运行以上命令遇到“permission denied”错误，请运行下列命令：</string>
 </resources>
