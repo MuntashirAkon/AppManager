@@ -632,7 +632,8 @@
     <string name="running_services_logcat_hint">Fai clic su un elemento per aprire il visualizzatore di log con l\'ID processo corrispondente come filtro predefinito.</string>
     <string name="import_from_sb">Importa da Swift Backup 3.0 - 3.2</string>
     <string name="explore">Esplora</string>
-    <string name="pref_default_blocking_method_description">Metodo da utilizzare per impostazione predefinita in luoghi in cui non è disponibile alcuna opzione per selezionare un metodo di blocco.</string>
+    <string name="pref_default_blocking_method_description">Metodo da usare per impostazione predefinita in luoghi in cui non è disponibile alcuna opzione per selezionare un metodo di blocco.
+\n<b>Nota:</b> \"IFW\" non funziona con i fornitori, viene invece utilizzato \"disable\".</string>
     <string name="pref_intent_firewall_and_disable_description">Blocca i componenti utilizzando Intent Firewall e disabilitali. Metodo consigliato per utenti root.</string>
     <string name="pref_intent_firewall_description">Blocca i componenti utilizzando solo Intent Firewall. Non consigliato in quanto alcune app di sistema possono aggirare i firewall.</string>
     <string name="pref_disable_description">Disabilita solo i componenti. Non consigliato per utenti root poiché le app possono ignorarlo. Nelle modalità ADB, le app di solo test possono essere disabilitate con questo metodo.</string>
@@ -825,7 +826,7 @@
     <string name="state_foreground">Primo Piano</string>
     <string name="state_multithreaded">Multithread</string>
     <string name="process_state_with_extra">Stato: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g>(<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
-    <string name="open_pgp_provider">Provider OpenPGP</string>
+    <string name="open_pgp_provider">Fornitore OpenPGP</string>
     <string name="profiles">Profili</string>
     <string name="apps">Applicazioni</string>
     <string name="filter_apps">Applicazioni</string>
@@ -1481,5 +1482,6 @@
     <string name="adb_pairing_pairing_in_progress">Accoppiamento…</string>
     <string name="adb_pairing_retry_pairing">Riprova</string>
     <string name="mode_of_op_custom_command_title">Comando personalizzato</string>
-    <string name="mode_of_op_custom_command">Se non riesci a utilizzare nessuna delle modalità, puoi eseguire il comando seguente utilizzando qualsiasi shell supportata per eseguire App Manager in modalità privilegiata:</string>
+    <string name="mode_of_op_custom_command">Se non riesci a utilizzare nessuna delle modalità, puoi eseguire il comando seguente in qualsiasi shell supportata per eseguire App Manager in modalità privilegiata:</string>
+    <string name="mode_of_op_alternative_custom_command">Se ricevi un errore di \"autorizzazione negata\" con il comando precedente, esegui invece il comando seguente:</string>
 </resources>
