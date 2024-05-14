@@ -70,7 +70,7 @@ public class AMService extends RootService {
 
         @Override
         public boolean onTransact(int code, @NonNull Parcel data, @Nullable Parcel reply, int flags) throws RemoteException {
-            if (code == ProxyBinder.PROXY_BINDER_TRANSACT_CODE) {
+            if (code == ProxyBinder.PROXY_BINDER_TRANSACTION) {
                 data.enforceInterface(IRootServiceManager.class.getName());
                 transactRemote(data, reply);
                 return true;
