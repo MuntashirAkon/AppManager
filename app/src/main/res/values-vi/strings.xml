@@ -394,7 +394,7 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/eclipse/tm4e">tm4e</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a> </string>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a></string>
     <string name="starting_activity">Hoạt động bắt đầu: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="clear_data_message">Bạn có chắc muốn xoá dữ liệu của ứng dụng này không\?</string>
     <string name="clear_data_from_uninstalled_apps_description">Dọn sạch dữ liệu khỏi các ứng dụng được gỡ cài đặt bằng cờ <tt>DUNG_XOA_DU_LIEU</tt></string>
@@ -1017,10 +1017,11 @@
     <string name="smali">Smali</string>
     <string name="accessibility_service_description">Cho phép truy cập và sử dụng dịch vụ để thực hiện một số công việc như dọn cache trên thiết bị chưa root.</string>
     <string name="pref_import_backups_hint">Chọn thư mục chứa bản sao từ(Swift Backup/Titanium Backup) hoặc thư mục(OAndBackup)</string>
-    <string name="import_from_sb">Nhập bản sao từ Swift Backup 3.0 - 3.2</string>
+    <string name="import_from_sb">Nhập bản sao từ Swift Backup 3.0 – 3.2</string>
     <string name="intent_firewall_and_disable">IFW + tắt</string>
     <string name="pref_default_blocking_method">Phương pháp chặn mặc định</string>
-    <string name="pref_default_blocking_method_description">Phương pháp sẽ được sử dụng theo mặc định ở những nơi không có tùy chọn phương pháp chặn.</string>
+    <string name="pref_default_blocking_method_description">Phương pháp được sử dụng theo mặc định ở những nơi không có tùy chọn để chọn phương pháp chặn.
+\n<b>Lưu ý:</b> “IFW” không hoạt động với các nhà cung cấp, thay vào đó, “vô hiệu hóa” được sử dụng.</string>
     <string name="pref_disable_description">Chỉ tắt các thành phần. Không được khuyên dùng cho người dùng root vì các ứng dụng có thể vượt qua việc này. Ở chế độ ADB, các ứng dụng chỉ thử có thể được tắt bằng phương pháp này.</string>
     <string name="intent_firewall">IFW</string>
     <string name="pref_intent_firewall_and_disable_description">Chặn các thành phần bằng Intent Firewall và tắt chúng. Phương pháp này được khuyên dùng cho người dùng root.</string>
@@ -1380,7 +1381,7 @@
     <string name="adb_pairing_found_pairing_service_with_port">Đã tìm thấy dịch vụ có cổng %d</string>
     <string name="adb_pairing_retry_pairing">Thử lại</string>
     <string name="adb_pairing_pairing_in_progress">Đang ghép nối…</string>
-    <string name="mode_of_op_custom_command">Nếu không thể sử dụng bất kỳ chế độ nào, bạn có thể chạy lệnh sau bằng bất kỳ shell nào được hỗ trợ để chạy App Manager ở chế độ đặc quyền:</string>
+    <string name="mode_of_op_custom_command">Nếu không thể sử dụng bất kỳ chế độ nào, bạn có thể chạy lệnh sau trong bất kỳ shell nào được hỗ trợ để chạy App Manager ở chế độ đặc quyền:</string>
     <string name="launch_activity_dialog_message">App Manager đang cố gắng khởi chạy hoạt động thông qua <b>Trợ lý tìm kiếm</b> (thường là Trợ lý Google), nhưng không thể thực hiện được do không có đủ quyền. Để mở hoạt động, vui lòng kích hoạt <b>Trợ lý tìm kiếm</b> theo cách thủ công (việc này thường được thực hiện bằng cách nhấp và giữ nút Trang chủ). Nhấp vào nút <b>Đóng</b> sau khi bạn khởi chạy xong hoạt động để quay lại trợ lý ban đầu.</string>
     <string name="pref_use_vt_no_internet">VirusTotal yêu cầu Internet để hoạt động nhưng Internet chưa được kích hoạt. Trước tiên, hãy bật <a href="app-manager://settings/privacy_prefs/toggle_internet">“Sử dụng Internet”</a>.</string>
     <string name="netpolicy_reject_metered_background_data">Từ chối dữ liệu nền trên mạng có đồng hồ đo</string>
@@ -1395,4 +1396,5 @@
     <string name="status_connected_via_mode">Đã kết nối qua %s</string>
     <string name="status_not_connected_via_mode">Không thể kết nối qua %s</string>
     <string name="adb_pairing_instruction">Vui lòng điều hướng đến tùy chọn nhà phát triển để bật gỡ lỗi không dây và tạo mã ghép nối.</string>
+    <string name="mode_of_op_alternative_custom_command">Nếu bạn gặp lỗi “quyền bị từ chối” với lệnh trên, thay vào đó hãy chạy lệnh sau:</string>
 </resources>
