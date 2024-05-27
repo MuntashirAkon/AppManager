@@ -134,9 +134,12 @@ class ServerHandler implements DataTransmission.OnReceiveCallback, Closeable {
                         Shell.Result shellResult = shell.exec(shellCaller.getCommand());
                         result = new CallerResult();
                         Parcel parcel = Parcel.obtain();
-                        parcel.writeValue(shellResult);
-                        result.setReply(parcel.marshall());
-                        parcel.recycle();
+                        try {
+                            parcel.writeValue(shellResult);
+                            result.setReply(parcel.marshall());
+                        } finally {
+                            parcel.recycle();
+                        }
                 }
                 LifecycleAgent.sServerInfo.successCount++;
             } catch (Throwable e) {

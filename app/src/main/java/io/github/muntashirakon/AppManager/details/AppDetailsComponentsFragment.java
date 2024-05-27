@@ -454,12 +454,11 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             });
             holder.toggleSwitch.setOnLongClickListener(v -> {
                 PopupMenu popupMenu = new PopupMenu(activity, holder.toggleSwitch);
+                Menu menu = popupMenu.getMenu();
+                boolean canBlockByIfw = !(item.mainItem instanceof ProviderInfo) && SelfPermissions.canBlockByIFW();
                 popupMenu.inflate(R.menu.fragment_app_details_components_selection_actions);
-                if (!SelfPermissions.canBlockByIFW()) {
-                    Menu menu = popupMenu.getMenu();
-                    menu.findItem(R.id.action_ifw_and_disable).setEnabled(false);
-                    menu.findItem(R.id.action_ifw).setEnabled(false);
-                }
+                menu.findItem(R.id.action_ifw_and_disable).setEnabled(canBlockByIfw);
+                menu.findItem(R.id.action_ifw).setEnabled(canBlockByIfw);
                 popupMenu.setOnMenuItemClickListener(item1 -> {
                     int id = item1.getItemId();
                     String componentStatus;

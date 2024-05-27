@@ -29,6 +29,7 @@ import android.content.pm.ProviderInfo;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
 import android.content.pm.SuspendDialogInfo;
+import android.os.BadParcelableException;
 import android.os.Build;
 import android.os.DeadObjectException;
 import android.os.RemoteException;
@@ -39,7 +40,6 @@ import android.util.AndroidException;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.OptIn;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.RequiresPermission;
 import androidx.annotation.WorkerThread;
@@ -47,6 +47,7 @@ import androidx.annotation.WorkerThread;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -119,7 +120,7 @@ public final class PackageManagerCompat {
 
     @WorkerThread
     @NonNull
-    public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userId) throws RemoteException {
+    public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userId) {
         IPackageManager pm = getPackageManager();
         // Here we've compromised performance to fix issues in some devices where Binder transaction limit is too small.
         List<PackageInfo> refPackages = getInstalledPackagesInternal(pm, flags & NEEDED_FLAGS, userId);
@@ -146,10 +147,12 @@ public final class PackageManagerCompat {
             if (ThreadUtils.isInterrupted()) {
                 break;
             }
+            String packageName = refPackages.get(i).packageName;
             try {
-                packageInfoList.add(getPackageInfo(pm, refPackages.get(i).packageName, flags, userId));
+                packageInfoList.add(getPackageInfo(pm, packageName, flags, userId));
             } catch (Exception ex) {
-                throw (RemoteException) new RemoteException(ex.getMessage()).initCause(ex);
+                Log.e(TAG, "Could not retrieve package info for " + packageName + " and user " + userId);
+                continue;
             }
             if (i % 100 == 0) {
                 // Prevent DeadObjectException
@@ -160,12 +163,20 @@ public final class PackageManagerCompat {
     }
 
     @SuppressWarnings("deprecation")
-    private static List<PackageInfo> getInstalledPackagesInternal(@NonNull IPackageManager pm, int flags,
-                                                                  @UserIdInt int userHandle) throws RemoteException {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return pm.getInstalledPackages((long) flags, userHandle).getList();
+    private static List<PackageInfo> getInstalledPackagesInternal(@NonNull IPackageManager pm,
+                                                                  int flags,
+                                                                  @UserIdInt int userId) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                return pm.getInstalledPackages((long) flags, userId).getList();
+            }
+            return pm.getInstalledPackages(flags, userId).getList();
+        } catch (RemoteException e) {
+            return ExUtils.rethrowFromSystemServer(e);
+        } catch (BadParcelableException e) {
+            Log.w(TAG, "Could not retrieve all packages for user " + userId, e);
+            return Collections.emptyList();
         }
-        return pm.getInstalledPackages(flags, userHandle).getList();
     }
 
     @WorkerThread

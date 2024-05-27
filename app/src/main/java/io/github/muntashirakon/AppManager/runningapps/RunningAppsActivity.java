@@ -361,7 +361,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         forceStop.setEnabled(appsCount != 0 && appsCount == selectedItems.size());
         forceStop.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES));
         preventBackground.setEnabled(appsCount != 0 && appsCount == selectedItems.size());
-        boolean killEnabled = Ops.isRoot();
+        boolean killEnabled = Ops.isWorkingUidRoot();
         if (killEnabled && !mEnableKillForSystem) {
             for (ProcessItem item : selectedItems) {
                 if (item.uid < Process.FIRST_APPLICATION_UID) {

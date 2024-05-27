@@ -325,7 +325,7 @@ public class ActivityInterceptor extends BaseActivity {
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
         // Get Intent
         Intent intent = new Intent(getIntent());
-        mUseRoot = Ops.isRoot() && intent.getBooleanExtra(EXTRA_ROOT, false);
+        mUseRoot = Ops.isWorkingUidRoot() && intent.getBooleanExtra(EXTRA_ROOT, false);
         mUserHandle = intent.getIntExtra(EXTRA_USER_HANDLE, UserHandleHidden.myUserId());
         intent.removeExtra(EXTRA_ROOT);
         intent.removeExtra(EXTRA_USER_HANDLE);
@@ -572,7 +572,7 @@ public class ActivityInterceptor extends BaseActivity {
         // Setup root
         MaterialCheckBox useRootCheckBox = findViewById(R.id.use_root);
         useRootCheckBox.setChecked(mUseRoot);
-        useRootCheckBox.setVisibility(Ops.isRoot() ? View.VISIBLE : View.GONE);
+        useRootCheckBox.setVisibility(Ops.isWorkingUidRoot() ? View.VISIBLE : View.GONE);
         useRootCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (mUseRoot != isChecked) {
                 mUseRoot = isChecked;
@@ -815,7 +815,7 @@ public class ActivityInterceptor extends BaseActivity {
                 StringTokenizer tokenizer = new StringTokenizer(line, "\t");
                 switch (tokenizer.nextToken()) {
                     case "ROOT":
-                        mUseRoot = Ops.isRoot() && Boolean.parseBoolean(tokenizer.nextToken());
+                        mUseRoot = Ops.isWorkingUidRoot() && Boolean.parseBoolean(tokenizer.nextToken());
                         ++parseCount;
                         break;
                     case "USER":

@@ -2,25 +2,35 @@
 
 package io.github.muntashirakon.AppManager.ipc;
 
+import android.os.Build;
 import android.os.IBinder;
 import android.os.IInterface;
 import android.os.Parcel;
 import android.os.RemoteException;
+import android.os.ResultReceiver;
 import android.os.ServiceManager;
+import android.os.ShellCallback;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.collection.ArrayMap;
 
 import java.io.FileDescriptor;
 import java.util.Map;
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.compat.BinderCompat;
 import io.github.muntashirakon.AppManager.server.common.IRootServiceManager;
+import io.github.muntashirakon.compat.os.ParcelCompat2;
 
 // Copyright 2020 Rikka
 public class ProxyBinder implements IBinder {
-    public static final int PROXY_BINDER_TRANSACT_CODE = 2;
+    public static final int PROXY_BINDER_TRANSACTION = 2;
+    /**
+     * IBinder protocol transaction code: execute a shell command.
+     */
+    public static final int SHELL_COMMAND_TRANSACTION = ('_' << 24) | ('C' << 16) | ('M' << 8) | 'D';
 
     private static final Map<String, IBinder> sServiceCache = new ArrayMap<>();
 
@@ -44,6 +54,38 @@ public class ProxyBinder implements IBinder {
         return binder;
     }
 
+    /**
+     * @see BinderCompat#shellCommand(IBinder, FileDescriptor, FileDescriptor, FileDescriptor, String[], ShellCallback, ResultReceiver)
+     */
+    @RequiresApi(Build.VERSION_CODES.N)
+    public static void shellCommand(@NonNull IBinder binder,
+                                    @NonNull FileDescriptor in, @NonNull FileDescriptor out,
+                                    @NonNull FileDescriptor err,
+                                    @NonNull String[] args, @Nullable ShellCallback callback,
+                                    @NonNull ResultReceiver resultReceiver) throws RemoteException {
+        if (!(binder instanceof ProxyBinder)) {
+            return;
+        }
+        ProxyBinder proxyBinder = (ProxyBinder) binder;
+        Parcel data = Parcel.obtain();
+        Parcel reply = Parcel.obtain();
+        data.writeFileDescriptor(in);
+        data.writeFileDescriptor(out);
+        data.writeFileDescriptor(err);
+        data.writeStringArray(args);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ShellCallback.writeToParcel(callback, data);
+        }
+        resultReceiver.writeToParcel(data, 0);
+        try {
+            proxyBinder.transact(SHELL_COMMAND_TRANSACTION, data, reply, 0);
+            reply.readException();
+        } finally {
+            data.recycle();
+            reply.recycle();
+        }
+    }
+
     private final IBinder mOriginal;
 
     public ProxyBinder(@NonNull IBinder original) {
@@ -53,14 +95,16 @@ public class ProxyBinder implements IBinder {
     @Override
     public boolean transact(int code, @NonNull Parcel data, @Nullable Parcel reply, int flags) throws RemoteException {
         if (LocalServices.alive()) {
-            Parcel newData = Parcel.obtain();
+            IBinder targetBinder = LocalServices.getAmService().asBinder();
+            Parcel newData = ParcelCompat2.obtain(targetBinder);
             try {
                 newData.writeInterfaceToken(IRootServiceManager.class.getName());
                 newData.writeStrongBinder(mOriginal);
                 newData.writeInt(code);
+                newData.writeInt(flags);
                 newData.appendFrom(data, 0, data.dataSize());
                 // Transact via AMService
-                LocalServices.getAmService().asBinder().transact(PROXY_BINDER_TRANSACT_CODE, newData, reply, flags);
+                targetBinder.transact(PROXY_BINDER_TRANSACTION, newData, reply, 0);
             } finally {
                 newData.recycle();
             }

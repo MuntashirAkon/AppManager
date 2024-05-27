@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.servermanager;
 
 import android.annotation.SuppressLint;
+import android.annotation.UserIdInt;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -17,41 +18,59 @@ import androidx.annotation.WorkerThread;
 import java.io.File;
 import java.io.IOException;
 import java.net.Inet4Address;
+import java.security.SecureRandom;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
+import io.github.muntashirakon.AppManager.server.common.Constants;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 // Copyright 2016 Zheng Li
 public final class ServerConfig {
+    public static final String TAG = ServerConfig.class.getSimpleName();
+
     public static final int DEFAULT_ADB_PORT = 5555;
-    static String SOCKET_PATH = "am_socket";
-    private static int DEFAULT_LOCAL_SERVER_PORT = 60001;
+    static final String SERVER_RUNNER_EXEC_NAME = "run_server.sh";
+    private static final int DEFAULT_LOCAL_SERVER_PORT = 60001;
     private static final String LOCAL_TOKEN = "l_token";
-
-    static final String JAR_NAME = "am.jar";
-    static final String EXECUTABLE_FILE_NAME = "run_server.sh";
-
-    private static File sDestJarFile;
-    private static File sDestExecFile;
+    private static final File[] SERVER_RUNNER_EXEC = new File[2];
+    private static final File[] SERVER_RUNNER_JAR = new File[2];
     private static final SharedPreferences sPreferences = ContextUtils.getContext()
             .getSharedPreferences("server_config", Context.MODE_PRIVATE);
+    private static int sServerPort = DEFAULT_LOCAL_SERVER_PORT;
     private static volatile boolean sInitialised = false;
 
-    @AnyThread
+    @WorkerThread
     @NoOps
-    static void init(Context context, int userHandle) throws IOException {
+    public static void init(@NonNull Context context, @UserIdInt int userHandle) throws IOException {
         if (sInitialised) {
             return;
         }
 
-        File externalStorage = FileUtils.getExternalCachePath(context);
-        sDestJarFile = new File(externalStorage, JAR_NAME);
-        sDestExecFile = new File(externalStorage, EXECUTABLE_FILE_NAME);
-
+        // Setup paths
+        File externalCachePath = FileUtils.getExternalCachePath(context);
+        File externalMediaPath = FileUtils.getExternalMediaPath(context);
+        File deStorage = ContextUtils.getDeContext(context).getCacheDir();
+        SERVER_RUNNER_EXEC[0] = new File(externalCachePath, SERVER_RUNNER_EXEC_NAME);
+        SERVER_RUNNER_EXEC[1] = new File(deStorage, SERVER_RUNNER_EXEC_NAME);
+        SERVER_RUNNER_JAR[0] = new File(externalCachePath, Constants.JAR_NAME);
+        SERVER_RUNNER_JAR[1] = new File(deStorage, Constants.JAR_NAME);
+        // Copy JAR
+        boolean force = BuildConfig.DEBUG;
+        AssetsUtils.copyFile(context, Constants.JAR_NAME, SERVER_RUNNER_JAR[0], force);
+        AssetsUtils.copyFile(context, Constants.JAR_NAME, SERVER_RUNNER_JAR[1], force);
+        // Write script
+        AssetsUtils.writeServerExecScript(context, SERVER_RUNNER_EXEC[0], SERVER_RUNNER_JAR[0].getAbsolutePath());
+        AssetsUtils.writeServerExecScript(context, SERVER_RUNNER_EXEC[1], SERVER_RUNNER_JAR[1].getAbsolutePath());
+        // Update permission
+        FileUtils.chmod711(deStorage);
+        FileUtils.chmod644(SERVER_RUNNER_JAR[1]);
+        FileUtils.chmod644(SERVER_RUNNER_EXEC[1]);
         if (userHandle != 0) {
-            SOCKET_PATH += userHandle;
-            DEFAULT_LOCAL_SERVER_PORT += userHandle;
+            sServerPort += userHandle;
         }
 
         sInitialised = true;
@@ -60,19 +79,22 @@ public final class ServerConfig {
     @AnyThread
     @NonNull
     public static File getDestJarFile() {
-        return sDestJarFile;
+        // For compatibility only
+        return SERVER_RUNNER_JAR[0];
     }
 
     @AnyThread
     @NonNull
-    static String getClassPath() {
-        return sDestJarFile.getAbsolutePath();
+    public static String getServerRunnerCommand(int index) throws IndexOutOfBoundsException {
+        Log.e(TAG, "Classpath: %s", SERVER_RUNNER_JAR[index]);
+        Log.e(TAG, "Exec path: %s", SERVER_RUNNER_EXEC[index]);
+        return "sh " + SERVER_RUNNER_EXEC[index] + " " + getLocalServerPort() + " " + getLocalToken();
     }
 
     @AnyThread
     @NonNull
-    public static File getExecPath() {
-        return sDestExecFile;
+    public static String getServerRunnerAdbCommand() throws IndexOutOfBoundsException {
+        return getServerRunnerCommand(0) + " || " + getServerRunnerCommand(1);
     }
 
     /**
@@ -82,17 +104,17 @@ public final class ServerConfig {
      */
     @AnyThread
     @NonNull
-    static String getLocalToken() {
+    public static String getLocalToken() {
         String token = sPreferences.getString(LOCAL_TOKEN, null);
         if (TextUtils.isEmpty(token)) {
-            token = AssetsUtils.generateToken();
+            token = generateToken();
             sPreferences.edit().putString(LOCAL_TOKEN, token).apply();
         }
         return token;
     }
 
     @AnyThread
-    static boolean getAllowBgRunning() {
+    public static boolean getAllowBgRunning() {
         return sPreferences.getBoolean("allow_bg_running", true);
     }
 
@@ -110,8 +132,8 @@ public final class ServerConfig {
     }
 
     @AnyThread
-    static int getLocalServerPort() {
-        return DEFAULT_LOCAL_SERVER_PORT;
+    public static int getLocalServerPort() {
+        return sServerPort;
     }
 
     @WorkerThread
@@ -123,12 +145,6 @@ public final class ServerConfig {
     @WorkerThread
     @NonNull
     public static String getLocalServerHost(Context context) {
-        return getHostIpAddress();
-    }
-
-    @WorkerThread
-    @NonNull
-    private static String getHostIpAddress() {
         String ipAddress = Inet4Address.getLoopbackAddress().getHostAddress();
         if (ipAddress == null || ipAddress.equals("::1")) return "127.0.0.1";
         return ipAddress;
@@ -155,5 +171,19 @@ public final class ServerConfig {
                 || Build.HARDWARE.contains(GOLDFISH)
                 || Build.HARDWARE.contains(RANCHU)
                 || androidId == null;
+    }
+
+
+    @AnyThread
+    @NonNull
+    private static String generateToken() {
+        Context context = ContextUtils.getContext();
+        String[] wordList = context.getResources().getStringArray(R.array.word_list);
+        SecureRandom secureRandom = new SecureRandom();
+        String[] tokenItems = new String[3 + secureRandom.nextInt(3)];
+        for (int i = 0; i < tokenItems.length; ++i) {
+            tokenItems[i] = wordList[secureRandom.nextInt(wordList.length)];
+        }
+        return TextUtils.join("-", tokenItems);
     }
 }

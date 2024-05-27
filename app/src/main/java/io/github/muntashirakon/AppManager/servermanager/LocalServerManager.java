@@ -81,7 +81,7 @@ class LocalServerManager {
                 try {
                     mSession = createSession();
                 } catch (Exception e) {
-                    if (!Ops.isRoot() && !Ops.isAdb()) {
+                    if (!Ops.isDirectRoot() && !Ops.isAdb()) {
                         // Do not bother attempting to create a new session
                         throw new IOException("Could not create session", e);
                     }
@@ -172,14 +172,6 @@ class LocalServerManager {
         }
     }
 
-    @WorkerThread
-    @NonNull
-    private String getExecCommand() throws IOException {
-        Log.e(TAG, "classpath --> %s", ServerConfig.getClassPath());
-        Log.e(TAG, "exec path --> %s", ServerConfig.getExecPath());
-        return LocalServer.getExecCommand(mContext);
-    }
-
     @Nullable
     private volatile AdbStream mAdbStream;
     private volatile CountDownLatch mAdbConnectionWatcher = new CountDownLatch(1);
@@ -227,7 +219,8 @@ class LocalServerManager {
 
         try (OutputStream os = Objects.requireNonNull(mAdbStream).openOutputStream()) {
             os.write("id\n".getBytes());
-            String command = getExecCommand();
+            // ADB may require a fallback method
+            String command = ServerConfig.getServerRunnerAdbCommand();
             Log.d(TAG, "useAdbStartServer: %s", command);
             os.write((command + "\n").getBytes());
         }
@@ -243,7 +236,8 @@ class LocalServerManager {
         if (!Ops.hasRoot()) {
             throw new Exception("Root access denied");
         }
-        String command = getExecCommand(); // + "\n" + "supolicy --live 'allow qti_init_shell zygote_exec file execute'";
+        String command = ServerConfig.getServerRunnerCommand(0);
+        // + "\n" + "supolicy --live 'allow qti_init_shell zygote_exec file execute'";
         Log.d(TAG, "useRootStartServer: %s", command);
         Runner.Result result = Runner.runCommand(command);
 
@@ -263,7 +257,7 @@ class LocalServerManager {
     private void startServer() throws Exception {
         if (Ops.isAdb()) {
             useAdbStartServer();
-        } else if (Ops.isRoot()) {
+        } else if (Ops.isDirectRoot()) {
             useRootStartServer();
         } else throw new Exception("Neither root nor ADB mode is enabled.");
     }

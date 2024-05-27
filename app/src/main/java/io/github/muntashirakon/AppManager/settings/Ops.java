@@ -101,6 +101,8 @@ public class Ops {
     public static int PHONE_UID = Process.PHONE_UID;
     public static int SYSTEM_UID = Process.SYSTEM_UID;
 
+    private static volatile int sWorkingUid = Process.myUid();
+    private static volatile boolean sDirectRoot = false; // AM has root AND that root is being used
     private static boolean sIsAdb = false; // UID = 2000
     private static boolean sIsSystem = false; // UID = 1000
     private static boolean sIsRoot = false; // UID = 0
@@ -113,23 +115,37 @@ public class Ops {
     private Ops() {
     }
 
-    /**
-     * Whether App Manager is running in the privileged mode.
-     *
-     * @return {@code true} iff user chose to run App Manager in the privileged mode.
-     */
     @AnyThread
-    private static boolean isPrivileged() {
-        // Currently, root and ADB are the only privileged mode
-        return sIsRoot || sIsAdb || sIsSystem;
+    public static int getWorkingUid() {
+        return sWorkingUid;
+    }
+
+    @AnyThread
+    public static void setWorkingUid(int newUid) {
+        sWorkingUid = newUid;
+    }
+
+    @AnyThread
+    public static int getWorkingUidOrRoot() {
+        int uid = getWorkingUid();
+        if (uid != ROOT_UID && sDirectRoot) {
+            return ROOT_UID;
+        }
+        return uid;
+    }
+
+    @AnyThread
+    public static boolean isWorkingUidRoot() {
+        return getWorkingUid() == ROOT_UID;
     }
 
     /**
-     * Whether App Manager is running in root mode
+     * Whether App Manager is currently using direct root (e.g. root granted to the app) to perform operations. The
+     * result returned by this method may not reflect the actual state due to other factors.
      */
     @AnyThread
-    public static boolean isRoot() {
-        return sIsRoot;
+    public static boolean isDirectRoot() {
+        return sDirectRoot;
     }
 
     /**
@@ -219,6 +235,7 @@ public class Ops {
     @Status
     public static int init(@NonNull Context context, boolean force) {
         String mode = getMode();
+        sDirectRoot = hasRoot();
         if (MODE_AUTO.equals(mode)) {
             autoDetectRootSystemOrAdbAndPersist(context);
             return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
@@ -228,6 +245,7 @@ public class Ops {
             return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
         }
         if (MODE_NO_ROOT.equals(mode)) {
+            sDirectRoot = false;
             sIsAdb = sIsSystem = sIsRoot = false;
             // Also, stop existing services if any
             ExUtils.exceptionAsIgnored(() -> {
@@ -241,7 +259,7 @@ public class Ops {
         try {
             switch (mode) {
                 case MODE_ROOT:
-                    if (!hasRoot()) {
+                    if (!sDirectRoot) {
                         throw new Exception("Root is unavailable.");
                     }
                     // Disable server first
@@ -298,8 +316,8 @@ public class Ops {
     @WorkerThread
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     private static void autoDetectRootSystemOrAdbAndPersist(@NonNull Context context) {
-        sIsRoot = hasRoot();
-        if (sIsRoot) {
+        sIsRoot = sDirectRoot;
+        if (sDirectRoot) {
             // Root permission was granted
             setMode(MODE_ROOT);
             // Disable remote server
@@ -388,7 +406,7 @@ public class Ops {
             // Any message produced by the method below is just a helpful message.
             checkRootOrIncompleteUsbDebuggingInAdb();
         }
-        setMode(isPrivileged() ? MODE_ADB_OVER_TCP : MODE_NO_ROOT);
+        setMode(getWorkingUid() != Process.myUid() ? MODE_ADB_OVER_TCP : MODE_NO_ROOT);
     }
 
     @UiThread

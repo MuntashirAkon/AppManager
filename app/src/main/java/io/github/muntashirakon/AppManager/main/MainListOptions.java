@@ -252,7 +252,7 @@ public class MainListOptions extends ListOptions {
             put(FILTER_APPS_WITHOUT_BACKUPS, R.string.filter_apps_without_backups);
             put(FILTER_RUNNING_APPS, R.string.filter_running_apps);
             put(FILTER_APPS_WITH_SPLITS, R.string.filter_apps_with_splits);
-            if (Ops.isRoot()) {
+            if (Ops.isWorkingUidRoot()) {
                 put(FILTER_APPS_WITH_KEYSTORE, R.string.filter_apps_with_keystore);
                 put(FILTER_APPS_WITH_SAF, R.string.filter_apps_with_saf);
                 put(FILTER_APPS_WITH_SSAID, R.string.filter_apps_with_ssaid);

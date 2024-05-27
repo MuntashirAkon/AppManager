@@ -168,7 +168,7 @@ public class UriManager {
         } catch (FileNotFoundException e) {
             // Missing grants is okay
         } catch (IOException | XmlPullParserException | RemoteException e) {
-            Log.e(TAG, "Failed reading Uri grants", e);
+            Log.w(TAG, "Failed reading Uri grants", e);
         }
     }
 

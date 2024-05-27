@@ -161,18 +161,30 @@ public final class FileUtils {
         Context context = ContextUtils.getContext();
         try {
             return getExternalCachePath(context);
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
             return context.getCacheDir();
         }
     }
 
     @AnyThread
     @NonNull
-    public static File getExternalCachePath(@NonNull Context context) throws IOException {
-        File[] extDirs = context.getExternalCacheDirs();
+    public static File getExternalCachePath(@NonNull Context context) throws FileNotFoundException {
+        return getBestExternalPath(context.getExternalCacheDirs());
+    }
+
+    @AnyThread
+    @NonNull
+    public static File getExternalMediaPath(@NonNull Context context) throws FileNotFoundException {
+        return getBestExternalPath(context.getExternalMediaDirs());
+    }
+
+    @AnyThread
+    @NonNull
+    public static File getBestExternalPath(@Nullable File[] extDirs) throws FileNotFoundException {
         if (extDirs == null) {
             throw new FileNotFoundException("Shared storage unavailable.");
         }
+        String lastReason = null;
         for (File extDir : extDirs) {
             // The priority is from top to bottom of the list as per Context#getExternalDir()
             if (extDir == null) {
@@ -180,16 +192,29 @@ public final class FileUtils {
                 continue;
             }
             if (!(extDir.exists() || extDir.mkdirs())) {
+                lastReason = extDir + ": permission denied.";
                 Log.w(TAG, "Could not use %s.", extDir);
                 continue;
             }
-            if (!Objects.equals(Environment.getExternalStorageState(extDir), Environment.MEDIA_MOUNTED)) {
-                Log.w(TAG, "Path %s not mounted.", extDir);
+            String storageState = Environment.getExternalStorageState(extDir);
+            if (!Objects.equals(storageState, Environment.MEDIA_MOUNTED)) {
+                lastReason = extDir + ": not mounted (" + storageState + ")";
+                Log.w(TAG, "Path %s not mounted. State: %s", extDir, storageState);
                 continue;
             }
             return extDir;
         }
-        throw new FileNotFoundException("No available shared storage found.");
+        throw new FileNotFoundException(lastReason != null ? lastReason : "No available shared storage found.");
+    }
+
+    @AnyThread
+    public static void chmod711(@NonNull File file) throws IOException {
+        try {
+            Os.chmod(file.getAbsolutePath(), 457);
+        } catch (ErrnoException e) {
+            Log.e("IOUtils", "Failed to apply mode 711 to " + file);
+            throw new IOException(e);
+        }
     }
 
     @AnyThread
