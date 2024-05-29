@@ -405,12 +405,16 @@ public final class PermissionCompat {
     @SuppressWarnings("deprecation")
     public static int checkPermission(@NonNull String permissionName,
                                       @NonNull String packageName,
-                                      @UserIdInt int userId) throws RemoteException {
+                                      @UserIdInt int userId) {
         IPackageManager pm = PackageManagerCompat.getPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return pm.checkPermission(permissionName, packageName, userId);
-        } else {
-            return pm.checkPermission(permissionName, packageName);
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                return pm.checkPermission(permissionName, packageName, userId);
+            } else {
+                return pm.checkPermission(permissionName, packageName);
+            }
+        } catch (RemoteException e) {
+            return ExUtils.rethrowFromSystemServer(e);
         }
     }
 
