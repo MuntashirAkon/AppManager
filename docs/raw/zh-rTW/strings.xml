@@ -469,7 +469,7 @@
     <string name="pages$settings-page$$instant-component-blocking-title">即時組件攔截</string>
     <string name="pages$settings-page$$import-export-blocking-rules-title">導入/導出阻止規則</string>
     <string name="pages$settings-page$$device-info-title">關於設備</string>
-    <string name="pages$settings-page$app-theme">配置應用內主題</string>
+    <string name="pages$settings-page$app-theme">配置應用程式內主題。</string>
     <string name="pages$settings-page$enable-disable-features">啟用或禁用應用 App Manager 中的某些功能，如
 \n\\begin{itemize}
 \n \\item 攔截器(Interceptor)
