@@ -17,7 +17,7 @@ import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class AMExceptionHandler implements Thread.UncaughtExceptionHandler {
-    private static final String E = "muntashirakon@riseup.net";
+    private static final String E = "am4android@riseup.net";
 
     private final Thread.UncaughtExceptionHandler defaultExceptionHandler;
     private final Context context;
