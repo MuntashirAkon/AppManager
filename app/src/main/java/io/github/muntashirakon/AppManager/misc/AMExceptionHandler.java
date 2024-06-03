@@ -16,7 +16,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class AMExceptionHandler implements Thread.UncaughtExceptionHandler {
-    private static final String E = "muntashirakon@riseup.net";
+    private static final String E = "am4android@riseup.net";
 
     private final Thread.UncaughtExceptionHandler mDefaultExceptionHandler;
     private final Context mContext;
