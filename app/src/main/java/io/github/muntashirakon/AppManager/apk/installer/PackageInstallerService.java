@@ -71,8 +71,6 @@ public class PackageInstallerService extends ForegroundService {
 
     @Nullable
     private OnInstallFinished mOnInstallFinished;
-    private int mSessionId;
-    private String mPackageName;
     private QueuedProgressHandler mProgressHandler;
     private NotificationInfo mNotificationInfo;
     private PowerManager.WakeLock mWakeLock;
@@ -123,8 +121,6 @@ public class PackageInstallerService extends ForegroundService {
         installer.setOnInstallListener(new PackageInstallerCompat.OnInstallListener() {
             @Override
             public void onStartInstall(int sessionId, String packageName) {
-                mSessionId = sessionId;
-                mPackageName = packageName;
             }
 
             // MIUI-begin: MIUI 12.5+ workaround
@@ -156,7 +152,9 @@ public class PackageInstallerService extends ForegroundService {
                             mOnInstallFinished.onFinished(packageName, result, blockingPackage, statusMessage);
                         }
                     });
-                } else sendNotification(result, apkQueueItem.getAppLabel(), blockingPackage, statusMessage);
+                } else {
+                    sendNotification(packageName, result, apkQueueItem.getAppLabel(), blockingPackage, statusMessage);
+                }
             }
         });
         // Two possibilities: 1. Install-existing, 2. ApkFile/Uri
@@ -241,19 +239,12 @@ public class PackageInstallerService extends ForegroundService {
         this.mOnInstallFinished = onInstallFinished;
     }
 
-    public int getCurrentSessionId() {
-        return mSessionId;
-    }
-
-    public String getCurrentPackageName() {
-        return mPackageName;
-    }
-
-    private void sendNotification(@PackageInstallerCompat.Status int status,
+    private void sendNotification(@NonNull String packageName,
+                                  @PackageInstallerCompat.Status int status,
                                   @Nullable String appLabel,
                                   @Nullable String blockingPackage,
                                   @Nullable String statusMessage) {
-        Intent intent = PackageManagerCompat.getLaunchIntentForPackage(mPackageName, UserHandleHidden.myUserId());
+        Intent intent = PackageManagerCompat.getLaunchIntentForPackage(packageName, UserHandleHidden.myUserId());
         PendingIntent defaultAction = intent != null ? PendingIntentCompat.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT, false) : null;
         String subject = getStringFromStatus(this, status, appLabel, blockingPackage);
