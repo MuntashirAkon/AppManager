@@ -1183,7 +1183,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             boolean isFrozen = FreezeUtils.isFrozen(mApplicationInfo);
             boolean canFreeze = !isStaticSharedLib && SelfPermissions.canFreezeUnfreezePackages();
             // Set open
-            Intent launchIntent = PackageUtils.getLaunchIntentForPackage(requireContext(), mPackageName, mUserId);
+            Intent launchIntent = PackageManagerCompat.getLaunchIntentForPackage(mPackageName, mUserId);
             if (launchIntent != null && !isFrozen) {
                 ActionItem launchAction = new ActionItem(R.string.launch_app, R.drawable.ic_open_in_new);
                 actionItems.add(launchAction);

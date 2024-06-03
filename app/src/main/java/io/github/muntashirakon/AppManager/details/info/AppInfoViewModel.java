@@ -368,7 +368,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                     appInfo.installerApp = applicationLabel;
                 }
                 // Set main activity
-                appInfo.mainActivity = pm.getLaunchIntentForPackage(packageName);
+                appInfo.mainActivity = PackageManagerCompat.getLaunchIntentForPackage(packageName, userId);
                 // SELinux
                 appInfo.seInfo = ApplicationInfoCompat.getSeInfo(applicationInfo);
                 // Primary ABI

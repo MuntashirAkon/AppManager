@@ -22,6 +22,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.UserHandleHidden;
 import android.text.GetChars;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -47,6 +48,7 @@ import java.util.Locale;
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
+import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 
 public class Utils {
@@ -585,7 +587,11 @@ public class Utils {
     }
 
     public static void relaunchApp(@NonNull FragmentActivity activity) {
-        Intent intent = activity.getPackageManager().getLaunchIntentForPackage(activity.getPackageName());
+        Intent intent = PackageManagerCompat.getLaunchIntentForPackage(activity.getPackageName(), UserHandleHidden.myUserId());
+        if (intent == null) {
+            // No launch intent
+            return;
+        }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(intent);
         activity.finish();

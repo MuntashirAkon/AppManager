@@ -21,6 +21,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageInstaller;
 import android.content.pm.IPackageManager;
 import android.content.pm.IPackageManagerN;
+import android.content.pm.LauncherActivityInfo;
+import android.content.pm.LauncherApps;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ParceledListSlice;
@@ -34,6 +36,7 @@ import android.os.Build;
 import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.os.SystemClock;
+import android.os.UserHandle;
 import android.os.UserHandleHidden;
 import android.util.AndroidException;
 
@@ -63,6 +66,7 @@ import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public final class PackageManagerCompat {
     public static final String TAG = PackageManagerCompat.class.getSimpleName();
@@ -316,6 +320,38 @@ public final class PackageManagerCompat {
             }
         }
         return new InstallSourceInfoCompat(installerPackageName);
+    }
+
+    @Nullable
+    public static Intent getLaunchIntentForPackage(@NonNull String packageName, @UserIdInt int userId) {
+        Context context = ContextUtils.getContext();
+        if (userId == UserHandleHidden.myUserId()) {
+            PackageManager pm = context.getPackageManager();
+            return Utils.isTv(context)
+                    ? pm.getLeanbackLaunchIntentForPackage(packageName)
+                    : pm.getLaunchIntentForPackage(packageName);
+        }
+        UserHandle userHandle = Users.getUserHandle(userId);
+        if (userHandle == null) {
+            // No supported user present
+            return null;
+        }
+        LauncherApps launcherApps = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
+        if (!launcherApps.isPackageEnabled(packageName, userHandle)) {
+            // Package not enabled
+            return null;
+        }
+        List<LauncherActivityInfo> activityInfoList = launcherApps.getActivityList(packageName, userHandle);
+        if (activityInfoList.isEmpty()) {
+            // No activities
+            return null;
+        }
+        // Return the first openable activity
+        LauncherActivityInfo info = activityInfoList.get(0);
+        return new Intent(Intent.ACTION_MAIN)
+                .addCategory(Intent.CATEGORY_LAUNCHER)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
+                .setComponent(info.getComponentName());
     }
 
     @SuppressLint("NewApi")

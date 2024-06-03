@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.PowerManager;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -252,7 +253,7 @@ public class PackageInstallerService extends ForegroundService {
                                   @Nullable String appLabel,
                                   @Nullable String blockingPackage,
                                   @Nullable String statusMessage) {
-        Intent intent = getPackageManager().getLaunchIntentForPackage(mPackageName);
+        Intent intent = PackageManagerCompat.getLaunchIntentForPackage(mPackageName, UserHandleHidden.myUserId());
         PendingIntent defaultAction = intent != null ? PendingIntentCompat.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT, false) : null;
         String subject = getStringFromStatus(this, status, appLabel, blockingPackage);
