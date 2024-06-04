@@ -97,20 +97,22 @@ public final class ActivityManagerCompat {
     }
 
     @SuppressWarnings("deprecation")
-    public static int startActivity(Intent intent, @UserIdInt int userHandle) throws RemoteException {
+    public static int startActivity(Intent intent, @UserIdInt int userHandle) throws SecurityException {
         IActivityManager am = getActivityManager();
         String callingPackage = SelfPermissions.getCallingPackage(Users.getSelfOrRemoteUid());
-        int result;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            result = am.startActivityAsUserWithFeature(null, callingPackage,
-                    null, intent, intent.getType(), null, null,
-                    0, 0, null, null, userHandle);
-        } else {
-            result = am.startActivityAsUser(null, callingPackage, intent, intent.getType(),
-                    null, null, 0, 0, null,
-                    null, userHandle);
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                return am.startActivityAsUserWithFeature(null, callingPackage,
+                        null, intent, intent.getType(), null, null,
+                        0, 0, null, null, userHandle);
+            } else {
+                return am.startActivityAsUser(null, callingPackage, intent, intent.getType(),
+                        null, null, 0, 0, null,
+                        null, userHandle);
+            }
+        } catch (RemoteException e) {
+            return ExUtils.rethrowFromSystemServer(e);
         }
-        return result;
     }
 
     @SuppressWarnings("deprecation")

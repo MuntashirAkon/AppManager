@@ -720,23 +720,23 @@ public class ActivityInterceptor extends BaseActivity {
         });
         mClassNameView.addTextChangedListener(new IntentUpdateTextWatcher(mClassNameView) {
             @Override
-            protected void onUpdateIntent(String modifiedContent) {
+            protected void onUpdateIntent(String modifiedComponent) {
                 if (mMutableIntent == null) return;
+                if (TextUtils.isEmpty(modifiedComponent)) {
+                    mRequestedComponent = null;
+                    mMutableIntent.setComponent(null);
+                    return;
+                }
                 String packageName = mMutableIntent.getPackage();
-                if (packageName == null && !TextUtils.isEmpty(modifiedContent)) {
+                if (packageName == null) {
                     UIUtils.displayShortToast(R.string.set_package_name_first);
                     mAreTextWatchersActive = false;
                     mClassNameView.setText(null);
                     mAreTextWatchersActive = true;
                     return;
                 }
-                if (TextUtils.isEmpty(modifiedContent)) {
-                    mRequestedComponent = null;
-                    mMutableIntent.setComponent(null);
-                    return;
-                }
-                mRequestedComponent = new ComponentName(packageName, (modifiedContent.startsWith(".") ?
-                        packageName : "") + modifiedContent);
+                mRequestedComponent = new ComponentName(packageName, (modifiedComponent.startsWith(".") ?
+                        packageName : "") + modifiedComponent);
                 mMutableIntent.setComponent(mRequestedComponent);
             }
         });
@@ -931,8 +931,13 @@ public class ActivityInterceptor extends BaseActivity {
                     // TODO: 4/2/22 Support sending activity result back to the original app
                     ActivityManagerCompat.startActivity(intent, mUserHandle);
                 } else {
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mIntentLauncher.launch(intent);
+                    try {
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mIntentLauncher.launch(intent);
+                    } catch (SecurityException e) {
+                        // TODO: 4/6/24 Support sending activity result back to the original app
+                        ActivityManagerCompat.startActivity(intent, mUserHandle);
+                    }
                 }
             }
         } catch (Throwable th) {
