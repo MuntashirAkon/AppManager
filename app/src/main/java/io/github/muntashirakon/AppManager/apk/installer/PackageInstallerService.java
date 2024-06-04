@@ -42,6 +42,7 @@ import io.github.muntashirakon.AppManager.apk.CachedApkSource;
 import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizer;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.NotificationInfo;
@@ -56,6 +57,8 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class PackageInstallerService extends ForegroundService {
+    public static final String TAG = PackageInstallerService.class.getSimpleName();
+
     public static final String EXTRA_QUEUE_ITEM = "queue_item";
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.INSTALL";
 
@@ -66,7 +69,7 @@ public class PackageInstallerService extends ForegroundService {
     }
 
     public PackageInstallerService() {
-        super("PackageInstallerService");
+        super(TAG);
     }
 
     @Nullable
@@ -168,25 +171,21 @@ public class PackageInstallerService extends ForegroundService {
             installer.installExisting(packageName, options.getUserId());
         } else {
             // ApkFile/Uri
-            ApkFile apkFile;
             ApkSource apkSource = apkQueueItem.getApkSource();
-            if (apkSource != null) {
-                // ApkFile set
-                try {
-                    apkFile = apkSource.resolve();
-                } catch (Throwable th) {
-                    // Could not get ApkFile for some reason, abort
-                    th.printStackTrace();
-                    return;
-                }
-            } else {
+            if (apkSource == null) {
                 // No apk file, abort
                 return;
             }
-            installer.install(apkFile, selectedSplitIds, options, mProgressHandler);
-            // Delete the cached file
-            if (apkSource instanceof CachedApkSource) {
-                ((CachedApkSource) apkSource).cleanup();
+            try {
+                ApkFile apkFile = apkSource.resolve();
+                installer.install(apkFile, selectedSplitIds, options, mProgressHandler);
+            } catch (Throwable th) {
+                Log.w(TAG, "Could not get ApkFile", th);
+            } finally {
+                // Delete the cached file
+                if (apkSource instanceof CachedApkSource) {
+                    ((CachedApkSource) apkSource).cleanup();
+                }
             }
         }
     }
