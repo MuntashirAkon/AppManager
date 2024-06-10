@@ -156,6 +156,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 // User did some interaction and the installer screen is closed now
                 Intent broadcastIntent = new Intent(PackageInstallerCompat.ACTION_INSTALL_INTERACTION_END);
+                broadcastIntent.setPackage(getPackageName());
                 broadcastIntent.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, mPackageName);
                 broadcastIntent.putExtra(PackageInstaller.EXTRA_SESSION_ID, mSessionId);
                 getApplicationContext().sendBroadcast(broadcastIntent);

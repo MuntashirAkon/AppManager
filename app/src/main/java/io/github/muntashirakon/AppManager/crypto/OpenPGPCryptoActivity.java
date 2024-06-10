@@ -22,6 +22,7 @@ public class OpenPGPCryptoActivity extends BaseActivity {
     private final ActivityResultLauncher<IntentSenderRequest> mConfirmationLauncher = registerForActivityResult(
             new ActivityResultContracts.StartIntentSenderForResult(), result -> {
                 Intent broadcastIntent = new Intent(OpenPGPCrypto.ACTION_OPEN_PGP_INTERACTION_END);
+                broadcastIntent.setPackage(getPackageName());
                 sendBroadcast(broadcastIntent);
                 finish();
             });

@@ -508,6 +508,7 @@ public class KeyStoreManager {
             filter.addAction(ACTION_KS_INTERACTION_END);
             ContextCompat.registerReceiver(mContext, mReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
             Intent broadcastIntent = new Intent(ACTION_KS_INTERACTION_BEGIN);
+            broadcastIntent.setPackage(mContext.getPackageName());
             mContext.sendBroadcast(broadcastIntent);
             // Intent wrapper
             Intent intent = new Intent(mContext, KeyStoreActivity.class);

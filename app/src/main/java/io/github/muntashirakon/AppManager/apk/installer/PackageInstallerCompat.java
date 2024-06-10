@@ -1235,6 +1235,7 @@ public final class PackageInstallerCompat {
 
     private void sendStartedBroadcast(@NonNull String packageName, int sessionId) {
         Intent broadcastIntent = new Intent(ACTION_INSTALL_STARTED);
+        broadcastIntent.setPackage(mContext.getPackageName());
         broadcastIntent.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
         broadcastIntent.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
         mContext.sendBroadcast(broadcastIntent);
@@ -1243,6 +1244,7 @@ public final class PackageInstallerCompat {
     static void sendCompletedBroadcast(@NonNull Context context, @NonNull String packageName, @Status int status,
                                        int sessionId) {
         Intent broadcastIntent = new Intent(ACTION_INSTALL_COMPLETED);
+        broadcastIntent.setPackage(context.getPackageName());
         broadcastIntent.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
         broadcastIntent.putExtra(PackageInstaller.EXTRA_STATUS, status);
         broadcastIntent.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);

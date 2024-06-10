@@ -85,7 +85,9 @@ public class KeyStoreActivity extends AppCompatActivity {
                 password = KeyStoreManager.getInstance().getAmKeyStorePassword();
             } catch (Exception e) {
                 Log.e(KeyStoreManager.TAG, "Could not get KeyStore password", e);
-                sendBroadcast(new Intent(KeyStoreManager.ACTION_KS_INTERACTION_END));
+                Intent broadcastIntent = new Intent(KeyStoreManager.ACTION_KS_INTERACTION_END);
+                broadcastIntent.setPackage(getPackageName());
+                sendBroadcast(broadcastIntent);
                 return;
             }
         } else {
@@ -94,6 +96,8 @@ public class KeyStoreActivity extends AppCompatActivity {
         }
         KeyStoreManager.savePass(this, prefKey, password);
         Utils.clearChars(password);
-        sendBroadcast(new Intent(KeyStoreManager.ACTION_KS_INTERACTION_END));
+        Intent broadcastIntent = new Intent(KeyStoreManager.ACTION_KS_INTERACTION_END);
+        broadcastIntent.setPackage(getPackageName());
+        sendBroadcast(broadcastIntent);
     }
 }
