@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.compat;
 
+import static io.github.muntashirakon.AppManager.compat.VirtualDeviceManagerCompat.PERSISTENT_DEVICE_ID_DEFAULT;
+
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.content.pm.ApplicationInfo;
@@ -265,7 +267,7 @@ public final class PermissionCompat {
     }
 
     @SuppressWarnings("deprecation")
-    @RequiresPermission(allOf = {
+    @RequiresPermission(anyOf = {
             ManifestCompat.permission.GET_RUNTIME_PERMISSIONS,
             ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS,
             ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS,
@@ -276,10 +278,16 @@ public final class PermissionCompat {
                                          @UserIdInt int userId) throws SecurityException {
         try {
             if (Build.VERSION.SDK_INT >= 34) {
+                IPermissionManager permissionManager = getPermissionManager();
                 try {
-                    return getPermissionManager().getPermissionFlags(packageName, permissionName, userId);
+                    return permissionManager.getPermissionFlags(packageName, permissionName, userId);
                 } catch (NoSuchMethodError e) {
-                    return getPermissionManager().getPermissionFlags(packageName, permissionName, 0, userId);
+                    try {
+                        return permissionManager.getPermissionFlags(packageName, permissionName, 0, userId);
+                    } catch (NoSuchMethodError e2) {
+                        return permissionManager.getPermissionFlags(packageName, permissionName,
+                                PERSISTENT_DEVICE_ID_DEFAULT, userId);
+                    }
                 }
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 return getPermissionManager().getPermissionFlags(packageName, permissionName, userId);
@@ -295,15 +303,15 @@ public final class PermissionCompat {
     }
 
     /**
-     * Replace a set of flags with another or {@code 0}
+     * Replace a set of flags with another or {@code 0}. Requires {@link ManifestCompat.permission#ADJUST_RUNTIME_PERMISSIONS_POLICY}
+     * when checkAdjustPolicyFlagPermission is {@code true} and flagMask has {@link #FLAG_PERMISSION_POLICY_FIXED}.
      *
      * @param flagMask   The flags to be replaced
      * @param flagValues The new flags to set (is a subset of flagMask)
      * @see <a href="https://cs.android.com/android/platform/superproject/+/master:cts/tests/tests/permission/src/android/permission/cts/PermissionFlagsTest.java">PermissionFlagsTest.java</a>
      */
     @SuppressWarnings("deprecation")
-    @RequiresPermission(allOf = {
-            ManifestCompat.permission.ADJUST_RUNTIME_PERMISSIONS_POLICY,
+    @RequiresPermission(anyOf = {
             ManifestCompat.permission.GET_RUNTIME_PERMISSIONS,
             ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS,
             ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS,
@@ -316,12 +324,18 @@ public final class PermissionCompat {
                                              @UserIdInt int userId) throws RemoteException {
         IPackageManager pm = PackageManagerCompat.getPackageManager();
         if (Build.VERSION.SDK_INT >= 34) {
+            IPermissionManager permissionManager = getPermissionManager();
             try {
-                getPermissionManager().updatePermissionFlags(packageName, permissionName, flagMask, flagValues,
+                permissionManager.updatePermissionFlags(packageName, permissionName, flagMask, flagValues,
                         checkAdjustPolicyFlagPermission, userId);
             } catch (NoSuchMethodError e) {
-                getPermissionManager().updatePermissionFlags(packageName, permissionName, flagMask, flagValues,
-                        checkAdjustPolicyFlagPermission, 0, userId);
+                try {
+                    permissionManager.updatePermissionFlags(packageName, permissionName, flagMask, flagValues,
+                            checkAdjustPolicyFlagPermission, 0, userId);
+                } catch (NoSuchMethodError e2) {
+                    permissionManager.updatePermissionFlags(packageName, permissionName, flagMask, flagValues,
+                            checkAdjustPolicyFlagPermission, PERSISTENT_DEVICE_ID_DEFAULT, userId);
+                }
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             getPermissionManager().updatePermissionFlags(packageName, permissionName, flagMask, flagValues,
@@ -337,21 +351,27 @@ public final class PermissionCompat {
         }
     }
 
+    /**
+     * Grant a permission. May also require {@link ManifestCompat.permission#ADJUST_RUNTIME_PERMISSIONS_POLICY}.
+     */
     @SuppressWarnings("deprecation")
-    @RequiresPermission(allOf = {
-            ManifestCompat.permission.ADJUST_RUNTIME_PERMISSIONS_POLICY,
-            ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS,
-    })
+    @RequiresPermission(ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS)
     public static void grantPermission(@NonNull String packageName,
                                        @NonNull String permissionName,
                                        @UserIdInt int userId)
             throws RemoteException {
         IPackageManager pm = PackageManagerCompat.getPackageManager();
         if (Build.VERSION.SDK_INT >= 34) {
+            IPermissionManager permissionManager = getPermissionManager();
             try {
-                getPermissionManager().grantRuntimePermission(packageName, permissionName, userId);
+                permissionManager.grantRuntimePermission(packageName, permissionName, userId);
             } catch (NoSuchMethodError e) {
-                getPermissionManager().grantRuntimePermission(packageName, permissionName, 0, userId);
+                try {
+                    permissionManager.grantRuntimePermission(packageName, permissionName, 0, userId);
+                } catch (NoSuchMethodError e2) {
+                    permissionManager.grantRuntimePermission(packageName, permissionName,
+                            PERSISTENT_DEVICE_ID_DEFAULT, userId);
+                }
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             getPermissionManager().grantRuntimePermission(packageName, permissionName, userId);
@@ -362,31 +382,37 @@ public final class PermissionCompat {
         }
     }
 
-    @RequiresPermission(allOf = {
-            ManifestCompat.permission.ADJUST_RUNTIME_PERMISSIONS_POLICY,
-            ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS,
-    })
+    /**
+     * Revoke a permission. May also require {@link ManifestCompat.permission#ADJUST_RUNTIME_PERMISSIONS_POLICY}.
+     */
+    @RequiresPermission(ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS)
     public static void revokePermission(@NonNull String packageName,
                                         @NonNull String permissionName,
                                         @UserIdInt int userId) throws RemoteException {
         revokePermission(packageName, permissionName, userId, null);
     }
 
+    /**
+     * Revoke a permission. May also require {@link ManifestCompat.permission#ADJUST_RUNTIME_PERMISSIONS_POLICY}.
+     */
     @SuppressWarnings("deprecation")
-    @RequiresPermission(allOf = {
-            ManifestCompat.permission.ADJUST_RUNTIME_PERMISSIONS_POLICY,
-            ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS,
-    })
+    @RequiresPermission(ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS)
     public static void revokePermission(@NonNull String packageName,
                                         @NonNull String permissionName,
                                         @UserIdInt int userId,
                                         @Nullable String reason) throws RemoteException {
         IPackageManager pm = PackageManagerCompat.getPackageManager();
         if (Build.VERSION.SDK_INT >= 34) {
+            IPermissionManager permissionManager = getPermissionManager();
             try {
-                getPermissionManager().revokeRuntimePermission(packageName, permissionName, userId, reason);
+                permissionManager.revokeRuntimePermission(packageName, permissionName, userId, reason);
             } catch (NoSuchMethodError e) {
-                getPermissionManager().revokeRuntimePermission(packageName, permissionName, 0, userId, reason);
+                try {
+                    permissionManager.revokeRuntimePermission(packageName, permissionName, 0, userId, reason);
+                } catch (NoSuchMethodError e2) {
+                    permissionManager.revokeRuntimePermission(packageName, permissionName,
+                            PERSISTENT_DEVICE_ID_DEFAULT, userId, reason);
+                }
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             getPermissionManager().revokeRuntimePermission(packageName, permissionName, userId, reason);
@@ -400,12 +426,16 @@ public final class PermissionCompat {
     @SuppressWarnings("deprecation")
     public static int checkPermission(@NonNull String permissionName,
                                       @NonNull String packageName,
-                                      @UserIdInt int userId) throws RemoteException {
+                                      @UserIdInt int userId) {
         IPackageManager pm = PackageManagerCompat.getPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return pm.checkPermission(permissionName, packageName, userId);
-        } else {
-            return pm.checkPermission(permissionName, packageName);
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                return pm.checkPermission(permissionName, packageName, userId);
+            } else {
+                return pm.checkPermission(permissionName, packageName);
+            }
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
         }
     }
 
