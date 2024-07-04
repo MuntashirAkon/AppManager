@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.compat;
 
+import static io.github.muntashirakon.AppManager.compat.VirtualDeviceManagerCompat.PERSISTENT_DEVICE_ID_DEFAULT;
+
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.content.pm.ApplicationInfo;
@@ -278,11 +280,17 @@ public final class PermissionCompat {
                                          @UserIdInt int userId) throws SecurityException {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                IPermissionManager permissionManager = getPermissionManager();
                 try {
-                    return getPermissionManager().getPermissionFlags(packageName, permissionName, userId);
+                    return permissionManager.getPermissionFlags(packageName, permissionName, userId);
                 } catch (NoSuchMethodError e) {
-                    return getPermissionManager().getPermissionFlags(packageName, permissionName,
-                            ContextUtils.getContext().getDeviceId(), userId);
+                    try {
+                        return permissionManager.getPermissionFlags(packageName, permissionName,
+                                ContextUtils.getContext().getDeviceId(), userId);
+                    } catch (NoSuchMethodError e2) {
+                        return permissionManager.getPermissionFlags(packageName, permissionName,
+                                PERSISTENT_DEVICE_ID_DEFAULT, userId);
+                    }
                 }
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 return getPermissionManager().getPermissionFlags(packageName, permissionName, userId);
@@ -319,12 +327,18 @@ public final class PermissionCompat {
                                              @UserIdInt int userId) throws RemoteException {
         IPackageManager pm = PackageManagerCompat.getPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            IPermissionManager permissionManager = getPermissionManager();
             try {
-                getPermissionManager().updatePermissionFlags(packageName, permissionName, flagMask, flagValues,
+                permissionManager.updatePermissionFlags(packageName, permissionName, flagMask, flagValues,
                         checkAdjustPolicyFlagPermission, userId);
             } catch (NoSuchMethodError e) {
-                getPermissionManager().updatePermissionFlags(packageName, permissionName, flagMask, flagValues,
-                        checkAdjustPolicyFlagPermission, ContextUtils.getContext().getDeviceId(), userId);
+                try {
+                    permissionManager.updatePermissionFlags(packageName, permissionName, flagMask, flagValues,
+                            checkAdjustPolicyFlagPermission, ContextUtils.getContext().getDeviceId(), userId);
+                } catch (NoSuchMethodError e2) {
+                    permissionManager.updatePermissionFlags(packageName, permissionName, flagMask, flagValues,
+                            checkAdjustPolicyFlagPermission, PERSISTENT_DEVICE_ID_DEFAULT, userId);
+                }
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             getPermissionManager().updatePermissionFlags(packageName, permissionName, flagMask, flagValues,
@@ -351,11 +365,17 @@ public final class PermissionCompat {
             throws RemoteException {
         IPackageManager pm = PackageManagerCompat.getPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            IPermissionManager permissionManager = getPermissionManager();
             try {
-                getPermissionManager().grantRuntimePermission(packageName, permissionName, userId);
+                permissionManager.grantRuntimePermission(packageName, permissionName, userId);
             } catch (NoSuchMethodError e) {
-                getPermissionManager().grantRuntimePermission(packageName, permissionName,
-                        ContextUtils.getContext().getDeviceId(), userId);
+                try {
+                    permissionManager.grantRuntimePermission(packageName, permissionName,
+                            ContextUtils.getContext().getDeviceId(), userId);
+                } catch (NoSuchMethodError e2) {
+                    permissionManager.grantRuntimePermission(packageName, permissionName,
+                            PERSISTENT_DEVICE_ID_DEFAULT, userId);
+                }
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             getPermissionManager().grantRuntimePermission(packageName, permissionName, userId);
@@ -387,11 +407,17 @@ public final class PermissionCompat {
                                         @Nullable String reason) throws RemoteException {
         IPackageManager pm = PackageManagerCompat.getPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            IPermissionManager permissionManager = getPermissionManager();
             try {
-                getPermissionManager().revokeRuntimePermission(packageName, permissionName, userId, reason);
+                permissionManager.revokeRuntimePermission(packageName, permissionName, userId, reason);
             } catch (NoSuchMethodError e) {
-                getPermissionManager().revokeRuntimePermission(packageName, permissionName,
-                        ContextUtils.getContext().getDeviceId(), userId, reason);
+                try {
+                    permissionManager.revokeRuntimePermission(packageName, permissionName,
+                            ContextUtils.getContext().getDeviceId(), userId, reason);
+                } catch (NoSuchMethodError e2) {
+                    permissionManager.revokeRuntimePermission(packageName, permissionName,
+                            PERSISTENT_DEVICE_ID_DEFAULT, userId, reason);
+                }
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             getPermissionManager().revokeRuntimePermission(packageName, permissionName, userId, reason);
