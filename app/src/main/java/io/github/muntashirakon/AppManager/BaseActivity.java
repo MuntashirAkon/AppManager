@@ -24,6 +24,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreActivity;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
@@ -39,16 +41,12 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 public abstract class BaseActivity extends AppCompatActivity {
     public static final String TAG = BaseActivity.class.getSimpleName();
 
-    private static final String[] REQUIRED_PERMISSIONS;
-
-    static {
-        REQUIRED_PERMISSIONS = new ArrayList<String>() {{
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                add(Manifest.permission.POST_NOTIFICATIONS);
-            }
-        }}.toArray(new String[0]);
-
-    }
+    private static final HashMap<String, Boolean> ASKED_PERMISSIONS = new HashMap<String, Boolean>() {{
+        // (permission, required) pairs
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            put(Manifest.permission.POST_NOTIFICATIONS, false);
+        }
+    }};
 
     @Nullable
     private AlertDialog mAlertDialog;
@@ -77,7 +75,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 if (permissionStatusMap == null) {
                     return;
                 }
-                initPermissionChecks();
+                initPermissionChecks(false);
             });
 
     @Override
@@ -87,7 +85,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (Ops.isAuthenticated()) {
             Log.d(TAG, "Already authenticated.");
             onAuthenticated(savedInstanceState);
-            initPermissionChecks();
+            initPermissionChecks(false);
             return;
         }
         if (Boolean.TRUE.equals(BuildExpiryChecker.buildExpired())) {
@@ -136,7 +134,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     if (mAlertDialog != null) mAlertDialog.dismiss();
                     Ops.setAuthenticated(this, true);
                     onAuthenticated(savedInstanceState);
-                    initPermissionChecks();
+                    initPermissionChecks(true);
                     InternalCacheCleanerService.scheduleAlarm(getApplicationContext());
             }
         });
@@ -243,12 +241,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    private void initPermissionChecks() {
-        for (String permission : REQUIRED_PERMISSIONS) {
-            if (!SelfPermissions.checkSelfPermission(permission)) {
-                mPermissionCheckActivity.launch(REQUIRED_PERMISSIONS);
-                return;
+    private void initPermissionChecks(boolean checkAll) {
+        List<String> permissionsToBeAsked = new ArrayList<>(ASKED_PERMISSIONS.size());
+        for (String permission : ASKED_PERMISSIONS.keySet()) {
+            boolean required = Boolean.TRUE.equals(ASKED_PERMISSIONS.get(permission));
+            if (!SelfPermissions.checkSelfPermission(permission) && (required || checkAll)) {
+                permissionsToBeAsked.add(permission);
             }
+        }
+        if (!permissionsToBeAsked.isEmpty()) {
+            // Ask required permissions
+            mPermissionCheckActivity.launch(permissionsToBeAsked.toArray(new String[0]));
         }
     }
 }
