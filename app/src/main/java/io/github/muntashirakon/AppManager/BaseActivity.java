@@ -70,10 +70,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     private final ActivityResultLauncher<String[]> mPermissionCheckActivity = registerForActivityResult(
             new ActivityResultContracts.RequestMultiplePermissions(),
             permissionStatusMap -> {
-                if (permissionStatusMap == null) {
-                    return;
-                }
-                initPermissionChecks(false);
             });
 
     @Override
