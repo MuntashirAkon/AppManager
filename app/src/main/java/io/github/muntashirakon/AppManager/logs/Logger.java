@@ -22,15 +22,18 @@ public class Logger implements Closeable {
         return FileUtils.getCachePath();
     }
 
+    @Nullable
     private final PrintWriter mWriter;
 
     private boolean mIsClosed;
 
-    protected Logger(File logFile, boolean append) throws IOException {
-        mWriter = new PrintWriter(new BufferedWriter(new FileWriter(logFile, append)));
+    protected Logger(@Nullable File logFile, boolean append) throws IOException {
+        if (logFile != null) {
+            mWriter = new PrintWriter(new BufferedWriter(new FileWriter(logFile, append)));
+        } else mWriter = null;
     }
 
-    protected Logger(PrintWriter printWriter) throws IOException {
+    protected Logger(@Nullable PrintWriter printWriter) throws IOException {
         mWriter = printWriter;
     }
 
@@ -41,6 +44,10 @@ public class Logger implements Closeable {
 
     @CallSuper
     public void println(@Nullable Object message, @Nullable Throwable tr) {
+        if (mWriter == null) {
+            // Do nothing
+            return;
+        }
         synchronized (mWriter) {
             mWriter.println(message);
             if (tr != null) {
@@ -55,15 +62,17 @@ public class Logger implements Closeable {
     @CallSuper
     @Override
     public void close() {
-        mWriter.flush();
-        mWriter.close();
+        if (mWriter != null) {
+            mWriter.flush();
+            mWriter.close();
+        }
         mIsClosed = true;
     }
 
     @Override
     protected void finalize() {
         // Closing is mandatory in order to make sure the logs are written correctly
-        if (!mIsClosed) {
+        if (!mIsClosed && mWriter != null) {
             mWriter.flush();
             mWriter.close();
         }
