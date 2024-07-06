@@ -24,6 +24,7 @@ import java.util.Set;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.widget.MaterialAlertView;
 
@@ -56,7 +57,7 @@ public class BackupFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         Set<CharSequence> uninstalledApps = mViewModel.getUninstalledApps();
-        if (uninstalledApps.size() > 0) {
+        if (!uninstalledApps.isEmpty()) {
             SpannableStringBuilder sb = new SpannableStringBuilder(getString(R.string.backup_apps_cannot_be_backed_up));
             for (CharSequence appLabel : uninstalledApps) {
                 sb.append("\n● ").append(appLabel);
@@ -82,14 +83,14 @@ public class BackupFragment extends Fragment {
             new TextInputDialogBuilder(mContext, R.string.input_backup_name)
                     .setTitle(R.string.backup)
                     .setHelperText(R.string.input_backup_name_description)
-                    .setPositiveButton(R.string.ok, (dialog, which, backupName, isChecked) -> {
-                        if (!TextUtils.isEmpty(backupName)) {
-                            //noinspection ConstantConditions
-                            operationInfo.backupNames = new String[]{backupName.toString()};
+                    .setPositiveButton(R.string.ok, (dialog, which, input, isChecked) -> {
+                        String backupName;
+                        if (TextUtils.isEmpty(input)) {
+                            backupName = DateUtils.formatMediumDateTime(mContext, System.currentTimeMillis());
                         } else {
-                            // No backup specified, remove the associated flag
-                            operationInfo.flags &= ~BackupFlags.BACKUP_MULTIPLE;
+                            backupName = input.toString();
                         }
+                        operationInfo.backupNames = new String[]{backupName};
                         mViewModel.prepareForOperation(operationInfo);
                     })
                     .show();
