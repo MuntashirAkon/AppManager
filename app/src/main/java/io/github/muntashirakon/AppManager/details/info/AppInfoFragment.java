@@ -1666,7 +1666,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
      */
     @NonNull
     private String getTime(long time) {
-        return DateUtils.formatWeekMediumDateTime(time);
+        return DateUtils.formatLongDateTime(time);
     }
 
     /**

@@ -29,12 +29,19 @@ public final class DateUtils {
     }
 
     @NonNull
-    public static String formatWeekMediumDateTime(long millis) {
+    public static String formatMediumDateTime(long millis) {
         Date dateTime = new Date(millis);
-        CharSequence week = android.text.format.DateFormat.format("EE", dateTime);
         String date = getMediumDateFormat().format(dateTime);
         String time = getTimeFormat().format(dateTime);
-        return week + ", " + date + " " + time;
+        return date + " " + time;
+    }
+
+    @NonNull
+    public static String formatLongDateTime(long millis) {
+        Date dateTime = new Date(millis);
+        String date = getLongDateFormat().format(dateTime);
+        String time = getTimeFormat().format(dateTime);
+        return date + " " + time;
     }
 
     public static String getFormattedDuration(Context context, long millis) {
@@ -181,8 +188,12 @@ public final class DateUtils {
         return android.text.format.DateFormat.getDateFormat(AppManager.getContext());
     }
 
-    public static DateFormat getMediumDateFormat() {
+    private static DateFormat getMediumDateFormat() {
         return android.text.format.DateFormat.getMediumDateFormat(AppManager.getContext());
+    }
+
+    private static DateFormat getLongDateFormat() {
+        return android.text.format.DateFormat.getLongDateFormat(AppManager.getContext());
     }
 
     private static DateFormat getTimeFormat() {
