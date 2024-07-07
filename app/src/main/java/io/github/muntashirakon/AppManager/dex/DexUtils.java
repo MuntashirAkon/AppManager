@@ -5,23 +5,24 @@ package io.github.muntashirakon.AppManager.dex;
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 
+import com.android.tools.smali.dexlib2.DexFileFactory;
+import com.android.tools.smali.dexlib2.Opcodes;
+import com.android.tools.smali.dexlib2.dexbacked.DexBackedDexFile;
+import com.android.tools.smali.dexlib2.dexbacked.DexBackedOdexFile;
+import com.android.tools.smali.dexlib2.iface.ClassDef;
+import com.android.tools.smali.dexlib2.iface.MultiDexContainer;
+import com.android.tools.smali.dexlib2.writer.builder.DexBuilder;
+import com.android.tools.smali.dexlib2.writer.io.DexDataStore;
+import com.android.tools.smali.dexlib2.writer.io.FileDataStore;
+import com.android.tools.smali.dexlib2.writer.pool.DexPool;
+import com.android.tools.smali.smali.smaliFlexLexer;
+import com.android.tools.smali.smali.smaliParser;
+import com.android.tools.smali.smali.smaliTreeWalker;
+
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
-import org.jf.dexlib2.DexFileFactory;
-import org.jf.dexlib2.Opcodes;
-import org.jf.dexlib2.dexbacked.DexBackedDexFile;
-import org.jf.dexlib2.dexbacked.DexBackedOdexFile;
-import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.iface.MultiDexContainer;
-import org.jf.dexlib2.writer.builder.DexBuilder;
-import org.jf.dexlib2.writer.io.DexDataStore;
-import org.jf.dexlib2.writer.io.FileDataStore;
-import org.jf.dexlib2.writer.pool.DexPool;
-import org.jf.smali.smaliFlexLexer;
-import org.jf.smali.smaliParser;
-import org.jf.smali.smaliTreeWalker;
 
 import java.io.File;
 import java.io.FileInputStream;

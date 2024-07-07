@@ -8,9 +8,10 @@ import android.util.LruCache;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.android.tools.smali.dexlib2.iface.ClassDef;
+import com.android.tools.smali.dexlib2.writer.io.FileDataStore;
+
 import org.antlr.runtime.RecognitionException;
-import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.writer.io.FileDataStore;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

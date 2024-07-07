@@ -82,8 +82,14 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
             throws PackageManager.NameNotFoundException {
         Context systemContext = getSystemContext();
         try {
-            UserHandle userHandle = (UserHandle) UserHandle.class
-                    .getDeclaredMethod("of", int.class).invoke(null, userId);
+            UserHandle userHandle;
+            try {
+                userHandle = (UserHandle) UserHandle.class
+                        .getDeclaredMethod("of", int.class).invoke(null, userId);
+            } catch (NoSuchMethodException e) {
+                userHandle = UserHandle.class
+                        .getDeclaredConstructor(int.class).newInstance(userId);
+            }
             return (Context) systemContext.getClass()
                     .getDeclaredMethod("createPackageContextAsUser",
                             String.class, int.class, UserHandle.class)
@@ -189,14 +195,13 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
 
         // Calling createPackageContext crashes on LG ROM
         // Override the system resources object to prevent crashing
-        Resources systemRes = Resources.getSystem();
-        Field systemResField = null;
         try {
             // This class only exists on LG ROMs with broken implementations
             Class.forName("com.lge.systemservice.core.integrity.IntegrityManager");
             // If control flow goes here, we need the resource hack
+            Resources systemRes = Resources.getSystem();
             Resources wrapper = new ResourcesWrapper(systemRes);
-            systemResField = Resources.class.getDeclaredField("mSystem");
+            Field systemResField = Resources.class.getDeclaredField("mSystem");
             systemResField.setAccessible(true);
             systemResField.set(null, wrapper);
         } catch (ReflectiveOperationException ignored) {}
@@ -207,13 +212,6 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
 
         // Use classloader from the package context to run everything
         ClassLoader cl = context.getClassLoader();
-
-        // Restore the system resources object after classloader is available
-        if (systemResField != null) {
-            try {
-                systemResField.set(null, systemRes);
-            } catch (ReflectiveOperationException ignored) {}
-        }
 
         Class<?> clz = cl.loadClass(name.getClassName());
         Constructor<?> ctor = clz.getDeclaredConstructor();
