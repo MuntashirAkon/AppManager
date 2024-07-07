@@ -81,7 +81,8 @@ public class DexOptimizer {
 
     public boolean forceDexOpt() {
         try {
-            if (SelfPermissions.isSystemOrRoot()) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+                    && SelfPermissions.isSystemOrRoot()) {
                 // Allowed for only root/system
                 try {
                     mPm.forceDexOpt(mPackageName);

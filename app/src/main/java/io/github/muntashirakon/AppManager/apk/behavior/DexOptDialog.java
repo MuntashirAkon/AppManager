@@ -83,6 +83,7 @@ public class DexOptDialog extends DialogFragment {
         MaterialCheckBox forceDexOptCheck = view.findViewById(R.id.force_dexopt);
         checkProfilesCheck.setChecked(mOptions.checkProfiles);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // Compile layout options was introduced in Android 10 and removed in Android 12
             compileLayoutsCheck.setVisibility(View.GONE);
         }
         if (!isRootOrSystem) {
