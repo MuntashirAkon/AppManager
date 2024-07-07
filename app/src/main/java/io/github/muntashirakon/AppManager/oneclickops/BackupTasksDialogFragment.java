@@ -53,10 +53,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         mActivity = (OneClickOpsActivity) requireActivity();
-        LayoutInflater inflater = LayoutInflater.from(mActivity);
-        if (inflater == null) return super.onCreateDialog(savedInstanceState);
-        @SuppressLint("InflateParams")
-        View view = inflater.inflate(R.layout.dialog_backup_tasks, null);
+        View view = View.inflate(requireContext(), R.layout.dialog_backup_tasks, null);
         // Backup all installed apps
         view.findViewById(R.id.backup_all).setOnClickListener(v -> {
             mActivity.progressIndicator.show();

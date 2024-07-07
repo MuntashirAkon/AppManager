@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.backup.dialog;
 
+import android.annotation.UserIdInt;
 import android.app.Application;
 import android.os.PowerManager;
 import android.os.UserHandleHidden;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Future;
 
@@ -37,7 +39,6 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class BackupRestoreDialogViewModel extends AndroidViewModel {
     public static class OperationInfo {
-        @Deprecated
         @BackupRestoreDialogFragment.ActionMode
         public int mode;
         @BatchOpsManager.OpType
@@ -59,6 +60,9 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
     }
 
     private int mWorstBackupFlag;
+    private int[] mPreferredUsersForBackup;
+    private int[] mPreferredUsersForRestore;
+    private boolean mAllowCustomUsersInBackup = true;
     private Future<?> mProcessPackageFuture;
     private Future<?> mHandleUsersFuture;
 
@@ -120,6 +124,14 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
         return mWorstBackupFlag;
     }
 
+    public boolean allowCustomUsersInBackup() {
+        return mAllowCustomUsersInBackup;
+    }
+
+    public void setPreferredUserForRestore(@UserIdInt int preferredUserForRestore) {
+        mPreferredUsersForRestore = new int[]{preferredUserForRestore};
+    }
+
     @AnyThread
     public void processPackages(@Nullable List<UserPackagePair> userPackagePairs) {
         mProcessPackageFuture = ThreadUtils.postOnBackgroundThread(() -> {
@@ -141,18 +153,12 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
     @AnyThread
     public void prepareForOperation(@NonNull OperationInfo operationInfo) {
         mHandleUsersFuture = ThreadUtils.postOnBackgroundThread(() -> {
-            switch (operationInfo.mode) {
-                case BackupRestoreDialogFragment.MODE_BACKUP:
-                case BackupRestoreDialogFragment.MODE_RESTORE:
-                    if (operationInfo.handleMultipleUsers
-                            && (operationInfo.flags & BackupFlags.BACKUP_CUSTOM_USERS) != 0) {
-                        handleCustomUsers(operationInfo);
-                        return;
-                    }
-                    break;
-                case BackupRestoreDialogFragment.MODE_DELETE:
-                    // Nothing to handle, proceed directly to operation
-                    break;
+            if (operationInfo.handleMultipleUsers
+                    && operationInfo.mode != BackupRestoreDialogFragment.MODE_DELETE
+                    && (operationInfo.flags & BackupFlags.BACKUP_CUSTOM_USERS) != 0) {
+                // Handle custom users for backup/restore operations if requested
+                handleCustomUsers(operationInfo);
+                return;
             }
             operationInfo.handleMultipleUsers = false;
             generatePackageUserIdLists(operationInfo);
@@ -162,6 +168,7 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
 
     private void processPackagesInternal(@NonNull List<UserPackagePair> userPackagePairs) {
         Map<String, BackupInfo> backupInfoMap = new HashMap<>();
+        AppDb appDb = new AppDb();
         // Fetch info
         for (UserPackagePair userPackagePair : userPackagePairs) {
             if (ThreadUtils.isInterrupted()) {
@@ -173,13 +180,13 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
             }
             BackupInfo backupInfo = backupInfoMap.get(userPackagePair.getPackageName());
             if (backupInfo != null) {
+                // Entry exists, add user ID only
                 backupInfo.userIds.add(userPackagePair.getUserId());
                 continue;
             }
+            // Add new entry
             backupInfo = new BackupInfo(userPackagePair.getPackageName(), userPackagePair.getUserId());
-            backupInfoMap.put(userPackagePair.getPackageName(), backupInfo);
-            AppDb appDb = new AppDb();
-            List<App> apps = appDb.getAllApplications(userPackagePair.getPackageName());
+            List<App> apps = appDb.getAllApplications(userPackagePair.getPackageName(), userPackagePair.getUserId());
             List<Backup> backups = appDb.getAllBackups(userPackagePair.getPackageName());
             if (ThreadUtils.isInterrupted()) {
                 return;
@@ -210,6 +217,11 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
                     backupInfo.setInstalled(backupInfo.isInstalled() | app.isInstalled);
                 }
             }
+            if (!backupInfo.isInstalled() && backupInfo.getBackups().isEmpty()) {
+                // App cannot be backed up or restored
+                continue;
+            }
+            backupInfoMap.put(userPackagePair.getPackageName(), backupInfo);
         }
         if (ThreadUtils.isInterrupted()) {
             return;
@@ -218,6 +230,29 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
         mBackupInfoList.addAll(backupInfoMap.values());
         mAppsWithoutBackups.clear();
         mUninstalledApps.clear();
+        // Check if mBackupInfoList is singleton
+        if (mBackupInfoList.size() == 1) {
+            // Singleton list
+            BackupInfo backupInfo = mBackupInfoList.get(0);
+            if (backupInfo.isInstalled() && backupInfo.userIds.size() == 1) {
+                // A special case where we need to check if we can allow custom users for backups
+                mPreferredUsersForBackup = new int[]{Objects.requireNonNull(backupInfo.userIds.valueAt(0))};
+                List<App> apps = appDb.getAllApplications(backupInfo.packageName);
+                int userCount = 0;
+                for (App app : apps) {
+                    if (app.isInstalled) {
+                        ++userCount;
+                    }
+                }
+                mAllowCustomUsersInBackup = userCount > 1;
+            }
+        }
+        if (mPreferredUsersForBackup == null) {
+            mPreferredUsersForBackup = new int[]{UserHandleHidden.myUserId()};
+        }
+        if (mPreferredUsersForRestore == null) {
+            mPreferredUsersForRestore = new int[]{UserHandleHidden.myUserId()};
+        }
         // Find status
         int status;
         mWorstBackupFlag = 0xffff_ffff;
@@ -288,7 +323,8 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
         operationInfo.handleMultipleUsers = false;
         List<UserInfo> users = Users.getUsers();
         if (users.size() <= 1) {
-            // Strip custom users flag
+            // There's only one user (which should not happen because the flag should be hidden)
+            // Strip custom users flag and start the operation
             operationInfo.flags &= ~BackupFlags.BACKUP_CUSTOM_USERS;
             generatePackageUserIdLists(operationInfo);
             mBackupOperationLiveData.postValue(operationInfo);
@@ -300,16 +336,38 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void generatePackageUserIdLists(@NonNull OperationInfo operationInfo) {
-        int[] userIds = operationInfo.selectedUsers != null ? operationInfo.selectedUsers : new int[]{UserHandleHidden.myUserId()};
+        int[] userIds;
+        if (operationInfo.selectedUsers != null) {
+            userIds = operationInfo.selectedUsers;
+        } else if (operationInfo.mode == BackupRestoreDialogFragment.MODE_BACKUP) {
+            userIds = mPreferredUsersForBackup;
+        } else { // restore/delete mode
+            userIds = mPreferredUsersForRestore;
+        }
         operationInfo.packageList = new ArrayList<>();
         operationInfo.userIdListMappedToPackageList = new ArrayList<>();
+        // For singleton restore, cross user restore is supported. So, we need to handle that here.
+        if (operationInfo.mode == BackupRestoreDialogFragment.MODE_RESTORE && mBackupInfoList.size() == 1) {
+            BackupInfo backupInfo = mBackupInfoList.get(0);
+            if (!backupInfo.getBackups().isEmpty() && backupInfo.userIds.size() == 1) {
+                // Singleton restore
+                for (int userId : userIds) {
+                    // Same backup can be restored for multiple users
+                    operationInfo.packageList.add(backupInfo.packageName);
+                    operationInfo.userIdListMappedToPackageList.add(userId);
+                }
+            }
+        }
+        // Otherwise, user checks are mandatory.
         for (BackupInfo backupInfo : mBackupInfoList) {
             if (ThreadUtils.isInterrupted()) {
                 return;
             }
             for (int userId : userIds) {
-                operationInfo.packageList.add(backupInfo.packageName);
-                operationInfo.userIdListMappedToPackageList.add(userId);
+                if (backupInfo.userIds.contains(userId)) {
+                    operationInfo.packageList.add(backupInfo.packageName);
+                    operationInfo.userIdListMappedToPackageList.add(userId);
+                }
             }
         }
     }

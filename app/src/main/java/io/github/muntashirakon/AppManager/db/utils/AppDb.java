@@ -37,7 +37,6 @@ import io.github.muntashirakon.AppManager.db.dao.AppDao;
 import io.github.muntashirakon.AppManager.db.dao.BackupDao;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -82,6 +81,12 @@ public class AppDb {
     public List<App> getAllApplications(String packageName) {
         synchronized (sLock) {
             return mAppDao.getAll(packageName);
+        }
+    }
+
+    public List<App> getAllApplications(String packageName, @UserIdInt int userId) {
+        synchronized (sLock) {
+            return mAppDao.getAll(packageName, userId);
         }
     }
 

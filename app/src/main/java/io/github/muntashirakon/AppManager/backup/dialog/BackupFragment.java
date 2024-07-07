@@ -29,8 +29,15 @@ import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.widget.MaterialAlertView;
 
 public class BackupFragment extends Fragment {
-    public static BackupFragment getInstance() {
-        return new BackupFragment();
+    public static final String ARG_ALLOW_CUSTOM_USERS = "allow_custom";
+
+    @NonNull
+    public static BackupFragment getInstance(boolean allowCustomUsers) {
+        BackupFragment fragment = new BackupFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_ALLOW_CUSTOM_USERS, allowCustomUsers);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     private BackupRestoreDialogViewModel mViewModel;
@@ -46,6 +53,7 @@ public class BackupFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(requireParentFragment()).get(BackupRestoreDialogViewModel.class);
         mContext = requireContext();
+        boolean allowCustomUsers = requireArguments().getBoolean(ARG_ALLOW_CUSTOM_USERS);
 
         MaterialAlertView messageView = view.findViewById(R.id.message);
         RecyclerView recyclerView = view.findViewById(android.R.id.list);
@@ -53,6 +61,9 @@ public class BackupFragment extends Fragment {
         int supportedFlags = BackupFlags.getSupportedBackupFlags();
         // Remove unsupported flags
         supportedFlags &= ~BackupFlags.BACKUP_NO_SIGNATURE_CHECK;
+        if (!allowCustomUsers) {
+            supportedFlags &= ~BackupFlags.BACKUP_CUSTOM_USERS;
+        }
         FlagsAdapter adapter = new FlagsAdapter(mContext, BackupFlags.fromPref().getFlags(), supportedFlags);
         recyclerView.setAdapter(adapter);
 

@@ -421,8 +421,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             });
         } else if (itemId == R.id.action_backup) {
             if (mMainModel == null) return true;
-            BackupRestoreDialogFragment fragment = BackupRestoreDialogFragment.getInstance(
-                    Collections.singletonList(new UserPackagePair(mPackageName, mUserId)));
+            BackupRestoreDialogFragment fragment = BackupRestoreDialogFragment.getInstanceWithPref(
+                    Collections.singletonList(new UserPackagePair(mPackageName, mUserId)), mUserId);
             fragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
             fragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
             fragment.show(getParentFragmentManager(), BackupRestoreDialogFragment.TAG);
