@@ -64,6 +64,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_sensor"
+        android:icon="@drawable/ic_pulse"
+        android:title="@string/sensors"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_net_policy"
         android:icon="@drawable/ic_security_network"
         android:title="@string/net_policy"

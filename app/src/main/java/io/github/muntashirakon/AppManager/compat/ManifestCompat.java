@@ -40,6 +40,8 @@ public final class ManifestCompat {
         public static final String MANAGE_NETWORK_POLICY = "android.permission.MANAGE_NETWORK_POLICY";
         @RequiresApi(Build.VERSION_CODES.S)
         public static final String MANAGE_NOTIFICATION_LISTENERS = "android.permission.MANAGE_NOTIFICATION_LISTENERS";
+        @RequiresApi(Build.VERSION_CODES.P)
+        public static final String MANAGE_SENSORS = "android.permission.MANAGE_SENSORS";
         public static final String MANAGE_USERS = "android.permission.MANAGE_USERS";
         public static final String READ_PRIVILEGED_PHONE_STATE = "android.permission.READ_PRIVILEGED_PHONE_STATE";
         public static final String REAL_GET_TASKS = "android.permission.REAL_GET_TASKS";

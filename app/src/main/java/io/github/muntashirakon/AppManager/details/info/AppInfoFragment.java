@@ -106,6 +106,7 @@ import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.compat.SensorServiceCompat;
 import io.github.muntashirakon.AppManager.debloat.BloatwareDetailsDialog;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
@@ -373,6 +374,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (batteryOptMenu != null) {
             batteryOptMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.DEVICE_POWER));
         }
+        MenuItem sensorsMenu = menu.findItem(R.id.action_sensor);
+        if (sensorsMenu != null) {
+            sensorsMenu.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+                    && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_SENSORS));
+        }
         MenuItem netPolicyMenu = menu.findItem(R.id.action_net_policy);
         if (netPolicyMenu != null) {
             netPolicyMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY));
@@ -486,6 +492,43 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .show();
             } else {
                 Log.e(TAG, "No DUMP permission.");
+            }
+        } else if (itemId == R.id.action_sensor) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_SENSORS)) {
+                new MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(R.string.sensors)
+                        .setMessage(R.string.choose_what_to_do)
+                        .setPositiveButton(R.string.enable, (dialog, which) -> ThreadUtils.postOnBackgroundThread(() -> {
+                            try {
+                                SensorServiceCompat.enableSensor(mPackageName, mUserId, true);
+                                ThreadUtils.postOnMainThread(() -> {
+                                    UIUtils.displayShortToast(R.string.done);
+                                    refreshDetails();
+                                });
+                            } catch (IOException e) {
+                                ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(
+                                        getString(R.string.failed)
+                                                + LangUtils.getSeparatorString()
+                                                + e.getMessage()));
+                            }
+                        }))
+                        .setNegativeButton(R.string.disable, (dialog, which) -> ThreadUtils.postOnBackgroundThread(() -> {
+                            try {
+                                SensorServiceCompat.enableSensor(mPackageName, mUserId, false);
+                                ThreadUtils.postOnMainThread(() -> {
+                                    UIUtils.displayShortToast(R.string.done);
+                                    refreshDetails();
+                                });
+                            } catch (IOException e) {
+                                ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(
+                                        getString(R.string.failed)
+                                                + LangUtils.getSeparatorString()
+                                                + e.getMessage()));
+                            }
+                        }))
+                        .show();
+            } else {
+                Log.e(TAG, "No sensor permission.");
             }
         } else if (itemId == R.id.action_net_policy) {
             if (!UserHandleHidden.isApp(mApplicationInfo.uid)) {

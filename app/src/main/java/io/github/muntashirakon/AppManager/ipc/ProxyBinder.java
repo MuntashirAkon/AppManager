@@ -64,6 +64,7 @@ public class ProxyBinder implements IBinder {
                                     @NonNull String[] args, @Nullable ShellCallback callback,
                                     @NonNull ResultReceiver resultReceiver) throws RemoteException {
         if (!(binder instanceof ProxyBinder)) {
+            BinderCompat.shellCommand(binder, in, out, err, args, callback, resultReceiver);
             return;
         }
         ProxyBinder proxyBinder = (ProxyBinder) binder;
