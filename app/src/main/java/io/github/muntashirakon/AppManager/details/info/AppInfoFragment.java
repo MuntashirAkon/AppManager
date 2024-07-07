@@ -90,7 +90,7 @@ import io.github.muntashirakon.AppManager.accessibility.NoRootAccessibilityServi
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
-import io.github.muntashirakon.AppManager.apk.behavior.DexOptDialog;
+import io.github.muntashirakon.AppManager.apk.dexopt.DexOptDialog;
 import io.github.muntashirakon.AppManager.apk.behavior.FreezeUnfreezeShortcutInfo;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;

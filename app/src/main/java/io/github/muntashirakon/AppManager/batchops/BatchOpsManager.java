@@ -24,7 +24,6 @@ import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
 import androidx.core.os.BundleCompat;
 
-import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -42,8 +41,8 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
-import io.github.muntashirakon.AppManager.apk.behavior.DexOptOptions;
-import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizer;
+import io.github.muntashirakon.AppManager.apk.dexopt.DexOptOptions;
+import io.github.muntashirakon.AppManager.apk.dexopt.DexOptimizer;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.BackupManager;

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.apk.behavior;
+package io.github.muntashirakon.AppManager.apk.dexopt;
 
 import android.os.Parcel;
 import android.os.Parcelable;
