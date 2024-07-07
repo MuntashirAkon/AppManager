@@ -257,6 +257,17 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
         }
     }
 
+    @Nullable
+    @GuardedBy("mLock")
+    private LogLine getItemSafe(int position) {
+        synchronized (mLock) {
+            if (mObjects.size() > position) {
+                return mObjects.get(position);
+            }
+            return null;
+        }
+    }
+
     @GuardedBy("mLock")
     public int getRealSize() {
         synchronized (mLock) {
@@ -281,21 +292,31 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
     @Override
     protected void select(int position) {
         synchronized (mSelectedLogLines) {
-            mSelectedLogLines.add(getItem(position));
+            LogLine logLine = getItemSafe(position);
+            if (logLine != null) {
+                mSelectedLogLines.add(logLine);
+            }
         }
     }
 
     @Override
     protected void deselect(int position) {
         synchronized (mSelectedLogLines) {
-            mSelectedLogLines.remove(getItem(position));
+            LogLine logLine = getItemSafe(position);
+            if (logLine != null) {
+                mSelectedLogLines.remove(logLine);
+            }
         }
     }
 
     @Override
     protected boolean isSelected(int position) {
         synchronized (mSelectedLogLines) {
-            return mSelectedLogLines.contains(getItem(position));
+            LogLine logLine = getItemSafe(position);
+            if (logLine != null) {
+                return mSelectedLogLines.contains(logLine);
+            }
+            return false;
         }
     }
 
