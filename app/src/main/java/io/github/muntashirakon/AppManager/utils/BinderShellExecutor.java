@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import android.os.ResultReceiver;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +23,9 @@ import java.io.InputStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.io.Path;
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -127,6 +130,11 @@ public class BinderShellExecutor {
             result.resultCode = resultCode;
             result.stdout = stdoutStream.toString();
             result.stderr = stderrStream.toString();
+            if (BuildConfig.DEBUG) {
+                Log.d("BinderShell_IN", TextUtils.join(" ", command));
+                Log.d("BinderShell_OUT", "(exit code: " + result.resultCode + ")");
+                Log.d("BinderShell_OUT", result.stdout);
+            }
             return result;
         } catch (RemoteException e) {
             return ExUtils.rethrowFromSystemServer(e);

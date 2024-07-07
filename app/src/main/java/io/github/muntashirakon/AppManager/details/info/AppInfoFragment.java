@@ -998,6 +998,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .show());
             }
         }
+        if (!tagCloud.sensorsEnabled) {
+            TagItem sensorsTag = new TagItem();
+            tagItems.add(sensorsTag);
+            sensorsTag.setTextRes(R.string.tag_sensors_disabled);
+        }
         if (tagCloud.netPolicies > 0) {
             String[] readablePolicies = NetworkPolicyManagerCompat.getReadablePolicies(context, tagCloud.netPolicies)
                     .values().toArray(new String[0]);

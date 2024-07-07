@@ -48,6 +48,7 @@ import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.compat.SensorServiceCompat;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.debloat.DebloatObject;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
@@ -163,7 +164,7 @@ public class AppInfoViewModel extends AndroidViewModel {
             tagCloud.isUpdatedSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0;
             String codePath = PackageUtils.getHiddenCodePathOrDefault(packageName, applicationInfo.publicSourceDir);
             tagCloud.isSystemlessPath = !isExternalApk && MagiskUtils.isSystemlessPath(codePath);
-            if (!isExternalApk && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            if (!isExternalApk && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 DomainVerificationUserState userState = DomainVerificationManagerCompat
                         .getDomainVerificationUserState(packageName, userId);
                 if (userState != null) {
@@ -224,6 +225,10 @@ public class AppInfoViewModel extends AndroidViewModel {
             if (ThreadUtils.isInterrupted()) {
                 return;
             }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+                    && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_SENSORS)) {
+                tagCloud.sensorsEnabled = SensorServiceCompat.isSensorEnabled(packageName, userId);
+            } else tagCloud.sensorsEnabled = true;
             try (ZipFile zipFile = new ZipFile(applicationInfo.publicSourceDir)) {
                 Boolean isXposedModule = XposedModuleInfo.isXposedModule(applicationInfo, zipFile);
                 if (!Boolean.FALSE.equals(isXposedModule)) {
@@ -439,6 +444,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isMagiskHideEnabled;
         public boolean isMagiskDenyListEnabled;
         public boolean isBloatware;
+        public boolean sensorsEnabled;
         @Nullable
         public XposedModuleInfo xposedModuleInfo;
         public boolean canWriteAndExecute;

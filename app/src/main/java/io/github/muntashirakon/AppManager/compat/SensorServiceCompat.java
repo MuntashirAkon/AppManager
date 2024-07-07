@@ -25,7 +25,7 @@ public final class SensorServiceCompat {
         } else command = new String[]{"get-uid-state", packageName};
         try {
             BinderShellExecutor.ShellResult result = BinderShellExecutor.execute(getSensorService(), command);
-            return result.getResultCode() == 0 && "active".contains(result.getStdout());
+            return "active".equals(result.getStdout().trim());
         } catch (IOException e) {
             e.printStackTrace();
         }
