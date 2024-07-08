@@ -8,6 +8,7 @@ import android.os.SystemProperties;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class DexOptOptions implements Parcelable {
     @NonNull
@@ -19,6 +20,7 @@ public class DexOptOptions implements Parcelable {
         return options;
     }
 
+    @Nullable
     public String[] packages;
     public String compilerFiler;
     public boolean compileLayouts;
