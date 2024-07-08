@@ -1488,4 +1488,6 @@
     <string name="mode_of_op_alternative_custom_command">If you get a “permission denied” error with the above command, run the following command instead:</string>
     <string name="sensors">Sensors</string>
     <string name="tag_sensors_disabled">Sensors disabled</string>
+    <string name="pref_use_system_font">Use system font</string>
+    <string name="pref_use_system_font_msg">Use the system-default font instead of the material font. <font fgcolor="#ff0000">This is an experimental feature.</font></string>
 </resources>

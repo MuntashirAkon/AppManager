@@ -149,6 +149,10 @@ public final class Prefs {
         public static void setNightMode(int nightMode) {
             AppPref.set(AppPref.PrefKey.PREF_APP_THEME_INT, nightMode);
         }
+
+        public static boolean useSystemFont() {
+            return AppPref.getBoolean(AppPref.PrefKey.PREF_USE_SYSTEM_FONT_BOOL);
+        }
     }
 
     public static final class BackupRestore {
@@ -510,7 +514,7 @@ public final class Prefs {
         @Nullable
         public static int[] getSelectedUsers() {
             String usersStr = AppPref.getString(AppPref.PrefKey.PREF_SELECTED_USERS_STR);
-            if ("".equals(usersStr)) return null;
+            if (usersStr.isEmpty()) return null;
             String[] usersSplitStr = usersStr.split(",");
             int[] users = new int[usersSplitStr.length];
             for (int i = 0; i < users.length; ++i) {

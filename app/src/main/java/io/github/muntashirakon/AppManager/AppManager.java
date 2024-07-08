@@ -19,6 +19,7 @@ import dalvik.system.ZipPathValidator;
 import io.github.muntashirakon.AppManager.misc.AMExceptionHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
+import io.github.muntashirakon.AppManager.utils.appearance.TypefaceUtil;
 
 public class AppManager extends Application {
     static {
@@ -38,6 +39,7 @@ public class AppManager extends Application {
         super.onCreate();
         Thread.setDefaultUncaughtExceptionHandler(new AMExceptionHandler(this));
         AppearanceUtils.init(this);
+        TypefaceUtil.replaceFontsWithSystem(this);
         Security.addProvider(new JavaKeyStoreProvider());
     }
 

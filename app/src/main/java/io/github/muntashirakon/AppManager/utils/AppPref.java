@@ -138,6 +138,7 @@ public class AppPref {
         PREF_VIRUS_TOTAL_API_KEY_STR,
         PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL,
 
+        PREF_USE_SYSTEM_FONT_BOOL,
         PREF_ZIP_ALIGN_BOOL,
         ;
 
@@ -387,6 +388,7 @@ public class AppPref {
             case PREF_FM_REMEMBER_LAST_PATH_BOOL:
             case PREF_FM_SORT_REVERSE_BOOL:
             case PREF_ENABLE_PERSISTENT_SESSION_BOOL:
+            case PREF_USE_SYSTEM_FONT_BOOL:
                 return false;
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_SHOW_DISCLAIMER_BOOL:
