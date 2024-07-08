@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.details.info;
 
+import android.Manifest;
 import android.annotation.UserIdInt;
 import android.app.ActivityManager;
 import android.app.Application;
@@ -61,6 +62,7 @@ import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -279,7 +281,9 @@ public class AppInfoViewModel extends AndroidViewModel {
                 }
                 // Net statistics
                 try {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (!ArrayUtils.contains(packageInfo.requestedPermissions, Manifest.permission.INTERNET)) {
+                        appInfo.dataUsage = null;
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (FeatureController.isUsageAccessEnabled()) {
                             appInfo.dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
                                     applicationInfo.uid, UsageUtils.USAGE_LAST_BOOT);
