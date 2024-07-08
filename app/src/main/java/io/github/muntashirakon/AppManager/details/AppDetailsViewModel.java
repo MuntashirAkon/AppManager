@@ -1367,8 +1367,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 // Include defaults i.e. app ops without any associated permissions if requested
                 if (Prefs.AppDetailsPage.displayDefaultAppOps()) {
                     for (int op : AppOpsManagerCompat.getOpsWithoutPermissions()) {
-                        if (op >= AppOpsManagerCompat._NUM_OP || opToOpEntryMap.get(op) != null) {
-                            // Unsupported app operation
+                        if (op == AppOpsManagerCompat.OP_NONE
+                                || op >= AppOpsManagerCompat._NUM_OP
+                                || opToOpEntryMap.get(op) != null) {
+                            // Invalid/unsupported app operation
                             continue;
                         }
                         otherOps.add(op);

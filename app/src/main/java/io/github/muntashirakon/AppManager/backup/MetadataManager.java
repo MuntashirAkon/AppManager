@@ -236,7 +236,7 @@ public final class MetadataManager {
             JSONObject rootObject = new JSONObject(metadata);
             mMetadata = new Metadata();
             mMetadata.backupFile = backupFile;
-            mMetadata.backupName = backupFile.getBackupPath().getName();
+            mMetadata.backupName = backupFile.backupName;
             mMetadata.label = rootObject.getString("label");
             mMetadata.packageName = rootObject.getString("package_name");
             mMetadata.versionName = rootObject.getString("version_name");
