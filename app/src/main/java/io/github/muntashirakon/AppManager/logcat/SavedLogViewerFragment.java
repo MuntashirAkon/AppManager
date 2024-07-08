@@ -68,13 +68,13 @@ public class SavedLogViewerFragment extends AbsLogViewerFragment implements LogV
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_saved_log_viewer_actions, menu);
+    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.fragment_saved_log_viewer_actions, menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        return super.onOptionsItemSelected(item);
+    public boolean onMenuItemSelected(@NonNull MenuItem item) {
+        return super.onMenuItemSelected(item);
     }
 
     @Override

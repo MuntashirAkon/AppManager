@@ -32,6 +32,8 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.os.BundleCompat;
 import androidx.core.os.ParcelCompat;
+import androidx.core.view.MenuProvider;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
@@ -71,7 +73,7 @@ import io.github.rosemoe.sora.widget.EditorSearcher.SearchOptions;
 import io.github.rosemoe.sora.widget.SymbolInputView;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 
-public class CodeEditorFragment extends AndroidFragment {
+public class CodeEditorFragment extends AndroidFragment implements MenuProvider {
     public static final String ARG_OPTIONS = "options";
 
     public static class Options implements Parcelable {
@@ -266,12 +268,6 @@ public class CodeEditorFragment extends AndroidFragment {
         }
     };
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -465,6 +461,7 @@ public class CodeEditorFragment extends AndroidFragment {
         mPositionButton.setOnClickListener(v -> {
             // TODO: 13/9/22 Enable going to custom places
         });
+        requireActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
         // Update live buttons at the start
         updateLiveButtons();
@@ -545,7 +542,7 @@ public class CodeEditorFragment extends AndroidFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.activity_code_editor_actions, menu);
         mSaveMenu = menu.findItem(R.id.action_save);
         mUndoMenu = menu.findItem(R.id.action_undo);
@@ -556,7 +553,7 @@ public class CodeEditorFragment extends AndroidFragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onMenuItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_undo) {
             if (mEditor != null && mEditor.canUndo()) {
@@ -591,12 +588,14 @@ public class CodeEditorFragment extends AndroidFragment {
             return true;
         } else if (id == R.id.action_java_smali_toggle) {
             mViewModel.generateJava(mEditor.getText());
+            return true;
         } else if (id == R.id.action_search) {
             if (mSearchWidget != null) {
                 // FIXME: 21/4/23 Ideally, search widget should have cross button to close it.
                 if (mSearchWidget.getVisibility() == View.VISIBLE) {
                     hideSearchWidget();
                 } else showSearchWidget();
+                return true;
             }
         }
         return false;

@@ -40,7 +40,9 @@ import androidx.collection.ArrayMap;
 import androidx.core.content.ContextCompat;
 import androidx.core.os.BundleCompat;
 import androidx.core.provider.DocumentsContractCompat;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -88,8 +90,9 @@ import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
-public class FmFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener,
-        SpeedDialView.OnActionSelectedListener, MultiSelectionActionsView.OnItemSelectedListener {
+public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQueryTextListener,
+        SwipeRefreshLayout.OnRefreshListener, SpeedDialView.OnActionSelectedListener,
+        MultiSelectionActionsView.OnItemSelectedListener {
     public static final String TAG = FmFragment.class.getSimpleName();
 
     public static final String ARG_URI = "uri";
@@ -151,7 +154,6 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         mModel = new ViewModelProvider(this).get(FmViewModel.class);
     }
 
@@ -261,6 +263,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         mMultiSelectionView.updateCounter(true);
         BatchOpsHandler batchOpsHandler = new BatchOpsHandler(mMultiSelectionView);
         mMultiSelectionView.setOnSelectionChangeListener(batchOpsHandler);
+        mActivity.addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
         // Set observer
         mModel.getLastUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
             // force disable empty view
@@ -419,12 +422,12 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.activity_fm_actions, menu);
     }
 
     @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+    public void onPrepareMenu(@NonNull Menu menu) {
         MenuItem pasteMenu = menu.findItem(R.id.action_paste);
         if (pasteMenu != null) {
             FmTasks.FmTask fmTask = FmTasks.getInstance().peek();
@@ -433,7 +436,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onMenuItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
             mModel.reload();
@@ -447,7 +450,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         } else if (id == R.id.action_storage) {
             ThreadUtils.postOnBackgroundThread(() -> {
                 ArrayMap<String, Uri> storageLocations = StorageUtils.getAllStorageLocations(mActivity);
-                if (storageLocations.size() == 0) {
+                if (storageLocations.isEmpty()) {
                     mActivity.runOnUiThread(() -> {
                         if (isDetached()) return;
                         new MaterialAlertDialogBuilder(mActivity)
@@ -502,7 +505,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             startActivity(intent);
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     @Override
@@ -534,7 +537,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         List<Path> selectedFiles = mModel.getSelectedItems();
-        if (selectedFiles.size() == 0) {
+        if (selectedFiles.isEmpty()) {
             // Do nothing on empty list
             return false;
         }

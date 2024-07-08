@@ -97,7 +97,6 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         mNeededProperty = requireArguments().getInt(ARG_TYPE);
     }
 
@@ -138,16 +137,16 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
         if (viewModel != null && !viewModel.isExternalApk() && SelfPermissions.canModifyAppComponentStates(
                 viewModel.getUserId(), viewModel.getPackageName(), viewModel.isTestOnlyApp())) {
-            inflater.inflate(R.menu.fragment_app_details_components_actions, menu);
+            menuInflater.inflate(R.menu.fragment_app_details_components_actions, menu);
             mBlockingToggler = menu.findItem(R.id.action_toggle_blocking);
-        } else inflater.inflate(R.menu.fragment_app_details_refresh_actions, menu);
+        } else menuInflater.inflate(R.menu.fragment_app_details_refresh_actions, menu);
     }
 
     @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+    public void onPrepareMenu(@NonNull Menu menu) {
         if (viewModel == null || viewModel.isExternalApk()) {
             return;
         }
@@ -162,7 +161,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onMenuItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh_details) {
             refreshDetails();
@@ -187,7 +186,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         } else if (id == R.id.action_sort_by_tracker_components) {  // Components
             setSortBy(AppDetailsFragment.SORT_BY_TRACKERS);
             item.setChecked(true);
-        } else return super.onOptionsItemSelected(item);
+        } else return false;
         return true;
     }
 

@@ -60,7 +60,9 @@ import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.pm.PackageInfoCompat;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -165,7 +167,7 @@ import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
-public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, MenuProvider {
     public static final String TAG = "AppInfoFragment";
 
     private static final String PACKAGE_NAME_AURORA_STORE = "com.aurora.store";
@@ -214,7 +216,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         mAppInfoModel = new ViewModelProvider(this).get(AppInfoViewModel.class);
         mMainModel = new ViewModelProvider(requireActivity()).get(AppDetailsViewModel.class);
     }
@@ -251,6 +252,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mVersionView = view.findViewById(R.id.version);
         mAdapter = new AppInfoRecyclerAdapter(requireContext());
         recyclerView.setAdapter(mAdapter);
+        mActivity.addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
         // Set observer
         mMainModel.get(AppDetailsFragment.APP_INFO).observe(getViewLifecycleOwner(), appDetailsItems -> {
             mLoadedItemCount = 0;
@@ -341,14 +343,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         if (mMainModel != null && !mMainModel.isExternalApk()) {
             inflater.inflate(R.menu.fragment_app_info_actions, menu);
         }
     }
 
     @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+    public void onPrepareMenu(@NonNull Menu menu) {
         if (mIsExternalApk) return;
         boolean isDebuggable;
         if (mApplicationInfo != null) {
@@ -395,7 +397,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onMenuItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.action_refresh_detail) {
             refreshDetails();
@@ -606,7 +608,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 DexOptDialog dialog = DexOptDialog.getInstance(new String[]{mPackageName});
                 dialog.show(getChildFragmentManager(), DexOptDialog.TAG);
             } else UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
-        } else return super.onOptionsItemSelected(item);
+        } else return false;
         return true;
     }
 
