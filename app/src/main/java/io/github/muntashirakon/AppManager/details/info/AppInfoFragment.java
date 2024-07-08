@@ -1538,7 +1538,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         Intent fdroid_intent = new Intent(Intent.ACTION_VIEW);
         fdroid_intent.setData(Uri.parse("https://f-droid.org/packages/" + mPackageName));
         List<ResolveInfo> resolvedActivities = mPackageManager.queryIntentActivities(fdroid_intent, 0);
-        if (resolvedActivities.size() > 0) {
+        if (!resolvedActivities.isEmpty()) {
             ActionItem fdroidItem = new ActionItem(R.string.fdroid, R.drawable.ic_frost_fdroid);
             actionItems.add(fdroidItem);
             fdroidItem.setOnClickListener(v -> {
@@ -1751,7 +1751,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void setDataUsage(@NonNull AppInfoViewModel.AppInfo appInfo) {
         AppUsageStatsManager.DataUsage dataUsage = appInfo.dataUsage;
-        if (dataUsage == null) return;
+        if (dataUsage == null) {
+            // No permission
+            return;
+        }
         // Hide data usage if:
         // 1. OS is Android 6.0 onwards, AND
         // 2. The user is not the current user, AND

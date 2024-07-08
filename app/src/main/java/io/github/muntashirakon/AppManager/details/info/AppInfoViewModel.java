@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.details.info;
 
+import android.Manifest;
 import android.annotation.UserIdInt;
 import android.app.ActivityManager;
 import android.app.Application;
@@ -69,6 +70,7 @@ import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -354,8 +356,10 @@ public class AppInfoViewModel extends AndroidViewModel {
                 boolean hasUsageAccess = FeatureController.isUsageAccessEnabled() && SelfPermissions.checkUsageStatsPermission();
                 if (hasUsageAccess) {
                     // Net statistics
-                    appInfo.dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
-                            applicationInfo.uid, UsageUtils.USAGE_LAST_BOOT);
+                    if (ArrayUtils.contains(packageInfo.requestedPermissions, Manifest.permission.INTERNET)) {
+                        appInfo.dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
+                                applicationInfo.uid, UsageUtils.USAGE_LAST_BOOT);
+                    } else appInfo.dataUsage = null;
                     // Set sizes
                     appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userId,
                             Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
@@ -367,7 +371,6 @@ public class AppInfoViewModel extends AndroidViewModel {
                     try {
                         applicationLabel = pm.getApplicationInfo(installerPackageName, 0).loadLabel(pm).toString();
                     } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
                         applicationLabel = installerPackageName;
                     }
                     appInfo.installerApp = applicationLabel;
