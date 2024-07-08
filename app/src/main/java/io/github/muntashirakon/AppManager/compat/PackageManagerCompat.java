@@ -491,13 +491,16 @@ public final class PackageManagerCompat {
     public static int installExistingPackageAsUser(@NonNull String packageName, @UserIdInt int userId, int installFlags,
                                                    int installReason, @Nullable List<String> whiteListedPermissions)
             throws RemoteException {
+        int returnCode;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return getPackageManager().installExistingPackageAsUser(packageName, userId, installFlags, installReason, whiteListedPermissions);
+            returnCode = getPackageManager().installExistingPackageAsUser(packageName, userId, installFlags, installReason, whiteListedPermissions);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            returnCode = getPackageManager().installExistingPackageAsUser(packageName, userId, installFlags, installReason);
+        } else returnCode = getPackageManager().installExistingPackageAsUser(packageName, userId);
+        if (userId != UserHandleHidden.myUserId()) {
+            BroadcastUtils.sendPackageAdded(ContextUtils.getContext(), new String[]{packageName});
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return getPackageManager().installExistingPackageAsUser(packageName, userId, installFlags, installReason);
-        }
-        return getPackageManager().installExistingPackageAsUser(packageName, userId);
+        return returnCode;
     }
 
     @RequiresPermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)

@@ -138,6 +138,7 @@ public class OABConverter extends Converter {
             try {
                 mTempBackupPath = backupFile.getBackupPath();
                 mCrypto = ConvertUtils.setupCrypto(mDestMetadata);
+                mDestMetadata.backupName = backupFile.backupName;
                 try {
                     mChecksum = backupFile.getChecksum(CryptoUtils.MODE_NO_ENCRYPTION);
                 } catch (IOException e) {
@@ -379,7 +380,7 @@ public class OABConverter extends Converter {
                             }
                         }
                         String fileName = zipEntry.getName().replaceFirst(Pattern.quote(mPackageName + "/"), "");
-                        if (fileName.equals("")) continue;
+                        if (fileName.isEmpty()) continue;
                         // New tar entry
                         TarArchiveEntry tarArchiveEntry = new TarArchiveEntry(fileName);
                         if (tmpFile != null) {

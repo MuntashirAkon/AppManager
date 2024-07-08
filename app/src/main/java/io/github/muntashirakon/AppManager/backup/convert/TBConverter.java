@@ -138,6 +138,7 @@ public class TBConverter extends Converter {
             try {
                 mTempBackupPath = backupFile.getBackupPath();
                 mCrypto = ConvertUtils.setupCrypto(mDestMetadata);
+                mDestMetadata.backupName = backupFile.backupName;
                 try {
                     mChecksum = backupFile.getChecksum(CryptoUtils.MODE_NO_ENCRYPTION);
                 } catch (IOException e) {
@@ -337,7 +338,7 @@ public class TBConverter extends Converter {
                 boolean isExternal = fileName.startsWith(EXTERNAL_PREFIX);
                 // Get new file name
                 fileName = fileName.replaceFirst((isExternal ? EXTERNAL_PREFIX : INTERNAL_PREFIX) + Pattern.quote(mPackageName + "/") + "\\./", "");
-                if (fileName.equals("")) continue;
+                if (fileName.isEmpty()) continue;
                 // New tar entry
                 TarArchiveEntry outTarEntry = new TarArchiveEntry(fileName);
                 outTarEntry.setMode(inTarEntry.getMode());

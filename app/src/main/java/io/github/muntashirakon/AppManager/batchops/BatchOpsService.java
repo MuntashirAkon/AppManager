@@ -219,7 +219,7 @@ public class BatchOpsService extends ForegroundService {
         broadcastIntent.setPackage(getPackageName());
         broadcastIntent.putExtra(EXTRA_OP, mOp);
         broadcastIntent.putExtra(EXTRA_OP_PKG, mPackages != null ? mPackages.toArray(new String[0]) : new String[0]);
-        broadcastIntent.putExtra(EXTRA_FAILED_PKG, opResult != null ? opResult.getFailedPackages().toArray(new String[0]) : new String[0]);
+        broadcastIntent.putStringArrayListExtra(EXTRA_FAILED_PKG, opResult != null ? opResult.getFailedPackages() : null);
         sendBroadcast(broadcastIntent);
         sendNotification(result, opResult);
     }

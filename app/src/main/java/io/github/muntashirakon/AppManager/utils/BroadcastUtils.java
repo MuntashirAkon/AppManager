@@ -30,4 +30,25 @@ public class BroadcastUtils {
         intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, packageNames);
         context.sendBroadcast(intent);
     }
+
+    public static void sendDbPackageAdded(@NonNull Context context, String[] packageNames) {
+        Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_ADDED);
+        intent.setPackage(context.getPackageName());
+        intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, packageNames);
+        context.sendBroadcast(intent);
+    }
+
+    public static void sendDbPackageAltered(@NonNull Context context, String[] packageNames) {
+        Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_ALTERED);
+        intent.setPackage(context.getPackageName());
+        intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, packageNames);
+        context.sendBroadcast(intent);
+    }
+
+    public static void sendDbPackageRemoved(@NonNull Context context, String[] packageNames) {
+        Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_REMOVED);
+        intent.setPackage(context.getPackageName());
+        intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, packageNames);
+        context.sendBroadcast(intent);
+    }
 }

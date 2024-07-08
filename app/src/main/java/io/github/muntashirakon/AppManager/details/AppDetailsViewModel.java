@@ -42,12 +42,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.apksig.ApkVerifier;
-import com.android.apksig.apk.ApkFormatException;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1432,8 +1430,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 // Include defaults i.e. app ops without any associated permissions if requested
                 if (Prefs.AppDetailsPage.displayDefaultAppOps()) {
                     for (int op : AppOpsManagerCompat.getOpsWithoutPermissions()) {
-                        if (op >= AppOpsManagerCompat._NUM_OP || opToOpEntryMap.get(op) != null) {
-                            // Unsupported app operation
+                        if (op == AppOpsManagerCompat.OP_NONE
+                                || op >= AppOpsManagerCompat._NUM_OP
+                                || opToOpEntryMap.get(op) != null) {
+                            // Invalid/unsupported app operation
                             continue;
                         }
                         otherOps.add(op);

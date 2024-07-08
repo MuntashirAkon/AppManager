@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.types;
 
+import static io.github.muntashirakon.AppManager.batchops.BatchOpsService.ACTION_BATCH_OPS_COMPLETED;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,15 +24,12 @@ import androidx.core.content.ContextCompat;
 import androidx.core.os.BundleCompat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
-
-import static io.github.muntashirakon.AppManager.batchops.BatchOpsService.ACTION_BATCH_OPS_COMPLETED;
 
 public abstract class PackageChangeReceiver extends BroadcastReceiver {
     /**
@@ -152,14 +151,13 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
                     if (op != BatchOpsManager.OP_NONE && op != BatchOpsManager.OP_FREEZE &&
                             op != BatchOpsManager.OP_UNFREEZE && op != BatchOpsManager.OP_UNINSTALL) {
                         String[] packages = intent.getStringArrayExtra(BatchOpsService.EXTRA_OP_PKG);
-                        String[] failedPackages = intent.getStringArrayExtra(BatchOpsService.EXTRA_FAILED_PKG);
+                        ArrayList<String> failedPackages = intent.getStringArrayListExtra(BatchOpsService.EXTRA_FAILED_PKG);
                         if (packages != null && failedPackages != null) {
                             List<String> packageList = new ArrayList<>();
-                            List<String> failedPackageList = Arrays.asList(failedPackages);
                             for (String packageName : packages) {
-                                if (!failedPackageList.contains(packageName)) packageList.add(packageName);
+                                if (!failedPackages.contains(packageName)) packageList.add(packageName);
                             }
-                            if (packageList.size() > 0) {
+                            if (!packageList.isEmpty()) {
                                 onPackageChanged(intent, null, packageList.toArray(new String[0]));
                             }
                         }

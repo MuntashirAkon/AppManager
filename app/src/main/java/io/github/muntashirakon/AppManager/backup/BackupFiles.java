@@ -81,12 +81,16 @@ public class BackupFiles {
 
     public static class BackupFile {
         @NonNull
+        public final String backupName;
+        @NonNull
         private final Path mBackupPath;
         @NonNull
         private final Path mTempBackupPath;
         private final boolean mIsTemporary;
 
         public BackupFile(@NonNull Path backupPath, boolean hasTemporary) throws IOException {
+            // For now, backup name is the same as the first path segment
+            backupName = backupPath.getName();
             mBackupPath = backupPath;
             mIsTemporary = hasTemporary;
             if (mIsTemporary) {
