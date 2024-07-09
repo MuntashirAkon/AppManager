@@ -40,7 +40,7 @@ public class NoRootAccessibilityService extends BaseAccessibilityService {
             if (trackerWindow == null) {
                 trackerWindow = new TrackerWindow(this);
             }
-            trackerWindow.showOrUpdate(event);
+            trackerWindow.showOrUpdate(AccessibilityEvent.obtain(event));
         } else if (trackerWindow != null) {
             trackerWindow.dismiss();
             trackerWindow = null;

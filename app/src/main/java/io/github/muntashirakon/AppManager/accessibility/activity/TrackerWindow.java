@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.UserHandleHidden;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -29,16 +31,19 @@ import com.google.android.material.imageview.ShapeableImageView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 import io.github.muntashirakon.widget.TextInputTextView;
 
-public class TrackerWindow {
+public class TrackerWindow implements View.OnTouchListener {
     public final WindowManager mWindowManager;
     private final WindowManager.LayoutParams mWindowLayoutParams;
     private final View mView;
@@ -48,11 +53,16 @@ public class TrackerWindow {
     private final TextInputTextView mClassNameView;
     private final TextInputTextView mClassHierarchyView;
     private final MaterialButton mPlayPauseButton;
+    private final Point mWindowSize = new Point(0, 0);
     private final Point mWindowPosition = new Point(0, 0);
     private final Point mPressPosition = new Point(0, 0);
-
-    public boolean mPaused = false;
-    public boolean mViewAttached = false;
+    private final int mMaxWidth;
+    private boolean mPaused = false;
+    private boolean mIconified = false;
+    private boolean mViewAttached = false;
+    private boolean mDragging = false;
+    @Nullable
+    private Future<?> mClassHierarchyResult;
 
     @SuppressLint("ClickableViewAccessibility")
     public TrackerWindow(@NonNull Context context) {
@@ -60,12 +70,15 @@ public class TrackerWindow {
         mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         int type = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
                 : WindowManager.LayoutParams.TYPE_PHONE;
-        int displayWidth = mWindowManager.getDefaultDisplay().getWidth();
+        Display display = mWindowManager.getDefaultDisplay();
+        int displayWidth = display.getWidth();
+        display.getRealSize(mWindowSize);
+        mMaxWidth = (displayWidth / 2) + 300; // FIXME: 5/2/23 Find a better way to represent a display
+        int flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
         mWindowLayoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT, type, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
+                WindowManager.LayoutParams.WRAP_CONTENT, type, flags, PixelFormat.TRANSLUCENT);
         mWindowLayoutParams.gravity = Gravity.CENTER;
-        mWindowLayoutParams.width = (displayWidth / 2) + 300; // FIXME: 5/2/23 Find a better way to represent a display
+        mWindowLayoutParams.width = mMaxWidth;
         mWindowLayoutParams.windowAnimations = android.R.style.Animation_Toast;
 
         mView = View.inflate(themedContext, R.layout.window_activity_tracker, null);
@@ -112,39 +125,49 @@ public class TrackerWindow {
                 UIUtils.displayLongToast(th.getMessage());
             }
         });
-        mView.findViewById(R.id.mini).setOnClickListener(v -> {
-            mPaused = true;
-            mIconView.setVisibility(View.VISIBLE);
-            mContentView.setVisibility(View.GONE);
-        });
+        mView.findViewById(R.id.mini).setOnClickListener(v -> iconify());
         mPlayPauseButton.setOnClickListener(v -> {
             mPaused = !mPaused;
             mPlayPauseButton.setIconResource(mPaused ? R.drawable.ic_play_arrow : R.drawable.ic_pause);
         });
         mView.findViewById(android.R.id.closeButton).setOnClickListener(v -> dismiss());
         mIconView.setVisibility(View.GONE);
-        mIconView.setOnClickListener(v -> {
-            mContentView.setVisibility(View.VISIBLE);
-            mIconView.setVisibility(View.GONE);
-            mPaused = false;
-        });
+        mIconView.setOnClickListener(v -> expand());
+        mView.findViewById(R.id.drag).setOnTouchListener(this);
+        mIconView.setOnTouchListener(this);
+    }
 
-        mView.setOnTouchListener((view, event) -> {
-            Point point = new Point((int) event.getRawX(), (int) event.getRawY());
-            int action = event.getAction();
-
-            if (action == MotionEvent.ACTION_DOWN) {
-                mPressPosition.set(point.x, point.y);
-                mWindowPosition.set(mWindowLayoutParams.x, mWindowLayoutParams.y);
-            } else if (action == MotionEvent.ACTION_MOVE) {
-                int delX = point.x - mPressPosition.x;
-                int delY = point.y - mPressPosition.y;
-                mWindowLayoutParams.x = mWindowPosition.x + delX;
-                mWindowLayoutParams.y = mWindowPosition.y + delY;
-                mWindowManager.updateViewLayout(view, mWindowLayoutParams);
-            }
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        Point point;
+        int action = event.getAction();
+        if (action == MotionEvent.ACTION_DOWN) {
+            mDragging = false;
+            point = new Point((int) event.getRawX(), (int) event.getRawY());
+            mPressPosition.set(point.x, point.y);
+            mWindowPosition.set(mWindowLayoutParams.x, mWindowLayoutParams.y);
             return true;
-        });
+        } else if (action == MotionEvent.ACTION_MOVE) {
+            mDragging = true;
+            point = new Point((int) event.getRawX(), (int) event.getRawY());
+            int delX = point.x - mPressPosition.x;
+            int delY = point.y - mPressPosition.y;
+            mWindowLayoutParams.x = mWindowPosition.x + delX;
+            mWindowLayoutParams.y = mWindowPosition.y + delY;
+            updateLayout();
+            return true;
+        }
+        if (!mDragging && v == mIconView && action == MotionEvent.ACTION_UP) {
+            point = new Point((int) event.getRawX(), (int) event.getRawY());
+            int delX = point.x - mPressPosition.x;
+            int delY = point.y - mPressPosition.y;
+            if (delX < 1 && delY < 1) {
+                v.performClick();
+                return true;
+            }
+        }
+        return false;
     }
 
     public void showOrUpdate(AccessibilityEvent event) {
@@ -153,20 +176,63 @@ public class TrackerWindow {
             mWindowManager.addView(mView, mWindowLayoutParams);
         }
         if (!mPaused) {
+            if (mClassHierarchyResult != null) {
+                mClassHierarchyResult.cancel(true);
+            }
             mPackageNameView.setText(event.getPackageName());
             mClassNameView.setText(event.getClassName());
-            mClassHierarchyView.setText(TextUtils.join("\n", getClassHierarchy(event)));
+            mClassHierarchyResult = ThreadUtils.postOnBackgroundThread(() -> {
+                CharSequence classHierarchy = TextUtils.join("\n", getClassHierarchy(event));
+                ThreadUtils.postOnMainThread(() -> mClassHierarchyView.setText(classHierarchy));
+            });
         }
     }
 
     public void dismiss() {
         AccessibilityMultiplexer.getInstance().enableLeadingActivityTracker(false);
         mViewAttached = false;
+        if (mClassHierarchyResult != null) {
+            mClassHierarchyResult.cancel(true);
+        }
         try {
             mWindowManager.removeView(mView);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignore) {
         }
+    }
+
+    private void iconify() {
+        mPaused = true;
+        mIconified = true;
+        // Window position may need to be adjusted to display the icon
+        // (0,0) is middle
+        int height = -mWindowSize.y / 2;
+        if (mWindowLayoutParams.y < height) {
+            mWindowPosition.y = height;
+            mWindowLayoutParams.y = height;
+        }
+        mIconView.setVisibility(View.VISIBLE);
+        mContentView.setVisibility(View.GONE);
+        updateLayout();
+    }
+
+    private void expand() {
+        mContentView.setVisibility(View.VISIBLE);
+        mIconView.setVisibility(View.GONE);
+        mPaused = false;
+        mIconified = false;
+        // Window position may need to be adjusted to display the drag handle
+        // (0,0) is middle
+        int width = (-mWindowSize.x + mMaxWidth) / 2;
+        if (mWindowLayoutParams.x < width) {
+            mWindowPosition.x = width;
+            mWindowLayoutParams.x = width;
+        }
+        updateLayout();
+    }
+
+    private void updateLayout() {
+        mWindowLayoutParams.width = mIconified ? WindowManager.LayoutParams.WRAP_CONTENT : mMaxWidth;
+        mWindowManager.updateViewLayout(mView, mWindowLayoutParams);
     }
 
     private void copyText(CharSequence label, CharSequence content) {
@@ -193,6 +259,9 @@ public class TrackerWindow {
                     break;
                 }
                 ++depth;
+                if (Thread.currentThread().isInterrupted()) {
+                    return Collections.emptyList();
+                }
             }
             try {
                 if (depth == 20) {
@@ -203,6 +272,9 @@ public class TrackerWindow {
             }
         }
         Collections.reverse(classHierarchies);
+        if (Thread.currentThread().isInterrupted()) {
+            return Collections.emptyList();
+        }
         int size = classHierarchies.size();
         if (size <= 1) {
             return classHierarchies;
@@ -218,6 +290,9 @@ public class TrackerWindow {
             } else sb.append("└─ ");
             sb.append(classHierarchies.get(i));
             classHierarchies.set(i, sb.toString());
+            if (Thread.currentThread().isInterrupted()) {
+                return Collections.emptyList();
+            }
         }
         return classHierarchies;
     }

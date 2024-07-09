@@ -99,6 +99,7 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/drag"
                     style="@style/Widget.AppTheme.Button.IconButton"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
