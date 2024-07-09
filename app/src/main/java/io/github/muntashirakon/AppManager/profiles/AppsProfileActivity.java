@@ -16,7 +16,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -244,7 +243,7 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(R.string.go, (dialog, which, profName, isChecked) -> {
                         if (TextUtils.isEmpty(profName)) {
-                            Toast.makeText(this, R.string.failed_to_duplicate_profile, Toast.LENGTH_SHORT).show();
+                            UIUtils.displayShortToast(R.string.failed_to_duplicate_profile);
                             return;
                         }
                         progressIndicator.show();

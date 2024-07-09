@@ -14,7 +14,6 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -126,7 +125,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
             context.startActivity(Intent.createChooser(actionSendIntent, context.getResources().getText(R.string.send_log_title))
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         } catch (Exception e) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+            UIUtils.displayLongToast(e.getMessage());
         }
     }
 
@@ -287,8 +286,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
         if (!TextUtils.isEmpty(level)) {
             int logLevelLimit = LogLine.convertCharToLogLevel(level.charAt(0));
             if (logLevelLimit == -1) {
-                String invalidLevel = getString(R.string.toast_invalid_level, level);
-                Toast.makeText(this, invalidLevel, Toast.LENGTH_LONG).show();
+                UIUtils.displayLongToast(R.string.toast_invalid_level, level);
             } else {
                 mViewModel.setLogLevel(logLevelLimit);
                 search(mSearchQuery);

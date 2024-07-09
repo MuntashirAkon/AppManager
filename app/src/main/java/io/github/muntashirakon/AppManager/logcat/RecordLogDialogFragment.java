@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +27,7 @@ import io.github.muntashirakon.AppManager.logcat.helper.WidgetHelper;
 import io.github.muntashirakon.AppManager.settings.LogViewerPreferences;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 
@@ -78,7 +78,7 @@ public class RecordLogDialogFragment extends DialogFragment {
                 .setInputText(logFilename)
                 .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
                     if (SaveLogHelper.isInvalidFilename(inputText)) {
-                        Toast.makeText(mActivity, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
+                        UIUtils.displayShortToast(R.string.enter_good_filename);
                     } else {
                         //noinspection ConstantConditions
                         String filename = inputText.toString();

@@ -27,7 +27,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -239,8 +238,7 @@ public class ActivityInterceptor extends BaseActivity {
                     showResetIntentButton(true);
                     refreshUI();
                 } catch (Exception e) {
-                    Toast.makeText(ActivityInterceptor.this, e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
+                    UIUtils.displayShortToast(e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -313,9 +311,7 @@ public class ActivityInterceptor extends BaseActivity {
 
                 refreshUI();
                 Uri uri = data == null ? null : data.getData();
-                Toast.makeText(ActivityInterceptor.this,
-                        String.format("%s: (%s)", getString(R.string.activity_result), uri),
-                        Toast.LENGTH_LONG).show();
+                UIUtils.displayLongToast("%s: (%s)", getString(R.string.activity_result), uri);
             });
 
     @Override

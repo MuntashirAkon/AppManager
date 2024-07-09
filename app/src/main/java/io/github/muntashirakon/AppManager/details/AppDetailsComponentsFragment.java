@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.MainThread;
@@ -658,7 +657,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                         ActivityManagerCompat.startService(intent, mUserId, true);
                     } catch (Throwable th) {
                         th.printStackTrace();
-                        Toast.makeText(context, th.toString(), Toast.LENGTH_LONG).show();
+                        UIUtils.displayShortToast(th.toString());
                     }
                 });
                 holder.launchBtn.setVisibility(View.VISIBLE);
