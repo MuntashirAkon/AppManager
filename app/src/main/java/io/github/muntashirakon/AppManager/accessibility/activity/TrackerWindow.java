@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
@@ -173,6 +174,16 @@ public class TrackerWindow implements View.OnTouchListener {
             mWindowManager.addView(mView, mWindowLayoutParams);
         }
         if (!mPaused) {
+            if (BuildConfig.APPLICATION_ID.contentEquals(event.getPackageName())) {
+                // On some devices, this window always gets the focus
+                if ("android.widget.EditText".contentEquals(event.getClassName())) {
+                    // For some reason, only this class is focused
+                    if (event.getSource() == null) {
+                        // No class hierarchy. This is the intended event
+                        return;
+                    }
+                }
+            }
             if (mClassHierarchyResult != null) {
                 mClassHierarchyResult.cancel(true);
             }
