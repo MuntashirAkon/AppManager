@@ -200,6 +200,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private Future<?> mTagCloudFuture;
     private Future<?> mActionsFuture;
     private Future<?> mListFuture;
+    private Future<?> mMenuPreparationResult;
 
     private boolean mIsExternalApk;
     private int mLoadedItemCount;
@@ -352,44 +353,54 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onPrepareMenu(@NonNull Menu menu) {
         if (mIsExternalApk) return;
+        MenuItem magiskHideMenu = menu.findItem(R.id.action_magisk_hide);
+        MenuItem magiskDenyListMenu = menu.findItem(R.id.action_magisk_denylist);
+        MenuItem openInTermuxMenu = menu.findItem(R.id.action_open_in_termux);
+        MenuItem runInTermuxMenu = menu.findItem(R.id.action_run_in_termux);
+        MenuItem batteryOptMenu = menu.findItem(R.id.action_battery_opt);
+        MenuItem sensorsMenu = menu.findItem(R.id.action_sensor);
+        MenuItem netPolicyMenu = menu.findItem(R.id.action_net_policy);
+        MenuItem installMenu = menu.findItem(R.id.action_install);
+        MenuItem optimizeMenu = menu.findItem(R.id.action_optimize);
+        mMenuPreparationResult = ThreadUtils.postOnBackgroundThread(() -> {
+            boolean magiskHideAvailable = MagiskHide.available();
+            boolean magiskDenyListAvailable = MagiskDenyList.available();
+            boolean rootAvailable = RunnerUtils.isRootAvailable();
+            if (ThreadUtils.isInterrupted()) {
+                return;
+            }
+            ThreadUtils.postOnMainThread(() -> {
+                if (magiskHideMenu != null) {
+                    magiskHideMenu.setVisible(magiskHideAvailable);
+                }
+                if (magiskDenyListMenu != null) {
+                    magiskDenyListMenu.setVisible(magiskDenyListAvailable);
+                }
+                if (openInTermuxMenu != null) {
+                    openInTermuxMenu.setVisible(rootAvailable);
+                }
+            });
+        });
         boolean isDebuggable;
         if (mApplicationInfo != null) {
             isDebuggable = (mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
         } else isDebuggable = false;
-        MenuItem magiskHideMenu = menu.findItem(R.id.action_magisk_hide);
-        if (magiskHideMenu != null) {
-            magiskHideMenu.setVisible(MagiskHide.available());
-        }
-        MenuItem magiskDenyListMenu = menu.findItem(R.id.action_magisk_denylist);
-        if (magiskDenyListMenu != null) {
-            magiskDenyListMenu.setVisible(MagiskDenyList.available());
-        }
-        MenuItem openInTermuxMenu = menu.findItem(R.id.action_open_in_termux);
-        if (openInTermuxMenu != null) {
-            openInTermuxMenu.setVisible(RunnerUtils.isRootAvailable());
-        }
-        MenuItem runInTermuxMenu = menu.findItem(R.id.action_run_in_termux);
         if (runInTermuxMenu != null) {
             runInTermuxMenu.setVisible(isDebuggable);
         }
-        MenuItem batteryOptMenu = menu.findItem(R.id.action_battery_opt);
         if (batteryOptMenu != null) {
             batteryOptMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.DEVICE_POWER));
         }
-        MenuItem sensorsMenu = menu.findItem(R.id.action_sensor);
         if (sensorsMenu != null) {
             sensorsMenu.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
                     && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_SENSORS));
         }
-        MenuItem netPolicyMenu = menu.findItem(R.id.action_net_policy);
         if (netPolicyMenu != null) {
             netPolicyMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY));
         }
-        MenuItem installMenu = menu.findItem(R.id.action_install);
         if (installMenu != null) {
             installMenu.setVisible(Users.getUsersIds().length > 1 && SelfPermissions.canInstallExistingPackages());
         }
-        MenuItem optimizeMenu = menu.findItem(R.id.action_optimize);
         if (optimizeMenu != null) {
             optimizeMenu.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
                     && (SelfPermissions.isSystemOrRootOrShell() || BuildConfig.APPLICATION_ID.equals(mInstallerPackageName)));
@@ -610,6 +621,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             } else UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
         } else return false;
         return true;
+    }
+
+    @Override
+    public void onMenuClosed(@NonNull Menu menu) {
+        if (mMenuPreparationResult != null) {
+            mMenuPreparationResult.cancel(true);
+        }
     }
 
     @Override
