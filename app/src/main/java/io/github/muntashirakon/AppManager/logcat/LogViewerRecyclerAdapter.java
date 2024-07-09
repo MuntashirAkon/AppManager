@@ -72,13 +72,19 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
 
     @ColorInt
     private static int getBackgroundColorForLogLevel(Context context, int logLevel) {
-        int result = Objects.requireNonNull(BACKGROUND_COLORS.get(logLevel));
+        Integer result = BACKGROUND_COLORS.get(logLevel);
+        if (result == null) {
+            throw new IllegalArgumentException("Invalid log level: " + logLevel);
+        }
         return ContextCompat.getColor(context, result);
     }
 
     @ColorInt
     private static int getForegroundColorForLogLevel(Context context, int logLevel) {
-        int result = Objects.requireNonNull(FOREGROUND_COLORS.get(logLevel));
+        Integer result = FOREGROUND_COLORS.get(logLevel);
+        if (result == null) {
+            throw new IllegalArgumentException("Invalid log level: " + logLevel);
+        }
         return ContextCompat.getColor(context, result);
     }
 
