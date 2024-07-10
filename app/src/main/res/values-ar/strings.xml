@@ -146,7 +146,7 @@
     <string name="no_receivers">لا يوجد مستقبلات</string>
     <string name="receivers">المستقبلات</string>
     <string name="no_activities">لا توجد أنشطة</string>
-    <string name="refresh">حدِّث</string>
+    <string name="refresh">انعاش</string>
     <string name="no_app_ops">لا توجد عمليات تطبيق</string>
     <string name="app_size">التطبيق</string>
     <string name="storage_and_cache">التخزين وذاكرة التخزين المؤقت</string>
@@ -1196,9 +1196,8 @@
     <string name="search_type_contains">يحتوي على</string>
     <string name="search_type_prefix">بادئه</string>
     <string name="search_type_suffix">لاحقة</string>
-    <string name="pref_default_blocking_method_description">طريقة يتم استخدامها بشكل افتراضي في الأماكن التي لا يوجد فيها خيار لتحديد طريقة الحظر.
-\n
-\n<b>ملاحظة:</b> لا يعمل \"IFW\" مع مقدمي الخدمة، ويتم استخدام \"disable\" بدلاً من ذلك.</string>
+    <string name="pref_default_blocking_method_description">طريقة الاستخدام افتراضيًا في الأماكن التي لا يوجد فيها خيار لتحديد طريقة حظر.
+\n<b>ملاحظة:</b> \"IFW\" لا يعمل مع مقدمي الخدمات، يتم استخدام \"Disable\" بدلاً من ذلك.</string>
     <string name="intent_firewall">IFW</string>
     <string name="pref_intent_firewall_description">منع المكونات باستخدام Intent Firewall فقط. لا يوصى به لأن بعض تطبيقات النظام يمكنها تجاوز جدران الحماية.</string>
     <string name="search_type_regular_expressions">ريجيس</string>
