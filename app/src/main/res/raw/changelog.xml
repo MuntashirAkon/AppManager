@@ -2,6 +2,42 @@
 <changelog>
     <release
         type="stable release"
+        version="v3.1.7"
+        code="430"
+        date="10 July 2024">
+        <note>
+            The email address has been changed to am4android@riseup.net. App Manager related queries
+            sent to the previous email shall be discarded.
+        </note>
+        <improve>
+            Hid “Data usage” in the App Info tab for apps without the internet permission
+        </improve>
+        <improve>Intercept newer photo viewer actions from the camera app</improve>
+        <fix>Fixed creating custom backups when the backup name is empty</fix>
+        <fix>Fixed freezing issues in the UI Tracker window on some devices</fix>
+        <fix>Fixed delivering changes in apps made via batch operations</fix>
+        <fix>
+            Fixed freezing the app due to the refusal of the notification permission at the startup
+        </fix>
+        <note subtext="true">
+            Notification permission is mandatory on phones and tabs. Without this permission, you
+            will not be able to use certain features.
+        </note>
+        <fix>Fixed listing running apps on some devices</fix>
+        <fix>Prevented the app from crashing in Android 14 r50</fix>
+        <fix>
+            Prevented the app from crashing when force dexopt is selected in Android 14 onwards
+        </fix>
+        <note subtext="true">
+            The feature was removed in Android 14.
+        </note>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.1.6...v3.1.7"]v3.1.6...v3.1.7[/a]
+        </note>
+    </release>
+    <release
+        type="stable release"
         version="v3.1.6"
         code="429"
         date="21 April 2024">

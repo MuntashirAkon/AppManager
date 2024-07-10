@@ -1,0 +1,10 @@
+- The email address has been changed to am4android@riseup.net.
+- Hid “Data usage” in the App Info tab for apps without the internet permission
+- Intercept newer photo viewer actions from the camera app
+- Fixed creating custom backups when the backup name is empty
+- Fixed freezing issues in the UI Tracker window
+- Fixed delivering changes in apps made via batch operations
+- Fixed freezing the app due to the refusal of the notification permission at the startup
+- Fixed listing running apps on some devices
+- Prevented the app from crashing in Android 14 r50
+- Prevented the app from crashing when force dexopt is selected in Android 14 onwards
