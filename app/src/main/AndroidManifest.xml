@@ -430,6 +430,8 @@
                 <action android:name="android.intent.action.INSERT" />
                 <action android:name="android.intent.action.INSERT_OR_EDIT" />
                 <!-- Used by camera to view photo taken -->
+                <action android:name="android.provider.action.REVIEW" />
+                <action android:name="android.provider.action.REVIEW_SECURE" />
                 <action android:name="com.android.camera.action.REVIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
