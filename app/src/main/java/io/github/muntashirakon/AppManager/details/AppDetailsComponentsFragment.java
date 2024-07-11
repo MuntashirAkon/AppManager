@@ -364,6 +364,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             Button shortcutBtn;
             MaterialButton launchBtn;
             MaterialSwitch toggleSwitch;
+            TextView blockingMethod;
             Chip chipType;
 
             public ViewHolder(@NonNull View itemView) {
@@ -376,6 +377,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
 
                 shortcutBtn = itemView.findViewById(R.id.edit_shortcut_btn);
                 toggleSwitch = itemView.findViewById(R.id.toggle_button);
+                blockingMethod = itemView.findViewById(R.id.method);
                 chipType = itemView.findViewById(R.id.type);
                 launchBtn = itemView.findViewById(R.id.launch);
 
@@ -442,7 +444,24 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         }
 
         private void handleBlock(@NonNull ViewHolder holder, @NonNull AppDetailsComponentItem item, RuleType ruleType) {
-            holder.toggleSwitch.setChecked(!item.isBlocked());
+            ComponentRule rule = item.getRule();
+            boolean isBlocked = item.isBlocked();
+            if (isBlocked) {
+                Objects.requireNonNull(rule);
+                holder.blockingMethod.setVisibility(View.VISIBLE);
+                String method;
+                if (rule.isIfw()) {
+                    if (item.isDisabled()) {
+                        method = "IFW+Dis";
+                    } else method = "IFW";
+                } else {
+                    method = "Dis";
+                }
+                holder.blockingMethod.setText(method);
+            } else {
+                holder.blockingMethod.setVisibility(View.GONE);
+            }
+            holder.toggleSwitch.setChecked(!isBlocked);
             holder.toggleSwitch.setVisibility(View.VISIBLE);
             holder.toggleSwitch.setOnClickListener(buttonView -> {
                 String componentStatus = item.isBlocked()
@@ -595,7 +614,10 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             // Blocking
             if (mCanModifyComponentStates) {
                 handleBlock(holder, componentItem, RuleType.ACTIVITY);
-            } else holder.toggleSwitch.setVisibility(View.GONE);
+            } else {
+                holder.toggleSwitch.setVisibility(View.GONE);
+                holder.blockingMethod.setVisibility(View.GONE);
+            }
         }
 
         private void getServicesView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
@@ -667,7 +689,10 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             // Blocking
             if (mCanModifyComponentStates) {
                 handleBlock(holder, serviceItem, RuleType.SERVICE);
-            } else holder.toggleSwitch.setVisibility(View.GONE);
+            } else {
+                holder.toggleSwitch.setVisibility(View.GONE);
+                holder.blockingMethod.setVisibility(View.GONE);
+            }
         }
 
         private void getReceiverView(@NonNull ViewHolder holder, int index) {
@@ -727,7 +752,10 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             // Blocking
             if (mCanModifyComponentStates) {
                 handleBlock(holder, componentItem, RuleType.RECEIVER);
-            } else holder.toggleSwitch.setVisibility(View.GONE);
+            } else {
+                holder.toggleSwitch.setVisibility(View.GONE);
+                holder.blockingMethod.setVisibility(View.GONE);
+            }
         }
 
         private void getProviderView(@NonNull ViewHolder holder, int index) {
@@ -810,7 +838,10 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             // Blocking
             if (mCanModifyComponentStates) {
                 handleBlock(holder, componentItem, RuleType.PROVIDER);
-            } else holder.toggleSwitch.setVisibility(View.GONE);
+            } else {
+                holder.toggleSwitch.setVisibility(View.GONE);
+                holder.blockingMethod.setVisibility(View.GONE);
+            }
         }
     }
 }
