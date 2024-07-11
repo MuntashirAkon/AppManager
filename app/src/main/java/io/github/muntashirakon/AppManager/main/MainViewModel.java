@@ -25,8 +25,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import org.json.JSONException;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.Collator;
 import java.util.ArrayList;
@@ -317,7 +318,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
 
     public void saveExportedAppList(@ListExporter.ExportType int exportType, @NonNull Path path) {
         executor.submit(() -> {
-            try (OutputStream os = path.openOutputStream()) {
+            try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(path.openOutputStream(), StandardCharsets.UTF_8))) {
                 List<PackageInfo> packageInfoList = new ArrayList<>();
                 for (String packageName : getSelectedPackages().keySet()) {
                     int[] userIds = Objects.requireNonNull(getSelectedPackages().get(packageName)).userIds;
@@ -327,7 +328,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                         break;
                     }
                 }
-                os.write(ListExporter.export(getApplication(), exportType, packageInfoList).getBytes(StandardCharsets.UTF_8));
+                ListExporter.export(getApplication(), writer, exportType, packageInfoList);
                 mOperationStatus.postValue(true);
             } catch (IOException | RemoteException | PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
