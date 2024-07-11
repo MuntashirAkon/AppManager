@@ -15,6 +15,7 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getDimmedBitmap;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 
 import android.Manifest;
@@ -105,6 +106,7 @@ import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
 import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat;
+import io.github.muntashirakon.AppManager.compat.InstallSourceInfoCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
@@ -1677,9 +1679,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 ListItem listItem = ListItem.newSelectableRegularItem(getString(R.string.installed_version),
                         getString(R.string.version_name_with_code, mInstalledPackageInfo.versionName,
                                 PackageInfoCompat.getLongVersionCode(mInstalledPackageInfo)), v -> {
-                            Intent appDetailsIntent = AppDetailsActivity.getIntent(mActivity, mPackageName,
+                            Intent intent = AppDetailsActivity.getIntent(mActivity, mPackageName,
                                     UserHandleHidden.myUserId());
-                            mActivity.startActivity(appDetailsIntent);
+                            mActivity.startActivity(intent);
                         });
                 listItem.setActionIcon(io.github.muntashirakon.ui.R.drawable.ic_information);
                 mListItems.add(listItem);
@@ -1719,7 +1721,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.process_name), mApplicationInfo.processName));
             }
             if (appInfo.installerApp != null) {
-                mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.installer_app), appInfo.installerApp));
+                ListItem installerItem = ListItem.newSelectableRegularItem(
+                        getString(R.string.installer_app), appInfo.installerApp,
+                        v -> displayInstallerDialog(Objects.requireNonNull(appInfo.installSource)));
+                installerItem.setActionIcon(R.drawable.ic_information_circle);
+                mListItems.add(installerItem);
             }
             mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.user_id), String.format(Locale.getDefault(), "%d",
                     mApplicationInfo.uid)));
@@ -1933,6 +1939,47 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     CreateShortcutDialogFragment dialog1 = CreateShortcutDialogFragment.getInstance(shortcutInfo);
                     dialog1.show(getChildFragmentManager(), CreateShortcutDialogFragment.TAG);
                 })
+                .show();
+    }
+
+    private void displayInstallerDialog(@NonNull InstallSourceInfoCompat installSource) {
+        List<CharSequence> installerInfoList = new ArrayList<>(3);
+        List<String> packageNames = new ArrayList<>(3);
+        if (installSource.getInstallingPackageLabel() != null) {
+            CharSequence info = new SpannableStringBuilder(getSmallerText(getString(R.string.installer)))
+                    .append("\n")
+                    .append(getTitleText(requireContext(), installSource.getInstallingPackageLabel()))
+                    .append("\n")
+                    .append(installSource.getInstallingPackageName());
+            installerInfoList.add(info);
+            packageNames.add(installSource.getInstallingPackageName());
+        }
+        if (installSource.getInitiatingPackageLabel() != null) {
+            CharSequence info = new SpannableStringBuilder(getSmallerText(getString(R.string.actual_installer)))
+                    .append("\n")
+                    .append(getTitleText(requireContext(), installSource.getInitiatingPackageLabel()))
+                    .append("\n")
+                    .append(installSource.getInitiatingPackageName());
+            installerInfoList.add(info);
+            packageNames.add(installSource.getInitiatingPackageName());
+        }
+        if (installSource.getOriginatingPackageLabel() != null) {
+            CharSequence info = new SpannableStringBuilder(getSmallerText(getString(R.string.apk_source)))
+                    .append("\n")
+                    .append(getTitleText(requireContext(), installSource.getOriginatingPackageLabel()))
+                    .append("\n")
+                    .append(installSource.getOriginatingPackageName());
+            installerInfoList.add(info);
+            packageNames.add(installSource.getOriginatingPackageName());
+        }
+        new SearchableItemsDialogBuilder<>(requireContext(), installerInfoList)
+                .setTitle(R.string.installer)
+                .setOnItemClickListener((dialog, which, item) -> {
+                    String packageName = packageNames.get(which);
+                    Intent intent = AppDetailsActivity.getIntent(requireContext(), packageName, mUserId);
+                    startActivity(intent);
+                })
+                .setNegativeButton(R.string.close, null)
                 .show();
     }
 

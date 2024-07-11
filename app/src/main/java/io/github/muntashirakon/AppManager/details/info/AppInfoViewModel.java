@@ -46,6 +46,7 @@ import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
 import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat;
+import io.github.muntashirakon.AppManager.compat.InstallSourceInfoCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
@@ -365,15 +366,28 @@ public class AppInfoViewModel extends AndroidViewModel {
                             Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
                 }
                 // Set installer app
-                String installerPackageName = PackageManagerCompat.getInstallerPackageName(packageName, userId);
-                if (installerPackageName != null) {
-                    String applicationLabel;
-                    try {
-                        applicationLabel = pm.getApplicationInfo(installerPackageName, 0).loadLabel(pm).toString();
-                    } catch (PackageManager.NameNotFoundException e) {
-                        applicationLabel = installerPackageName;
+                InstallSourceInfoCompat installSourceInfo = ExUtils.exceptionAsNull(() ->
+                        PackageManagerCompat.getInstallSourceInfo(packageName, userId));
+                if (installSourceInfo != null) {
+                    if (installSourceInfo.getInstallingPackageName() != null) {
+                        CharSequence label = PackageUtils.getPackageLabel(pm,
+                                installSourceInfo.getInstallingPackageName(), userId);
+                        appInfo.installerApp = label;
+                        installSourceInfo.setInstallingPackageLabel(label);
                     }
-                    appInfo.installerApp = applicationLabel;
+                    if (installSourceInfo.getInitiatingPackageName() != null) {
+                        CharSequence label = PackageUtils.getPackageLabel(pm,
+                                installSourceInfo.getInitiatingPackageName(), userId);
+                        if (appInfo.installerApp == null) {
+                            appInfo.installerApp = label;
+                        }
+                        installSourceInfo.setInitiatingPackageLabel(label);
+                    }
+                    if (installSourceInfo.getOriginatingPackageName() != null) {
+                        installSourceInfo.setOriginatingPackageLabel(PackageUtils.getPackageLabel(pm,
+                                installSourceInfo.getOriginatingPackageName(), userId));
+                    }
+                    appInfo.installSource = installSourceInfo;
                 }
                 // Set main activity
                 appInfo.mainActivity = PackageManagerCompat.getLaunchIntentForPackage(packageName, userId);
@@ -483,7 +497,9 @@ public class AppInfoViewModel extends AndroidViewModel {
         public PackageSizeInfo sizeInfo;
         // More info
         @Nullable
-        public String installerApp;
+        public InstallSourceInfoCompat installSource;
+        @Nullable
+        public CharSequence installerApp;
         @Nullable
         public Intent mainActivity;
         @Nullable

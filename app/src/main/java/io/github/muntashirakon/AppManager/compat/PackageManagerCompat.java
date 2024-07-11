@@ -293,7 +293,11 @@ public final class PackageManagerCompat {
     @Nullable
     public static String getInstallerPackageName(@NonNull String packageName, @UserIdInt int userId) {
         try {
-            return getInstallSourceInfo(packageName, userId).getInstallingPackageName();
+            InstallSourceInfoCompat installSource = getInstallSourceInfo(packageName, userId);
+            if (installSource.getInstallingPackageName() != null) {
+                return installSource.getInstallingPackageName();
+            }
+            return installSource.getInitiatingPackageName();
         } catch (RemoteException | SecurityException e) {
             return null;
         }
