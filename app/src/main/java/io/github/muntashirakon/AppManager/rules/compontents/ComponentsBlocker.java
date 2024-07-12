@@ -2,6 +2,10 @@
 
 package io.github.muntashirakon.AppManager.rules.compontents;
 
+import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;
+import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+import static android.content.pm.PackageManager.DONT_KILL_APP;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 
@@ -406,13 +410,24 @@ public final class ComponentsBlocker extends RulesStorageManager {
         boolean isSuccessful = true;
         if (apply) {
             for (ComponentRule entry : allEntries) {
+                if (entry.applyDefaultState()) {
+                    // Need to set component state to default first and do nothing
+                    try {
+                        PackageManagerCompat.setComponentEnabledSetting(entry.getComponentName(),
+                                COMPONENT_ENABLED_STATE_DEFAULT, DONT_KILL_APP, userId);
+                        removeEntry(entry);
+                    } catch (Throwable e) {
+                        isSuccessful = false;
+                        Log.e(TAG, "Could not enable component: %s/%s", e, packageName, entry.name);
+                    }
+                }
                 switch (entry.getComponentStatus()) {
                     case ComponentRule.COMPONENT_TO_BE_DEFAULTED:
                         // Set component state to default and remove it
                         try {
-                            PackageManagerCompat.setComponentEnabledSetting(entry.getComponentName(),
-                                    PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.DONT_KILL_APP,
-                                    userId);
+                            PackageManagerCompat.setComponentEnabledSetting(
+                                    entry.getComponentName(), COMPONENT_ENABLED_STATE_DEFAULT,
+                                    DONT_KILL_APP, userId);
                             removeEntry(entry);
                         } catch (Throwable e) {
                             isSuccessful = false;
@@ -422,9 +437,9 @@ public final class ComponentsBlocker extends RulesStorageManager {
                     case ComponentRule.COMPONENT_TO_BE_ENABLED:
                         // Enable components
                         try {
-                            PackageManagerCompat.setComponentEnabledSetting(entry.getComponentName(),
-                                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP,
-                                    userId);
+                            PackageManagerCompat.setComponentEnabledSetting(
+                                    entry.getComponentName(), COMPONENT_ENABLED_STATE_ENABLED,
+                                    DONT_KILL_APP, userId);
                             setComponent(entry.name, entry.type, ComponentRule.COMPONENT_ENABLED);
                         } catch (Throwable e) {
                             isSuccessful = false;
@@ -438,9 +453,9 @@ public final class ComponentsBlocker extends RulesStorageManager {
                     case ComponentRule.COMPONENT_TO_BE_DISABLED:
                         // Disable components
                         try {
-                            PackageManagerCompat.setComponentEnabledSetting(entry.getComponentName(),
-                                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP,
-                                    userId);
+                            PackageManagerCompat.setComponentEnabledSetting(
+                                    entry.getComponentName(), COMPONENT_ENABLED_STATE_DISABLED,
+                                    DONT_KILL_APP, userId);
                             setComponent(entry.name, entry.type, entry.getCounterpartOfToBe());
                         } catch (Throwable e) {
                             isSuccessful = false;
@@ -458,7 +473,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                 // IFW rules are already removed above.
                 try {
                     PackageManagerCompat.setComponentEnabledSetting(entry.getComponentName(),
-                            PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.DONT_KILL_APP,
+                            COMPONENT_ENABLED_STATE_DEFAULT, DONT_KILL_APP,
                             userId);
                     if (entry.toBeRemoved()) {
                         removeEntry(entry);
@@ -550,15 +565,15 @@ public final class ComponentsBlocker extends RulesStorageManager {
                     case ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE:
                     case ComponentRule.COMPONENT_DISABLED:
                         // If component is enabled/defaulted, make it to be disabled
-                        if (s == PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-                                || s == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT) {
+                        if (s == COMPONENT_ENABLED_STATE_ENABLED
+                                || s == COMPONENT_ENABLED_STATE_DEFAULT) {
                             addComponent(entry.name, entry.type, entry.getToBe());
                             ++invalidated;
                         }
                         break;
                     case ComponentRule.COMPONENT_ENABLED:
                         // If component is not enabled, make it to be enabled
-                        if (s != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
+                        if (s != COMPONENT_ENABLED_STATE_ENABLED) {
                             addComponent(entry.name, entry.type, entry.getToBe());
                             ++invalidated;
                         }

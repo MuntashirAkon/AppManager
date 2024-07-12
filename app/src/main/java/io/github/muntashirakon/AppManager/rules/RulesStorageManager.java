@@ -8,6 +8,7 @@ import android.os.RemoteException;
 
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import java.io.BufferedReader;
@@ -121,21 +122,27 @@ public class RulesStorageManager implements Closeable {
     }
 
     @GuardedBy("entries")
-    protected void removeEntries(String name, RuleType type) {
+    @Nullable
+    protected RuleEntry removeEntries(String name, RuleType type) {
         synchronized (mEntries) {
             Iterator<RuleEntry> entryIterator = mEntries.iterator();
-            RuleEntry entry;
+            RuleEntry entry = null;
             while (entryIterator.hasNext()) {
                 entry = entryIterator.next();
                 if (entry.name.equals(name) && entry.type.equals(type)) {
                     entryIterator.remove();
                 }
             }
+            return entry;
         }
     }
 
     protected void setComponent(String name, RuleType componentType, @ComponentRule.ComponentStatus String componentStatus) {
-        addUniqueEntry(new ComponentRule(packageName, name, componentType, componentStatus));
+        ComponentRule newRule = new ComponentRule(packageName, name, componentType, componentStatus);
+        RuleEntry oldRule = addUniqueEntry(newRule);
+        if (oldRule instanceof ComponentRule) {
+            newRule.setLastComponentStatus(((ComponentRule) oldRule).getComponentStatus());
+        }
     }
 
     public void setAppOp(int op, @AppOpsManagerCompat.Mode int mode) {
@@ -203,10 +210,12 @@ public class RulesStorageManager implements Closeable {
      * Remove all entries of the given name and type before adding the entry.
      */
     @GuardedBy("entries")
-    private void addUniqueEntry(@NonNull RuleEntry entry) {
+    @Nullable
+    private RuleEntry addUniqueEntry(@NonNull RuleEntry entry) {
         synchronized (mEntries) {
-            removeEntries(entry.name, entry.type);
+            RuleEntry previousEntry = removeEntries(entry.name, entry.type);
             mEntries.add(entry);
+            return previousEntry;
         }
     }
 
@@ -247,7 +256,7 @@ public class RulesStorageManager implements Closeable {
     @GuardedBy("entries")
     protected void saveEntries(Path tsvRulesFile, boolean isExternal) throws IOException, RemoteException {
         synchronized (mEntries) {
-            if (mEntries.size() == 0) {
+            if (mEntries.isEmpty()) {
                 tsvRulesFile.delete();
                 return;
             }

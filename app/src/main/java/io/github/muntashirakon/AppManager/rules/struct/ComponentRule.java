@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.rules.struct;
 import android.content.ComponentName;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
 
 import java.lang.annotation.Retention;
@@ -74,6 +75,10 @@ public class ComponentRule extends RuleEntry {
     @ComponentStatus
     private final String mComponentStatus;
 
+    @Nullable
+    @ComponentStatus
+    private String mLastComponentStatus;
+
     public ComponentRule(@NonNull String packageName, @NonNull String name, RuleType componentType,
                          @NonNull @ComponentStatus String componentStatus) {
         super(packageName, name, componentType);
@@ -96,6 +101,21 @@ public class ComponentRule extends RuleEntry {
     @ComponentStatus
     public String getComponentStatus() {
         return mComponentStatus;
+    }
+
+    public void setLastComponentStatus(@Nullable String lastComponentStatus) {
+        mLastComponentStatus = lastComponentStatus;
+    }
+
+    public boolean applyDefaultState() {
+        if (mLastComponentStatus == null) {
+            return false;
+        }
+        if (mComponentStatus.equals(COMPONENT_TO_BE_BLOCKED_IFW)) {
+            return mLastComponentStatus.equals(COMPONENT_DISABLED)
+                    || mLastComponentStatus.equals(COMPONENT_BLOCKED_IFW_DISABLE);
+        }
+        return false;
     }
 
     public boolean toBeRemoved() {
