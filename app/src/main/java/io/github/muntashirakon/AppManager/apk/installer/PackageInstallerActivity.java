@@ -150,7 +150,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             goToNext();
         }
     };
-    private final InstallerOptions mInstallerOptions = new InstallerOptions();
+    private final InstallerOptions mInstallerOptions = InstallerOptions.getDefault();
     private final Queue<ApkQueueItem> mApkQueue = new LinkedList<>();
     private final ActivityResultLauncher<Intent> mConfirmIntentLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -203,7 +203,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             throw new RuntimeException("Unable to bind PackageInstallerService");
         }
         synchronized (mApkQueue) {
-            mApkQueue.addAll(ApkQueueItem.fromIntent(intent));
+            mApkQueue.addAll(ApkQueueItem.fromIntent(intent, Utils.getRealReferrer(this)));
         }
         ApkSource apkSource = IntentCompat.getParcelableExtra(intent, EXTRA_APK_FILE_LINK, ApkSource.class);
         if (apkSource != null) {
@@ -381,6 +381,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Log.d(TAG, "New intent called: %s", intent);
+        setIntent(intent);
         // Check for action first
         if (ACTION_PACKAGE_INSTALLED.equals(intent.getAction())) {
             mSessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
@@ -402,7 +403,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         }
         // New APK files added
         synchronized (mApkQueue) {
-            mApkQueue.addAll(ApkQueueItem.fromIntent(intent));
+            mApkQueue.addAll(ApkQueueItem.fromIntent(intent, Utils.getRealReferrer(this)));
         }
         UIUtils.displayShortToast(R.string.added_to_queue);
     }

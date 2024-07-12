@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.utils;
 import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
 import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -46,6 +47,7 @@ import java.util.List;
 import java.util.Locale;
 
 import aosp.libcore.util.EmptyArray;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
@@ -595,6 +597,24 @@ public class Utils {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(intent);
         activity.finish();
+    }
+
+    @Nullable
+    public static String getRealReferrer(@NonNull Activity activity) {
+        String callingPackage = activity.getCallingPackage();
+        if (callingPackage != null && !BuildConfig.APPLICATION_ID.equals(callingPackage)) {
+            return callingPackage;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            Intent intent = activity.getIntent();
+             intent.removeExtra(Intent.EXTRA_REFERRER_NAME);
+             intent.removeExtra(Intent.EXTRA_REFERRER);
+            // Now that the custom referrers are removed, it should return the real referrer.
+            // android-app:authority
+            Uri referrer = activity.getReferrer();
+            return referrer != null ? referrer.getAuthority() : null;
+        }
+        return null;
     }
 
     public static boolean isWifiActive(@NonNull Context context) {
