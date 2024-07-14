@@ -81,7 +81,6 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
         }
         sdFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
         sdFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
-        sdFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
         sdFilter.addAction(ACTION_PACKAGE_ALTERED);
         sdFilter.addAction(ACTION_PACKAGE_ADDED);
         sdFilter.addAction(ACTION_PACKAGE_REMOVED);
@@ -124,7 +123,9 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
                 case Intent.ACTION_PACKAGE_ADDED:
                 case Intent.ACTION_PACKAGE_CHANGED: {
                     int uid = intent.getIntExtra(Intent.EXTRA_UID, -1);
-                    if (uid != -1) onPackageChanged(intent, uid, null);
+                    if (uid != -1) {
+                        onPackageChanged(intent, uid, null);
+                    }
                     return;
                 }
                 case ACTION_PACKAGE_ADDED:
@@ -141,9 +142,6 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
                     onPackageChanged(intent, null, packages);
                     return;
                 }
-                case Intent.ACTION_LOCALE_CHANGED:
-                    onPackageChanged(intent, null, null);
-                    return;
                 case ACTION_BATCH_OPS_COMPLETED: {
                     // Trigger for all ops except disable, force-stop and uninstall
                     @BatchOpsManager.OpType int op;
