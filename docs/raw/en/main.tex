@@ -17,6 +17,7 @@
 % po4a: command -pagecolor {}
 % po4a: command *colorbox {}{_}
 
+\usepackage[margin=1in]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage{mathpazo} % Palatino
 \usepackage[utf8]{inputenc}
@@ -41,7 +42,7 @@
 \setcounter{secnumdepth}{3}
 
 % Import localised keywords
-\input{keywords.tex}
+\input{keywords}
 
 % -------------------
 % Alert environments
@@ -174,18 +175,18 @@
 \author{Muntashir Al-Islam}
 
 % Load variables
-\input{transient.tex}
+\input{transient}
 
 \begin{document}
-    \input{titlepage.tex}
+    \input{titlepage}
     \ifdefined\HCode
     % Don't display table of contents for tex4ht
     \else
         \tableofcontents
     \fi
-    \input{intro/main.tex}
-    \input{pages/main.tex}
-    \input{guide/main.tex}
-    \input{faq/main.tex}
-    \input{appendices/main.tex}
+    \input{intro/main}
+    \input{pages/main}
+    \input{guide/main}
+    \input{faq/main}
+    \input{appendices/main}
 \end{document}

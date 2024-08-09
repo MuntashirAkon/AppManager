@@ -1,0 +1,23 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Documentation" type="LATEX_RUN_CONFIGURATION" factoryName="LaTeX configuration factory">
+    <texify>
+      <compiler>PDFLATEX</compiler>
+      <compiler-path>pdflatex</compiler-path>
+      <sumatra-path />
+      <pdf-viewer>NONE</pdf-viewer>
+      <viewer-command>open</viewer-command>
+      <compiler-arguments>-shell-escape</compiler-arguments>
+      <envs />
+      <main-file>$PROJECT_DIR$/docs/raw/en/main_vanilla.tex</main-file>
+      <output-path>$PROJECT_DIR$/docs/raw/en</output-path>
+      <auxil-path>{projectDir}/auxil</auxil-path>
+      <compile-twice>false</compile-twice>
+      <output-format>PDF</output-format>
+      <latex-distribution>TEXLIVE</latex-distribution>
+      <has-been-run>true</has-been-run>
+      <bib-run-config>[]</bib-run-config>
+      <makeindex-run-config>[]</makeindex-run-config>
+    </texify>
+    <method v="2" />
+  </configuration>
+</component>

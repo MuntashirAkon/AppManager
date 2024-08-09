@@ -277,6 +277,7 @@
     <string name="guide$aot$$miui-usb-debug-title">Xiaomi (MIUI)</string>
     <string name="guide$aot$$emui-usb-debug-title">Huawei (EMUI)</string>
     <string name="guide$aot$$realme-usb-debug-title">Realme</string>
+    <string name="guide$aot$$oneplus-usb-debug-title">OnePlus (Oxygen OS)</string>
     <string name="guide$aot$$lg-usb-debug-title">LG</string>
     <string name="guide$aot$$troubleshooting-usb-debug-title">Troubleshooting</string>
     <string name="guide$aot$$setup-adb-on-pc-title">Setup ADB on PC or Mac</string>
@@ -295,6 +296,7 @@
     <string name="guide$aot$miui-usb-debug">Enable \\textbf{USB debugging (Security settings)} as well.</string>
     <string name="guide$aot$emui-usb-debug">Enable \\textbf{Allow ADB debugging in charge only mode} as well. When connecting to your PC or Mac, you may get a prompt\nsaying \\textbf{Allow access to device data\?} in which case click \\textbf{YES, ALLOW ACCESS}.\n\n\\begin{tip}{Notice}\n    Often the \\textbf{USB debugging} mode could be disabled automatically by the system. If that\'s the case, repeat the\n    above procedure.\n\\end{tip}</string>
     <string name="guide$aot$realme-usb-debug">Depending on the device and the version of operating system, you have to enable \\textbf{Disable Permission Monitoring},\nor \\textbf{USB debugging (Security settings)} along with \\textbf{Install via USB}.</string>
+    <string name="guide$aot$oneplus-usb-debug">Depending on the device and the version of operating system, you have to enable \\textbf{Disable Permission Monitoring}.</string>
     <string name="guide$aot$lg-usb-debug">Make sure you have \\textbf{USB tethering} enabled.</string>
     <string name="guide$aot$troubleshooting-usb-debug">In case \\textbf{USB Debugging} is greyed out, you can do the following:\n\\begin{enumerate}\n    \\item Make sure you enabled USB debugging before connecting your phone to the PC or Mac via USB cable\n    \\item Enable USB tethering after connecting to PC or Mac via USB cable\n    \\item (For Samsung) If your device is running KNOX, you may have to follow some additional steps. See official\n    documentations or consult support for further assistant\n\\end{enumerate}</string>
     <string name="guide$aot$setup-adb-on-pc">In order to enable ADB over TCP, you have to set up ADB in your PC or Mac. \\textbf{\\textit{Lineage OS users can skip to\n\\Sref{subsubsec:lineage-os}.}}</string>
