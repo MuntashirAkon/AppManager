@@ -173,11 +173,13 @@ public class ScannerFragment extends Fragment {
                         .showSelectAll(false)
                         .setNegativeButton(R.string.ok, null)
                         .setNeutralButton(R.string.send_selected, (dialog, which, selectedItems) -> {
+                            String message = "Package: " + mViewModel.getPackageName() + "\n" +
+                                    "Signatures: " + selectedItems;
                             Intent i = new Intent(Intent.ACTION_SEND);
                             i.setType("message/rfc822");
                             i.putExtra(Intent.EXTRA_EMAIL, new String[]{"am4android@riseup.net"});
                             i.putExtra(Intent.EXTRA_SUBJECT, "App Manager: Missing signatures");
-                            i.putExtra(Intent.EXTRA_TEXT, selectedItems.toString());
+                            i.putExtra(Intent.EXTRA_TEXT, message);
                             startActivity(Intent.createChooser(i, getText(R.string.signatures)));
                         })
                         .show());
