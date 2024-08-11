@@ -43,20 +43,23 @@ public class CsvWriter {
     }
 
     public void addField(@Nullable String field, boolean addQuotes) throws IOException {
+        boolean previouslyInitialized = mInitialized;
         ++mCurrentFieldCount;
         checkFieldAvailable();
         if (mCurrentFieldCount > 1) {
             // There are other fields
             mWriter.write(mSeparator);
+        } else if (previouslyInitialized) {
+            // This is the first field since the last line
+            mWriter.append(System.lineSeparator());
         }
         mWriter.append(getFormattedField(field, addQuotes));
     }
 
-    public void addLine() throws IOException {
+    public void addLine() {
         initIfNotAlready();
         checkFieldCountSame();
         mCurrentFieldCount = 0;
-        mWriter.append(System.lineSeparator());
     }
 
     public void addLine(@NonNull String[] line) throws IOException {
@@ -67,11 +70,16 @@ public class CsvWriter {
      * @param addQuotes Whether all fields are to be enclosed in double quotes
      */
     public void addLine(@NonNull String[] line, boolean addQuotes) throws IOException {
+        boolean previouslyInitialized = mInitialized;
         mCurrentFieldCount = line.length;
         initIfNotAlready();
         checkFieldCountSame();
         mCurrentFieldCount = 0;
-        mWriter.append(getFormattedLine(line, addQuotes)).append(System.lineSeparator());
+        if (previouslyInitialized) {
+            // There were other lines
+            mWriter.append(System.lineSeparator());
+        }
+        mWriter.append(getFormattedLine(line, addQuotes));
     }
 
     public void addLines(@NonNull Collection<String[]> lines) throws IOException {
@@ -87,6 +95,7 @@ public class CsvWriter {
         }
     }
 
+    @NonNull
     private String getFormattedLine(@NonNull String[] line, boolean addQuotes) {
         return Stream.of(line)
                 .map(field -> getFormattedField(field, addQuotes))
@@ -102,7 +111,8 @@ public class CsvWriter {
         if (field.contains(COMMA)
                 || field.contains(DOUBLE_QUOTES)
                 || field.contains(NEW_LINE_UNIX)
-                || field.contains(NEW_LINE_WINDOWS)) {
+                || field.contains(NEW_LINE_WINDOWS)
+                || field.contains(mSeparator)) {
 
             // If the field contains double quotes, replace it with two double quotes \"\"
             String result = field.replace(DOUBLE_QUOTES, EMBEDDED_DOUBLE_QUOTES);
