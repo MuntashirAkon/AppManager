@@ -156,6 +156,7 @@ public class ApplicationItem extends PackageItemInfo {
 
     public void generateOtherInfo() {
         isStopped = (flags & ApplicationInfo.FLAG_STOPPED) != 0;
+        isSystem = (flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         isPersistent = (flags & ApplicationInfo.FLAG_PERSISTENT) != 0;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             usesCleartextTraffic = (flags & ApplicationInfo.FLAG_USES_CLEARTEXT_TRAFFIC) != 0;
