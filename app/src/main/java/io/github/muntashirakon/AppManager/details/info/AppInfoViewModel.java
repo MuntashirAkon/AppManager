@@ -357,10 +357,13 @@ public class AppInfoViewModel extends AndroidViewModel {
                 boolean hasUsageAccess = FeatureController.isUsageAccessEnabled() && SelfPermissions.checkUsageStatsPermission();
                 if (hasUsageAccess) {
                     // Net statistics
-                    if (ArrayUtils.contains(packageInfo.requestedPermissions, Manifest.permission.INTERNET)) {
-                        appInfo.dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
-                                applicationInfo.uid, UsageUtils.USAGE_LAST_BOOT);
-                    } else appInfo.dataUsage = null;
+                    AppUsageStatsManager.DataUsage dataUsage;
+                    dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
+                            applicationInfo.uid, UsageUtils.USAGE_LAST_BOOT);
+                    if (dataUsage.getTotal() == 0 && !ArrayUtils.contains(
+                            packageInfo.requestedPermissions, Manifest.permission.INTERNET)) {
+                        appInfo.dataUsage = null;
+                    } else appInfo.dataUsage = dataUsage;
                     // Set sizes
                     appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userId,
                             Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
