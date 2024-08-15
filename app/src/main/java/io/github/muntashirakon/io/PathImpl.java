@@ -1234,11 +1234,15 @@ class PathImpl extends Path {
         } else if (documentFile instanceof VirtualDocumentFile) {
             return ((VirtualDocumentFile) documentFile).openInputStream();
         }
-        InputStream is = context.getContentResolver().openInputStream(documentFile.getUri());
-        if (is == null) {
-            throw new IOException("Could not resolve Uri: " + documentFile.getUri());
+        try {
+            InputStream is = context.getContentResolver().openInputStream(documentFile.getUri());
+            if (is == null) {
+                throw new IOException("Could not resolve Uri: " + documentFile.getUri());
+            }
+            return is;
+        } catch (SecurityException e) {
+            throw new IOException(e);
         }
-        return is;
     }
 
     public FileChannel openFileChannel(int mode) throws IOException {
