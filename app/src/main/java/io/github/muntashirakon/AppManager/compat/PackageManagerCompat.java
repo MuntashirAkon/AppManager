@@ -464,10 +464,14 @@ public final class PackageManagerCompat {
                 if (hidden) {
                     if (hide) {
                         BroadcastUtils.sendPackageRemoved(ContextUtils.getContext(), new String[]{packageName});
-                    } else BroadcastUtils.sendPackageAdded(ContextUtils.getContext(), new String[]{packageName});
+                    } else {
+                        BroadcastUtils.sendPackageAdded(ContextUtils.getContext(), new String[]{packageName});
+                    }
                 }
             }
-        } else throw new RemoteException("Missing required permission: android.permission.MANAGE_USERS.");
+        } else {
+            throw new RemoteException("Missing required permission: android.permission.MANAGE_USERS.");
+        }
     }
 
     public static boolean isPackageHidden(String packageName, @UserIdInt int userId) throws RemoteException {
@@ -524,9 +528,7 @@ public final class PackageManagerCompat {
         if (!obs.isSuccessful()) {
             throw new AndroidException("Could not clear data of package " + pair);
         }
-        if (pair.getUserId() != UserHandleHidden.myUserId()) {
-            BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{pair.getPackageName()});
-        }
+        BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{pair.getPackageName()});
     }
 
     @RequiresPermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)
@@ -562,9 +564,7 @@ public final class PackageManagerCompat {
         if (!obs.isSuccessful()) {
             throw new AndroidException("Could not clear cache of package " + pair);
         }
-        if (pair.getUserId() != UserHandleHidden.myUserId()) {
-            BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{pair.getPackageName()});
-        }
+        BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{pair.getPackageName()});
     }
 
     @RequiresPermission(allOf = {
@@ -582,10 +582,12 @@ public final class PackageManagerCompat {
     }
 
     @RequiresPermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)
-    public static void forceStopPackage(String packageName, int userId) throws RemoteException {
-        ActivityManagerCompat.getActivityManager().forceStopPackage(packageName, userId);
-        if (userId != UserHandleHidden.myUserId()) {
+    public static void forceStopPackage(String packageName, int userId) throws RemoteException, SecurityException {
+        try {
+            ActivityManagerCompat.getActivityManager().forceStopPackage(packageName, userId);
             BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{packageName});
+        } catch (RemoteException e) {
+            ExUtils.rethrowFromSystemServer(e);
         }
     }
 
@@ -613,7 +615,9 @@ public final class PackageManagerCompat {
             boolean hasPermission;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
                 hasPermission = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERNAL_DELETE_CACHE_FILES);
-            } else hasPermission = SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.DELETE_CACHE_FILES);
+            } else {
+                hasPermission = SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.DELETE_CACHE_FILES);
+            }
             if (!hasPermission) {
                 // Does not have enough permission
                 return;
