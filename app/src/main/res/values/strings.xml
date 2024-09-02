@@ -430,7 +430,6 @@
     <string name="features">Features</string>
     <string name="whats_new">What\'s New</string>
     <string name="blocking_rules">Blocking rules</string>
-    <string name="cache">Cache</string>
     <string name="external_data">External data</string>
     <string name="internal_data">Internal data</string>
     <string name="data">Data</string>
@@ -1492,4 +1491,5 @@
     <string name="pref_use_system_font_msg">Use the system-default font instead of the material font. <font fgcolor="#ff0000">This is an experimental feature.</font></string>
     <string name="actual_installer">Actual Installer</string>
     <string name="apk_source">APK Source</string>
+    <string name="backup_cache">Cache</string>
 </resources>

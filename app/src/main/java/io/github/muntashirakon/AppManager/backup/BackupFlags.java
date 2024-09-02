@@ -66,7 +66,7 @@ public final class BackupFlags {
         put(BACKUP_INT_DATA, new Pair<>(R.string.internal_data, R.string.backup_internal_data_description));
         put(BACKUP_EXT_DATA, new Pair<>(R.string.external_data, R.string.backup_external_data_description));
         put(BACKUP_EXT_OBB_MEDIA, new Pair<>(R.string.backup_obb_media, R.string.backup_obb_media_description));
-        put(BACKUP_CACHE, new Pair<>(R.string.cache, R.string.backup_cache_description));
+        put(BACKUP_CACHE, new Pair<>(R.string.backup_cache, R.string.backup_cache_description));
         put(BACKUP_EXTRAS, new Pair<>(R.string.backup_extras, R.string.backup_extras_description));
         put(BACKUP_RULES, new Pair<>(R.string.rules, R.string.backup_rules_description));
         put(BACKUP_MULTIPLE, new Pair<>(R.string.backup_multiple, R.string.backup_multiple_description));
