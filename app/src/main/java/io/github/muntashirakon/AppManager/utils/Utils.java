@@ -607,8 +607,8 @@ public class Utils {
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
             Intent intent = activity.getIntent();
-             intent.removeExtra(Intent.EXTRA_REFERRER_NAME);
-             intent.removeExtra(Intent.EXTRA_REFERRER);
+            intent.removeExtra(Intent.EXTRA_REFERRER_NAME);
+            intent.removeExtra(Intent.EXTRA_REFERRER);
             // Now that the custom referrers are removed, it should return the real referrer.
             // android-app:authority
             Uri referrer = activity.getReferrer();

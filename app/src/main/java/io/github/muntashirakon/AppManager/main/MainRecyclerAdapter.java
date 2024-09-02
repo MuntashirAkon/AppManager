@@ -35,12 +35,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
+import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
@@ -48,6 +50,7 @@ import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -288,9 +291,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             holder.size.setText(item.sdkString);
         } else holder.size.setText("-");
         // Set SDK color to orange if the app is using cleartext (e.g. HTTP) traffic
-        if (item.usesCleartextTraffic) {
-            holder.size.setTextColor(mColorOrange);
-        } else holder.size.setTextColor(mColorSecondary);
+        holder.size.setTextColor(item.usesCleartextTraffic ? mColorOrange : mColorSecondary);
         // Check for backup
         if (item.backup != null) {
             holder.backupIndicator.setVisibility(View.VISIBLE);
@@ -380,7 +381,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                                 | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES,
                         UserHandleHidden.myUserId());
             } catch (RemoteException | PackageManager.NameNotFoundException e) {
-                displayShortToast(R.string.app_not_installed);
+                showBackupRestoreDialogOrAppNotInstalled(item);
                 return;
             }
             // 1. Check if the app was really uninstalled.
@@ -411,7 +412,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             // 3. The app might be uninstalled without clearing data
             if (ApplicationInfoCompat.isSystemApp(info)) {
                 // The app is a system app, there's no point in asking to uninstall it again
-                displayShortToast(R.string.app_not_installed);
+                showBackupRestoreDialogOrAppNotInstalled(item);
                 return;
             }
             new MaterialAlertDialogBuilder(mActivity)
@@ -442,7 +443,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                 return;
             }
             // Outside our jurisdiction
-            displayShortToast(R.string.app_not_installed);
+            showBackupRestoreDialogOrAppNotInstalled(item);
             return;
         }
         // More than a user, ask the user to select one
@@ -464,6 +465,21 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
+    }
+
+    private void showBackupRestoreDialogOrAppNotInstalled(@NonNull ApplicationItem item) {
+        if (item.backup == null) {
+            // No backups
+            displayShortToast(R.string.app_not_installed);
+            return;
+        }
+        // Has backups
+        BackupRestoreDialogFragment fragment = BackupRestoreDialogFragment.getInstance(
+                Collections.singletonList(new UserPackagePair(
+                        item.packageName, UserHandleHidden.myUserId())));
+        fragment.setOnActionBeginListener(mode -> mActivity.showProgressIndicator(true));
+        fragment.setOnActionCompleteListener((mode, failedPackages) -> mActivity.showProgressIndicator(false));
+        fragment.show(mActivity.getSupportFragmentManager(), BackupRestoreDialogFragment.TAG);
     }
 
     public static class ViewHolder extends MultiSelectionView.ViewHolder {

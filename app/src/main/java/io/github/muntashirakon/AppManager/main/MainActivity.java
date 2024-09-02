@@ -585,7 +585,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                 .show();
     }
 
-    private void showProgressIndicator(boolean show) {
+    void showProgressIndicator(boolean show) {
         if (show) mProgressIndicator.show();
         else mProgressIndicator.hide();
     }
