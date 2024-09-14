@@ -54,6 +54,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }};
 
+    public static final String EXTRA_AUTH = "auth";
+
     @Nullable
     private AlertDialog mAlertDialog;
     @Nullable
@@ -231,7 +233,17 @@ public abstract class BaseActivity extends AppCompatActivity {
             handleMigrationAndModeOfOp();
             return;
         }
-        Log.d(TAG, "Security enabled.");
+        if (getIntent().hasExtra(EXTRA_AUTH)) {
+            Log.i(TAG, "Screen lock-bypass enabled.");
+            // Check for auth
+            String auth = getIntent().getStringExtra(EXTRA_AUTH);
+            if (AuthManager.getKey().equals(auth)) {
+                // Auth successful
+                handleMigrationAndModeOfOp();
+                return;
+            } // else // Invalid authorization key, fallback to security
+        }
+        Log.i(TAG, "Screen lock enabled.");
         KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         if (keyguardManager.isKeyguardSecure()) {
             // Screen lock enabled
