@@ -167,6 +167,7 @@ dependencies {
     implementation "androidx.documentfile:documentfile:${documentfile_version}"
     implementation "androidx.activity:activity:${activity_version}"
     implementation "androidx.core:core-splashscreen:${splashscreen_version}"
+    implementation "androidx.biometric:biometric:${biometric_version}"
     implementation "androidx.webkit:webkit:${webkit_version}"
     implementation "io.github.Rosemoe.sora-editor:editor:${sora_editor_version}"
     implementation "io.github.Rosemoe.sora-editor:language-textmate:${sora_editor_version}"
