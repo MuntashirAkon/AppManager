@@ -1,13 +1,305 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="refresh">Opdater</string>
     <string name="activities">Aktiviteter</string>
     <string name="no_receivers">Ingen modtagere</string>
     <string name="providers">Udbydere</string>
     <string name="uninstall">Afinstaller</string>
     <string name="no_activities">Ingen aktiviteter</string>
-    <string name="require_no_permission">Der kræves ingen tilladelse</string>
+    <string name="require_no_permission">Ingen tilladelse påkrævet</string>
     <string name="permissions">Bruger tilladelser</string>
     <string name="launch">Start</string>
     <string name="receivers">Modtagere</string>
+    <string name="create_shortcut">Opret Genvej</string>
+    <string name="debuggable">Kan fejlfindes</string>
+    <string name="sort_by_last_used">Sidst brugt</string>
+    <string name="failed_to_reset_app_ops">Kunne ikke nulstille app-operationer</string>
+    <string name="app_signing_no_signatures">Ingen gyldige signeringer</string>
+    <string name="never_ask">Spørg aldrig</string>
+    <string name="shared_user_id">Delt Bruger-ID</string>
+    <string name="read">Læs</string>
+    <string name="shortcut_name">Genvejsnavn</string>
+    <string name="class_name">Klassenavn</string>
+    <string name="disabled_app">Deaktiveret</string>
+    <string name="configurations">Konfigurationer</string>
+    <string name="error_verbose_pin_shortcut">Nuværende launcher understøtter ikke PinShortcut. Kan ikke oprette genvej.</string>
+    <string name="touchscreen">Touchskærm</string>
+    <string name="battery_mode">Batteritilstand</string>
+    <string name="error_evaluating_input">Kunne ikke evaluere input</string>
+    <string name="sdk_min">Min.</string>
+    <string name="uses_feature">Bruger funktioner</string>
+    <string name="version">Version</string>
+    <string name="mode">Tilstand</string>
+    <string name="disable">Deaktiver</string>
+    <string name="paths_and_directories">Stier &amp; Mapper</string>
+    <string name="save">Gem</string>
+    <string name="kill_process">Dræb</string>
+    <string name="data_dir">Datamappe</string>
+    <string name="delete">Slet</string>
+    <string name="failed_to_revoke_permission">Kunne ikke tilbagekalde tilladelse</string>
+    <string name="app_signing_signatures">Signeringer</string>
+    <string name="data_transmitted">Data sendt</string>
+    <string name="usage_yesterday">I går</string>
+    <string name="no_feature">Ingen funktioner</string>
+    <string name="data_size">Data</string>
+    <string name="sdk_flags">Flag</string>
+    <string name="class_viewer">Klassevisning</string>
+    <string name="sort_by_domain">Brugerapps først</string>
+    <string name="grant_uri_permission">Giv URI-tilladelser</string>
+    <string name="error">Fejl</string>
+    <string name="sort_by_package_name">Pakkenavn</string>
+    <string name="data_usage_msg">Dataforbrug</string>
+    <string name="cache_size">Cache</string>
+    <string name="user">Bruger</string>
+    <string name="system_app">Systemapp</string>
+    <string name="user_app">Brugerapp</string>
+    <string name="more_info">Mere Info</string>
+    <string name="date_installed">Installationsdato</string>
+    <string name="date_updated">Opdateringsdato</string>
+    <string name="main_activity">Hovedaktivitet</string>
+    <string name="empty_package_name">Tomt pakkenavn</string>
+    <string name="user_id">Bruger-ID</string>
+    <string name="changelog">Ændringslog</string>
+    <string name="apply">Anvend</string>
+    <string name="app_info">App-info</string>
+    <string name="sort_by_sha">Signering</string>
+    <string name="day">Dag</string>
+    <string name="launch_app">Start</string>
+    <string name="service">Tjenester</string>
+    <string name="done">Færdig</string>
+    <string name="import_failed">Import mislykkedes!</string>
+    <string name="sort_by_shared_user_id">Delt Bruger-ID</string>
+    <string name="found_trackers">Fandt Trackere:</string>
+    <string name="usage_today">I dag</string>
+    <string name="duration">Varighed</string>
+    <string name="system">System</string>
+    <string name="source_dir">Kildemappe</string>
+    <string name="sort_by_mobile_data">Mobildata</string>
+    <string name="no_providers">Ingen udbydere</string>
+    <string name="export_options">Indstillinger for Eksport</string>
+    <string name="pref_export">Eksport</string>
+    <string name="declared_permission">Tilladelser</string>
+    <string name="signatures">Signeringer</string>
+    <string name="loading">Indlæser…</string>
+    <string name="ago">siden</string>
+    <string name="data_received">Data modtaget</string>
+    <plurals name="tracker_and_classes">
+        <item quantity="one">1 tracker med <xliff:g id="class_no" example="50">%1$d</xliff:g> klasse</item>
+        <item quantity="other">1 tracker med <xliff:g id="class_no" example="50">%1$d</xliff:g> klasser</item>
+    </plurals>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d min.</item>
+        <item quantity="other">%1$d min.</item>
+    </plurals>
+    <string name="patterns_allowed">Mønstre tilladt</string>
+    <plurals name="alert_failed_to_force_stop">
+        <item quantity="one">Kunne ikke gennemtvinge stop af %1$d app</item>
+        <item quantity="other">Kunne ikke gennemtvinge stop af %1$d apps</item>
+    </plurals>
+    <string name="package_name">Pakkenavn</string>
+    <string name="icon_picker">Ikonvælger</string>
+    <string name="third_party">Tredjepartsbiblioteker og -ikoner</string>
+    <string name="credits">Tak til</string>
+    <string name="word_wrap">Slå ordombrydning til/fra</string>
+    <string name="tracker_details">Trackerdetaljer</string>
+    <string name="all_classes">Alle klasser</string>
+    <string name="no_shared_libs">Ingen delte biblioteker</string>
+    <string name="no_tracker_class">Ingen trackerklasser</string>
+    <string name="usage_weekly">Ugentlig</string>
+    <string name="usage_7_days">Sidste 7 dage</string>
+    <string name="usage_less_than_a_minute">Mindre end et minut</string>
+    <string name="go_back">Gå tilbage</string>
+    <string name="share_apk">Del APK</string>
+    <string name="failed_to_extract_apk_file">Kunne ikke udpakke APK-fil</string>
+    <string name="menu_remove_rules">Fjern regler</string>
+    <string name="menu_apply_rules">Anvend regler</string>
+    <string name="search">Søg</string>
+    <string name="process_name">Procesnavn</string>
+    <string name="no_code">Ingen kode</string>
+    <string name="updated_app">Opdateret</string>
+    <string name="discard">Kassér</string>
+    <string name="deleted_successfully">Slettet</string>
+    <string name="deletion_failed">Sletning mislykkedes</string>
+    <string name="saved_successfully">Gemt</string>
+    <string name="select_type">Vælg en type</string>
+    <string name="type_float">Decimaltal</string>
+    <string name="type_long">Langt heltal</string>
+    <string name="no_content">Intet indhold</string>
+    <string name="view_in_settings">Se i Indstillinger</string>
+    <string name="uninstall_system_app_message">Dette er en systemapp. Er du sikker på, at du vil afinstallere denne app?</string>
+    <string name="failed_to_uninstall">Kunne ikke afinstallere <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> er blevet afinstalleret.</string>
+    <string name="stopped">Stoppet</string>
+    <string name="enable">Aktiver</string>
+    <string name="force_stop">Gennemtving stop</string>
+    <string name="failed_to_stop">Kunne ikke stoppe <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="storage_and_cache">Lager og Cache</string>
+    <string name="no_app_ops">Ingen app-operationer</string>
+    <string name="rules_not_applied">Regler anvendes ikke</string>
+    <string name="str_logo">Logo</string>
+    <string name="app_settings">Indstillinger</string>
+    <string name="exodus_link">εxodus-link</string>
+    <string name="external_data_dir">Ekstern Datamappe</string>
+    <string name="external_multiple_data_dir">Ekstern Datamappe <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
+    <string name="sort_by_screen_time">Skærmtid</string>
+    <string name="pref_import_export_blocking_rules">Importér/eksportér blokeringsregler</string>
+    <string name="pref_import_export_blocking_rules_msg">Importér/eksportér regler. Importér eksterne regler fra Watt eller Blocker.</string>
+    <string name="pref_import_watt">Importér fra Watt</string>
+    <string name="the_import_was_successful">Importeret</string>
+    <string name="the_export_was_successful">Eksporteret</string>
+    <string name="apk_updater">APK Updater</string>
+    <string name="running_apps">Kørende Apps</string>
+    <string name="user_with_id">Bruger: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="backup_restore">Backup/Gendan</string>
+    <string name="export_blocking_rules">Eksportér Blokeringsregler</string>
+    <string name="running">Kører</string>
+    <string name="pref_import">Import</string>
+    <string name="keyboard_type">Tastaturtype</string>
+    <string name="navigation">Navigation</string>
+    <string name="pref_export_msg">Eksportér blokeringsregler konfigurerede i App Manager til eksternt lager.</string>
+    <string name="pref_import_msg">Importér tidligere eksporterede blokeringsregler fra App Manager.</string>
+    <string name="pref_app_theme">App-tema</string>
+    <string name="night">Nat</string>
+    <string name="select_theme">Tema</string>
+    <string name="pref_about_msg">App Manager-version, -licens, -kredit osv.</string>
+    <string name="block_trackers">Bloker trackere</string>
+    <string name="sort_by_component_name">Komponentnavn</string>
+    <string name="reset_to_default">Nulstil til standard</string>
+    <string name="deny_dangerous_app_ops">Afvis farlige app-operationer</string>
+    <string name="sort_by_denied_app_ops">Afvist først</string>
+    <string name="sort_by_dangerous_permissions">Farlige først</string>
+    <string name="sort_by_denied_permissions">Afvist først</string>
+    <string name="sort_by_tracker_components">Trackere først</string>
+    <string name="unknown_op">Ukendt Operation</string>
+    <string name="failed_to_grant_permission">Kunne ikke give tilladelse</string>
+    <string name="failed_to_deny_dangerous_perms">Kunne ikke tilbagekalde alle farlige tilladelser</string>
+    <string name="failed_to_deny_dangerous_app_ops">Kunne ikke tilbagekalde alle farlige app-operationer</string>
+    <string name="external_apk_no_app_op">Ekstern APK har ingen app-operationer</string>
+    <string name="install">Installer</string>
+    <string name="update">Opdater</string>
+    <string name="source_code">Kildekode</string>
+    <string name="community">Fællesskab</string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">X (Twitter)</a></string>
+    <string name="pref_import_existing">Importér eksisterende regler</string>
+    <string name="clear_cache">Ryd Cache</string>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackere med <xliff:g id="class_no" example="50">%2$d</xliff:g> klasser</item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackere med <xliff:g id="class_no" example="50">%2$d</xliff:g> klasser</item>
+    </plurals>
+    <plurals name="main_list_date_days">
+        <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dag</item>
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dage</item>
+    </plurals>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d sek.</item>
+        <item quantity="other">%1$d sek.</item>
+    </plurals>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="one">Kunne ikke afinstallere %1$d app</item>
+        <item quantity="other">Kunne ikke afinstallere %1$d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable_background">
+        <item quantity="one">Kunne ikke forhindre %1$d app i at køre i baggrunden</item>
+        <item quantity="other">Kunne ikke forhindre %1$d apps i at køre i baggrunden</item>
+    </plurals>
+    <plurals name="no_of_trackers">
+        <item quantity="one">%1$d tracker</item>
+        <item quantity="other">%1$d trackere</item>
+    </plurals>
+    <plurals name="no_of_components">
+        <item quantity="one">%1$d komponent</item>
+        <item quantity="other">%1$d komponenter</item>
+    </plurals>
+    <plurals name="alert_failed_to_clear_data">
+        <item quantity="one">Kunne ikke rydde data fra %1$d app</item>
+        <item quantity="other">Kunne ikke rydde data fra %1$d apps</item>
+    </plurals>
+    <string name="saving_failed">Lagring mislykkedes. Prøv igen.</string>
+    <string name="key_name">Nøglenavn</string>
+    <string name="uninstall_app_message">Vil du afinstallere denne app?</string>
+    <string name="flags">Flag</string>
+    <string name="import_options">Indstillinger for Import</string>
+    <string name="databases">Databaser</string>
+    <string name="no_service">Ingen tjenester</string>
+    <string name="about">Om</string>
+    <string name="sort_by_blocked_components">Blokeret først</string>
+    <string name="tracker_classes">Trackerklasser</string>
+    <string name="type_boolean">Sandt/falsk</string>
+    <string name="export_failed">Eksport mislykkedes!</string>
+    <string name="second_degree_tracker_note">²-præfikset angiver, at trackerne er på <a href="https://etip.exodus-privacy.eu.org/">ETIP\'s standby-liste</a>, dvs. at det stadig undersøges, om de er faktiske trackere.</string>
+    <string name="app_size">App</string>
+    <string name="no_configurations">Ingen konfigurationer</string>
+    <string name="error_creating_shortcut">Fejl ved oprettelse af genvej</string>
+    <string name="pref_import_blocker">Importér fra Blocker</string>
+    <string name="pref_global_blocking_enabled_msg">Lader dig blokere enhver komponent i enhver app uden eksplicit at slå blokering til for appen.</string>
+    <string name="dev_protected_data_dir">Enhedsbeskyttet Datamappe</string>
+    <string name="failed_to_uninstall_app">Afinstallation mislykkedes</string>
+    <string name="deny_dangerous_permissions">Afvis farlige tilladelser</string>
+    <string name="type_int">Heltal</string>
+    <string name="type_string">Tegn</string>
+    <string name="follow_system">Følg system</string>
+    <string name="key_name_cannot_be_null">Nøglenavn må ikke være tomt</string>
+    <string name="total_size">I alt</string>
+    <string name="clear_data">Ryd Data</string>
+    <string name="one_click_ops">1-klik-operationer</string>
+    <string name="memory_virtual_memory">Hukommelse: %1$s; Virtuel Hukommelse: %2$s</string>
+    <string name="sort_by_wifi_data">Wi-Fi-data</string>
+    <string name="write">Skriv</string>
+    <plurals name="usage_hours">
+        <item quantity="one">%1$d t.</item>
+        <item quantity="other">%1$d t.</item>
+    </plurals>
+    <string name="the_operation_was_successful">Færdig</string>
+    <string name="pref_import_existing_msg">Føj komponenter, der er deaktiveret af andre apps, til App Manager. Vær forsigtig, når du bruger dette værktøj, da der kan være mange falske positiver. Vælg kun de apps, du er sikker på.</string>
+    <string name="sort">Sortér</string>
+    <plurals name="usage_months">
+        <item quantity="one">%1$d md.</item>
+        <item quantity="other">%1$d mdr.</item>
+    </plurals>
+    <plurals name="no_of_times_opened">
+        <item quantity="one">%1$d gang</item>
+        <item quantity="other">%1$d gange</item>
+    </plurals>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="one">2 trackere med <xliff:g id="class_no" example="50">%1$d</xliff:g> klasser</item>
+        <item quantity="other">2 trackere med <xliff:g id="class_no" example="50">%1$d</xliff:g> klasser</item>
+    </plurals>
+    <plurals name="failed_to_import_files">
+        <item quantity="one">Kunne ikke importere %1$d fil.</item>
+        <item quantity="other">Kunne ikke importere %1$d filer.</item>
+    </plurals>
+    <string name="credits_message">Til skaberne af
+        \n- Android Open Source-projektet
+        \n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
+        \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+        \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+        \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+        \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+        \n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
+        \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
+        \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+        \n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a>
+        \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
+        \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+        \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
+        \n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
+        \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
+        \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+        \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+        \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+        \n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
+        \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+        \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+        \n- <a href="https://github.com/eclipse/tm4e">tm4e</a>
+        \n- <a href="https://github.com/tuyafeng/Watt">Watt</a></string>
+    <string name="toggle_class_listing">Slå klassevisning til/fra</string>
+    <plurals name="usage_days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dage</item>
+    </plurals>
+    <string name="license">Licens</string>
+    <string name="app_not_installed">App ikke installeret</string>
+    <string name="version_name_with_code">Version <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
+    <string name="user_and_uid">Bruger: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
 </resources>
