@@ -1026,4 +1026,13 @@
     <string name="port_number_invalid">अमान्य पोर्ट संख्या।</string>
     <string name="netpolicy_reject_cellular_data">सेलुलर डेटा अस्वीकार करें</string>
     <string name="netpolicy_reject_vpn_data">वीपीएन डेटा अस्वीकार करें</string>
+    <string name="notice">सूचना</string>
+    <string name="profile_save_apk_msg"><tt>AppManager/apks</tt> में APK फ़ाइलें सहेजता है</string>
+    <string name="help_uses_permissions_tab">किसी आइटम को <b>अनुमति</b> देने या <b>निरस्त</b> करने के लिए उस पर क्लिक करें। केवल <b>ख़तरनाक</b> और <b>विकास</b> अनुमतियाँ ही दी या रद्द की जा सकती हैं।</string>
+    <string name="added_to_queue">कतार में जोड़ा गया</string>
+    <string name="saved_filters">सहेजे गए फ़िल्टर</string>
+    <string name="error_with_details">त्रुटि : %s</string>
+    <string name="pref_selected_users_msg">App Manager को केवल चयनित उपयोगकर्ताओं के साथ काम करने के लिए प्रतिबंधित करें।</string>
+    <string name="notice_saf">वॉल्यूम के विपरीत, चयनित निर्देशिका का उपयोग ऐप मैनेजर से संबंधित सभी फ़ाइलों को संग्रहीत करने के लिए किया जाएगा, जिसमें सहेजे गए APK और बैकअप शामिल हैं। स्टोरेज एक्सेस फ्रेमवर्क (SAF) बहुत धीमा है इसलिए आपको इस विकल्प का उपयोग केवल तभी करना चाहिए जब अन्य का उपयोग नहीं किया जा सकता है।</string>
+    <string name="pref_selected_users">चयनित उपयोगकर्ता</string>
 </resources>
