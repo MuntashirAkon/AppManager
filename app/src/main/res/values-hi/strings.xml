@@ -1035,4 +1035,14 @@
     <string name="pref_selected_users_msg">App Manager को केवल चयनित उपयोगकर्ताओं के साथ काम करने के लिए प्रतिबंधित करें।</string>
     <string name="notice_saf">वॉल्यूम के विपरीत, चयनित निर्देशिका का उपयोग ऐप मैनेजर से संबंधित सभी फ़ाइलों को संग्रहीत करने के लिए किया जाएगा, जिसमें सहेजे गए APK और बैकअप शामिल हैं। स्टोरेज एक्सेस फ्रेमवर्क (SAF) बहुत धीमा है इसलिए आपको इस विकल्प का उपयोग केवल तभी करना चाहिए जब अन्य का उपयोग नहीं किया जा सकता है।</string>
     <string name="pref_selected_users">चयनित उपयोगकर्ता</string>
+    <string name="files">फ़ाइलें</string>
+    <string name="paste">पेस्ट करें</string>
+    <string name="storage">स्टोरेज</string>
+    <string name="backup_volume_dialog_description"><tt>/tree</tt> उपसर्ग वाले वॉल्यूम स्टोरेज एक्सेस फ़्रेमवर्क (SAF) का उपयोग करके चुने गए फ़ोल्डर हैं। इन फ़ोल्डरों को छोड़कर, ऐप मैनेजर के लिए डिफ़ॉल्ट निर्देशिका <tt>AppManager</tt> नामक एक सबफ़ोल्डर है।</string>
+    <string name="adb_pair">जोड़ा</string>
+    <string name="paired_successfully">जोड़ा गया।</string>
+    <string name="set_package_name_first">पहले पैकेज का नाम निर्धारित करें!</string>
+    <string name="keystore_password_info">निम्नलिखित ऐप मैनेजर कीस्टोर पासवर्ड है। यदि आप ऐप मैनेजर कीस्टोर का बैकअप/पुनर्स्थापना करने जा रहे हैं तो कृपया इसे सुरक्षित स्थान पर संग्रहीत करें। <b>यह संदेश फिर से प्रदर्शित नहीं किया जाएगा।</b></string>
+    <string name="keystore_pass_cannot_be_empty">कीस्टोर पासवर्ड खाली नहीं हो सकता।</string>
+    <string name="invalid_password">अमान्य पासवर्ड, पुन: प्रयास करें।</string>
 </resources>
