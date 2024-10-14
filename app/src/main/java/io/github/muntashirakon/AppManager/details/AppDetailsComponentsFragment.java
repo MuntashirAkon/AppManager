@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.MainThread;
@@ -97,7 +96,6 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         mNeededProperty = requireArguments().getInt(ARG_TYPE);
     }
 
@@ -138,16 +136,16 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
         if (viewModel != null && !viewModel.isExternalApk() && SelfPermissions.canModifyAppComponentStates(
                 viewModel.getUserId(), viewModel.getPackageName(), viewModel.isTestOnlyApp())) {
-            inflater.inflate(R.menu.fragment_app_details_components_actions, menu);
+            menuInflater.inflate(R.menu.fragment_app_details_components_actions, menu);
             mBlockingToggler = menu.findItem(R.id.action_toggle_blocking);
-        } else inflater.inflate(R.menu.fragment_app_details_refresh_actions, menu);
+        } else menuInflater.inflate(R.menu.fragment_app_details_refresh_actions, menu);
     }
 
     @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+    public void onPrepareMenu(@NonNull Menu menu) {
         if (viewModel == null || viewModel.isExternalApk()) {
             return;
         }
@@ -162,7 +160,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onMenuItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh_details) {
             refreshDetails();
@@ -187,7 +185,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         } else if (id == R.id.action_sort_by_tracker_components) {  // Components
             setSortBy(AppDetailsFragment.SORT_BY_TRACKERS);
             item.setChecked(true);
-        } else return super.onOptionsItemSelected(item);
+        } else return false;
         return true;
     }
 
@@ -366,6 +364,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             Button shortcutBtn;
             MaterialButton launchBtn;
             MaterialSwitch toggleSwitch;
+            TextView blockingMethod;
             Chip chipType;
 
             public ViewHolder(@NonNull View itemView) {
@@ -378,6 +377,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
 
                 shortcutBtn = itemView.findViewById(R.id.edit_shortcut_btn);
                 toggleSwitch = itemView.findViewById(R.id.toggle_button);
+                blockingMethod = itemView.findViewById(R.id.method);
                 chipType = itemView.findViewById(R.id.type);
                 launchBtn = itemView.findViewById(R.id.launch);
 
@@ -444,7 +444,24 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         }
 
         private void handleBlock(@NonNull ViewHolder holder, @NonNull AppDetailsComponentItem item, RuleType ruleType) {
-            holder.toggleSwitch.setChecked(!item.isBlocked());
+            ComponentRule rule = item.getRule();
+            boolean isBlocked = item.isBlocked();
+            if (isBlocked) {
+                Objects.requireNonNull(rule);
+                holder.blockingMethod.setVisibility(View.VISIBLE);
+                String method;
+                if (rule.isIfw()) {
+                    if (item.isDisabled()) {
+                        method = "IFW+Dis";
+                    } else method = "IFW";
+                } else {
+                    method = "Dis";
+                }
+                holder.blockingMethod.setText(method);
+            } else {
+                holder.blockingMethod.setVisibility(View.GONE);
+            }
+            holder.toggleSwitch.setChecked(!isBlocked);
             holder.toggleSwitch.setVisibility(View.VISIBLE);
             holder.toggleSwitch.setOnClickListener(buttonView -> {
                 String componentStatus = item.isBlocked()
@@ -597,7 +614,10 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             // Blocking
             if (mCanModifyComponentStates) {
                 handleBlock(holder, componentItem, RuleType.ACTIVITY);
-            } else holder.toggleSwitch.setVisibility(View.GONE);
+            } else {
+                holder.toggleSwitch.setVisibility(View.GONE);
+                holder.blockingMethod.setVisibility(View.GONE);
+            }
         }
 
         private void getServicesView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
@@ -659,7 +679,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                         ActivityManagerCompat.startService(intent, mUserId, true);
                     } catch (Throwable th) {
                         th.printStackTrace();
-                        Toast.makeText(context, th.toString(), Toast.LENGTH_LONG).show();
+                        UIUtils.displayShortToast(th.toString());
                     }
                 });
                 holder.launchBtn.setVisibility(View.VISIBLE);
@@ -669,7 +689,10 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             // Blocking
             if (mCanModifyComponentStates) {
                 handleBlock(holder, serviceItem, RuleType.SERVICE);
-            } else holder.toggleSwitch.setVisibility(View.GONE);
+            } else {
+                holder.toggleSwitch.setVisibility(View.GONE);
+                holder.blockingMethod.setVisibility(View.GONE);
+            }
         }
 
         private void getReceiverView(@NonNull ViewHolder holder, int index) {
@@ -729,7 +752,10 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             // Blocking
             if (mCanModifyComponentStates) {
                 handleBlock(holder, componentItem, RuleType.RECEIVER);
-            } else holder.toggleSwitch.setVisibility(View.GONE);
+            } else {
+                holder.toggleSwitch.setVisibility(View.GONE);
+                holder.blockingMethod.setVisibility(View.GONE);
+            }
         }
 
         private void getProviderView(@NonNull ViewHolder holder, int index) {
@@ -812,7 +838,10 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             // Blocking
             if (mCanModifyComponentStates) {
                 handleBlock(holder, componentItem, RuleType.PROVIDER);
-            } else holder.toggleSwitch.setVisibility(View.GONE);
+            } else {
+                holder.toggleSwitch.setVisibility(View.GONE);
+                holder.blockingMethod.setVisibility(View.GONE);
+            }
         }
     }
 }

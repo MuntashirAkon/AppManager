@@ -17,7 +17,6 @@ import android.os.PowerManager;
 import android.text.SpannableStringBuilder;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,7 +35,7 @@ import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.apk.behavior.DexOptDialog;
+import io.github.muntashirakon.AppManager.apk.dexopt.DexOptDialog;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
@@ -416,11 +415,6 @@ public class OneClickOpsActivity extends BaseActivity {
                 })
                 .setNegativeButton(R.string.cancel, (dialog1, which1, selectedItems) -> progressIndicator.hide())
                 .show();
-    }
-
-    private void clearAppCache() {
-        // TODO
-        Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_SHORT).show();
     }
 
     @Override

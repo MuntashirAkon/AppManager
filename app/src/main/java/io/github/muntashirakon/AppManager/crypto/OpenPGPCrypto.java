@@ -294,6 +294,7 @@ public class OpenPGPCrypto implements Crypto {
             case OpenPgpApi.RESULT_CODE_USER_INTERACTION_REQUIRED: {
                 Log.i(TAG, "User interaction required. Sending intent...");
                 Intent broadcastIntent = new Intent(OpenPGPCrypto.ACTION_OPEN_PGP_INTERACTION_BEGIN);
+                broadcastIntent.setPackage(mContext.getPackageName());
                 mContext.sendBroadcast(broadcastIntent);
                 // Intent wrapper
                 Intent intent = new Intent(mContext, OpenPGPCryptoActivity.class);

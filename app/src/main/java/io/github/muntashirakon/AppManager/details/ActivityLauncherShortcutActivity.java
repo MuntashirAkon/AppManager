@@ -8,7 +8,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
@@ -70,7 +69,7 @@ public class ActivityLauncherShortcutActivity extends BaseActivity {
         } else {
             try {
                 ActivityManagerCompat.startActivity(intent, userId);
-            } catch (RemoteException e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
                 UIUtils.displayLongToast("Error: " + e.getMessage());
                 // Try assist instead

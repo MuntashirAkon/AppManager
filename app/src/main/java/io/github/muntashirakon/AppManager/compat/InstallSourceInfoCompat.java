@@ -29,6 +29,13 @@ public class InstallSourceInfoCompat implements Parcelable {
     @Nullable
     private final String mInstallingPackageName;
 
+    @Nullable
+    private CharSequence mInitiatingPackageLabel;
+    @Nullable
+    private CharSequence mOriginatingPackageLabel;
+    @Nullable
+    private CharSequence mInstallingPackageLabel;
+
     @RequiresApi(Build.VERSION_CODES.R)
     public InstallSourceInfoCompat(@Nullable InstallSourceInfo installSourceInfo) {
         if (installSourceInfo != null) {
@@ -74,6 +81,33 @@ public class InstallSourceInfoCompat implements Parcelable {
         }
         mOriginatingPackageName = source.readString();
         mInstallingPackageName = source.readString();
+    }
+
+    public void setInitiatingPackageLabel(@Nullable CharSequence label) {
+        mInitiatingPackageLabel = label;
+    }
+
+    @Nullable
+    public CharSequence getInitiatingPackageLabel() {
+        return mInitiatingPackageLabel;
+    }
+
+    public void setOriginatingPackageLabel(@Nullable CharSequence label) {
+        mOriginatingPackageLabel = label;
+    }
+
+    @Nullable
+    public CharSequence getOriginatingPackageLabel() {
+        return mOriginatingPackageLabel;
+    }
+
+    public void setInstallingPackageLabel(@Nullable CharSequence label) {
+        mInstallingPackageLabel = label;
+    }
+
+    @Nullable
+    public CharSequence getInstallingPackageLabel() {
+        return mInstallingPackageLabel;
     }
 
     /**

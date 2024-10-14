@@ -72,13 +72,19 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
 
     @ColorInt
     private static int getBackgroundColorForLogLevel(Context context, int logLevel) {
-        int result = Objects.requireNonNull(BACKGROUND_COLORS.get(logLevel));
+        Integer result = BACKGROUND_COLORS.get(logLevel);
+        if (result == null) {
+            throw new IllegalArgumentException("Invalid log level: " + logLevel);
+        }
         return ContextCompat.getColor(context, result);
     }
 
     @ColorInt
     private static int getForegroundColorForLogLevel(Context context, int logLevel) {
-        int result = Objects.requireNonNull(FOREGROUND_COLORS.get(logLevel));
+        Integer result = FOREGROUND_COLORS.get(logLevel);
+        if (result == null) {
+            throw new IllegalArgumentException("Invalid log level: " + logLevel);
+        }
         return ContextCompat.getColor(context, result);
     }
 
@@ -257,6 +263,17 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
         }
     }
 
+    @Nullable
+    @GuardedBy("mLock")
+    private LogLine getItemSafe(int position) {
+        synchronized (mLock) {
+            if (mObjects.size() > position) {
+                return mObjects.get(position);
+            }
+            return null;
+        }
+    }
+
     @GuardedBy("mLock")
     public int getRealSize() {
         synchronized (mLock) {
@@ -281,21 +298,31 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
     @Override
     protected void select(int position) {
         synchronized (mSelectedLogLines) {
-            mSelectedLogLines.add(getItem(position));
+            LogLine logLine = getItemSafe(position);
+            if (logLine != null) {
+                mSelectedLogLines.add(logLine);
+            }
         }
     }
 
     @Override
     protected void deselect(int position) {
         synchronized (mSelectedLogLines) {
-            mSelectedLogLines.remove(getItem(position));
+            LogLine logLine = getItemSafe(position);
+            if (logLine != null) {
+                mSelectedLogLines.remove(logLine);
+            }
         }
     }
 
     @Override
     protected boolean isSelected(int position) {
         synchronized (mSelectedLogLines) {
-            return mSelectedLogLines.contains(getItem(position));
+            LogLine logLine = getItemSafe(position);
+            if (logLine != null) {
+                return mSelectedLogLines.contains(logLine);
+            }
+            return false;
         }
     }
 

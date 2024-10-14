@@ -9,7 +9,6 @@ import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MAT
 
 import android.annotation.UserIdInt;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -42,13 +41,13 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
-import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.PackageUsageInfo;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -82,6 +81,12 @@ public class AppDb {
     public List<App> getAllApplications(String packageName) {
         synchronized (sLock) {
             return mAppDao.getAll(packageName);
+        }
+    }
+
+    public List<App> getAllApplications(String packageName, @UserIdInt int userId) {
+        synchronized (sLock) {
+            return mAppDao.getAll(packageName, userId);
         }
     }
 
@@ -317,24 +322,15 @@ public class AppDb {
             mAppDao.insert(modifiedApps);
             if (!oldApps.isEmpty()) {
                 // Delete broadcast
-                Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_REMOVED);
-                intent.setPackage(context.getPackageName());
-                intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, getPackageNamesFromApps(oldApps));
-                context.sendBroadcast(intent);
+                BroadcastUtils.sendDbPackageRemoved(context, getPackageNamesFromApps(oldApps));
             }
             if (!newApps.isEmpty()) {
                 // New apps
-                Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_ADDED);
-                intent.setPackage(context.getPackageName());
-                intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, newApps.toArray(new String[0]));
-                context.sendBroadcast(intent);
+                BroadcastUtils.sendDbPackageAdded(context, newApps.toArray(new String[0]));
             }
             if (!updatedApps.isEmpty()) {
                 // Altered apps
-                Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_ALTERED);
-                intent.setPackage(context.getPackageName());
-                intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, updatedApps.toArray(new String[0]));
-                context.sendBroadcast(intent);
+                BroadcastUtils.sendDbPackageAltered(context, updatedApps.toArray(new String[0]));
             }
         }
 
@@ -370,7 +366,7 @@ public class AppDb {
                 try {
                     userIdSsaidSettingsMap.put(userId, new SsaidSettings(userId));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.w(TAG, "Error: " + e.getMessage());
                 }
             }
         }

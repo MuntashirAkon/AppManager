@@ -15,6 +15,7 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getDimmedBitmap;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 
 import android.Manifest;
@@ -60,7 +61,9 @@ import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.pm.PackageInfoCompat;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -90,7 +93,7 @@ import io.github.muntashirakon.AppManager.accessibility.NoRootAccessibilityServi
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
-import io.github.muntashirakon.AppManager.apk.behavior.DexOptDialog;
+import io.github.muntashirakon.AppManager.apk.dexopt.DexOptDialog;
 import io.github.muntashirakon.AppManager.apk.behavior.FreezeUnfreezeShortcutInfo;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
@@ -103,9 +106,11 @@ import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
 import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat;
+import io.github.muntashirakon.AppManager.compat.InstallSourceInfoCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.compat.SensorServiceCompat;
 import io.github.muntashirakon.AppManager.debloat.BloatwareDetailsDialog;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
@@ -164,7 +169,7 @@ import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
-public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, MenuProvider {
     public static final String TAG = "AppInfoFragment";
 
     private static final String PACKAGE_NAME_AURORA_STORE = "com.aurora.store";
@@ -197,6 +202,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private Future<?> mTagCloudFuture;
     private Future<?> mActionsFuture;
     private Future<?> mListFuture;
+    private Future<?> mMenuPreparationResult;
 
     private boolean mIsExternalApk;
     private int mLoadedItemCount;
@@ -213,7 +219,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         mAppInfoModel = new ViewModelProvider(this).get(AppInfoViewModel.class);
         mMainModel = new ViewModelProvider(requireActivity()).get(AppDetailsViewModel.class);
     }
@@ -250,6 +255,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mVersionView = view.findViewById(R.id.version);
         mAdapter = new AppInfoRecyclerAdapter(requireContext());
         recyclerView.setAdapter(mAdapter);
+        mActivity.addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
         // Set observer
         mMainModel.get(AppDetailsFragment.APP_INFO).observe(getViewLifecycleOwner(), appDetailsItems -> {
             mLoadedItemCount = 0;
@@ -340,48 +346,63 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         if (mMainModel != null && !mMainModel.isExternalApk()) {
             inflater.inflate(R.menu.fragment_app_info_actions, menu);
         }
     }
 
     @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+    public void onPrepareMenu(@NonNull Menu menu) {
         if (mIsExternalApk) return;
+        MenuItem magiskHideMenu = menu.findItem(R.id.action_magisk_hide);
+        MenuItem magiskDenyListMenu = menu.findItem(R.id.action_magisk_denylist);
+        MenuItem openInTermuxMenu = menu.findItem(R.id.action_open_in_termux);
+        MenuItem runInTermuxMenu = menu.findItem(R.id.action_run_in_termux);
+        MenuItem batteryOptMenu = menu.findItem(R.id.action_battery_opt);
+        MenuItem sensorsMenu = menu.findItem(R.id.action_sensor);
+        MenuItem netPolicyMenu = menu.findItem(R.id.action_net_policy);
+        MenuItem installMenu = menu.findItem(R.id.action_install);
+        MenuItem optimizeMenu = menu.findItem(R.id.action_optimize);
+        mMenuPreparationResult = ThreadUtils.postOnBackgroundThread(() -> {
+            boolean magiskHideAvailable = MagiskHide.available();
+            boolean magiskDenyListAvailable = MagiskDenyList.available();
+            boolean rootAvailable = RunnerUtils.isRootAvailable();
+            if (ThreadUtils.isInterrupted()) {
+                return;
+            }
+            ThreadUtils.postOnMainThread(() -> {
+                if (magiskHideMenu != null) {
+                    magiskHideMenu.setVisible(magiskHideAvailable);
+                }
+                if (magiskDenyListMenu != null) {
+                    magiskDenyListMenu.setVisible(magiskDenyListAvailable);
+                }
+                if (openInTermuxMenu != null) {
+                    openInTermuxMenu.setVisible(rootAvailable);
+                }
+            });
+        });
         boolean isDebuggable;
         if (mApplicationInfo != null) {
             isDebuggable = (mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
         } else isDebuggable = false;
-        MenuItem magiskHideMenu = menu.findItem(R.id.action_magisk_hide);
-        if (magiskHideMenu != null) {
-            magiskHideMenu.setVisible(MagiskHide.available());
-        }
-        MenuItem magiskDenyListMenu = menu.findItem(R.id.action_magisk_denylist);
-        if (magiskDenyListMenu != null) {
-            magiskDenyListMenu.setVisible(MagiskDenyList.available());
-        }
-        MenuItem openInTermuxMenu = menu.findItem(R.id.action_open_in_termux);
-        if (openInTermuxMenu != null) {
-            openInTermuxMenu.setVisible(RunnerUtils.isRootAvailable());
-        }
-        MenuItem runInTermuxMenu = menu.findItem(R.id.action_run_in_termux);
         if (runInTermuxMenu != null) {
             runInTermuxMenu.setVisible(isDebuggable);
         }
-        MenuItem batteryOptMenu = menu.findItem(R.id.action_battery_opt);
         if (batteryOptMenu != null) {
             batteryOptMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.DEVICE_POWER));
         }
-        MenuItem netPolicyMenu = menu.findItem(R.id.action_net_policy);
+        if (sensorsMenu != null) {
+            sensorsMenu.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+                    && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_SENSORS));
+        }
         if (netPolicyMenu != null) {
             netPolicyMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY));
         }
-        MenuItem installMenu = menu.findItem(R.id.action_install);
         if (installMenu != null) {
             installMenu.setVisible(Users.getUsersIds().length > 1 && SelfPermissions.canInstallExistingPackages());
         }
-        MenuItem optimizeMenu = menu.findItem(R.id.action_optimize);
         if (optimizeMenu != null) {
             optimizeMenu.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
                     && (SelfPermissions.isSystemOrRootOrShell() || BuildConfig.APPLICATION_ID.equals(mInstallerPackageName)));
@@ -389,7 +410,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onMenuItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.action_refresh_detail) {
             refreshDetails();
@@ -415,8 +436,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             });
         } else if (itemId == R.id.action_backup) {
             if (mMainModel == null) return true;
-            BackupRestoreDialogFragment fragment = BackupRestoreDialogFragment.getInstance(
-                    Collections.singletonList(new UserPackagePair(mPackageName, mUserId)));
+            BackupRestoreDialogFragment fragment = BackupRestoreDialogFragment.getInstanceWithPref(
+                    Collections.singletonList(new UserPackagePair(mPackageName, mUserId)), mUserId);
             fragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
             fragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
             fragment.show(getParentFragmentManager(), BackupRestoreDialogFragment.TAG);
@@ -486,6 +507,43 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .show();
             } else {
                 Log.e(TAG, "No DUMP permission.");
+            }
+        } else if (itemId == R.id.action_sensor) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_SENSORS)) {
+                new MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(R.string.sensors)
+                        .setMessage(R.string.choose_what_to_do)
+                        .setPositiveButton(R.string.enable, (dialog, which) -> ThreadUtils.postOnBackgroundThread(() -> {
+                            try {
+                                SensorServiceCompat.enableSensor(mPackageName, mUserId, true);
+                                ThreadUtils.postOnMainThread(() -> {
+                                    UIUtils.displayShortToast(R.string.done);
+                                    refreshDetails();
+                                });
+                            } catch (IOException e) {
+                                ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(
+                                        getString(R.string.failed)
+                                                + LangUtils.getSeparatorString()
+                                                + e.getMessage()));
+                            }
+                        }))
+                        .setNegativeButton(R.string.disable, (dialog, which) -> ThreadUtils.postOnBackgroundThread(() -> {
+                            try {
+                                SensorServiceCompat.enableSensor(mPackageName, mUserId, false);
+                                ThreadUtils.postOnMainThread(() -> {
+                                    UIUtils.displayShortToast(R.string.done);
+                                    refreshDetails();
+                                });
+                            } catch (IOException e) {
+                                ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(
+                                        getString(R.string.failed)
+                                                + LangUtils.getSeparatorString()
+                                                + e.getMessage()));
+                            }
+                        }))
+                        .show();
+            } else {
+                Log.e(TAG, "No sensor permission.");
             }
         } else if (itemId == R.id.action_net_policy) {
             if (!UserHandleHidden.isApp(mApplicationInfo.uid)) {
@@ -563,8 +621,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 DexOptDialog dialog = DexOptDialog.getInstance(new String[]{mPackageName});
                 dialog.show(getChildFragmentManager(), DexOptDialog.TAG);
             } else UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
-        } else return super.onOptionsItemSelected(item);
+        } else return false;
         return true;
+    }
+
+    @Override
+    public void onMenuClosed(@NonNull Menu menu) {
+        if (mMenuPreparationResult != null) {
+            mMenuPreparationResult.cancel(true);
+        }
     }
 
     @Override
@@ -955,6 +1020,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .show());
             }
         }
+        if (!tagCloud.sensorsEnabled) {
+            TagItem sensorsTag = new TagItem();
+            tagItems.add(sensorsTag);
+            sensorsTag.setTextRes(R.string.tag_sensors_disabled);
+        }
         if (tagCloud.netPolicies > 0) {
             String[] readablePolicies = NetworkPolicyManagerCompat.getReadablePolicies(context, tagCloud.netPolicies)
                     .values().toArray(new String[0]);
@@ -1183,7 +1253,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             boolean isFrozen = FreezeUtils.isFrozen(mApplicationInfo);
             boolean canFreeze = !isStaticSharedLib && SelfPermissions.canFreezeUnfreezePackages();
             // Set open
-            Intent launchIntent = PackageUtils.getLaunchIntentForPackage(requireContext(), mPackageName, mUserId);
+            Intent launchIntent = PackageManagerCompat.getLaunchIntentForPackage(mPackageName, mUserId);
             if (launchIntent != null && !isFrozen) {
                 ActionItem launchAction = new ActionItem(R.string.launch_app, R.drawable.ic_open_in_new);
                 actionItems.add(launchAction);
@@ -1490,7 +1560,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         Intent fdroid_intent = new Intent(Intent.ACTION_VIEW);
         fdroid_intent.setData(Uri.parse("https://f-droid.org/packages/" + mPackageName));
         List<ResolveInfo> resolvedActivities = mPackageManager.queryIntentActivities(fdroid_intent, 0);
-        if (resolvedActivities.size() > 0) {
+        if (!resolvedActivities.isEmpty()) {
             ActionItem fdroidItem = new ActionItem(R.string.fdroid, R.drawable.ic_frost_fdroid);
             actionItems.add(fdroidItem);
             fdroidItem.setOnClickListener(v -> {
@@ -1609,9 +1679,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 ListItem listItem = ListItem.newSelectableRegularItem(getString(R.string.installed_version),
                         getString(R.string.version_name_with_code, mInstalledPackageInfo.versionName,
                                 PackageInfoCompat.getLongVersionCode(mInstalledPackageInfo)), v -> {
-                            Intent appDetailsIntent = AppDetailsActivity.getIntent(mActivity, mPackageName,
+                            Intent intent = AppDetailsActivity.getIntent(mActivity, mPackageName,
                                     UserHandleHidden.myUserId());
-                            mActivity.startActivity(appDetailsIntent);
+                            mActivity.startActivity(intent);
                         });
                 listItem.setActionIcon(io.github.muntashirakon.ui.R.drawable.ic_information);
                 mListItems.add(listItem);
@@ -1651,7 +1721,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.process_name), mApplicationInfo.processName));
             }
             if (appInfo.installerApp != null) {
-                mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.installer_app), appInfo.installerApp));
+                ListItem installerItem = ListItem.newSelectableRegularItem(
+                        getString(R.string.installer_app), appInfo.installerApp,
+                        v -> displayInstallerDialog(Objects.requireNonNull(appInfo.installSource)));
+                installerItem.setActionIcon(R.drawable.ic_information_circle);
+                mListItems.add(installerItem);
             }
             mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.user_id), String.format(Locale.getDefault(), "%d",
                     mApplicationInfo.uid)));
@@ -1703,7 +1777,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void setDataUsage(@NonNull AppInfoViewModel.AppInfo appInfo) {
         AppUsageStatsManager.DataUsage dataUsage = appInfo.dataUsage;
-        if (dataUsage == null) return;
+        if (dataUsage == null) {
+            // No permission
+            return;
+        }
         // Hide data usage if:
         // 1. OS is Android 6.0 onwards, AND
         // 2. The user is not the current user, AND
@@ -1865,6 +1942,47 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 .show();
     }
 
+    private void displayInstallerDialog(@NonNull InstallSourceInfoCompat installSource) {
+        List<CharSequence> installerInfoList = new ArrayList<>(3);
+        List<String> packageNames = new ArrayList<>(3);
+        if (installSource.getInstallingPackageLabel() != null) {
+            CharSequence info = new SpannableStringBuilder(getSmallerText(getString(R.string.installer)))
+                    .append("\n")
+                    .append(getTitleText(requireContext(), installSource.getInstallingPackageLabel()))
+                    .append("\n")
+                    .append(installSource.getInstallingPackageName());
+            installerInfoList.add(info);
+            packageNames.add(installSource.getInstallingPackageName());
+        }
+        if (installSource.getInitiatingPackageLabel() != null) {
+            CharSequence info = new SpannableStringBuilder(getSmallerText(getString(R.string.actual_installer)))
+                    .append("\n")
+                    .append(getTitleText(requireContext(), installSource.getInitiatingPackageLabel()))
+                    .append("\n")
+                    .append(installSource.getInitiatingPackageName());
+            installerInfoList.add(info);
+            packageNames.add(installSource.getInitiatingPackageName());
+        }
+        if (installSource.getOriginatingPackageLabel() != null) {
+            CharSequence info = new SpannableStringBuilder(getSmallerText(getString(R.string.apk_source)))
+                    .append("\n")
+                    .append(getTitleText(requireContext(), installSource.getOriginatingPackageLabel()))
+                    .append("\n")
+                    .append(installSource.getOriginatingPackageName());
+            installerInfoList.add(info);
+            packageNames.add(installSource.getOriginatingPackageName());
+        }
+        new SearchableItemsDialogBuilder<>(requireContext(), installerInfoList)
+                .setTitle(R.string.installer)
+                .setOnItemClickListener((dialog, which, item) -> {
+                    String packageName = packageNames.get(which);
+                    Intent intent = AppDetailsActivity.getIntent(requireContext(), packageName, mUserId);
+                    startActivity(intent);
+                })
+                .setNegativeButton(R.string.close, null)
+                .show();
+    }
+
     /**
      * Get Unix time to formatted time.
      *
@@ -1873,7 +1991,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
      */
     @NonNull
     private String getTime(long time) {
-        return DateUtils.formatWeekMediumDateTime(requireContext(), time);
+        return DateUtils.formatLongDateTime(requireContext(), time);
     }
 
     /**

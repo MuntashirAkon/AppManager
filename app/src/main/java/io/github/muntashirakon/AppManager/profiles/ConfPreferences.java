@@ -322,7 +322,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
     }
 
     private void updateAppOpsPref(Preference pref) {
-        mAppOps = mModel.getAppOps();
+        mAppOps = mModel.getAppOpsStr();
         if (mAppOps == null || mAppOps.length == 0) pref.setSummary(R.string.disabled_app);
         else {
             pref.setSummary(TextUtils.join(", ", mAppOps));

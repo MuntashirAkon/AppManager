@@ -72,7 +72,7 @@
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/toggle_button"
-                android:layout_width="56dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="0"
@@ -81,15 +81,37 @@
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/softInput"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textIsSelectable="true"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textSize="9sp"
-            tools:text="@tools:sample/lorem"
-            tools:ignore="SmallSp" />
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/softInput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textIsSelectable="true"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textSize="9sp"
+                tools:text="@tools:sample/lorem"
+                tools:ignore="SmallSp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/method"
+                android:layout_width="52dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textSize="9sp"
+                android:singleLine="true"
+                android:textAlignment="center"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:text="IFW+D"
+                tools:ignore="SmallSp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/launchMode"

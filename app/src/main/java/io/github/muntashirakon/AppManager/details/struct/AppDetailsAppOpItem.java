@@ -14,6 +14,7 @@ import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PermissionInfoCompat;
 
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
@@ -41,11 +42,13 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
 
     public AppDetailsAppOpItem(@NonNull AppOpsManagerCompat.OpEntry opEntry) {
         this(opEntry.getOp());
+        name = opEntry.getName();
         mOpEntry = opEntry;
     }
 
     public AppDetailsAppOpItem(int op) {
         super(op);
+        name = AppOpsManagerCompat.opToName(op);
         mOpEntry = null;
         permissionInfo = null;
         permission = null;
@@ -57,6 +60,7 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
     public AppDetailsAppOpItem(@NonNull AppOpsManagerCompat.OpEntry opEntry, @NonNull PermissionInfo permissionInfo,
                                boolean isGranted, int permissionFlags, boolean appContainsPermission) {
         super(opEntry.getOp());
+        name = opEntry.getName();
         mOpEntry = opEntry;
         this.permissionInfo = permissionInfo;
         this.appContainsPermission = appContainsPermission;
@@ -75,6 +79,7 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
     public AppDetailsAppOpItem(int op, @NonNull PermissionInfo permissionInfo,
                                boolean isGranted, int permissionFlags, boolean appContainsPermission) {
         super(op);
+        name = AppOpsManagerCompat.opToName(op);
         mOpEntry = null;
         this.permissionInfo = permissionInfo;
         this.appContainsPermission = appContainsPermission;
@@ -219,5 +224,19 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
         } catch (Exception e) {
             throw new PermissionException(e);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AppDetailsAppOpItem)) return false;
+        if (!super.equals(o)) return false;
+        AppDetailsAppOpItem that = (AppDetailsAppOpItem) o;
+        return Objects.equals(mainItem, that.mainItem);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mainItem);
     }
 }

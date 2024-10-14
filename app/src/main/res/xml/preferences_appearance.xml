@@ -13,6 +13,12 @@
         app:summary="@string/pref_pure_black_theme_msg"
         app:iconSpaceReserved="false" />
 
+    <SwitchPreferenceCompat
+        app:key="use_system_font"
+        app:title="@string/pref_use_system_font"
+        app:summary="@string/pref_use_system_font_msg"
+        app:iconSpaceReserved="false" />
+
     <Preference
         app:key="layout_orientation"
         app:title="@string/pref_layout_direction"

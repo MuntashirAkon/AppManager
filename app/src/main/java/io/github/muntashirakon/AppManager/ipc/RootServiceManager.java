@@ -151,10 +151,6 @@ public class RootServiceManager implements Handler.Callback {
     private Shell.Task startRootProcess(ComponentName name, String action) {
         Context context = ContextUtils.getContext();
 
-        if (Utils.hasStartupAgents(context)) {
-            Log.e(TAG, JVMTI_ERROR);
-        }
-
         if ((mFlags & RECEIVER_REGISTERED) == 0) {
             // Register receiver to receive binder from root process
             IntentFilter filter = new IntentFilter(RECEIVER_BROADCAST);
@@ -167,6 +163,10 @@ public class RootServiceManager implements Handler.Callback {
         }
 
         return (stdin, stdout, stderr) -> {
+            if (Utils.hasStartupAgents(context)) {
+                Log.e(TAG, JVMTI_ERROR);
+            }
+
             Context ctx = ContextUtils.getContext();
             Context de = ContextUtils.getDeContext(ctx);
             File mainJar;

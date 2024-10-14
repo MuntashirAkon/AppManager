@@ -11,6 +11,7 @@ public class AppDetailsDefinedPermissionItem extends AppDetailsItem<PermissionIn
 
     public AppDetailsDefinedPermissionItem(@NonNull PermissionInfo permissionInfo, boolean isExternal) {
         super(permissionInfo);
+        name = permissionInfo.name;
         this.isExternal = isExternal;
     }
 }

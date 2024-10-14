@@ -19,6 +19,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
+import io.github.muntashirakon.AppManager.utils.appearance.TypefaceUtil;
 import io.github.muntashirakon.dialog.SearchableFlagsDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 
@@ -62,11 +63,25 @@ public class AppearancePreferences extends PreferenceFragment {
         });
         // Black theme/custom theme
         SwitchPreferenceCompat fullBlackTheme = Objects.requireNonNull(findPreference("app_theme_pure_black"));
-        fullBlackTheme.setVisible(BuildConfig.DEBUG);
         fullBlackTheme.setChecked(Prefs.Appearance.isPureBlackTheme());
         fullBlackTheme.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean enabled = (boolean) newValue;
             Prefs.Appearance.setPureBlackTheme(enabled);
+            AppearanceUtils.applyConfigurationChangesToActivities();
+            return true;
+        });
+        // Black theme/custom theme
+        SwitchPreferenceCompat useSystemFontPref = Objects.requireNonNull(findPreference("use_system_font"));
+        useSystemFontPref.setChecked(Prefs.Appearance.useSystemFont());
+        useSystemFontPref.setVisible(BuildConfig.DEBUG);
+        useSystemFontPref.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (((boolean) newValue)) {
+                // Enable system font
+                TypefaceUtil.replaceFontsWithSystem(requireContext());
+            } else {
+                // Disable system font
+                TypefaceUtil.restoreFonts();
+            }
             AppearanceUtils.applyConfigurationChangesToActivities();
             return true;
         });

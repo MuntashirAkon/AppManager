@@ -28,7 +28,6 @@ import androidx.annotation.UiThread;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.divider.MaterialDivider;
 import com.google.android.material.materialswitch.MaterialSwitch;
 
 import java.lang.annotation.Retention;
@@ -51,7 +50,6 @@ import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.self.pref.TipsPrefs;
 import io.github.muntashirakon.AppManager.settings.Prefs;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
@@ -62,6 +60,7 @@ import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialAlertView;
 import io.github.muntashirakon.widget.RecyclerView;
@@ -142,7 +141,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         switch (mNeededProperty) {
             case APP_OPS:
                 inflater.inflate(R.menu.fragment_app_details_app_ops_actions, menu);
@@ -159,7 +158,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
     }
 
     @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+    public void onPrepareMenu(@NonNull Menu menu) {
         if (viewModel == null || viewModel.isExternalApk()) {
             return;
         }
@@ -170,7 +169,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onMenuItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh_details) {
             refreshDetails();
@@ -281,7 +280,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
         } else if (id == R.id.action_sort_by_denied_permissions) {
             setSortBy(SORT_BY_DENIED_PERMS);
             item.setChecked(true);
-        } else return super.onOptionsItemSelected(item);
+        } else return false;
         return true;
     }
 

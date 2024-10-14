@@ -235,6 +235,8 @@
         <item>@string/freeze_on_phone_locked</item>
     </string-array>
     <string-array name="export_app_list_options">
+        <item>CSV</item>
+        <item>JSON</item>
         <item>@string/export_option_xml</item>
         <item>@string/export_option_markdown</item>
     </string-array>

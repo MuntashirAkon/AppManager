@@ -28,7 +28,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
-import android.widget.Toast;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -57,10 +56,11 @@ import java.util.regex.PatternSyntaxException;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.filters.options.FilterOption;
 import io.github.muntashirakon.AppManager.filters.options.FilterOptions;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.adapters.SelectedArrayAdapter;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.view.TextInputLayoutCompat;
 import io.github.muntashirakon.widget.MaterialSpinner;
 import io.github.muntashirakon.widget.RecyclerView;
@@ -252,7 +252,7 @@ public class EditFilterOptionFragment extends DialogFragment {
         builder.setView(view)
                 .setPositiveButton(editMode ? R.string.update : R.string.add, (dialog, which) -> {
                     if (mCurrentFilterOption == null) {
-                        Toast.makeText(getActivity(), R.string.key_name_cannot_be_null, Toast.LENGTH_LONG).show();
+                        UIUtils.displayLongToast(R.string.key_name_cannot_be_null);
                         return;
                     }
                     WrappedFilterOption newWrappedFilterOption;
@@ -268,7 +268,7 @@ public class EditFilterOptionFragment extends DialogFragment {
                         mCurrentFilterOption.setKeyValue(mCurrentKey, TextUtils.isEmpty(editable) ? null : editable.toString());
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity(), R.string.error_evaluating_input, Toast.LENGTH_LONG).show();
+                        UIUtils.displayLongToast(R.string.error_evaluating_input);
                         return;
                     }
                     if (editMode) {

@@ -47,6 +47,7 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                 Log.d(TAG, "Requesting user confirmation...");
                 // Send broadcast first
                 Intent broadcastIntent2 = new Intent(PackageInstallerCompat.ACTION_INSTALL_INTERACTION_BEGIN);
+                broadcastIntent2.setPackage(context.getPackageName());
                 broadcastIntent2.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, mPackageName);
                 broadcastIntent2.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                 context.sendBroadcast(broadcastIntent2);
@@ -66,6 +67,7 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                 }
                 // Delete intent: aborts the operation
                 Intent broadcastCancel = new Intent(PackageInstallerCompat.ACTION_INSTALL_COMPLETED);
+                broadcastCancel.setPackage(context.getPackageName());
                 broadcastCancel.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, mPackageName);
                 broadcastCancel.putExtra(PackageInstaller.EXTRA_STATUS, PackageInstallerCompat.STATUS_FAILURE_ABORTED);
                 broadcastCancel.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
@@ -95,6 +97,7 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
             default:
                 NotificationUtils.cancelInstallConfirmNotification(context, mConfirmNotificationId);
                 Intent broadcastError = new Intent(PackageInstallerCompat.ACTION_INSTALL_COMPLETED);
+                broadcastError.setPackage(context.getPackageName());
                 String statusMessage = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE);
                 broadcastError.putExtra(PackageInstaller.EXTRA_STATUS_MESSAGE, statusMessage);
                 broadcastError.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, mPackageName);

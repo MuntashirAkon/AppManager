@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.apk.behavior;
+package io.github.muntashirakon.AppManager.apk.dexopt;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,6 +8,7 @@ import android.os.SystemProperties;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class DexOptOptions implements Parcelable {
     @NonNull
@@ -19,6 +20,7 @@ public class DexOptOptions implements Parcelable {
         return options;
     }
 
+    @Nullable
     public String[] packages;
     public String compilerFiler;
     public boolean compileLayouts;

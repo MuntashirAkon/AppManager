@@ -17,6 +17,7 @@ import androidx.annotation.RequiresApi;
 import androidx.collection.ArrayMap;
 
 import java.io.FileDescriptor;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -32,7 +33,8 @@ public class ProxyBinder implements IBinder {
      */
     public static final int SHELL_COMMAND_TRANSACTION = ('_' << 24) | ('C' << 16) | ('M' << 8) | 'D';
 
-    private static final Map<String, IBinder> sServiceCache = new ArrayMap<>();
+    private static final Map<String, IBinder> sServiceCache
+            = Collections.synchronizedMap(new ArrayMap<>());
 
     @NonNull
     public static IBinder getService(String serviceName) {
@@ -64,6 +66,7 @@ public class ProxyBinder implements IBinder {
                                     @NonNull String[] args, @Nullable ShellCallback callback,
                                     @NonNull ResultReceiver resultReceiver) throws RemoteException {
         if (!(binder instanceof ProxyBinder)) {
+            BinderCompat.shellCommand(binder, in, out, err, args, callback, resultReceiver);
             return;
         }
         ProxyBinder proxyBinder = (ProxyBinder) binder;

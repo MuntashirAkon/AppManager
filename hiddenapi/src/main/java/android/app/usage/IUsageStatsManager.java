@@ -12,13 +12,15 @@ import android.os.RemoteException;
 
 import androidx.annotation.RequiresApi;
 
+import misc.utils.HiddenUtil;
+
 public interface IUsageStatsManager extends IInterface {
     abstract class Stub extends Binder implements IUsageStatsManager {
         public Stub() {
         }
 
         public static IUsageStatsManager asInterface(IBinder obj) {
-            throw new UnsupportedOperationException();
+            return HiddenUtil.throwUOE(obj);
         }
 
         @Override
@@ -54,7 +56,7 @@ public interface IUsageStatsManager extends IInterface {
     void setAppInactive(String packageName, boolean inactive, int userId) throws RemoteException;
 
     /**
-     * @deprecated Removed in API 30 (Android R)
+     * @deprecated Replaced in API 30 (Android R) by {@link #isAppInactive(String, int, String)}
      */
     @RequiresApi(Build.VERSION_CODES.M)
     @Deprecated

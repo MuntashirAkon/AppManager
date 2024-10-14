@@ -20,6 +20,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -28,10 +29,13 @@ import com.google.android.material.imageview.ShapeableImageView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Future;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
@@ -51,11 +55,12 @@ public class TrackerWindow implements View.OnTouchListener {
     private final Point mWindowPosition = new Point(0, 0);
     private final Point mPressPosition = new Point(0, 0);
     private final int mMaxWidth;
-
-    public boolean mPaused = false;
-    public boolean mIconified = false;
-    public boolean mViewAttached = false;
-    public boolean mDragging = false;
+    private boolean mPaused = false;
+    private boolean mIconified = false;
+    private boolean mViewAttached = false;
+    private boolean mDragging = false;
+    @Nullable
+    private Future<?> mClassHierarchyResult;
 
     @SuppressLint("ClickableViewAccessibility")
     public TrackerWindow(@NonNull Context context) {
@@ -169,19 +174,37 @@ public class TrackerWindow implements View.OnTouchListener {
             mWindowManager.addView(mView, mWindowLayoutParams);
         }
         if (!mPaused) {
+            if (BuildConfig.APPLICATION_ID.contentEquals(event.getPackageName())) {
+                // On some devices, this window always gets the focus
+                if ("android.widget.EditText".contentEquals(event.getClassName())) {
+                    // For some reason, only this class is focused
+                    if (event.getSource() == null) {
+                        // No class hierarchy. This is the intended event
+                        return;
+                    }
+                }
+            }
+            if (mClassHierarchyResult != null) {
+                mClassHierarchyResult.cancel(true);
+            }
             mPackageNameView.setText(event.getPackageName());
             mClassNameView.setText(event.getClassName());
-            mClassHierarchyView.setText(TextUtils.join("\n", getClassHierarchy(event)));
+            mClassHierarchyResult = ThreadUtils.postOnBackgroundThread(() -> {
+                CharSequence classHierarchy = TextUtils.join("\n", getClassHierarchy(event));
+                ThreadUtils.postOnMainThread(() -> mClassHierarchyView.setText(classHierarchy));
+            });
         }
     }
 
     public void dismiss() {
         AccessibilityMultiplexer.getInstance().enableLeadingActivityTracker(false);
         mViewAttached = false;
+        if (mClassHierarchyResult != null) {
+            mClassHierarchyResult.cancel(true);
+        }
         try {
             mWindowManager.removeView(mView);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignore) {
         }
     }
 
@@ -242,6 +265,9 @@ public class TrackerWindow implements View.OnTouchListener {
                     break;
                 }
                 ++depth;
+                if (ThreadUtils.isInterrupted()) {
+                    return Collections.emptyList();
+                }
             }
             try {
                 if (depth == 20) {
@@ -252,6 +278,9 @@ public class TrackerWindow implements View.OnTouchListener {
             }
         }
         Collections.reverse(classHierarchies);
+        if (ThreadUtils.isInterrupted()) {
+            return Collections.emptyList();
+        }
         int size = classHierarchies.size();
         if (size <= 1) {
             return classHierarchies;
@@ -267,6 +296,9 @@ public class TrackerWindow implements View.OnTouchListener {
             } else sb.append("└─ ");
             sb.append(classHierarchies.get(i));
             classHierarchies.set(i, sb.toString());
+            if (ThreadUtils.isInterrupted()) {
+                return Collections.emptyList();
+            }
         }
         return classHierarchies;
     }

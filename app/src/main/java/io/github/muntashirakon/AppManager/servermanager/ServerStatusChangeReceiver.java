@@ -34,32 +34,38 @@ public class ServerStatusChangeReceiver extends BroadcastReceiver {
         }
         // Verify token before doing action
         String token = intent.getStringExtra(ConfigParams.PARAM_TOKEN);
-        if (ServerConfig.getLocalToken().equals(token)) {
-            String uidString = intent.getStringExtra(ConfigParams.PARAM_UID);
-            Log.d(TAG, "onReceive --> %s %s", action, uidString);
-            int uid = Integer.parseInt(uidString);
+        if (!ServerConfig.getLocalToken().equals(token)) {
+            Log.d(TAG, "Mismatch token. Expected: %s, Received: %s", ServerConfig.getLocalToken(), token);
+            return;
+        }
+        String uidString = intent.getStringExtra(ConfigParams.PARAM_UID);
+        if (uidString == null) {
+            Log.w(TAG, "No UID received from the server.");
+            return;
+        }
+        Log.d(TAG, "onReceive --> %s %s", action, uidString);
+        int uid = Integer.parseInt(uidString);
 
-            switch (action) {
-                case ServerActions.ACTION_SERVER_STARTED:
-                    // Server was started for the first time
-                    Ops.setWorkingUid(uid);
-                    startServerIfNotAlready(context);
-                    // TODO: 8/4/24 Need to broadcast this message to update UI and/or trigger development
-                    break;
-                case ServerActions.ACTION_SERVER_STOPPED:
-                    // Server was stopped
-                    LocalServer.die();
-                    Ops.setWorkingUid(Process.myUid());
-                    break;
-                case ServerActions.ACTION_SERVER_CONNECTED:
-                    // Server was connected with App Manager
-                    Ops.setWorkingUid(uid);
-                    break;
-                case ServerActions.ACTION_SERVER_DISCONNECTED:
-                    // Exited from App Manager
-                    Ops.setWorkingUid(Process.myUid());
-                    break;
-            }
+        switch (action) {
+            case ServerActions.ACTION_SERVER_STARTED:
+                // Server was started for the first time
+                Ops.setWorkingUid(uid);
+                startServerIfNotAlready(context);
+                // TODO: 8/4/24 Need to broadcast this message to update UI and/or trigger development
+                break;
+            case ServerActions.ACTION_SERVER_STOPPED:
+                // Server was stopped
+                LocalServer.die();
+                Ops.setWorkingUid(Process.myUid());
+                break;
+            case ServerActions.ACTION_SERVER_CONNECTED:
+                // Server was connected with App Manager
+                Ops.setWorkingUid(uid);
+                break;
+            case ServerActions.ACTION_SERVER_DISCONNECTED:
+                // Exited from App Manager
+                Ops.setWorkingUid(Process.myUid());
+                break;
         }
     }
 

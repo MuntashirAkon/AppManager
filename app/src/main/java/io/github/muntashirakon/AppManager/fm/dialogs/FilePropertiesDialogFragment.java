@@ -471,7 +471,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
                 if (mOwnerList.isEmpty()) {
                     getOwnersAndGroupsInternal();
                 }
-                mOwnerListLiveData.postValue(mOwnerList);
+                mOwnerListLiveData.postValue(new ArrayList<>(mOwnerList));
             });
         }
 
@@ -480,7 +480,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
                 if (mGroupList.isEmpty()) {
                     getOwnersAndGroupsInternal();
                 }
-                mGroupListLiveData.postValue(mGroupList);
+                mGroupListLiveData.postValue(new ArrayList<>(mGroupList));
             });
         }
 

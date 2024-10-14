@@ -23,6 +23,7 @@ public class AppDetailsComponentItem extends AppDetailsItem<ComponentInfo> {
 
     public AppDetailsComponentItem(@NonNull ComponentInfo componentInfo) {
         super(componentInfo);
+        name = componentInfo.name;
         mIsDisabled = !componentInfo.isEnabled();
     }
 

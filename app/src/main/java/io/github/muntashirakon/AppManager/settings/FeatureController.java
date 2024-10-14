@@ -150,6 +150,10 @@ public class FeatureController {
         return getInstance().isEnabled(FEAT_VIRUS_TOTAL);
     }
 
+    public static boolean isCodeEditorEnabled() {
+        return getInstance().isEnabled(FEAT_CODE_EDITOR);
+    }
+
     private boolean isEnabled(@FeatureFlags int key) {
         ComponentName cn;
         switch (key) {

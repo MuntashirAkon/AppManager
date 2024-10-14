@@ -17,7 +17,9 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,8 +45,10 @@ import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
-public abstract class AbsLogViewerFragment extends Fragment implements LogViewerViewModel.LogLinesAvailableInterface,
-        MultiSelectionActionsView.OnItemSelectedListener, LogViewerActivity.SearchingInterface, Filter.FilterListener {
+public abstract class AbsLogViewerFragment extends Fragment implements MenuProvider,
+        LogViewerViewModel.LogLinesAvailableInterface,
+        MultiSelectionActionsView.OnItemSelectedListener,
+        LogViewerActivity.SearchingInterface, Filter.FilterListener {
     public static final String TAG = AbsLogViewerFragment.class.getSimpleName();
 
     protected RecyclerView mRecyclerView;
@@ -96,7 +100,6 @@ public abstract class AbsLogViewerFragment extends Fragment implements LogViewer
     @CallSuper
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
         mViewModel = new ViewModelProvider(requireActivity()).get(LogViewerViewModel.class);
         mActivity = (LogViewerActivity) requireActivity();
         mActivity.setSearchingInterface(this);
@@ -116,6 +119,7 @@ public abstract class AbsLogViewerFragment extends Fragment implements LogViewer
         mMultiSelectionView.hide();
         mRecyclerView.setAdapter(mLogListAdapter);
         mRecyclerView.addOnScrollListener(mRecyclerViewScrollListener);
+        mActivity.addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
         // Observers
         mViewModel.getExpandLogsLiveData().observe(getViewLifecycleOwner(), expanded -> {
             int oldFirstVisibleItem = ((LinearLayoutManager) Objects.requireNonNull(mRecyclerView.getLayoutManager())).findFirstVisibleItemPosition();
@@ -148,11 +152,11 @@ public abstract class AbsLogViewerFragment extends Fragment implements LogViewer
         super.onDestroy();
     }
 
-    public abstract void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater);
+    public abstract void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater);
 
     @CallSuper
     @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+    public void onPrepareMenu(@NonNull Menu menu) {
         MenuItem expandMenu = menu.findItem(R.id.action_expand_collapse);
         if (expandMenu != null) {
             if (mViewModel.isCollapsedMode()) {
@@ -167,7 +171,7 @@ public abstract class AbsLogViewerFragment extends Fragment implements LogViewer
 
     @CallSuper
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onMenuItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_expand_collapse) {
             mViewModel.setCollapsedMode(!mViewModel.isCollapsedMode());
@@ -206,7 +210,7 @@ public abstract class AbsLogViewerFragment extends Fragment implements LogViewer
         } else if (id == R.id.action_export) {
             displaySaveDebugLogsDialog(false, false);
             return true;
-        } else return super.onOptionsItemSelected(item);
+        } else return false;
         return true;
     }
 

@@ -37,7 +37,14 @@ public class Log extends Logger {
 
     static {
         DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ROOT);
-        LOG_FILE = new File(getLoggingDirectory(), "am.log");
+        File logFile;
+        try {
+            logFile = new File(getLoggingDirectory(), "am.log");
+        } catch (SecurityException e) {
+            // Remote side doesn't have a logging directory
+            logFile = null;
+        }
+        LOG_FILE = logFile;
         try {
             sInstance = new Log();
         } catch (IOException e) {

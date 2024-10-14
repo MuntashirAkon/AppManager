@@ -103,17 +103,18 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_app_details_refresh_actions, menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onMenuItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh_details) {
             refreshDetails();
-        } else return super.onOptionsItemSelected(item);
-        return true;
+            return true;
+        }
+        return false;
     }
 
     @Override

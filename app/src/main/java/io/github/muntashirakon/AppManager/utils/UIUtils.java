@@ -289,6 +289,16 @@ public class UIUtils {
     }
 
     @UiThread
+    public static void displayShortToast(CharSequence message) {
+        Toast.makeText(ContextUtils.getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @UiThread
+    public static void displayShortToast(String format, Object... args) {
+        Toast.makeText(ContextUtils.getContext(), String.format(Locale.getDefault(), format, args), Toast.LENGTH_SHORT).show();
+    }
+
+    @UiThread
     public static void displayShortToast(@StringRes int res) {
         Toast.makeText(ContextUtils.getContext(), res, Toast.LENGTH_SHORT).show();
     }
@@ -302,6 +312,13 @@ public class UIUtils {
     @UiThread
     public static void displayLongToast(CharSequence message) {
         Toast.makeText(ContextUtils.getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+
+    @UiThread
+    public static void displayLongToast(String format, Object... args) {
+        Toast.makeText(ContextUtils.getContext(), String.format(Locale.getDefault(), format, args),
+                Toast.LENGTH_LONG).show();
     }
 
     @UiThread

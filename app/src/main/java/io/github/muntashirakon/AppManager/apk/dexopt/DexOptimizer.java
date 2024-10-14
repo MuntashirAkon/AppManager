@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.apk.behavior;
+package io.github.muntashirakon.AppManager.apk.dexopt;
 
 import android.content.pm.IPackageManager;
 import android.os.Build;
@@ -81,7 +81,8 @@ public class DexOptimizer {
 
     public boolean forceDexOpt() {
         try {
-            if (SelfPermissions.isSystemOrRoot()) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+                    && SelfPermissions.isSystemOrRoot()) {
                 // Allowed for only root/system
                 try {
                     mPm.forceDexOpt(mPackageName);

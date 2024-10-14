@@ -105,21 +105,10 @@ See [CONTRIBUTING.rst](CONTRIBUTING.rst)
 
 ## Donation and Funding
 
-_Donation or purchasing is not a requirement in order to use app Manager._ While App Manager does not support any
-purchases, donations can be sent to the owner of App Manager through Open Source Collective.
-
-Open Source Collective is a fiscal host in the Open Collective platform which helps the open source projects manage
-their finances. At present, it supports payments through bank accounts, PayPal, credit or debit cards and
-cryptocurrencies.
-
-Link: https://opencollective.com/muntashir
-
-By sending donations, the senders agree that they shall not use the donations as a leverage to prioritise their
-requested features. Feature requests do not require any bounties or donations, and they are prioritised in accordance
-with the preferences of the owner.
-
-**App Manager accepts any offers of funding/grants.** Representatives of the interested organization can contact the
-owner directly at muntashirakon [at] riseup [dot] net (FINGERPRINT: `7bad37c2981e41f8f6abea7f58f0b4f26c346fce`).
+As of September 2024, App Manager is not accepting any financial support until further notice. But
+you may still be able to send gifts (e.g., gift cards, subscriptions, food and drink, flowers, or
+even cash). Please contact the maintainer at muntashirakon [at] riseup [dot] net for further
+assistance.
 
 ## Credits and Libraries
 

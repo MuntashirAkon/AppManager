@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.apk.behavior;
+package io.github.muntashirakon.AppManager.apk.dexopt;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -75,14 +75,16 @@ public class DexOptDialog extends DialogFragment {
         boolean isRootOrSystem = uid == Ops.SYSTEM_UID || uid == Ops.ROOT_UID;
         // Inflate view
         View view = View.inflate(requireContext(), R.layout.dialog_dexopt, null);
-        AutoCompleteTextView autoCompleteTextView = view.findViewById(R.id.compiler_filter);
+        AutoCompleteTextView compilerFilterSelectionView = view.findViewById(R.id.compiler_filter);
         MaterialCheckBox compileLayoutsCheck = view.findViewById(R.id.compile_layouts);
         MaterialCheckBox clearProfileDataCheck = view.findViewById(R.id.clear_profile_data);
         MaterialCheckBox checkProfilesCheck = view.findViewById(R.id.check_profiles);
         MaterialCheckBox forceCompilationCheck = view.findViewById(R.id.force_compilation);
         MaterialCheckBox forceDexOptCheck = view.findViewById(R.id.force_dexopt);
+        compilerFilterSelectionView.setText(mOptions.compilerFiler);
         checkProfilesCheck.setChecked(mOptions.checkProfiles);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // Compile layout options was introduced in Android 10 and removed in Android 12
             compileLayoutsCheck.setVisibility(View.GONE);
         }
         if (!isRootOrSystem) {
@@ -92,7 +94,7 @@ public class DexOptDialog extends DialogFragment {
         }
 
         // Set listeners
-        autoCompleteTextView.setAdapter(new AnyFilterArrayAdapter<>(requireContext(), io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item,
+        compilerFilterSelectionView.setAdapter(new AnyFilterArrayAdapter<>(requireContext(), io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item,
                 COMPILER_FILTERS));
         compileLayoutsCheck.setOnCheckedChangeListener((buttonView, isChecked) -> mOptions.compileLayouts = isChecked);
         clearProfileDataCheck.setOnCheckedChangeListener((buttonView, isChecked) -> mOptions.clearProfileData = isChecked);
@@ -107,7 +109,7 @@ public class DexOptDialog extends DialogFragment {
                 .setTitle(R.string.title_perform_runtime_optimization_to_apps)
                 .setView(view)
                 .setPositiveButton(R.string.action_run, (dialog, which) -> {
-                    Editable compilerFilterRaw = autoCompleteTextView.getText();
+                    Editable compilerFilterRaw = compilerFilterSelectionView.getText();
                     if (TextUtils.isEmpty(compilerFilterRaw)) {
                         return;
                     }

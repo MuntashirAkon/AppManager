@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.details.info;
 
+import android.Manifest;
 import android.annotation.UserIdInt;
 import android.app.ActivityManager;
 import android.app.Application;
@@ -45,9 +46,11 @@ import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
 import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat;
+import io.github.muntashirakon.AppManager.compat.InstallSourceInfoCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.compat.SensorServiceCompat;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.debloat.DebloatObject;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
@@ -68,6 +71,7 @@ import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -163,7 +167,7 @@ public class AppInfoViewModel extends AndroidViewModel {
             tagCloud.isUpdatedSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0;
             String codePath = PackageUtils.getHiddenCodePathOrDefault(packageName, applicationInfo.publicSourceDir);
             tagCloud.isSystemlessPath = !isExternalApk && MagiskUtils.isSystemlessPath(codePath);
-            if (!isExternalApk && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            if (!isExternalApk && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 DomainVerificationUserState userState = DomainVerificationManagerCompat
                         .getDomainVerificationUserState(packageName, userId);
                 if (userState != null) {
@@ -224,6 +228,10 @@ public class AppInfoViewModel extends AndroidViewModel {
             if (ThreadUtils.isInterrupted()) {
                 return;
             }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+                    && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_SENSORS)) {
+                tagCloud.sensorsEnabled = SensorServiceCompat.isSensorEnabled(packageName, userId);
+            } else tagCloud.sensorsEnabled = true;
             try (ZipFile zipFile = new ZipFile(applicationInfo.publicSourceDir)) {
                 Boolean isXposedModule = XposedModuleInfo.isXposedModule(applicationInfo, zipFile);
                 if (!Boolean.FALSE.equals(isXposedModule)) {
@@ -349,26 +357,43 @@ public class AppInfoViewModel extends AndroidViewModel {
                 boolean hasUsageAccess = FeatureController.isUsageAccessEnabled() && SelfPermissions.checkUsageStatsPermission();
                 if (hasUsageAccess) {
                     // Net statistics
-                    appInfo.dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
+                    AppUsageStatsManager.DataUsage dataUsage;
+                    dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
                             applicationInfo.uid, UsageUtils.USAGE_LAST_BOOT);
+                    if (dataUsage.getTotal() == 0 && !ArrayUtils.contains(
+                            packageInfo.requestedPermissions, Manifest.permission.INTERNET)) {
+                        appInfo.dataUsage = null;
+                    } else appInfo.dataUsage = dataUsage;
                     // Set sizes
                     appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userId,
                             Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
                 }
                 // Set installer app
-                String installerPackageName = PackageManagerCompat.getInstallerPackageName(packageName, userId);
-                if (installerPackageName != null) {
-                    String applicationLabel;
-                    try {
-                        applicationLabel = pm.getApplicationInfo(installerPackageName, 0).loadLabel(pm).toString();
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                        applicationLabel = installerPackageName;
+                InstallSourceInfoCompat installSourceInfo = ExUtils.exceptionAsNull(() ->
+                        PackageManagerCompat.getInstallSourceInfo(packageName, userId));
+                if (installSourceInfo != null) {
+                    if (installSourceInfo.getInstallingPackageName() != null) {
+                        CharSequence label = PackageUtils.getPackageLabel(pm,
+                                installSourceInfo.getInstallingPackageName(), userId);
+                        appInfo.installerApp = label;
+                        installSourceInfo.setInstallingPackageLabel(label);
                     }
-                    appInfo.installerApp = applicationLabel;
+                    if (installSourceInfo.getInitiatingPackageName() != null) {
+                        CharSequence label = PackageUtils.getPackageLabel(pm,
+                                installSourceInfo.getInitiatingPackageName(), userId);
+                        if (appInfo.installerApp == null) {
+                            appInfo.installerApp = label;
+                        }
+                        installSourceInfo.setInitiatingPackageLabel(label);
+                    }
+                    if (installSourceInfo.getOriginatingPackageName() != null) {
+                        installSourceInfo.setOriginatingPackageLabel(PackageUtils.getPackageLabel(pm,
+                                installSourceInfo.getOriginatingPackageName(), userId));
+                    }
+                    appInfo.installSource = installSourceInfo;
                 }
                 // Set main activity
-                appInfo.mainActivity = pm.getLaunchIntentForPackage(packageName);
+                appInfo.mainActivity = PackageManagerCompat.getLaunchIntentForPackage(packageName, userId);
                 // SELinux
                 appInfo.seInfo = ApplicationInfoCompat.getSeInfo(applicationInfo);
                 // Primary ABI
@@ -439,6 +464,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isMagiskHideEnabled;
         public boolean isMagiskDenyListEnabled;
         public boolean isBloatware;
+        public boolean sensorsEnabled;
         @Nullable
         public XposedModuleInfo xposedModuleInfo;
         public boolean canWriteAndExecute;
@@ -474,7 +500,9 @@ public class AppInfoViewModel extends AndroidViewModel {
         public PackageSizeInfo sizeInfo;
         // More info
         @Nullable
-        public String installerApp;
+        public InstallSourceInfoCompat installSource;
+        @Nullable
+        public CharSequence installerApp;
         @Nullable
         public Intent mainActivity;
         @Nullable

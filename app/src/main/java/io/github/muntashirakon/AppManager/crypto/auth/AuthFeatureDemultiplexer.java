@@ -12,7 +12,6 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.profiles.ProfileApplierActivity;
 
 public class AuthFeatureDemultiplexer extends BaseActivity {
-    public static final String EXTRA_AUTH = "auth";
     public static final String EXTRA_FEATURE = "feature";
 
     @Override

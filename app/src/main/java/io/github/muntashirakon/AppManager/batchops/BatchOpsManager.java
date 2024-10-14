@@ -24,7 +24,6 @@ import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
 import androidx.core.os.BundleCompat;
 
-import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -42,8 +41,8 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
-import io.github.muntashirakon.AppManager.apk.behavior.DexOptOptions;
-import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizer;
+import io.github.muntashirakon.AppManager.apk.dexopt.DexOptOptions;
+import io.github.muntashirakon.AppManager.apk.dexopt.DexOptimizer;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
@@ -68,6 +67,7 @@ import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -191,11 +191,7 @@ public class BatchOpsManager {
 
     public BatchOpsManager() {
         mCustomLogger = false;
-        try {
-            mLogger = new BatchOpsLogger();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mLogger = ExUtils.exceptionAsNull(BatchOpsLogger::new);
     }
 
     public BatchOpsManager(@Nullable Logger logger) {
@@ -474,13 +470,14 @@ public class BatchOpsManager {
     }
 
     private Result opBlockComponents() {
+        String[] signatures = Objects.requireNonNull(mArgs.getStringArray(ARG_SIGNATURES));
         List<UserPackagePair> failedPackages = new ArrayList<>();
         float lastProgress = mProgressHandler != null ? mProgressHandler.getLastProgress() : 0;
         int i = 0;
         for (UserPackagePair pair : mUserPackagePairs) {
             updateProgress(lastProgress, ++i);
             try {
-                ComponentUtils.blockFilteredComponents(pair, mArgs.getStringArray(ARG_SIGNATURES));
+                ComponentUtils.blockFilteredComponents(pair, signatures);
             } catch (Exception e) {
                 log("====> op=BLOCK_COMPONENTS, pkg=" + pair, e);
                 failedPackages.add(pair);
@@ -619,12 +616,12 @@ public class BatchOpsManager {
     }
 
     private Result opGrantOrRevokePermissions(boolean isGrant) {
-        String[] permissions = mArgs.getStringArray(ARG_PERMISSIONS);
+        String[] permissions = Objects.requireNonNull(mArgs.getStringArray(ARG_PERMISSIONS));
         List<UserPackagePair> failedPackages = new ArrayList<>();
         float lastProgress = mProgressHandler != null ? mProgressHandler.getLastProgress() : 0;
+        int i = 0;
         if (permissions.length == 1 && permissions[0].equals("*")) {
             // Wildcard detected
-            int i = 0;
             for (UserPackagePair pair : mUserPackagePairs) {
                 updateProgress(lastProgress, ++i);
                 try {
@@ -643,7 +640,6 @@ public class BatchOpsManager {
                 }
             }
         } else {
-            int i = 0;
             for (UserPackagePair pair : mUserPackagePairs) {
                 updateProgress(lastProgress, ++i);
                 for (String permission : permissions) {
@@ -699,14 +695,14 @@ public class BatchOpsManager {
     }
 
     private Result opSetAppOps() {
-        int[] appOps = mArgs.getIntArray(ARG_APP_OPS);
+        int[] appOps = Objects.requireNonNull(mArgs.getIntArray(ARG_APP_OPS));
         int mode = mArgs.getInt(ARG_APP_OP_MODE, AppOpsManager.MODE_IGNORED);
         List<UserPackagePair> failedPkgList = new ArrayList<>();
         float lastProgress = mProgressHandler != null ? mProgressHandler.getLastProgress() : 0;
         AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat();
+        int i = 0;
         if (appOps.length == 1 && appOps[0] == AppOpsManagerCompat.OP_NONE) {
             // Wildcard detected
-            int i = 0;
             for (UserPackagePair pair : mUserPackagePairs) {
                 updateProgress(lastProgress, ++i);
                 try {
@@ -726,7 +722,6 @@ public class BatchOpsManager {
                 }
             }
         } else {
-            int i = 0;
             for (UserPackagePair pair : mUserPackagePairs) {
                 updateProgress(lastProgress, ++i);
                 try {
@@ -741,13 +736,14 @@ public class BatchOpsManager {
     }
 
     private Result opUnblockComponents() {
+        String[] signatures = Objects.requireNonNull(mArgs.getStringArray(ARG_SIGNATURES));
         List<UserPackagePair> failedPackages = new ArrayList<>();
         float lastProgress = mProgressHandler != null ? mProgressHandler.getLastProgress() : 0;
         int i = 0;
         for (UserPackagePair pair : mUserPackagePairs) {
             updateProgress(lastProgress, ++i);
             try {
-                ComponentUtils.unblockFilteredComponents(pair, mArgs.getStringArray(ARG_SIGNATURES));
+                ComponentUtils.unblockFilteredComponents(pair, signatures);
             } catch (Throwable th) {
                 log("====> op=UNBLOCK_COMPONENTS, pkg=" + pair, th);
                 failedPackages.add(pair);

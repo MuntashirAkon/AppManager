@@ -116,8 +116,11 @@ function collect_tex_files(array &$tex_files, string $base_dir = null, string $t
         $base_dir = getcwd() . '/' . BASE_DIR;
         $tex_file = MAIN_TEX;
     }
+    if (str_ends_with($tex_file, ".tex") === false) {
+        $tex_file .= ".tex";
+    }
     if (!file_exists($base_dir . '/' . $tex_file)) {
-        echo "File $tex_file does not exist!";
+        echo "File $tex_file does not exist!\n";
         return;
     }
     $tex_files[] = $tex_file;

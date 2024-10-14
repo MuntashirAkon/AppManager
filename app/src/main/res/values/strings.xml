@@ -89,7 +89,7 @@
     <string name="license">License</string>
     <string name="license_message" translatable="false"><a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General
         Public License v3.0</a></string>
-    <string name="copyright_message" translatable="false">© 2020–2023 <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a></string>
+    <string name="copyright_message" translatable="false">© 2020–2024 <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a></string>
     <string name="third_party">Third-party Libraries and Icons</string>
     <string name="third_party_message" translatable="false">-
         <a href="https://github.com/zhanghai/AndroidFastScroll">AndroidFastScroll</a> (Apache 2.0)
@@ -430,7 +430,6 @@
     <string name="features">Features</string>
     <string name="whats_new">What\'s New</string>
     <string name="blocking_rules">Blocking rules</string>
-    <string name="cache">Cache</string>
     <string name="external_data">External data</string>
     <string name="internal_data">Internal data</string>
     <string name="data">Data</string>
@@ -1486,4 +1485,11 @@
     <string name="mode_of_op_custom_command_title">Custom Command</string>
     <string name="mode_of_op_custom_command">If you are unable to use any of the modes, you can run the following command in any supported shell to run App Manager in privileged mode:</string>
     <string name="mode_of_op_alternative_custom_command">If you get a “permission denied” error with the above command, run the following command instead:</string>
+    <string name="sensors">Sensors</string>
+    <string name="tag_sensors_disabled">Sensors disabled</string>
+    <string name="pref_use_system_font">Use system font</string>
+    <string name="pref_use_system_font_msg">Use the system-default font instead of the material font. <font fgcolor="#ff0000">This is an experimental feature.</font></string>
+    <string name="actual_installer">Actual Installer</string>
+    <string name="apk_source">APK Source</string>
+    <string name="backup_cache">Cache</string>
 </resources>

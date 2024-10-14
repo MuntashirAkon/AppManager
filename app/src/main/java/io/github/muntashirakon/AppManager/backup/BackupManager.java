@@ -117,7 +117,7 @@ public class BackupManager {
             // Multiple backups requested
             if (backupNames == null) {
                 // Create a singleton backupNames array with current time
-                backupNames = new String[]{DateUtils.formatDateTime(ContextUtils.getContext(), System.currentTimeMillis())};
+                backupNames = new String[]{DateUtils.formatMediumDateTime(ContextUtils.getContext(), System.currentTimeMillis())};
             }
             for (int i = 0; i < backupNames.length; ++i) {
                 // Replace illegal characters
@@ -188,7 +188,6 @@ public class BackupManager {
                     mTargetPackage.getUserId())) {
                 restoreOp.runRestore(progressHandler);
                 mRequiresRestart |= restoreOp.requiresRestart();
-                BackupUtils.putBackupToDbAndBroadcast(ContextUtils.getContext(), restoreOp.getMetadata());
             }
         } else {
             Log.w(RestoreOp.TAG, "No backups found.");

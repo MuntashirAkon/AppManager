@@ -9,7 +9,6 @@ import android.os.ParcelFileDescriptor;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +29,7 @@ import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.IoUtils;
 
 // Copyright 2015 Google, Inc.
@@ -68,7 +68,7 @@ public class ScannerActivity extends BaseActivity {
 
         mApkUri = IntentCompat.getDataUri(intent);
         if (mApkUri == null) {
-            Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
+            UIUtils.displayShortToast(R.string.error);
             finish();
             return;
         }

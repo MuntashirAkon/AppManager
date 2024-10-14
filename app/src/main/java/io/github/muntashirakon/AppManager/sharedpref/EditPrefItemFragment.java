@@ -6,12 +6,10 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -29,6 +27,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.adapters.SelectedArrayAdapter;
 import io.github.muntashirakon.widget.MaterialSpinner;
 
@@ -121,10 +120,7 @@ public class EditPrefItemFragment extends DialogFragment {
         Bundle args = requireArguments();
         PrefItem prefItem = BundleCompat.getParcelable(args, ARG_PREF_ITEM, PrefItem.class);
         @Mode int mode = args.getInt(ARG_MODE);
-
-        LayoutInflater inflater = LayoutInflater.from(activity);
-        if (inflater == null) return super.onCreateDialog(savedInstanceState);
-        View view = inflater.inflate(R.layout.dialog_edit_pref_item, null);
+        View view = View.inflate(activity, R.layout.dialog_edit_pref_item, null);
         MaterialSpinner spinner = view.findViewById(R.id.type_selector_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = SelectedArrayAdapter.createFromResource(activity,
                 R.array.shared_pref_types, io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item);
@@ -202,7 +198,7 @@ public class EditPrefItemFragment extends DialogFragment {
                         newPrefItem.keyName = editKeyName.getText().toString();
                     }
                     if (newPrefItem.keyName == null) {
-                        Toast.makeText(getActivity(), R.string.key_name_cannot_be_null, Toast.LENGTH_LONG).show();
+                        UIUtils.displayLongToast(R.string.key_name_cannot_be_null);
                         return;
                     }
 
@@ -229,7 +225,7 @@ public class EditPrefItemFragment extends DialogFragment {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity(), R.string.error_evaluating_input, Toast.LENGTH_LONG).show();
+                        UIUtils.displayLongToast(R.string.error_evaluating_input);
                         return;
                     }
                     mInterfaceCommunicator.sendInfo(mode, newPrefItem);

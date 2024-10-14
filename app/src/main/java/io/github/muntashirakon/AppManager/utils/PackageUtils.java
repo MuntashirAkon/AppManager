@@ -17,14 +17,11 @@ import android.app.usage.IStorageStatsManager;
 import android.app.usage.StorageStats;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
 import android.content.pm.IPackageManager;
 import android.content.pm.IPackageStatsObserver;
-import android.content.pm.LauncherActivityInfo;
-import android.content.pm.LauncherApps;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -32,7 +29,6 @@ import android.content.pm.SigningInfo;
 import android.os.Build;
 import android.os.PowerManager;
 import android.os.RemoteException;
-import android.os.UserHandle;
 import android.os.UserHandleHidden;
 import android.os.storage.StorageManagerHidden;
 import android.system.ErrnoException;
@@ -222,6 +218,7 @@ public final class PackageUtils {
             item.blockedCount = app.rulesCount;
             item.trackerCount = app.trackerCount;
             item.lastActionTime = app.lastActionTime;
+            item.generateOtherInfo();
         }
         // Add rest of the backups
         for (String packageName : backups.keySet()) {
@@ -241,6 +238,7 @@ public final class PackageUtils {
             item.isInstalled = false;
             item.hasSplits = backup.hasSplits;
             item.hasKeystore = backup.hasKeyStore;
+            item.generateOtherInfo();
         }
         if (loadInBackground) {
             // Update list of apps safely in the background.
@@ -324,7 +322,6 @@ public final class PackageUtils {
                 }
                 pm.getPackageSizeInfo(packageName, userHandle,
                         new IPackageStatsObserver.Stub() {
-                            @SuppressWarnings("deprecation")
                             @Override
                             public void onGetStatsCompleted(final android.content.pm.PackageStats pStats, boolean succeeded) {
                                 try {
@@ -471,36 +468,6 @@ public final class PackageUtils {
         return info.requestedPermissions;
     }
 
-    @Nullable
-    public static Intent getLaunchIntentForPackage(@NonNull Context context,
-                                                   @NonNull String packageName,
-                                                   @UserIdInt int userId) {
-        if (userId == UserHandleHidden.myUserId()) {
-            return context.getPackageManager().getLaunchIntentForPackage(packageName);
-        }
-        UserHandle userHandle = Users.getUserHandle(userId);
-        if (userHandle != null) {
-            LauncherApps launcherApps = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
-            try {
-                if (!launcherApps.isPackageEnabled(packageName, userHandle)) {
-                    return null;
-                }
-                List<LauncherActivityInfo> activityInfoList = launcherApps.getActivityList(packageName, userHandle);
-                if (activityInfoList.size() > 0) {
-                    Intent launchIntent = new Intent(Intent.ACTION_MAIN);
-                    launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                            | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                    launchIntent.setComponent(activityInfoList.get(0).getComponentName());
-                    return launchIntent;
-                }
-            } catch (Throwable th) {
-                th.printStackTrace();
-            }
-        }
-        return null;
-    }
-
     @NonNull
     public static String getPackageLabel(@NonNull PackageManager pm, String packageName) {
         try {
@@ -540,10 +507,6 @@ public final class PackageUtils {
                 PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, pair.getUserId()).uid, -1);
     }
 
-    public static boolean isTestOnlyApp(@NonNull ApplicationInfo applicationInfo) {
-        return (applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0;
-    }
-
     @NonNull
     public static String getSourceDir(@NonNull ApplicationInfo applicationInfo) {
         String sourceDir = new File(applicationInfo.publicSourceDir).getParent(); // or applicationInfo.sourceDir
@@ -559,7 +522,7 @@ public final class PackageUtils {
         Runner.Result result = Runner.runCommand(RunnerUtils.CMD_PM + " dump " + packageName + " | grep codePath");
         if (result.isSuccessful()) {
             List<String> paths = result.getOutputAsList();
-            if (paths.size() > 0) {
+            if (!paths.isEmpty()) {
                 // Get only the last path
                 String codePath = paths.get(paths.size() - 1);
                 int start = codePath.indexOf('=');
@@ -601,7 +564,6 @@ public final class PackageUtils {
                 .getString("com.android.stamp.source"));
     }
 
-    @SuppressWarnings("deprecation")
     @Nullable
     public static SignerInfo getSignerInfo(@NonNull PackageInfo packageInfo, boolean isExternal) {
         if (!isExternal || Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -671,14 +633,14 @@ public final class PackageUtils {
                 oldChecksums.remove(newChecksum);
             }
             // Old checksums should contain no values if the checksums are the same
-            return oldChecksums.size() != 0;
+            return !oldChecksums.isEmpty();
         }
         // For single signer, there could be one or more extra certificates for rotation.
-        if (newChecksums.length == 0 && oldChecksums.size() == 0) {
+        if (newChecksums.length == 0 && oldChecksums.isEmpty()) {
             // No signers
             return false;
         }
-        if (newChecksums.length == 0 || oldChecksums.size() == 0) {
+        if (newChecksums.length == 0 || oldChecksums.isEmpty()) {
             // One of them is signed, other doesn't
             return true;
         }
