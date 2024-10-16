@@ -11,4 +11,5 @@
     <string name="disclaimer_agree">Elfogadom</string>
     <string name="disclaimer_exit">Kilépés</string>
     <string name="disclaimer_agree_forever">Soha többet ne mutassa</string>
+    <string name="disclaimer_header">Felelősség kizárása</string>
 </resources>
