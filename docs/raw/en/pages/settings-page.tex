@@ -16,6 +16,11 @@ Configure in-app language. App Manager currently supports 22 (twenty-two) langua
 Configure in-app theme.
 %%!!>>
 
+\subsubsection{Pure Black Theme}\label{subsubsec:pure-black-theme} %%##$pure-black-theme-title>>
+%%!!pure-black-theme<<
+Whether to use a black background instead of the material themed background.
+%%!!>>
+
 \subsubsection{Layout Direction}\label{subsubsec:layout-direction} %%##$layout-direction-title>>
 %%!!layout-direction<<
 Change layout direction, either left to right or right to left. This is usually set using the selected language but not
@@ -34,11 +39,12 @@ Enable or disable certain features in App Manager, such as
     \item \textbf{Log viewer}
     \item \textbf{App explorer.} The ``Explore'' option will not be available while trying to open an APK file.
     \item \textbf{App info.} The ``App info'' option displayed while trying to open an APK file.
+    \item \textbf{Code Editor}
+    \item \textbf{VirusTotal}
     \item \textbf{Use the internet.} All the Internet features are disabled if this feature is turned off.
     Currently, the only Internet feature is fetching scanning reports via VirusTotal.
 \end{itemize}
 %%!!>>
-
 
 \subsection{Privacy}\label{subsec:privacy} %%##$privacy-settings-title>>
 
@@ -51,6 +57,22 @@ Lock App Manager using Android screen lock provided a screen lock is configured.
 \end{warning}
 %%!!>>
 
+\subsubsection{Run App Manager in the Background}\label{subsubsec:run-am-in-background} %%##$run-am-in-background-title>>
+%%!!run-am-in-background<<
+Whether to run App Manager in the background to reduce the initialisation delay. On certain devices,
+this can also help if you're frequently disconnected from ADB\@.
+%%!!>>
+
+\subsubsection{Use the Internet}\label{subsubsec:use-the-internet} %%##$use-the-internet-title>>
+%%!!use-the-internet<<
+Whether to activate the Internet features in App Manager. This currently include VirusTotal and
+Pithus scanning in the \hyperref[sec:scanner-page]{Scanner page}.
+%%!!>>
+
+\subsubsection{Authorization Manager}\label{subsubsec:auth-manager} %%##$auth-manager-title>>
+%%!!auth-manager<<
+This setting allows a third-party application to get access to certain features, such as profiles.
+%%!!>>
 
 \subsection{Mode of Operation}\label{subsec:mode-of-operation} %%##$mode-of-operation-title>>
 %%!!mode-of-operation<<
@@ -76,7 +98,12 @@ Mode of operation defines how App Manager works as a whole. It has the following
     all the root- or ADB-specific features will be disabled.
 \end{itemize}
 
-It also displays the currently inferred mode of operation. The actual mode of operations are \textit{root}, \textit{ABD} and \textit{no-root}.
+It also displays the actual mode of operation at the top. The actual mode of operations are
+\textit{root}, \textit{ABD} and \textit{no-root}.
+
+\begin{tip}{Notice}
+    ``Remote service'' is only required for ADB users or when you use the custom commands.
+\end{tip}
 %%!!>>
 
 
@@ -94,23 +121,24 @@ Configure the signing key for signing APK files. Keys from an existing KeyStore 
 or a new key can be generated.
 
 \begin{tip}{Tip}
-    If you need to use the key in the future, it is recommended that you create a KeyStore yourself and import the key
-    here. Keys generated within App Manager is at the risk of being deleted without a proper backup.
+    If you need to use the key in the future, it is recommended that you create a KeyStore yourself
+    and import the key here. Without a proper backup, keys generated within App Manager are at the risk of being deleted.
 \end{tip}
 %%!!>>
 
-\subsection{Installer}\label{subsec:installer} %%##$installer-title>>
-
-\subsubsection{Show users in installer} %%##$show-users-in-installer-title>>
-%%!!show-users-in-installer<<
-When enabled, a list of users will be displayed before installing the application. The application will be installed
-only for the specified users.
+\subsubsection{Align APK Files} %%##$align-apk-files-title>>
+%%!!align-apk-files<<
+Performs zip alignment when App Manager signs an APK file. Zip alignment stores the files in the APK
+file (which is actually a zip file) in a way that a zip file reader can access the files quite
+easily using random access instead of loading the entire APK file in the memory, which results in
+the reduction of Android's memory usage. Note that this step is required if an application's
+manifest has \texttt{extractNativeLibs} set to \texttt{true}.
 %%!!>>
 
-\subsubsection{Sign APK} %%##$sign-apk-title>>
-%%!!sign-apk<<
-Whether to sign the APK files before installing the application. A signing key has to be added or generated before this
-option can be enabled. This can be done in the \hyperref[subsec:apk-signing]{APK signing} page.
+\subsection{Installer}\label{subsec:installer} %%##$installer-title>>
+%%!!installer-subtitle<<
+Configure the default behaviour of the installer. You can also find most of the settings by clicking
+on the \textit{cog} icon when you install an application.
 %%!!>>
 
 \subsubsection{Install Location} %%##$install-location-title>>
@@ -118,6 +146,17 @@ option can be enabled. This can be done in the \hyperref[subsec:apk-signing]{APK
 Define APK installation location. This can be one of \textit{auto}, \textit{internal only} and \textit{prefer external}.
 In newer Android versions, selecting the last option does not guarantee that the application will be installed in the
 external storage.
+%%!!>>
+
+\subsubsection{Block Trackers} %%##$block-trackers-title>>
+%%!!block-trackers<<
+Whether to block the tracking components immediately after installing the application.
+%%!!>>
+
+\subsubsection{Display Changes} %%##$display-changes-title>>
+%%!!display-changes<<
+Whether to display changes in version, trackers, components, permissions, signatures, SDK, etc. in a version controlled
+style before installing the application if the application has already been installed.
 %%!!>>
 
 \subsubsection{Installer App} %%##$installer-app-title>>
@@ -132,15 +171,16 @@ verify if the application is installed legitimately. This only works for root or
 \end{tip}
 %%!!>>
 
-\subsubsection{Block Trackers} %%##$block-trackers-title>>
-%%!!block-trackers<<
-Whether to block the tracking components immediately after installing the application.
+\subsubsection{Sign APK} %%##$sign-apk-title>>
+%%!!sign-apk<<
+Whether to sign the APK files before installing the application. A signing key has to be added or generated before this
+option can be enabled. This can be done in the \hyperref[subsec:apk-signing]{APK signing} page.
 %%!!>>
 
-\subsubsection{Display Changes} %%##$display-changes-title>>
-%%!!display-changes<<
-Whether to display changes in version, trackers, components, permissions, signatures, SDK, etc. in a version controlled
-style before installing the application if the application has already been installed.
+\subsubsection{Immediately Perform DEX Optimization} %%##$immediately-perform-dex-opt-title>>
+%%!!immediately-perform-dex-op<<
+Whether to perform DEX optimization immediately after installing the application. This can be useful
+for heavy applications, such as the gaming applications.
 %%!!>>
 
 \subsubsection{Install in the Background} %%##$install-in-the-background-title>>
@@ -156,8 +196,9 @@ Settings related to \hyperref[sec:backup-restore]{back up/restore}.
 
 \subsubsection{Compression method} %%##$compression-method-title>>
 %%!!compression-method<<
-Set the compression method to be used during backups. App Manager supports GZip and BZip2 compression methods,
-GZip being the default compression method. It doesn't affect the restoring of an existing backup.
+Set the compression method to be used during backups. App Manager supports GZip, BZip2 and Zstandard
+compression methods, GZip being the default compression method. It doesn't affect the restore of
+an existing backup.
 %%!!>>
 
 \subsubsection{Backup Options}\label{subsubsec:settings-backup-options} %%##$backup-options-title>>
@@ -169,21 +210,21 @@ Customise the \textit{back up/restore dialog} displayed while taking a backup.
 
 \subsubsection{Backup apps with Android KeyStore} %%##$backup-apps-with-keystore-title>>
 %%!!backup-apps-with-keystore<<
-Allow backup of applications that has entries in the Android KeyStore. This option is disabled by default because
-a few apps (such as Signal) may crash if restored.
+Allow backup of applications that has entries in the Android KeyStore. This option is disabled by
+default because a few apps (such as Signal or Element) may crash if restored.
 %%!!>>
 
 \subsubsection{Encryption}\label{subsubsec:settings-encryption} %%##$encryption-title>>
 %%!!encryption<<
 Set an encryption method for the backups. App Manager currently supports OpenPGP (via
 \href{https://f-droid.org/packages/org.sufficientlysecure.keychain/}{OpenKeyChain}), AES, RSA and ECC\@.
-Like \hyperref[subsec:apk-signing]{APK signing}, The AES, RSA and ECC keys are stored in the KeyStore and can be
-imported from other KeyStores.
+Like \hyperref[subsec:apk-signing]{APK signing}, The AES, RSA and ECC keys are stored in the
+KeyStore and can be imported from other KeyStores.
 
 \begin{danger}{Danger}
-    For your own safety, it is not recommended generating RSA and ECC keys inside App Manager. Instead, they should be
-    imported from a KeyStore stored in a secure place.\\
-    In case of AES, the generated key should be stored in a secure place, such as using a password manager.
+    For your own safety, it is not recommended generating RSA and ECC keys inside App Manager.
+    Instead, they should be imported from a KeyStore stored in a secure place.\\
+    In case of AES, the generated key should be stored in a secure place, such as in a password manager.
 \end{danger}
 %%!!>>
 

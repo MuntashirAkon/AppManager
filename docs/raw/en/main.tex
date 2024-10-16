@@ -148,10 +148,26 @@
 \definecolor{AMVeryDarkRed}{HTML}{4F1C14}
 \definecolor{AMVividOrange}{HTML}{FF8017}
 \ifdefined\Vanilla\else
+    \definecolor{uninstalled-day}{HTML}{FF0000B3}
+    \definecolor{uninstalled-night}{HTML}{790D0D}
+    \definecolor{disabled-day}{HTML}{FF8A80}
+    \definecolor{disabled-night}{HTML}{4F1C14BF}
+    \definecolor{force-stopped}{HTML}{09868B}
+    \definecolor{tracker-day}{HTML}{FF8017}
+    \definecolor{tracker-night}{HTML}{FF801780}
+    % For compatibility only
     \definecolor{AMVeryDarkOrange}{HTML}{FF801780}
 \fi
 \ifdefined\Vanilla
-    % We have to define Vanilla colour letter because Pandoc only looks at the first colour
+    % We have to define Vanilla colour later because Pandoc only looks at the first colour
+    \definecolor{uninstalled-day}{HTML}{FF0000}
+    \definecolor{uninstalled-night}{HTML}{790D0D}
+    \definecolor{disabled-day}{HTML}{FF8A80}
+    \definecolor{disabled-night}{HTML}{4F1C14}
+    \definecolor{force-stopped}{HTML}{09868B}
+    \definecolor{tracker-day}{HTML}{FF8017}
+    \definecolor{tracker-night}{HTML}{FF8017}
+    % For compatibility only
     \definecolor{AMVeryDarkOrange}{HTML}{FF8017}
 \fi
 \definecolor{AMSoftMagenta}{HTML}{EA80FC}

@@ -1,12 +1,15 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
 \section{Main Page}\label{sec:main-page} %%##$section-title>>
 %%!!intro<<
-Main page lists all the installed, uninstalled and backed up applications. A single click on any installed app item
-opens the respective \hyperref[sec:app-details-page]{App Details page}. For the uninstalled system apps, it displays a
-dialog prompt which can be used to reinstall the app. Using the \hyperlink{par:main-page-sort}{sort} option from the
-list options, the app items can be sorted in various ways and preserved on exit. It is also possible to filter items
-using the \hyperlink{par:main-page-filter}{filter} option in the list options. Filtering is possible also via the search
-bar with additional support for the regular expressions.
+Main page lists all the installed, uninstalled and backed up applications. A single click on any
+installed application item opens the respective \hyperref[sec:app-details-page]{App Details page}.
+For the uninstalled system applications, a dialog prompt is displayed with an option reinstall them.
+The applications uninstalled without removing their data and signatures are also displayed in this
+page with an option to perform a full uninstallation. For the uninstalled applications having one or
+more backups, the restore dialog is displayed. Using the \hyperlink{par:main-page-sort}{sort} option
+from the list options, the items can be sorted in various ways. It is also possible to filter items
+using the \hyperlink{par:main-page-filter}{filter} option in the list options. Filtering is also
+possible from the search bar with additional support for the regular expressions.
 %%!!>>
 
 \begin{figure}[ht]
@@ -18,50 +21,56 @@ bar with additional support for the regular expressions.
 
 \subsection{Batch Operations}\label{subsec:batch-operations} %%##$batch-operations-title>>
 %%!!batch-operations<<
-Batch operations or operation on multiple applications are also available within this page. Multiple selection mode can
-be activated by clicking on any app icon or by long-clicking on any items in the list. Once activated, a single click on
-a list item selects it instead of opening the App Details page. In this mode, the batch operations are located in the
-multiple selection menu at the bottom of the page. The operations include:
+Batch operations or operations on multiple applications are also available within this page.
+Multiple selection mode can be activated by clicking on the app icon of an item or by long-clicking
+on any items in the list. Once activated, a click on an item selects it instead of opening the App
+Details page. In this mode, the batch operations are located in the multiple selection menu at the
+bottom of the page. The operations include:
 \begin{itemize}
     \item Adding the selected applications to a \hyperref[sec:profiles-page]{profile}
-    \item \hyperref[sec:backup-restore]{Backing up, restoring or deleting} the applications
+    \item \hyperref[sec:backup-restore]{Backing up applications}, or restoring and deleting the
+    existing backups
     \item Blocking the trackers from the applications
     \item Clearing data or cache from the applications
     \item Exporting the blocking rules configured inside App Manager
-    \item Exporting the list of apps in Markdown or XML format
+    \item Exporting the list of applications in Markdown, CSV, JSON or XML format
     \item Freezing/unfreezing/force-stopping/uninstalling the applications
-    \item Preventing the background operations of the applications (Android 7 and onwards)
+    \item Performing run-time optimization of the applications (Android 7 onwards)
+    \item Preventing the background operations of the applications (Android 7 onwards)
     \item Saving the APK files to \texttt{AppManager/apks}
     \item Setting \hyperref[sec:net-policy]{net policies}
 \end{itemize}
 
 \begin{tip}{Accessibility}
-    After the multiple selection mode has been activated, it is possible to navigate in or out of the multiple selection
-    menu using the right or left keys of the keyboard or remote.
+    After the multiple selection mode has been activated, it is possible to navigate in or out of
+    the multiple selection menu using the right or left keys of the keyboard or remote.
 \end{tip}
 %%!!>>
 
 \subsection{Colour Codes}\label{subsec:main-colour-codes} %%##$colour-codes-title>>
 %%!!colour-codes<<
 \begin{itemize}
-    \item \colorbox{AMLightGreyishOrange}{\textcolor{black}{Light greyish orange (day)}} / \colorbox{AMDarkBlue}{
-        \textcolor{white}{dark blue (night)}} -- The application is selected for batch operation
-    \item \colorbox{AMLightRed}{\textcolor{black}{Light red (day)}} / \colorbox{AMVeryDarkRed}{\textcolor{white}
-    {dark red (night)}} -- Frozen app
+    \item \colorbox{uninstalled-day}{\textcolor{black}{Red (day)}} / \colorbox{uninstalled-night}{\textcolor{white}
+    {dark red (night)}} -- Uninstalled application
+    \item \colorbox{disabled-day}{\textcolor{black}{Light red (day)}} / \colorbox{disabled-night}{\textcolor{white}
+    {very dark red (night)}} -- Frozen application
+    \item \colorbox{force-stopped}{\textcolor{white}{Dark cyan}} -- Force-stopped application
     \item \colorbox{AMYellow}{\textcolor{black}{Yellow Star}} -- Debuggable application
-    \item \textcolor{AMOrange}{Orange \textit{Date}} -- The app has access to the system logs
+
+    \item \textcolor{AMOrange}{Orange \textit{Date}} -- The application can read system logs
     \item \textcolor{AMOrange}{Orange \textit{UID}} -- The user ID is being shared among multiple applications
     \item \textcolor{AMOrange}{Orange \textit{SDK}} -- The application possibly uses cleartext (i.e.\ HTTP) traffic
-    \item \textcolor{red}{Red \textit{package name}} -- The application does not allow clearing its data
-    \item \textcolor{red}{Red \textit{backup}} -- The uninstalled application with one or more backups present in App
-    Manager
-    \item \textcolor{AMOrange}{Orange \textit{backup}} -- Outdated backup, i.e.\ the base backup contains an older
-    version of the installed application
-    \item \textcolor{AMDarkCyan}{Dark cyan \textit{backup}} -- Up to date backup, i.e.\ the base backup contains the
-    same or higher version of the installed application
-    \item \textcolor{AMDarkCyan}{Dark cyan \textit{package name}} -- Force-stopped application
+    \item \textcolor{tracker-day}{Light orange \textit{package name}} -- The application has one or more trackers
+    \item \textcolor{red}{Red \textit{app label}} -- The application does not allow clearing its data
     \item \textcolor{AMDarkCyan}{Dark cyan \textit{version}} -- Inactive application
-    \item \textcolor{magenta}{Magenta} -- Persistent application i.e.\ it remains running all the time.
+    \item \textcolor{magenta}{Magenta type} -- Persistent application i.e.\ it remains running all the time
+
+    \item \textcolor{red}{Red \textit{backup}} -- The uninstalled application with one or more
+    backups present in App Manager
+    \item \textcolor{AMOrange}{Orange \textit{backup}} -- Outdated backup, i.e.\ the base backup
+    contains an older version of the installed application
+    \item \textcolor{AMDarkCyan}{Dark cyan \textit{backup}} -- Up to date backup, i.e.\ the base
+    backup contains the same or higher version of the installed application.
 \end{itemize}
 %%!!>>
 
@@ -119,10 +128,10 @@ The applications listed in the main page can be sorted in the following ways:
     \item \textbf{Last actions.} Sort the list in descending order based on the latest time and date of any actions made
     to the applications within App Manager.
     \item \textbf{Installation date.} Sort the list by the date of installation in descending order.
-    \item \textbf{Total size.} Sort the list by the total size of the apps and their data in descending order. Requires \texttt{Usage Access} permission.
+    \item \textbf{Total size.} Sort the list by the total size of the applications and their data in descending order. Requires \texttt{Usage Access} permission.
     \item \textbf{Data usage.} Sort the list by the total data usage in descending order. Requires \texttt{Usage Access} permission.
-    \item \textbf{Times opened.} List frequently used apps on top. Requires \texttt{Usage Access} permission.
-    \item \textbf{Screen time.} List apps with highest engagements on top. Requires \texttt{Usage Access} permission.
+    \item \textbf{Times opened.} List frequently used applications on top. Requires \texttt{Usage Access} permission.
+    \item \textbf{Screen time.} List the applications with the highest engagements on top. Requires \texttt{Usage Access} permission.
     \item \textbf{Last used.} List last used apps on top. Requires \texttt{Usage Access} permission.
 \end{itemize}
 
@@ -138,23 +147,29 @@ The applications listed in the main page can be filtered in the following ways:
     \item \textbf{User apps.} List only the user applications
     \item \textbf{System apps.} List only the system applications
     \item \textbf{Frozen apps.} List only the frozen applications
-    \item \textbf{Apps with rules.} List the applications with one or more blocking rules
-    \item \textbf{Apps with activities.} List the applications with one or more activities
-    \item \textbf{Apps with backups.} List the applications with one or more backups
-    \item \textbf{Running apps.} List the applications that are currently running
-    \item \textbf{Apps with splits.} List the applications with one or more split APK files
+    \item \textbf{Stopped apps.} List only the applications that were forced-stopped
     \item \textbf{Installed apps.} List only the installed applications
     \item \textbf{Uninstalled apps.} List only the uninstalled applications
-    \item \textbf{Apps without backups.} List the applications with no backups present.
-    \item \textbf{Apps with KeyStore.} List only the applications with Android KeyStore.
-    \item \textbf{Apps with SAF.} List only the applications with SAF access.
-    \item \textbf{Apps with SSAID.} List only the applications with a valid SSAID\@.
+    \item \textbf{With rules.} List the applications with one or more blocking rules
+    \item \textbf{With activities.} List the applications with one or more activities
+    \item \textbf{With backups.} List the applications with one or more backups
+    \item \textbf{Without backups.} List the applications with no backups present.
+    \item \textbf{Running apps.} List the applications that are currently running
+    \item \textbf{With splits.} List the applications with one or more split APK files
+    \item \textbf{With KeyStore.} List only the applications with Android KeyStore.
+    \item \textbf{With SAF.} List only the applications with SAF access.
+    \item \textbf{With SSAID.} List only the applications with a valid SSAID\@.
 \end{itemize}
 
 Unlike sorting, it is possible to apply more than one filtering options at the same time. For example, the frozen user
 applications can be listed by selecting both \textit{User apps} and \textit{Frozen apps}. This can be particularly
 useful for \hyperref[subsec:batch-operations]{batch operations} where filtering the user applications may be necessary
 to carry out certain operations safely.
+
+\begin{warning}{Inconsistencies}
+    App Manager extensively caches everything in this page. Therefore, certain states (e.g., freeze
+    and stopped states) may not always be up-to-date.
+\end{warning}
 %%!!>>
 
 \paragraph{Profile Name}%%##$profile_name-title>>
@@ -179,17 +194,10 @@ page} in a new activity.
 
 \subsubsection{App Usage} %%##$app-usage-title>>
 %%!!app-usage<<
-App usage statistics such as \textit{screen time}, \textit{data usage} (both mobile and Wi-Fi), \textit{the number of
-times an app was opened} can be accessed by clicking on the \textbf{App Usage} option in the menu. However, it requires
-the \textit{Usage Access} permission. This menu item will not be listed if the usage access feature is disabled in
-\hyperref[subsubsec:enable/disable-features]{settings}.
-%%!!>>
-
-\subsubsection{System Config} %%##$system-config-title>>
-%%!!system-config<<
-This menu item opens a new page where various system configurations, blacklists/whitelists included in Android by the
-OEM, the vendor, the AOSP or the Magisk modules are displayed. It requires root. Therefore, this menu item will not be
-listed if root permission is unavailable to App Manager.
+Application usage statistics, such as \textit{screen time}, \textit{data usage} (both mobile and
+Wi-Fi), \textit{number of times an app was opened}, can be accessed by clicking on the \textbf{App
+Usage} option in the menu. However, it requires the \textit{Usage Access} permission. This menu item
+will not be listed if the usage access feature is disabled in \hyperref[subsubsec:enable/disable-features]{settings}.
 %%!!>>
 
 \subsubsection{Running Apps}\label{subsubsec:main:running-apps} %%##$running-apps-title>>
@@ -209,15 +217,6 @@ This menu item opens the \hyperref[sec:profiles-page]{profiles page}. Profiles a
 tasks. They can also be invoked via shortcuts.
 %%!!>>
 
-\subsubsection{Log Viewer}\label{subsubsec:log-viewer} %%##$log-viewer-title>>
-% TODO: Create a new page for the log viewer
-%%!!log-viewer<<
-This menu item opens the log viewer page which can display and manage logs using the \texttt{logcat} command. By
-default, this page can only display the activities of App Manager. However, it can display logs from all the
-processes if \texttt{android.permission.READ\_LOGS} is granted. This permission granted automatically if the current
-\hyperref[subsec:mode-of-operation]{mode of operation} is either root or ADB\@.
-%%!!>>
-
 \subsubsection{APK Updater} %%##$apk-updater-title>>
 %%!!apk-updater<<
 If the app \href{https://github.com/rumboalla/apkupdater}{APK Updater} is installed in the system, it can be opened
@@ -229,6 +228,19 @@ directly via this menu item. The option remains hidden if the app is not present
 If the app \href{https://github.com/termux/termux-app}{Termux} is installed in the system, the running session (or a
 new session) can be opened directly via this menu item. The option remains hidden if the app is not present in the
 system.
+%%!!>>
+
+\subsubsection{Debloater} %%##$debloater-title>>
+%%!!debloater<<
+This menu item opens the debloater page that lists all the bloatware available in the device and in
+App Manager. It also suggests alternative applications based on the criteria set by the \href{https://github.com/MuntashirAkon/android-debloat-list}{Android Debloat List}
+project.
+%%!!>>
+
+\subsubsection{Labs} %%##$labs-title>>
+%%!!labs<<
+This menu item opens the labs page that lists all the additional features. They include Log Viewer,
+System Config, Terminal, File Manager (as Files), UI Tracker, Interceptor, and Code Editor pages.
 %%!!>>
 
 \subsubsection{Settings} %%##$settings-title>>

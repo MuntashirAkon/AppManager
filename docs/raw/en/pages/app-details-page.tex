@@ -1,20 +1,22 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
 \section{App Details Page}\label{sec:app-details-page} %%##$section-title>>
 %%!!intro<<
-\textbf{App Details} page consists of 11 (eleven) tabs. It describes almost every bit of information an application
-can have, including all attributes from its manifest, \hyperref[ch:app-ops]{application operations}, signing
-information, libraries, and so on.
+\textbf{App Details} page consists of 11 (eleven) tabs. It describes almost every bit of information
+an application usually has, including all attributes from its manifest,
+\hyperref[ch:app-ops]{application operations} (app ops), signing information, libraries, and so on.
 %%!!>>
 
 \subsection{Colour Codes}\label{subsec:app-details-colour-codes} %%##$colour-codes-title>>
 %%!!colour-codes<<
 List of colours used in this page, and their meaning:
 \begin{itemize}
-    \item \colorbox{AMRed}{\textcolor{black}{Red (day)}} / \colorbox{AMDarkRed}{\textcolor{white}{dark red (night)}}
-    -- Denotes any app ops or permissions having the dangerous flag, or any components blocked within App Manager
+    \item \colorbox{uninstalled-day}{\textcolor{black}{Red (day)}} / \colorbox{uninstalled-night}{\textcolor{white}{dark red (night)}}
+    -- Denotes any app ops or permissions having the dangerous flag, or any components blocked
+    within App Manager, or any unsupported but required features.
 
-    \item \colorbox{AMLightRed}{\textcolor{black}{Light red (day)}} / \colorbox{AMVeryDarkRed}{\textcolor{white}{very
-    dark red (night)}} -- Denotes the components disabled outside of App Manager
+    \item \colorbox{disabled-day}{\textcolor{black}{Light red (day)}} / \colorbox{disabled-night}{\textcolor{white}{very
+    dark red (night)}} -- Denotes the components disabled outside of App Manager, or any unsupported
+    but optional features.
 
     \begin{tip}{Note}
         A component marked as disabled does not always mean that it is disabled by the user: It could also be disabled
@@ -22,11 +24,14 @@ List of colours used in this page, and their meaning:
         considered disabled by the system (and App Manager).
     \end{tip}
 
-    \item \colorbox{AMVividOrange}{\textcolor{black}{Vivid orange (day)}} / \colorbox{AMVeryDarkOrange}{
+    \item \colorbox{tracker-day}{\textcolor{black}{Vivid orange (day)}} / \colorbox{tracker-night}{
         \textcolor{white}{very dark orange (night)}} -- Denotes the tracker components
 
     \item \colorbox{AMSoftMagenta}{\textcolor{black}{Soft magenta (day)}} / \colorbox{AMVeryDarkViolet}{
         \textcolor{white}{very dark violet (night)}} -- Denotes the running services.
+
+    \item \colorbox{AMDarkCyan}{\textcolor{black}{Dark cyan}}  -- Used in the tracker-indicator tag
+    to denote that all the trackers in the application are blocked.
 \end{itemize}
 %%!!>>
 
@@ -54,7 +59,7 @@ The list below is in the same order as listed in the App Info tab.
     differentiate between application versions (since a version name can be unreadable to a machine). In general,
     a new version of an application has higher version code than the old ones. For example, if \texttt{123} and
     \texttt{125} are two version codes of an application, we can say that the latter is more updated than the former
-    because the version code of the latter is higher. Applications that serve different APK files for the same version
+    because the version code of the latter is higher. An application that serves different APK files for the same version
     on different platforms (mobile, tabs, desktops, etc.) or architectures (32/64 bit, ARM or Intel), the version
     numbers can be misleading as they often add prefixes for each platform.
 
@@ -65,13 +70,14 @@ The list below is in the same order as listed in the App Info tab.
     the application. See \Sref{subsubsec:horizontal-action-panel} for a complete list of actions available here.
     Additional actions are available in the \hyperref[subsubsec:app-info-options-menu]{options menu}.
 
-    \item \textbf{Paths \& Directories.} Contains various information regarding application paths including \textit{app
-    directory} (where the APK files reside), \textit{data directories} (internal, device protected and externals),
-    \textit{split APK directories} (along with the split names), and \textit{native JNI library} (if present). JNI
-    libraries are used to invoke native codes usually written in C/C++. Use of native library can make the application
-    run faster or help an application use third-party libraries written using languages other than Java like in most
-    games. The directories can be opened via third-party file managers provided they support it and have the necessary
-    permissions by clicking on the launch button on the right-hand side of each directory item.
+    \item \textbf{Paths \& Directories.} Contains various information regarding application paths
+    including \textit{app directory} (where the APK files reside), \textit{data directories}
+    (internal, device protected and externals), and \textit{JNI library directory} (if present).
+    JNI libraries are used to invoke native codes usually written in C/C++. Use of native library
+    can make the application run faster or help an application use third-party libraries written
+    using languages other than Java like in most games. The directories can be opened via file
+    managers provided they support it and have the necessary permissions, by clicking on the launch
+    button on the right-hand side of a directory item.
 
     \item \textbf{Data Usage.} Amount of data used by the application as reported by the operating system. Depending on
     Android version, this may require a wide range of permissions including \textit{Usage Access} and \textit{Telephony}
@@ -79,19 +85,21 @@ The list below is in the same order as listed in the App Info tab.
 
     \item \textbf{Storage \& Cache.} Displays information regarding the size of the application (APK files, optimised
     files), data and cache. In older devices, size of external data, cache, media and OBB folders are also displayed.
-    This part remains hidden if\textit{Usage Access} permission is not granted in newer devices.
+    This part remains hidden if \textit{Usage Access} permission is not granted in the newer devices.
 
     \item \textbf{More Info.} Displays other information such as--
     \begin{itemize}
-        \item \textbf{SDK.} Displays information related to the Android SDK. There are two (one in old devices) values:
-        \textit{Max} denotes the target SDK and \textit{Min} denotes the minimum SDK (the latter is not available in old
-        devices). It is best practice to use applications with maximum SDK that the platform currently supports in order
-        to ensure that the application is not running in the compatibility mode in order to use privacy-evading features.
-        SDK is also known as \textbf{API Level}.\\
+        \item \textbf{SDK.} Displays information related to the Android SDK: \textit{Max} denotes
+        the target SDK and \textit{Min} denotes the minimum SDK (the latter is not available in
+        Android Lollipop). If the target SDK value is less than the platform SDK (i.e., the highest
+        SDK the current operating system supports), the application will run in the compatibility
+        mode. This means the application may have access to certain features that are unavailable or
+        restricted in a newer version of Android, which can be a security and/or privacy issue. SDK
+        is also known as \textbf{API Level}.\\
         \seealsoinline{\href{https://en.wikipedia.org/wiki/Android_version_history\#Overview}{Android Version History}}
 
         \item \textbf{Flags.} The application flags used at the time of building the application. For a complete list of
-        flags and what they do, visit the
+        flags and what they do, read the
         \href{https://developer.android.com/reference/android/content/pm/ApplicationInfo\#flags}{official documentation}.
 
         \item \textbf{Date Installed.} The date when the application was first installed.
@@ -99,11 +107,22 @@ The list below is in the same order as listed in the App Info tab.
         \item \textbf{Date Updated.} The date when the application was last updated. This is the same as \textit{Date Installed}
         if the application hasn't been updated.
 
-        \item \textbf{Installer App.} The application that installed this application. Not all application supply the information used by the
-        package manager to register the installer application. Therefore, this value should not be taken for granted.
+        \item \textbf{Process Name.} The name of the process if it is different from the package
+        name. Process name is set when an application is being started by the system, and is usually
+        the same as the package name.
 
-        \item \textbf{User ID.} The unique user ID set by the Android system to the application. For shared applications, same
-        user ID is assigned to multiple applications that have the same \textit{Shared User ID}.
+        \item \textbf{Installer App.} The application that installed this application. The installer
+        application may not always be the same as the application that installed this application,
+        because Android allows setting an arbitrary value for this field. In Android 11 onwards, the
+        actual installer application is also stored by the system which can be accessed by clicking
+        the ``Info'' button on the right-hand side of the item. The field will not be visible if the
+        installer application is not reported by the system (e.g., due to the installer application
+        being uninstalled or hidden). Installer application may be granted additional privileges by
+        the system so that it can control certain behaviour of the application it installs.
+
+        \item \textbf{User ID.} The unique user ID set by the system to the application. For shared
+        applications, the same user ID is assigned to multiple applications having the same
+        \textit{Shared User ID}.
 
         \item \textbf{Shared User ID.} Applicable for applications that are shared together. The shared application must
         have the same \hyperref[subsec:signatures-tab]{signatures}.
@@ -124,7 +143,7 @@ The list below is in the same order as listed in the App Info tab.
             \item \textit{Warn.} Same as above, except that warnings will be logged each time the application accesses
             the hidden API. This is mostly unused.
             \item \textit{Enforce.} The application cannot access hidden API, either dark-grey list or blacklist, or
-            both of them. This is the default option for the third-party applications in Android 9 and later unless the
+            both of them. This is the default option for the third-party applications in Android 9 onwards unless the
             application is whitelisted by the OEM or the vendor.
             \begin{warning}{Warning}
                 Hidden API enforcement policy is not properly implemented in Android and can be bypassed by the
@@ -146,15 +165,15 @@ The list below is in the same order as listed in the App Info tab.
 \begin{itemize}
     \item \textbf{Tracker info.} Number of tracker components in the application (e.g., \textit{5 trackers}) The colour
     of the tag appears orange if the trackers are unblocked and dark cyan if they are blocked in App Manager.
-    Clicking on the tag opens a dialog containing the list of tracker components which can be blocked or unblocked if
-    App Manager has sufficient privileges.
+    Clicking on the tag opens a dialog containing the list of tracker components which can also be blocked or unblocked
+    provided App Manager has sufficient privileges.
 
-    \item \textbf{Application type.} User application or system application. If it is a system application, whether
-    the application is an updated version of the system application or if the application is installed systemless-ly
-    via Magisk.
+    \item \textbf{Application type.} User application or system application. For a system
+    application, it displays whether the application is an updated version of the system application
+    or the application is installed systemless-ly via Magisk.
 
     \item \textbf{Split APK info.} Number of splits in the APK excluding the base APK (e.g., \textit{5 splits}).
-    Clicking on the tag opens a dialog containing the split APK information such as type and size.
+    Clicking on the tag opens a dialog containing a few additional information, such as name, type, and size.
 
     \item \textbf{Debuggable.} The application can be debugged over ADB\@. Debuggable applications can enjoy certain
     functions unavailable to a regular application. The data of the application might be accessible via ADB (e.g.\ using
@@ -164,17 +183,27 @@ The list below is in the same order as listed in the App Info tab.
     functions unavailable to a regular application. The data of the application might be accessible via ADB (e.g.\ using
     \texttt{run-as} command) without any additional permissions.
 
-    \item \textbf{Large heap.} The application has requested large heap size i.e.\ more space in memory (RAM) is
-    requested for dynamic allocation. It is still up to the operating system to decide whether to allocate large space
-    for the application. App Manager, for example, requests large heap size because it needs to load an entire APK
-    into memory while scanning an APK before Android 8.
-
-    \item \textbf{No code.} The application does not have any code associated with it i.e.\ DEX files aren't present.
+    \item \textbf{No code.} The application does not have any code associated with it i.e., DEX files aren't present.
     In some system applications, the actual code might be located in another place.
 
-    \item \textbf{Running.} One or more services of the application is currently running in the background. Clicking
-    on the tag opens a dialog containing the list of running services. Clicking on any services opens it in the log
-    viewer provided the log viewer feature is enabled. There's also an option to force-stop the application.
+    \item \textbf{Large heap.} The application has requested large heap size i.e., more space in memory (RAM) is
+    requested for dynamic allocation. It is still up to the operating system to decide whether to allocate large space
+    for the application. App Manager, for example, requests large heap size because it needs to load an entire APK
+    into memory while scanning an APK\@.
+
+    \item \textbf{Open links.} The application may open certain links from any applications. If the
+    application can open any links by default, the color of the tag would be red, dark cyan if
+    otherwise. Clicking on the tag opens a dialog with the supported hosts or domains listed. In
+    Android 12 onwards, it displays an option to enable or disable opening links by default provided
+    App Manager has sufficient permissions. Otherwise, it displays an option to open the system
+    settings page for the application.
+
+    \item \textbf{Running.} One or more services of the application is currently running in the
+    background. Clicking on the tag opens a dialog containing the list of running services. Clicking
+    on any services opens the log viewer with default filter set to the UID associated with the
+    service (which can be different from the UID of the application if it is running in a separate
+    or isolated process) provided the log viewer feature is enabled. There's also an option to
+    force-stop the application.
 
     \item \textbf{Stopped.} The application is force stopped. This may not prevent it from running automatically later.
 
@@ -184,16 +213,22 @@ The list below is in the same order as listed in the App Info tab.
 
     \item \textbf{Hidden.} Denotes that the application is hidden (hidden from the launcher).
 
-    \item \textbf{MagiskHide.} MagiskHide is enabled. Clicking on the tag opens a dialog containing the list of
-    processes within the application that can be added or removed from the MagiskHide list.
+    \item \textbf{MagiskHide.} MagiskHide is enabled for the application. Clicking on the tag opens
+    a dialog containing the list of process names within the application that can be added to or
+    removed from the MagiskHide list.
 
-    \item \textbf{MagiskDenyList.} The application is present in MagiskDenyList. Clicking on the tag opens a dialog
-    containing the list of processes within the application that can be added or removed from MagiskDenyList.
+    \item \textbf{MagiskDenyList.} The application is present in Magisk DenyList. Clicking on the
+    tag opens a dialog containing the list of process names within the application that can be added
+    to or removed from Magisk DenyList.
 
-    \item \textbf{WX.} The app violates ``W\textasciicircum{}X policy'' and is capable of writing and executing in the same directory or
-    in the same portion of memory. This allows the execution of arbitrary executables either by the modification of
-    executables embedded within the app or by downloading them from the Internet.\\
+    \item \textbf{WX.} The application violates the ``W\textasciicircum{}X policy'' and is capable
+    of writing and executing in the same directory or in the same portion of memory. This allows the
+    execution of arbitrary executables either by the modification of executables embedded within the
+    application or by downloading them from the Internet.\\
     \seealsoinline{\href{https://en.wikipedia.org/wiki/W\%5EX}{W\textasciicircum{}X in Wikipedia}}
+
+    \item \textbf{Bloatware.} The application may be a known bloatware. Clicking on the tag opens a
+    dialog containing detailed information in addition to suggestions (if available).
 
     \item \textbf{KeyStore.} The application has items in the Android KeyStore. Clicking on the tag opens a dialog
     containing all the KeyStore files that belong to the application.
@@ -203,6 +238,9 @@ The list below is in the same order as listed in the App Info tab.
 
     \item \textbf{No battery optimisation.} Battery optimisation is disabled for the application. It is possible to
     re-enable battery optimisation by clicking on the tag.
+
+    \item \textbf{Sensors disabled.} Sensors are disabled for the application. Sensors are disabled
+    for most applications by default.
 
     \item \hyperref[sec:net-policy]{\textbf{Net policy.}} Network policy (e.g., background data usage) is configured
     for the application. Clicking on the tag displays a dialog containing the supported policies for the platform
@@ -216,6 +254,17 @@ The list below is in the same order as listed in the App Info tab.
     granted URIs.
 
     \item \textbf{Play App Signing.} Indicates that the application might be signed by Google.
+
+    \item \textbf{Xposed.} Indicates that the application may be an Xposed module. Clicking on the
+    tag displays a dialog with additional information.
+
+    \item \textbf{Static Shared Library.} Denotes that the application serves as a static shared
+    library for one or more applications. Clicking on the tag opens a dialog containing a list of
+    installed versions of the library along with an option to uninstall them.
+    \begin{tip}{Notice}
+        The trichrome library (supplied by Google Chrome, Vanadium or similar projects) is currently
+        the only known static shared library on Android.
+    \end{tip}
 \end{itemize}
 %%!!>>
 
@@ -256,14 +305,14 @@ Horizontal Action Panel, as described in the previous section, consists of vario
     \item \textbf{Clear Cache.} Clear the application cache. If the application is running during the operation, the
     cache may not be cleared as expected.
 
-    \item \textbf{Install.} Action to install an application opened via a third-party application. This button is only
-    displayed if the application hasn't been already installed.
+    \item \textbf{Install.} Install the application, only displayed if the application hasn't
+    already been installed.
 
-    \item \textbf{What's New.} This button is displayed for an external application if it's already been installed.
-    Clicking on this button displays a dialog consisting of differences between the opened version and the installed
-    version in a version control manner. The information it displays include \textit{version}, \textit{trackers},
-    \textit{permissions}, \textit{components}, \textit{signatures} (checksum changes), \textit{features},
-    \textit{shared libraries} and \textit{SDK}.
+    \item \textbf{What's New.} Displayed for an external application if an older version of it is
+    already installed. Clicking on this button opens a dialog containing the differences between
+    this and the installed version in a version control manner. Changes include \textit{version},
+    \textit{trackers}, \textit{permissions}, \textit{components}, \textit{signatures} (only checksum
+    changes), \textit{features}, \textit{shared libraries} and \textit{SDK}.
 
     \item \textbf{Update.} Displayed if the application has a higher version code than the installed application.
 
@@ -271,21 +320,21 @@ Horizontal Action Panel, as described in the previous section, consists of vario
 
     \item \textbf{Downgrade.} Displayed if the application has a lower version code than the installed application.
 
-    \item \textbf{Manifest.} Clicking on this button displays the application's manifest file in a separate page. The
-    manifest file can be wrapped or unwrapped using the corresponding toggle button (on the top-right side) or can be
-    exported using the save button.
+    \item \textbf{Manifest.} Opens the application's manifest file in a separate page. If the
+    application has more than one split, it will display the list of split APK files, and clicking
+    on an item will open the corresponding manifest file instead.
 
-    \item \textbf{Scanner.} Scan the application in order to list potential trackers and libraries. It also scans the
-    file using VirusTotal if configured.\\
+    \item \textbf{Scanner.} Scan the application in order to list potential trackers and libraries.
+    It also scans the file using VirusTotal and fetch results from Pithus if configured.\\
     \seealsoinline{\hyperref[sec:scanner-page]{Scanner page}}
 
-    \item \textbf{Shared Prefs.} Clicking on this button displays a list of shared preferences used by the application.
+    \item \textbf{Shared Prefs.} Displays a list of shared preferences used by the application.
     Clicking on a preference item in the list opens the \hyperref[sec:shared-preferences-editor-page]{Shared Preferences
     Editor page}. This option is only visible if the user has the required privileges.
 
-    \item \textbf{Databases.} Clicking on this button displays a list of databases used by the application. Clicking on
-    an item opens a list of activities that can open the database. This option is only visible if the user has the
-    required privileges.
+    \item \textbf{Databases.} Displays a list of databases used by the application. Clicking on an
+    item opens a list of activities that can open the database. This option is only visible if the
+    user has the required privileges.
 
     \item \textbf{F-Droid.} Open the application in the selected \textit{F-Droid} client.
 
@@ -319,18 +368,23 @@ given below:
     applicable to the debuggable applications and works for both root and ADB users. See \Sref{subsubsec:config-termux}
     to learn how to configure Termux to run commands from third-party applications.
 
-    \item \textbf{MagiskHide.} Open a dialog containing the list of processes within the application that can be added
+    \item \textbf{MagiskHide.} Open a dialog containing the list of process names within the application that can be added
     or removed from the MagiskHide list.
 
-    \item \textbf{Magisk DenyList.} Open a dialog containing the list of processes within the application that can be
+    \item \textbf{Magisk DenyList.} Open a dialog containing the list of process namees within the application that can be
     added or removed from Magisk DenyList.
 
-    \item \textbf{Battery optimisation.} Enable/disable battery optimisation.
+    \item \textbf{Battery optimisation.} Enable/disable battery optimisation for this application.
+
+    \item \textbf{Sensors.} Enable/disable sensors for this application.
 
     \item \hyperref[sec:net-policy]{\textbf{Net policy.}} Configure network policy (e.g., background data usage) for the
     application.
 
     \item \textbf{Extract Icon.} Extract and save the application's icon in the shared storage.
+
+    \item \textbf{Optimize.} Perform optimisation for this application. This option is for advanced
+    users only.
 
     \item \textbf{Add to profile.} Add the application to one of the configured \hyperref[sec:profile-page]{profiles}.
 
@@ -340,7 +394,7 @@ given below:
 
 \subsubsection{Configuring Termux}\label{subsubsec:config-termux} %%##$config-termux-title>>
 %%!!config-termux<<
-By default, Termux does not allow running commands from third-party applications. To use this option, Termux v0.96 or
+By default, Termux does not allow running commands from a third-party application. To use this option, Termux v0.96 or
 later is required and \texttt{allow-external-apps=true} must be added in \texttt{\textasciitilde/.termux/termux.properties}.
 
 \begin{tip}{Info}
@@ -351,16 +405,18 @@ later is required and \texttt{allow-external-apps=true} must be added in \texttt
 
 \subsection{Component Tabs}\label{subsec:component-tabs} %%##$component-tabs-title>>
 %%!!component-tabs<<
-\textbf{Activities}, \textbf{Services}, \textbf{Receivers} (i.e. broadcast receivers) and \textbf{Providers}
-(i.e. content providers) are collectively known as the application components. This is because they share
-similar features in many ways. For example, they all have a \textit{name}, a \textit{label}, an \textit{icon} and are
-executed via \textit{Intent}. Application components are the building blocks of an application and must be declared in
-the application manifest. Application manifest is a file where application specific metadata are stored. The Android
-operating system learns what to do with the application by reading the metadata.
+\textbf{Activities}, \textbf{Services}, \textbf{Receivers} (i.e., broadcast receivers) and
+\textbf{Providers} (e.g., content providers) are collectively known as the application components,
+because they offer similar features and share similar properties. For example, they all have a
+\textit{name}, a \textit{label}, an \textit{icon}, can be enabled or disabled, and can be executed
+via \textit{Intent}. Application components are the building blocks of an application and must be
+declared in the application manifest (with a few exceptions). Application manifest is a file where
+application specific metadata are stored. The Android operating system learns what to do with the
+application by reading the metadata.
 
-Colours used in these tabs are explained in \Sref{subsec:app-details-colour-codes}. It is also possible to sort the list
-of components to display blocked or tracker components on top of the list via the \textbf{Sort} option located in the
-overflow menu.
+Colours used in these tabs are explained in \Sref{subsec:app-details-colour-codes}. It is also
+possible to sort the list of components to display blocked or tracker components on top of the list
+via the \textbf{Sort} option located in the three-dots menu.
 %%!!>>
 
 \subsubsection{Activities}\label{subsubsec:activities} %%##$activities-title>>
@@ -369,23 +425,32 @@ overflow menu.
 \textit{Main page} and \textit{App Details page} are two activities). Each activity can have multiple UI components
 known as \textit{widgets} or \textit{fragments}, and each component can be nested or placed on top of each other. The
 developer can also choose to open external files, links, etc. within an activity using a method called
-\textit{intent filters}. For example, when you open a file using your file manager, either your file manager or
-operating system scans the intent filters via PackageManager to find the activities capable of opening the file and
-offers you to open the file with these activities.
+\textit{intent filters}. For example, when you open a file in your file manager, either your file manager or the
+operating system scans the intent filters via PackageManager, find the activities capable of opening the file, and
+list those activities so that you can choose your preferred activity.
 
-Activities which are \textit{exportable} can usually be opened by any third-party applications. Some activities require
-permissions, and if that is the case, only an application having those permissions can open them. In the
-\textit{Activities} tab, activities can be launched via the \textbf{Launch} button. If it is necessary to supply
-additional information such as Intent extras, data or action, long clicking on the \textbf{Launch} button opens the
-\hyperref[sec:interceptor-page]{Activity Interceptor} page which provides such features.
+Activities that are \textit{exportable} can be opened by any third-party applications. However, Some
+activities may require permissions, and only an application having those permissions can open them.
+In the \textit{Activities} tab, certain activities can be launched via the \textbf{Launch} button.
+If it is necessary to supply additional information, such as Intent extras, data or action, long
+clicking on the \textbf{Launch} button opens the \hyperref[sec:interceptor-page]{Activity Interceptor}
+page which provides such features.
 
-\begin{tip}{Notice}
-    If you are unable to open any activity, chances are it has certain dependencies which are not met, e.g.\ you
-    cannot open \textit{App Details} page because it requires you to, at least, supply a package name. Since these
-    dependencies cannot be inferred programmatically, these activities may not be opened via App Manager by default.
+\begin{tip}{Tip}
+    No-root users can grant \texttt{android.permission.WRITE\_SECURE\_SETTINGS} via ADB to launch
+    \textit{non-exportable} activities.
 \end{tip}
 
-It is also possible to create shortcuts of the activities via the \textbf{Create shortcut} button.
+\begin{tip}{Notice}
+    If launching an activity throws an error, it may have certain dependencies which are not met
+    (e.g., \textit{App Details} page in App Manager cannot be launched using the launch button,
+    because it requires a package name). Since the dependencies cannot be inferred programmatically,
+    the activity may not be opened from App Manager by default.
+\end{tip}
+
+It is also possible to create shortcuts of an activity-launch using the \textbf{Create shortcut}
+button. If you need to supply additional information, you can create a shortcut from the Activity
+Interceptor page instead.
 
 \begin{danger}{Caution}
     If you uninstall App Manager, all shortcuts created by App Manager will be lost.
@@ -398,27 +463,30 @@ Unlike \hyperref[subsubsec:activities]{activities} that users can see, \textbf{S
 if you're downloading a video from the internet using your phone's Internet browser, the Internet browser is using a
 \textit{foreground service} to download the content.
 
-When an activity is closed or removed from the \textit{Recents} section, it may be destroyed immediately depending on
-many factors such as how much free memory the phone has. But services can be run indefinitely if desired. If more
-services are run in background, the phone may become slower due to the shortage of memory and/or processing power, and
-the phone's battery will be drained more quickly. Newer Android versions have a battery optimisation feature enabled
-by default for all applications. With this feature enabled, the system can randomly terminate any service. However,
-foreground services (i.e.\ services that run with a fixed notification such as music player) are not typically
-terminated unless the system is low on resources (memory, battery, etc.). Vendor-specific stock ROMs can offer more
-aggressive optimisation. MIUI, for example, has a very aggressive optimisation feature known as \textit{MIUI optimisation}.
+When an activity is closed or removed from the \textit{Recents} page, it may be destroyed
+immediately depending on the amount free memory the phone has, battery statistics, or how the
+activity is configured. But services can be run indefinitely if desired. If more services run in the
+background, the phone may become slower due to the shortage of memory and/or processing power, and
+the phone's battery will be drained more quickly. Newer versions of Android come with a battery
+optimisation feature enabled by default for all applications. With this feature enabled, the system
+can randomly terminate any service depending on the amount of resources the system has or the
+service requires. However, foreground services (i.e., services that run with a fixed notification,
+such as music player or downloader) are not typically terminated unless the system is very low on
+resources (memory, battery, etc.). Certain stock ROMs can offer more aggressive optimisation. MIUI,
+for example, has a very aggressive optimisation feature known as the \textit{MIUI optimisation}.
 
 Both activities and services are run in the same \href{https://stackoverflow.com/questions/7597742}{looper} called
-the main looper, which means the services are not really run in the background. It is the task of the developer to
-ensure this. How do the application communicate with the service? It uses
+the main looper, which means the services do not really run in the background. It is the task of the developer to
+ensure this. How do the application communicate with the services? It uses
 \hyperref[subsubsec:app-details-receivers]{broadcast receiver} or Binder.
 %%!!>>
 
 \subsubsection{Receivers}\label{subsubsec:app-details-receivers} %%##$receivers-title>>
 %%!!receivers<<
 \textbf{Receivers} (also called \textit{broadcast receivers}) can be used to trigger execution of certain tasks when
-certain events occur. These components are called broadcast receivers because they are executed as soon as a broadcast
+certain events occur. These components are called broadcast receivers, because they are executed as soon as a broadcast
 message is received. These broadcast messages are sent using a method called \textit{Intent}. Intent is a special
-feature in Android that can be used to open applications (i.e.\ activities), run services and send broadcast messages.
+feature in Android that can be used to open applications (i.e., activities), run services and send broadcast messages.
 Therefore, like \hyperref[subsubsec:activities]{activities}, broadcast receivers use \textit{intent filters} to receive
 the desired broadcast messages. Broadcast messages can be sent by the system or the application itself. When a broadcast
 message is sent, the corresponding receivers are activated by the system so that they can execute tasks. For example, if
@@ -427,17 +495,18 @@ to the Wi-Fi. This is because broadcast receivers that can receive \texttt{andro
 activated by the system as soon as the data connection is enabled. Since many applications typically use this intent
 filter, they are all activated almost immediately by the system which causes the freezing or lags.
 
-Receivers can also be used for inter-process communication (IPC), i.e.\ it can be used to communicate acrosss multiple
+Receivers can also be used for inter-process communication (IPC), i.e., it can be used to communicate across multiple
 applications or even different components of a single application.
 %%!!>>
 
 \subsubsection{Providers}\label{subsubsec:providers} %%##$providers-title>>
 %%!!providers<<
-\textbf{Providers} (also called \textit{content providers}) are used for data management. For example, when you save an
-APK file or export rules in App Manager, it uses a content provider called \texttt{.fm.FmProvider} to save the APK or
-export the rules. There are many content providers, including the ones provided by the system, to manage various
-content-related tasks such as database management, tracking, searching, etc. Each content provider has a field called
-\textit{Authority} which is unique to the application in the entire Android ecosystem just as the package name.
+\textbf{Providers} are primarily used for data management. For example, when you save an APK file or
+export rules in App Manager, it uses a content provider called \texttt{.fm.FmProvider} to save the
+APK or export the rules. There are many providers, including the ones provided by the system, that
+can be used to manage various content-related tasks, such as database management, tracking,
+searching, etc. Each provider has a field called \textit{Authority} which is unique to the
+application in the entire Android ecosystem just as the package name.
 %%!!>>
 
 \subsubsection{Additional Features for Rooted Phones} %%##$additional-features-for-rooted-phones-title>>
@@ -445,7 +514,7 @@ content-related tasks such as database management, tracking, searching, etc. Eac
 Unlike the no-root users who are mostly spectators in these tabs, root users can perform various operations.
 %%!!>>
 
-\paragraph{Blocking Components} %%##$blocking-components-title>>
+\paragraph{Blocking Components.} %%##$blocking-components-title>>
 %%!!blocking-components<<
 On the right-most side of each component item, there is a switch which can be used to toggle the blocking status of that
 particular component. If \hyperref[subsubsec:instant-component-blocking]{Instant Component Blocking} is not enabled or
@@ -458,7 +527,7 @@ It is also possible to block the component using one of the several methods by l
 \seealsoinline{\hyperref[sec:faq:app-components]{FAQ: App Components}}
 %%!!>>
 
-\paragraph{Blocking Trackers}\label{par:appdetails:blocking-trackers} %%##$blocking-trackers-title>>
+\paragraph{Blocking Trackers.}\label{par:appdetails:blocking-trackers} %%##$blocking-trackers-title>>
 \phantomsection
 %%!!blocking-trackers<<
 It is possible to disable tracker components using the \textbf{Block tracker} option in the three-dots menu. All tracker
@@ -479,7 +548,7 @@ components will be blocked regardless of the tab you're currently in.
 \subsection{Permission Tabs}\label{subsec:permission-tabs} %%##$permission-tabs-title>>
 %%!!permission-tabs<<
 \textbf{App Ops}, \textbf{Uses Permissions} and \textbf{Permissions} tabs are related to permissions. In Android
-communication across applications or processes which do not have the same identity (known as \textit{shared ID}) often
+communication across applications or processes not having the same identity (known as \textit{shared ID}) often
 require permissions. These permissions are managed by the permission controller. Some permissions are considered
 \textit{normal} permissions which are granted automatically if they appear in the application manifest, but
 \textit{dangerous} and \textit{development} permissions require confirmation from the user. Colours used in these tabs
@@ -502,7 +571,7 @@ Others may include the following:
     means the app op can only be used when the application is running in foreground), and some custom modes set by the
     vendors (MIUI uses \textit{ask}, for example).
 
-    \item \textbf{Duration.} The amount of time this application op has been used (there can be negative durations whose
+    \item \textbf{Duration.} The amount of time this app op has been used (there can be negative durations whose
     use cases are currently unknown to me).
 
     \item \textbf{Accept Time.} Last time the app op was accepted.
@@ -555,14 +624,16 @@ permissions at first using the corresponding options in the menu.
 
 \subsubsection{Permissions}\label{subsubsec:permissions} %%##$permissions-title>>
 %%!!permissions<<
-\textbf{Permissions} are usually custom permissions defined by the application itself. These type of permissions are
-marked as \textit{Internal} permissions. It also contains permissions declared in other applications which are marked as
-\textit{External} permissions. External permissions are specified in the application components as the dependencies i.e.
-an application may invoke the component only if holds the specified permission. Here's a complete description of each
-item that is displayed there:
+\textbf{Permissions} are usually custom permissions defined by the application itself. These type of
+permissions are marked as \textit{Internal} permissions. It also contains permissions declared by
+other applications which are marked as \textit{External} permissions. An external permission can be
+specified in an \textit{exported} application component so that another application may invoke the
+component only if it holds the permission. Below is a complete description of each item displayed in
+this tab:
 \begin{itemize}
-    \item \textbf{Name.} Each permission has a unique name like \texttt{android.permission.INTERNET} but multiple
-    applications can request the same permission.
+    \item \textbf{Name.} A permission has a unique name (e.g., \texttt{android.permission.INTERNET})
+    that multiple applications can request. The application that declared the permission is
+    automatically granted and cannot be revoked.
 
     \item \textbf{Icon.} Each permission can have a custom icon. The other permission tabs do not have any icon because
     they do not contain any icon in the application manifest.
@@ -584,16 +655,18 @@ item that is displayed there:
 
 \subsection{Signatures Tab}\label{subsec:signatures-tab} %%##$signatures-tab-title>>
 %%!!signatures-tab_1<<
-\textbf{Signatures} are actually called signing information. An application is signed using one or more signing
-certificates by the application developers before publishing it. The integrity of an application i.e.\ whether the
-application is from the actual developer and isn't modified by other people can be checked using the signing information;
-because when an application is modified by an unauthorised entity, the application cannot be signed using the original
-certificates again because the signing information are kept private by the actual developer. Signing information can be
-verified using checksums. Checksums are generated from the certificates themselves. If the developer supplies the
-checksums for the signing certificates, they can be matched against the checksums generated in the \textbf{Signatures}
-tab to verify the application. For example, if you have downloaded App Manager from GitHub or Telegram Channel, you can
-verify whether the application is actually released by me by simply matching the following \textit{SHA256} checksum with
-the one displayed in this tab:
+\textbf{Signatures} are actually called signing information. An application is signed with one or
+more signing keys by its developer before publishing it. The integrity of an application, i.e.,
+whether the application is from the actual developer and has not been modified by another person,
+can be checked using the signing certificate included in the APK files. This is because when an
+application is modified by an unauthorised entity, the application can longer be signed with the
+original signing keys since the signing keys are unknown to the entity. One way to verify the
+integrity of an application is via the checksums generated from the certificates. If the developer
+supplies the checksums for the signing certificates, they can be compared against the checksums
+generated in the \textbf{Signatures} tab to verify the application. For example, if you have
+downloaded App Manager from GitHub or Telegram Channel, you can verify whether the application was
+actually released by me by simply matching the following \textit{SHA256} checksum with the one
+displayed in this tab:
 %%!!>>
 \begin{Verbatim}
 320c0c0fe8cef873f2b554cb88c837f1512589dcced50c5b25c43c04596760ab
@@ -604,20 +677,32 @@ Several hashing algorithms are used to generate checksums in this tab. They incl
 \textit{SHA256} and \textit{SHA512}.
 
 \begin{danger}{Caution}
-    Signing information should be verified using a reliable hashing algorithm such as \textit{SHA256}. DO NOT rely on
-    \textit{MD5} or \textit{SHA1} checksums as they are known to generate the same checksums for multiple certificates.
+    Signing information should be verified using a reliable hashing algorithm, such as \textit{SHA256}.
+    DO NOT rely on \textit{MD5} or \textit{SHA1} checksums as they are known to generate the same
+    checksums for multiple certificates.
 \end{danger}
+%%!!>>
+
+\subsection{Uses Features tab}\label{subsec:uses-features-tab} %%##$uses-features-tab-title>>
+%%!!uses-features-tab<<
+\textbf{Uses Features} tab lists the features declared by the application, such as OpenGL ES,
+telephony, and leanback. Some features can be required by the application, and some features can be
+optional. Required features must be present in the system along with the required version.
+Otherwise, any attempt to install the application will be denied by the system. Colours used in this
+tab are explained in \Sref{subsec:app-details-colour-codes}.
+%%!!>>
+
+\subsection{Configurations tab}\label{subsec:configurations-tab} %%##$configurations-tab-title>>
+%%!!configurations-tab<<
+\textbf{Configurations} tab lists the configurations required by the application, such as input
+method type (qwerty, 12 key), touch screen type (finger, stylus, etc.), and navigation type (dial
+pad, trackball, wheel). This tab is going to be empty for most applications.
 %%!!>>
 
 \subsection{Shared Libraries Tab}\label{subsec:shared-libs-tab} %%##$shared-libs-tab-title>>
 %%!!shared-libs-tab<<
-\textbf{Shared libraries} tab lists all the legacy JAR dependencies as well as JNI (Java native interface) libraries.
-For JNI libraries, it specifies platform (x86/x86\_64/ARM/AArch64), architecture (32/64 bit), object type (shared object
-or executable), etc.
-%%!!>>
-
-\subsection{Other Tabs}\label{subsec:other-tabs} %%##$other-tabs-title>>
-%%!!other-tabs<<
-Other tabs list android manifest components such as features and configurations. A complete description
-about these tabs may be available in the future.
+\textbf{Shared libraries} tab lists the legacy JAR dependencies, any static shared library
+dependencies (currently, the only known cases are the Chromium-based browsers and WebViews) as well
+as the JNI (Java native interface) libraries. For JNI libraries, it specifies platform
+(x86/x86\_64/ARM/AArch64), architecture (32/64 bit), object type (shared object or executable), etc.
 %%!!>>
