@@ -31,7 +31,6 @@
     <string name="pages$main-page$$profile_name-title">Nombre del perfil</string>
     <string name="pages$main-page$$1-click-ops-title">Operaciones con 1 clic</string>
     <string name="pages$main-page$$app-usage-title">Uso de la aplicación</string>
-    <string name="pages$main-page$$system-config-title">Configuración del sistema</string>
     <string name="pages$main-page$$running-apps-title">Aplicaciones en ejecución</string>
     <string name="pages$main-page$$profiles-title">Perfiles</string>
     <string name="pages$main-page$$apk-updater-title">Actualizador de APK</string>
@@ -56,7 +55,6 @@
     <string name="pages$app-details-page$$permission-tabs-title">Pestañas de permisos</string>
     <string name="pages$app-details-page$$uses-permissions-title">Permisos de uso</string>
     <string name="pages$app-details-page$$permissions-title">Permisos</string>
-    <string name="pages$app-details-page$$other-tabs-title">Otras pestañas</string>
     <string name="pages$one-click-ops-page$$section-title">Página de operaciones con 1 clic</string>
     <string name="pages$profile-page$$apps-tab-title">Pestaña de aplicaciones</string>
     <string name="pages$profile-page$$configurations-tab-title">Pestaña de configuraciones</string>
@@ -66,7 +64,6 @@
     <string name="pages$profile-page$$permissions-title">Permisos</string>
     <string name="pages$profile-page$$backup-restore-title">Copia de seguridad/restauracion</string>
     <string name="pages$profile-page$$export-blocking-rules-title">Exportar reglas de bloqueo</string>
-    <string name="pages$profile-page$$disable-title">Deshabilitar</string>
     <string name="pages$profile-page$$force-stop-title">Parada forzosa</string>
     <string name="pages$profile-page$$clear-cache-title">Limpiar caché</string>
     <string name="pages$profile-page$$clear-data-title">Limpiar datos</string>
@@ -95,8 +92,6 @@
     <string name="pages$settings-page$$device-info-title">Sobre este dispositivo</string>
     <string name="pages$settings-page$language">Configurar el idioma de la aplicación. App Manager admite actualmente 21 (veintiún) idiomas.</string>
     <string name="pages$settings-page$app-theme">Configurar el tema de la aplicación.</string>
-    <string name="pages$settings-page$show-users-in-installer">Si se activa, se mostrará una lista de usuarios antes de instalar la aplicación. La aplicación se instalará
-\nsólo para los usuarios especificados.</string>
     <string name="pages$settings-page$backup-restore">Configuración relacionada con \\hyperref[sec:backup-restore]{back up/restore}.</string>
     <string name="pages$settings-page$backup-options">Personalice el \\textit{cuadro de diálogo de copia de seguridad/restauración} que se muestra al realizar una copia de seguridad. 
 \n
@@ -142,7 +137,6 @@
     <string name="pages$main-page$$how-app-ops-work-title">Un elemento de la lista de aplicaciones en la página principal</string>
     <string name="pages$main-page$$termux-title">Termux</string>
     <string name="pages$main-page$$options-menu-title">Opciones de menú</string>
-    <string name="pages$main-page$$log-viewer-title">Visor de registro</string>
     <string name="pages$main-page$intro">La página principal muestra todas las aplicaciones instaladas, desinstaladas y con copia de seguridad. Un solo clic en cualquier elemento de la aplicación instalada
 \nabre la respectiva \\hyperref[sec:app-details-page]{página de detalles de la aplicación}. Para las aplicaciones del sistema desinstaladas, se muestra un
 \ndiálogo que puede utilizarse para reinstalar la aplicación. Utilizando la opción \\hyperlink{par:main-page-sort}{ordenación} de las
@@ -158,9 +152,6 @@
     <string name="pages$main-page$instructions">Al hacer clic en \\textbf{Instrucciones} se abre la versión sin conexión del manual de usuario de App Manager. También puede abrir la
 \nversión en línea si la función correspondiente no está instalada, o si no hay una WebView en el sistema para cargar el manual.
 \npresente en el sistema para cargar el manual.</string>
-    <string name="pages$main-page$system-config">Este elemento del menú abre una nueva página donde se muestran varias configuraciones del sistema, listas negras/listas blancas incluidas en Android por el
-\nOEM, el proveedor, el AOSP o los módulos Magisk. Requiere root. Por lo tanto, este elemento del menú no aparecerá
-\naparece si el permiso de root no está disponible para App Manager.</string>
     <string name="pages$app-details-page$additional-features-for-rooted-phones">A diferencia de los usuarios no-root, que son en su mayoría espectadores en estas pestañas, los usuarios root pueden realizar varias operaciones.</string>
     <string name="pages$app-details-page$$app-ops-title">Operaciones de aplicaciones</string>
     <string name="pages$app-details-page$$signatures-tab-title">Pestañas de firmas</string>
@@ -178,8 +169,6 @@
     <string name="pages$profile-page$force-stop">Permita que los paquetes seleccionados se detengan a la fuerza.</string>
     <string name="pages$profile-page$clear-data">Habilitar el borrado de los datos para los paquetes seleccionados.</string>
     <string name="pages$settings-page$$enable-disable-features-title">Habilitar/deshabilitar características</string>
-    <string name="pages$app-details-page$other-tabs">Otras pestañas enumeran los componentes del manifiesto androide, como las características y las configuraciones. Una descripción completa
-\nsobre estas pestañas estará disponible pronto.</string>
     <string name="pages$one-click-ops-page$$block-components-dots-title">Componentes de bloque\\puntos</string>
     <string name="pages$profiles-page$$section-title">Página de perfiles</string>
     <string name="pages$profiles-page$$options-menu-title">Opciones de menú</string>
@@ -195,7 +184,6 @@
 \n Si se desactiva el bloqueo de pantalla en Android después de activar esta configuración, App Manager no se abrirá hasta que se vuelva a activar.
 \n\\end{warning}</string>
     <string name="pages$settings-page$$signature-schemes-title">Esquemas de firma</string>
-    <string name="pages$settings-page$$show-users-in-installer-title">Mostrar usuarios en el instalador</string>
     <string name="pages$settings-page$$compression-method-title">Método de compresión</string>
     <string name="pages$settings-page$$backup-options-title">Opciones de copia de seguridad</string>
     <string name="pages$settings-page$$instant-component-blocking-title">Bloqueo instantáneo de componentes</string>

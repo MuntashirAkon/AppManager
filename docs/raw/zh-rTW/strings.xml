@@ -8,8 +8,6 @@
     <string name="intro$main$$source-code-links-title">源碼鏈接</string>
     <string name="pages$main-page$$apk-updater-title">APK更新器</string>
     <string name="pages$main-page$$settings-title">設置</string>
-    <string name="pages$main-page$$log-viewer-title">日志查看器</string>
-    <string name="pages$app-details-page$$other-tabs-title">其他選項卡</string>
     <string name="intro$main$$official-sources-title">官方來源</string>
     <string name="intro$main$$contact-title">聯系我們</string>
     <string name="intro$main$$donation-title">捐贈 \\&amp; 資助</string>
@@ -34,7 +32,6 @@
     <string name="pages$main-page$$batch-operations-title">批處理</string>
     <string name="pages$main-page$$instructions-title">說明</string>
     <string name="pages$main-page$$filter-title">篩選</string>
-    <string name="pages$main-page$$system-config-title">系統配置</string>
     <string name="pages$main-page$$colour-codes-title">顏色代碼含義</string>
     <string name="pages$main-page$$profile_name-title">配置文件名稱</string>
     <string name="pages$main-page$$profiles-title">配置文件</string>
@@ -461,7 +458,6 @@
 \n \\item \\textbf{群組(Group)} 與權限關聯的群組（如果有），幾個相關的權限通常可以組合在一起。
 \n\\end{itemize}</string>
     <string name="pages$profile-page$$export-blocking-rules-title">導出屏蔽規則</string>
-    <string name="pages$profile-page$$disable-title">禁用</string>
     <string name="pages$settings-page$$app-theme-title">應用主題</string>
     <string name="pages$settings-page$$screen-lock-title">屏幕鎖定</string>
     <string name="pages$settings-page$$encryption-title">加密</string>
@@ -479,8 +475,6 @@
 \n \\item 使用情況(Usage access): 關閉此選項後，App Manager 將永遠不會請求 \\textit{Usage Access} 權限.
 \n \\item 日志瀏覽器(Log viewer)
 \n\\end{itemize}</string>
-    <string name="pages$settings-page$show-users-in-installer">對於 root/AD B用戶，在安裝應用之前將顯示一個用戶列表.
-\n該應用將只對指定的用戶（或者如果選擇了所有用戶）安裝.</string>
     <string name="pages$settings-page$backup-restore">與 \\hyperref[sec:backup-restore]{備份恢覆} 相關的設置.</string>
     <string name="pages$scanner-page$$missing-signatures-title">缺少簽名</string>
     <string name="pages$interceptor-page$$send-edited-intent-title">發送編輯過的意圖(Intent)</string>
@@ -528,10 +522,6 @@
 \n\\hyperref[subsec:enable/disable-features]{設置}。</string>
     <string name="pages$main-page$profiles">此菜單項打開 \\hyperref[sec:profiles-page]{profiles page}。配置文件是一種配置經常使用的方法
 \n任務。它們也可以通過快捷方式調用。</string>
-    <string name="pages$main-page$log-viewer">此菜單項可打開日志查看器頁面，其使用 \\texttt{logcat} 命令顯示並管理日志.
-\n此頁面默認只能顯示 App Manager 自身進程的日志記錄，但是，
-\n若授予\\texttt{android.permission.READ\\_LOGS} 權限後，則可顯示來自所有進程的日志.
-\n若當前\\hyperref[subsec:mode-of-operation]{運行模式} 為 root 或 ADB\\@，此權限將自動授予.</string>
     <string name="pages$main-page$termux">如果系統中已安裝\\href{https://github.com/termux/termux-app}{Termux} ，則可直接從此菜單項運行會話（或
 \n新會話）.
 \n如果應用不存在，則此選項將被隱藏.</string>
@@ -654,7 +644,6 @@
     <string name="pages$settings-page$$signature-schemes-title">簽名方案</string>
     <string name="pages$settings-page$$signing-key-title">簽名密鑰</string>
     <string name="pages$settings-page$$installer-title">安裝器</string>
-    <string name="pages$settings-page$$show-users-in-installer-title">在安裝器中顯示用戶</string>
     <string name="pages$settings-page$$sign-apk-title">簽名 APK</string>
     <string name="pages$settings-page$$install-location-title">安裝位置</string>
     <string name="pages$settings-page$$remove-all-rules-title">刪除所有規則</string>
@@ -692,9 +681,6 @@
 \n不能通過 \\hyperref[sec:profiles-page]{Profiles page} 完成。</string>
     <string name="pages$main-page$1-click-ops">\\textbf{1-Click Ops} 代表單擊操作。它打開 \\hyperref[sec:1-click-ops-page]{corresponding
 \npage} 在新活動中。</string>
-    <string name="pages$main-page$system-config">此菜單項打開一個新頁面，其中包含 Android 中包含的各種系統配置、黑名單/白名單
-\n顯示 OEM、供應商、AOSP 或 Magisk 模塊。它需要根。因此，該菜單項不會
-\n如果 App Manager 無法使用 root 權限，則會列出。</string>
     <string name="pages$one-click-ops-page$$1-click-back-up-title">備份</string>
     <string name="pages$one-click-ops-page$$1-click-restore-title">恢覆</string>
     <string name="pages$profiles-page$$section-title">配置文件頁面</string>

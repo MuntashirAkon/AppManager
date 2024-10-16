@@ -63,14 +63,10 @@
     <string name="pages$main-page$$version-info-title">버전 정보</string>
     <string name="pages$main-page$$profile_name-title">프로필 이름</string>
     <string name="pages$main-page$$app-usage-title">앱 사용량</string>
-    <string name="pages$main-page$$system-config-title">시스템 구성</string>
     <string name="pages$main-page$$filter-title">필터</string>
     <string name="pages$main-page$profile_name">\\hyperref[sec:profiles-page]{프로필}에만 존재하는 앱을 나열할 수도 있습니다. 이는
 \n\\hyperref[sec:profiles-page]{프로필 페이지}에서 할 수 없는 특정 작업을 프로필에서
 \n실행하는데 유용할 수 있습니다 (예를 들어, 해당 프로필의 앱을 전부 제거하기).</string>
-    <string name="pages$main-page$system-config">이 메뉴 항목은 OEM, 공급업체, AOSP 또는 Magisk 모듈에 의해 Android에 포함된 다양한 시스템 구성,
-\n블랙리스트/화이트리스트가 표시되는 새 페이지를 엽니다. 이를 위해 루팅(rooting)이 필요합니다. 따라서 App Manager에서
-\n루트(root)권한을 사용할 수 없는 경우 이 메뉴 항목이 표시되지 않습니다.</string>
     <string name="pages$app-details-page$$servcies-title">서비스</string>
     <string name="pages$app-details-page$$receivers-title">수신자</string>
     <string name="pages$app-details-page$$providers-title">공급자</string>
@@ -85,7 +81,6 @@
     <string name="pages$main-page$$application-types-title">앱 종류</string>
     <string name="pages$main-page$$running-apps-title">실행 중인 앱</string>
     <string name="pages$main-page$$profiles-title">프로필</string>
-    <string name="pages$main-page$$log-viewer-title">로그 뷰어</string>
     <string name="pages$main-page$$apk-updater-title">APK 업데이터</string>
     <string name="pages$main-page$$settings-title">설정</string>
     <string name="pages$main-page$options-menu">옵션 메뉴는 나열된 앱을 정렬 및 필터링하고 App Manager 내부 또는 외부의 다른 페이지로 이동하는 데
@@ -97,7 +92,6 @@
     <string name="pages$app-details-page$$permissions-title">권한</string>
     <string name="pages$app-details-page$$signatures-tab-title">서명 탭</string>
     <string name="pages$app-details-page$$shared-libs-tab-title">공유 라이브러리 탭</string>
-    <string name="pages$app-details-page$$other-tabs-title">기타 탭</string>
     <string name="pages$app-details-page$intro">\\textbf{앱 세부정보} 페이지는11 (십일)개의 탭으로 구성되있습니다. Manifest의 모든 속성,
 \n\\hyperref[ch:app-ops]{앱 작업}, 서명 정보, 라이브러리 등을 포함하여
 \n앱이 가질 수 있는 거의 모든 정보를 설명합니다.</string>

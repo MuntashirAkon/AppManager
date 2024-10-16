@@ -71,10 +71,8 @@
     <string name="pages$main-page$$profile_name-title">配置文件名称</string>
     <string name="pages$main-page$$1-click-ops-title">一键操作</string>
     <string name="pages$main-page$$app-usage-title">应用使用情况</string>
-    <string name="pages$main-page$$system-config-title">系统配置</string>
     <string name="pages$main-page$$running-apps-title">正在运行的应用</string>
     <string name="pages$main-page$$profiles-title">配置文件</string>
-    <string name="pages$main-page$$log-viewer-title">日志查看器</string>
     <string name="pages$main-page$$termux-title">Termux 终端模拟器</string>
     <string name="pages$main-page$$settings-title">设置</string>
     <string name="pages$main-page$options-menu">选项菜单提供了几个选项，可用以对列出的应用程序进行排序和过滤，
@@ -91,7 +89,6 @@
     <string name="pages$app-details-page$$receivers-title">(广播)接收器 ((Broadcast)Receiver)</string>
     <string name="pages$app-details-page$$providers-title">(内容)提供者 ((Content)Providers)</string>
     <string name="pages$app-details-page$$blocking-components-title">阻止组件</string>
-    <string name="pages$app-details-page$$other-tabs-title">其他选项卡</string>
     <string name="pages$app-details-page$intro">\\textbf{应用详情} 页面由 11 个标签页组成。它描述了一个应用程序所能有的几乎所有信息, 
 \n包括其清单中的所有属性、\\hyperref[ch:app-ops]{应用操作}、签名
 \n信息、库等等。</string>
@@ -420,7 +417,6 @@
     <string name="pages$profile-page$$permissions-title">权限</string>
     <string name="pages$profile-page$$backup-restore-title">备份/恢复</string>
     <string name="pages$profile-page$$export-blocking-rules-title">导出屏蔽规则</string>
-    <string name="pages$profile-page$$disable-title">禁用</string>
     <string name="pages$profile-page$$force-stop-title">强制停止</string>
     <string name="pages$profile-page$$clear-cache-title">清除缓存</string>
     <string name="pages$profile-page$$clear-data-title">清除数据</string>
@@ -433,7 +429,6 @@
     <string name="pages$settings-page$$app-theme-title">应用主题</string>
     <string name="pages$settings-page$$screen-lock-title">屏幕锁定</string>
     <string name="pages$settings-page$$installer-title">安装器</string>
-    <string name="pages$settings-page$$show-users-in-installer-title">在安装器中显示用户</string>
     <string name="pages$settings-page$$sign-apk-title">签名 APK</string>
     <string name="pages$settings-page$$compression-method-title">压缩方法</string>
     <string name="pages$settings-page$$backup-options-title">备份选项</string>
@@ -500,10 +495,6 @@
     <string name="appendices$specifications$$background-title">背景介绍</string>
     <string name="appendices$specifications$$rules-file-format-title">规则文件格式</string>
     <string name="appendices$specifications$$internal-title">内部</string>
-    <string name="pages$main-page$log-viewer">此菜单项可打开日志查看器页面，其使用 \\texttt{logcat} 命令显示并管理日志.
-\n此页面默认只能显示 App Manager 自身进程的日志记录，但是，
-\n若授予\\texttt{android.permission.READ\\_LOGS} 权限后，则可显示来自所有进程的日志.
-\n若当前\\hyperref[subsec:mode-of-operation]{运行模式} 为 root 或 ADB\\@，此权限将自动授予.</string>
     <string name="pages$main-page$apk-updater">若系统中已安装\\href{https://github.com/rumboalla/apkupdater}{APK Updater} ，则可通过此菜单项直接打开.
 \n若系统中不存在该应用，则该选项将被隐藏.</string>
     <string name="pages$main-page$termux">如果系统中已安装\\href{https://github.com/termux/termux-app}{Termux} ，则可直接从此菜单项运行会话（或
@@ -577,8 +568,6 @@
 \n\\end{tip}</string>
     <string name="pages$settings-page$$enable-disable-features-title">启用/禁用功能</string>
     <string name="pages$settings-page$$apk-signing-title">APK 签名</string>
-    <string name="pages$settings-page$show-users-in-installer">启用后，将在安装应用前显示用户列表。将只为特定用户
-\n安装应用。</string>
     <string name="pages$settings-page$sign-apk">安装应用前是否对 APK 文件进行签名。可用 \\hyperref[subsec:apk-signing]{APK 签名} 页面
 \n来配置签名。</string>
     <string name="pages$scanner-page$$section-title">扫描器页面</string>

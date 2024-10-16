@@ -115,10 +115,8 @@
     <string name="pages$main-page$$profile_name-title">Profilname</string>
     <string name="pages$main-page$$1-click-ops-title">1-Klick-Operationen</string>
     <string name="pages$main-page$$app-usage-title">App Nutzung</string>
-    <string name="pages$main-page$$system-config-title">System-Konfiguration</string>
     <string name="pages$main-page$$running-apps-title">Laufende Apps</string>
     <string name="pages$main-page$$profiles-title">Profile</string>
-    <string name="pages$main-page$$log-viewer-title">Log-Anzeige</string>
     <string name="pages$main-page$$apk-updater-title">APK-Updater</string>
     <string name="pages$main-page$$termux-title">Termux</string>
     <string name="pages$main-page$$settings-title">Einstellungen</string>
@@ -219,10 +217,6 @@
 \nElement. Ein normaler Klick auf ein Element öffnet einen Dialog, in dem detailliertere Informationen angezeigt werden.</string>
     <string name="pages$main-page$profiles">Dieser Menüpunkt öffnet die Seite \\hyperref[sec:profiles-page]{Profile-Seite}. Profile sind eine Möglichkeit zur Konfiguration regelmäßig verwendeter
 \nAufgaben. Sie können auch über Tastenkombinationen aufgerufen werden.</string>
-    <string name="pages$main-page$log-viewer">Dieser Menüpunkt öffnet die Log-Betrachter Seite, die Protokolle mit dem Befehl \\texttt{logcat} anzeigen und verwalten kann. Unter
-\nStandardmäßig kann diese Seite nur die Aktivitäten des App Managers anzeigen. Sie kann jedoch Protokolle von allen Prozessen anzeigen
-\nProzesse anzeigen, wenn \\texttt{android.permission.READ\\_LOGS} gewährt wird. Diese Berechtigung wird automatisch erteilt, wenn die aktuelle
-\n\\hyperref[subsec:mode-of-operation]{Betriebsmodus} entweder root oder ADB\\@ ist.</string>
     <string name="pages$app-details-page$$section-title">App-Detailseite</string>
     <string name="pages$main-page$apk-updater">Wenn die App \\href{https://github.com/rumboalla/apkupdater}{APK Updater} im System installiert ist, kann sie
 \ndirekt über diesen Menüpunkt geöffnet werden. Die Option bleibt ausgeblendet, wenn die App nicht im System vorhanden ist.</string>
@@ -244,7 +238,6 @@
     <string name="pages$app-details-page$$permission-tabs-title">Registerkarten Berechtigungen</string>
     <string name="pages$app-details-page$$uses-permissions-title">Verwendete Berechtigungen</string>
     <string name="pages$app-details-page$$permissions-title">Berechtigungen</string>
-    <string name="pages$app-details-page$$other-tabs-title">Sonstige Registerkarten</string>
     <string name="pages$app-details-page$$signatures-tab-title">Registerkarte Signaturen</string>
     <string name="pages$app-details-page$intro">\\textbf{Anwendungsdetails} Seite besteht aus 11 (elf) Registerkarten. Sie beschreibt fast alle Informationen, die
 \neine Anwendung haben kann, einschließlich aller Attribute aus ihrem Manifest, \\hyperref[ch:app-ops]{Anwendungsoperationen}, Signier
@@ -739,9 +732,6 @@
 \nanwendungen aufgelistet werden, indem sowohl \\textit{Benutzeranwendungen} als auch \\textit{Inaktivierte Anwendungen} ausgewählt werden. Dies kann besonders nützlich sein
 \n für \\hyperref[subsec:batch-operations]{Batch-Operationen}, bei denen das Filtern der Benutzeranwendungen notwendig sein kann,
 \n um bestimmte Operationen sicher auszuführen.</string>
-    <string name="pages$main-page$system-config">Dieser Menüpunkt öffnet eine neue Seite, auf der verschiedene Systemkonfigurationen, Blacklists/Whitelists, die in Android durch den
-\nOEM, dem Hersteller, dem AOSP oder den Magisk-Modulen enthalten sind, angezeigt werden. Dazu ist Root erforderlich. Daher wird dieser Menüpunkt nicht angezeigt,
-\nwenn keine Root-Berechtigung für App Manager verfügbar ist.</string>
     <string name="pages$main-page$app-usage">App-Nutzungsstatistiken wie z. B. Bildschirmzeit, Datennutzung (sowohl mobil als auch Wi-Fi), \\textit{die Haufigkeit, die
 \n eine App geöffnet wurde}, können durch Klicken auf die Option \\textbf{App-Nutzung} im Menü aufgerufen werden. Es erfordert jedoch
 \ndie Berechtigung \\textit{Nutzungszugriff}. Dieser Menüpunkt wird nicht aufgeführt, wenn die Nutzungszugriffsfunktion in
@@ -774,8 +764,6 @@
 \ngenerierten Prüfsummen abgeglichen werden, um die Anwendung zu verifizieren. Wenn Sie zum Beispiel App Manager von GitHub oder dem Telegram Channel heruntergeladen haben, können Sie
 \nüberprüfen, ob die Anwendung tatsächlich von mir freigegeben wurde, indem Sie einfach die folgende \\textit{SHA256}-Prüfsumme mit
 \nder auf dieser Registerkarte angezeigten:</string>
-    <string name="pages$app-details-page$other-tabs">Auf anderen Registerkarten werden Komponenten des Android-Manifests wie Funktionen und Konfigurationen aufgelistet. Eine vollständige Beschreibung
-\nüber diese Registerkarten wird in Kürze verfügbar sein.</string>
     <string name="pages$one-click-ops-page$$section-title">1-Klick-Ops Seite</string>
     <string name="pages$one-click-ops-page$$block-unblock-trackers-title">Blockieren/Entsperren von Trackern</string>
     <string name="pages$one-click-ops-page$$block-components-dots-title">Block Komponenten\\ Punkte</string>
@@ -948,7 +936,6 @@
     <string name="pages$profile-page$$permissions-title">Berechtigungen</string>
     <string name="pages$profile-page$$backup-restore-title">Sichern/Wiederherstellen</string>
     <string name="pages$profile-page$$export-blocking-rules-title">Regeln für die Exportsperre</string>
-    <string name="pages$profile-page$$disable-title">Deaktivieren</string>
     <string name="pages$profile-page$$force-stop-title">Zwangsstopp</string>
     <string name="pages$profile-page$$clear-cache-title">Zwischenspeicher löschen</string>
     <string name="pages$profile-page$$clear-data-title">Daten löschen</string>
@@ -1125,7 +1112,6 @@
     <string name="pages$settings-page$$language-title">Sprache</string>
     <string name="pages$settings-page$$installer-app-title">InstallationsApps</string>
     <string name="pages$settings-page$$installer-title">Installationsprogramm</string>
-    <string name="pages$settings-page$$show-users-in-installer-title">Benutzer im Installationsprogramm anzeigen</string>
     <string name="pages$settings-page$$sign-apk-title">APK signieren</string>
     <string name="pages$settings-page$$install-location-title">Installationsort</string>
     <string name="pages$settings-page$$backup-restore-title">Sichern/Wiederherstellen</string>
@@ -1144,8 +1130,6 @@
 \ndeaktiviert werden (unabhängig von den eingegebenen Werten), indem Sie im Eingabedialog auf die Schaltfläche \\textit{deaktivieren} klicken.</string>
     <string name="pages$profile-page$block-trackers">Aktiviert die Sperrung oder Entsperrung der Tracker-Komponenten der ausgewählten Pakete je nach dem Wert von \\hyperref[subsubsec:profile-state]{Status}.
 \nWenn der Zustand \\textit{EIN} ist, werden die Tracker blockiert, und wenn der Zustand \\textit{AUS} ist, werden die Tracker entsperrt.</string>
-    <string name="pages$profile-page$disable">Ermöglicht die Aktivierung oder Deaktivierung der ausgewählten Pakete in Abhängigkeit vom Wert von \\hyperref[subsubsec:profile-state]{Status}.
-\nWenn der Zustand \\textit{Ein} ist, werden die Pakete deaktiviert, und wenn der Zustand \\textit{Aus} ist, werden die Pakete aktiviert.</string>
     <string name="pages$settings-page$$backup-apps-with-keystore-title">Anwendungen mit Android KeyStore sichern</string>
     <string name="pages$profile-page$export-blocking-rules">\\begin{danger}{Achtung}
 \n Diese Option ist noch nicht implementiert.
@@ -1259,8 +1243,6 @@
     <string name="pages$settings-page$import-export-keystore">Importieren oder exportieren Sie den von App Manager verwendeten KeyStore. Dies ist ein Bouncy Castle KeyStore mit der Erweiterung \\texttt{bks}.
 \nDaher werden andere KeyStore wie Java KeyStore (JKS) oder PKCS \\#12 nicht unterstützt.
 \nWenn ein Schlüssel aus einem solchen KeyStore importiert werden muss, sollten die entsprechenden Optionen wie oben angegeben gewählt werden.</string>
-    <string name="pages$settings-page$show-users-in-installer">Wenn diese Option aktiviert ist, wird vor der Installation der Anwendung eine Liste der Benutzer angezeigt. Die Anwendung wird 
-\nnur für die angegebenen Benutzer installiert.</string>
     <string name="pages$settings-page$installer-app">Wählen Sie die Installationsanwendung aus. Dies ist nützlich für Anwendungen, die explizit das Installationsprogramm prüfen, um festzustellen, ob die Anwendung rechtmäßig installiert wurde.
 \nDies funktioniert nur für Root- oder ADB-Benutzer.
 \n

@@ -42,9 +42,7 @@
     <string name="pages$main-page$$apk-updater-title">Trình cập nhật APK</string>
     <string name="pages$main-page$$batch-operations-title">Hoạt động hàng loạt</string>
     <string name="pages$main-page$$1-click-ops-title">1-Nhấp vào Hoạt động</string>
-    <string name="pages$main-page$$system-config-title">Cấu hình hệ thống</string>
     <string name="pages$main-page$$running-apps-title">Đang chạy các ứng dụng</string>
-    <string name="pages$main-page$$log-viewer-title">Trình xem nhật ký</string>
     <string name="pages$main-page$options-menu">Menu tùy chọn cung cấp một số tùy chọn có thể được sử dụng để sắp xếp và lọc các ứng dụng được liệt kê cũng như để điều hướng
 \nđến các trang khác nhau trong hoặc ngoài Trình quản lý ứng dụng.</string>
     <string name="pages$main-page$list-options">\\textbf{Liệt kê các tùy chọn} chứa các tùy chọn để sắp xếp và lọc danh sách trong trang chính.</string>
