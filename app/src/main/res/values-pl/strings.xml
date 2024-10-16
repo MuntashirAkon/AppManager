@@ -1524,4 +1524,11 @@
     <string name="mode_of_op_custom_command_title">Własna komenda</string>
     <string name="mode_of_op_custom_command">Jeśli nie możesz użyć żadnego z trybów, możesz uruchomić następujące polecenie w dowolnej obsługiwanej powłoce, aby uruchomić App Manager w trybie uprzywilejowanym:</string>
     <string name="mode_of_op_alternative_custom_command">Jeśli po wykonaniu powyższego polecenia pojawi się błąd \"odmowa uprawnień\", uruchom następujące polecenie:</string>
+    <string name="sensors">Czujniki</string>
+    <string name="tag_sensors_disabled">Czujniki wyłączone</string>
+    <string name="pref_use_system_font">Używaj czcionki systemowej</string>
+    <string name="pref_use_system_font_msg">Używa domyślnej czcionki systemowej zamiast czcionki material.<font fgcolor="#ff0000"> Jest to funkcja eksperymentalna.</font></string>
+    <string name="actual_installer">Obecny instalator</string>
+    <string name="apk_source">Źródło APK</string>
+    <string name="backup_cache">Pamięć podręczna</string>
 </resources>
