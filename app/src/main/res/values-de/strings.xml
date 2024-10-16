@@ -361,7 +361,6 @@
     <string name="features">Funktionalitäten</string>
     <string name="whats_new">Was gibt\'s Neues</string>
     <string name="blocking_rules">Blockierregeln</string>
-    <string name="cache">Cache nicht einbeziehen</string>
     <string name="external_data">Externe Daten</string>
     <string name="data">Daten</string>
     <string name="backup">Sichern</string>

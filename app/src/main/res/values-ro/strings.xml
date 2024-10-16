@@ -228,7 +228,6 @@
     <string name="community">Comunitate</string>
     <string name="pref_import_existing">Importă regulile existente</string>
     <string name="input_app_ops">Aplicații ops de intrare</string>
-    <string name="cache">Memoria cache</string>
     <string name="backup">Copie de rezervă</string>
     <string name="restore">Restaurare</string>
     <string name="apply_to_system_apps">Se aplică la aplicațiile de sistem</string>

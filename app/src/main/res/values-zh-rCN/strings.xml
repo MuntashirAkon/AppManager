@@ -349,7 +349,6 @@
     <string name="features">特性</string>
     <string name="whats_new">更新内容</string>
     <string name="blocking_rules">屏蔽规则</string>
-    <string name="cache">不包括缓存</string>
     <string name="external_data">外部数据</string>
     <string name="data">数据 </string>
     <string name="backup">备份</string>

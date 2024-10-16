@@ -731,7 +731,6 @@
     <string name="backup">Cadangan</string>
     <string name="data">Data</string>
     <string name="external_data">Data eksternal</string>
-    <string name="cache">Kecualikan cache</string>
     <string name="blocking_rules">Memblokir aturan</string>
     <string name="whats_new">Apa yang baru</string>
     <string name="features">Fitur</string>

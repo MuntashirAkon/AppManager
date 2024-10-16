@@ -269,7 +269,6 @@
     <string name="backup">Резервна копія</string>
     <string name="data">Дані</string>
     <string name="external_data">Зовнішні дані</string>
-    <string name="cache">Кеш</string>
     <string name="blocking_rules">Правила блокування</string>
     <string name="whats_new">Що нового</string>
     <string name="features">Функції</string>

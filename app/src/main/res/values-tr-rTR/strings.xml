@@ -94,7 +94,6 @@
     <string name="features">Özellikler</string>
     <string name="whats_new">Yenilikler</string>
     <string name="blocking_rules">Engelleme kuralları</string>
-    <string name="cache">Önbelleği hariç tut</string>
     <string name="external_data">Harici veri</string>
     <string name="data">Veri</string>
     <string name="backup">Yedekleme</string>

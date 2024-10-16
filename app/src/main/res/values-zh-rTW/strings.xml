@@ -449,7 +449,6 @@
     <string name="restore">還原</string>
     <string name="data">資料</string>
     <string name="external_data">外部資料</string>
-    <string name="cache">排除快取</string>
     <string name="blocking_rules">封鎖規則</string>
     <string name="whats_new">什麼是新的</string>
     <string name="features">特徵</string>

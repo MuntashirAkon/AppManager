@@ -358,7 +358,6 @@
     <string name="features">機能</string>
     <string name="whats_new">最新情報</string>
     <string name="blocking_rules">ブロッキングルール</string>
-    <string name="cache">キャッシュを除外</string>
     <string name="external_data">外部データ</string>
     <string name="data">データ</string>
     <string name="backup">バックアップ</string>

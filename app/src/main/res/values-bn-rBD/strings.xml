@@ -223,7 +223,6 @@
     <string name="features">বৈশিষ্ট্যসমূহ</string>
     <string name="whats_new">নুতুনত্ব</string>
     <string name="blocking_rules">ব্লকিং এর বিধিগুলো</string>
-    <string name="cache">ক্যাশে বাদ দিন</string>
     <string name="external_data">বাহ্যিক ডাটা</string>
     <string name="data">ডাটা</string>
     <string name="backup">ব্যাকআপ</string>

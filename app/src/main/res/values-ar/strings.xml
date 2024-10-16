@@ -273,7 +273,6 @@
     <string name="data">البيانات</string>
     <string name="internal_data">البيانات الداخلية</string>
     <string name="external_data">البيانات الخارجية</string>
-    <string name="cache">التخزين المؤقت</string>
     <string name="blocking_rules">قواعد المنع</string>
     <string name="whats_new">ما الجديد</string>
     <string name="features">المميزات</string>

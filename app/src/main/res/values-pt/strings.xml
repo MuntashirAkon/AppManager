@@ -358,7 +358,6 @@
     <string name="app_signing_no_signatures">Sem assinatura válida</string>
     <string name="signatures">Assinaturas</string>
     <string name="sort_by_sha">Assinatura</string>
-    <string name="cache">Cache</string>
     <string name="blocking_rules">Regras de bloqueio</string>
     <string name="whats_new">Novidades</string>
     <string name="features">Funcionalidades</string>

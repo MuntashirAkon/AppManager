@@ -338,7 +338,6 @@
     <string name="failed_to_parse_some_numbers">일부 숫자 파싱 실패</string>
     <string name="filter_system_apps">시스템 앱</string>
     <string name="blocking_rules">차단 규칙</string>
-    <string name="cache">캐시</string>
     <string name="external_data">외부 데이터</string>
     <string name="restore">복구</string>
     <string name="backup_options">백업 옵션</string>

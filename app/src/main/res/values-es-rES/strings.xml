@@ -324,7 +324,6 @@
     <string name="backup">Respaldo</string>
     <string name="data">Datos</string>
     <string name="external_data">Datos externos</string>
-    <string name="cache">Antememoria</string>
     <string name="blocking_rules">Reglas de bloqueo</string>
     <string name="whats_new">Novedades</string>
     <string name="features">Funciones</string>

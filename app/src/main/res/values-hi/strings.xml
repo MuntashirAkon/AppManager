@@ -312,7 +312,6 @@
     <string name="backup">बैकअप</string>
     <string name="data">डेटा</string>
     <string name="external_data">एक्सटर्नल डेटा</string>
-    <string name="cache">कैश को शामिल न करें</string>
     <string name="blocking_rules">ब्लॉकिंग रूल्स</string>
     <string name="whats_new">नया क्या है</string>
     <string name="features">फीचर्स</string>
