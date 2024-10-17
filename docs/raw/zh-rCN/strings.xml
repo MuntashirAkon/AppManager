@@ -88,7 +88,7 @@
     <string name="pages$app-details-page$$component-tabs-title">组件选项卡</string>
     <string name="pages$app-details-page$$receivers-title">(广播)接收器 ((Broadcast)Receiver)</string>
     <string name="pages$app-details-page$$providers-title">(内容)提供者 ((Content)Providers)</string>
-    <string name="pages$app-details-page$$blocking-components-title">阻止组件</string>
+    <string name="pages$app-details-page$$blocking-components-title">拦截组件。</string>
     <string name="pages$app-details-page$intro">\\textbf{应用详情} 页面由 11 个标签页组成。它描述了一个应用程序所能有的几乎所有信息, 
 \n包括其清单中的所有属性、\\hyperref[ch:app-ops]{应用操作}、签名
 \n信息、库等等。</string>
@@ -241,7 +241,7 @@
     <string name="pages$app-details-page$$uses-permissions-title">使用权限</string>
     <string name="pages$app-details-page$$permissions-title">权限</string>
     <string name="pages$app-details-page$$signatures-tab-title">签名选项卡</string>
-    <string name="pages$app-details-page$$blocking-trackers-title">阻止跟踪器</string>
+    <string name="pages$app-details-page$$blocking-trackers-title">拦截跟踪器。</string>
     <string name="pages$app-details-page$$app-ops-title">App Ops</string>
     <string name="pages$app-details-page$colour-codes">本页中使用的颜色列表及它们的含义：
 \n\\begin{itemize}
@@ -270,7 +270,7 @@
     <string name="pages$settings-page$$backup-volume-title">备份位置</string>
     <string name="pages$settings-page$$rules-title">规则</string>
     <string name="pages$settings-page$$instant-component-blocking-title">即时组件拦截</string>
-    <string name="pages$settings-page$$import-export-blocking-rules-title">导入/导出阻止规则</string>
+    <string name="pages$settings-page$$import-export-blocking-rules-title">导入/导出拦截规则</string>
     <string name="pages$settings-page$$remove-all-rules-title">删除所有规则</string>
     <string name="pages$scanner-page$$missing-signatures-title">缺少签名</string>
     <string name="guide$backup-restore$$location-title">位置</string>
@@ -610,7 +610,7 @@
 \n
 \n \\item \\textbf{群组(Group)} 与权限关联的群组（如果有），几个相关的权限通常可以组合在一起。
 \n\\end{itemize}</string>
-    <string name="pages$settings-page$language">配置应用内语言。App Manager 目前支持 21 种语言。</string>
+    <string name="pages$settings-page$language">配置应用内语言。App Manager 目前支持 22 种语言。</string>
     <string name="pages$app-details-page$permission-tabs">\\textbf{App Ops}, \\textbf{使用权限} and \\textbf{权限} 选项卡与权限相关。
 \n安卓中，在不具有相同身份（称为 \\textit{shared ID}）的应用或进程之间进行通信常常需要权限，其由权限控制器管理。
 \n一些被视为\\textit{普通} 的权限，若它们出现在应用程序清单中，则会自动授予，但\\textit{危险}权限 和 \\textit{开发} 权限需要用户确认。
