@@ -1440,4 +1440,11 @@
     <string name="adb_pairing_pairing_code">Eşleştirme kodu</string>
     <string name="adb_pairing_retry_pairing">Yeniden dene</string>
     <string name="mode_of_op_alternative_custom_command">Yukarıdaki komutla “permission denied” hatası alırsanız, bunun yerine şu komutu çalıştırın:</string>
+    <string name="sensors">Sensörler</string>
+    <string name="tag_sensors_disabled">Sensörler devre dışı</string>
+    <string name="pref_use_system_font_msg">Material yazı tipi yerine sistem öntanımlı yazı tipini kullan. <font fgcolor="#ff0000">Bu deneysel bir özelliktir.</font></string>
+    <string name="actual_installer">Gerçek Kurucu</string>
+    <string name="backup_cache">Önbellek</string>
+    <string name="pref_use_system_font">Sistem yazı tipini kullan</string>
+    <string name="apk_source">APK Kaynağı</string>
 </resources>
