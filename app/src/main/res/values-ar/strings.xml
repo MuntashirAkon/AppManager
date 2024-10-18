@@ -615,7 +615,7 @@
     <string name="gz_bz2_compressed">%1$s مضغوط</string>
     <string name="latest_backup">أحدث نسخة احتياطية</string>
     <string name="pref_import_export_keystore">استيراد / تصدير سجل المفاتيح</string>
-    <string name="pref_import_export_keystore_msg">استيراد / تصدير سجل مفاتيح القلعة النطاطة (BKS) المستخدم داخليًا بواسطة مدير التطبيقات.</string>
+    <string name="pref_import_export_keystore_msg">استيراد / تصدير سجل مفاتيح القلعة النطاطة (BKS) المستخدم داخليًا بواسطة App Manager.</string>
     <string name="import_keystore">استيراد سجل المفاتيح</string>
     <string name="confirm_import_keystore">هل أنت متأكد من أنك تريد استبدال سجل المفاتيح الحالي؟ لا يمكن التراجع عن هذا الإجراء.</string>
     <string name="failed">فشل</string>
@@ -752,7 +752,7 @@
         <item quantity="many">%1$d مكون</item>
         <item quantity="other">%1$d مكون</item>
     </plurals>
-    <string name="failed_to_initialize_key_store">تعذرت تهيئة ملف تخزين مفاتيح مدير التطبيقات.</string>
+    <string name="failed_to_initialize_key_store">تعذرت تهيئة ملف تخزين مفاتيح App Manager.</string>
     <string name="failed_to_change_ssaid">تعذر تغيير SSAID</string>
     <string name="screen">الشَّاشة</string>
     <string name="navigation_trackball">تراكبال</string>
@@ -904,8 +904,8 @@
     <string name="backup_obb_media_description">النسخ الاحتياطي لمجلدات OBB والوسائط.</string>
     <string name="backup_cache_description">نسخ <b> ذاكرة التخزين المؤقت</b>، <b>no_cache</b> و <b>no_backup</b> المجلدات.</string>
     <string name="backup_extras">إضافية</string>
-    <string name="backup_extras_description">نسخ احتياطي لأذونات التطبيق، وتوفير البطارية وخيارات استخدام البيانات، وحالة MagiskHide، وSSAID، وما إلى ذلك. <font fgcolor="#ff0000">اعتمادًا على الأذونات، لا يمكن استعادة جميع الإضافات.</font></string>
-    <string name="backup_rules_description">قواعد النسخ الاحتياطي التي تم تكوينها داخل مدير التطبيقات. <font fgcolor="#ff0000"> اعتمادًا على الأذونات ، لا يمكن إعادة تطبيق جميع القواعد أثناء الاستعادة. </font></string>
+    <string name="backup_extras_description">نسخ احتياطي لصلاحيات التطبيق، وتوفير البطارية وخيارات استخدام البيانات، وحالة MagiskHide، وSSAID، وما إلى ذلك. <font fgcolor="#ff0000">اعتمادًا على الصلاحيات، لا يمكن استعادة جميع الإضافات.</font></string>
+    <string name="backup_rules_description">قواعد النسخ الاحتياطي التي تم تكوينها داخل App Manager. <font fgcolor="#ff0000">اعتمادًا على الصلاحيات، لا يمكن إعادة تطبيق جميع القواعد أثناء الاستعادة.</font></string>
     <string name="backup_multiple_description">قم بإنشاء نسخة احتياطية منفصلة <i> باسم </i> بدلاً من النسخة الاحتياطية الأساسية.</string>
     <string name="patch_level">مستوى التصحيح</string>
     <string name="selinux">امان لينكس المحسن</string>
@@ -951,9 +951,9 @@
     <string name="internal_storage">الذاكرة الداخلية</string>
     <string name="external_storage">التخزين الخارجي</string>
     <string name="sd_card">بطاقة الذاكرة</string>
-    <string name="unlock_app_manager">إلغاء تأمين مدير التطبيقات</string>
+    <string name="unlock_app_manager">إلغاء تأمين App Manager</string>
     <string name="screen_lock">قفل الشاشة</string>
-    <string name="screen_lock_msg">قفل مدير التطبيقات باستخدام قفل شاشة أندرويد</string>
+    <string name="screen_lock_msg">قفل App Manager باستخدام قفل شاشة أندرويد</string>
     <string name="type_null">بلا قيمة</string>
     <string name="type_component_name">اسم المكون</string>
     <string name="type_int_array">صف من الأعداد الصحيحة</string>
@@ -982,7 +982,7 @@
     <string name="restart_to_reflect_changes">يجب إعادة تشغيل الجهاز مباشرة لاستخدام التغييرات الجديدة.</string>
     <string name="installed_apps">التطبيقات المثبتة</string>
     <string name="enable_disable_features">تمكين/تعطيل الميزات</string>
-    <string name="pref_enable_disable_features_msg">تمكين أو تعطيل الميزات في إدارة التطبيقات.</string>
+    <string name="pref_enable_disable_features_msg">تمكين أو تعطيل الميزات في App Manager.</string>
     <string name="last_actions">الإجراءات الأخيرة</string>
     <string name="isolated">معزول</string>
     <string name="screen_lock_not_enabled">يرجى اختيار قفل الشاشة في إعدادات Android، أو مسح بيانات التطبيق.</string>
@@ -1135,7 +1135,7 @@
     <string name="help_app_ops_tab">انقر على عنصر <b>للسماح</b> أو <b>تجاهله</b>. انقر مطولاً على عنصر لرؤية الأوضاع المدعومة الأخرى.</string>
     <string name="saved_filters">المرشحات المحفوظة</string>
     <string name="permission_flags">إشارات الصلاحيات</string>
-    <string name="pref_selected_users_msg">تقييد مدير التطبيقات للعمل مع المستخدمين المحددين فقط.</string>
+    <string name="pref_selected_users_msg">تقييد App Manager للعمل مع المستخدمين المحددين فقط.</string>
     <string name="pref_selected_users">المستخدمون المحددون</string>
     <string name="error_with_details">خطأ: %s</string>
     <string name="files">الملفات</string>
@@ -1146,7 +1146,7 @@
     <string name="adb_pair">اقتران</string>
     <string name="invalid_password">كلمة مرور غير صالحة، حاول مرة أخرى.</string>
     <string name="keystore_pass_cannot_be_empty">لا يمكن أن تكون كلمة مرور مخزن المفتاح فارغة.</string>
-    <string name="keystore_password_info">فيما يلي كلمة مرور مخزن المفتاح لمدير التطبيقات. يرجى تخزينه في مكان آمن إذا كنت تريد إجراء نسخة احتياطية / استعادة مدير التطبيقات KeyStore.<b> لن يتم عرض هذه الرسالة مرة أخرى.</b></string>
+    <string name="keystore_password_info">فيما يلي كلمة مرور مخزن المفتاح App Manager. يرجى تخزينه في مكان آمن إذا كنت تريد إجراء نسخة احتياطية / استعادة App Manager KeyStore.<b> لن يتم عرض هذه الرسالة مرة أخرى.</b></string>
     <plurals name="pref_thread_count_msg">
         <item quantity="zero">قم بتنفيذ على الاقل %1$d عملية او أكثر بالتوازي</item>
         <item quantity="one">قم بتنفيذ على الاقل %1$d عملية او أكثر بالتوازي</item>
@@ -1163,7 +1163,7 @@
     <string name="type_uri_array">مجموعة من عناوين URIs</string>
     <string name="pref_always_on_background_msg">قم دائما بتثبيت التطبيقات في الخلفية وعرض تنبيه عند الانتهاء.</string>
     <string name="pref_always_on_background">تثبيت في الخلفية</string>
-    <string name="pref_block_trackers_msg">حظر مكونات التتبع بعد تثبيت تطبيق باستخدام إدارة التطبيقات.</string>
+    <string name="pref_block_trackers_msg">حظر مكونات التتبع بعد تثبيت تطبيق باستخدام App Manager.</string>
     <string name="next">التالي</string>
     <string name="installer_app_installed">تم تثبيت التطبيق</string>
     <string name="staging_apk_files">يجهز …</string>
@@ -1174,7 +1174,7 @@
     <string name="paste">لصق</string>
     <string name="set_package_name_first">تعيين اسم الحزمة أولا!</string>
     <string name="identifier">المعرف</string>
-    <string name="backup_volume_dialog_description">وحدات التخزين ذات <tt>/tree</tt> بادئة هي المجلدات المحددة باستخدام إطار الوصول التخزين (SAF). باستثناء هذه المجلدات، الدليل الافتراضي لإدارة التطبيقات هو مجلد فرعي يسمى <tt>AppManager</tt>.</string>
+    <string name="backup_volume_dialog_description">وحدات التخزين ذات <tt>/tree</tt> بادئة هي المجلدات المحددة باستخدام إطار الوصول التخزين (SAF). باستثناء هذه المجلدات، الدليل الافتراضي لـ App Manager هو مجلد فرعي يسمى <tt>AppManager</tt>.</string>
     <string name="second_degree_tracker_note">تشير البادئة ² إلى أن المتعقبات موجودة في <a href="https://etip.exodus-privacy.eu.org/"> قائمة ETIP الاحتياطية </a> أي ما إذا كانت متتبعات فعلية لا تزال قيد التحقيق.</string>
     <string name="failed_to_uninstall_app">فشل إلغاء التثبيت</string>
     <string name="import_from_sb">الاستيراد من Swift Backup 3.0 - 3.2</string>
@@ -1229,9 +1229,9 @@
     <string name="vt_checking">VirusTotal: جارٍ الفحص…</string>
     <string name="vt_uploading">VirusTotal: جارٍ الرفع …</string>
     <string name="vt_queued">VirusTotal: في قائمة الانتظار</string>
-    <string name="vt_slowness_warning">اعتمادا على سرعة الإنترنت وتحميل على الملقم، قد يستغرق ذلك بعض الوقت.</string>
-    <string name="vt_disclaimer">تعد VirusTotal وشعاراتها علامة تجارية مملوكة لشركة Chronicle LLC. لا يتحمل مدير التطبيقات - عميل واجهة برمجة التطبيقات - ولا مؤلفوه مسؤولية أي بيانات قد ترسلها إلى VirusTotal.</string>
-    <string name="pref_vt_apikey_description">يمكّن مفتاح واجهة برمجة التطبيقات مدير التطبيقات من تحميل ملفات APK إلى VirusTotal بالإضافة إلى جلب التقارير. اشترك في https://virustotal.com للحصول على مفتاح API مجانًا.</string>
+    <string name="vt_slowness_warning">اعتماداً على سرعة الإنترنت وتحميل على الخادم، قد يستغرق ذلك بعض الوقت.</string>
+    <string name="vt_disclaimer">تعد VirusTotal وشعاراتها علامة تجارية مملوكة لشركة Chronicle LLC. لا App Manager - عميل واجهة برمجة التطبيقات - ولا مؤلفوه مسؤولية أي بيانات قد ترسلها إلى VirusTotal.</string>
+    <string name="pref_vt_apikey_description">يمكّن مفتاح واجهة برمجة التطبيقات App Manager من تحميل ملفات APK إلى VirusTotal بالإضافة إلى جلب التقارير. اشترك في https://virustotal.com للحصول على مفتاح API مجانًا.</string>
     <string name="uses_play_app_signing">تشغيل توقيع التطبيق</string>
     <string name="uses_play_app_signing_description">يحتوي هذا التطبيق على علامات معينة تشير إلى أنه <i> قد </i> يستخدم <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play App Signing </a>. مع هذا النظام، يتم تخزين مفاتيح التوقيع في خوادم Google، وجوجل مسؤولة عن توقيع التطبيق. لاحظ أن مطابقة معلومات التوقيع هي الطريقة الوحيدة للتحقق من أن التطبيق لم يتم تعديله من قبل أي شخص آخر غير المطور (وفي هذه الحالة، Google أيضا).</string>
     <string name="virtual_memory">الذاكرة الظاهرية</string>
@@ -1308,10 +1308,10 @@
     <string name="unfreeze">إلغاء التجميد</string>
     <string name="backup_no_backups_present">لا توجد نسخ احتياطية.</string>
     <string name="restore_dots">يستعيد…</string>
-    <string name="import_backups_warning_delete_backups_after_import">حذف النسخ الاحتياطية بعد استيرادها إلى مدير التطبيقات؟ يتم حذف كل نسخة احتياطية بشكل فردي بعد استيرادها بنجاح. حدد <b> No</b> إذا لم تكن متأكدا.</string>
+    <string name="import_backups_warning_delete_backups_after_import">حذف النسخ الاحتياطية بعد استيرادها إلى App Manager؟ يتم حذف كل نسخة احتياطية بشكل فردي بعد استيرادها بنجاح. حدد <b> No</b> إذا لم تكن متأكدا.</string>
     <string name="troubleshooting">استكشاف الاخطاء</string>
     <string name="pref_reload_apps">إعادة تحميل التطبيقات</string>
-    <string name="pref_reload_apps_msg">أعد تحميل قائمة التطبيقات المخزنة في قاعدة بيانات مدير التطبيقات في حالة حدوث سلوك غير متوقع.</string>
+    <string name="pref_reload_apps_msg">أعد تحميل قائمة التطبيقات المخزنة في قاعدة بيانات App Manager في حالة حدوث سلوك غير متوقع.</string>
     <string name="changelog_type_new">جديد</string>
     <string name="changelog_type_fix">اصلاح</string>
     <string name="changelog_type_improve">حسن</string>
@@ -1392,8 +1392,8 @@
     <string name="install_for_another_user">التثبيت لـ …</string>
     <string name="confirm_uninstallation">تأكيد إلغاء التثبيت</string>
     <string name="grant_required_permission">الحصول على إذن</string>
-    <string name="grant_overlay_permission_message">السماح لمدير التطبيقات بعرض نافذة عائمة أعلى جميع النوافذ الأخرى</string>
-    <string name="grant_accessibility_permission_for_tracking_window_contents">اسمح لمدير التطبيقات باستخدام ميزة إمكانية الوصول لتتبع محتويات النافذة البادئة.</string>
+    <string name="grant_overlay_permission_message">السماح لـ App Manager بعرض نافذة عائمة أعلى جميع النوافذ الأخرى</string>
+    <string name="grant_accessibility_permission_for_tracking_window_contents">اسمح لـApp Manager باستخدام ميزة إمكانية الوصول لتتبع محتويات النافذة البادئة.</string>
     <string name="class_hierarchy">تَسَلسُل</string>
     <string name="title_ui_tracker">متقفي واجهة المستخدم</string>
     <string name="title_terminal_emulator">الطرفية</string>
@@ -1418,8 +1418,8 @@
     <string name="export_app_list_select_format">حدد تنسيقا لتصدير قائمة التطبيقات</string>
     <string name="export_option_xml">ملف XML</string>
     <string name="export_option_markdown">ماركداون</string>
-    <string name="funding_campaign_dialog_message">نحن ندير حملة تمويل <b> </b> لمدير التطبيقات لفترة محدودة. قم بزيارة <a href="https://opencollective.com/app-manager#category-ABOUT"> opencollective.com/app-manager </a> لمعرفة المزيد عن الحملة. لن يتم عرض هذا الإشعار مرة أخرى ، ولكن يمكنك العثور عليه في صفحة الإعدادات أثناء الحملة بأكملها.</string>
-    <string name="funding_campaign_text">نحن ندير حملة تمويل <b> </b> لمدير التطبيقات لفترة محدودة. <a href="https://opencollective.com/app-manager#category-ABOUT"> تعرف على المزيد... </a></string>
+    <string name="funding_campaign_dialog_message">نحن ندير حملة تمويل <b> </b> App Manager لـ لفترة محدودة. قم بزيارة <a href="https://opencollective.com/app-manager#category-ABOUT"> opencollective.com/app-manager </a> لمعرفة المزيد عن الحملة. لن يتم عرض هذا الإشعار مرة أخرى، ولكن يمكنك العثور عليه في صفحة الإعدادات أثناء الحملة بأكملها.</string>
+    <string name="funding_campaign_text">نحن ندير حملة تمويل <b> </b> لـ App Manager لفترة محدودة. <a href="https://opencollective.com/app-manager#category-ABOUT"> تعرف على المزيد... </a></string>
     <string name="adb_incomplete_usb_debugging_title">تصحيح أخطاء USB غير مكتمل</string>
     <string name="adb_incomplete_usb_debugging_message">يبدو أن تصحيح أخطاء USB لم يتم تكوينه بشكل صحيح. يرجى قراءة <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging"> الوثائق </a> للحصول على خطوات إضافية. إذا كنت تعرف الخطوات بالفعل ، فالرجاء النقر فوق \"فتح\" لفتح خيارات المطور ، أو النقر فوق \"إغلاق\" لمواصلة استخدام وضع عدم الجذر.</string>
     <string name="select_a_dex2oat_compiler_filter"><tt> dex2oat </tt> فلتر المجمع</string>
@@ -1558,14 +1558,14 @@
     <string name="xposed_module_info">معلومات وحدة Xposed</string>
     <string name="title_description">الوصف</string>
     <string name="module_name">اسم الوحدة</string>
-    <string name="app_manager_is_running">مدير التطبيقات قيد التشغيل</string>
+    <string name="app_manager_is_running">App Manager قيد التشغيل</string>
     <string name="tap_to_open_notification_settings">انقر للإخفاء</string>
-    <string name="app_manager_is_unlocked">مدير التطبيقات غير مؤمن</string>
+    <string name="app_manager_is_unlocked">App Manager غير مؤمن</string>
     <string name="action_lock_app">قفل</string>
-    <string name="pref_enable_persistent_session">تشغيل مدير التطبيقات في الخلفية</string>
-    <string name="pref_enable_persistent_session_msg">يؤدي تشغيل مدير التطبيقات في الخلفية إلى تقليل تأخير التجهيز. مفيد إذا كنت تستخدم مدير التطبيقات بشكل متكرر.</string>
+    <string name="pref_enable_persistent_session">تشغيل App Manager في الخلفية</string>
+    <string name="pref_enable_persistent_session_msg">يؤدي تشغيل App Manager في الخلفية إلى تقليل تأخير التجهيز. مفيد إذا كنت تستخدم App Manager بشكل متكرر.</string>
     <string name="pref_enable_auto_lock">تأمين تلقائي</string>
-    <string name="pref_enable_auto_lock_msg">قفل مدير التطبيقات عندما يكون الجهاز مقفلا.</string>
+    <string name="pref_enable_auto_lock_msg">قفل App Manager عندما يكون الجهاز مقفلا.</string>
     <string name="path_does_not_exist">\"%1$s\" غير موجود</string>
     <string name="path_not_a_folder">\"%1$s\" ليس مجلدا</string>
     <string name="scan_report_from_pithus">تقرير بيثوس</string>
@@ -1575,13 +1575,13 @@
     <string name="copy_profile_id">نسخ معرف الملف السخصي</string>
     <string name="profile_id">معرف الملف الشخصي</string>
     <string name="choose_a_profile_state">حدد حالة الملف الشخصي</string>
-    <string name="pref_toggle_internet_msg">قم بتنشيط ميزات الإنترنت في مدير التطبيقات</string>
-    <string name="pref_use_vt_no_internet">يتطلب فايروس توتال وجود إنترنت لكي يعمل، وهو أمر غير ممكّن. الرجاء تمكين <a href="app-manager://settings/privacy_prefs/toggle_internet">\"استخدام الإنترنت\"</a> أولاً.</string>
+    <string name="pref_toggle_internet_msg">قم بتنشيط ميزات الإنترنت في App Manager</string>
+    <string name="pref_use_vt_no_internet">يتطلب VirusTotal وجود إنترنت لكي يعمل، وهو أمر غير ممكّن. الرجاء تمكين <a href="app-manager://settings/privacy_prefs/toggle_internet">\"استخدام الإنترنت\"</a> أولاً.</string>
     <string name="netpolicy_reject_metered_background_data">رفض بيانات الخلفية على الشبكات المقننة</string>
     <string name="netpolicy_reject_metered_data">رفض البيانات على الشبكات المقننة</string>
     <string name="netpolicy_allow_metered_background_data">السماح ببيانات الخلفية على الشبكات المقننة حتى عند تشغيل توفير البيانات</string>
     <string name="launch_activity_dialog_title">إطلاق النشاط: الإجراء مطلوب</string>
-    <string name="launch_activity_dialog_message">يحاول مدير التطبيقات تشغيل النشاط عبر <b>مساعد البحث</b> (مساعد Google عادةً)، لكنه غير قادر على القيام بذلك بسبب عدم كفاية الإذونات المطلوبة. لفتح النشاط، يرجى تنشيط <b>مساعد البحث</b> يدويًا (والذي يتم عادةً عن طريق النقر لفترة طويلة على زر الصفحة الرئيسية). انقر فوق الزر <b>إغلاق</b> بعد الانتهاء من تشغيل النشاط للعودة إلى المساعد الأصلي.</string>
+    <string name="launch_activity_dialog_message">يحاول App Manager تشغيل النشاط عبر <b>مساعد البحث</b> (مساعد Google عادةً)، لكنه غير قادر على القيام بذلك بسبب عدم كفاية الأذونات المطلوبة. لفتح النشاط، يرجى تنشيط <b>مساعد البحث</b> يدويًا (والذي يتم عادةً عن طريق النقر لفترة طويلة على زر الصفحة الرئيسية). انقر فوق الزر <b>إغلاق</b> بعد الانتهاء من تشغيل النشاط للعودة إلى المساعد الأصلي.</string>
     <string name="finder_title">الباحث</string>
     <string name="select_filter">اختر مرشحا</string>
     <string name="size_in_bytes">الحجم (بايت)</string>
@@ -1609,7 +1609,7 @@
     <string name="adb_pairing_found_pairing_service_with_port">تم العثور على خدمة بالمنفذ %d</string>
     <string name="adb_pairing_pairing_in_progress">قيد الإقتران…</string>
     <string name="mode_of_op_custom_command_title">أمر مخصص</string>
-    <string name="mode_of_op_custom_command">إذا لم تتمكن من استخدام أي من الأوضاع، فيمكنك تشغيل الأمر التالي باستخدام أي طرفية مدعومة لتشغيل مدير التطبيقات في الوضع المميز:</string>
+    <string name="mode_of_op_custom_command">إذا لم تتمكن من استخدام أي من الأوضاع، فيمكنك تشغيل الأمر التالي باستخدام أي طرفية مدعومة لتشغيل App Manager في الوضع المصرح:</string>
     <string name="adb_pairing_retry_pairing">حاول مرَّةً أخرى</string>
     <string name="mode_of_op_alternative_custom_command">إذا تلقيت خطأ \"تم رفض الإذن\" في الأمر أعلاه، فقم بتشغيل الأمر التالي بدلاً من ذلك:</string>
 </resources>
