@@ -1044,4 +1044,10 @@
     <string name="keystore_password_info">निम्नलिखित ऐप मैनेजर कीस्टोर पासवर्ड है। यदि आप ऐप मैनेजर कीस्टोर का बैकअप/पुनर्स्थापना करने जा रहे हैं तो कृपया इसे सुरक्षित स्थान पर संग्रहीत करें। <b>यह संदेश फिर से प्रदर्शित नहीं किया जाएगा।</b></string>
     <string name="keystore_pass_cannot_be_empty">कीस्टोर पासवर्ड खाली नहीं हो सकता।</string>
     <string name="invalid_password">अमान्य पासवर्ड, पुन: प्रयास करें।</string>
+    <string name="identifier">पहचानकर्ता</string>
+    <string name="trim_caches_in_all_apps_description">एंड्रॉइड सिस्टम सहित सभी एप्लिकेशन से कैशे फ़ाइलें हटा देता है</string>
+    <string name="minimum_version">न्यूनतम संस्करण: %d</string>
+    <string name="permission_flags">अनुमति ध्वज</string>
+    <string name="background">पृष्ठभूमि</string>
+    <string name="adb_connect_port_number_description">पोर्ट नंबर <b>आईपी पता और पोर्ट</b> अनुभाग के अंतर्गत <b>डिवाइस नाम</b> अनुभाग के ठीक नीचे स्थित है।</string>
 </resources>
