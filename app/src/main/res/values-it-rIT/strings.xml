@@ -300,29 +300,29 @@
     </plurals>
     <string name="toggle_class_listing">Attiva o disattiva elenco classi</string>
     <string name="class_viewer">Visualizzatore classi</string>
-    <string name="credits_message">Agli autori di 
-\n- Il progetto open source Android 
-\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a> 
-\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a> 
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a> 
-\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a> 
-\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a> 
-\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a> 
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a> 
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a> 
-\n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a> 
-\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a> 
-\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a> 
-\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> 
-\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a> 
-\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a> 
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a> 
-\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a> 
-\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a> 
-\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a> 
-\n- <a href="https://github.com/Aefyr/SAI">SAI</a> 
-\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a> 
-\n- <a href="https://github.com/eclipse/tm4e">tm4e</a> 
+    <string name="credits_message">Agli autori di
+\n- Il progetto open source Android
+\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
+\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\n- <a href="https://github.com/eclipse/tm4e">tm4e</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a></string>
     <string name="credits">Crediti</string>
     <string name="sdk_flags">Flag</string>
@@ -1484,4 +1484,11 @@
     <string name="mode_of_op_custom_command_title">Comando personalizzato</string>
     <string name="mode_of_op_custom_command">Se non riesci a utilizzare nessuna delle modalità, puoi eseguire il comando seguente in qualsiasi shell supportata per eseguire App Manager in modalità privilegiata:</string>
     <string name="mode_of_op_alternative_custom_command">Se ricevi un errore di \"autorizzazione negata\" con il comando precedente, esegui invece il comando seguente:</string>
+    <string name="sensors">Sensori</string>
+    <string name="tag_sensors_disabled">Sensori disabilitati</string>
+    <string name="pref_use_system_font">Usa font di sistema</string>
+    <string name="pref_use_system_font_msg">Usa il font predefinito del sistema invece del font material. <font fgcolor="#ff0000">Questa è una funzionalità sperimentale.</font></string>
+    <string name="apk_source">Sorgente APK</string>
+    <string name="backup_cache">Cache</string>
+    <string name="actual_installer">Installatore effettivo</string>
 </resources>
