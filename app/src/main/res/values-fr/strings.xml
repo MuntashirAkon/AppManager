@@ -1443,4 +1443,44 @@
     <string name="profile_id">ID du profil</string>
     <string name="copy_profile_id">Copier l\'ID du profil</string>
     <string name="read_only_file_warning">Les modifications ne peuvent pas être écrites dans le fichier, peut-être parce qu\'il se trouve dans un volume sur lequel App Manager n\'est pas autorisé à écrire. Voulez-vous l\'enregistrer à un autre endroit ?</string>
+    <string name="change_group_gid">Changer de groupe (GID)</string>
+    <string name="invalid_regex">Expression régulière invalide !</string>
+    <string name="value_cannot_be_empty">La valeur ne peut être vide !</string>
+    <string name="date">Date</string>
+    <string name="pref_use_vt">Utiliser VirusTotal</string>
+    <string name="pref_use_log_viewer">Utiliser le Visualiseur de journaux</string>
+    <string name="pref_installer">Utiliser l\'Installeur</string>
+    <string name="pref_cat_general">Général</string>
+    <string name="status_remote_server_active">Le serveur distant est actif</string>
+    <string name="status_remote_services_inactive">Les services distants sont inactifs</string>
+    <string name="status_connecting">Connexion…</string>
+    <string name="status_connecting_via_mode">Connexion via %s</string>
+    <string name="status_not_connected_via_mode">Connexion impossible via %s</string>
+    <string name="adb_pairing_searching_for_port">Recherche en cours…</string>
+    <string name="adb_pairing_stop_searching">Arrêter</string>
+    <string name="sensors">Capteurs</string>
+    <string name="tag_sensors_disabled">Capteurs désactivés</string>
+    <string name="apk_source">Source APK</string>
+    <string name="mode_of_op_alternative_custom_command">Si vous obtenez une erreur \"Permission refusée\" avec la commande ci-dessus, lancez la commande suivante à la place :</string>
+    <string name="scan_report_from_pithus">Rapport Pithus</string>
+    <string name="launch_activity_dialog_title">Lancement d\'activité : action requise</string>
+    <string name="select_filter">Sélectionner un filtre</string>
+    <string name="failed_to_copy_specified_file">Impossible de copier \"%1$s\".</string>
+    <string name="apply_recursively">Appliquer aux fichiers joints</string>
+    <string name="size_in_bytes">Taille (octet)</string>
+    <string name="launch_activity_dialog_message">App Manager essaie de lancer l\'activité via l\'<b>Assistant de recherche</b> (usuellement Google Assistant), mais n\'y parvient pas dû à des permissions insuffisantes. Pour ouvrir l\'activité, merci d\'activer l\'<b>Assistant de recherche</b> manuellement (en général via un long clic sur le bouton d\'accueil). Cliquer sur le bouton <b>Fermer</b> lorsque vous avez fini de lancer l\'activité pour retourner sur l\'assistant original.</string>
+    <string name="pref_use_vt_no_internet">VirusTotal a besoin d\'accéder à Internet, ce qui n\'est pas le cas. Merci d\'activer <a href="app-manager://settings/privacy_prefs/toggle_internet">Utiliser Internet</a> d\'abord.</string>
+    <string name="status_remote_server_inactive">Le serveur distant est inactif</string>
+    <string name="status_remote_services_active">Les services distants sont actifs</string>
+    <string name="status_connected_via_mode">Connecté via %s</string>
+    <string name="adb_pairing_pairing_code">Code de couplage</string>
+    <string name="adb_pairing_instruction">Merci d\'accéder aux options développeurs pour activer le débogage sans fil et générer un code de couplage.</string>
+    <string name="adb_pairing_input_pairing_code">Code de couplage</string>
+    <string name="adb_pairing_found_pairing_service_with_port">Service trouvé avec le port %d</string>
+    <string name="adb_pairing_pairing_in_progress">Couplage…</string>
+    <string name="mode_of_op_custom_command_title">Commande personnalisée</string>
+    <string name="mode_of_op_custom_command">S\'il est impossible d\'utiliser l\'un de ces modes, vous pouvez exécuter la commande suivante dans un terminal avec accès privilégié pour lancer App Manager :</string>
+    <string name="adb_pairing_retry_pairing">Réessayer</string>
+    <string name="pref_use_system_font">Utiliser la police système</string>
+    <string name="pref_use_system_font_msg">Utiliser la police Material système par défaut. <font fgcolor="#ff0000">Ceci est une fonctionnalité expérimentale.</font></string>
 </resources>
