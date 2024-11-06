@@ -56,6 +56,24 @@
                     style="@style/Widget.AppTheme.TextInputLayout.Small"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/activity_name"
+                    app:hintEnabled="true">
+
+                    <io.github.muntashirakon.widget.TextInputTextView
+                        android:id="@+id/activity_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:maxLines="1"
+                        android:fontFamily="monospace"
+                        tools:text="io.github.muntashirakon.AppManager" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.AppTheme.TextInputLayout.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:hint="@string/class_name"
                     app:hintEnabled="true">
 

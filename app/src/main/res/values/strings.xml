@@ -1492,4 +1492,5 @@
     <string name="actual_installer">Actual Installer</string>
     <string name="apk_source">APK Source</string>
     <string name="backup_cache">Cache</string>
+    <string name="activity_name">Activity Name</string>
 </resources>

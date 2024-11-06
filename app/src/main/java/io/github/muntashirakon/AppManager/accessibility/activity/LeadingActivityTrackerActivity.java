@@ -18,9 +18,17 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.accessibility.NoRootAccessibilityService;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class LeadingActivityTrackerActivity extends BaseActivity {
     private final ActivityResultLauncher<Intent> mSettingsLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                // Init again
+                init();
+            });
+    private final ActivityResultLauncher<Intent> mUsageAccessSettingsLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 // Init again
                 init();
@@ -49,6 +57,18 @@ public class LeadingActivityTrackerActivity extends BaseActivity {
                     })
                     .setNegativeButton(R.string.go_back, (dialog, which) -> finish())
                     .show();
+            return;
+        }
+        if (!SelfPermissions.checkUsageStatsPermission()) {
+            ThreadUtils.postOnMainThread(() -> new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.grant_usage_access)
+                    .setMessage(R.string.grant_usage_acess_message)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.go, (dialog, which) -> {
+                        mUsageAccessSettingsLauncher.launch(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+                    })
+                    .setNegativeButton(R.string.go_back, (dialog, which) -> finish())
+                    .show());
             return;
         }
         if (!NoRootAccessibilityService.isAccessibilityEnabled(this)) {
