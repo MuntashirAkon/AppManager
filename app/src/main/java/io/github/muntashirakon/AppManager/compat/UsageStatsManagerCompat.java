@@ -10,9 +10,18 @@ import android.os.Build;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresPermission;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
@@ -30,21 +39,52 @@ public final class UsageStatsManagerCompat {
         }
     }
 
-    public static UsageEvents queryEvents(long beginTime, long endTime, int userId) throws RemoteException {
-        IUsageStatsManager usm = getUsageStatsManager();
-        String callingPackage = SelfPermissions.getCallingPackage(Users.getSelfOrRemoteUid());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            return usm.queryEventsForUser(beginTime, endTime, userId, callingPackage);
+    @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
+    @Nullable
+    public static UsageEvents queryEvents(long beginTime, long endTime, int userId) {
+        try {
+            IUsageStatsManager usm = getUsageStatsManager();
+            String callingPackage = SelfPermissions.getCallingPackage(Users.getSelfOrRemoteUid());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                return usm.queryEventsForUser(beginTime, endTime, userId, callingPackage);
+            }
+            return usm.queryEvents(beginTime, endTime, callingPackage);
+        } catch (RemoteException e) {
+            return ExUtils.rethrowFromSystemServer(e);
         }
-        return usm.queryEvents(beginTime, endTime, callingPackage);
     }
 
-    public static void setAppInactive(String packageName, @UserIdInt int userId, boolean inactive)
-            throws RemoteException {
+    /**
+     * Note: This method should only be used when sorted entries are required as the operations done
+     * here are expensive.
+     */
+    @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
+    @NonNull
+    public static List<UsageEvents.Event> queryEventsSorted(long beginTime, long endTime, int userId, int[] filterEvents) {
+        List<UsageEvents.Event> filteredEvents = new ArrayList<>();
+        UsageEvents events = queryEvents(beginTime, endTime, userId);
+        if (events != null) {
+            while (events.hasNextEvent()) {
+                UsageEvents.Event event = new UsageEvents.Event();
+                events.getNextEvent(event);
+                if (ArrayUtils.contains(filterEvents, event.getEventType())) {
+                    filteredEvents.add(event);
+                }
+            }
+            Collections.sort(filteredEvents, (o1, o2) -> -Long.compare(o1.getTimeStamp(), o2.getTimeStamp()));
+        }
+        return filteredEvents;
+    }
+
+    public static void setAppInactive(String packageName, @UserIdInt int userId, boolean inactive) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getUsageStatsManager().setAppInactive(packageName, inactive, userId);
-            if (userId != UserHandleHidden.myUserId()) {
-                BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{packageName});
+            try {
+                getUsageStatsManager().setAppInactive(packageName, inactive, userId);
+                if (userId != UserHandleHidden.myUserId()) {
+                    BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{packageName});
+                }
+            } catch (RemoteException e) {
+                ExUtils.rethrowFromSystemServer(e);
             }
         }
     }
