@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Stack;
 
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkStatsCompat;
@@ -49,7 +50,6 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
-import io.github.muntashirakon.AppManager.utils.NonNullUtils;
 import io.github.muntashirakon.proc.ProcFs;
 import io.github.muntashirakon.proc.ProcUidNetStat;
 
@@ -139,6 +139,12 @@ public class AppUsageStatsManager {
         return appUsageStatsManager;
     }
 
+    private static final int[] USUAL_ACTIVITY_EVENTS = new int[]{
+            UsageEvents.Event.ACTIVITY_RESUMED,
+            UsageEvents.Event.ACTIVITY_PAUSED,
+            UsageEvents.Event.ACTIVITY_STOPPED,
+    };
+
     @NonNull
     private final Context mContext;
 
@@ -189,35 +195,85 @@ public class AppUsageStatsManager {
         ApplicationInfo applicationInfo = PackageManagerCompat.getApplicationInfo(packageName, MATCH_UNINSTALLED_PACKAGES
                 | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
         PackageUsageInfo packageUsageInfo = new PackageUsageInfo(mContext, packageName, userId, applicationInfo);
-        List<UsageEvents.Event> events = UsageStatsManagerCompat.queryEventsSorted(range.getStartTime(), range.getEndTime(), userId, new int[]{UsageEvents.Event.ACTIVITY_RESUMED, UsageEvents.Event.ACTIVITY_PAUSED, UsageEvents.Event.ACTIVITY_STOPPED});
-        List<PackageUsageInfo.Entry> usEntries = new ArrayList<>();
-        long endTime = 0;
+        PerPackageUsageInternal usage = new PerPackageUsageInternal(packageName);
+        List<UsageEvents.Event> events = UsageStatsManagerCompat.queryEventsSorted(range.getStartTime(), range.getEndTime(), userId, USUAL_ACTIVITY_EVENTS);
         for (UsageEvents.Event event : events) {
             if (Objects.equals(packageName, event.getPackageName())) {
                 int eventType = event.getEventType();
                 // Queries are sorted in descending order, so a not-running activity should be paused
                 // or stopped first and then resumed (i.e., reversed logic)
                 if (eventType == UsageEvents.Event.ACTIVITY_STOPPED || eventType == UsageEvents.Event.ACTIVITY_PAUSED) {
-                    if (endTime > 0) {
-                        // Log.d(TAG, "Start time non-zero (%d) for package %s", endTime, packageName);
-                        // Prefer stop times over pause. So, ignore all the subsequent events until an
-                        // resume event is found. This may result in inaccurate access count. However,
-                        // this inaccuracy is acceptable.
-                        continue;
-                    }
-                    endTime = event.getTimeStamp();
+                    usage.setLastEndTime(event.getTimeStamp());
                 } else if (eventType == UsageEvents.Event.ACTIVITY_RESUMED) {
-                    if (endTime == 0) {
-                        Log.d(TAG, "Start time is zero for package %s, skipping...", packageName);
-                        continue;
-                    }
-                    usEntries.add(new PackageUsageInfo.Entry(event.getTimeStamp(), endTime));
-                    endTime = 0;
+                    usage.setLastStartTime(event.getTimeStamp());
                 }
             }
         }
-        packageUsageInfo.entries = usEntries;
+        packageUsageInfo.entries = usage.entries;
         return packageUsageInfo;
+    }
+
+    private static class PerPackageUsageInternal {
+        @NonNull
+        public final String packageName;
+        public final Stack<PackageUsageInfo.Entry> entries = new Stack<>();
+        public long screenTime = 0;
+        public long lastUsed = 0;
+        public int accessCount = 0;
+
+        private long mLastStartTime = 0;
+        private long mLastEndTime = 0;
+        private boolean mOverrideLastEntry = false;
+
+        public PerPackageUsageInternal(@NonNull String packageName) {
+            this.packageName = packageName;
+        }
+
+        public void setLastStartTime(long startTime) {
+            // Start time is added last due to how events are sorted
+            if (mLastEndTime == 0) {
+                Log.d(TAG, "End time is zero for package %s", packageName);
+                return;
+            }
+            mLastStartTime = startTime;
+            // Add to entries
+            if (mOverrideLastEntry) {
+                mOverrideLastEntry = false;
+                PackageUsageInfo.Entry entry = entries.pop();
+                entries.push(new PackageUsageInfo.Entry(mLastStartTime, entry.endTime));
+                // Remove this screen time
+                screenTime -= entry.getDuration();
+            } else {
+                entries.push(new PackageUsageInfo.Entry(mLastStartTime, mLastEndTime));
+            }
+            // Add to screen time
+            screenTime += entries.peek().getDuration();
+            // Reset end time
+            mLastEndTime = 0;
+        }
+
+        public void setLastEndTime(long endTime) {
+            // End time is added first due to how events are sorted
+            if (mLastEndTime != 0) {
+                // Log.d(TAG, "Start time non-zero (%d) for package %s", mLastEndTime, packageName);
+                // Prefer stop times over pause. So, ignore all the subsequent events until an
+                // resume event is found. This may result in inaccurate access count. However,
+                // this inaccuracy is acceptable.
+                return;
+            }
+            mLastEndTime = endTime;
+            // Set access count
+            if (mLastStartTime > 0 && (mLastStartTime - mLastEndTime) <= 500) {
+                // 500 ms is a heuristic diff that depends on the processing speed & anim time.
+                // Request updating the last entry
+                mOverrideLastEntry = true;
+            } else ++accessCount;
+            // Set last used time if not already (we only add the first end time because of how
+            // the events are sorted)
+            if (lastUsed == 0) {
+                lastUsed = endTime;
+            }
+        }
     }
 
     /**
@@ -233,64 +289,42 @@ public class AppUsageStatsManager {
     private List<PackageUsageInfo> getUsageStatsInternal(@UsageUtils.IntervalType int usageInterval,
                                                          @UserIdInt int userId) {
         List<PackageUsageInfo> screenTimeList = new ArrayList<>();
-        Map<String, Long> endTimes = new HashMap<>();
-        Map<String, Long> screenTimes = new HashMap<>();
-        Map<String, Long> lastUse = new HashMap<>();
-        Map<String, Integer> accessCount = new HashMap<>();
+        Map<String, PerPackageUsageInternal> perPackageUsageMap = new HashMap<>();
         // Get events
         UsageUtils.TimeInterval interval = UsageUtils.getTimeInterval(usageInterval);
-        List<UsageEvents.Event> events = UsageStatsManagerCompat.queryEventsSorted(interval.getStartTime(), interval.getEndTime(), userId, new int[]{UsageEvents.Event.ACTIVITY_RESUMED, UsageEvents.Event.ACTIVITY_PAUSED, UsageEvents.Event.ACTIVITY_STOPPED});
+        List<UsageEvents.Event> events = UsageStatsManagerCompat.queryEventsSorted(interval.getStartTime(), interval.getEndTime(), userId, USUAL_ACTIVITY_EVENTS);
         for (UsageEvents.Event event : events) {
             int eventType = event.getEventType();
             String packageName = event.getPackageName();
             // Queries are sorted in descending order, so a not-running activity should be paused or
             // stopped first and then resumed (i.e., reversed logic).
             if (eventType == UsageEvents.Event.ACTIVITY_STOPPED || eventType == UsageEvents.Event.ACTIVITY_PAUSED) {
-                if (endTimes.get(packageName) != null) {
-                    // Log.d(TAG, "(%2d) Start time non-zero (%d) for package %s", eventType, endTimes.get(packageName), packageName);
-                    // Prefer stop times over pause. So, ignore all the subsequent events until an
-                    // resume event is found. This may result in inaccurate access count. However,
-                    // this inaccuracy is acceptable.
-                    continue;
+                PerPackageUsageInternal usage = perPackageUsageMap.get(packageName);
+                if (usage == null) {
+                    usage = new PerPackageUsageInternal(packageName);
+                    perPackageUsageMap.put(packageName, usage);
                 }
-                // Override previous pause/stops
-                endTimes.put(event.getPackageName(), event.getTimeStamp());
+                usage.setLastEndTime(event.getTimeStamp());
             } else if (eventType == UsageEvents.Event.ACTIVITY_RESUMED) {
-                Long endTime = endTimes.remove(packageName);
-                if (endTime == null) {
-                    Log.d(TAG, "Start time is zero for package %s", packageName);
-                    continue;
+                PerPackageUsageInternal usage = perPackageUsageMap.get(packageName);
+                if (usage == null) {
+                    usage = new PerPackageUsageInternal(packageName);
+                    perPackageUsageMap.put(packageName, usage);
                 }
-                long time = endTime - event.getTimeStamp();
-                if (screenTimes.containsKey(packageName)) {
-                    screenTimes.put(packageName, NonNullUtils.defeatNullable(screenTimes
-                            .get(packageName)) + time);
-                } else screenTimes.put(packageName, time);
-                // FIXME: 11/6/24 Access count is still not perfect since it counts access through
-                //  activities. Instead, access counts should be measured for the entire time the
-                //  app is running after it's opened.
-                if (accessCount.containsKey(packageName)) {
-                    accessCount.put(packageName, NonNullUtils.defeatNullable(accessCount
-                            .get(packageName)) + 1);
-                } else accessCount.put(packageName, 1);
-                if (lastUse.get(packageName) == null) {
-                    lastUse.put(packageName, event.getTimeStamp());
-                }
+                usage.setLastStartTime(event.getTimeStamp());
             }
         }
-        SparseArrayCompat<DataUsage> mobileData = new SparseArrayCompat<>();
-        SparseArrayCompat<DataUsage> wifiData = new SparseArrayCompat<>();
-        mobileData.putAll(getMobileData(interval));
-        wifiData.putAll(getWifiData(interval));
-        for (String packageName : screenTimes.keySet()) {
+        SparseArrayCompat<DataUsage> mobileData = getMobileData(interval);
+        SparseArrayCompat<DataUsage> wifiData = getWifiData(interval);
+        for (PerPackageUsageInternal usage : perPackageUsageMap.values()) {
             // Skip uninstalled packages?
             ApplicationInfo applicationInfo = ExUtils.exceptionAsNull(() -> PackageManagerCompat
-                    .getApplicationInfo(packageName, MATCH_UNINSTALLED_PACKAGES
+                    .getApplicationInfo(usage.packageName, MATCH_UNINSTALLED_PACKAGES
                             | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId));
-            PackageUsageInfo packageUsageInfo = new PackageUsageInfo(mContext, packageName, userId, applicationInfo);
-            packageUsageInfo.timesOpened = NonNullUtils.defeatNullable(accessCount.get(packageName));
-            packageUsageInfo.lastUsageTime = NonNullUtils.defeatNullable(lastUse.get(packageName));
-            packageUsageInfo.screenTime = NonNullUtils.defeatNullable(screenTimes.get(packageName));
+            PackageUsageInfo packageUsageInfo = new PackageUsageInfo(mContext, usage.packageName, userId, applicationInfo);
+            packageUsageInfo.timesOpened = usage.accessCount;
+            packageUsageInfo.lastUsageTime = usage.lastUsed;
+            packageUsageInfo.screenTime = usage.screenTime;
             int uid = applicationInfo != null ? applicationInfo.uid : 0;
             if (mobileData.containsKey(uid)) {
                 packageUsageInfo.mobileData = mobileData.get(uid);
