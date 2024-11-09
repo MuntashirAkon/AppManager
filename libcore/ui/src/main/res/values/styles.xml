@@ -144,6 +144,7 @@
     <style name="Widget.AppTheme.MaterialSpinner.AutoCompleteTextView" parent="Widget.Material3.AutoCompleteTextView.OutlinedBox.Dense">
         <item name="simpleItemLayout">@layout/auto_complete_dropdown_item</item>
         <item name="android:dropDownSelector">?attr/listChoiceBackgroundIndicator</item>
+        <item name="android:textColor">?attr/colorOnPrimaryContainer</item>
     </style>
 
     <style name="Widget.AppTheme.MaterialSpinner.AutoCompleteTextView.Small" parent="Widget.AppTheme.AutoCompleteTextView">
@@ -152,6 +153,7 @@
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
         <item name="android:minHeight">34dp</item>
+        <item name="android:textColor">?attr/colorOnPrimaryContainer</item>
     </style>
 
     <!-- MaterialAlertDialog -->
