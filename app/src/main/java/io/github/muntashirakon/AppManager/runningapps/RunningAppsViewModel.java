@@ -227,7 +227,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
             try {
                 PackageManagerCompat.forceStopPackage(info.packageName, UserHandleHidden.getUserId(info.uid));
                 mForceStopAppResult.postValue(new Pair<>(info, true));
-            } catch (RemoteException e) {
+            } catch (SecurityException e) {
                 e.printStackTrace();
                 mForceStopAppResult.postValue(new Pair<>(info, false));
             }

@@ -36,6 +36,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
 import android.provider.Settings;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.format.Formatter;
 import android.util.Pair;
@@ -150,7 +151,6 @@ import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.IntentUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
@@ -343,6 +343,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setMessage(statusMessagePair.second)
                         .setNegativeButton(R.string.close, null)
                         .show());
+        mMainModel.getTagsAlteredLiveData().observe(getViewLifecycleOwner(), altered -> {
+            // Reload tag cloud
+            mAppInfoModel.loadTagCloud(mPackageInfo, mIsExternalApk);
+        });
     }
 
     @Override
@@ -439,13 +443,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             BackupRestoreDialogFragment fragment = BackupRestoreDialogFragment.getInstanceWithPref(
                     Collections.singletonList(new UserPackagePair(mPackageName, mUserId)), mUserId);
             fragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
-            fragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
+            fragment.setOnActionCompleteListener((mode, failedPackages) -> {
+                showProgressIndicator(false);
+                mMainModel.getTagsAlteredLiveData().setValue(true);
+            });
             fragment.show(getParentFragmentManager(), BackupRestoreDialogFragment.TAG);
         } else if (itemId == R.id.action_view_settings) {
             try {
                 ActivityManagerCompat.startActivity(IntentUtils.getAppDetailsSettings(mPackageName), mUserId);
             } catch (Throwable th) {
-                UIUtils.displayLongToast(th.getLocalizedMessage());
+                UIUtils.displayLongToast("Error: " + th.getLocalizedMessage());
             }
         } else if (itemId == R.id.action_export_blocking_rules) {
             final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(mActivity, System.currentTimeMillis()) + ".am.tsv";
@@ -468,20 +475,22 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         } else if (itemId == R.id.action_open_in_termux) {
             if (SelfPermissions.checkSelfPermission(TERMUX_RUN_COMMAND)) {
                 openInTermux();
-            } else mRequestPerm.launch(TERMUX_RUN_COMMAND, granted -> {
-                if (granted) openInTermux();
-            });
+            } else {
+                mRequestPerm.launch(TERMUX_RUN_COMMAND, granted -> {
+                    if (granted) openInTermux();
+                });
+            }
         } else if (itemId == R.id.action_run_in_termux) {
             if (SelfPermissions.checkSelfPermission(TERMUX_RUN_COMMAND)) {
                 runInTermux();
-            } else mRequestPerm.launch(TERMUX_RUN_COMMAND, granted -> {
-                if (granted) runInTermux();
-            });
+            } else {
+                mRequestPerm.launch(TERMUX_RUN_COMMAND, granted -> {
+                    if (granted) runInTermux();
+                });
+            }
         } else if (itemId == R.id.action_magisk_hide) {
-            if (mMainModel == null) return true;
             displayMagiskHideDialog();
         } else if (itemId == R.id.action_magisk_denylist) {
-            if (mMainModel == null) return true;
             displayMagiskDenyListDialog();
         } else if (itemId == R.id.action_battery_opt) {
             if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.DEVICE_POWER)) {
@@ -491,7 +500,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setPositiveButton(R.string.enable, (dialog, which) -> {
                             if (DeviceIdleManagerCompat.enableBatteryOptimization(mPackageName)) {
                                 UIUtils.displayShortToast(R.string.done);
-                                refreshDetails();
+                                mMainModel.getTagsAlteredLiveData().setValue(true);
                             } else {
                                 UIUtils.displayShortToast(R.string.failed);
                             }
@@ -499,7 +508,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setNegativeButton(R.string.disable, (dialog, which) -> {
                             if (DeviceIdleManagerCompat.disableBatteryOptimization(mPackageName)) {
                                 UIUtils.displayShortToast(R.string.done);
-                                refreshDetails();
+                                mMainModel.getTagsAlteredLiveData().setValue(true);
                             } else {
                                 UIUtils.displayShortToast(R.string.failed);
                             }
@@ -516,10 +525,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setPositiveButton(R.string.enable, (dialog, which) -> ThreadUtils.postOnBackgroundThread(() -> {
                             try {
                                 SensorServiceCompat.enableSensor(mPackageName, mUserId, true);
-                                ThreadUtils.postOnMainThread(() -> {
-                                    UIUtils.displayShortToast(R.string.done);
-                                    refreshDetails();
-                                });
+                                mMainModel.getTagsAlteredLiveData().postValue(true);
+                                ThreadUtils.postOnMainThread(() ->
+                                        UIUtils.displayShortToast(R.string.done));
                             } catch (IOException e) {
                                 ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(
                                         getString(R.string.failed)
@@ -530,10 +538,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setNegativeButton(R.string.disable, (dialog, which) -> ThreadUtils.postOnBackgroundThread(() -> {
                             try {
                                 SensorServiceCompat.enableSensor(mPackageName, mUserId, false);
-                                ThreadUtils.postOnMainThread(() -> {
-                                    UIUtils.displayShortToast(R.string.done);
-                                    refreshDetails();
-                                });
+                                mMainModel.getTagsAlteredLiveData().postValue(true);
+                                ThreadUtils.postOnMainThread(() ->
+                                        UIUtils.displayShortToast(R.string.done));
                             } catch (IOException e) {
                                 ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(
                                         getString(R.string.failed)
@@ -553,7 +560,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             ArrayMap<Integer, String> netPolicyMap = NetworkPolicyManagerCompat.getAllReadablePolicies(ContextUtils.getContext());
             Integer[] polices = new Integer[netPolicyMap.size()];
             CharSequence[] policyStrings = new String[netPolicyMap.size()];
-            int selectedPolicies = ExUtils.requireNonNullElse(() -> NetworkPolicyManagerCompat.getUidPolicy(mApplicationInfo.uid), 0);
+            int selectedPolicies = NetworkPolicyManagerCompat.getUidPolicy(mApplicationInfo.uid);
             for (int i = 0; i < netPolicyMap.size(); ++i) {
                 polices[i] = netPolicyMap.keyAt(i);
                 policyStrings[i] = netPolicyMap.valueAt(i);
@@ -567,12 +574,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         for (int flag : selections) {
                             flags |= flag;
                         }
-                        try {
-                            NetworkPolicyManagerCompat.setUidPolicy(mApplicationInfo.uid, flags);
-                            refreshDetails();
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
+                        NetworkPolicyManagerCompat.setUidPolicy(mApplicationInfo.uid, flags);
+                        mMainModel.getTagsAlteredLiveData().setValue(true);
                     })
                     .show();
         } else if (itemId == R.id.action_extract_icon) {
@@ -676,7 +679,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         try {
             ActivityCompat.startForegroundService(mActivity, intent);
         } catch (Exception e) {
-            e.printStackTrace();
+            UIUtils.displayLongToast("Error: " + e.getMessage());
         }
     }
 
@@ -686,7 +689,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         try {
             startActivity(PackageInstallerActivity.getLaunchableInstance(requireContext(), apkSource));
         } catch (Exception e) {
-            e.printStackTrace();
             UIUtils.displayLongToast("Error: " + e.getMessage());
         }
     }
@@ -720,7 +722,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @WorkerThread
     @NonNull
-    private List<TagItem> getTagCloudItems(AppInfoViewModel.TagCloud tagCloud) {
+    private List<TagItem> getTagCloudItems(@NonNull AppInfoViewModel.TagCloud tagCloud) {
         Objects.requireNonNull(mMainModel);
         Context context = mTagCloud.getContext();
         List<TagItem> tagItems = new LinkedList<>();
@@ -840,10 +842,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                                 DomainVerificationManagerCompat.setDomainVerificationLinkHandlingAllowed(
                                                         mPackageName, !tagCloud.canOpenLinks, mUserId);
                                             }
-                                            ThreadUtils.postOnMainThread(() -> {
-                                                UIUtils.displayShortToast(R.string.done);
-                                                refreshDetails();
-                                            });
+                                            mMainModel.getTagsAlteredLiveData().postValue(true);
+                                            ThreadUtils.postOnMainThread(() ->
+                                                    UIUtils.displayShortToast(R.string.done));
                                         } catch (Throwable th) {
                                             th.printStackTrace();
                                             ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed));
@@ -865,58 +866,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             tagItems.add(runningTag);
             runningTag.setTextRes(R.string.running)
                     .setColor(ColorCodes.getComponentRunningIndicatorColor(context))
-                    .setOnClickListener(v -> {
-                        showProgressIndicator(true);
-                        ThreadUtils.postOnBackgroundThread(() -> {
-                            List<ActivityManager.RunningServiceInfo> runningServices = tagCloud.runningServices;
-                            CharSequence[] runningServiceNames = new CharSequence[runningServices.size()];
-                            for (int i = 0; i < runningServiceNames.length; ++i) {
-                                runningServiceNames[i] = new SpannableStringBuilder()
-                                        .append(runningServices.get(i).service.getShortClassName())
-                                        .append("\n")
-                                        .append(getSmallerText(new SpannableStringBuilder()
-                                                .append(getStyledKeyValue(v.getContext(), R.string.process_name,
-                                                        runningServices.get(i).process)).append("\n")
-                                                .append(getStyledKeyValue(mActivity, R.string.pid,
-                                                        String.valueOf(runningServices.get(i).pid)))));
-                            }
-                            boolean logViewerAvailable = FeatureController.isLogViewerEnabled()
-                                    && SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.DUMP);
-                            DialogTitleBuilder titleBuilder = new DialogTitleBuilder(v.getContext())
-                                    .setTitle(R.string.running_services);
-                            if (logViewerAvailable) {
-                                titleBuilder.setSubtitle(R.string.running_services_logcat_hint);
-                            }
-                            ThreadUtils.postOnMainThread(() -> {
-                                if (isDetached()) return;
-                                showProgressIndicator(false);
-                                SearchableItemsDialogBuilder<CharSequence> builder = new SearchableItemsDialogBuilder<>(mActivity, runningServiceNames)
-                                        .setTitle(titleBuilder.build());
-                                if (logViewerAvailable) {
-                                    builder.setOnItemClickListener((dialog, which, item) -> {
-                                        Intent logViewerIntent = new Intent(mActivity.getApplicationContext(), LogViewerActivity.class)
-                                                .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + runningServices.get(which).pid)
-                                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        mActivity.startActivity(logViewerIntent);
-                                    });
-                                }
-                                if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)) {
-                                    builder.setNeutralButton(R.string.force_stop, (dialog, which) -> ThreadUtils.postOnBackgroundThread(() -> {
-                                        try {
-                                            PackageManagerCompat.forceStopPackage(mPackageName, mUserId);
-                                            ThreadUtils.postOnMainThread(this::refreshDetails);
-                                        } catch (RemoteException | SecurityException e) {
-                                            Log.e(TAG, e);
-                                            ThreadUtils.postOnMainThread(() -> displayLongToast(R.string.failed_to_stop, mAppLabel));
-                                        }
-                                    }));
-                                }
-                                builder.setNegativeButton(R.string.close, null);
-                                if (isDetached()) return;
-                                builder.show();
-                            });
-                        });
-                    });
+                    .setOnClickListener(v ->
+                            displayRunningServices(tagCloud.runningServices, v.getContext()));
         }
         if (tagCloud.isForceStopped) {
             tagItems.add(new TagItem()
@@ -1012,7 +963,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setPositiveButton(R.string.yes, (dialog, which) -> {
                             if (DeviceIdleManagerCompat.enableBatteryOptimization(mPackageName)) {
                                 UIUtils.displayShortToast(R.string.done);
-                                refreshDetails();
+                                mMainModel.getTagsAlteredLiveData().setValue(true);
                             } else {
                                 UIUtils.displayShortToast(R.string.failed);
                             }
@@ -1141,6 +1092,61 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return tagItems;
     }
 
+    private void displayRunningServices(
+            @NonNull List<ActivityManager.RunningServiceInfo> runningServices,
+            @NonNull Context ctx) {
+        showProgressIndicator(true);
+        ThreadUtils.postOnBackgroundThread(() -> {
+            CharSequence[] runningServiceNames = new CharSequence[runningServices.size()];
+            for (int i = 0; i < runningServiceNames.length; ++i) {
+                ActivityManager.RunningServiceInfo serviceInfo = runningServices.get(i);
+                String title = serviceInfo.service.getShortClassName();
+                Spannable description = new SpannableStringBuilder()
+                        .append(getStyledKeyValue(ctx, R.string.process_name, serviceInfo.process))
+                        .append("\n")
+                        .append(getStyledKeyValue(ctx, R.string.pid, String.valueOf(serviceInfo.pid)));
+                runningServiceNames[i] = new SpannableStringBuilder()
+                        .append(title)
+                        .append("\n")
+                        .append(getSmallerText(description));
+            }
+            boolean logViewerAvailable = FeatureController.isLogViewerEnabled()
+                    && SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.DUMP);
+            DialogTitleBuilder titleBuilder = new DialogTitleBuilder(ctx)
+                    .setTitle(R.string.running_services);
+            if (logViewerAvailable) {
+                titleBuilder.setSubtitle(R.string.running_services_logcat_hint);
+            }
+            ThreadUtils.postOnMainThread(() -> {
+                if (isDetached()) return;
+                showProgressIndicator(false);
+                SearchableItemsDialogBuilder<CharSequence> builder = new SearchableItemsDialogBuilder<>(mActivity, runningServiceNames)
+                        .setTitle(titleBuilder.build());
+                if (logViewerAvailable) {
+                    builder.setOnItemClickListener((dialog, which, item) -> {
+                        Intent logViewerIntent = new Intent(mActivity.getApplicationContext(), LogViewerActivity.class)
+                                .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + runningServices.get(which).pid)
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mActivity.startActivity(logViewerIntent);
+                    });
+                }
+                if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)) {
+                    builder.setNeutralButton(R.string.force_stop, (dialog, which) -> ThreadUtils.postOnBackgroundThread(() -> {
+                        try {
+                            PackageManagerCompat.forceStopPackage(mPackageName, mUserId);
+                        } catch (SecurityException e) {
+                            Log.e(TAG, e);
+                            ThreadUtils.postOnMainThread(() -> displayLongToast(R.string.failed_to_stop, mAppLabel));
+                        }
+                    }));
+                }
+                builder.setNegativeButton(R.string.close, null);
+                if (isDetached()) return;
+                builder.show();
+            });
+        });
+    }
+
     @UiThread
     private void displayMagiskHideDialog() {
         SearchableMultiChoiceDialogBuilder<MagiskProcess> builder;
@@ -1150,7 +1156,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     if (MagiskHide.apply(mp)) {
                         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mUserId)) {
                             cb.setMagiskHide(mp);
-                            ThreadUtils.postOnMainThread(this::refreshDetails);
+                            mMainModel.getTagsAlteredLiveData().postValue(true);
                         }
                     } else {
                         mp.setEnabled(!isChecked);
@@ -1172,7 +1178,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     if (MagiskDenyList.apply(mp)) {
                         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mUserId)) {
                             cb.setMagiskDenyList(mp);
-                            ThreadUtils.postOnMainThread(this::refreshDetails);
+                            mMainModel.getTagsAlteredLiveData().postValue(true);
                         }
                     } else {
                         mp.setEnabled(!isChecked);
@@ -1261,7 +1267,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     try {
                         ActivityManagerCompat.startActivity(launchIntent, mUserId);
                     } catch (Throwable th) {
-                        UIUtils.displayLongToast(th.getLocalizedMessage());
+                        UIUtils.displayLongToast("Error: " + th.getLocalizedMessage());
                     }
                 });
             }
@@ -1293,8 +1299,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
                         uninstallIntent.setData(Uri.parse("package:" + mPackageName));
                         ActivityManagerCompat.startActivity(uninstallIntent, mUserId);
+                        // TODO: 19/8/24 Watch for uninstallation
                     } catch (Throwable th) {
-                        UIUtils.displayLongToast(th.getLocalizedMessage());
+                        UIUtils.displayLongToast("Error: " + th.getLocalizedMessage());
                     }
                     return;
                 }
@@ -1361,8 +1368,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             ThreadUtils.postOnBackgroundThread(() -> {
                                 try {
                                     PackageManagerCompat.forceStopPackage(mPackageName, mUserId);
-                                    ThreadUtils.postOnMainThread(this::refreshDetails);
-                                } catch (RemoteException | SecurityException e) {
+                                } catch (SecurityException e) {
                                     Log.e(TAG, e);
                                     displayLongToast(R.string.failed_to_stop, mAppLabel);
                                 }
@@ -1390,9 +1396,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setPositiveButton(R.string.clear, (dialog, which) -> {
                             if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)) {
                                 ThreadUtils.postOnBackgroundThread(() -> {
-                                    if (PackageManagerCompat.clearApplicationUserData(mPackageName, mUserId)) {
-                                        ThreadUtils.postOnMainThread(this::refreshDetails);
-                                    }
+                                    boolean success = PackageManagerCompat
+                                            .clearApplicationUserData(mPackageName, mUserId);
+                                    ThreadUtils.postOnMainThread(() -> {
+                                        if (success) {
+                                            UIUtils.displayShortToast(R.string.done);
+                                        } else UIUtils.displayShortToast(R.string.failed);
+                                    });
                                 });
                             } else {
                                 // Use accessibility
@@ -1416,9 +1426,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 clearCacheAction.setOnClickListener(v -> {
                     if (SelfPermissions.canClearAppCache()) {
                         ThreadUtils.postOnBackgroundThread(() -> {
-                            if (PackageManagerCompat.deleteApplicationCacheFilesAsUser(mPackageName, mUserId)) {
-                                ThreadUtils.postOnMainThread(this::refreshDetails);
-                            }
+                            boolean success = PackageManagerCompat
+                                    .deleteApplicationCacheFilesAsUser(mPackageName, mUserId);
+                            ThreadUtils.postOnMainThread(() -> {
+                                if (success) {
+                                    UIUtils.displayShortToast(R.string.done);
+                                } else UIUtils.displayShortToast(R.string.failed);
+                            });
                         });
                     } else {
                         // Use accessibility
@@ -1440,7 +1454,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     try {
                         ActivityManagerCompat.startActivity(IntentUtils.getAppDetailsSettings(mPackageName), mUserId);
                     } catch (Throwable th) {
-                        UIUtils.displayLongToast(th.getLocalizedMessage());
+                        UIUtils.displayLongToast("Error: " + th.getLocalizedMessage());
                     }
                 });
             }
@@ -1557,15 +1571,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
         }  // End root only features
         // Set F-Droid
-        Intent fdroid_intent = new Intent(Intent.ACTION_VIEW);
-        fdroid_intent.setData(Uri.parse("https://f-droid.org/packages/" + mPackageName));
-        List<ResolveInfo> resolvedActivities = mPackageManager.queryIntentActivities(fdroid_intent, 0);
+        Intent fdroidIntent = new Intent(Intent.ACTION_VIEW);
+        fdroidIntent.setData(Uri.parse("https://f-droid.org/packages/" + mPackageName));
+        List<ResolveInfo> resolvedActivities = mPackageManager.queryIntentActivities(fdroidIntent, 0);
         if (!resolvedActivities.isEmpty()) {
             ActionItem fdroidItem = new ActionItem(R.string.fdroid, R.drawable.ic_frost_fdroid);
             actionItems.add(fdroidItem);
             fdroidItem.setOnClickListener(v -> {
                 try {
-                    startActivity(fdroid_intent);
+                    startActivity(fdroidIntent);
                 } catch (Exception ignored) {
                 }
             });

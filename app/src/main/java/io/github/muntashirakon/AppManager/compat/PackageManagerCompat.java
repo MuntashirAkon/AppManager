@@ -582,7 +582,7 @@ public final class PackageManagerCompat {
     }
 
     @RequiresPermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)
-    public static void forceStopPackage(String packageName, int userId) throws RemoteException, SecurityException {
+    public static void forceStopPackage(String packageName, int userId) throws SecurityException {
         try {
             ActivityManagerCompat.getActivityManager().forceStopPackage(packageName, userId);
             BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{packageName});

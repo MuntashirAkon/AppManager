@@ -255,7 +255,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                 tagCloud.isBatteryOptimized = true;
             }
             if (!isExternalApk && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY)) {
-                tagCloud.netPolicies = ExUtils.requireNonNullElse(() -> NetworkPolicyManagerCompat.getUidPolicy(applicationInfo.uid), 0);
+                tagCloud.netPolicies = NetworkPolicyManagerCompat.getUidPolicy(applicationInfo.uid);
             } else {
                 tagCloud.netPolicies = 0;
             }

@@ -54,6 +54,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -114,6 +115,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private final ExecutorService mExecutor = Executors.newFixedThreadPool(4);
     private final CountDownLatch mPackageInfoWatcher = new CountDownLatch(1);
     private final MutableLiveData<PackageInfo> mPackageInfoLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mTagsAlteredLiveData = new MutableLiveData<>();
+    private final MutableLiveData<AppDetailsComponentItem> mComponentChangedLiveData = new MutableLiveData<>();
 
     @Nullable
     private PackageInfo mPackageInfo;
@@ -175,6 +178,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
             ((CachedApkSource) mApkSource).cleanup();
         }
         mExecutor.shutdownNow();
+    }
+
+    public MutableLiveData<Boolean> getTagsAlteredLiveData() {
+        return mTagsAlteredLiveData;
     }
 
     @UiThread
@@ -507,6 +514,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                                         @ComponentRule.ComponentStatus String componentStatus) {
         if (mExternalApk) return;
         mExecutor.submit(() -> {
+            Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::pauseWatcher);
             String componentName = componentItem.name;
             synchronized (mBlockerLocker) {
                 waitForBlockerOrExit();
@@ -527,9 +535,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 // Commit changes
                 mBlocker.commit();
                 mBlocker.setReadOnly();
-                // FIXME: 18/1/22 Do not reload all components, only reload this component
-                // Update UI
-                reloadComponents();
+                Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::resumeWatcher);
             }
         });
     }
@@ -708,7 +714,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (mExternalApk) return false;
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null) return false;
-        boolean isSuccessful = false;
         try {
             if (appOpItem.isAllowed()) {
                 appOpItem.disallowAppOp(packageInfo, mAppOpsManager);
@@ -899,6 +904,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @AnyThread
     public void load(@AppDetailsFragment.Property int property) {
         mExecutor.submit(() -> {
+            Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::pauseWatcher);
             switch (property) {
                 case AppDetailsFragment.ACTIVITIES:
                     loadActivities();
@@ -937,6 +943,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     loadAppInfo();
                     break;
             }
+            Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::resumeWatcher);
         });
     }
 
@@ -1019,10 +1026,14 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void reloadComponents() {
-        mExecutor.submit(this::loadActivities);
-        mExecutor.submit(this::loadServices);
-        mExecutor.submit(this::loadReceivers);
-        mExecutor.submit(this::loadProviders);
+        mExecutor.submit(() -> {
+            Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::pauseWatcher);
+            loadActivities();
+            loadServices();
+            loadReceivers();
+            loadProviders();
+            Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::resumeWatcher);
+        });
     }
 
     @SuppressLint("WrongConstant")
@@ -1903,30 +1914,49 @@ public class AppDetailsViewModel extends AndroidViewModel {
      */
     public static class PackageIntentReceiver extends PackageChangeReceiver {
         final AppDetailsViewModel mModel;
+        volatile boolean mPauseWatcher = false;
+        int mChangeCount = 0;
 
         public PackageIntentReceiver(@NonNull AppDetailsViewModel model) {
             super(model.getApplication());
             mModel = model;
         }
 
+        public void resumeWatcher() {
+            if (mChangeCount > 0) {
+                mChangeCount = 0;
+                mModel.setPackageChanged();
+            }
+            mPauseWatcher = false;
+        }
+
+        public void pauseWatcher() {
+            mChangeCount = 0;
+            mPauseWatcher = true;
+        }
+
         @Override
         @WorkerThread
         protected void onPackageChanged(Intent intent, @Nullable Integer uid, @Nullable String[] packages) {
+            boolean packageChanged = false;
             if (uid != null) {
                 if (mModel.mPackageInfo != null && mModel.mPackageInfo.applicationInfo.uid == uid) {
                     Log.d(TAG, "Package is changed.");
-                    mModel.setPackageChanged();
+                    packageChanged = true;
                 }
             } else if (packages != null) {
                 for (String packageName : packages) {
                     if (packageName.equals(mModel.mPackageName)) {
                         Log.d(TAG, "Package availability changed.");
-                        mModel.setPackageChanged();
+                        packageChanged = true;
+                        break;
                     }
                 }
-            } else {
-                Log.d(TAG, "Locale changed.");
-                mModel.setPackageChanged();
+            }
+            if (packageChanged) {
+                if (mPauseWatcher) {
+                    ++mChangeCount;
+                } else mModel.setPackageChanged();
             }
         }
     }
