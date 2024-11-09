@@ -87,7 +87,8 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     void setDefaultList(List<PackageUsageInfo> list) {
         synchronized (mAdapterList) {
-            AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
+            notifyItemChanged(0);
+            AdapterUtils.notifyDataSetChanged(this, 1, mAdapterList, list);
         }
     }
 
