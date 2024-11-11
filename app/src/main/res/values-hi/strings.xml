@@ -776,10 +776,7 @@
     <string name="input_app_ops_description_profile">इनपुट ऐप सेशन नाम और/या रिक्त स्थान के साथ स्थिरांक, उदा। <tt>WAKE_LOCK 63 72 CAMERA</tt> आदि। सभी कॉन्फ़िगर किए गए ऐप ऑप्स के लिए आवेदन करने के लिए <tt>*</tt> का उपयोग करें।</string>
     <string name="app_signing_signature_schemes">हस्ताक्षर योजनाएं</string>
     <string name="pref_backup_restore_msg">बैकअप/पुनर्स्थापना अनुकूलित करें।</string>
-    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> •
-\n<a href="https://gitlab.com/muntashir/AppManager">GitLab</a> •
-\n<a href="https://0xacab.org/muntashir/AppManager">Riseup</a> •
-\n<a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="no_volumes_found">लिखित अनुमति के साथ कोई वॉल्यूम नहीं मिला।</string>
     <string name="backup_volume">बैकअप वॉल्यूम</string>
     <string name="encrypted">एन्क्रिप्टेड</string>
