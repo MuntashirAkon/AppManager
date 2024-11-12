@@ -1612,4 +1612,12 @@
     <string name="mode_of_op_custom_command">إذا لم تتمكن من استخدام أي من الأوضاع، فيمكنك تشغيل الأمر التالي باستخدام أي طرفية مدعومة لتشغيل App Manager في الوضع المصرح:</string>
     <string name="adb_pairing_retry_pairing">حاول مرَّةً أخرى</string>
     <string name="mode_of_op_alternative_custom_command">إذا تلقيت خطأ \"تم رفض الإذن\" في الأمر أعلاه، فقم بتشغيل الأمر التالي بدلاً من ذلك:</string>
+    <string name="sensors">المستشعرات</string>
+    <string name="tag_sensors_disabled">المستشعرات معطلة</string>
+    <string name="backup_cache">الملفات المؤقتة</string>
+    <string name="pref_use_system_font">استخدم خط النظام</string>
+    <string name="pref_use_system_font_msg">استخدم الخط الافتراضي للنظام بدلاً من الخط المادي. <font fgcolor="#ff0000">هذه ميزة تجريبية.</font></string>
+    <string name="actual_installer">المثبت الفعلي</string>
+    <string name="apk_source">مصدر التطبيق</string>
+    <string name="activity_name">اسم النشاط</string>
 </resources>
