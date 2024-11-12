@@ -1531,4 +1531,5 @@
     <string name="actual_installer">Obecny instalator</string>
     <string name="apk_source">Źródło APK</string>
     <string name="backup_cache">Pamięć podręczna</string>
+    <string name="activity_name">Nazwa aktywności</string>
 </resources>
