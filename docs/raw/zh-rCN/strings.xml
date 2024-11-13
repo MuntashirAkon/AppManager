@@ -75,8 +75,7 @@
     <string name="pages$main-page$$profiles-title">配置文件</string>
     <string name="pages$main-page$$termux-title">Termux 终端模拟器</string>
     <string name="pages$main-page$$settings-title">设置</string>
-    <string name="pages$main-page$options-menu">选项菜单提供了几个选项，可用以对列出的应用程序进行排序和过滤，
-\n以及转到 App Manager 内或外的不同页面。</string>
+    <string name="pages$main-page$options-menu">选项菜单提供了若干个选项，以用于对列出的应用程序进行排序和过滤， \n以及转到 App Manager 内或外的不同页面。</string>
     <string name="pages$main-page$settings">此菜单项将打开本应用的 \\hyperref[sec:settings-page]{设置}.</string>
     <string name="pages$app-details-page$$section-title">应用程序详情页</string>
     <string name="pages$app-details-page$$colour-codes-title">颜色代码含义</string>
@@ -105,26 +104,7 @@
 \n在通过电子邮件提交补丁是，整个邮件对话在将来可能会被公开访问.
 \n所以，请不要除了您的姓名和电子邮件地址之外，不要包含任何个人身份信息（PII）.
 \n\\end{warning}</string>
-    <string name="pages$main-page$colour-codes">\\begin{itemize}
-\n \\item \\colorbox{AMLightGreyishOrange}{\\textcolor{black}{浅灰橙(日间模式下)}} / \\colorbox{AMDarkBlue}{
-\n \\textcolor{white}{深蓝(夜间模式下)}} -- 多选模式下被选中的应用
-\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{浅红(日间模式下)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}
-\n {深红 (夜间模式下)}} -- 停用的应用
-\n \\item \\colorbox{AMYellow}{\\textcolor{black}{黄色星标}} -- 可调试的应用
-\n \\item \\textcolor{AMOrange}{橙色 \\textit{日期}} -- 应用可读取日志
-\n \\item \\textcolor{AMOrange}{橙色 \\textit{UID}} -- 用户 ID 在应用间被共享
-\n \\item \\textcolor{AMOrange}{橙色 \\textit{SDK}} -- 使用明文网络通信(即 HTTP)
-\n \\item \\textcolor{red}{红色 \\textit{包名}} -- 应用禁止清除数据
-\n \\item \\textcolor{red}{红色\\textit{备份标识}} -- 已卸载的应用存在一个或多个备份
-\n 在App Manager中
-\n \\item \\textcolor{AMOrange}{橙色\\textit{备份标识}} -- 备份过期,
-\n 即基本备份中包含已安装的应用的旧版本
-\n \\item \\textcolor{AMDarkCyan}{深蓝绿色 \\textit{备份标识}} -- 备份在期,
-\n 即基本备份中包含已安装应用的相同或更高版本
-\n \\item \\textcolor{AMDarkCyan}{深蓝绿色 \\textit{包名}} -- 已强行停止运行的应用
-\n \\item \\textcolor{AMDarkCyan}{深蓝绿色 \\textit{版本}} -- 不活跃的应用
-\n \\item \\textcolor{magenta}{紫红} -- 常驻应用(即一直运行的应用)
-\n\\end{itemize}</string>
+    <string name="pages$main-page$colour-codes">\\begin{itemize}\n \\item \\colorbox{uninstalled-day}{\\textcolor{black}{红色 (日间模式下)}} / \\colorbox{uninstalled-night}{\\textcolor{white}\n {深红色 (夜间模式下)}} --已卸载的应用程序\n \\item \\colorbox{disabled-day}{\\textcolor{black}{浅红色 (日间模式下)}} / \\colorbox{disabled-night}{\\textcolor{white}\n {暗红色 (夜间模式下)}} -- 已停用的应用程序\n \\item \\colorbox{force-stopped}{\\textcolor{white}{靛青色}} -- 已强行停止的应用程序\n \\item \\colorbox{AMYellow}{\\textcolor{black}{黄色星标}} -- 可调式的应用程序\n\n \\item \\textcolor{AMOrange}{橙色 \\textit{日期}} -- 可读取日志的应用程序\n \\item \\textcolor{AMOrange}{橙色 \\textit{UID}} -- UID在多个应用程序中被共享\n \\item \\textcolor{AMOrange}{橙色 \\textit{SDK}} -- 使用明文网络通信(即 HTTP)\n \\item \\textcolor{tracker-day}{亮橙色 \\textit{包名}} -- 有一个或多个跟踪器的应用程序\n \\item \\textcolor{red}{红色 \\textit{应用标签}} -- 不允许清空数据的应用程序\n \\item \\textcolor{AMDarkCyan}{靛青色 \\textit{版本}} -- 未运行的应用程序\n \\item \\textcolor{magenta}{紫红色} -- 常驻应用(即一直运行的应用程序)\n\n \\item \\textcolor{red}{红色 \\textit{备份标识}} -- 已卸载的应用程序存在一个或多个备份 \n 在App Manager中\n \\item \\textcolor{AMOrange}{橙色 \\textit{备份标识}} -- 存在的备份已过期，\n 即基本备份中包含已安装应用程序的旧版本\n \\item \\textcolor{AMDarkCyan}{靛青色 \\textit{备份标识}} -- 存在的备份已更新，\n 即基本备份中包含已安装应用程序的相同版本或更高版本\n\\end{itemize}</string>
     <string name="pages$main-page$instructions">单击 \\textbf{用户手册} 打开离线版本的 App Manager 用户手册。\n如果单独拆分出来的相应功能 i.e.\\ \\texttt{feat\\_docs} 未安装, 或系统里不存在加载手册的 WebView\n也可以打开用户手册的在线版本。</string>
     <string name="pages$main-page$$list-options-title">列表选项</string>
     <string name="pages$main-page$$apk-updater-title">APK更新器</string>
@@ -157,81 +137,12 @@
 \n使用列表选项中的 \\hyperlink{par:main-page-sort}{排序} ，可以选择应用列表的排序方式，退出应用后仍会保留排序方式。
 \n使用列表选项中的 \\hyperlink{par:main-page-filter}{过滤}，可以过滤列表选项。
 \n筛选也可以通过搜索栏进行过滤，并支持正则表达式。</string>
-    <string name="pages$main-page$batch-operations">批处理或者多应用处理也可以在这个页面内进行。
-\n多选模式可以由点击任何应用图标或长按列表中的任何一项进入。
-\n进入后，仅需单击列表中的任何一项便可选中，而不是打开应用程序详情页。
-\n该模式下，批处理操作位于页面底部的多选菜单。操作包括：
-\n\\begin{itemize}
-\n \\item 将选中应用添加到 \\hyperref[sec:profiles-page]{配置}
-\n \\item \\hyperref[sec:backup-restore]{备份、恢复或删除}应用程序
-\n \\item 阻止应用中的追踪器
-\n \\item 清除应用数据或缓存
-\n \\item 导出App Manager中的屏蔽规则
-\n \\item 以MarkDown或XML格式导出应用列表
-\n \\item 启用/停用/强制停止/卸载应用程序
-\n \\item 阻止应用的后台操作 (Android 7 及更高版本)
-\n \\item 导出APK文件到 \\texttt{AppManager/apks}
-\n \\item 设置\\hyperref[sec:net-policy]{联网规则}
-\n\\end{itemize}
-\n
-\n\\begin{tip}{无障碍}
-\n 进入多选模式后。
-\n 可以使用键盘或遥控器的左右键呼出多选菜单。
-\n\\end{tip}</string>
-    <string name="pages$main-page$application-types">一个应用程序可以是 \\textbf{用户} 或 \\textbf{系统} 应用，同时存在以下后缀:
-\n\\begin{itemize}
-\n \\item \\texttt{X} -- 支持多种架构
-\n \\item \\texttt{0} -- 不含dex文件
-\n \\item \\texttt{°} -- 已暂停应用
-\n \\item \\texttt{\\#} -- 应用程序请求系统分配一个大堆，即\\ 大运行时内存
-\n \\item \\texttt{\?} -- 应用程序请求虚拟机处于安全模式。
-\n\\end{itemize}</string>
-    <string name="pages$main-page$version-info">版本名称有以下前缀:
-\n\\begin{itemize}
-\n \\item \\texttt{\\_} -- 没有硬件加速（减慢应用中的过渡动画）
-\n \\item \\texttt{\\textasciitilde} -- 仅测试模式
-\n \\item \\texttt{debug} -- 可调试应用
-\n\\end{itemize}</string>
+    <string name="pages$main-page$batch-operations">批处理或者多应用处理也可以在这个页面内进行。 \n多选模式可以由点击任何应用图标或长按列表中的任意一项进入。 \n进入多选模式后，仅需单击列表中的任意一项便可选中，而不是打开应用程序详情页。 \n该模式下，批处理操作位于页面底部的多选菜单。操作包括： \n\\begin{itemize} \n \\item 将选中应用添加到 \\hyperref[sec:profiles-page]{配置} \n \\item \\hyperref[sec:backup-restore]{备份、恢复或删除}应用程序 \n \\item 阻止应用中的追踪器 \n \\item 清除应用数据或缓存 \n \\item 导出App Manager中的屏蔽规则 \n \\item 以MarkDown，CSV，JSON或XML格式导出应用列表 \n \\item 启用/停用/强制停止/卸载应用程序 \n \\item 对应用执行运行时优化 (Android 7 及更高版本) \n \\item 阻止应用的后台操作 (Android 7 及更高版本) \n \\item 导出APK文件到 \\texttt{AppManager/apks} \n \\item 设置\\hyperref[sec:net-policy]{联网规则} \n\\end{itemize} \n \n\\begin{tip}{无障碍} \n 进入多选模式后， \n 可以使用键盘或遥控器的左右键呼出多选菜单。 \n\\end{tip}</string>
+    <string name="pages$main-page$application-types">一个应用程序可以是 \\textbf{用户} 或 \\textbf{系统} 应用，同时存在以下后缀: \n\\begin{itemize} \n \\item \\texttt{X} -- 支持多种架构 \n \\item \\texttt{0} -- 应用程序中不存在dex文件 \n \\item \\texttt{°} -- 已暂停的应用程序\n \\item \\texttt{\\#} -- 应用程序请求系统分配一个大堆，即大运行时内存 \n \\item \\texttt{?} -- 应用程序请求虚拟机处于安全模式。 \n\\end{itemize}</string>
+    <string name="pages$main-page$version-info">版本名称有以下前缀: \n\\begin{itemize} \n \\item \\texttt{\\_} -- 无硬件加速（减缓应用程序中的过渡动画或透明效果） \n \\item \\texttt{\\textasciitilde} -- 仅用于测试的应用程序 \n \\item \\texttt{debug} -- 可调试的应用程序 \n\\end{itemize}</string>
     <string name="pages$main-page$list-options">\\textbf{列表选项} 包含了对主页面中的列表进行排序和过滤的选项。</string>
-    <string name="pages$main-page$sort">主页面中列出的应用程序可以按照以下方式进行排序:
-\n\\begin{itemize}
-\n \\item \\textbf{用户应用优先} 用户应用将优先展示
-\n \\item \\textbf{应用标签} 根据应用标签（也称为 \\textit{应用程序名称}）升序排序。(默认选项)
-\n \\item \\textbf{包名} 根据包名升序排序
-\n \\item \\textbf{最后更新} 根据更新时间降序排序
-\n \\item \\textbf{共享 user ID} 根据共享 user ID升序排序
-\n \\item \\textbf{目标 SDK} 根据目标SDK升序排序
-\n \\item \\textbf{签名} 根据签名信息升序排序
-\n \\item \\textbf{已停用优先} 已停用将优先展示
-\n \\item \\textbf{已阻止优先} 根据已阻止的应用组件数目降序排序
-\n \\item \\textbf{已备份优先} 已备份将优先展示
-\n \\item \\textbf{追踪器} 根据追踪器数目降序排序S
-\n \\item \\textbf{最后操作} 根据被App Manager操作的应用时间降序排序
-\n\\end{itemize}
-\n
-\n此外，还有 \\textit{反转} 选项，可以用来对列表进行反向排序。
-\n无论怎样排序偏好，应用程序都是先按字母顺序排序，以防止产生任何随机排序结果.</string>
-    <string name="pages$main-page$filter">主页面中列出的应用可以通过以下方式进行过滤:
-\n\\begin{itemize}
-\n \\item \\textbf{用户} 仅用户应用
-\n \\item \\textbf{系统} 仅系统应用
-\n \\item \\textbf{停用} 仅停用应用
-\n \\item \\textbf{被阻止} 仅被阻止组件的应用
-\n \\item \\textbf{可打开} 仅至少有一个Aactivity的应用
-\n \\item \\textbf{有备份} 仅有备份的应用
-\n \\item \\textbf{无备份} 仅没有备份的应用
-\n \\item \\textbf{运行中} 仅正在运行的应用
-\n \\item \\textbf{有分包} 仅有分包(多Apk)应用
-\n \\item \\textbf{已安装} 仅已安装应用
-\n \\item \\textbf{已卸载} 仅已卸载应用
-\n\\end{itemize}
-\n
-\n与排序不同，它可以同时应用多个过滤选项，
-\n如，停用的用户应用可以通过选择 \\textit{用户}和 \\textit{停用}列出，这对\\hyperref[subsec:batch-operations]{批处理}特别有用，在这种情况下过滤用户应用可能是必要的，以便安全地进行某些操作。
-\nUnlike sorting, it is possible to apply more than one filtering options at the same time. For example, the disabled user
-\napplications can be listed by selecting both \\textit{User apps} and \\textit{Disabled apps}. This can be particularly
-\nuseful for \\hyperref[subsec:batch-operations]{batch operations} where filtering the user applications may be necessary
-\nto carry out certain operations safely.</string>
+    <string name="pages$main-page$sort">主页面中列出的应用程序可以按照以下方式进行排序: \n\\begin{itemize} \n \\item \\textbf{用户应用优先} 用户应用将优先展示 \n \\item \\textbf{应用标签} 根据应用标签（也称为 \\textit{应用程序名称}）升序排序。(默认选项) \n \\item \\textbf{包名} 根据包名升序排序 \n \\item \\textbf{最后更新} 根据更新时间降序排序 \n \\item \\textbf{共享 user ID} 根据共享 user ID升序排序 \n \\item \\textbf{目标 SDK} 根据目标SDK升序排序 \n \\item \\textbf{签名} 根据签名信息升序排序 \n \\item \\textbf{已停用优先} 已停用将优先展示 \n \\item \\textbf{已阻止优先} 根据已阻止的应用组件数目降序排序 \n \\item \\textbf{已备份优先} 已备份将优先展示 \n \\item \\textbf{追踪器} 根据追踪器数目降序排序S \n \\item \\textbf{最后操作} 根据被App Manager操作的应用时间降序排序 \n\\end{itemize} \n \n此外，还有 \\textit{反转} 选项，可以用来对列表进行反向排序。 \n无论怎样的排序偏好，应用程序都会先按字母顺序排序，以防止产生任何随机排序结果。</string>
+    <string name="pages$main-page$filter">主页面中列出的应用可以通过以下方式进行过滤:\n\\begin{itemize}\n \\item \\textbf{用户应用} 仅列出用户应用程序\n \\item \\textbf{系统应用} 仅列出系统应用程序\n \\item \\textbf{已停用应用} 仅列出已停用的应用程序\n \\item \\textbf{已停止应用} 仅列出已停止运行的应用程序\n \\item \\textbf{已安装应用} 仅列出已安装的应用程序\n \\item \\textbf{已卸载应用} 仅列出已卸载的应用程序\n \\item \\textbf{存在规则} 列出存在被一个或多个规则限制的应用程序\n \\item \\textbf{有活动} 列出存在一个或多个活动的应用程序\n \\item \\textbf{有备份} 列出存在一个或多个备份的应用程序\n \\item \\textbf{无备份} 列出不存在备份的应用程序\n \\item \\textbf{运行中应用} 列出当前正在运行的应用程序\n \\item \\textbf{有分包} 列出存在一个或多个拆分APK的应用程序\n \\item \\textbf{KeyStore} 仅列出存在Android 密钥库(KeyStore)的应用程序\n \\item \\textbf{SAF} 仅列出使用存储访问框架(SAF)的应用程序\n \\item \\textbf{SSAID} 仅列出存在可用的Settings.Secure.ANDROID_ID(即SSAID)的应用程序\n\\end{itemize}\n\n与排序不同，筛选过程中可同时应用多个筛选选项。\n比如被停用的用户应用程序可通过同时选择 \\textit{用户应用} and \\textit{已停用应用} 列出。 \n对于需要筛选出用户应用以确保安全地执行某种操作的 \\hyperref[subsec:batch-operations]{批处理操作} 而言，\n这很有帮助。\n\n\\begin{warning}{状态不一致}\n App Manager 通过大量缓存相应的查询结果显示页面（并非实时更新）。\n所以，某些状态（比如说停用和已停止运行状态）并不总是最新的。\n\\end{warning}</string>
     <string name="pages$app-details-page$$activities-title">活动 (Activity)</string>
     <string name="pages$app-details-page$$servcies-title">服务 (Services)</string>
     <string name="pages$app-details-page$$additional-features-for-rooted-phones-title">针对已root的手机的额外功能</string>
