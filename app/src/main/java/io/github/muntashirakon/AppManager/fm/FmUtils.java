@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.io.Path;
@@ -151,11 +152,14 @@ public final class FmUtils {
     }
 
     public static Uri uriFromPathParts(@NonNull Uri baseUri, @NonNull List<String> pathParts, int endPosition) {
+        if (endPosition >= pathParts.size()) {
+            throw new IndexOutOfBoundsException("EndPosition: " + endPosition + ", Size: " + pathParts.size());
+        }
         Uri.Builder builder = baseUri.buildUpon();
         builder.path(null);
-        switch (baseUri.getScheme()) {
+        switch (Objects.requireNonNull(baseUri.getScheme())) {
             case ContentResolver.SCHEME_CONTENT: {
-                if (isDocumentsProvider(baseUri.getAuthority())) {
+                if (isDocumentsProvider(Objects.requireNonNull(baseUri.getAuthority()))) {
                     List<String> paths = baseUri.getPathSegments();
                     if (paths.size() == 2) {
                         if ("document".equals(paths.get(0))) {
