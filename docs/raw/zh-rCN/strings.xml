@@ -88,9 +88,7 @@
     <string name="pages$app-details-page$$receivers-title">(广播)接收器 ((Broadcast)Receiver)</string>
     <string name="pages$app-details-page$$providers-title">(内容)提供者 ((Content)Providers)</string>
     <string name="pages$app-details-page$$blocking-components-title">拦截组件。</string>
-    <string name="pages$app-details-page$intro">\\textbf{应用详情} 页面由 11 个标签页组成。它描述了一个应用程序所能有的几乎所有信息, 
-\n包括其清单中的所有属性、\\hyperref[ch:app-ops]{应用操作}、签名
-\n信息、库等等。</string>
+    <string name="pages$app-details-page$intro">\\textbf{应用详情} 页面由 11 个标签页组成。它描述了一个应用程序持有的几乎所有信息, \n包括其清单中的所有属性、\\hyperref[ch:app-ops]{应用操作（App Ops）}、签名 \n信息、库等等。</string>
     <string name="pages$app-details-page$app-info-tab">\\textbf{应用信息} 选项卡包含关于一个应用程序的基本信息,
 \n许多操作可以在此标签中执行.</string>
     <string name="pages$one-click-ops-page$$section-title">一键操作页</string>
@@ -105,7 +103,7 @@
 \n所以，请不要除了您的姓名和电子邮件地址之外，不要包含任何个人身份信息（PII）.
 \n\\end{warning}</string>
     <string name="pages$main-page$colour-codes">\\begin{itemize}\n \\item \\colorbox{uninstalled-day}{\\textcolor{black}{红色 (日间模式下)}} / \\colorbox{uninstalled-night}{\\textcolor{white}\n {深红色 (夜间模式下)}} --已卸载的应用程序\n \\item \\colorbox{disabled-day}{\\textcolor{black}{浅红色 (日间模式下)}} / \\colorbox{disabled-night}{\\textcolor{white}\n {暗红色 (夜间模式下)}} -- 已停用的应用程序\n \\item \\colorbox{force-stopped}{\\textcolor{white}{靛青色}} -- 已强行停止的应用程序\n \\item \\colorbox{AMYellow}{\\textcolor{black}{黄色星标}} -- 可调式的应用程序\n\n \\item \\textcolor{AMOrange}{橙色 \\textit{日期}} -- 可读取日志的应用程序\n \\item \\textcolor{AMOrange}{橙色 \\textit{UID}} -- UID在多个应用程序中被共享\n \\item \\textcolor{AMOrange}{橙色 \\textit{SDK}} -- 使用明文网络通信(即 HTTP)\n \\item \\textcolor{tracker-day}{亮橙色 \\textit{包名}} -- 有一个或多个跟踪器的应用程序\n \\item \\textcolor{red}{红色 \\textit{应用标签}} -- 不允许清空数据的应用程序\n \\item \\textcolor{AMDarkCyan}{靛青色 \\textit{版本}} -- 未运行的应用程序\n \\item \\textcolor{magenta}{紫红色} -- 常驻应用(即一直运行的应用程序)\n\n \\item \\textcolor{red}{红色 \\textit{备份标识}} -- 已卸载的应用程序存在一个或多个备份 \n 在App Manager中\n \\item \\textcolor{AMOrange}{橙色 \\textit{备份标识}} -- 存在的备份已过期，\n 即基本备份中包含已安装应用程序的旧版本\n \\item \\textcolor{AMDarkCyan}{靛青色 \\textit{备份标识}} -- 存在的备份已更新，\n 即基本备份中包含已安装应用程序的相同版本或更高版本\n\\end{itemize}</string>
-    <string name="pages$main-page$instructions">单击 \\textbf{用户手册} 打开离线版本的 App Manager 用户手册。\n如果单独拆分出来的相应功能 i.e.\\ \\texttt{feat\\_docs} 未安装, 或系统里不存在加载手册的 WebView\n也可以打开用户手册的在线版本。</string>
+    <string name="pages$main-page$instructions">单击 \\textbf{用户手册} 打开离线版本的 App Manager 用户手册。\n如果单独拆分出来的相应功能（即\\ \\texttt{feat\\_docs} ）未安装, 或系统里不存在加载手册的 WebView\n也可以打开用户手册的在线版本。</string>
     <string name="pages$main-page$$list-options-title">列表选项</string>
     <string name="pages$main-page$$apk-updater-title">APK更新器</string>
     <string name="intro$main$donation">\\emph{捐赠或购买并不是使用App Manager的必要条件.} 虽然 App Manager 不支持任何任何内购,
@@ -152,23 +150,7 @@
     <string name="pages$app-details-page$$signatures-tab-title">签名选项卡</string>
     <string name="pages$app-details-page$$blocking-trackers-title">拦截跟踪器。</string>
     <string name="pages$app-details-page$$app-ops-title">App Ops</string>
-    <string name="pages$app-details-page$colour-codes">本页中使用的颜色列表及它们的含义：
-\n\\begin{itemize}
-\n \\item \\colorbox{AMRed}{\\textcolor{black}{正红 (日间)}} / \\colorbox{AMDarkRed}{\\textcolor{white}{深红 (夜间)}}
-\n -- 危险权限或, 被阻止的组件(使用App Manager操作)
-\n
-\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{亮红 (日间)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}{绯红 (夜间)}} -- 被阻止的组件(其他应用操作)
-\n
-\n \\begin{tip}{注意}
-\n表示在 App Manager 之外禁用(阻止)的组件, 标记为禁用(阻止)的组件并不意味着它被用户禁用,它也可能是被系统禁用的, 或者在其清单(Android-Manifest.xml)中被标记为禁用(阻止)。被停用的应用程序也会被系统（和App Manager）视为禁用(阻止)。
-\n \\end{tip}
-\n
-\n \\item \\colorbox{AMVividOrange}{\\textcolor{black}{鲜橙 (日间)}} / \\colorbox{AMVeryDarkOrange}{
-\n \\textcolor{white}{深橙 (夜间)}} -- 追踪器组件
-\n
-\n \\item \\colorbox{AMSoftMagenta}{\\textcolor{black}{亮紫 (日间)}} / \\colorbox{AMVeryDarkViolet}{
-\n \\textcolor{white}{深紫 (夜间)}} -- 正在运行的组件
-\n\\end{itemize}</string>
+    <string name="pages$app-details-page$colour-codes">本页中使用的颜色列表，以及对应的含义:\n\\begin{itemize}\n \\item \\colorbox{uninstalled-day}{\\textcolor{black}{红色 (日间模式)}} / \\colorbox{uninstalled-night}{\\textcolor{white}{深红色 (夜间模式)}}\n -- 表示任何应用操作(App ops)或权限存在危险标志(flag)，或者任何组件在 App Manager 中被阻止，\n 又或者是任何需要却又不受支持的功能特性。\n\n \\item \\colorbox{disabled-day}{\\textcolor{black}{亮红色 (日间模式)}} / \\colorbox{disabled-night}{\\textcolor{white}{暗红色 (夜间模式)}}\n-- 表示组件在 App Manager 外被禁用，或任何不受支持的\n可选功能特性。 \n\n \\begin{tip}{注意}\n 标记为禁用（停用/阻止）的组件并不意味着它被用户禁用，它也可能是被系统禁用的，\n或者是在其清单(Android-Manifest.xml)中被标记为禁用（停用/阻止）。\n被禁用（停用/阻止）的应用程序也会被系统（和App Manager）视为禁用（停用/阻止）。 \n \\end{tip}\n\n \\item \\colorbox{tracker-day}{\\textcolor{black}{鲜橙色 (日间模式)}} / \\colorbox{tracker-night}{\n \\textcolor{white}{暗沉色 (夜间模式)}} -- 表示存在跟踪器组件\n\n \\item \\colorbox{AMSoftMagenta}{\\textcolor{black}{紫色 (日间模式)}} / \\colorbox{AMVeryDarkViolet}{\n \\textcolor{white}{深紫色 (夜间模式)}} -- 表示存在正在运行的服务。\n\n \\item \\colorbox{AMDarkCyan}{\\textcolor{black}{靛青色}} -- 表示当前应用程序中的所有跟踪器\n 已在 跟踪器指示器 标签页内被阻止。\n\\end{itemize}</string>
     <string name="pages$app-details-page$$shared-libs-tab-title">共享库选项卡</string>
     <string name="pages$one-click-ops-page$$1-click-back-up-title">备份</string>
     <string name="pages$one-click-ops-page$$1-click-restore-title">恢复</string>
@@ -191,75 +173,7 @@
     <string name="faq$misc$$shizuku-title">对于 Shizuku 有何计划？</string>
     <string name="faq$misc$$bloatware-title">什么是预装(bloatware)软件以及如何删除？</string>
     <string name="appendices$specifications$$rules-specification-title">规则语法</string>
-    <string name="pages$app-details-page$app-info-general-information">以下的列表与“应用信息”选项卡中列出的顺序相同.
-\n\\begin{itemize}
-\n \\item \\textbf{应用图标}: 应用图标，若应用没有图标，则显示系统默认图标.
-\n可以点击图标，进行与剪贴板中的 SHA 或 MD5 进行 APK 签名验证.
-\n \\item \\textbf{应用标签}: 应用程序名.
-\n \\item \\textbf{包名}: 应用程序包名，点击复制.
-\n \\item \\textbf{版本}: 版本分为两部分:
-\n第一部分称 \\textit{版本名(Version Name)}. 格式各不相同，但常由多个以点分隔的整数组成.
-\n第二部分称 \\textit{版本号}. 其被第一个括号括起来. 版本代码是一个整数，用于 区分应用程序版本 (因为机器无法读取版本名). 简言之, 新版本的应用程序具有比旧版本更高的版本代码. 如，如果 \\texttt{123} 和 \\texttt{125} 是一个应用程序的两个版本代码，我们可以说后者比前者更新(后者的版本代码更高).
-\n在不同平台（移动、平板、桌面等）或架构（32/64 位、ARM 或 Intel）上为同一版本提供不同 APK 文件的应用程序，版本号可能会产生误导，因为它们通常会为每个平台添加前缀 .
-\n
-\n \\item \\textbf{标签}: (也称标签云) 标签包括应用程序最基本、最简洁、有用的信息。参阅 \\Sref{subsubsec:tags} 查看显示在此处的完整标签列表。
-\n
-\n\\item \\textbf{水平滚动操作面板} 一个操作面板，由可以对应用执行的各种操作组成, 有关可用操作的完整列表，请参阅§\\ref{subsubsec:horizontal-action-panel}.
-\n
-\n \\item \\textbf{路径与目录}: 应用有关路径的各种信息，包括 \\textit{应用目录} (where the APK files reside), \\textit{数据目录} (internal, device protected and externals), \\textit{应用分包目录} (along with the split names), and \\textit{本机原生 JNI 库} (如果有). JNI 库用于调用通常用 C/C++ 编写的本机原生代码, 使用本机原生库可以使应用程序运行得更快或帮助应用程序使用使用非 Java 语言编写的第三方库，同大多数游戏中一样.
-\n通过单击每个目录项右侧的启动按钮, 可以通过第三方文件管理器打开目录，前提是它们支持并获得必要的权限.
-\n
-\n \\item \\textbf{数据使用}: 操作系统报告的应用程序使用的数据量.
-\n 根据 Android 版本，这可能需要广泛的权限，包括 \\textit{访问应用使用情况} 和 \\textit{电话} 权限.
-\n
-\n \\item \\textbf{存储与缓存}: 显示有关应用程序大小（APK 文件、优化文件）、数据和缓存的信息。 在旧设备中，还会显示外部数据、缓存、媒体和 OBB 文件夹的大小. 如果在较新的设备中未授予 \\textit{访问应用使用情况s} 权限，此部分将隐藏.
-\n
-\n \\item \\textbf{更多信息} 例如--
-\n \\begin{itemize}
-\n \\item \\textbf{SDK} 显示与 Android SDK 相关的信息. 存在两个（旧设备只有一个）值:
-\n \\textit{最高} 目标 SDK 与\\textit{最低} 最低SDK (后者不适用于旧设备).
-\n最佳实践是使用平台当前支持的最大 SDK 的应用程序，以确保应用程序未在兼容模式下运行(以便使用隐私规避功能).
-\n SDK 也称为 \\textbf{等级(API Level)}\\\\
-\n \\同样参阅在线资料{\\href{https://en.wikipedia.org/wiki/Android_version_history\\#Overview}{Android Version History}}
-\n
-\n \\item \\textbf{标志位(Flags)}: 构建应用程序时使用的应用标志, 有关标志的完整列表及其作用, 请见\\href{https://developer.android.com/reference/android/content/pm/ApplicationInfo\\#flags}{official documentation}.
-\n
-\n \\item \\textbf{安装日期}: 首次安装应用的日期.
-\n
-\n \\item \\textbf{更新日期}: 上次更新应用程序的日期. 如果应用程序尚未更新，这与 \\textit{安装日期} 相同.
-\n
-\n \\item \\textbf{安装器}: 安装此应用的应用.
-\n并非所有应用程序都提供包管理器用来注册安装程序应用程序的信息. 因此，这个值不应被视为理所当然。
-\n
-\n \\item \\textbf{User ID}: Android系统给应用设置的唯一用户ID.
-\n 对于共享应用，相同的用户 ID 被分配给具有相同 \\textit{Shared User ID} 的多个应用程序.
-\n
-\n \\item \\textbf{Shared User ID}: 适用于一起共享ID的应用. 共享应用必须具有相同的 \\hyperref[subsec:signatures-tab]{签名}.
-\n
-\n \\item \\textbf{首选ABI}: 此平台为此应用程序支持的架构。
-\n
-\n \\item \\textbf{Zygote preload name}: 负责预加载应用程序代码和在所有使用应用程序 zygote 的隔离服务之间共享的数据.
-\n
-\n \\item \\textbf{隐藏 API 使用策略}: 从 Android 9 开始，Android Framework 中的许多方法和类第三方应用程序无法通过隐藏 API 强制访问.
-\n存在以下选项:
-\n \\begin{itemize}
-\n \\item \\textit{默认(Default}: 基于应用的类型。 对于系统应用程序，它应该被禁用，而对于其他应用，它应该被强制执行.
-\n \\item \\textit{无或关闭(None/disabled)}: 该应用可以完全访问隐藏的 API，就像在 Android 9 之前一样.
-\n \\item \\textit{警告(Warn)}: 与上面相同，除了每次应用程序访问隐藏 API 时都会记录警告. 这一般未使用的.
-\n \\item \\textit{强制(Enforce)}: 应用无法访问隐藏的 API，无论是深灰名单还是黑名单，或者两者都无法访问.
-\n这是 Android 9 及更高版本中第三方应用程序的默认选项，除非该应用程序被 OEM 或供应商列入白名单.
-\n \\begin{warning}{Warning}
-\n 隐藏 API 访问限制策略在 Android 中没有正确实现，应用程序可以绕过它.
-\n 因此，不应信任此值.
-\n \\end{warning}
-\n \\end{itemize}
-\n
-\n \\item \\textbf{SELinux}: 操作系统通过 SELinux 设置的强制访问控制 (MAC) 策略.
-\n
-\n \\item \\textbf{主活动}: 应用的主要入口点.
-\n这仅在应用程序具有 \\hyperref[subsubsec:activities]{活动} 并且其中任何一个都可以从启动器中打开时显示. 右侧还有一个启动按钮，可用于启动此活动.
-\n \\end{itemize}
-\n\\end{itemize}</string>
+    <string name="pages$app-details-page$app-info-general-information">以下的列表与“应用信息”选项卡中列出的顺序相同。 \n\\begin{itemize} \n \\item \\textbf{应用图标}: 应用程序的图标，若该应用程序没有图标，则显示系统默认图标。 \n可以轻轻点击图标，通过对比剪贴板中存储的 SHA 或 MD5 总和的方式进行 APK 签名验证。 \n \\item \\textbf{应用标签}: 应用程序的标签或名称。 \n \\item \\textbf{包名}: 应用程序包名，点击该包名可将其复制到剪切板。 \n \\item \\textbf{版本}: 版本分为两部分： \n 第一部分称 \\textit{版本名(Version Name)}。 格式各不相同，但常由多个以点分隔的整数组成。 \n 第二部分称 \\textit{版本代码}。 其被第一个括号括起来。版本代码是一个整数，用于区分应用程序版本 (因为机器可能无法正确读取版本名)。简言之，新版本的应用程序具有比旧版本更高的版本代码。 例如，如果 \\texttt{123} 和 \\texttt{125} 是同一个应用程序的两个版本代码，我们可以说后者比前者更新（后者的版本代码更高）。 \n 当为同一版本的应用程序提供不同的 APK 文件，并在不同平台（移动端、平板、桌面等）或架构（32/64 位、ARM 或 Intel）上运行时，版本号可能会产生误导，因为通常应用程序提供商会为每个平台添加前缀以作区分。\n \n \\item \\textbf{标签}:(也称作标签云) 标签包含应用程序最基本、最简洁、有用的信息。参阅 \\Sref{subsubsec:tags}{标签} 内的完整标签列表。 \n \n \\item \\textbf{水平操作面板} 一个操作面板，由可以对应用程序执行的各种操作组成，参阅 \\Sref{subsubsec:horizontal-action-panel}{水平操作面板} 内的完整可用操作列表。 \n 对于可用的其它操作列表，参阅 \\hyperref[subsubsec:app-info-options-menu]{选项菜单}。\n \n \\item \\textbf{路径与目录}: 包含应用程序相关路径的各种信息，包括 \\textit{应用目录} (存储 APK 文件的路径), \\textit{数据目录} (内部存储, 设备保护区以及外部存储) 和 \\textit{JNI 库目录} (如果有). JNI (Java Native Interface，Java本机接口) 库用于调用通常用 C/C++ 编写的本机原生代码。使用本机原生库可以使应用程序运行得更快，或帮助应用程序使用非 Java 语言编写的第三方库，同大多数游戏中所做的一样。 \n通过单击每个目录项右侧的启动按钮，可以通过文件管理器打开目录，前提是它们提供相应的支持并被授予必要的权限。 \n \n \\item \\textbf{数据使用}: 操作系统报告的应用程序使用的数据量。 \n 取决于 Android 版本，该项可能需要广泛的权限，包括 \\textit{使用情况访问} 权限和 \\textit{电话} 权限。 \n \n \\item \\textbf{存储与缓存}: 显示有关应用程序的大小（APK 文件、优化文件、数据和缓存）。 在旧设备中，还会显示外部数据、缓存、媒体和 OBB 文件夹的大小。如果在较新的设备中未授予 \\textit{使用情况访问} 权限，此部分将被隐藏。 \n \n \\item \\textbf{更多信息} 显示其他信息，例如-- \n \\begin{itemize} \n \\item \\textbf{SDK} 显示与 Android SDK 相关的信息: \\textit{Max} 表示目标SDK\n 而 \\textit{Min} 表示最小SDK（后者在 Android 5及更低版本中不可用）\n 如果目标SDK的值低于平台SDK的值（即当前操作系统支持的最大SDK的值），该应用程序会在兼容模式下运行。\n 这意味着应用程序可能有权访问某些不可用或者被较新版本的 Android 限制的功能，\n 这将导致安全和隐私问题。\n SDK也被称作 \\textbf{API 级别 (API Level)}，\\\\\n \\另请参阅{\\href{https://en.wikipedia.org/wiki/Android_version_history\\#Overview}{Android 版本历史}}\n \n \\item \\textbf{标志位(Flags)}: 构建应用程序时使用的应用标志，关于完整的标志列表及其作用，参阅\\href{https://developer.android.com/reference/android/content/pm/ApplicationInfo\\#flags}{官方文档}。 \n \n \\item \\textbf{安装日期}: 首次安装应用程序的日期。 \n \n \\item \\textbf{更新日期}: 上次更新应用程序的日期。 如果应用程序尚未更新，该项与 \\textit{安装日期} 相同。 \n\n \\item \\textbf{进程名} 如果与包名不同的情况下，进程的名称。\n 进程名在应用程序被系统启动时被设置，而通常情况下\n 进程名与包名相同。\n \n \\item \\textbf{安装器应用} 安装该应用程序的应用程序。\n 当安装该应用时，每次的安装器应用不总是会保持相同。\n 因为 Android 允许对此字段设置任意值。\n 在 Android 11及更高版本中，实际安装器应用会存储在系统，并可以通过点击\n 项目右侧的“信息”按钮访问。即使系统并未报告安装器应用（比如说，安装器应用被卸载或隐藏），\n 该字段也不会不可见。安装器应用可被系统授予额外的特殊权限\n 以控制它安装的应用程序的某种行为。\n \n \\item \\textbf{User ID}: Android系统给应用设置的唯一用户ID. \n 对于共享应用，相同的用户 ID 被分配给具有相同 \\textit{Shared User ID} 的多个应用程序. \n\n \\item \\textbf{User ID} 系统设置的唯一的用户ID（User ID，也被称作UID）并赋予应用程序。 \n 对于共享的应用程序，多个持有相同的 \\textit{Shared User ID} 的应用程序\n 会被赋予同样的用户ID。 .\n \n \\item \\textbf{Shared User ID} 适用于共享同一个ID的应用程序们（它们之间的数据也是共享的）。\n共享的应用程序们必须持有同样的 \\hyperref[subsec:signatures-tab]{签名}。\n \n \\item \\textbf{首选ABI}: 此平台为此应用程序提供支持的架构。 \n \n \\item \\textbf{Zygote 预加载名称}: 负责预加载应用程序代码\n和在所有使用应用 zygote 的隔离服务之间共享的数据。\n \n \\item \\textbf{隐藏 API 执行策略}: 从 Android 9 开始，第三方应用程序无法通过隐藏 API 执行策略访问 Android 框架中的许多方法和类。 \n存在以下选项： \n \\begin{itemize} \n \\item \\textit{默认}: 基于应用程序的类型。 对于系统应用程序，隐藏API执行策略应该被禁用；而对于其他应用，则应该被强制执行。 \n \\item \\textit{无或已禁用}: 该应用可以像在 Android 9 之前一样完全访问隐藏的 API。\n \\item \\textit{警告}: 同上，只是每次应用程序访问隐藏 API 时都会记录警告。绝大多数情况下不使用。 \n \\item \\textit{强制执行}: 无论是深灰名单还是黑名单，或者两者都是的应用程序无法访问隐藏的 API。 \n这是 Android 9 及更高版本中第三方应用程序的默认选项，除非该应用程序被 OEM 或供应商列入白名单。 \n \\begin{warning}{警告} \n 隐藏 API 执行策略在 Android 中并没有被正确实现，\n应用程序可以绕过它。因此，不应该信任此值。 \n \\end{warning} \n \\end{itemize} \n \n \\item \\textbf{SELinux}: 操作系统通过 SELinux 设置的强制访问控制 (MAC) 策略。 \n \n \\item \\textbf{主活动}: 应用的主要入口点。 \n 仅在应用程序具有 \\hyperref[subsubsec:activities]{活动} 并且其中任何一个都可以从启动器中打开时显示。\n 右侧也一个启动按钮，可用于启动此活动。 \n \\end{itemize} \n\\end{itemize}</string>
     <string name="pages$app-details-page$app-info-options-menu">选项菜单位于页面的右上角, 下面给出了对现有选项的完整描述:
 \n\\begin{itemize}
 \n \\item \\textbf{分享}: 共享按钮可用于共享 APK 或(如果应用程序有多个拆分) \\textit{APKS}.
@@ -555,10 +469,14 @@
 \n {---劳伦斯修士，\\textit{罗密欧与朱丽叶}}
 \n \\end{quotation}</string>
     <string name="pages$main-page$$labs-title">标签</string>
-    <string name="pages$main-page$profile_name">也可以列出那些只存在于 \\hyperref[sec:profiles-page]{profile} 页面的应用。对于无法通过 \\hyperref[sec:profiles-page]{Profiles page}\n在同配置下完成的某些操作（比如说卸载同配置文件下的所有应用程序)，\n这会很有用。</string>
+    <string name="pages$main-page$profile_name">也可以列出那些只存在于某个 \\hyperref[sec:profiles-page]{配置文件} 下的应用。\n当执行某些无法通过 \\hyperref[sec:profiles-page]{配置文件} 完成的操作时（比如说卸载同配置文件下的所有应用程序)，\n这会很有用。</string>
     <string name="pages$main-page$profiles">该菜单项会打开 \\hyperref[sec:profiles-page]{配置文件页面}. 配置文件是一种保存了频繁使用的任务的方式。\n这些配置文件也可以通过快捷方式调用。</string>
     <string name="pages$main-page$app-usage">应用程序使用情况统计，比如说 \\textit{屏幕时间}、\\textit{数据流量使用情况} (包括移动数据和无线网络)、\\textit{打开某应用的次数统计}，\n可通过单击菜单中的 \\textbf{应用程序使用情况} 选项进行访问.。\n但是该功能需要 \\textit{使用情况统计信息访问} 权限。 \n如使用情况统计信息访问功能在 \\hyperref[subsubsec:enable/disable-features]{设置}中被禁用，该菜单项在设置中不会被列出。</string>
     <string name="pages$main-page$running-apps">该菜单项打开一个新页面，显示正在运行的应用程序或进程列表。它也会显示\n当前内存和缓存（如果可用）使用情况。如果 App Manager 在非root或ADB访问下运行，它只会显示自身使用情况\n在近期的安卓版本。正在运行的应用或进程也可以在结果显示页面里被强行停止或杀掉。\n每个进程标识符(PID)的日志也可以在 \\hyperref[subsubsec:log-viewer]{log viewer} 里查阅。\n此外，也可以通过点击图标或长按某一项进行批量处理操作。\n通常情况下点击任意项目会打开一个显示更多详细信息的对话框。</string>
     <string name="pages$main-page$debloater">该菜单项会打开预装应用卸载页面，列出在设备和 App Manager 里可用的所有预装应用。\n该页面也会推荐可替代的应用程序，这些预装应用以 \\href{https://github.com/MuntashirAkon/android-debloat-list}{Android Debloat List}\n项目为判断基准。</string>
     <string name="pages$main-page$labs">该菜单项会打开一个标签页以列举所有附加功能。包括日志查看器、\n系统配置、终端、文件管理器（类似 文件）、UI追踪器、意图拦截器，以及代码编辑器。</string>
+    <string name="pages$main-page$$debloater-title">预装应用卸载器</string>
+    <string name="pages$app-details-page$$uses-features-tab-title">使用特性选项卡</string>
+    <string name="pages$app-details-page$$configurations-tab-title">配置选项卡</string>
+    <string name="pages$app-details-page$$tags-title">Tags (标签)</string>
 </resources>
