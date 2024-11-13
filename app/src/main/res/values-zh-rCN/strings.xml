@@ -1405,4 +1405,5 @@
     <string name="sensors">传感器</string>
     <string name="tag_sensors_disabled">停用了传感器</string>
     <string name="pref_use_system_font_msg">使用系统默认字体而非 material 字体。<font fgcolor="#ff0000">这是实验性功能。</font></string>
+    <string name="activity_name">Activity 名称</string>
 </resources>
