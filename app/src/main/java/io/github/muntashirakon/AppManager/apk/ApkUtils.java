@@ -63,10 +63,10 @@ public final class ApkUtils {
     @NonNull
     public static Path getSharableApkFile(@NonNull Context ctx, @NonNull PackageInfo packageInfo) throws IOException {
         synchronized (sLock) {
-            ApplicationInfo info = packageInfo.applicationInfo;
             PackageManager pm = ctx.getPackageManager();
-            String outputName = Paths.sanitizeFilename(info.loadLabel(pm).toString() + "_" +
-                    packageInfo.versionName, "_");
+            ApplicationInfo info = packageInfo.applicationInfo;
+            String outputName = Paths.sanitizeFilename(getFormattedApkFilename(ctx, packageInfo, pm), "_",
+                    Paths.SANITIZE_FLAG_FAT_ILLEGAL_CHARS | Paths.SANITIZE_FLAG_UNIX_RESERVED);
             if (outputName == null) outputName = info.packageName;
             Path tmpPublicSource;
             if (isSplitApk(info) || hasObbFiles(info.packageName, UserHandleHidden.getUserId(info.uid))) {
@@ -75,7 +75,8 @@ public final class ApkUtils {
                 SplitApkExporter.saveApks(packageInfo, tmpPublicSource);
             } else {
                 // Regular apk
-                tmpPublicSource = Paths.get(packageInfo.applicationInfo.publicSourceDir);
+                tmpPublicSource = Paths.get(new File(FileUtils.getExternalCachePath(ContextUtils.getContext()), outputName + EXT_APK));
+                IoUtils.copy(Paths.get(info.publicSourceDir), tmpPublicSource);
             }
             return tmpPublicSource;
         }
