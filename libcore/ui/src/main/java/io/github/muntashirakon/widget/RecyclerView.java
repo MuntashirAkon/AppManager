@@ -17,6 +17,28 @@ import io.github.muntashirakon.util.UiUtils;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
+    public static class AdapterDataChangedObserver extends AdapterDataObserver {
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount) {
+            onChanged();
+        }
+
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            onChanged();
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            onChanged();
+        }
+
+        @Override
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+            onChanged();
+        }
+    }
+
     private View mEmptyView;
     final private AdapterDataObserver mObserver = new AdapterDataObserver() {
         @Override

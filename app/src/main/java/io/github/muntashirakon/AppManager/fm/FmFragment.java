@@ -32,7 +32,6 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SearchView;
@@ -230,7 +229,7 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
         mRecyclerView = view.findViewById(R.id.list_item);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mAdapter = new FmAdapter(mModel, mActivity);
-        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataChangedObserver() {
             @Override
             public void onChanged() {
                 if (scrollPosition.get() != RecyclerView.NO_POSITION) {
@@ -270,9 +269,8 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
                 mEmptyView.setVisibility(View.GONE);
             }
             // Reset subtitle
-            Optional.ofNullable(mActivity.getSupportActionBar()).ifPresent(actionBar -> {
-                actionBar.setSubtitle(R.string.loading);
-            });
+            Optional.ofNullable(mActivity.getSupportActionBar()).ifPresent(actionBar ->
+                    actionBar.setSubtitle(R.string.loading));
             if (uri1 == null) {
                 return;
             }

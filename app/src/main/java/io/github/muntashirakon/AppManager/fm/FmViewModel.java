@@ -195,11 +195,13 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     }
 
     public void setScrollPosition(Uri uri, int currentScrollPosition) {
+        Log.d(TAG, "Store: Scroll position = %d, uri = %s", currentScrollPosition, uri);
         mPathScrollPositionMap.put(uri, currentScrollPosition);
     }
 
     public int getCurrentScrollPosition() {
         Integer scrollPosition = mPathScrollPositionMap.get(mCurrentUri);
+        Log.d(TAG, "Load: Scroll position = %d, uri = %s", scrollPosition, mCurrentUri);
         return scrollPosition != null ? scrollPosition : 0;
     }
 
