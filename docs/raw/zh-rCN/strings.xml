@@ -125,7 +125,7 @@
 \n \\item \\textcolor{AMDarkCyan}{深蓝绿色 \\textit{版本}} -- 不活跃的应用
 \n \\item \\textcolor{magenta}{紫红} -- 常驻应用(即一直运行的应用)
 \n\\end{itemize}</string>
-    <string name="pages$main-page$instructions">点击 \\textbf{指南} 打开离线版本的 App Manager 用户手册 \n如果单独拆分出来的相应功能 i.e.\\ \\texttt{feat\\_docs} 未安装, 或系统里不存在可以加载手册的 WebView\n也可以打开用户手册的在线版本</string>
+    <string name="pages$main-page$instructions">单击 \\textbf{用户手册} 打开离线版本的 App Manager 用户手册。\n如果单独拆分出来的相应功能 i.e.\\ \\texttt{feat\\_docs} 未安装, 或系统里不存在加载手册的 WebView\n也可以打开用户手册的在线版本。</string>
     <string name="pages$main-page$$list-options-title">列表选项</string>
     <string name="pages$main-page$$apk-updater-title">APK更新器</string>
     <string name="intro$main$donation">\\emph{捐赠或购买并不是使用App Manager的必要条件.} 虽然 App Manager 不支持任何任何内购,
@@ -437,19 +437,7 @@
     <string name="pages$settings-page$install-location">定义 APK 安装位置，可以是 \\textit{自动}、\\textit{仅内部存储} 和\\textit{偏好外部存储}。
 \n在较新的 Android 版本中，选择最后一个选项
 \n并不保证应用将被安装在外部存储中。</string>
-    <string name="pages$settings-page$enable-disable-features">启用或禁用应用 App Manager 中的某些功能，如
-\n\\begin{itemize}
-\n \\item \\textbf{拦截器}
-\n \\item \\textbf{Manifest 查看器}
-\n \\item \\textbf{扫描器}
-\n \\item \\textbf{包安装器}
-\n \\item \\textbf{使用情况.} 如关闭此功能，App Manager 永远不会请求 \\textit{使用情况} 权限.
-\n \\item \\textbf{日志查看器}
-\n\\item \\textbf{App Eexplorer.} ``探索\'\' 选择在尝试打开 APK 文件时不可用。
-\n \\item \\textbf{App info.} 尝试打开 APK 文件时会显示 ``应用信息\'\'选项
-\n \\item \\textbf{使用互联网.}如果关闭此功能，则所有互联网功能都将被禁用。
-\n 目前，唯一的互联网功能是通过 VirusTotal 获取扫描报告。
-\n\\end{itemize}</string>
+    <string name="pages$settings-page$enable-disable-features">启用或禁用 App Manager 中的某些功能，如 \n\\begin{itemize} \n \\item \\textbf{拦截器} \n \\item \\textbf{Manifest 查看器} \n \\item \\textbf{扫描器} \n \\item \\textbf{包安装器} \n \\item \\textbf{使用情况.} 如关闭此功能，App Manager 永远不会请求 \\textit{使用情况} 权限. \n \\item \\textbf{日志查看器} \n\\item \\textbf{App Explorer.} ``探索\'\' 选项在尝试打开 APK 文件时不可用。 \n \\item \\textbf{App info.} 尝试打开 APK 文件时会显示 ``应用信息\'\'选项 \n \\item \\textbf{代码编辑器}\n \\item \\textbf{VirusTotal}\n \\item \\textbf{使用互联网.}如果关闭此功能，则所有互联网功能都将被禁用。 \n 目前，唯一的互联网功能是通过 VirusTotal 获取扫描报告。 \n\\end{itemize}</string>
     <string name="pages$settings-page$backup-restore">与 \\hyperref[sec:backup-restore]{备份恢复} 相关的设置.</string>
     <string name="pages$interceptor-page$$data-title">数据(Data)</string>
     <string name="pages$interceptor-page$$mime-type-title">MIME 类型</string>
@@ -656,9 +644,9 @@
 \n {---劳伦斯修士，\\textit{罗密欧与朱丽叶}}
 \n \\end{quotation}</string>
     <string name="pages$main-page$$labs-title">标签</string>
-    <string name="pages$main-page$profile_name">也可以列出那些只存在于 \\hyperref[sec:profiles-page]{profile} 页面的应用。在同配置文件下\n执行某些无法通过 \\hyperref[sec:profiles-page]{Profiles page} 完成的操作时 \n(比如说卸载同配置文件下的所有应用程序)，这会很有用</string>
+    <string name="pages$main-page$profile_name">也可以列出那些只存在于 \\hyperref[sec:profiles-page]{profile} 页面的应用。对于无法通过 \\hyperref[sec:profiles-page]{Profiles page}\n在同配置下完成的某些操作（比如说卸载同配置文件下的所有应用程序)，\n这会很有用。</string>
     <string name="pages$main-page$profiles">该菜单项会打开 \\hyperref[sec:profiles-page]{配置文件页面}. 配置文件是一种保存了频繁使用的任务的方式。\n这些配置文件也可以通过快捷方式调用。</string>
-    <string name="pages$main-page$app-usage">应用程序使用情况统计，比如说 \\textit{屏幕时间}, \\textit{数据流量使用情况} (包括移动数据和无线网络), \\textit{打开某应用的次数统计}, 可通过单击菜单中的 \\textbf{应用程序使用情况} 选项进行访问. 但是该功能需要 \\textit{使用情况统计信息访问} 权限。 当使用情况统计信息访问权限被禁止时，\n该菜单项目不会被显示在 \\hyperref[subsubsec:enable/disable-features]{设置} 中。</string>
+    <string name="pages$main-page$app-usage">应用程序使用情况统计，比如说 \\textit{屏幕时间}、\\textit{数据流量使用情况} (包括移动数据和无线网络)、\\textit{打开某应用的次数统计}，\n可通过单击菜单中的 \\textbf{应用程序使用情况} 选项进行访问.。\n但是该功能需要 \\textit{使用情况统计信息访问} 权限。 \n如使用情况统计信息访问功能在 \\hyperref[subsubsec:enable/disable-features]{设置}中被禁用，该菜单项在设置中不会被列出。</string>
     <string name="pages$main-page$running-apps">该菜单项打开一个新页面，显示正在运行的应用程序或进程列表。它也会显示\n当前内存和缓存（如果可用）使用情况。如果 App Manager 在非root或ADB访问下运行，它只会显示自身使用情况\n在近期的安卓版本。正在运行的应用或进程也可以在结果显示页面里被强行停止或杀掉。\n每个进程标识符(PID)的日志也可以在 \\hyperref[subsubsec:log-viewer]{log viewer} 里查阅。\n此外，也可以通过点击图标或长按某一项进行批量处理操作。\n通常情况下点击任意项目会打开一个显示更多详细信息的对话框。</string>
     <string name="pages$main-page$debloater">该菜单项会打开预装应用卸载页面，列出在设备和 App Manager 里可用的所有预装应用。\n该页面也会推荐可替代的应用程序，这些预装应用以 \\href{https://github.com/MuntashirAkon/android-debloat-list}{Android Debloat List}\n项目为判断基准。</string>
     <string name="pages$main-page$labs">该菜单项会打开一个标签页以列举所有附加功能。包括日志查看器、\n系统配置、终端、文件管理器（类似 文件）、UI追踪器、意图拦截器，以及代码编辑器。</string>
