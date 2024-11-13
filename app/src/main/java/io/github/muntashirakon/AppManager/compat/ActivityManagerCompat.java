@@ -38,6 +38,8 @@ import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -97,9 +99,17 @@ public final class ActivityManagerCompat {
     }
 
     @SuppressWarnings("deprecation")
-    public static int startActivity(Intent intent, @UserIdInt int userHandle) throws SecurityException {
-        IActivityManager am = getActivityManager();
-        String callingPackage = SelfPermissions.getCallingPackage(Users.getSelfOrRemoteUid());
+    public static int startActivity(@NonNull Intent intent, @UserIdInt int userHandle) throws SecurityException {
+        IActivityManager am;
+        String callingPackage;
+        if (intent.getData() != null && FmProvider.AUTHORITY.equals(intent.getData().getAuthority())) {
+            // We need unprivileged authority for this
+            am = getActivityManagerUnprivileged();
+            callingPackage = BuildConfig.APPLICATION_ID;
+        } else {
+            am = getActivityManager();
+            callingPackage = SelfPermissions.getCallingPackage(Users.getSelfOrRemoteUid());
+        }
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 return am.startActivityAsUserWithFeature(null, callingPackage,
@@ -213,6 +223,14 @@ public final class ActivityManagerCompat {
             return IActivityManager.Stub.asInterface(ProxyBinder.getService(Context.ACTIVITY_SERVICE));
         } else {
             return ActivityManagerNative.asInterface(ProxyBinder.getService(Context.ACTIVITY_SERVICE));
+        }
+    }
+
+    public static IActivityManager getActivityManagerUnprivileged() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            return IActivityManager.Stub.asInterface(ProxyBinder.getUnprivilegedService(Context.ACTIVITY_SERVICE));
+        } else {
+            return ActivityManagerNative.asInterface(ProxyBinder.getUnprivilegedService(Context.ACTIVITY_SERVICE));
         }
     }
 
