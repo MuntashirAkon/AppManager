@@ -2,6 +2,220 @@
 <changelog>
     <release
         type="beta release"
+        version="v4.0.0-beta02"
+        code="437"
+        date="13 November 2024">
+        <note subtext="true">
+            Private messages should be emailed to am4android@riseup.net. Emails sent to any other
+            email addresses shall be discarded.
+        </note>
+        <new>Added full support for Android 14-r29 and later</new>
+
+        <title>App Details page</title>
+        <new title="App Info">Added a new tag: Sensors disabled</new>
+        <note subtext="true">
+            System may misreport this permission. The best way to check if sensors are indeed
+            disabled is by opening the app first and then visiting the App Info tab leaving the
+            other app running in the background.
+        </note>
+        <new title="App Info">Added option to enable/disable sensors</new>
+        <improve title="App Info">Display detailed installer info</improve>
+        <note subtext="true">
+            An info button is added next to the installer which displays the installer, the actual
+            installer (AKA initiator), and the APK source (originator). Clicking on each item opens
+            the corresponding App Details page. It also fixed displaying the installer app in
+            certain devices.
+        </note>
+        <fix title="App Info">Use the configured naming format when sharing an APK(S)</fix>
+        <improve>Display blocking method in the components tabs</improve>
+        <note subtext="true">
+            IFW+Dis = The component is blocked using both IFW and disable[br /]
+            IFW = The component is blocked using IFW[br /]
+            Dis = The component is disabled.
+        </note>
+        <improve>Hide “Data usage” for apps without the internet permission</improve>
+        <fix>Disabled “IFW” and “IFW+Disable” in the providers tab</fix>
+        <note subtext="true">
+            In Rules settings, the description for “Default blocking method” was also updated with a
+            note that says IFW feature does not work with providers, “disable” is used for them
+            instead.
+        </note>
+        <fix>Fixed applying IFW method in the components tabs</fix>
+        <note subtext="true">
+            Fixed applying IFW rules if the previous rules were “IFW+Disable” or “Disable”.
+        </note>
+
+        <title>App Usage page</title>
+        <improve>Improve the usage time calculation method</improve>
+        <note subtext="true">
+            The usage events returned by the [tt]UsageStatsManager[/tt] were assumed to be in order
+            of their timestamp which does not seem to be true and resulted in missing a few events
+            due to the standard calculation method, that is, calculating the time difference between
+            activity resume and pause timestamps. In addition, it appears that the system may log
+            activity stop timestamp without logging any pause timestamp (a typical activity cycle
+            would be resume → pause → stop → resume → …) causing further miss of events. These
+            issues were addressed by sorting the events in order of their timestamp as well as
+            measure the time difference between resume and stop timestamps instead of resume and
+            pause timestamps.
+        </note>
+        <fix>Fixed the “times opened” value</fix>
+        <note subtext="true">
+            In order to calculate a more reliable number of times an app was opened, the time
+            difference between each activity opening and closing are now relaxed. So, when the user
+            navigates to another activity from an activity belonging to the same app and the time
+            difference is less than 500 ms, the time difference is added to the total usage time.
+            This calculation is technically more precise than the system's own open count because
+            certain navigation involves the use of system UI (e.g., the arrow in the gesture
+            navigation is emitted from the System UI app and should be considered as such) which are
+            ignored. However, the issues with choosing 500 ms (half of a second) time difference are
+            as follows:[br /]
+            1. Due to an user waiting a long time to trigger the back gesture or simply bad coding,
+            an app may take more than this time to open an activity which will cause them to be
+            listed as two accesses.[br /]
+            2. Some apps support multiple windows. If the user opens another activity in a new
+            window shortly after opening the first activity, the two accesses may be counted as one
+            instead of two.[br /]
+            These events are considered extraordinary and can be negligible in a real-life setting.
+        </note>
+
+        <title>Backup/restore</title>
+        <improve>Improved handling custom users in backups</improve>
+        <note subtext="true">
+            - Properly handle backup/restore for a single app. “Custom users” in the backup options
+            is displayed only if the app is installed for multiple users. Similarly, cross-user
+            restore is supported via the “Custom users” option. In addition, fixed issues causing
+            the backup or restore to be performed for the wrong users.[br /]
+            - Unless the “Custom users” option is selected, backup or restore is made only for the
+            current user in the batch selection mode. Others retain the old behaviour. For example,
+            in the batch selection mode, restore is only made with the “base” backup which is
+            defined to be the primary backup for the current user. So, if “Custom users” option is
+            selected for restore operation, App Manager will try to find the base backup of each
+            selected user and restore those for that user.[br /][br /]
+            These behaviours are applied throughout the app to reduce complexity and remove
+            any ambiguous behaviour.
+        </note>
+        <fix>Fixed creating custom backups</fix>
+        <note subtext="true">
+            When custom backups are enabled but the backup name is empty, create a custom backup
+            with the current date and time instead of creating a base backup.
+        </note>
+        <fix>Fixed the “cache” “no cache” confusion in the backup flags selection dialog</fix>
+        <note subtext="true">
+            The “No cache” flag was replaced by the “cache” flag, but the translations still use the
+            former. So, the string ID is altered to invalidate the translations.
+        </note>
+
+        <title>DexOpt</title>
+        <improve>Set default compiler filter from the [tt]pm.dexopt.install[/tt] property</improve>
+        <fix>Fixed applying force dexopt in Android 14</fix>
+        <note subtext="true">
+            These fixes may not work for every device. A novel approach is needed to reduce the
+            complexity as well as put an end to the cat-and-mouse game.
+        </note>
+
+        <title>File Manager</title>
+        <fix>Fixed remembering scroll position during navigation</fix>
+
+        <title>Installer</title>
+        <improve>Accelerate the installation process in Android 12 onwards when possible</improve>
+        <note subtext="true">
+            If an app is being installed in the foreground, App Manager will try to accelerate the
+            installation process by delaying various post-installation tasks carried out by the
+            system services.
+        </note>
+        <improve>
+            Properly handle the originating URI extra supplied by third-party apps via
+            [tt]Intent.EXTRA_ORIGINATING_URI[/tt]
+        </improve>
+        <improve>Set originating package in Android 7 onwards</improve>
+        <note subtext="true">
+            The originating package is automatically determined from the Intent sent from the
+            third-party apps. However, the determination logic may not always work, but it was
+            ensured that there will not be any false positives, e.g., no spoofing can be done by a
+            third-party app.
+        </note>
+        <improve>
+            Set package source to [tt]PACKAGE_SOURCE_OTHER[/tt] by default in Android 13 onwards
+        </improve>
+        <note subtext="true">
+            This is done to prevent the system from applying various accessibility restrictions to
+            the app. However, [tt]PACKAGE_SOURCE_STORE[/tt] is set by default if the originating
+            package is one of the supported app stores. At present, the supported app stores are:
+            Aurora Store, Droid-ify, F-Droid, F-Droid Basic, F-Droid Classic and Neo Store. It is up
+            to the developers to ensure that they send the APK installation requests in a proper
+            way, i.e., by utilizing features such as [tt]startActivityForResult[/tt] whenever
+            possible.
+        </note>
+
+        <title>Interceptor</title>
+        <improve>Intercept SAF, dialer, gallery, search, music player, and WhatsApp URLs</improve>
+
+        <title>Main page</title>
+        <new title="Batch Ops">Added option to export app list as CSV and JSON</new>
+        <improve>Display restore dialog for uninstalled apps with backups</improve>
+        <note subtext="true">
+            Instead of displaying “App not installed” toast for the uninstalled apps with backups,
+            open the restore dialog instead when clicking on such an item in the Main page.
+        </note>
+        <fix>
+            Fixed retrieving applications when there are too many applications installed on the
+            device
+        </fix>
+
+        <title>Profiles page</title>
+        <improve>Display app op names instead of number in the profiles page</improve>
+
+        <title>Settings page</title>
+        <new>Added support for pure black theme</new>
+        <improve>Added a fallback server runner command from DE storage</improve>
+        <note subtext="true">
+            Added a fallback server runner command in case SD card is inaccessible from the UID from
+            which the script is being run. This leverages the device encrypted storage (data_de) by
+            making certain folder and files globally accessible.
+        </note>
+        <fix>Fixed displaying custom commands in the mode of ops page</fix>
+        <fix>Fixed the title for the Mode of Ops settings page</fix>
+
+        <title>UI Tracker</title>
+        <improve>Display current activity name when possible</improve>
+        <note subtext="true">
+            In addition to displaying the class name and its hierarchies, the window will display
+            the activity name if there's is an activity (not all windows are activities). This
+            requires the usage stats permission which is enforced here even if it's disabled in the
+            settings. This is because this feature is meant to be used as a useful tool separated
+            from the rest of the app, but with some level of integration.
+        </note>
+        <fix>Fixed freezing issues in certain devices (e.g., Samsung)</fix>
+
+        <title>Others</title>
+        <improve>Allow opening an application in Android TV as well as for other users</improve>
+        <note subtext="true">
+            This feature does not work in the installation completion dialog or notification.
+        </note>
+        <improve>Allow the remote server to run under any privileged UID</improve>
+        <improve>Made notification permission optional</improve>
+        <note subtext="true">
+            Although denying notification permission will render many features useless, it is made
+            optional for those who insists on denying it. However, the permission shall still be
+            asked everytime the app is launched until it times out.
+        </note>
+        <improve>Updated documentation to reflect latest changes</improve>
+        <note subtext="true">In addition, Oxygen OS specific ADB instructions were added.</note>
+
+        <fix>Fixed changing permissions in Android 14-r50 and later</fix>
+        <fix>Fixed deleting the cached application after the installation attempt fails</fix>
+        <fix>Fixed delivering changes made via batch operations</fix>
+        <fix>Fixed issues with executing automated tasks from the third-party applications</fix>
+        <fix>Fixed suspending packages in Android 14-r29 onwards</fix>
+        <fix>Hide Code Editor if it's disabled in settings</fix>
+
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v4.0.0-beta01...v4.0.0-beta02"]v4.0.0-beta01...v4.0.0-beta02[/a]
+        </note>
+    </release>
+    <release
+        type="beta release"
         version="v4.0.0-beta01"
         code="436"
         date="19 April 2024">

@@ -1,0 +1,15 @@
+Private messages should be emailed to am4android@riseup.net. Emails sent to any other email addresses shall be discarded.
+- Added full support for Android 14-r29 and later
+- [App Info] New tag: Sensors disabled
+- [App Info] Added option to enable/disable sensors
+- [App Info] Display detailed installer info
+- Display blocking method in the components tabs
+- Fixed applying IFW method in the components tabs
+- Improved the usage time calculation method
+- Improved handling custom users in backups
+- Fixed creating custom backups
+- [Batch Ops] Added option to export app list as CSV and JSON
+- Added support for pure black theme
+- Added a fallback server runner command from DE storage
+- [UI Tracker] Display current activity name when possible
+- Updated documentation to reflect latest changes, so on.
