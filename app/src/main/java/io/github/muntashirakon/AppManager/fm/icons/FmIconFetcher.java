@@ -13,7 +13,9 @@ import com.j256.simplemagic.ContentType;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.ThumbnailUtilsCompat;
@@ -27,6 +29,28 @@ import io.github.muntashirakon.svg.SVGParser;
 import io.github.muntashirakon.util.UiUtils;
 
 public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
+    private static final Set<String> OPEN_DOCUMENT_FORMAT_MIME_TYPES = new HashSet<String>() {{
+        add("application/vnd.oasis.opendocument.text");
+        add("application/vnd.oasis.opendocument.spreadsheet");
+        add("application/vnd.oasis.opendocument.presentation");
+        add("application/vnd.oasis.opendocument.graphics");
+        add("application/vnd.oasis.opendocument.chart");
+        add("application/vnd.oasis.opendocument.formula");
+        add("application/vnd.oasis.opendocument.image");
+        add("application/vnd.oasis.opendocument.text-master");
+        add("application/vnd.sun.xml.base");
+        add("application/vnd.oasis.opendocument.base");
+        add("application/vnd.oasis.opendocument.database");
+        // Templates
+        add("application/vnd.oasis.opendocument.text-template");
+        add("application/vnd.oasis.opendocument.spreadsheet-template");
+        add("application/vnd.oasis.opendocument.presentation-template");
+        add("application/vnd.oasis.opendocument.graphics-template");
+        add("application/vnd.oasis.opendocument.chart-template");
+        add("application/vnd.oasis.opendocument.formula-template");
+        add("application/vnd.oasis.opendocument.text-web");
+    }};
+
     @NonNull
     private final FmItem mFmItem;
 
@@ -48,6 +72,15 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
         int length = UiUtils.dpToPx(ContextUtils.getContext(), 40);
         ImageLoader.DefaultImage defaultImage = new ImageLoader.DefaultImageDrawableRes("drawable_" + drawableRes, drawableRes, padding);
         Size size = new Size(length, length);
+        if (OPEN_DOCUMENT_FORMAT_MIME_TYPES.contains(mimeType)) {
+            // Open document format
+            Bitmap bitmap = FmIcons.getOpenDocumentThumbnail(mFmItem.path);
+            if (bitmap != null) {
+                return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true),
+                        false, true, defaultImage);
+            }
+            // Fallback to alternatives
+        }
         if (FmIcons.isAudio(drawableRes)) {
             try {
                 Bitmap bitmap = ThumbnailUtilsCompat.createAudioThumbnail(ContextUtils.getContext(), FmProvider.getContentUri(mFmItem.path), size, null);

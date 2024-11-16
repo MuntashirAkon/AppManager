@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.fm.icons;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.pdf.PdfRenderer;
@@ -20,6 +21,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
@@ -353,6 +356,27 @@ final class FmIcons {
                 file.first.delete();
             }
         }
+    }
+
+    @Nullable
+    public static Bitmap getOpenDocumentThumbnail(@NonNull Path path) {
+        Pair<File, Boolean> file = getUsableFile(path);
+        if (file == null) {
+            return null;
+        }
+        try (ZipFile zipFile = new ZipFile(file.first)) {
+            ZipEntry coverEntry = zipFile.getEntry("Thumbnails/thumbnail.png");
+            if (coverEntry != null) {
+                return BitmapFactory.decodeStream(zipFile.getInputStream(coverEntry));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (file.second) {
+                file.first.delete();
+            }
+        }
+        return null;
     }
 
     @Nullable
