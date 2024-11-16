@@ -25,6 +25,8 @@ public interface IUserManager extends IInterface {
 
     int getManagedProfileBadge(int userId) throws RemoteException;
 
+    boolean hasUserRestriction(String restrictionKey, int userHandle) throws RemoteException;
+
     abstract class Stub {
         public static IUserManager asInterface(android.os.IBinder obj) {
             return HiddenUtil.throwUOE(obj);
