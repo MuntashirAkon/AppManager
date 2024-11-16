@@ -106,21 +106,7 @@
     <string name="pages$main-page$instructions">单击 \\textbf{用户手册} 打开离线版本的 App Manager 用户手册。\n如果单独拆分出来的相应功能（即\\ \\texttt{feat\\_docs} ）未安装, 或系统里不存在加载手册的 WebView\n也可以打开用户手册的在线版本。</string>
     <string name="pages$main-page$$list-options-title">列表选项</string>
     <string name="pages$main-page$$apk-updater-title">APK更新器</string>
-    <string name="intro$main$donation">\\emph{捐赠或购买并不是使用App Manager的必要条件.} 虽然 App Manager 不支持任何任何内购,
-\n但可以通过 Open Source Collective 向 App Manager 的所有者发送捐赠.
-\n
-\nOpen Source Collective 是 Open Collective 平台上的一个财政托管机构，以帮助开源项目管理他们的财务状况。
-\n目前，它支持通过银行账户、PayPal、信用卡或借记卡
-\n和加密货币发起捐赠.
-\n
-\n\\textit{Link:} \\url{https://opencollective.com/muntashir}.
-\n
-\n通过发送捐款，发送者同意他们不应使用捐款作为筹码来使作者优先考虑其所请求的功能.
-\n请求新功能不需要任何捐赠，
-\n且它们的优先级是按作者倾向排序.
-\n
-\n\\emph{App Manager 接受任何资助的提议}
-\n有兴趣的组织的代表可以通过以下方式直接联系联系所有者: \\Sref{sec:contact}.</string>
+    <string name="intro$main$donation">% \\emph{捐赠或购买并不是使用App Manager的必要条件。} 虽然 App Manager 不支持任何内购，\n% 但可以通过 Open Source Collective 向 App Manager 的所有者进行捐赠。 \n%\n% Open Source Collective 是 Open Collective 平台上的一个财政托管机构，\n% 帮助开源项目管理他们的财务状况。 \n% 目前支持通过银行账户、PayPal、信用卡或借记卡以及加密货币发起捐赠。\n%\n% \\textit{链接：} \\url{https://opencollective.com/muntashir} 。\n%\n% 向开发者捐赠意味着捐赠者同意“不应将捐款当作使作者优先考虑其所请求的功能的筹码” 这一点。 \n% 新功能的优先级是根据开发者的偏好和倾向决定的，并不需要任何报酬或捐赠。\n%\n% \\emph{App Manager 接受任意资助或赠款} \n% 有兴趣的组织代表可以通过以下方式直接联系所有者： \\Sref{sec:contact}。\n\n截至2024年9月，在另行通知前 App Manager 不接受任何经济支持。\n但你仍可以向开发者赠送礼物（例如礼品卡、订阅、食物和饮料、鲜花甚至是现金）。\n请通过以下方式联系维护者以获得进一步帮助：Sref{sec:contact}。</string>
     <string name="intro$main$contact">Muntashir Al-Islam\\footnote{可称``Muntashir Akon\'\'}\\\\
 \n邮箱: \\href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\\\
 \nKey Fingerprint: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
@@ -433,9 +419,52 @@
     <string name="pages$profile-page$options-menu">顶部右上角的三点菜单会打开选项菜单。其中包含若干个选项，例如--\n\\begin{itemize}\n \\item \\textbf{应用} 该选项用于直接应用配置文件。\n 点击时，会显示一个可以选择 \\hyperref[subsubsec:profile-state]{配置文件状态} 的对话框。\n 在选择其中一个状态后，配置文件会立即生效。\n \\begin{tip}{注意}\n 当你应用配置文件时，如果存在某些不符合标准的应用，它们会被直接忽略。\n \\end{tip}\n\n \\item \\textbf{保存} 保存对配置文件的更改。\n\n \\item \\textbf{丢弃} 丢弃自上次保存后产生的全部更改。\n\n \\item \\textbf{删除} 点击此选项将将在无警告的情况下直接移除配置文件。\n\n \\item \\textbf{复制} 该选项用于复制配置文件。\n 点击时会显示一个对话框，在对话框内可为新的配置文件命名。\n 单击“OK”后，会复制当前配置文件存储的配置信息\n 并加载到新的 \\hyperref[sec:profile-page]{配置文件页面} 。\n 尽管如此，复制的配置文件在手动保存之前都不会被保存。\n\n \\item \\textbf{创建快捷方式} 该选项用于创建该配置文件的快捷方式。\n 该功能提供两个选项： \\textit{简单} 和 \\textit{高级} 。\n 选择 \\textit{高级} 进行配置时，会提示用户选择快捷方式被调用时的配置文件状态。\n 选择 \\textit{简单} 进行配置时，则总是使用上一次保存的配置文件设置的默认状态。\n\\end{itemize}</string>
     <string name="pages$profiles-page$options-menu">通过位于 App Manager 顶部右上角的三点菜单打开全局选项菜单。\n其中有一个用于选项，用于导入先前从 App Manager 导出的已有配置文件。\n\n长按任意配置文件项目以弹出另一个选项菜单。该选项菜单提供以下选项：\n\\begin{itemize}\n \\item \\textbf{立即应用\\dots.} 该选项用于直接应用配置文件。\n 点击时会显示一个对话框，在对话框内可选择 \\hyperref[subsubsec:profile-state]{配置文件状态}。\n 选择其中一个状态后，配置文件会被立即应用，所做的更改即刻生效。\n\n \\item \\textbf{删除} 点击该选项将在无警告的情况下直接移除配置文件。\n\n \\item \\textbf{复制} 该选项用于复制配置文件。\n 点击时会显示一个对话框，在对话框内可为新的配置文件命名。\n 单击“OK”后，会复制当前配置文件存储的配置信息并加载到新的 \\hyperref[sec:profile-page]{配置文件页面} 。\n 尽管如此，复制的配置文件在手动保存之前都不会被保存。\n\n \\item \\textbf{复制配置文件ID} 该选项用于复制配置文件的唯一配置ID。\n 该配置ID可用于从第三方应用程序 \\hyperref[subsec:triggering-a-profile]{触发配置文件} 。\n\n \\item \\textbf{导出} 导出配置文件到外部存储。\n 通过该方式导出的配置文件可以通过之前提到的 \\textit{导入} 选项被导入。\n\n \\item \\textbf{创建快捷方式} 该选项用于创建该配置文件的快捷方式。\n 该功能提供两个选项： \\textit{简单} 和 \\textit{高级} 。\n 选择 \\textit{高级} 进行配置时，会提示用户选择快捷方式被调用时的配置文件状态。\n 选择 \\textit{简单} 进行配置时，则总是使用上一次保存的配置文件设置的默认状态。\n\\end{itemize}</string>
     <string name="pages$profile-page$apps-tab">应用标签页会列出所有为该配置文件配置的包。\n包可以通过位于屏幕底部附近的 \\textit{添加} 按钮添加或移除。\n一个包可以通过长按该按钮的方式移除 (以防万一，会弹出一个仅显示 \\textit{删除} 选项的对话框)。</string>
-    <string name="pages$profile-page$state">表示默认情况下某些配置文件选项的行为方式。\n例如，若 \\textit{禁用} 选项被打开，则状态是 \\textit{开} 的应用程序会被禁用，状态是 \\textit{关} 的会被启用。\n目前此项仅支持取值 \\textit{开} 和 \\textit{关} 。</string>
-    <string name="pages$profile-page$app-ops">该行为与位于一键操作页面中的 \\hyperref[subsec:set-mode-for-app-ops-dots]{设置 App Ops(应用操作) 模式\\dots} 选项的行为相同。\n然而，此处的操作仅对选中的包生效。\n若 \\hyperref[subsubsec:profile-state]{状态} 为 \\textit{开}，则应用操作(App Ops)会被拒绝 (即忽略)。\n若其状态是 \\textit{关}，则应用操作(App Ops)会被允许。\n该选项可通过单击输入对话框中的 \\textit{禁用} 按钮禁用 (无论被插入何值)。</string>
-    <string name="pages$profile-page$components">该行为与位于一键操作页面中的 \\hyperref[subsec:block-components-dots]{阻止组件\\dots} 选项的行为相同。\n然而，此处的阻止操作仅对选中的包生效。\n若 \\hyperref[subsubsec:profile-state]{状态} 为 \\textit{开}，则组件会被阻止。\n若其状态是 \\textit{关}，则组件会被解除阻止。\n该选项可通过单击输入对话框中的 \\textit{禁用} 按钮禁用 (无论被插入何值)。\n\n\\另请参阅{\\hyperref[subsec:faq:what-are-app-components]{什么是应用组件？}}</string>
-    <string name="pages$profile-page$permissions">该选项用于对被选中的包授予或撤销某些权限。与其他选项类似，权限必须用空格隔开。\n若 \\hyperref[subsubsec:profile-state]{状态} 为 \\textit{开}，则权限会被撤销。\n若其状态是 \\textit{关}，则权限会被允许。\n该选项可通过单击输入对话框中的 \\textit{禁用} 按钮禁用 (无论被插入何值)。</string>
+    <string name="pages$profile-page$state">表示默认情况下某些配置文件选项的行为方式。\n例如，若 \\textit{禁用} 选项被打开，则状态为 \\textit{开} 的应用程序会被禁用，状态为 \\textit{关} 的会被启用。\n目前此项仅支持取值 \\textit{开} 和 \\textit{关} 。</string>
+    <string name="pages$profile-page$app-ops">该行为与位于一键操作页面中的 \\hyperref[subsec:set-mode-for-app-ops-dots]{设置 App Ops(应用操作) 模式\\dots} 选项的行为相同。\n然而，此处的操作仅对选中的包生效。\n若 \\hyperref[subsubsec:profile-state]{状态} 为 \\textit{开}，则应用操作(App Ops)会被拒绝 (即忽略)。\n若其状态为 \\textit{关}，则应用操作(App Ops)会被允许。\n该选项可通过单击输入对话框中的 \\textit{禁用} 按钮禁用 (无论被插入何值)。</string>
+    <string name="pages$profile-page$components">该行为与位于一键操作页面中的 \\hyperref[subsec:block-components-dots]{阻止组件\\dots} 选项的行为相同。\n然而，此处的阻止操作仅对选中的包生效。\n若 \\hyperref[subsubsec:profile-state]{状态} 为 \\textit{开}，则组件会被阻止。\n若其状态为 \\textit{关}，则组件会被解除阻止。\n该选项可通过单击输入对话框中的 \\textit{禁用} 按钮禁用 (无论被插入何值)。\n\n\\另请参阅{\\hyperref[subsec:faq:what-are-app-components]{什么是应用组件？}}</string>
+    <string name="pages$profile-page$permissions">该选项用于对被选中的包授予或撤销某些权限。与其他选项类似，权限必须用空格隔开。\n若 \\hyperref[subsubsec:profile-state]{状态} 为 \\textit{开}，则权限会被撤销。\n若其状态为 \\textit{关}，则权限会被允许。\n该选项可通过单击输入对话框中的 \\textit{禁用} 按钮禁用 (无论被插入何值)。</string>
     <string name="pages$profile-page$backup-restore">该选项用于对被选中的应用程序和其数据进行备份或还原。\n提供两个选项： \\textit{备份选项} 和 \\textit{备份名称} 。\n\\begin{itemize}\n \\item \\textbf{备份选项} 与备份/还原功能中的 \\hyperref[subsec:backup-restore-backup-options]{备份选项} 相同。\n 若没有设置，则使用默认选项。\n \\item \\textbf{备份名称} 为备份设置自定义名称。若已经设置了备份名称，则每次备份都会沿用该名称。\n 每个备份名称后都会被赋予唯一的名称作为后缀。该行为将在未来的正式版被修复。\n 对于通常的“基本”备份，此区域会留空\n (也请确保不要在备份选项中开启 \\textit{多个备份} )。\n\\end{itemize}\n\n若 \\hyperref[subsubsec:profile-state]{状态} 为 \\textit{开}，则包会被备份。\n若其状态为 \\textit{关}，则包会被还原。\n该选项可通过单击输入对话框中的 \\textit{禁用} 按钮禁用 (无论被插入何值)。</string>
+    <string name="pages$settings-page$$pure-black-theme-title">纯黑色主题</string>
+    <string name="pages$settings-page$$layout-direction-title">布局方向</string>
+    <string name="pages$settings-page$$privacy-settings-title">隐私</string>
+    <string name="pages$settings-page$$run-am-in-background-title">在后台运行 App Manager</string>
+    <string name="pages$settings-page$$use-the-internet-title">使用网络</string>
+    <string name="pages$settings-page$$auth-manager-title">授权管理器</string>
+    <string name="pages$settings-page$$align-apk-files-title">对齐 APK 文件</string>
+    <string name="pages$settings-page$$display-changes-title">显示变化</string>
+    <string name="pages$settings-page$$immediately-perform-dex-opt-title">立即执行DEX优化</string>
+    <string name="pages$settings-page$$import-backups-title">导入备份</string>
+    <string name="pages$settings-page$$advanced-settings-title">高级</string>
+    <string name="pages$settings-page$pure-black-theme">使用纯黑色的背景，而不是Material 主题背景。</string>
+    <string name="pages$settings-page$layout-direction">更改布局方向，从左到右或者从右到左。\n通常情况下由选择的语言决定，但不是每个人都有相同的方向习惯。</string>
+    <string name="pages$settings-page$screen-lock">当设置了屏幕锁定时，使用 Android 屏幕锁定的设置锁定 App Manager。\n\n\\begin{warning}{警告}\n 若启用该设置后，屏幕锁定在 Android 中被禁用/移除，则直到再度启用屏幕锁定前 App Manager 将无法被打开。\n\\end{warning}</string>
+    <string name="pages$settings-page$use-the-internet">在 App Manager 中激活网络功能。\n目前包括在 \\hyperref[sec:scanner-page]{扫描器页面}中进行扫描的 VirusTotal 和 Pithus。</string>
+    <string name="pages$settings-page$auth-manager">该设置允许第三方应用程序获得某些功能的访问权限，比如说配置文件。</string>
+    <string name="pages$settings-page$installer-subtitle">配置安装器的默认行为。在应用程序安装时，\n你也可以通过点击 \\textit{齿轮} 图标并找到绝大多数设置。</string>
+    <string name="pages$settings-page$immediately-perform-dex-op">在安装应用程序后立即执行DEX优化。\n对于大型应用程序（比如说游戏类应用程序）而言，这很有用。</string>
+    <string name="pages$settings-page$install-in-the-background">总是在后台安装应用程序。当安装完成时，会发出一条通知。</string>
+    <string name="pages$settings-page$backup-volume">选择存放备份的存储路径。这也将存放日志以及导出的 APK 文件。\n\n\\begin{tip}{注意}\n 备份卷仅可指定存储空间而不是路径。一般情况下备份会被存放在位于存储路径内部的 \\texttt{AppManager} 文件夹内。\n 但当通过存储访问框架 (Storage Access Framework，即 SAF ) 选择路径时，会直接选择路径或目录。\n\\end{tip}</string>
+    <string name="pages$settings-page$import-backups">从旧版本和已停止更新的项目（比如说钛备份、OAndBackup 和 Swift Backup (从3.0到3.2的版本) 中导入备份。\n备份在导入后不会被删除，以防止在无法正确还原导入的备份时丢失数据。</string>
+    <string name="pages$profile-page$block-trackers">根据 \\hyperref[subsubsec:profile-state]{状态} 的值对选中的包的跟踪器组件启用阻止或解除阻止。\n若状态为 \\textit{开} ，则跟踪器会被阻止；若状态为 \\textit{关} ，则跟踪器会被解除阻止。</string>
+    <string name="pages$profile-page$save-apk">对在 \\texttt{AppManager/apks} (或在设置页面中被选中的目录) 中被选中的包启用导出 APK 文件。</string>
+    <string name="pages$settings-page$intro">设置页面可被用于个性化 App Manager 的行为。</string>
+    <string name="pages$profile-page$clear-cache">为被选中的包启用清除缓存。</string>
+    <string name="pages$settings-page$$selected-users-title">选中的用户</string>
+    <string name="pages$profile-page$clear-data">为选中的包启用清除数据。</string>
+    <string name="pages$settings-page$$block-trackers-title">阻止跟踪器</string>
+    <string name="pages$settings-page$signature-schemes">配置\\href{https://source.android.com/security/apksigning}{签名方案} 以用于启用 APK 签名的情况。\n默认启用 v1 和 v2 签名方案，但应该也启用 v3 以确保在 Android 9 及更高版本的安全性。</string>
+    <string name="pages$settings-page$block-trackers">在安装应用程序后立刻阻止跟踪器组件。</string>
+    <string name="pages$settings-page$display-changes">在安装应用程序前，若该应用程序已经被安装，\n则会在版本控制样式中显示版本、跟踪器、组件、权限、签名、SDK等信息的变更。</string>
+    <string name="pages$settings-page$compression-method">设置在备份时使用的压缩方式。\nApp Manager 支持 GZip、BZip2 和 Zstandard 压缩方式，且默认的压缩方式为 GZip。\n这不会影响到已有备份的还原。</string>
+    <string name="pages$profile-page$force-stop">允许被选中的包被强行停止。</string>
+    <string name="pages$settings-page$signing-key">为签名 APK 文件配置签名密钥。\n已存在密钥库中的密钥可以被导入到 App Manager，或者可以生成新的密钥。\n\n\\begin{tip}{提示}\n 如果你需要在将来使用密钥，推荐你自行创建密钥库并在此处导入密钥。\n 在没有正确备份的情况下，在 App Manager 生成的密钥有被删除的风险。\n\\end{tip}</string>
+    <string name="pages$settings-page$$appearance-title">外观</string>
+    <string name="pages$settings-page$$install-in-the-background-title">后台安装</string>
+    <string name="pages$settings-page$$saved-apk-name-format-title">保存的 APK 名称格式</string>
+    <string name="pages$settings-page$run-am-in-background">App Manager 在后台运行时会减少初始化延迟。\n对缓解某些设备频繁断开 ADB\\@ 连接的问题而言，这也很有用。</string>
+    <string name="pages$settings-page$mode-of-operation">操作模式定义了 App Manager 整体的工作模式，其有着以下选项：\n\\begin{itemize}\n \\item \\textbf{自动} 让 App Manager 决定最佳选项。\n 尽管这是默认选项，对于无 Root 用户而言应该使用 \\textit{无 Root} 模式。\n\n \\item \\textbf{Root} 以 Root 模式运行 App Manager。\n 若未检测到 Root 权限，App Manager 会回退至 \\textit{无 Root} 模式。在极少数个例中，当通过 Root发起的 Binder 交流被禁用时\n (例如 \\href{https://github.com/MuntashirAkon/AppManager/issues/606}{Phh SuperUser})，App Manager 也会回退至 \\textit{无 Root} 模式。\n\n \\item \\textbf{网络调试} 在 ADB 模式下通过 \\hyperref[sec:adb-over-tcp]{ADB over TCP} 方式运行 App Manager。\n 若未启用网络调试，App Manager 会回退至 \\textit{无 Root} 模式。\n\n \\item \\textbf{无线调试} 通过无线调试启用 ADB 。首先会自动尝试连接之前配置的热点，\n 失败时会提示用户重新匹配，或者手动连接到 ADB daemon。\n 若通过该方式无法成功连接到 ADB daemon，App Manager会回退至 \\textit{无 Root} 模式。\n \\begin{tip}{信息}\n 由于无线调试在 Android 11 才被引入，该选项仅在运行 Android 11 及更高版本的设备上显示。\n \\end{tip}\n\n \\item \\textbf{无 Root} 以无 Root 模式运行 App Manager。当 App Manager 在此模式中表现更佳，\n 所有仅 Root 或 仅 ADB 特有的功能会被禁用。\n\\end{itemize}\n\n也会在顶部显示实际操作模式。\n实际操作模式是指 \\textit{Root}, \\textit{ADB} and \\textit{无 Root} 。\n\n\\begin{tip}{注意}\n 当你使用自定义命令时，“远程服务”时仅要求 ADB 用户。\n\\end{tip}</string>
+    <string name="pages$settings-page$backup-options">自定义备份时 \\textit{备份/还原对话框} 的显示。\n\n\\另请参阅{\\hyperref[subsec:backup-restore-backup-options]{备份选项}}</string>
+    <string name="pages$settings-page$backup-apps-with-keystore">允许备份在 Android 密钥库中有条目的应用程序。\n由于一些应用 (比如说 Signal 和 Element ) 在还原后会崩溃闪退，该选项会默认显示。</string>
+    <string name="pages$settings-page$align-apk-files">在 App Manager 对一个 APK 文件签名时执行 ZIP 对齐。 ZIP对齐在 APK 文件 (实际也是一种 ZIP 文件) 中\nZIP 文件浏览器可通过随机访问非常轻易地访问文件而不是将整个 APK 文件加载到内存，\n进而导致 Android 可用内存的减少。\n记住一点：该步骤需要该应用程序的清单 (manifest) 中\n存在 \\texttt{解压本地库 (extractNativeLibs)} 并被设定为 \\texttt{真 (true)}。</string>
+    <string name="pages$settings-page$encryption">为备份设置加密方式。App Manager 当前支持 OpenPGP\n(源自 \\href{https://f-droid.org/packages/org.sufficientlysecure.keychain/}{OpenKeyChain} )、\nAES、RSA和ECC\\@ 。与 \\hyperref[subsec:apk-signing]{APK 签名}类似，AES、RSA和ECC密钥被存储在\n密钥库中，可从其它密钥库中导入。\n\n\\begin{danger}{危险}\n 为了确保自身安全，推荐在 App Manager 内部生成 RSA 和 ECC 密钥。\n 或者应该从存储在安全地方的密钥库中导入。\\\\\n 在 AES 的情况下，生成的密钥应存储在安全的地方，例如密码管理器中。\n\\end{danger}</string>
 </resources>
