@@ -102,6 +102,14 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
                             false, true, defaultImage);
                 }
             }
+        } else if (FmIcons.isArchive(drawableRes)) {
+            if (ContentType.JAVA_ARCHIVE.getMimeType().equals(mimeType)) {
+                Bitmap bitmap = FmIcons.generateJ2meIcon(mFmItem.path);
+                if (bitmap != null) {
+                    return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true),
+                            false, true, defaultImage);
+                }
+            }
         } else if (FmIcons.isAudio(drawableRes)) {
             try {
                 Bitmap bitmap = ThumbnailUtilsCompat.createAudioThumbnail(ContextUtils.getContext(), FmProvider.getContentUri(mFmItem.path), size, null);

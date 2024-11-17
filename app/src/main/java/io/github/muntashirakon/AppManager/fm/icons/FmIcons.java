@@ -275,6 +275,10 @@ final class FmIcons {
         return drawable == DRAWABLE_APK;
     }
 
+    public static boolean isArchive(@DrawableRes int drawable) {
+        return drawable == DRAWABLE_ARCHIVE;
+    }
+
     public static boolean isImage(@DrawableRes int drawable) {
         return drawable == DRAWABLE_IMAGE;
     }
@@ -361,6 +365,21 @@ final class FmIcons {
         }
         try {
             return EpubCoverGenerator.generateFromFile(file.first);
+        } finally {
+            if (file.second) {
+                file.first.delete();
+            }
+        }
+    }
+
+    @Nullable
+    public static Bitmap generateJ2meIcon(@NonNull Path path) {
+        Pair<File, Boolean> file = getUsableFile(path);
+        if (file == null) {
+            return null;
+        }
+        try {
+            return J2meIconExtractor.generateFromFile(file.first);
         } finally {
             if (file.second) {
                 file.first.delete();
