@@ -1189,8 +1189,8 @@
     <string name="change_group_gid">تنظیم گروه (GID)</string>
     <string name="change_mode">تنظیم حالت</string>
     <plurals name="file_count">
-        <item quantity="one">پرونده</item>
-        <item quantity="other">پرونده</item>
+        <item quantity="one"></item>
+        <item quantity="other"></item>
     </plurals>
     <string name="shortcut_icon">نماد میانبر</string>
     <string name="sort_by_data_usage">مصرف داده</string>
@@ -1215,15 +1215,15 @@
     <string name="renamed_successfully">تغییر نام یافت</string>
     <string name="confirm_uninstallation">تایید پاک‌کردن</string>
     <plurals name="search_results">
-        <item quantity="one">نتیجه</item>
-        <item quantity="other">نتیجه</item>
+        <item quantity="one"></item>
+        <item quantity="other"></item>
     </plurals>
     <string name="debloat_list_type">فهرست</string>
     <string name="empty_folder">خالی</string>
     <string name="go_to_path">برو به…</string>
     <string name="uninstall_app">پاک‌کردن %1$s</string>
     <string name="copy_this_path">رونوشت مسیر</string>
-    <string name="backing_up_app">پشتیبان گیری…</string>
+    <string name="backing_up_app"></string>
     <string name="create_new_folder">پوشه جدید</string>
     <string name="create_new_file">پرونده جدید</string>
     <string name="installer_options">گزینه های نصب کننده</string>
@@ -1282,7 +1282,7 @@
     <string name="system_app_put_back">بازگشت به عقب</string>
     <string name="title_audio_player">پخش کننده صدا</string>
     <string name="filter_force_stopped_apps">برنامه های ایستاده</string>
-    <string name="installing_package">نصب</string>
+    <string name="installing_package"></string>
     <string name="enter_target_path">مسیر هدف</string>
     <string name="invalid_target_path">مسیر نامعتبر</string>
     <string name="copy_these_paths">رونوشت مسیر ها</string>
@@ -1308,7 +1308,7 @@
     <string name="value_cannot_be_empty">مقدار نمیتواند خالی باشد!</string>
     <string name="invalid_regex">عبارات منظم نامعتبر!</string>
     <plurals name="folder_count">
-        <item quantity="one">پوشه</item>
-        <item quantity="other">پوشه</item>
+        <item quantity="one"></item>
+        <item quantity="other"></item>
     </plurals>
 </resources>
