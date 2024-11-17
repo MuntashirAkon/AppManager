@@ -835,10 +835,10 @@
     <string name="paired_successfully">Sparowany.</string>
     <string name="pid">Identyfikator procesu</string>
     <plurals name="pref_thread_count_msg">
-        <item quantity="one">Wykonaj co najwyżej %1$d operacje równolegle</item>
-        <item quantity="few">Wykonaj co najwyżej %1$d operacji równolegle</item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="one">Wykonuj co najwyżej %1$d operację równolegle</item>
+        <item quantity="few">Wykonuj co najwyżej %1$d operacje równolegle</item>
+        <item quantity="many">Wykonuj co najwyżej %1$d operacji równolegle</item>
+        <item quantity="other">Wykonuj co najwyżej %1$d operacji równolegle</item>
     </plurals>
     <string name="pref_thread_count_hint">Wartość musi być pomiędzy 0 a %1$d gdzie 0 znaczy <i> maksymalnej liczby operacji w danym czasie</i>.</string>
     <string name="pref_thread_count">Wykonanie równoległe</string>
