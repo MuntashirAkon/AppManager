@@ -19,6 +19,7 @@ import java.util.Set;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.ThumbnailUtilsCompat;
+import io.github.muntashirakon.AppManager.fm.ContentType2;
 import io.github.muntashirakon.AppManager.fm.FmItem;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
@@ -79,8 +80,20 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
                 return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true),
                         false, true, defaultImage);
             }
-            // Fallback to alternatives
+        } else if (ContentType.APK.getMimeType().equals(mimeType)) {
+            Bitmap bitmap = FmIcons.generateApkIcon(mFmItem.path);
+            if (bitmap != null) {
+                return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true),
+                        false, true, defaultImage);
+            }
+        } else if (ContentType2.APKM.getMimeType().equals(mimeType)) {
+            Bitmap bitmap = FmIcons.getApkmIcon(mFmItem.path);
+            if (bitmap != null) {
+                return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true),
+                        false, true, defaultImage);
+            }
         }
+        // Others
         if (FmIcons.isAudio(drawableRes)) {
             try {
                 Bitmap bitmap = ThumbnailUtilsCompat.createAudioThumbnail(ContextUtils.getContext(), FmProvider.getContentUri(mFmItem.path), size, null);
@@ -153,7 +166,7 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
                         new ImageLoader.DefaultImageDrawableRes("drawable_" + drawableRes, drawableRes, padding));
             }
         }
-        // TODO: 24/5/23 Check APK, XAPK, APKS, APKM icons
+        // TODO: 24/5/23 Check XAPK, APKS, APKM icons
         return new ImageLoader.ImageFetcherResult(tag, null, defaultImage);
     }
 

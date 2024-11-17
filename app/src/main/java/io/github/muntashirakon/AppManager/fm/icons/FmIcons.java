@@ -3,6 +3,9 @@
 package io.github.muntashirakon.AppManager.fm.icons;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -26,6 +29,7 @@ import java.util.zip.ZipFile;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.Path;
@@ -368,6 +372,52 @@ final class FmIcons {
             ZipEntry coverEntry = zipFile.getEntry("Thumbnails/thumbnail.png");
             if (coverEntry != null) {
                 return BitmapFactory.decodeStream(zipFile.getInputStream(coverEntry));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (file.second) {
+                file.first.delete();
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public static Bitmap generateApkIcon(@NonNull Path path) {
+        Pair<File, Boolean> file = getUsableFile(path);
+        if (file == null) {
+            return null;
+        }
+        try {
+            PackageManager pm = ContextUtils.getContext().getPackageManager();
+            String f = file.first.getAbsolutePath();
+            PackageInfo packageInfo = pm.getPackageArchiveInfo(f, 0);
+            if (packageInfo != null) {
+                ApplicationInfo info = packageInfo.applicationInfo;
+                info.sourceDir = info.publicSourceDir = f;
+                if (info.icon != 0) {
+                    return UIUtils.getBitmapFromDrawable(info.loadIcon(pm));
+                }
+            }
+        } finally {
+            if (file.second) {
+                file.first.delete();
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public static Bitmap getApkmIcon(@NonNull Path path) {
+        Pair<File, Boolean> file = getUsableFile(path);
+        if (file == null) {
+            return null;
+        }
+        try (ZipFile zipFile = new ZipFile(file.first)) {
+            ZipEntry iconEntry = zipFile.getEntry("icon.png");
+            if (iconEntry != null) {
+                return BitmapFactory.decodeStream(zipFile.getInputStream(iconEntry));
             }
         } catch (IOException e) {
             e.printStackTrace();
