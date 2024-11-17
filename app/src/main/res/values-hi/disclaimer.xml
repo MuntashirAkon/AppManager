@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
     <string name="disclaimer_header">अस्वीकरण</string>
     <string name="disclaimer_exit">निकास</string>
     <string name="disclaimer_agree">मैं सहमत हूँ</string>
     <string name="disclaimer_agree_forever">यह फिर से न दिखाएँ</string>
-    <string name="disclaimer_footer">© 2020 मुंतशिर अल-इस्लाम</string>
+    <string name="disclaimer_footer">© 2020–2024 मुंतशिर अल-इस्लाम</string>
     <string name="disclaimer_body">ऐप मैनेजर रूट फ़ंक्शन प्रदान करता है जो संभवतः गलत तरीके से उपयोग किए जाने पर आपके डिवाइस को नुकसान पहुंचा सकता है। ऐप मैनेजर इस एप्लिकेशन का उपयोग करके किए गए किसी भी नुकसान के लिए जिम्मेदार नहीं है। यदि आप पूरी तरह से रुट कैसे काम करता है के बारे में पता नहीं है तो आप रूट विकल्प का उपयोग करने से बचना चाहिए जब तक आप जोखिम के बारे में पूरी तरह से समझ नही जाते ।
 \n
 \nमेरे द्वारा अन्य ऐप्स और वेबसाइटों पर जाने वाला कोई भी लिंक उपयोगकर्ताओं के लाभ के लिए है। मैं बाहरी लिंक पर जाने से आपको मिलने वाली किसी भी सामग्री के लिए जिम्मेदार नहीं हूं।
