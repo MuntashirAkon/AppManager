@@ -96,7 +96,7 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
     }
 
     public int getOp() {
-        return mainItem;
+        return item;
     }
 
     @AppOpsManagerCompat.Mode
@@ -232,11 +232,11 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
         if (!(o instanceof AppDetailsAppOpItem)) return false;
         if (!super.equals(o)) return false;
         AppDetailsAppOpItem that = (AppDetailsAppOpItem) o;
-        return Objects.equals(mainItem, that.mainItem);
+        return Objects.equals(item, that.item);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(mainItem);
+        return Objects.hash(item);
     }
 }

@@ -265,7 +265,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
             ++mLoadedItemCount;
             AppDetailsItem<?> appDetailsItem = appDetailsItems.get(0);
-            mPackageInfo = (PackageInfo) appDetailsItem.mainItem;
+            mPackageInfo = (PackageInfo) appDetailsItem.item;
             mApplicationInfo = mPackageInfo.applicationInfo;
             mPackageName = appDetailsItem.name;
             mUserId = mMainModel.getUserId();

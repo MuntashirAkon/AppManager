@@ -654,7 +654,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 permissionItem = (AppDetailsPermissionItem) mAdapterList.get(index);
             }
-            @NonNull PermissionInfo permissionInfo = permissionItem.mainItem;
+            @NonNull PermissionInfo permissionInfo = permissionItem.item;
             final String permName = permissionInfo.name;
             // Set permission name
             if (mConstraint != null && permName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
@@ -735,7 +735,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 permissionItem = (AppDetailsDefinedPermissionItem) mAdapterList.get(index);
             }
-            PermissionInfo permissionInfo = permissionItem.mainItem;
+            PermissionInfo permissionInfo = permissionItem.item;
             // Internal or external
             holder.chipType.setText(permissionItem.isExternal ? R.string.external : R.string.internal);
             // Label
