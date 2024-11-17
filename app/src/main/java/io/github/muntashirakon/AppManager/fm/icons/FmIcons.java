@@ -28,6 +28,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.UriApkSource;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
@@ -269,6 +271,10 @@ final class FmIcons {
         return drawable != null ? drawable : DRAWABLE_GENERIC;
     }
 
+    public static boolean isApk(@DrawableRes int drawable) {
+        return drawable == DRAWABLE_APK;
+    }
+
     public static boolean isImage(@DrawableRes int drawable) {
         return drawable == DRAWABLE_IMAGE;
     }
@@ -390,22 +396,12 @@ final class FmIcons {
             return null;
         }
         try {
-            PackageManager pm = ContextUtils.getContext().getPackageManager();
-            String f = file.first.getAbsolutePath();
-            PackageInfo packageInfo = pm.getPackageArchiveInfo(f, 0);
-            if (packageInfo != null) {
-                ApplicationInfo info = packageInfo.applicationInfo;
-                info.sourceDir = info.publicSourceDir = f;
-                if (info.icon != 0) {
-                    return UIUtils.getBitmapFromDrawable(info.loadIcon(pm));
-                }
-            }
+            return getApkIcon(file.first);
         } finally {
             if (file.second) {
                 file.first.delete();
             }
         }
-        return null;
     }
 
     @Nullable
@@ -424,6 +420,48 @@ final class FmIcons {
         } finally {
             if (file.second) {
                 file.first.delete();
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public static Bitmap getApksIcon(@NonNull Path path) {
+        Pair<File, Boolean> file = getUsableFile(path);
+        if (file == null) {
+            return null;
+        }
+        try (ZipFile zipFile = new ZipFile(file.first)) {
+            ZipEntry iconEntry = zipFile.getEntry("icon.png");
+            if (iconEntry != null) {
+                return BitmapFactory.decodeStream(zipFile.getInputStream(iconEntry));
+            }
+            // Load as ApkFile
+            UriApkSource apkSource = new UriApkSource(Uri.fromFile(file.first), path.getType());
+            try (ApkFile apkFile = apkSource.resolve()) {
+                ApkFile.Entry baseEntry = apkFile.getBaseEntry();
+                return getApkIcon(baseEntry.getFile(false));
+            }
+        } catch (IOException | ApkFile.ApkFileException e) {
+            e.printStackTrace();
+        } finally {
+            if (file.second) {
+                file.first.delete();
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private static Bitmap getApkIcon(@NonNull File apkFile) {
+        PackageManager pm = ContextUtils.getContext().getPackageManager();
+        String f = apkFile.getAbsolutePath();
+        PackageInfo packageInfo = pm.getPackageArchiveInfo(f, 0);
+        if (packageInfo != null) {
+            ApplicationInfo info = packageInfo.applicationInfo;
+            info.sourceDir = info.publicSourceDir = f;
+            if (info.icon != 0) {
+                return UIUtils.getBitmapFromDrawable(info.loadIcon(pm));
             }
         }
         return null;

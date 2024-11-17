@@ -80,21 +80,29 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
                 return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true),
                         false, true, defaultImage);
             }
-        } else if (ContentType.APK.getMimeType().equals(mimeType)) {
-            Bitmap bitmap = FmIcons.generateApkIcon(mFmItem.path);
-            if (bitmap != null) {
-                return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true),
-                        false, true, defaultImage);
-            }
-        } else if (ContentType2.APKM.getMimeType().equals(mimeType)) {
-            Bitmap bitmap = FmIcons.getApkmIcon(mFmItem.path);
-            if (bitmap != null) {
-                return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true),
-                        false, true, defaultImage);
-            }
         }
         // Others
-        if (FmIcons.isAudio(drawableRes)) {
+        if (FmIcons.isApk(drawableRes)) {
+            if (ContentType.APK.getMimeType().equals(mimeType)) {
+                Bitmap bitmap = FmIcons.generateApkIcon(mFmItem.path);
+                if (bitmap != null) {
+                    return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true),
+                            false, true, defaultImage);
+                }
+            } else if (ContentType2.APKM.getMimeType().equals(mimeType)) {
+                Bitmap bitmap = FmIcons.getApkmIcon(mFmItem.path);
+                if (bitmap != null) {
+                    return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true),
+                            false, true, defaultImage);
+                }
+            } else {
+                Bitmap bitmap = FmIcons.getApksIcon(mFmItem.path);
+                if (bitmap != null) {
+                    return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true),
+                            false, true, defaultImage);
+                }
+            }
+        } else if (FmIcons.isAudio(drawableRes)) {
             try {
                 Bitmap bitmap = ThumbnailUtilsCompat.createAudioThumbnail(ContextUtils.getContext(), FmProvider.getContentUri(mFmItem.path), size, null);
                 return new ImageLoader.ImageFetcherResult(tag, bitmap, false, true, defaultImage);
@@ -166,7 +174,6 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
                         new ImageLoader.DefaultImageDrawableRes("drawable_" + drawableRes, drawableRes, padding));
             }
         }
-        // TODO: 24/5/23 Check XAPK, APKS, APKM icons
         return new ImageLoader.ImageFetcherResult(tag, null, defaultImage);
     }
 
