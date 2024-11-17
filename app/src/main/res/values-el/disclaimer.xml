@@ -9,7 +9,7 @@
 \nΧρησιμοποιώντας την εφαρμογή, αποδέχεστε πλήρη ευθύνη χρησιμοποιώντας τη και συμφωνείτε ότι δεν είμαι υπεύθυνος για οποιαδήποτε πράξη που θα πάρετε η οποία θα έχει κακό αντίκτυπο στη συσκευή σας.</string>
     <string name="disclaimer_exit">Έξοδος</string>
     <string name="disclaimer_header">Αποποίηση ευθυνών</string>
-    <string name="disclaimer_footer">© 2020–2022 Muntashir Al-Islam</string>
+    <string name="disclaimer_footer">© 2020–2024 Muntashir Al-Islam</string>
     <string name="disclaimer_agree_forever">Να μην εμφανιστεί ξανά</string>
     <string name="disclaimer_agree">Συμφωνώ</string>
 </resources>
