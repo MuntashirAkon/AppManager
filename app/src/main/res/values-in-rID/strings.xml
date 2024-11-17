@@ -195,22 +195,7 @@
     <string name="toggle_class_listing">Alihkan Pendaftar Class</string>
     <string name="class_viewer">Peninjau Class</string>
     <string name="word_wrap">alihkan word wrap</string>
-    <string name="credits_message">Kepada pembuat/pemilik dari
-\n- Proyek Android Sumber Terbuka
-\n- <a href="https://github.com/butzist/ActivityLauncher">Peluncur Aktivfitas</a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Informasi Apps_packages</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
-\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\n- <a href="https://github.com/matrix-org/matrix-android-sdk">SDK Android Matrix</a>
-\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
-\n- <a href="https://github.com/open-keychain/open-keychain">Keychain Sumber Terbuka</a>
-\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nKarya Logo Asli: <a href="https://github.com/Atrate">Atrate</a>. </string>
+    <string name="credits_message">Kepada pembuat/pemilik dari \n- The Android Open Source Project \n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a> \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a> \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a> \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a> \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a> \n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a> \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a> \n- <a href="https://github.com/billthefarmer/editor">Editor</a> \n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a> \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a> \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a> \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> \n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a> \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a> \n- <a href="https://github.com/pluscubed/matlog">MatLog</a> \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a> \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a> \n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a> \n- <a href="https://github.com/Aefyr/SAI">SAI</a> \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a> \n- <a href="https://github.com/eclipse/tm4e">tm4e</a> \n- <a href="https://github.com/tuyafeng/Watt">Watt</a></string>
     <string name="credits">Pembuat</string>
     <string name="third_party">Pustakaan dan Ikon Pihak-Ketiga</string>
     <string name="license">Lisensi</string>
@@ -448,8 +433,8 @@
     <string name="patch_level">Tingkat tambalan</string>
     <string name="backup_skip_signature_checks_description">Pulihkan cadangan yang gagal dikarenakan kegagalan verifikasi checksum atau memiliki tanda tangan APK yang berbeda dari apa yang telah dicadangkan sebelumnya.</string>
     <string name="backup_multiple_description">Buat sebuah cadangan terpisah <i>dinamai</i> cadangan daripada cadangan basis.</string>
-    <string name="backup_rules_description">Aturan cadangan dikonfigurasi dalam manajer aplikasi.</string>
-    <string name="backup_extras_description">Cadangkan izin aplikasi, penghemat baterai dan opsi penggunaan data, status MagiskHide, SSAID, dll.</string>
+    <string name="backup_rules_description">Aturan cadangan dikonfigurasi dalam manajer aplikasi. <font fgcolor="#ff0000">Tergantung pada perizinan, tidak semua aturan dapat di aplikasikan kembali setelah di pulihkan.</font></string>
+    <string name="backup_extras_description">Cadangkan izin aplikasi, penghemat baterai dan opsi penggunaan data, status MagiskHide, SSAID, dll. <font fgcolor="#ff0000">Tergantung pada perizinan, Tidak semua pilihan dapat di pulihkan.</font></string>
     <string name="backup_extras">Ekstra</string>
     <string name="backup_cache_description">Cadangkan folder <b>cache</b>, <b>no_cache</b> dan <b>no_backup</b>.</string>
     <string name="backup_obb_media_description">Cadangkan Folder OBB dan Media.</string>
