@@ -737,7 +737,7 @@
     <string name="backup_skip_signature_checks_description">उन बैकअप को पुनर्स्थापित करें जो या तो चेकसम सत्यापन को विफल करते हैं या उनके पिछले बैकअप की तुलना में भिन्न एपीके हस्ताक्षर हैं।</string>
     <string name="backup_multiple_description">बेस बैकअप के बजाय एक अलग <i>नामित</i> बैकअप बनाएं।</string>
     <string name="backup_rules_description">ऐप मैनेजर के भीतर कॉन्फ़िगर किए गए नियमों का बैकअप लें। <font fgcolor="#ff0000">अनुमतियों के आधार पर, पुनर्स्थापना के दौरान सभी नियमों को दोबारा लागू नहीं किया जा सकता है।</font> </string>
-    <string name="backup_extras_description">ऐप अनुमतियां, बैटरी की बचत, डेटा उपयोग विकल्प, मैजिस्कहाइड स्थिति, SSAID, आदि बैकअप करें। <font fgcolor="#ff0000"> अनुमतियों के आधार पर, सभी अतिरिक्त सुविधाएं बहाल नहीं की जा सकतीं।</font>। </string>
+    <string name="backup_extras_description">ऐप अनुमतियां, बैटरी की बचत, डेटा उपयोग विकल्प, मैजिस्कहाइड स्थिति, SSAID, आदि बैकअप करें। <font fgcolor="#ff0000"> अनुमतियों के आधार पर, सभी अतिरिक्त सुविधाएं बहाल नहीं की जा सकतीं।</font></string>
     <string name="backup_extras">एक्स्ट्रास</string>
     <string name="backup_cache_description"><b>cache</b>, <b>no_cache</b> और <b>no_backup</b> फ़ोल्डर का बैकअप न करें।</string>
     <string name="backup_obb_media_description">ओबीबी और मीडिया फ़ोल्डर्स बैकअप करें।</string>
