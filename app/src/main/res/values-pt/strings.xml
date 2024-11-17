@@ -1386,7 +1386,7 @@
     <string name="enter_target_path">Caminho de destino</string>
     <string name="copy_these_paths">Copiar caminhos</string>
     <string name="moved_successfully">Movido</string>
-    <string name="copied_successfully">Copiado</string>
+    <string name="copied_successfully">Copiado.</string>
     <plurals name="alert_failed_to_unblock_components">
         <item quantity="one">Não foi possível desbloquear componentes para %1$d app</item>
         <item quantity="many">Não foi possível desbloquear componentes para %1$d apps</item>
