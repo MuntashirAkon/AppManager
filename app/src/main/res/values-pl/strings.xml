@@ -837,8 +837,8 @@
     <plurals name="pref_thread_count_msg">
         <item quantity="one">Wykonaj co najwyżej %1$d operacje równolegle</item>
         <item quantity="few">Wykonaj co najwyżej %1$d operacji równolegle</item>
-        <item quantity="many"/>
-        <item quantity="other"/>
+        <item quantity="many"></item>
+        <item quantity="other"></item>
     </plurals>
     <string name="pref_thread_count_hint">Wartość musi być pomiędzy 0 a %1$d gdzie 0 znaczy <i> maksymalnej liczby operacji w danym czasie</i>.</string>
     <string name="pref_thread_count">Wykonanie równoległe</string>
