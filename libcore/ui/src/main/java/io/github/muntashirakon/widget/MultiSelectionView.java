@@ -506,9 +506,13 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         public void toggleSelection(int position) {
             if (isSelected(position)) {
                 deselect(position);
-            } else select(position);
-            notifyItemChanged(position);
-            notifySelectionChange();
+                notifyItemChanged(position);
+                notifySelectionChange();
+            } else {
+                select(position);
+                notifySelectionChange();
+                notifyItemChanged(position);
+            }
         }
 
         @UiThread
@@ -517,8 +521,8 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
             for (int position = 0; position < getItemCount(); ++position) {
                 select(position);
             }
-            notifyItemRangeChanged(0, getItemCount(), null);
             notifySelectionChange();
+            notifyItemRangeChanged(0, getItemCount(), null);
         }
 
         @UiThread
@@ -541,8 +545,8 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
             for (int position = beginPosition; position <= endPosition; ++position) {
                 select(position);
             }
-            notifyItemRangeChanged(beginPosition, endPosition - beginPosition + 1);
             notifySelectionChange();
+            notifyItemRangeChanged(beginPosition, endPosition - beginPosition + 1);
         }
 
         @Override
