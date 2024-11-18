@@ -232,6 +232,11 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataChangedObserver() {
             @Override
             public void onChanged() {
+                if (mAdapter.isInSelectionMode()) {
+                    // Avoid setting a selection in selection mode (directory cannot be changed
+                    // in selection mode anyway).
+                    return;
+                }
                 if (scrollPosition.get() != RecyclerView.NO_POSITION) {
                     // Update scroll position
                     mRecyclerView.setSelection(scrollPosition.get());
