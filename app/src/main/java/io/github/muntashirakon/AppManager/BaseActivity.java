@@ -3,28 +3,20 @@
 package io.github.muntashirakon.AppManager;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.CallSuper;
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.biometric.BiometricPrompt;
 import androidx.biometric.BiometricPrompt.AuthenticationResult;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
@@ -44,7 +36,7 @@ import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.settings.SecurityAndOpsViewModel;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends PerProcessActivity {
     public static final String TAG = BaseActivity.class.getSimpleName();
 
     private static final HashMap<String, Boolean> ASKED_PERMISSIONS = new HashMap<String, Boolean>() {{
@@ -75,7 +67,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
-        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
         if (Ops.isAuthenticated()) {
             Log.d(TAG, "Already authenticated.");
@@ -160,20 +151,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract void onAuthenticated(@Nullable Bundle savedInstanceState);
 
-    public boolean getTransparentBackground() {
-        return false;
-    }
-
-    @CallSuper
-    @SuppressLint("RestrictedApi")
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (menu instanceof MenuBuilder) {
-            ((MenuBuilder) menu).setOptionalIconsVisible(true);
-        }
-        return super.onCreateOptionsMenu(menu);
-    }
-
     @CallSuper
     @Override
     protected void onStart() {
@@ -194,24 +171,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             mAlertDialog.dismiss();
         }
         super.onStop();
-    }
-
-    protected void clearBackStack() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if (fragmentManager.getBackStackEntryCount() > 0) {
-            FragmentManager.BackStackEntry entry = fragmentManager.getBackStackEntryAt(0);
-            fragmentManager.popBackStackImmediate(entry.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
-    }
-
-    protected void removeCurrentFragment(@IdRes int id) {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(id);
-        if (fragment != null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .remove(fragment)
-                    .commit();
-        }
     }
 
     private void authenticate() {

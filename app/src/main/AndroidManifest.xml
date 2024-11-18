@@ -1117,10 +1117,11 @@
         <activity
             android:name=".viewer.audio.AudioPlayerActivity"
             android:excludeFromRecents="true"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_audio_player"
             android:taskAffinity=".misc.music.AudioPlayerActivity"
-            android:theme="@style/AppTheme.TransparentBackground">
+            android:theme="@style/AppTheme.TransparentBackground"
+            android:process=":audio_player">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 

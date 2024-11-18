@@ -34,7 +34,7 @@ import java.lang.ref.WeakReference;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 
-import io.github.muntashirakon.AppManager.BaseActivity;
+import io.github.muntashirakon.AppManager.PerProcessActivity;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 
@@ -116,8 +116,8 @@ public final class AppearanceUtils {
     private static class ActivityAppearanceCallback implements Application.ActivityLifecycleCallbacks {
         @Override
         public void onActivityPreCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
-            if (activity instanceof BaseActivity) {
-                boolean transparentBackground = ((BaseActivity) activity).getTransparentBackground();
+            if (activity instanceof PerProcessActivity) {
+                boolean transparentBackground = ((PerProcessActivity) activity).getTransparentBackground();
                 activity.setTheme(transparentBackground
                         ? Prefs.Appearance.getTransparentAppTheme()
                         : Prefs.Appearance.getAppTheme());

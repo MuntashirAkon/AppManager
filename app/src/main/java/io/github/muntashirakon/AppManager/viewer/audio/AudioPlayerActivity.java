@@ -9,18 +9,19 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.BaseActivity;
+import io.github.muntashirakon.AppManager.PerProcessActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 
-public class AudioPlayerActivity extends BaseActivity {
+public class AudioPlayerActivity extends PerProcessActivity {
     @Override
     public boolean getTransparentBackground() {
         return true;
     }
 
     @Override
-    protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_player);
         List<Uri> uriList = IntentCompat.getDataUris(getIntent());
         if (uriList == null) {
