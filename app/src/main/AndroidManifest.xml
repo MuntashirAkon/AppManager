@@ -450,6 +450,18 @@
             android:label="@string/title_labs_activity" />
 
         <activity-alias
+            android:name=".apk.installer.AppInfoActivity"
+            android:exported="false"
+            android:label="@string/app_info"
+            android:targetActivity=".details.AppDetailsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SHOW_APP_INFO" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
             android:name=".details.AppInfoActivity"
             android:exported="true"
             android:label="@string/app_info"
@@ -1119,9 +1131,9 @@
             android:excludeFromRecents="true"
             android:exported="true"
             android:label="@string/title_audio_player"
+            android:process=":audio_player"
             android:taskAffinity=".misc.music.AudioPlayerActivity"
-            android:theme="@style/AppTheme.TransparentBackground"
-            android:process=":audio_player">
+            android:theme="@style/AppTheme.TransparentBackground">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
