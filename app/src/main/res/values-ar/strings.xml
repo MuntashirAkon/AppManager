@@ -306,7 +306,7 @@
     <string name="pref_import_existing">استيراد القواعد الموجودة</string>
     <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">جيتهب</a> • <a href="https://gitlab.com/muntashir/AppManager">جيتلاب</a> • <a href="https://0xacab.org/muntashir/AppManager">ارتق</a> • <a href="https://codeberg.org/muntashir/AppManager">كودبيرق</a></string>
     <string name="source_code">الشفرة المصدرية</string>
-    <string name="update">تحديث</string>
+    <string name="update">إنعاش</string>
     <string name="install">تثبيت</string>
     <string name="manifest_viewer">عارض البيان</string>
     <string name="external_apk_no_app_op">لا يحتوي ملف APK الخارجي على أي عمليات تطبيق</string>
