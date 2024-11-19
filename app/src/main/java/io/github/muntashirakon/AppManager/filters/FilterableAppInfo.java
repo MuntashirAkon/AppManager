@@ -24,6 +24,7 @@ import androidx.core.content.pm.PackageInfoCompat;
 import java.io.IOException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -72,7 +73,7 @@ public class FilterableAppInfo {
     private String[] mSignatureSha256Checksums;
     private Map<ComponentInfo, Integer> mAllComponents;
     private Map<ComponentInfo, Integer> mTrackerComponents;
-    private String[] mUsedPermissions;
+    private List<String> mUsedPermissions;
     private Backup[] mBackups;
     private List<AppOpsManagerCompat.OpEntry> mAppOpEntries;
     @Nullable
@@ -211,7 +212,7 @@ public class FilterableAppInfo {
     }
 
     @NonNull
-    public String[] getAllPermissions() {
+    public List<String> getAllPermissions() {
         if (mUsedPermissions == null) {
             Set<String> usedPermissions = new HashSet<>();
             if (mPackageInfo.requestedPermissions != null) {
@@ -243,7 +244,7 @@ public class FilterableAppInfo {
                     }
                 }
             }
-            mUsedPermissions = usedPermissions.toArray(new String[0]);
+            mUsedPermissions = new ArrayList<>(usedPermissions);
         }
         return mUsedPermissions;
     }

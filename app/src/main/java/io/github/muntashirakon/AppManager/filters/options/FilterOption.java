@@ -168,6 +168,7 @@ public abstract class FilterOption {
         private List<Backup> mMatchedBackups;
         private Map<ComponentInfo, Integer> mMatchedComponents;
         private Map<ComponentInfo, Integer> mMatchedTrackers;
+        private List<String> mMatchedPermissions;
         private List<String> mMatchedSubjectLines;
 
         public TestResult setMatched(boolean matched) {
@@ -207,6 +208,15 @@ public abstract class FilterOption {
         @Nullable
         public Map<ComponentInfo, Integer> getMatchedTrackers() {
             return mMatchedTrackers;
+        }
+
+        public TestResult setMatchedPermissions(List<String> matchedPermissions) {
+            mMatchedPermissions = matchedPermissions;
+            return this;
+        }
+
+        public List<String> getMatchedPermissions() {
+            return mMatchedPermissions;
         }
 
         public TestResult setMatchedSubjectLines(List<String> matchedSubjectLines) {

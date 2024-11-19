@@ -20,7 +20,7 @@ public final class FilterOptions {
             case "installer": return new InstallerOption();
             case "last_update": return new LastUpdateOption();
             case "min_sdk": return new MinSdkOption();
-            // case "permission": return new PermissionOption();
+            case "permissions": return new PermissionsOption();
             case "pkg_name": return new PackageNameOption();
             case "running_apps": return new RunningAppsOption();
             case "screen_time": return new ScreenTimeOption();
