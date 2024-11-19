@@ -87,9 +87,9 @@ public class EditFilterOptionFragment extends DialogFragment {
         }
 
         protected WrappedFilterOption(@NonNull Parcel in) {
-            logic = in.readString().charAt(0);
-            filterOption = FilterOptions.create(in.readString());
-            filterOption.setKeyValue(in.readString(), in.readString());
+            logic = Objects.requireNonNull(in.readString()).charAt(0);
+            filterOption = FilterOptions.create(Objects.requireNonNull(in.readString()));
+            filterOption.setKeyValue(Objects.requireNonNull(in.readString()), in.readString());
         }
 
         @Override
@@ -297,7 +297,7 @@ public class EditFilterOptionFragment extends DialogFragment {
         mCurrentKey = filterOption.getKey();
         mCurrentKeyType = filterOption.getKeyType();
         mKeySpinner.setSelection(mKeyAdapter.getPosition(mCurrentKey));
-        // Update the textfield
+        // Update the text field
         mGenericEditText.setText(filterOption.getValue());
         updateUiForType(mCurrentKeyType);
     }
@@ -419,12 +419,18 @@ public class EditFilterOptionFragment extends DialogFragment {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             int flag = mFlags.get(position);
             CharSequence flagName = mFlagMap.get(flag);
-            boolean selected = (mFlag & flag) != 0;
             holder.item.setText(flagName);
-            holder.item.setChecked(selected);
+            holder.item.setChecked((mFlag & flag) != 0);
             holder.item.setOnClickListener(v -> {
-                mFlag |= flag;
-                holder.item.setChecked(true);
+                if ((mFlag & flag) != 0) {
+                    // Already selected, deselect
+                    mFlag &= ~flag;
+                    holder.item.setChecked(false);
+                } else {
+                    // Not yet selected, select
+                    mFlag |= flag;
+                    holder.item.setChecked(true);
+                }
                 mItemClickListener.onClick(v);
             });
         }
