@@ -15,6 +15,7 @@ public class DataUsageOption extends FilterOption {
         put("eq", TYPE_SIZE_BYTES);
         put("le", TYPE_SIZE_BYTES);
         put("ge", TYPE_SIZE_BYTES);
+        // TODO: 11/19/24 Add more curated options, e.g., mobile and wifi
     }};
 
     public DataUsageOption() {

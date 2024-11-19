@@ -67,6 +67,18 @@ public class AppUsageStatsManager {
     public static final class DataUsage extends Pair<Long, Long> implements Parcelable, Comparable<DataUsage> {
         public static final DataUsage EMPTY = new DataUsage(0, 0);
 
+        public static DataUsage fromDataUsage(DataUsage ...dataUsages) {
+            if (dataUsages == null) {
+                return EMPTY;
+            }
+            long tx = 0, rx = 0;
+            for (DataUsage dataUsage : dataUsages) {
+                tx += dataUsage.getTx();
+                rx += dataUsage.getRx();
+            }
+            return new DataUsage(tx, rx);
+        }
+
         private final long mTotal;
 
         public DataUsage(long tx, long rx) {

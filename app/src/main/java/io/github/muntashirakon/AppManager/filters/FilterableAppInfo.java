@@ -48,7 +48,6 @@ import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.PackageUsageInfo;
-import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -57,6 +56,8 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class FilterableAppInfo {
     private final PackageInfo mPackageInfo;
+    @Nullable
+    private final PackageUsageInfo mPackageUsageInfo;
     private final ApplicationInfo mApplicationInfo;
     private final int mUserId;
     private final PackageManager mPm;
@@ -76,12 +77,12 @@ public class FilterableAppInfo {
     private List<AppOpsManagerCompat.OpEntry> mAppOpEntries;
     @Nullable
     private PackageSizeInfo mPackageSizeInfo;
-    private PackageUsageInfo mPackageUsageInfo;
     private AppUsageStatsManager.DataUsage mDataUsage;
     private DebloatObject mBloatwareInfo;
 
-    public FilterableAppInfo(@NonNull PackageInfo packageInfo) {
+    public FilterableAppInfo(@NonNull PackageInfo packageInfo, @Nullable PackageUsageInfo packageUsageInfo) {
         mPackageInfo = packageInfo;
+        mPackageUsageInfo = packageUsageInfo;
         mApplicationInfo = packageInfo.applicationInfo;
         mUserId = UserHandleHidden.getUserId(mApplicationInfo.uid);
         mPm = ContextUtils.getContext().getPackageManager();
@@ -383,28 +384,26 @@ public class FilterableAppInfo {
 
     public AppUsageStatsManager.DataUsage getDataUsage() {
         if (mDataUsage == null && isInstalled()) {
-            mDataUsage = AppUsageStatsManager.getDataUsageForPackage(ContextUtils.getContext(), mApplicationInfo.uid, UsageUtils.USAGE_WEEKLY);
-        } else mDataUsage = new AppUsageStatsManager.DataUsage(0, 0);
+            if (mPackageUsageInfo != null) {
+                mDataUsage = AppUsageStatsManager.DataUsage.fromDataUsage(mPackageUsageInfo.mobileData, mPackageUsageInfo.wifiData);
+            }
+        }
+        if (mDataUsage == null) {
+            mDataUsage = AppUsageStatsManager.DataUsage.EMPTY;
+        }
         return mDataUsage;
     }
 
-    private void fetchPackageUsageInfo() {
-        if (mPackageUsageInfo == null && isInstalled()) {
-            try {
-                mPackageUsageInfo = AppUsageStatsManager.getInstance().getUsageStatsForPackage(getPackageName(), UsageUtils.USAGE_WEEKLY, mUserId);
-            } catch (Exception ignore) {
-            }
-        }
-    }
-
     public int getTimesOpened() {
-        fetchPackageUsageInfo();
         return mPackageUsageInfo != null ? mPackageUsageInfo.timesOpened : 0;
     }
 
     public long getTotalScreenTime() {
-        fetchPackageUsageInfo();
-        return mPackageUsageInfo != null ? mPackageUsageInfo.screenTime : 0;
+        return mPackageUsageInfo != null ? mPackageUsageInfo.screenTime : 0L;
+    }
+
+    public long getLastUsedTime() {
+        return mPackageUsageInfo != null ? mPackageUsageInfo.lastUsageTime : 0L;
     }
 
     @Nullable
