@@ -95,6 +95,8 @@ public class FinderViewModel extends AndroidViewModel {
                     PackageManager.GET_META_DATA | GET_SIGNING_CERTIFICATES
                             | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
                             | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
+                            | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_PERMISSIONS
+                            | PackageManager.GET_URI_PERMISSION_PATTERNS
                             | MATCH_DISABLED_COMPONENTS | MATCH_UNINSTALLED_PACKAGES
                             | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
             // List usages

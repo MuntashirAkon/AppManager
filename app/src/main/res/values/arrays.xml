@@ -253,7 +253,7 @@
         <item>installer</item>
         <item>last_update</item>
         <item>min_sdk</item>
-        <!--item>permission</item-->
+        <item>permissions</item>
         <item>pkg_name</item>
         <item>running_apps</item>
         <item>screen_time</item>
