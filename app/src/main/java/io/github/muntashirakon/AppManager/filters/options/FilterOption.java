@@ -215,6 +215,7 @@ public abstract class FilterOption {
             return this;
         }
 
+        @Nullable
         public List<String> getMatchedPermissions() {
             return mMatchedPermissions;
         }

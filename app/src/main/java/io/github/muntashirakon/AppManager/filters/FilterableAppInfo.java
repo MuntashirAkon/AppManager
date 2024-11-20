@@ -44,6 +44,7 @@ import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.debloat.DebloatObject;
 import io.github.muntashirakon.AppManager.filters.options.ComponentsOption;
+import io.github.muntashirakon.AppManager.filters.options.FreezeOption;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
@@ -260,6 +261,20 @@ public class FilterableAppInfo {
 
     public boolean isFrozen() {
         return !isEnabled() || isSuspended() || isHidden();
+    }
+
+    public int getFreezeFlags() {
+        int flags = 0;
+        if (!isEnabled()) {
+            flags |= FreezeOption.FREEZE_TYPE_DISABLED;
+        }
+        if (isHidden()) {
+            flags |= FreezeOption.FREEZE_TYPE_HIDDEN;
+        }
+        if (isSuspended()) {
+            flags |= FreezeOption.FREEZE_TYPE_SUSPENDED;
+        }
+        return flags;
     }
 
     public boolean isStopped() {
