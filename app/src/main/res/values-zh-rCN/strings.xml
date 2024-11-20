@@ -20,7 +20,7 @@
     <string name="no_service">无服务</string>
     <string name="orientation">屏幕旋转</string>
     <string name="soft_input">软键盘输入模式</string>
-    <string name="flags">标志位(Flags)</string>
+    <string name="flags">标志(Flags)</string>
     <string name="grant_uri_permission">授予 URI 权限</string>
     <string name="path_permissions">路径授权</string>
     <string name="read">读取</string>
