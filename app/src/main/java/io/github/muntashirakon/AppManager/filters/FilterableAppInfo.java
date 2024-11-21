@@ -15,6 +15,7 @@ import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,6 +44,7 @@ import io.github.muntashirakon.AppManager.compat.InstallSourceInfoCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.debloat.DebloatObject;
+import io.github.muntashirakon.AppManager.filters.options.AppTypeOption;
 import io.github.muntashirakon.AppManager.filters.options.ComponentsOption;
 import io.github.muntashirakon.AppManager.filters.options.FreezeOption;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -81,6 +83,8 @@ public class FilterableAppInfo {
     private PackageSizeInfo mPackageSizeInfo;
     private AppUsageStatsManager.DataUsage mDataUsage;
     private DebloatObject mBloatwareInfo;
+    private Integer mFreezeFlags = null;
+    private Integer mAppTypeFlags = null;
 
     public FilterableAppInfo(@NonNull PackageInfo packageInfo, @Nullable PackageUsageInfo packageUsageInfo) {
         mPackageInfo = packageInfo;
@@ -264,17 +268,20 @@ public class FilterableAppInfo {
     }
 
     public int getFreezeFlags() {
-        int flags = 0;
+        if (mFreezeFlags != null) {
+            return mFreezeFlags;
+        }
+        mFreezeFlags = 0;
         if (!isEnabled()) {
-            flags |= FreezeOption.FREEZE_TYPE_DISABLED;
+            mFreezeFlags |= FreezeOption.FREEZE_TYPE_DISABLED;
         }
         if (isHidden()) {
-            flags |= FreezeOption.FREEZE_TYPE_HIDDEN;
+            mFreezeFlags |= FreezeOption.FREEZE_TYPE_HIDDEN;
         }
         if (isSuspended()) {
-            flags |= FreezeOption.FREEZE_TYPE_SUSPENDED;
+            mFreezeFlags |= FreezeOption.FREEZE_TYPE_SUSPENDED;
         }
-        return flags;
+        return mFreezeFlags;
     }
 
     public boolean isStopped() {
@@ -287,6 +294,60 @@ public class FilterableAppInfo {
 
     public boolean isDebuggable() {
         return (mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+    }
+
+    public int getAppTypeFlags() {
+        if (mAppTypeFlags != null) {
+            return mAppTypeFlags;
+        }
+        mAppTypeFlags = 0;
+        if (isSystemApp()) {
+            mAppTypeFlags |= AppTypeOption.APP_TYPE_SYSTEM;
+        } else {
+            mAppTypeFlags |= AppTypeOption.APP_TYPE_USER;
+        }
+        if (isUpdatedSystemApp()) {
+            mAppTypeFlags |= AppTypeOption.APP_TYPE_UPDATED_SYSTEM;
+        }
+        if (isPrivileged()) {
+            mAppTypeFlags |= AppTypeOption.APP_TYPE_PRIVILEGED;
+        }
+        if (dataOnlyApp()) {
+            mAppTypeFlags |= AppTypeOption.APP_TYPE_DATA_ONLY;
+        }
+        if (isStopped()) {
+            mAppTypeFlags |= AppTypeOption.APP_TYPE_STOPPED;
+        }
+        if (requestedLargeHeap()) {
+            mAppTypeFlags |= AppTypeOption.APP_TYPE_LARGE_HEAP;
+        }
+        if (isDebuggable()) {
+            mAppTypeFlags |= AppTypeOption.APP_TYPE_DEBUGGABLE;
+        }
+        if (isTestOnly()) {
+            mAppTypeFlags |= AppTypeOption.APP_TYPE_TEST_ONLY;
+        }
+        if (hasCode()) {
+            mAppTypeFlags |= AppTypeOption.APP_TYPE_HAS_CODE;
+        }
+        if (isPersistent()) {
+            mAppTypeFlags |= AppTypeOption.APP_TYPE_PERSISTENT;
+        }
+        if (backupAllowed()) {
+            mAppTypeFlags |= AppTypeOption.APP_TYPE_ALLOW_BACKUP;
+        }
+        if (installedInExternalStorage()) {
+            mAppTypeFlags |= AppTypeOption.APP_TYPE_INSTALLED_IN_EXTERNAL;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (usesHttp()) {
+                mAppTypeFlags |= AppTypeOption.APP_TYPE_HTTP_ONLY;
+            }
+        }
+        if (!TextUtils.isEmpty(getSsaid())) {
+            mAppTypeFlags |= AppTypeOption.APP_TYPE_SSAID;
+        }
+        return mAppTypeFlags;
     }
 
     public boolean isSystemApp() {

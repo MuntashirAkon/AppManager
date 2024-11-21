@@ -35,7 +35,7 @@ public class InstallerOption extends FilterOption {
     public TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result) {
         InstallSourceInfoCompat installSourceInfo = info.getInstallerInfo();
         if (installSourceInfo == null) {
-            return result.setMatched(key.equals("all"));
+            return result.setMatched(key.equals(KEY_ALL));
         }
         // There's at least one installer at this point
         Set<String> installers = getInstallers(installSourceInfo);

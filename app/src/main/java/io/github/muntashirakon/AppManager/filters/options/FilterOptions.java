@@ -10,9 +10,11 @@ public final class FilterOptions {
         switch (filterName) {
             case "apk_size": return new ApkSizeOption();
             case "app_label": return new AppLabelOption();
+            case "app_type": return new AppTypeOption();
             case "backup": return new BackupOption();
             case "bloatware": return new BloatwareOption();
             case "cache_size": return new CacheSizeOption();
+            case "compile_sdk": return new CompileSdkOption();
             case "components": return new ComponentsOption();
             case "data_size": return new DataSizeOption();
             case "data_usage": return new DataUsageOption();
@@ -25,6 +27,7 @@ public final class FilterOptions {
             case "pkg_name": return new PackageNameOption();
             case "running_apps": return new RunningAppsOption();
             case "screen_time": return new ScreenTimeOption();
+            case "shared_uid": return new SharedUidOption();
             case "signature": return new SignatureOption();
             case "target_sdk": return new TargetSdkOption();
             case "times_opened": return new TimesOpenedOption();
