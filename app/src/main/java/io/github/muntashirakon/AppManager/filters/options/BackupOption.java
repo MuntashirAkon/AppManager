@@ -32,6 +32,7 @@ public class BackupOption extends FilterOption {
         put("made_before", TYPE_TIME_MILLIS);
         put("made_after", TYPE_TIME_MILLIS);
         put("with_flags", TYPE_INT_FLAGS);
+        put("without_flags", TYPE_INT_FLAGS);
     }};
 
     private final Map<Integer, CharSequence> mBackupFlags = new LinkedHashMap<Integer, CharSequence>() {{
@@ -56,7 +57,7 @@ public class BackupOption extends FilterOption {
 
     @Override
     public Map<Integer, CharSequence> getFlags(@NonNull String key) {
-        if (key.equals("with_flags")) {
+        if (key.equals("with_flags") || key.equals("without_flags")) {
             return mBackupFlags;
         }
         return super.getFlags(key);
@@ -135,6 +136,16 @@ public class BackupOption extends FilterOption {
                 List<Backup> matchedBackups = new ArrayList<>();
                 for (Backup backup : backups) {
                     if ((backup.flags & intValue) == intValue) {
+                        matchedBackups.add(backup);
+                    }
+                }
+                return result.setMatched(!matchedBackups.isEmpty())
+                        .setMatchedBackups(matchedBackups);
+            }
+            case "without_flags": {
+                List<Backup> matchedBackups = new ArrayList<>();
+                for (Backup backup : backups) {
+                    if ((backup.flags & intValue) != intValue) {
                         matchedBackups.add(backup);
                     }
                 }

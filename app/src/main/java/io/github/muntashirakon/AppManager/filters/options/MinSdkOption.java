@@ -13,7 +13,7 @@ import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
 
 public class MinSdkOption extends FilterOption {
     private final Map<String, Integer> mKeysWithType = new LinkedHashMap<String, Integer>() {{
-        put("all", TYPE_NONE);
+        put(KEY_ALL, TYPE_NONE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             put("eq", TYPE_INT);
             put("le", TYPE_INT);

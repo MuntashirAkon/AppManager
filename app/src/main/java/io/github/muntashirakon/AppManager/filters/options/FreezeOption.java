@@ -21,6 +21,7 @@ public class FreezeOption extends FilterOption {
         put("frozen", TYPE_NONE);
         put("unfrozen", TYPE_NONE);
         put("with_flags", TYPE_INT_FLAGS);
+        put("without_flags", TYPE_INT_FLAGS);
     }};
 
     private final Map<Integer, CharSequence> mFrozenFlags = new LinkedHashMap<Integer, CharSequence>() {{
@@ -43,7 +44,7 @@ public class FreezeOption extends FilterOption {
 
     @Override
     public Map<Integer, CharSequence> getFlags(@NonNull String key) {
-        if (key.equals("with_flags")) {
+        if (key.equals("with_flags") || key.equals("without_flags")) {
             return mFrozenFlags;
         }
         return super.getFlags(key);
@@ -64,6 +65,9 @@ public class FreezeOption extends FilterOption {
             }
             case "with_flags": {
                 return result.setMatched((freezeFlags & intValue) == intValue);
+            }
+            case "without_flags": {
+                return result.setMatched((freezeFlags & intValue) != intValue);
             }
         }
     }

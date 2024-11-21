@@ -67,7 +67,7 @@ public class BloatwareOption extends FilterOption {
     public TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result) {
         DebloatObject object = info.getBloatwareInfo();
         if (object == null) {
-            return result.setMatched(key.equals("all"));
+            return result.setMatched(key.equals(KEY_ALL));
         }
         switch (key) {
             default:

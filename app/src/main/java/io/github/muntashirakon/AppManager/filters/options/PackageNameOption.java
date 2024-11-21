@@ -12,7 +12,7 @@ import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
 
 public class PackageNameOption extends FilterOption {
     private final Map<String, Integer> mKeysWithType = new LinkedHashMap<String, Integer>() {{
-        put("all", TYPE_NONE);
+        put(KEY_ALL, TYPE_NONE);
         put("eq", TYPE_STR_SINGLE);
         put("contains", TYPE_STR_SINGLE);
         put("starts_with", TYPE_STR_SINGLE);

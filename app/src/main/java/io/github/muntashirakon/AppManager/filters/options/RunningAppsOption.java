@@ -11,7 +11,7 @@ import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
 
 public class RunningAppsOption extends FilterOption {
     private final Map<String, Integer> mKeysWithType = new LinkedHashMap<String, Integer>() {{
-        put("all", TYPE_NONE);
+        put(KEY_ALL, TYPE_NONE);
         put("running", TYPE_NONE);
         put("not_running", TYPE_NONE);
     }};

@@ -17,10 +17,12 @@ import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
 
 public class SignatureOption extends FilterOption {
     private final Map<String, Integer> mKeysWithType = new LinkedHashMap<String, Integer>() {{
-        put("all", TYPE_NONE);
+        put(KEY_ALL, TYPE_NONE);
         put("no_signer", TYPE_NONE);
-        put("with_source_stamp", TYPE_NONE);
         put("with_lineage", TYPE_NONE);
+        put("with_source_stamp", TYPE_NONE);
+        put("without_lineage", TYPE_NONE);
+        put("without_source_stamp", TYPE_NONE);
         put("sub_eq", TYPE_STR_SINGLE);
         put("sub_contains", TYPE_STR_SINGLE);
         put("sub_starts_with", TYPE_STR_SINGLE);
@@ -59,6 +61,10 @@ public class SignatureOption extends FilterOption {
                 return result.setMatched(signerInfo.getSourceStampCert() != null).setMatchedSubjectLines(subjectLines);
             case "with_lineage":
                 return result.setMatched(signerInfo.getSignerCertsInLineage() != null).setMatchedSubjectLines(subjectLines);
+            case "without_source_stamp":
+                return result.setMatched(signerInfo.getSourceStampCert() == null).setMatchedSubjectLines(subjectLines);
+            case "without_lineage":
+                return result.setMatched(signerInfo.getSignerCertsInLineage() == null).setMatchedSubjectLines(subjectLines);
             case "sub_eq": {
                 List<String> matchedSubjectLines = new ArrayList<>();
                 for (String subject : subjectLines) {

@@ -21,6 +21,7 @@ public class ComponentsOption extends FilterOption {
     private final Map<String, Integer> mKeysWithType = new LinkedHashMap<String, Integer>() {{
         put(KEY_ALL, TYPE_NONE);
         put("with_type", TYPE_INT_FLAGS);
+        put("without_type", TYPE_INT_FLAGS);
         put("eq", TYPE_STR_SINGLE);
         put("contains", TYPE_STR_SINGLE);
         put("starts_with", TYPE_STR_SINGLE);
@@ -50,7 +51,7 @@ public class ComponentsOption extends FilterOption {
 
     @Override
     public Map<Integer, CharSequence> getFlags(@NonNull String key) {
-        if (key.equals("with_type")) {
+        if (key.equals("with_type") || key.equals("without_type")) {
             return mComponentTypeFlags;
         }
         return super.getFlags(key);
@@ -74,6 +75,17 @@ public class ComponentsOption extends FilterOption {
                     }
                 }
                 return result.setMatched(!filteredComponents.isEmpty())
+                        .setMatchedComponents(filteredComponents);
+            }
+            case "without_type": {
+                Map<ComponentInfo, Integer> filteredComponents = new LinkedHashMap<>();
+                for (ComponentInfo component : components.keySet()) {
+                    int type = Objects.requireNonNull(components.get(component));
+                    if ((intValue & type) == 0) {
+                        filteredComponents.put(component, type);
+                    }
+                }
+                return result.setMatched(filteredComponents.size() == components.size())
                         .setMatchedComponents(filteredComponents);
             }
             case "eq": {
