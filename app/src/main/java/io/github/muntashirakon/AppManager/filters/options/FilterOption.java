@@ -120,7 +120,7 @@ public abstract class FilterOption {
                     this.longValue = Long.parseLong(value);
                     break;
                 case TYPE_REGEX:
-                    this.regexValue = Pattern.compile(value);
+                    this.regexValue = Pattern.compile(Pattern.quote(value));
                 case TYPE_STR_MULTIPLE:
                     this.stringValues = value.split("\\n");
             }
