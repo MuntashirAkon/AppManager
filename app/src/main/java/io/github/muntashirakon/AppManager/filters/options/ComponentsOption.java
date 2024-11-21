@@ -26,6 +26,9 @@ public class ComponentsOption extends FilterOption {
         put("starts_with", TYPE_STR_SINGLE);
         put("ends_with", TYPE_STR_SINGLE);
         put("regex", TYPE_REGEX);
+        put("count_eq", TYPE_INT);
+        put("count_le", TYPE_INT);
+        put("count_ge", TYPE_INT);
     }};
 
     private final Map<Integer, CharSequence> mComponentTypeFlags = new LinkedHashMap<Integer, CharSequence>() {{
@@ -126,6 +129,18 @@ public class ComponentsOption extends FilterOption {
                 }
                 return result.setMatched(!filteredComponents.isEmpty())
                         .setMatchedComponents(filteredComponents);
+            }
+            case "count_eq": {
+                return result.setMatched(components.size() == intValue)
+                        .setMatchedComponents(components);
+            }
+            case "count_le": {
+                return result.setMatched(components.size() <= intValue)
+                        .setMatchedComponents(components);
+            }
+            case "count_ge": {
+                return result.setMatched(components.size() >= intValue)
+                        .setMatchedComponents(components);
             }
         }
     }
