@@ -1491,4 +1491,5 @@
     <string name="apk_source">Sorgente APK</string>
     <string name="backup_cache">Cache</string>
     <string name="actual_installer">Installatore effettivo</string>
+    <string name="activity_name">Nome attività</string>
 </resources>
