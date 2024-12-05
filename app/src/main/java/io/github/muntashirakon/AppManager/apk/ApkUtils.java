@@ -197,7 +197,7 @@ public final class ApkUtils {
             if (attribute.getName().isEmpty()) {
                 continue;
             }
-            manifestAttrs.put(attribute.getName(), attribute.getValue());
+            manifestAttrs.put(attribute.getName(), attribute.getValueAsString());
         }
         XMLElement androidElement = null;
         for (XMLElement elem : manifestElement.getChildElementList()) {
@@ -214,7 +214,7 @@ public final class ApkUtils {
             if (attribute.getName().isEmpty()) {
                 continue;
             }
-            manifestAttrs.put(attribute.getName(), attribute.getValue());
+            manifestAttrs.put(attribute.getName(), attribute.getValueAsString());
         }
         return manifestAttrs;
     }

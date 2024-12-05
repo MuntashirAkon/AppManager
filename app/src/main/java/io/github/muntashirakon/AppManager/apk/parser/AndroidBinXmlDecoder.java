@@ -73,9 +73,8 @@ public class AndroidBinXmlDecoder {
              PrintStream out = new PrintStream(os)) {
             ResXmlDocument resXmlDocument = new ResXmlDocument();
             resXmlDocument.readBytes(reader);
-            try (ResXmlPullParser parser = new ResXmlPullParser()) {
-                parser.setCurrentPackage(getFrameworkPackageBlock());
-                parser.setResXmlDocument(resXmlDocument);
+            resXmlDocument.setPackageBlock(getFrameworkPackageBlock());
+            try (ResXmlPullParser parser = new ResXmlPullParser(resXmlDocument)) {
                 StringBuilder indent = new StringBuilder(10);
                 final String indentStep = "  ";
                 out.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
@@ -128,7 +127,7 @@ public class AndroidBinXmlDecoder {
         try (BlockReader reader = new BlockReader(byteBuffer.array())) {
             xmlBlock.readBytes(reader);
             xmlBlock.setPackageBlock(getFrameworkPackageBlock());
-            return xmlBlock.decodeToXml();
+            return xmlBlock.toXml(true);
         }
     }
 
@@ -141,7 +140,7 @@ public class AndroidBinXmlDecoder {
     }
 
     @NonNull
-    static PackageBlock getFrameworkPackageBlock() throws IOException {
+    static PackageBlock getFrameworkPackageBlock() {
         if (sFrameworkPackageBlock != null) {
             return sFrameworkPackageBlock;
         }

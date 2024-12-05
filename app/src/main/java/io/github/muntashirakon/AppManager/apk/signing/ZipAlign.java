@@ -117,7 +117,6 @@ public class ZipAlign {
             Pattern patternNativeLib = Pattern.compile("^lib/.+\\.so$");
             zipAligner.setFileAlignment(patternNativeLib, ALIGNMENT_PAGE);
         }
-        zipAligner.setEnableDataDescriptor(true);
         return zipAligner;
     }
 
