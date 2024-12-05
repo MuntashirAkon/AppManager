@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.installer.InstallerOptions;
@@ -348,6 +349,7 @@ class RestoreOp implements Closeable {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 options.setInstallScenario(PackageManager.INSTALL_SCENARIO_BULK);
             }
+            AtomicReference<String> status = new AtomicReference<>();
             PackageInstallerCompat packageInstaller = PackageInstallerCompat.getNewInstance();
             packageInstaller.setOnInstallListener(new PackageInstallerCompat.OnInstallListener() {
                 @Override
@@ -363,11 +365,22 @@ class RestoreOp implements Closeable {
 
                 @Override
                 public void onFinishedInstall(int sessionId, String packageName, int result, @Nullable String blockingPackage, @Nullable String statusMessage) {
+                    status.set(statusMessage);
                 }
             });
             try {
                 if (!packageInstaller.install(allApks, mPackageName, options)) {
-                    throw new BackupException("A (re)install was necessary but couldn't perform it.");
+                    String statusMessage;
+                    if (!isVerified) {
+                        // Previously installed app was uninstalled.
+                        statusMessage = "Couldn't perform a re-installation";
+                    } else {
+                        statusMessage = "Couldn't perform an installation";
+                    }
+                    if (status.get() != null) {
+                        statusMessage += ": " + status.get();
+                    } else statusMessage += ".";
+                    throw new BackupException(statusMessage);
                 }
             } finally {
                 deleteFiles(allApks);  // Clean up apk files
