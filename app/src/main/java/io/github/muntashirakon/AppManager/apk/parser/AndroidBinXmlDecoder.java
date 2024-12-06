@@ -140,7 +140,7 @@ public class AndroidBinXmlDecoder {
     }
 
     @NonNull
-    static PackageBlock getFrameworkPackageBlock() {
+    public static PackageBlock getFrameworkPackageBlock() {
         if (sFrameworkPackageBlock != null) {
             return sFrameworkPackageBlock;
         }
