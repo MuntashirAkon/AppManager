@@ -16,7 +16,6 @@ import com.reandroid.arsc.chunk.PackageBlock;
 import com.reandroid.arsc.chunk.xml.ResXmlDocument;
 import com.reandroid.arsc.chunk.xml.ResXmlPullParser;
 import com.reandroid.arsc.io.BlockReader;
-import com.reandroid.xml.XMLDocument;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -119,15 +118,6 @@ public class AndroidBinXmlDecoder {
             }
         } catch (XmlPullParserException e) {
             throw new IOException(e);
-        }
-    }
-
-    public static XMLDocument decodeToXml(@NonNull ByteBuffer byteBuffer) throws IOException {
-        ResXmlDocument xmlBlock = new ResXmlDocument();
-        try (BlockReader reader = new BlockReader(byteBuffer.array())) {
-            xmlBlock.readBytes(reader);
-            xmlBlock.setPackageBlock(getFrameworkPackageBlock());
-            return xmlBlock.toXml(true);
         }
     }
 

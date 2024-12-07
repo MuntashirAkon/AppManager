@@ -18,9 +18,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PackageInfoCompat;
 
-import com.reandroid.xml.XMLAttribute;
-import com.reandroid.xml.XMLDocument;
-import com.reandroid.xml.XMLElement;
+import com.reandroid.arsc.chunk.xml.ResXmlAttribute;
+import com.reandroid.arsc.chunk.xml.ResXmlDocument;
+import com.reandroid.arsc.chunk.xml.ResXmlElement;
+import com.reandroid.arsc.io.BlockReader;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -31,6 +32,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -187,36 +189,51 @@ public final class ApkUtils {
     @NonNull
     public static HashMap<String, String> getManifestAttributes(@NonNull ByteBuffer manifestBytes)
             throws ApkFile.ApkFileException, IOException {
-        HashMap<String, String> manifestAttrs = new HashMap<>();
-        XMLDocument xmlDocument = AndroidBinXmlDecoder.decodeToXml(manifestBytes);
-        XMLElement manifestElement = xmlDocument.getDocumentElement();
-        if (!"manifest".equals(manifestElement.getName())) {
-            throw new ApkFile.ApkFileException("No manifest found.");
-        }
-        for (XMLAttribute attribute : manifestElement.listAttributes()) {
-            if (attribute.getName().isEmpty()) {
-                continue;
+        try (BlockReader reader = new BlockReader(manifestBytes.array())) {
+            HashMap<String, String> manifestAttrs = new HashMap<>();
+            ResXmlDocument xmlBlock = new ResXmlDocument();
+            xmlBlock.readBytes(reader);
+            xmlBlock.setPackageBlock(AndroidBinXmlDecoder.getFrameworkPackageBlock());
+            ResXmlElement resManifestElement = xmlBlock.getDocumentElement();
+            // manifest
+            if (!"manifest".equals(resManifestElement.getName())) {
+                throw new ApkFile.ApkFileException("No manifest found.");
             }
-            manifestAttrs.put(attribute.getName(), attribute.getValueAsString());
-        }
-        XMLElement androidElement = null;
-        for (XMLElement elem : manifestElement.getChildElementList()) {
-            if ("application".equals(elem.getName())) {
-                androidElement = elem;
-                break;
+            Iterator<ResXmlAttribute> attrIt = resManifestElement.getAttributes();
+            ResXmlAttribute attr;
+            String attrName;
+            while (attrIt.hasNext()) {
+                attr = attrIt.next();
+                attrName = attr.getName();
+                if (attrName == null || attrName.isEmpty()) {
+                    continue;
+                }
+                manifestAttrs.put(attrName, attr.getValueAsString());
             }
-        }
-        if (androidElement == null) {
-            Log.w("ApkUtils", "No application element found while parsing APK.");
+            // application
+            ResXmlElement resApplicationElement = null;
+            Iterator<ResXmlElement> resXmlElementIt = resManifestElement.getElements("application");
+            if (resXmlElementIt.hasNext()) {
+                resApplicationElement = resXmlElementIt.next();
+            }
+            if (resXmlElementIt.hasNext()) {
+                throw new IOException("\"manifest\" has duplicate \"application\" tags.");
+            }
+            if (resApplicationElement == null) {
+                Log.w("ApkUtils", "No application tag found while parsing APK.");
+                return manifestAttrs;
+            }
+            attrIt = resApplicationElement.getAttributes();
+            while (attrIt.hasNext()) {
+                attr = attrIt.next();
+                attrName = attr.getName();
+                if (attrName == null || attrName.isEmpty()) {
+                    continue;
+                }
+                manifestAttrs.put(attrName, attr.getValueAsString());
+            }
             return manifestAttrs;
         }
-        for (XMLAttribute attribute : androidElement.listAttributes()) {
-            if (attribute.getName().isEmpty()) {
-                continue;
-            }
-            manifestAttrs.put(attribute.getName(), attribute.getValueAsString());
-        }
-        return manifestAttrs;
     }
 
     public static boolean hasObbFiles(@NonNull String packageName, @UserIdInt int userId) {

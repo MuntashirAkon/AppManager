@@ -57,8 +57,8 @@ public class ManifestParser {
     }
 
     public List<ManifestComponent> parseComponents() throws IOException {
-        ResXmlDocument xmlBlock = new ResXmlDocument();
         try (BlockReader reader = new BlockReader(mManifestBytes.array())) {
+            ResXmlDocument xmlBlock = new ResXmlDocument();
             xmlBlock.readBytes(reader);
             xmlBlock.setPackageBlock(AndroidBinXmlDecoder.getFrameworkPackageBlock());
             ResXmlElement resManifestElement = xmlBlock.getDocumentElement();
