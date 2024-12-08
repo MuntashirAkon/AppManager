@@ -281,19 +281,13 @@ public final class ApkFile implements AutoCloseable {
         // Check for splits
         if (extension.equals("apk")) {
             // Get manifest attributes
-            ByteBuffer manifest;
-            HashMap<String, String> manifestAttrs;
-            try {
-                manifest = getManifestFromApk(mCacheFilePath);
-                manifestAttrs = getManifestAttributes(manifest);
-            } catch (IOException e) {
-                throw new ApkFileException("Manifest not found for base APK.", e);
-            }
+            ByteBuffer manifest = getManifestFromApk(mCacheFilePath);
+            HashMap<String, String> manifestAttrs = getManifestAttributes(manifest);
             if (!manifestAttrs.containsKey(ATTR_PACKAGE)) {
                 throw new IllegalArgumentException("Manifest doesn't contain any package name.");
             }
             packageName = manifestAttrs.get(ATTR_PACKAGE);
-            mBaseEntry = new Entry(mCacheFilePath, manifest);
+            mBaseEntry = new Entry(mCacheFilePath, manifest, manifestAttrs);
             mEntries.add(mBaseEntry);
         } else {
             try {
@@ -309,14 +303,8 @@ public final class ApkFile implements AutoCloseable {
                 if (fileName.endsWith(".apk")) { // APK is more likely to match
                     try (InputStream zipInputStream = mZipFile.getInputStream(zipEntry)) {
                         // Get manifest attributes
-                        ByteBuffer manifest;
-                        HashMap<String, String> manifestAttrs;
-                        try {
-                            manifest = getManifestFromApk(zipInputStream);
-                            manifestAttrs = getManifestAttributes(manifest);
-                        } catch (IOException e) {
-                            throw new ApkFileException("Manifest not found.", e);
-                        }
+                        ByteBuffer manifest = getManifestFromApk(zipInputStream);
+                        HashMap<String, String> manifestAttrs = getManifestAttributes(manifest);
                         if (manifestAttrs.containsKey("split")) {
                             // TODO: check for duplicates
                             Entry entry = new Entry(fileName, zipEntry, APK_SPLIT, manifest, manifestAttrs);
@@ -376,11 +364,7 @@ public final class ApkFile implements AutoCloseable {
         File sourceDir = mCacheFilePath.getParentFile();
         if (sourceDir == null || "/data/app".equals(sourceDir.getAbsolutePath())) {
             // Old file structure (storing APK files at /data/app)
-            try {
-                mEntries.add(mBaseEntry = new Entry(mCacheFilePath, getManifestFromApk(mCacheFilePath)));
-            } catch (IOException e) {
-                throw new ApkFileException("Manifest not found.", e);
-            }
+            mEntries.add(mBaseEntry = new Entry(mCacheFilePath, getManifestFromApk(mCacheFilePath), null));
         } else {
             File[] apks = sourceDir.listFiles((dir, name) -> name.endsWith(".apk"));
             if (apks == null) {
@@ -402,14 +386,8 @@ public final class ApkFile implements AutoCloseable {
             for (File apk : apks) {
                 fileName = Paths.getLastPathSegment(apk.getAbsolutePath());
                 // Get manifest attributes
-                ByteBuffer manifest;
-                HashMap<String, String> manifestAttrs;
-                try {
-                    manifest = getManifestFromApk(apk);
-                    manifestAttrs = getManifestAttributes(manifest);
-                } catch (IOException e) {
-                    throw new ApkFileException("Manifest not found.", e);
-                }
+                ByteBuffer manifest = getManifestFromApk(apk);
+                HashMap<String, String> manifestAttrs = getManifestAttributes(manifest);
                 if (manifestAttrs.containsKey("split")) {
                     Entry entry = new Entry(fileName, apk, APK_SPLIT, manifest, manifestAttrs);
                     mEntries.add(entry);
@@ -474,7 +452,7 @@ public final class ApkFile implements AutoCloseable {
     }
 
     public boolean hasObb() {
-        return mObbFiles.size() > 0;
+        return !mObbFiles.isEmpty();
     }
 
     @WorkerThread
@@ -575,21 +553,16 @@ public final class ApkFile implements AutoCloseable {
          */
         public int rank = Integer.MAX_VALUE;
 
-        Entry(@NonNull File source, @NonNull ByteBuffer manifest) {
+        Entry(@NonNull File source, @NonNull ByteBuffer manifest, @Nullable HashMap<String, String> manifestAttrs) {
+            this("base-apk", "Base.apk", APK_BASE, manifest, manifestAttrs);
             mSource = Objects.requireNonNull(source);
-            id = "base-apk"; // A safe ID since others ends with `.apk`
-            name = "Base.apk";
-            type = APK_BASE;
-            mRequired = true;
-            mIsolated = false;
-            this.manifest = Objects.requireNonNull(manifest);
         }
 
         Entry(@NonNull String name,
               @NonNull ZipEntry zipEntry,
               @ApkType int type,
               @NonNull ByteBuffer manifest,
-              @NonNull HashMap<String, String> manifestAttrs) {
+              @Nullable HashMap<String, String> manifestAttrs) {
             this(Objects.requireNonNull(zipEntry).getName(), name, type, manifest, manifestAttrs);
             mZipEntry = Objects.requireNonNull(zipEntry);
         }
@@ -598,7 +571,7 @@ public final class ApkFile implements AutoCloseable {
               @NonNull File source,
               @ApkType int type,
               @NonNull ByteBuffer manifest,
-              @NonNull HashMap<String, String> manifestAttrs) {
+              @Nullable HashMap<String, String> manifestAttrs) {
             this(Objects.requireNonNull(source).getAbsolutePath(), name, type, manifest, manifestAttrs);
             mSource = source;
         }
@@ -607,10 +580,9 @@ public final class ApkFile implements AutoCloseable {
                       @NonNull String name,
                       @ApkType int type,
                       @NonNull ByteBuffer manifest,
-                      @NonNull HashMap<String, String> manifestAttrs) {
+                      @Nullable HashMap<String, String> manifestAttrs) {
             Objects.requireNonNull(name);
             Objects.requireNonNull(manifest);
-            Objects.requireNonNull(manifestAttrs);
             this.id = id;
             this.manifest = manifest;
             if (type == APK_BASE) {
@@ -619,6 +591,7 @@ public final class ApkFile implements AutoCloseable {
                 mIsolated = false;
                 this.type = APK_BASE;
             } else if (type == APK_SPLIT) {
+                Objects.requireNonNull(manifestAttrs);
                 String splitName = manifestAttrs.get(ATTR_SPLIT);
                 if (splitName == null) throw new RuntimeException("Split name is empty.");
                 this.name = splitName;
@@ -984,11 +957,11 @@ public final class ApkFile implements AutoCloseable {
     }
 
     public static class ApkFileException extends Throwable {
-        public ApkFileException(String message) {
+        public ApkFileException(@Nullable String message) {
             super(message);
         }
 
-        public ApkFileException(String message, Throwable throwable) {
+        public ApkFileException(@Nullable String message, Throwable throwable) {
             super(message, throwable);
         }
 
