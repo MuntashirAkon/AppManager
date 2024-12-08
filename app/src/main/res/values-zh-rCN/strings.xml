@@ -1386,7 +1386,7 @@
     <string name="status_connecting_via_mode">正在通过%s连接</string>
     <string name="status_connected_via_mode">已通过%s连接</string>
     <string name="status_not_connected_via_mode">无法通过%s连接</string>
-    <string name="adb_pairing_instruction">请转向开发人员选项以启用无线调试并生成配对码。</string>
+    <string name="adb_pairing_instruction">请转到开发者选项以启用无线调试并生成配对码。</string>
     <string name="adb_pairing_searching_for_port">搜索中…</string>
     <string name="adb_pairing_stop_searching">停止</string>
     <string name="adb_pairing_input_pairing_code">配对码</string>
@@ -1398,7 +1398,7 @@
     <string name="mode_of_op_custom_command">如果您无法使用任何模式，您可以在任何受支持的 shell 中运行以下命令，以在特权模式下运行App Manager：</string>
     <string name="finder_title">访达</string>
     <string name="mode_of_op_alternative_custom_command">如果运行以上命令遇到“permission denied”错误，请运行下列命令：</string>
-    <string name="actual_installer">实际安装包</string>
+    <string name="actual_installer">实际安装者</string>
     <string name="apk_source">APK 源</string>
     <string name="backup_cache">缓存</string>
     <string name="pref_use_system_font">使用系统字体</string>
