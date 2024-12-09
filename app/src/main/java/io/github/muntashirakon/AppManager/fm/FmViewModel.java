@@ -554,8 +554,11 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             // TODO: 31/5/23 Handle read-only
             Path filePath = Paths.getStrict(mOptions.uri);
             Path cachedPath = Paths.get(mFileCache.getCachedFile(filePath));
+            String type = cachedPath.getType();
             int vfsId;
-            if (FileUtils.isZip(cachedPath)) {
+            if (ContentType.APK.getMimeType().equals(type)) {
+                vfsId = VirtualFileSystem.mount(filePath.getUri(), cachedPath, ContentType.APK.getMimeType());
+            } else if (FileUtils.isZip(cachedPath)) {
                 vfsId = VirtualFileSystem.mount(filePath.getUri(), cachedPath, ContentType.ZIP.getMimeType());
             } else if (DexUtils.isDex(cachedPath)) {
                 vfsId = VirtualFileSystem.mount(filePath.getUri(), cachedPath, ContentType2.DEX.getMimeType());

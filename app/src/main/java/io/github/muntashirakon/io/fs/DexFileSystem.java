@@ -16,6 +16,7 @@ import org.antlr.runtime.RecognitionException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -216,7 +217,7 @@ public class DexFileSystem extends VirtualFileSystem {
     }
 
     @Override
-    public long lastModified(@NonNull Node<?> node) {
+    protected long lastModified(@NonNull Node<?> node) {
         return getFile().lastModified();
     }
 
@@ -271,6 +272,19 @@ public class DexFileSystem extends VirtualFileSystem {
         }
         try {
             return new ByteArrayInputStream(getDexClasses().getClassContents(classDef).getBytes(StandardCharsets.UTF_8));
+        } catch (ClassNotFoundException e) {
+            throw new IOException(e);
+        }
+    }
+
+    @Override
+    protected void cacheFile(@NonNull Node<?> src, @NonNull File sink) throws IOException {
+        ClassDef classDef = (ClassDef) src.getObject();
+        if (classDef == null) {
+            throw new FileNotFoundException("Class definition for " + src.getFullPath() + " is not found.");
+        }
+        try (FileOutputStream os = new FileOutputStream(sink)) {
+            os.write(getDexClasses().getClassContents(classDef).getBytes(StandardCharsets.UTF_8));
         } catch (ClassNotFoundException e) {
             throw new IOException(e);
         }
