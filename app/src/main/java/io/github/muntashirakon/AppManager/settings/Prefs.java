@@ -325,8 +325,13 @@ public final class Prefs {
 
         public static void setLastOpenedPath(@NonNull FmActivity.Options options, @NonNull Uri initUri, int position) {
             try {
+                if (options.isVfs) {
+                    // Ignore VFS for now
+                    return;
+                }
                 JSONObject object = new JSONObject();
                 object.put("pos", position);
+                //noinspection ConstantValue
                 if (options.isVfs) {
                     object.put("vfs", true);
                     object.put("path", options.uri.toString());

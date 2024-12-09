@@ -394,10 +394,7 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
     public void onStop() {
         super.onStop();
         if (mModel != null && mRecyclerView != null) {
-            View v = mRecyclerView.getChildAt(0);
-            if (v != null) {
-                Prefs.FileManager.setLastOpenedPath(mModel.getOptions(), mModel.getCurrentUri(), mRecyclerView.getChildAdapterPosition(v));
-            }
+            Prefs.FileManager.setLastOpenedPath(mModel.getOptions(), mModel.getCurrentUri(), getRecyclerViewFirstChildPosition());
         }
     }
 
@@ -587,6 +584,14 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
     @Override
     public void onRefresh() {
         if (mModel != null) mModel.reload();
+    }
+
+    public int getRecyclerViewFirstChildPosition() {
+        if (mRecyclerView != null) {
+            View v = mRecyclerView.getChildAt(0);
+            return mRecyclerView.getChildAdapterPosition(v);
+        }
+        return RecyclerView.NO_POSITION;
     }
 
     private void goToRawPath(@NonNull String p) {
