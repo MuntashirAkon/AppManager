@@ -1218,7 +1218,8 @@
         <service
             android:name=".adb.AdbPairingService"
             android:exported="false"
-            android:foregroundServiceType="dataSync|specialUse" />
+            android:foregroundServiceType="dataSync|specialUse"
+            tools:targetApi="r" />
 
         <receiver
             android:name=".servermanager.ServerStatusChangeReceiver"
@@ -1230,6 +1231,11 @@
             android:label="@string/screen_time">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE_OPTIONS" />
+                <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
+                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
+                <action android:name="android.appwidget.action.APPWIDGET_RESTORED" />
             </intent-filter>
 
             <meta-data

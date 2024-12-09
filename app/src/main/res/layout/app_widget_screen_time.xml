@@ -5,12 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/app_widget_background"
+    android:padding="0dp"
     android:theme="@style/AppTheme.AppWidgetContainer">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/app_widget_background_padding">
 
         <TextView
             android:layout_width="match_parent"
@@ -52,10 +54,10 @@
                     android:layout_marginStart="4sp"
                     android:layout_marginTop="64sp"
                     android:background="@drawable/circle_background"
-                    android:backgroundTint="#e9c2c3"
+                    android:backgroundTint="#d4e3ff"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textColor="?android:attr/textColorPrimaryInverse"
+                    android:textColor="#1b1b1b"
                     android:textSize="@dimen/font_size_medium"
                     tools:text="20m" />
 
@@ -66,10 +68,10 @@
                     android:layout_marginStart="2sp"
                     android:layout_marginTop="32sp"
                     android:background="@drawable/circle_background"
-                    android:backgroundTint="#674A6A"
+                    android:backgroundTint="#565e71"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:textColor="#f9f9f9"
                     android:textSize="@dimen/font_size_medium"
                     tools:text="45m" />
 
@@ -80,10 +82,10 @@
                     android:layout_marginStart="0sp"
                     android:layout_marginTop="0sp"
                     android:background="@drawable/circle_background"
-                    android:backgroundTint="#342932"
+                    android:backgroundTint="#1b1b1b"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:textColor="#f9f9f9"
                     android:textSize="@dimen/font_size_medium"
                     tools:text="~1h" />
 

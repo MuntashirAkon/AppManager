@@ -53,12 +53,10 @@ public class ScreenTimeAppWidget extends AppWidgetProvider {
         RemoteViews views;
         if (appWidgetSize.getHeight() <= 200) {
             views = new RemoteViews(context.getPackageName(), R.layout.app_widget_screen_time_small);
+        } else if (appWidgetSize.getWidth() <= 250) {
+            views = new RemoteViews(context.getPackageName(), R.layout.app_widget_screen_time);
         } else {
-            if (appWidgetSize.getWidth() <= 250) {
-                views = new RemoteViews(context.getPackageName(), R.layout.app_widget_screen_time);
-            } else {
-                views = new RemoteViews(context.getPackageName(), R.layout.app_widget_screen_time_large);
-            }
+            views = new RemoteViews(context.getPackageName(), R.layout.app_widget_screen_time_large);
         }
         // Set views
         views.setTextViewText(R.id.screen_time, DateUtils.getFormattedDurationShort(totalScreenTime, false, true, false));
