@@ -1,5 +1,5 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.AppTheme.AppWidget"
     android:layout_width="match_parent"
@@ -15,12 +15,14 @@
         android:padding="@dimen/app_widget_background_padding">
 
         <TextView
+            android:id="@+id/screen_time_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@string/screen_time" />
+            android:text="@string/screen_time"
+            android:textColor="?android:attr/textColorSecondary" />
 
         <TextView
             android:id="@+id/screen_time"
@@ -28,136 +30,182 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
+            android:autoSizeMaxTextSize="38sp"
+            android:autoSizeMinTextSize="16sp"
+            android:autoSizeTextType="uniform"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:paddingVertical="@dimen/padding_small"
             android:textColor="?android:attr/textColorPrimary"
-            android:textSize="36sp"
+            android:textSize="27sp"
             android:textStyle="bold"
+            tools:targetApi="o"
             tools:text="2h 30m" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+            <TextView
+                android:id="@+id/app3_circle"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/circle_background"
+                android:backgroundTint="#d4e3ff" />
 
-                <TextView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_margin="4dp"
-                    android:background="@drawable/circle_background"
-                    android:backgroundTint="#d4e3ff" />
+            <TextView
+                android:id="@+id/app3_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="@dimen/font_size_medium"
+                tools:text="K-9 Mail" />
 
-                <TextView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_margin="4dp"
-                    android:background="@drawable/circle_background"
-                    android:backgroundTint="#565e71" />
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_margin="4dp"
-                    android:background="@drawable/circle_background"
-                    android:backgroundTint="#1b1b1b" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            </LinearLayout>
+            <TextView
+                android:id="@+id/app2_circle"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/circle_background"
+                android:backgroundTint="#565e71" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+            <TextView
+                android:id="@+id/app2_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="@dimen/font_size_medium"
+                tools:text="App Manager" />
 
-                <TextView
-                    android:id="@+id/app3_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textSize="@dimen/font_size_medium"
-                    tools:text="K-9 Mail" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/app2_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textSize="@dimen/font_size_medium"
-                    tools:text="App Manager" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/app1_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textSize="@dimen/font_size_medium"
-                    tools:text="Signal" />
+            <TextView
+                android:id="@+id/app1_circle"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/circle_background"
+                android:backgroundTint="#1b1b1b" />
 
-            </LinearLayout>
+            <TextView
+                android:id="@+id/app1_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="@dimen/font_size_medium"
+                tools:text="Signal" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <!-- Badges -->
+    <!-- Bubbles -->
 
-    <TextView
-        android:id="@+id/app1_time"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/circle_background"
-        android:backgroundTint="#1b1b1b"
-        android:gravity="center"
-        android:maxLines="1"
-        android:textColor="#f9f9f9"
-        android:textSize="@dimen/font_size_medium"
-        tools:text="~1h" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/app2_time"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="25dp"
-        android:layout_marginBottom="85dp"
-        android:background="@drawable/circle_background"
-        android:backgroundTint="#565e71"
-        android:gravity="center"
-        android:maxLines="1"
-        android:textColor="#f9f9f9"
-        android:textSize="@dimen/font_size_medium"
-        tools:text="45m" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
-    <TextView
-        android:id="@+id/app3_time"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="55dp"
-        android:layout_marginBottom="145dp"
-        android:background="@drawable/circle_background"
-        android:backgroundTint="#d4e3ff"
-        android:gravity="center"
-        android:maxLines="1"
-        android:textColor="#1b1b1b"
-        android:textSize="@dimen/font_size_medium"
-        tools:text="20m" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/app_widget_background_padding">
 
-</RelativeLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <RelativeLayout
+                android:layout_width="112dp"
+                android:layout_height="203dp"
+                android:layout_gravity="bottom">
+
+                <TextView
+                    android:id="@+id/app1_time"
+                    android:layout_width="112dp"
+                    android:layout_height="112dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="#1b1b1b"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="#f9f9f9"
+                    android:textSize="@dimen/font_size_large"
+                    android:textStyle="bold"
+                    tools:text="~1h" />
+
+                <TextView
+                    android:id="@+id/app2_time"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginBottom="95dp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="#565e71"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="#f9f9f9"
+                    android:textSize="@dimen/font_size_large"
+                    android:textStyle="bold"
+                    tools:text="45m" />
+
+                <TextView
+                    android:id="@+id/app3_time"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="55dp"
+                    android:layout_marginBottom="155dp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="#d4e3ff"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="#1b1b1b"
+                    android:textSize="@dimen/font_size_large"
+                    android:textStyle="bold"
+                    tools:text="20m" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

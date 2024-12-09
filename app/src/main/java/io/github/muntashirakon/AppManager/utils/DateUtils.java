@@ -179,7 +179,7 @@ public final class DateUtils {
             fTime.append(min).append("m");
         } else {
             // Seconds not included
-            fTime.append("~1m");
+            fTime.append("<1m");
         }
         return (addSign && isNegative ? "-" : "") + fTime;
     }

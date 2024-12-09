@@ -73,7 +73,17 @@ public final class AppearanceUtils {
         options.nightMode = Prefs.Appearance.getNightMode();
         ContextThemeWrapper newCtx = new ContextThemeWrapper(context, options.theme);
         newCtx.applyOverrideConfiguration(createOverrideConfiguration(context, options));
-        return newCtx;
+        return DynamicColors.wrapContextIfAvailable(newCtx);
+    }
+
+    /**
+     * Return a {@link ContextThemeWrapper} with the default locale, layout direction, theme and night mode.
+     */
+    @NonNull
+    public static Context getThemedWidgetContext(@NonNull Context context, boolean transparent) {
+        int theme = transparent ? Prefs.Appearance.getTransparentAppTheme() : Prefs.Appearance.getAppTheme();
+        ContextThemeWrapper newCtx = new ContextThemeWrapper(context, theme);
+        return DynamicColors.wrapContextIfAvailable(newCtx);
     }
 
     /**

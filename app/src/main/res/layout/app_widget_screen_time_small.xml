@@ -16,14 +16,14 @@
         android:padding="@dimen/app_widget_background_padding">
 
         <TextView
+            android:id="@+id/screen_time_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:ellipsize="end"
             android:maxLines="1"
-            android:paddingStart="0dp"
-            android:paddingEnd="16dp"
-            android:text="@string/screen_time" />
+            android:text="@string/screen_time"
+            android:textColor="?android:attr/textColorSecondary" />
 
         <TextView
             android:id="@+id/screen_time"
@@ -34,10 +34,13 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:paddingVertical="@dimen/padding_small"
             android:textColor="?android:attr/textColorPrimary"
-            android:textSize="36sp"
+            android:autoSizeMinTextSize="16sp"
+            android:autoSizeMaxTextSize="38sp"
+            android:autoSizeTextType="uniform"
+            android:textSize="27sp"
             android:textStyle="bold"
+            tools:targetApi="o"
             tools:text="2h 30m" />
 
     </LinearLayout>

@@ -24,10 +24,12 @@
         <item name="appWidgetRadius">8dp</item>
     </style>
 
-    <style name="Widget.AppTheme.AppWidget" parent="android:Widget">
+    <style name="Widget.AppTheme.AppWidgetOverlay" parent="android:Widget">
         <item name="android:id">@android:id/background</item>
         <item name="android:background">?android:attr/colorBackground</item>
         <item name="android:padding">?attr/appWidgetPadding</item>
     </style>
+
+    <style name="Widget.AppTheme.AppWidget" parent="Widget.AppTheme.AppWidgetOverlay" />
 
 </resources>
