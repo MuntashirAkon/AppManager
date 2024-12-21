@@ -134,7 +134,9 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         }
         holder.mMemoryShortInfoView.setText(UIUtils.getStyledKeyValue(context, R.string.memory, Formatter
                 .formatFileSize(context, mProcMemoryInfo.getUsedMemory()) + "/" + Formatter
-                .formatFileSize(context, mProcMemoryInfo.getTotalMemory())));
+                .formatFileSize(context, mProcMemoryInfo.getTotalMemory()) + " (" +
+                context.getString(R.string.available_memory, Formatter
+                        .formatFileSize(context, mProcMemoryInfo.getAvailableMemory())) + ")"));
         // Set color info
         Spannable memInfo = UIUtils.charSequenceToSpannable(context.getString(R.string.memory_chart_info, Formatter
                         .formatShortFileSize(context, appMemory), Formatter.formatShortFileSize(context, cachedMemory),

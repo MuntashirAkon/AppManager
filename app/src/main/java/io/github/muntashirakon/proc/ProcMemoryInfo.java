@@ -86,6 +86,10 @@ public class ProcMemoryInfo {
         return getTotalMemory() - getFreeMemory();
     }
 
+    public long getAvailableMemory() {
+        return get(MEMINFO_MEM_AVAILABLE, 0);
+    }
+
     public long getBuffers() {
         return get(MEMINFO_BUFFERS, 0);
     }

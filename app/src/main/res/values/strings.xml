@@ -1487,4 +1487,5 @@
     <string name="apk_source">APK Source</string>
     <string name="backup_cache">Cache</string>
     <string name="activity_name">Activity Name</string>
+    <string name="available_memory">Available: %s</string>
 </resources>
