@@ -8,6 +8,7 @@ plugins {
 android {
     namespace 'io.github.muntashirakon.AppManager'
     compileSdk compile_sdk
+    buildToolsVersion = build_tools
 
     defaultConfig {
         applicationId 'io.github.muntashirakon.AppManager'
@@ -73,7 +74,7 @@ android {
             universalApk true
         }
     }
-    androidResources {
+    aaptOptions {
         noCompress 'jar', 'sh'
     }
     testOptions {

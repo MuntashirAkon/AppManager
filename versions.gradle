@@ -4,9 +4,10 @@ ext {
     compile_sdk = 35
     min_sdk = 21
     target_sdk = 34
+    build_tools = '35.0.0'
 
     // Gradle plugins
-    agp_version = '8.7.2'
+    agp_version = '8.7.3'
 
     // Library dependencies
     activity_version = "1.9.3" // Draw around the display cutouts
@@ -15,7 +16,7 @@ ext {
     apksig_version = "4.4.0"
     appcompat_version = "1.7.0"
     arsclib_version = "cb342c16ad"
-    baksmali_version = "3.0.8"
+    baksmali_version = "3.0.9"
     biometric_version = "1.4.0-alpha02"
     bouncycastle_version = "1.79"
     desugar_jdk_version = "2.1.3"

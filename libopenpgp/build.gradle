@@ -5,6 +5,7 @@ apply plugin: 'com.android.library'
 android {
     namespace 'org.openintents.openpgp'
     compileSdk compile_sdk
+    buildToolsVersion = build_tools
 
     defaultConfig {
         minSdk min_sdk
