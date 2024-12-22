@@ -151,10 +151,12 @@ public class AppUsageStatsManager {
         return appUsageStatsManager;
     }
 
+    @SuppressLint("InlinedApi") // These are constant values, API compatibility does not apply
     private static final int[] USUAL_ACTIVITY_EVENTS = new int[]{
             UsageEvents.Event.ACTIVITY_RESUMED,
             UsageEvents.Event.ACTIVITY_PAUSED,
             UsageEvents.Event.ACTIVITY_STOPPED,
+            UsageEvents.Event.DEVICE_SHUTDOWN,
     };
 
     @NonNull
@@ -214,9 +216,9 @@ public class AppUsageStatsManager {
                 int eventType = event.getEventType();
                 // Queries are sorted in descending order, so a not-running activity should be paused
                 // or stopped first and then resumed (i.e., reversed logic)
-                if (eventType == UsageEvents.Event.ACTIVITY_STOPPED || eventType == UsageEvents.Event.ACTIVITY_PAUSED) {
+                if (isActivityClosed(eventType)) {
                     usage.setLastEndTime(event.getTimeStamp());
-                } else if (eventType == UsageEvents.Event.ACTIVITY_RESUMED) {
+                } else if (isActivityOpened(eventType)) {
                     usage.setLastStartTime(event.getTimeStamp());
                 }
             }
@@ -310,14 +312,14 @@ public class AppUsageStatsManager {
             String packageName = event.getPackageName();
             // Queries are sorted in descending order, so a not-running activity should be paused or
             // stopped first and then resumed (i.e., reversed logic).
-            if (eventType == UsageEvents.Event.ACTIVITY_STOPPED || eventType == UsageEvents.Event.ACTIVITY_PAUSED) {
+            if (isActivityClosed(eventType)) {
                 PerPackageUsageInternal usage = perPackageUsageMap.get(packageName);
                 if (usage == null) {
                     usage = new PerPackageUsageInternal(packageName);
                     perPackageUsageMap.put(packageName, usage);
                 }
                 usage.setLastEndTime(event.getTimeStamp());
-            } else if (eventType == UsageEvents.Event.ACTIVITY_RESUMED) {
+            } else if (isActivityOpened(eventType)) {
                 PerPackageUsageInternal usage = perPackageUsageMap.get(packageName);
                 if (usage == null) {
                     usage = new PerPackageUsageInternal(packageName);
@@ -347,6 +349,18 @@ public class AppUsageStatsManager {
             screenTimeList.add(packageUsageInfo);
         }
         return screenTimeList;
+    }
+
+    @SuppressLint("InlinedApi") // These are constant values, API compatibility does not apply
+    private static boolean isActivityClosed(int eventType) {
+        return eventType == UsageEvents.Event.ACTIVITY_STOPPED
+                || eventType == UsageEvents.Event.ACTIVITY_PAUSED
+                || eventType == UsageEvents.Event.DEVICE_SHUTDOWN;
+    }
+
+    @SuppressLint("InlinedApi") // These are constant values, API compatibility does not apply
+    private static boolean isActivityOpened(int eventType) {
+        return eventType == UsageEvents.Event.ACTIVITY_RESUMED;
     }
 
     @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
