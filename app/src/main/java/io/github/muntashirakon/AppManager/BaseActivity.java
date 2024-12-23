@@ -76,10 +76,38 @@ public abstract class BaseActivity extends PerProcessActivity {
         }
         if (Boolean.TRUE.equals(BuildExpiryChecker.buildExpired())) {
             // Build has expired
-            BuildExpiryChecker.getBuildExpiredDialog(this).show();
+            BuildExpiryChecker.getBuildExpiredDialog(this, (dialog, which) -> doAuthenticate(savedInstanceState)).show();
             return;
         }
         // Run authentication
+        doAuthenticate(savedInstanceState);
+    }
+
+    protected abstract void onAuthenticated(@Nullable Bundle savedInstanceState);
+
+    @CallSuper
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mViewModel != null && mViewModel.isAuthenticating() && mAlertDialog != null) {
+            if (mDisplayLoader) {
+                mAlertDialog.show();
+            } else {
+                mAlertDialog.hide();
+            }
+        }
+    }
+
+    @CallSuper
+    @Override
+    protected void onStop() {
+        if (mAlertDialog != null) {
+            mAlertDialog.dismiss();
+        }
+        super.onStop();
+    }
+
+    private void doAuthenticate(@Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(SecurityAndOpsViewModel.class);
         mBiometricPrompt = new BiometricPrompt(this, ContextCompat.getMainExecutor(this),
                 new BiometricPrompt.AuthenticationCallback() {
@@ -145,45 +173,17 @@ public abstract class BaseActivity extends PerProcessActivity {
         });
         if (!mViewModel.isAuthenticating()) {
             mViewModel.setAuthenticating(true);
-            authenticate();
-        }
-    }
-
-    protected abstract void onAuthenticated(@Nullable Bundle savedInstanceState);
-
-    @CallSuper
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (mViewModel != null && mViewModel.isAuthenticating() && mAlertDialog != null) {
-            if (mDisplayLoader) {
-                mAlertDialog.show();
-            } else {
-                mAlertDialog.hide();
+            // Check KeyStore
+            if (KeyStoreManager.hasKeyStorePassword()) {
+                // We already have a working keystore password.
+                // Only need authentication and/or verify mode of operation.
+                ensureSecurityAndModeOfOp();
+                return;
             }
+            Intent keyStoreIntent = new Intent(this, KeyStoreActivity.class)
+                    .putExtra(KeyStoreActivity.EXTRA_KS, true);
+            mKeyStoreActivity.launch(keyStoreIntent);
         }
-    }
-
-    @CallSuper
-    @Override
-    protected void onStop() {
-        if (mAlertDialog != null) {
-            mAlertDialog.dismiss();
-        }
-        super.onStop();
-    }
-
-    private void authenticate() {
-        // Check KeyStore
-        if (KeyStoreManager.hasKeyStorePassword()) {
-            // We already have a working keystore password.
-            // Only need authentication and/or verify mode of operation.
-            ensureSecurityAndModeOfOp();
-            return;
-        }
-        Intent keyStoreIntent = new Intent(this, KeyStoreActivity.class)
-                .putExtra(KeyStoreActivity.EXTRA_KS, true);
-        mKeyStoreActivity.launch(keyStoreIntent);
     }
 
     private void ensureSecurityAndModeOfOp() {
