@@ -9,14 +9,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Size;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.PendingIntentCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.color.MaterialColors;
 
@@ -101,23 +104,26 @@ public class ScreenTimeAppWidget extends AppWidgetProvider {
         }
         // Set colors
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            ColorStateList colorPrimary = ColorStateList.valueOf(MaterialColors.getColor(context, com.google.android.material.R.attr.colorPrimary, "colorPrimary"));
-            int colorOnPrimary = MaterialColors.getColor(context, com.google.android.material.R.attr.colorOnPrimary, "colorOnPrimary");
-            ColorStateList colorSecondary = ColorStateList.valueOf(MaterialColors.getColor(context, com.google.android.material.R.attr.colorSecondary, "colorSecondary"));
-            int colorOnSecondary = MaterialColors.getColor(context, com.google.android.material.R.attr.colorOnSecondary, "colorOnSecondary");
-            ColorStateList colorTertiary = ColorStateList.valueOf(MaterialColors.getColor(context, com.google.android.material.R.attr.colorTertiary, "colorTertiary"));
-            int colorOnTertiary = MaterialColors.getColor(context, com.google.android.material.R.attr.colorOnTertiary, "colorOnTertiary");
-            views.setTextColor(R.id.app1_time, colorOnPrimary);
-            views.setColorStateList(R.id.app1_time, "setBackgroundTintList", colorPrimary);
-            views.setColorStateList(R.id.app1_circle, "setBackgroundTintList", colorPrimary);
-            views.setTextColor(R.id.app2_time, colorOnSecondary);
-            views.setColorStateList(R.id.app2_time, "setBackgroundTintList", colorSecondary);
-            views.setColorStateList(R.id.app2_circle, "setBackgroundTintList", colorSecondary);
-            views.setTextColor(R.id.app3_time, colorOnTertiary);
-            views.setColorStateList(R.id.app3_time, "setBackgroundTintList", colorTertiary);
-            views.setColorStateList(R.id.app3_circle, "setBackgroundTintList", colorTertiary);
+            int colorSurface = MaterialColors.getColor(context, com.google.android.material.R.attr.colorSurface, "colorSurface");
+            int textColorPrimary = MaterialColors.getColor(context, android.R.attr.textColorPrimary, "textColorSecondary");
+            int textColorSecondary = MaterialColors.getColor(context, android.R.attr.textColorSecondary, "textColorSecondary");
+            ColorStateList color1 = ColorStateList.valueOf(MaterialColors.harmonizeWithPrimary(context, Color.parseColor("#1b1b1b")));
+            ColorStateList color2 = ColorStateList.valueOf(MaterialColors.harmonizeWithPrimary(context, Color.parseColor("#565e71")));
+            ColorStateList color3 = ColorStateList.valueOf(MaterialColors.harmonizeWithPrimary(context, Color.parseColor("#d4e3ff")));
+            views.setTextColor(R.id.screen_time_label, textColorSecondary);
+            views.setTextColor(R.id.screen_time, textColorPrimary);
+            views.setTextColor(R.id.app1_label, textColorSecondary);
+            views.setTextColor(R.id.app2_label, textColorSecondary);
+            views.setTextColor(R.id.app3_label, textColorSecondary);
+            views.setColorStateList(R.id.app1_time, "setBackgroundTintList", color1);
+            views.setColorStateList(R.id.app1_circle, "setBackgroundTintList", color1);
+            views.setColorStateList(R.id.app2_time, "setBackgroundTintList", color2);
+            views.setColorStateList(R.id.app2_circle, "setBackgroundTintList", color2);
+            views.setColorStateList(R.id.app3_time, "setBackgroundTintList", color3);
+            views.setColorStateList(R.id.app3_circle, "setBackgroundTintList", color3);
+            views.setInt(R.id.widget_background, "setBackgroundColor", colorSurface);
         }
-        views.setOnClickPendingIntent(android.R.id.background, pendingIntent);
+        views.setOnClickPendingIntent(R.id.widget_background, pendingIntent);
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
