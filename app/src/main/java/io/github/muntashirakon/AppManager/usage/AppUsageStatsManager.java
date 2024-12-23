@@ -67,7 +67,7 @@ public class AppUsageStatsManager {
     public static final class DataUsage extends Pair<Long, Long> implements Parcelable, Comparable<DataUsage> {
         public static final DataUsage EMPTY = new DataUsage(0, 0);
 
-        public static DataUsage fromDataUsage(DataUsage ...dataUsages) {
+        public static DataUsage fromDataUsage(DataUsage... dataUsages) {
             if (dataUsages == null) {
                 return EMPTY;
             }
@@ -211,14 +211,22 @@ public class AppUsageStatsManager {
         PackageUsageInfo packageUsageInfo = new PackageUsageInfo(mContext, packageName, userId, applicationInfo);
         PerPackageUsageInternal usage = new PerPackageUsageInternal(packageName);
         List<UsageEvents.Event> events = UsageStatsManagerCompat.queryEventsSorted(range.getStartTime(), range.getEndTime(), userId, USUAL_ACTIVITY_EVENTS);
+        long lastShutdownTime = 0L;
         for (UsageEvents.Event event : events) {
-            if (Objects.equals(packageName, event.getPackageName())) {
-                int eventType = event.getEventType();
+            int eventType = event.getEventType();
+            if (eventType == UsageEvents.Event.DEVICE_SHUTDOWN) {
+                lastShutdownTime = event.getTimeStamp();
+            } else if (Objects.equals(packageName, event.getPackageName())) {
                 // Queries are sorted in descending order, so a not-running activity should be paused
                 // or stopped first and then resumed (i.e., reversed logic)
                 if (isActivityClosed(eventType)) {
                     usage.setLastEndTime(event.getTimeStamp());
                 } else if (isActivityOpened(eventType)) {
+                    if (lastShutdownTime != 0L) {
+                        // The device was shutdown. Adding the shutdown time here as no impact if
+                        // the event already has an end time.
+                        usage.setLastEndTime(lastShutdownTime);
+                    }
                     usage.setLastStartTime(event.getTimeStamp());
                 }
             }
@@ -307,12 +315,15 @@ public class AppUsageStatsManager {
         // Get events
         UsageUtils.TimeInterval interval = UsageUtils.getTimeInterval(usageInterval);
         List<UsageEvents.Event> events = UsageStatsManagerCompat.queryEventsSorted(interval.getStartTime(), interval.getEndTime(), userId, USUAL_ACTIVITY_EVENTS);
+        long lastShutdownTime = 0L;
         for (UsageEvents.Event event : events) {
             int eventType = event.getEventType();
             String packageName = event.getPackageName();
             // Queries are sorted in descending order, so a not-running activity should be paused or
             // stopped first and then resumed (i.e., reversed logic).
-            if (isActivityClosed(eventType)) {
+            if (eventType == UsageEvents.Event.DEVICE_SHUTDOWN) {
+                lastShutdownTime = event.getTimeStamp();
+            } else if (isActivityClosed(eventType)) {
                 PerPackageUsageInternal usage = perPackageUsageMap.get(packageName);
                 if (usage == null) {
                     usage = new PerPackageUsageInternal(packageName);
@@ -324,6 +335,11 @@ public class AppUsageStatsManager {
                 if (usage == null) {
                     usage = new PerPackageUsageInternal(packageName);
                     perPackageUsageMap.put(packageName, usage);
+                }
+                if (lastShutdownTime != 0L) {
+                    // The device was shutdown. Adding the shutdown time here as no impact if the
+                    // event already has an end time.
+                    usage.setLastEndTime(lastShutdownTime);
                 }
                 usage.setLastStartTime(event.getTimeStamp());
             }
@@ -354,8 +370,7 @@ public class AppUsageStatsManager {
     @SuppressLint("InlinedApi") // These are constant values, API compatibility does not apply
     private static boolean isActivityClosed(int eventType) {
         return eventType == UsageEvents.Event.ACTIVITY_STOPPED
-                || eventType == UsageEvents.Event.ACTIVITY_PAUSED
-                || eventType == UsageEvents.Event.DEVICE_SHUTDOWN;
+                || eventType == UsageEvents.Event.ACTIVITY_PAUSED;
     }
 
     @SuppressLint("InlinedApi") // These are constant values, API compatibility does not apply
