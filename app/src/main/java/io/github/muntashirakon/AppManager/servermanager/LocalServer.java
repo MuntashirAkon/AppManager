@@ -160,7 +160,7 @@ public class LocalServer {
     }
 
     @WorkerThread
-    public void closeBgServer() {
+    public void closeBgServer() throws IOException {
         mLocalServerManager.closeBgServer();
         mLocalServerManager.stop();
     }

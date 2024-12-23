@@ -21,6 +21,8 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.FileSystemManager;
 
 public class LocalServices {
+    private static final Object sBindLock = new Object();
+
     @NonNull
     private static final ServiceConnectionWrapper sFileSystemServiceConnectionWrapper
             = new ServiceConnectionWrapper(BuildConfig.APPLICATION_ID, FileSystemService.class.getName());
@@ -34,16 +36,18 @@ public class LocalServices {
 
     @WorkerThread
     public static void bindServices() throws RemoteException {
-        unbindServicesIfRunning();
-        bindAmService();
-        bindFileSystemManager();
-        // Verify binding
-        if (!getAmService().asBinder().pingBinder()) {
-            throw new RemoteException("IAmService not running.");
+        synchronized (sBindLock) {
+            unbindServicesIfRunning();
+            bindAmService();
+            bindFileSystemManager();
+            // Verify binding
+            if (!getAmService().asBinder().pingBinder()) {
+                throw new RemoteException("IAmService not running.");
+            }
+            getFileSystemManager();
+            // Update UID
+            Ops.setWorkingUid(getAmService().getUid());
         }
-        getFileSystemManager();
-        // Update UID
-        Ops.setWorkingUid(getAmService().getUid());
     }
 
     public static boolean alive() {

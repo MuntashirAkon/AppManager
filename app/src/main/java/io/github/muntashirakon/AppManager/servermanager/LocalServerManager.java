@@ -28,6 +28,7 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.server.common.BaseCaller;
 import io.github.muntashirakon.AppManager.server.common.Caller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
+import io.github.muntashirakon.AppManager.server.common.Constants;
 import io.github.muntashirakon.AppManager.server.common.DataTransmission;
 import io.github.muntashirakon.AppManager.server.common.ParcelableUtil;
 import io.github.muntashirakon.AppManager.settings.Ops;
@@ -162,13 +163,22 @@ class LocalServerManager {
     }
 
     @WorkerThread
-    void closeBgServer() {
+    void closeBgServer() throws IOException {
         try {
             BaseCaller baseCaller = new BaseCaller(BaseCaller.TYPE_CLOSE);
             getSession().getDataTransmission().sendAndReceiveMessage(ParcelableUtil.marshall(baseCaller));
         } catch (Exception e) {
             // Since the server is closed abruptly, this should always produce error
             Log.w(TAG, "closeBgServer: Error", e);
+        }
+        // Check if the server is still active
+        if (LocalServer.alive(mContext)) {
+            // Server still active, need to run killall am_local_server
+            try {
+                stopServer();
+            } catch (Exception e) {
+                throw new IOException(e);
+            }
         }
     }
 
@@ -263,6 +273,58 @@ class LocalServerManager {
     }
 
     /**
+     * Stop root or ADB server based on config
+     */
+    @WorkerThread
+    @NoOps(used = true)
+    private void stopServer() throws Exception {
+        String command = "killall " + Constants.SERVER_NAME;
+        if (Ops.isAdb()) {
+            if (mAdbStream == null || Objects.requireNonNull(mAdbStream).isClosed()) {
+                // ADB shell not running
+                String adbHost = ServerConfig.getAdbHost(mContext);
+                int adbPort = ServerConfig.getAdbPort();
+                AdbConnectionManager manager = AdbConnectionManager.getInstance();
+                Log.d(TAG, "stopServer (ADB): Connecting using host=%s, port=%d", adbHost, adbPort);
+                manager.setTimeout(10, TimeUnit.SECONDS);
+                if (!manager.isConnected() && !manager.connect(adbHost, adbPort)) {
+                    throw new IOException("Could not connect to ADB.");
+                }
+
+                Log.d(TAG, "stopServer (ADB): Opening shell...");
+                mAdbStream = manager.openStream("shell:");
+                mAdbConnectionWatcher = new CountDownLatch(1);
+                mAdbServerStarted = false;
+                new Thread(mAdbOutputThread).start();
+            }
+            Log.d(TAG, "stopServer (ADB): Shell opened.");
+
+            try (OutputStream os = Objects.requireNonNull(mAdbStream).openOutputStream()) {
+                os.write("id\n".getBytes());
+                Log.d(TAG, "stopServer (ADB): %s", command);
+                os.write((command + "\n").getBytes());
+            }
+
+            if (!mAdbConnectionWatcher.await(1, TimeUnit.MINUTES) || !mAdbServerStarted) {
+                throw new Exception("Server wasn't stopped.");
+            }
+            Log.d(TAG, "useAdbStartServer: Server has stopped.");
+        } else if (Ops.isDirectRoot()) {
+            if (!Ops.hasRoot()) {
+                throw new Exception("Root access denied");
+            }
+            Log.d(TAG, "stopServer (root): %s", command);
+            Runner.Result result = Runner.runCommand(command);
+            Log.d(TAG, "stopServer (root): %s", result.getOutput());
+            if (!result.isSuccessful()) {
+                throw new Exception("Could not start server.");
+            }
+            SystemClock.sleep(3000);
+            Log.e(TAG, "useRootStartServer: Server has started.");
+        } else throw new Exception("Neither root nor ADB mode is enabled.");
+    }
+
+    /**
      * Create a client session
      *
      * @return New session if not running, running session otherwise
@@ -279,7 +341,7 @@ class LocalServerManager {
         String host = ServerConfig.getLocalServerHost(mContext);
         int port = ServerConfig.getLocalServerPort();
         Socket socket = new Socket(host, port);
-        socket.setSoTimeout(1000 * 30);
+        socket.setSoTimeout(30_000);
         // NOTE: (CWE-319) No need for SSL since it only runs on a random port in localhost with specific authorization.
         // TODO: 5/8/23 We could use an SSL server with a randomly generated certificate per session without requiring
         //  any other authorization methods. This session is independent of the application.
