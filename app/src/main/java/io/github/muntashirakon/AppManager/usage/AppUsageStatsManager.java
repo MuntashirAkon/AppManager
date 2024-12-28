@@ -394,19 +394,22 @@ public class AppUsageStatsManager {
         return lastTime;
     }
 
+    @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
     @NonNull
-    private SparseArrayCompat<DataUsage> getMobileData(@NonNull UsageUtils.TimeInterval interval) {
+    public static SparseArrayCompat<DataUsage> getMobileData(@NonNull UsageUtils.TimeInterval interval) {
         return getDataUsageForNetwork(TRANSPORT_CELLULAR, interval);
     }
 
 
+    @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
     @NonNull
-    private SparseArrayCompat<DataUsage> getWifiData(@NonNull UsageUtils.TimeInterval interval) {
+    public static SparseArrayCompat<DataUsage> getWifiData(@NonNull UsageUtils.TimeInterval interval) {
         return getDataUsageForNetwork(TRANSPORT_WIFI, interval);
     }
 
+    @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
     @NonNull
-    private SparseArrayCompat<DataUsage> getDataUsageForNetwork(@Transport int networkType,
+    public static SparseArrayCompat<DataUsage> getDataUsageForNetwork(@Transport int networkType,
                                                                 @NonNull UsageUtils.TimeInterval interval) {
         SparseArrayCompat<DataUsage> dataUsageSparseArray = new SparseArrayCompat<>();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -417,7 +420,7 @@ public class AppUsageStatsManager {
             }
             return dataUsageSparseArray;
         }
-        List<String> subscriberIds = getSubscriberIds(mContext, networkType);
+        List<String> subscriberIds = getSubscriberIds(networkType);
         for (String subscriberId : subscriberIds) {
             try (NetworkStatsCompat networkStats = NetworkStatsManagerCompat.querySummary(networkType, subscriberId,
                     interval.getStartTime(), interval.getEndTime())) {
@@ -444,8 +447,7 @@ public class AppUsageStatsManager {
 
     @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
     @NonNull
-    public static DataUsage getDataUsageForPackage(@NonNull Context context, int uid,
-                                                   @UsageUtils.IntervalType int intervalType) {
+    public static DataUsage getDataUsageForPackage(int uid, @UsageUtils.IntervalType int intervalType) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             @SuppressWarnings("deprecation")
             ProcUidNetStat netStat = ProcFs.getInstance().getUidNetStat(uid);
@@ -456,7 +458,7 @@ public class AppUsageStatsManager {
         long totalTx = 0;
         long totalRx = 0;
         for (int networkId = 0; networkId < 2; ++networkId) {
-            subscriberIds = getSubscriberIds(context, networkId);
+            subscriberIds = getSubscriberIds(networkId);
             for (String subscriberId : subscriberIds) {
                 try (NetworkStatsCompat networkStats = NetworkStatsManagerCompat.querySummary(networkId, subscriberId,
                         range.getStartTime(), range.getEndTime())) {
@@ -482,12 +484,12 @@ public class AppUsageStatsManager {
     @SuppressLint({"HardwareIds", "MissingPermission"})
     @RequiresApi(Build.VERSION_CODES.M) // LOLLIPOP_MR1, but we don't need it for API < 23
     @NonNull
-    private static List<String> getSubscriberIds(@NonNull Context context, @Transport int networkType) {
+    private static List<String> getSubscriberIds(@Transport int networkType) {
         if (networkType != TRANSPORT_CELLULAR) {
             // Unsupported API
             return Collections.singletonList(null);
         }
-        PackageManager pm = context.getPackageManager();
+        PackageManager pm = ContextUtils.getContext().getPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
                 && !pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY_SUBSCRIPTION)) {
             Log.i(TAG, "No such feature: %s", PackageManager.FEATURE_TELEPHONY_SUBSCRIPTION);

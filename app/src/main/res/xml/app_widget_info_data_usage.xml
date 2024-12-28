@@ -1,0 +1,18 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/data_usage_msg"
+    android:initialKeyguardLayout="@layout/app_widget_data_usage_small"
+    android:initialLayout="@layout/app_widget_data_usage_small"
+    android:minWidth="110dp"
+    android:minHeight="80dp"
+    android:minResizeWidth="100dp"
+    android:minResizeHeight="50dp"
+    android:previewImage="@drawable/app_widget_preview_data_usage"
+    android:previewLayout="@layout/app_widget_data_usage_small"
+    android:resizeMode="horizontal|vertical"
+    android:maxResizeWidth="310dp"
+    android:maxResizeHeight="80dp"
+    android:targetCellWidth="2"
+    android:targetCellHeight="1"
+    android:updatePeriodMillis="60000"
+    android:widgetCategory="home_screen" />

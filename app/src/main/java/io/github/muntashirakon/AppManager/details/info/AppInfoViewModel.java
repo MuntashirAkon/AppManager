@@ -358,8 +358,8 @@ public class AppInfoViewModel extends AndroidViewModel {
                 if (hasUsageAccess) {
                     // Net statistics
                     AppUsageStatsManager.DataUsage dataUsage;
-                    dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
-                            applicationInfo.uid, UsageUtils.USAGE_LAST_BOOT);
+                    dataUsage = AppUsageStatsManager.getDataUsageForPackage(applicationInfo.uid,
+                            UsageUtils.USAGE_LAST_BOOT);
                     if (dataUsage.getTotal() == 0 && !ArrayUtils.contains(
                             packageInfo.requestedPermissions, Manifest.permission.INTERNET)) {
                         appInfo.dataUsage = null;

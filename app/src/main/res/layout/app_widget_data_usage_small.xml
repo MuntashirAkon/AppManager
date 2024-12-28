@@ -1,0 +1,58 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget_background"
+    style="@style/Widget.AppTheme.AppWidget"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/app_widget_background"
+    android:orientation="vertical"
+    android:padding="0dp"
+    android:theme="@style/AppTheme.AppWidgetContainer">
+
+    <include
+        layout="@layout/app_widget_refresh_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/app_widget_background_padding">
+
+        <TextView
+            android:id="@+id/data_usage_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingStart="0dp"
+            android:paddingEnd="16dp"
+            android:text="@string/data_usage_msg"
+            android:textColor="?android:attr/textColorSecondary" />
+
+        <TextView
+            android:id="@+id/data_usage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="38sp"
+            android:autoSizeMinTextSize="16sp"
+            android:autoSizeTextType="uniform"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="↑ 28 MB ↓ 1.2 GB"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText"
+            tools:targetApi="o" />
+
+    </LinearLayout>
+
+</FrameLayout>

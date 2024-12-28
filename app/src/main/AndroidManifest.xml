@@ -1243,6 +1243,23 @@
                 android:resource="@xml/app_widget_info_screen_time" />
         </receiver>
         <receiver
+            android:name=".usage.DataUsageAppWidget"
+            android:exported="true"
+            android:label="@string/data_usage_msg">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE_OPTIONS" />
+                <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
+                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
+                <action android:name="android.appwidget.action.APPWIDGET_RESTORED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_info_data_usage" />
+        </receiver>
+        <receiver
             android:name=".oneclickops.ClearCacheAppWidget"
             android:exported="true"
             android:label="@string/clear_cache">
