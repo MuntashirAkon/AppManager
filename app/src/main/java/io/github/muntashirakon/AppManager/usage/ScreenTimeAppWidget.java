@@ -32,6 +32,7 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
+import io.github.muntashirakon.util.UiUtils;
 
 public class ScreenTimeAppWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
@@ -97,7 +98,9 @@ public class ScreenTimeAppWidget extends AppWidgetProvider {
         }
         // Set colors
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            boolean isNight = UiUtils.isDarkMode(context);
             int colorSurface = MaterialColors.getColor(context, com.google.android.material.R.attr.colorSurface, "colorSurface");
+            int colorSurfaceInverse = MaterialColors.getColor(context, com.google.android.material.R.attr.colorSurfaceInverse, "colorSurfaceInverse");
             ColorStateList color1 = ColorStateList.valueOf(MaterialColors.harmonizeWithPrimary(context, Color.parseColor("#1b1b1b")));
             ColorStateList color2 = ColorStateList.valueOf(MaterialColors.harmonizeWithPrimary(context, Color.parseColor("#565e71")));
             ColorStateList color3 = ColorStateList.valueOf(MaterialColors.harmonizeWithPrimary(context, Color.parseColor("#d4e3ff")));
@@ -107,7 +110,9 @@ public class ScreenTimeAppWidget extends AppWidgetProvider {
             views.setColorStateList(R.id.app2_circle, "setBackgroundTintList", color2);
             views.setColorStateList(R.id.app3_time, "setBackgroundTintList", color3);
             views.setColorStateList(R.id.app3_circle, "setBackgroundTintList", color3);
-            views.setInt(R.id.widget_background, "setBackgroundColor", colorSurface);
+            if (isNight) {
+                views.setColorInt(R.id.widget_background, "setBackgroundColor", colorSurfaceInverse, colorSurface);
+            } else views.setColorInt(R.id.widget_background, "setBackgroundColor", colorSurface, colorSurfaceInverse);
         }
         // Get PendingIntent for App Usage page
         Intent appUsageIntent = new Intent(context, AppUsageActivity.class);
