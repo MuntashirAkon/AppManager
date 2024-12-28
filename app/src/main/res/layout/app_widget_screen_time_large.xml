@@ -9,6 +9,12 @@
     android:padding="0dp"
     android:theme="@style/AppTheme.AppWidgetContainer">
 
+    <include
+        layout="@layout/app_widget_refresh_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

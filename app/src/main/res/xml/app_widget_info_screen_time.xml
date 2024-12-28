@@ -10,7 +10,7 @@
     android:previewImage="@drawable/app_widget_preview_screen_time"
     android:previewLayout="@layout/app_widget_screen_time"
     android:resizeMode="horizontal|vertical"
-    android:maxResizeWidth="450dp"
+    android:maxResizeWidth="500dp"
     android:maxResizeHeight="350dp"
     android:targetCellWidth="2"
     android:targetCellHeight="2"

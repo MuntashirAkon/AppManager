@@ -14,12 +14,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Size;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.PendingIntentCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.color.MaterialColors;
 
@@ -55,10 +53,6 @@ public class ScreenTimeAppWidget extends AppWidgetProvider {
         for (PackageUsageInfo appItem : packageUsageInfoList) {
             totalScreenTime += appItem.screenTime;
         }
-        // Get pending intent
-        Intent intent = new Intent(context, AppUsageActivity.class);
-        PendingIntent pendingIntent = PendingIntentCompat.getActivity(context, 0 /* no requestCode */, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT, false);
         // Construct the RemoteViews object
         Size appWidgetSize = getAppWidgetSize(context, appWidgetManager, appWidgetId);
         RemoteViews views;
@@ -69,52 +63,44 @@ public class ScreenTimeAppWidget extends AppWidgetProvider {
         } else {
             views = new RemoteViews(context.getPackageName(), R.layout.app_widget_screen_time_large);
         }
-        // Set views
+        // Set screen time
         views.setTextViewText(R.id.screen_time, DateUtils.getFormattedDurationShort(totalScreenTime, false, true, false));
         int len = Math.min(packageUsageInfoList.size(), 3);
-        if (len < 3) {
-            views.setViewVisibility(R.id.app3_circle, View.INVISIBLE);
-            views.setViewVisibility(R.id.app3_time, View.INVISIBLE);
-            views.setViewVisibility(R.id.app3_label, View.INVISIBLE);
-        }
-        if (len < 2) {
-            views.setViewVisibility(R.id.app2_circle, View.INVISIBLE);
-            views.setViewVisibility(R.id.app2_time, View.INVISIBLE);
-            views.setViewVisibility(R.id.app2_label, View.INVISIBLE);
-        }
-        if (len < 1) {
-            views.setViewVisibility(R.id.app1_circle, View.INVISIBLE);
-            views.setViewVisibility(R.id.app1_time, View.INVISIBLE);
-            views.setViewVisibility(R.id.app1_label, View.INVISIBLE);
-        }
-        if (len > 0) {
-            PackageUsageInfo item1 = packageUsageInfoList.get(0);
-            views.setTextViewText(R.id.app1_label, item1.appLabel);
-            views.setTextViewText(R.id.app1_time, DateUtils.getFormattedDurationSingle(item1.screenTime, false));
-        }
-        if (len > 1) {
-            PackageUsageInfo item2 = packageUsageInfoList.get(1);
-            views.setTextViewText(R.id.app2_label, item2.appLabel);
-            views.setTextViewText(R.id.app2_time, DateUtils.getFormattedDurationSingle(item2.screenTime, false));
-        }
-        if (len == 3) {
+        // Set visibility
+        int app3_visibility = len == 3 ? View.VISIBLE : View.INVISIBLE;
+        int app2_visibility = len >= 2 ? View.VISIBLE : View.INVISIBLE;
+        int app1_visibility = len >= 1 ? View.VISIBLE : View.INVISIBLE;
+        views.setViewVisibility(R.id.app3_circle, app3_visibility);
+        views.setViewVisibility(R.id.app3_time, app3_visibility);
+        views.setViewVisibility(R.id.app3_label, app3_visibility);
+        views.setViewVisibility(R.id.app2_circle, app2_visibility);
+        views.setViewVisibility(R.id.app2_time, app2_visibility);
+        views.setViewVisibility(R.id.app2_label, app2_visibility);
+        views.setViewVisibility(R.id.app1_circle, app1_visibility);
+        views.setViewVisibility(R.id.app1_time, app1_visibility);
+        views.setViewVisibility(R.id.app1_label, app1_visibility);
+        // Set app info
+        if (app3_visibility == View.VISIBLE) {
             PackageUsageInfo item3 = packageUsageInfoList.get(2);
             views.setTextViewText(R.id.app3_label, item3.appLabel);
             views.setTextViewText(R.id.app3_time, DateUtils.getFormattedDurationSingle(item3.screenTime, false));
         }
+        if (app2_visibility == View.VISIBLE) {
+            PackageUsageInfo item2 = packageUsageInfoList.get(1);
+            views.setTextViewText(R.id.app2_label, item2.appLabel);
+            views.setTextViewText(R.id.app2_time, DateUtils.getFormattedDurationSingle(item2.screenTime, false));
+        }
+        if (app1_visibility == View.VISIBLE) {
+            PackageUsageInfo item1 = packageUsageInfoList.get(0);
+            views.setTextViewText(R.id.app1_label, item1.appLabel);
+            views.setTextViewText(R.id.app1_time, DateUtils.getFormattedDurationSingle(item1.screenTime, false));
+        }
         // Set colors
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             int colorSurface = MaterialColors.getColor(context, com.google.android.material.R.attr.colorSurface, "colorSurface");
-            int textColorPrimary = MaterialColors.getColor(context, android.R.attr.textColorPrimary, "textColorSecondary");
-            int textColorSecondary = MaterialColors.getColor(context, android.R.attr.textColorSecondary, "textColorSecondary");
             ColorStateList color1 = ColorStateList.valueOf(MaterialColors.harmonizeWithPrimary(context, Color.parseColor("#1b1b1b")));
             ColorStateList color2 = ColorStateList.valueOf(MaterialColors.harmonizeWithPrimary(context, Color.parseColor("#565e71")));
             ColorStateList color3 = ColorStateList.valueOf(MaterialColors.harmonizeWithPrimary(context, Color.parseColor("#d4e3ff")));
-            views.setTextColor(R.id.screen_time_label, textColorSecondary);
-            views.setTextColor(R.id.screen_time, textColorPrimary);
-            views.setTextColor(R.id.app1_label, textColorSecondary);
-            views.setTextColor(R.id.app2_label, textColorSecondary);
-            views.setTextColor(R.id.app3_label, textColorSecondary);
             views.setColorStateList(R.id.app1_time, "setBackgroundTintList", color1);
             views.setColorStateList(R.id.app1_circle, "setBackgroundTintList", color1);
             views.setColorStateList(R.id.app2_time, "setBackgroundTintList", color2);
@@ -123,7 +109,18 @@ public class ScreenTimeAppWidget extends AppWidgetProvider {
             views.setColorStateList(R.id.app3_circle, "setBackgroundTintList", color3);
             views.setInt(R.id.widget_background, "setBackgroundColor", colorSurface);
         }
-        views.setOnClickPendingIntent(R.id.widget_background, pendingIntent);
+        // Get PendingIntent for App Usage page
+        Intent appUsageIntent = new Intent(context, AppUsageActivity.class);
+        PendingIntent appUsagePendingIntent = PendingIntentCompat.getActivity(context, 0,
+                appUsageIntent, PendingIntent.FLAG_UPDATE_CURRENT, false);
+        views.setOnClickPendingIntent(R.id.widget_background, appUsagePendingIntent);
+        // Get PendingIntent for widget update
+        Intent appWidgetIntent = new Intent(context, ScreenTimeAppWidget.class)
+                .setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
+                .putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{appWidgetId});
+        PendingIntent appWidgetPendingIntent = PendingIntentCompat.getBroadcast(context, 0,
+                appWidgetIntent, PendingIntent.FLAG_UPDATE_CURRENT, false);
+        views.setOnClickPendingIntent(R.id.screen_time_refresh, appWidgetPendingIntent);
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
