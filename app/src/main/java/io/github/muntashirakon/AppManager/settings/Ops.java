@@ -520,6 +520,12 @@ public class Ops {
                 .setTitle(R.string.wireless_debugging)
                 .setMessage(R.string.adb_pairing_instruction)
                 .setCancelable(false)
+                .setNeutralButton(R.string.action_manual, (dialog, which) -> {
+                    Intent adbPairingServiceIntent = new Intent(activity, AdbPairingService.class)
+                            .setAction(AdbPairingService.ACTION_START_PAIRING);
+                    ContextCompat.startForegroundService(activity, adbPairingServiceIntent);
+                    callback.pairAdb();
+                })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> callback.onStatusReceived(STATUS_FAILURE))
                 .setPositiveButton(R.string.go, (dialog, which) -> {
                     Intent developerOptionsIntent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
