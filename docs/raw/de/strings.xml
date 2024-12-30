@@ -234,7 +234,7 @@
     <string name="pages$app-details-page$$servcies-title">Dienste</string>
     <string name="pages$app-details-page$$providers-title">Anbieter</string>
     <string name="pages$app-details-page$$additional-features-for-rooted-phones-title">Zusätzliche Funktionen für gerootete Handys</string>
-    <string name="pages$app-details-page$$blocking-trackers-title">Tracker blockieren</string>
+    <string name="pages$app-details-page$$blocking-trackers-title">Tracker blockieren.</string>
     <string name="pages$app-details-page$$permission-tabs-title">Registerkarten Berechtigungen</string>
     <string name="pages$app-details-page$$uses-permissions-title">Verwendete Berechtigungen</string>
     <string name="pages$app-details-page$$permissions-title">Berechtigungen</string>
@@ -624,7 +624,7 @@
 \n\\textit{gefährlich} und \\textit{Entwicklung} Berechtigungen erfordern eine Bestätigung durch den Benutzer. Die in diesen Registerkarten verwendeten Farben
 \nwerden in \\Sref{subsec:app-details-colour-codes} erläutert.</string>
     <string name="pages$app-details-page$$config-termux-title">Termux konfigurieren</string>
-    <string name="pages$app-details-page$$blocking-components-title">Komponenten blockieren</string>
+    <string name="pages$app-details-page$$blocking-components-title">Komponenten blockieren.</string>
     <string name="pages$main-page$batch-operations">Auf dieser Seite sind auch Stapeloperationen oder Operationen mit mehreren Anwendungen möglich. Der Mehrfachauswahlmodus kann
 \naktiviert werden, indem man auf ein beliebiges Anwendungssymbol klickt oder indem man auf ein beliebiges Element in der Liste lange klickt. Einmal aktiviert, wählt ein einfacher Klick auf
 \nein Listenelement ausgewählt, anstatt die Seite mit den Anwendungsdetails zu öffnen. In diesem Modus befinden sich die Stapeloperationen im
@@ -1451,4 +1451,5 @@
 \n\\end{tip}
 \n
 \n\\seealsoinline{\\hyperref[sec:faq:adb-over-tcp]{FAQ: ADB-over-TCP}}</string>
+    <string name="pages$app-details-page$$tags-title">Schlagwörter</string>
 </resources>
