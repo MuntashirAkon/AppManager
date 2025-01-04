@@ -644,17 +644,50 @@ public class TarUtils {
      * @return map of PAX headers values found inside of the current (local or global) PAX headers tar entry.
      * @throws IOException
      */
+    @Deprecated
     protected static Map<String, String> parsePaxHeaders(final InputStream inputStream, final List<TarArchiveStructSparse> sparseHeaders, final Map<String, String> globalPaxHeaders)
             throws IOException {
+                return parsePaxHeaders(inputStream, sparseHeaders, globalPaxHeaders, -1);
+    }
+     /**
+     * For PAX Format 0.0, the sparse headers(GNU.sparse.offset and GNU.sparse.numbytes)
+     * may appear multi times, and they look like:
+     *
+     * GNU.sparse.size=size
+     * GNU.sparse.numblocks=numblocks
+     * repeat numblocks times
+     *   GNU.sparse.offset=offset
+     *   GNU.sparse.numbytes=numbytes
+     * end repeat
+     *
+     * For PAX Format 0.1, the sparse headers are stored in a single variable : GNU.sparse.map
+     *
+     * GNU.sparse.map
+     *    Map of non-null data chunks. It is a string consisting of comma-separated values "offset,size[,offset-1,size-1...]"
+     *
+     * @param inputStream input stream to read keys and values
+     * @param sparseHeaders used in PAX Format 0.0 &amp; 0.1, as it may appear multiple times,
+     *                      the sparse headers need to be stored in an array, not a map
+     * @param globalPaxHeaders global PAX headers of the tar archive
+     * @param headerSize total size of the PAX header, will be ignored if negative
+     * @return map of PAX headers values found inside of the current (local or global) PAX headers tar entry.
+     * @throws IOException if an I/O error occurs.
+     * @since 1.21
+     */
+    protected static Map<String, String> parsePaxHeaders(final InputStream inputStream,
+            final List<TarArchiveStructSparse> sparseHeaders, final Map<String, String> globalPaxHeaders,
+            final long headerSize) throws IOException {
         final Map<String, String> headers = new HashMap<>(globalPaxHeaders);
         Long offset = null;
         // Format is "length keyword=value\n";
+        int totalRead = 0;
         while(true) { // get length
             int ch;
             int len = 0;
             int read = 0;
             while((ch = inputStream.read()) != -1) {
                 read++;
+                totalRead++;
                 if (ch == '\n') { // blank line in header
                     break;
                 } else if (ch == ' '){ // End of length string
@@ -662,12 +695,17 @@ public class TarUtils {
                     final ByteArrayOutputStream coll = new ByteArrayOutputStream();
                     while((ch = inputStream.read()) != -1) {
                         read++;
+                        totalRead++;
                         if (ch == '='){ // end of keyword
                             final String keyword = coll.toString(CharsetNames.UTF_8);
                             // Get rest of entry
                             final int restLen = len - read;
                             if (restLen <= 1) { // only NL
                                 headers.remove(keyword);
+                            } else if (headerSize >= 0 && totalRead + restLen > headerSize) {
+                                throw new IOException("Paxheader value size " + restLen
+                                    + " exceeds size of header record");
+
                             } else {
                                 final byte[] rest = new byte[restLen];
                                 final int got = IOUtils.readFully(inputStream, rest);
@@ -678,7 +716,12 @@ public class TarUtils {
                                             + " bytes, read "
                                             + got);
                                 }
+                                totalRead += restLen;
                                 // Drop trailing NL
+                                if (rest[restLen - 1] != '\n') {
+                                    throw new IOException("Failed to read Paxheader."
+                                       + "Value should end with a newline");
+                                }
                                 final String value = new String(rest, 0,
                                         restLen - 1, StandardCharsets.UTF_8);
                                 headers.put(keyword, value);
