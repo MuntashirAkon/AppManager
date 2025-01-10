@@ -237,7 +237,7 @@ public class ProfilesActivity extends BaseActivity {
                 popupMenu.setOnMenuItemClickListener(item -> {
                     int id = item.getItemId();
                     if (id == R.id.action_apply) {
-                        Intent intent = ProfileApplierActivity.getShortcutIntent(mActivity, profile.profileId, null, null);
+                        Intent intent = ProfileApplierActivity.getApplierIntent(mActivity, profile.profileId);
                         mActivity.startActivity(intent);
                     } else if (id == R.id.action_delete) {
                         new MaterialAlertDialogBuilder(mActivity)

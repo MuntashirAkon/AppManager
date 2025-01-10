@@ -8,6 +8,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.Objects;
+
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.profiles.ProfileApplierActivity;
 
@@ -44,10 +46,12 @@ public class AuthFeatureDemultiplexer extends BaseActivity {
             return;
         }
 
-        switch (feature) {
+        switch (Objects.requireNonNull(feature)) {
             case "profile":
                 launchProfile(intent);
                 break;
+            default:
+                throw new RuntimeException("Invalid feature: " + feature);
         }
         finish();
     }
@@ -55,6 +59,6 @@ public class AuthFeatureDemultiplexer extends BaseActivity {
     public void launchProfile(@NonNull Intent intent) {
         String profileId = intent.getStringExtra(ProfileApplierActivity.EXTRA_PROFILE_ID);
         String state = intent.getStringExtra(ProfileApplierActivity.EXTRA_STATE);
-        startActivity(ProfileApplierActivity.getShortcutIntent(getApplicationContext(), profileId, null, state));
+        startActivity(ProfileApplierActivity.getAutomationIntent(getApplicationContext(), profileId, state));
     }
 }

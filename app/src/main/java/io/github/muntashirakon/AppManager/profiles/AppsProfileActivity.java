@@ -223,7 +223,7 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
         if (id == android.R.id.home) {
             onBackPressed();
         } else if (id == R.id.action_apply) {
-            Intent intent = ProfileApplierActivity.getShortcutIntent(this, model.getProfileName(), null, null);
+            Intent intent = ProfileApplierActivity.getApplierIntent(this, model.getProfileName());
             startActivity(intent);
         } else if (id == R.id.action_save) {
             model.save(false);

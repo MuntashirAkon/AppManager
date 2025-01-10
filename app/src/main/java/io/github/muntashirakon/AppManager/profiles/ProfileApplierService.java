@@ -30,6 +30,7 @@ public class ProfileApplierService extends ForegroundService {
     public static final String EXTRA_PROFILE_ID = "prof";
     public static final String EXTRA_PROFILE_NAME = "name";
     public static final String EXTRA_PROFILE_STATE = "state";
+    public static final String EXTRA_NOTIFY = "notify";
     /**
      * Notification channel ID
      */
@@ -39,6 +40,7 @@ public class ProfileApplierService extends ForegroundService {
     private String mProfileName;
     @Nullable
     private String mProfileId;
+    private boolean mNotify = true;
     private QueuedProgressHandler mProgressHandler;
     private NotificationProgressHandler.NotificationInfo mNotificationInfo;
     private PowerManager.WakeLock mWakeLock;
@@ -60,6 +62,7 @@ public class ProfileApplierService extends ForegroundService {
         if (intent != null) {
             mProfileId = intent.getStringExtra(EXTRA_PROFILE_ID);
             mProfileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
+            mNotify = intent.getBooleanExtra(EXTRA_NOTIFY, true);
         }
         NotificationManagerInfo notificationManagerInfo = new NotificationManagerInfo(CHANNEL_ID,
                 "Profile Applier", NotificationManagerCompat.IMPORTANCE_LOW);
@@ -152,6 +155,6 @@ public class ProfileApplierService extends ForegroundService {
                     PendingIntent.FLAG_ONE_SHOT, false);
             notificationInfo.addAction(0, getString(R.string.restart_device), pendingIntent);
         }
-        mProgressHandler.onResult(notificationInfo);
+        mProgressHandler.onResult(mNotify ? notificationInfo : null);
     }
 }
