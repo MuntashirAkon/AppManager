@@ -476,8 +476,9 @@ public final class PackageInstallerCompat {
         // MIUI-begin: MIUI 12.5+ workaround
 
         /**
-         * MIUI 12.5+ may require more than one tries in order to have successful installations. This is only needed
-         * during APK installations, not APK uninstallations or install-existing attempts.
+         * MIUI 12.5+ may require more than one tries in order to have successful installations.
+         * This is only needed during APK installations, not APK uninstallations or install-existing
+         * attempts.
          *
          * @param apkFile Underlying APK file if available.
          */
@@ -485,6 +486,20 @@ public final class PackageInstallerCompat {
         default void onAnotherAttemptInMiui(@Nullable ApkFile apkFile) {
         }
         // MIUI-end
+
+        // HyperOS-begin: HyperOS 2.0+ workaround
+
+        /**
+         * In HyperOS 2.0+, the installer for the system apps must be another system app. The
+         * overridden method must set the package installer to a valid system app. This is only
+         * needed during APK installations, not APK uninstallations or install-existing attempts.
+         *
+         * @param apkFile Underlying APK file if available.
+         */
+        @WorkerThread
+        default void onSecondAttemptInHyperOsWithoutInstaller(@Nullable ApkFile apkFile) {
+        }
+        // HyperOS-end
 
         @WorkerThread
         void onFinishedInstall(int sessionId, String packageName, int result, @Nullable String blockingPackage,
@@ -1033,25 +1048,45 @@ public final class PackageInstallerCompat {
                                   @Nullable String blockingPackage,
                                   @Nullable String statusMessage) {
         ThreadUtils.ensureWorkerThread();
-        // MIUI-begin: In MIUI 12.5 and 20.2.0, it might be required to try installing the APK files more than once.
         if (finalStatus == STATUS_FAILURE_ABORTED
                 && mSessionId == sessionId
-                && mOnInstallListener != null
-                && !SelfPermissions.checkSelfPermission(Manifest.permission.INSTALL_PACKAGES)
-                && MiuiUtils.isActualMiuiVersionAtLeast("12.5", "20.2.0")
-                && Objects.equals(statusMessage, "INSTALL_FAILED_ABORTED: Permission denied")
-                && mAttempts <= 3) {
-            // Try once more
-            ++mAttempts;
-            Log.i(TAG, "MIUI: Installation attempt no %d for package %s", mAttempts, mPackageName);
-            mInteractionWatcher.countDown();
-            mInstallWatcher.countDown();
-            // Remove old broadcast receivers
-            unregisterReceiver();
-            mOnInstallListener.onAnotherAttemptInMiui(mApkFile);
-            return;
+                && mOnInstallListener != null) {
+            boolean privileged = SelfPermissions.checkSelfPermission(Manifest.permission.INSTALL_PACKAGES);
+            // MIUI-begin: In MIUI 12.5 and 20.2.0, it might be required to try installing the APK files more than once.
+            if (!privileged
+                    && MiuiUtils.isActualMiuiVersionAtLeast("12.5", "20.2.0")
+                    && Objects.equals(statusMessage, "INSTALL_FAILED_ABORTED: Permission denied")
+                    && mAttempts <= 3) {
+                // Try once more
+                ++mAttempts;
+                Log.i(TAG, "MIUI: Installation attempt no %d for package %s", mAttempts, mPackageName);
+                mInteractionWatcher.countDown();
+                mInstallWatcher.countDown();
+                // Remove old broadcast receivers
+                unregisterReceiver();
+                mOnInstallListener.onAnotherAttemptInMiui(mApkFile);
+                return;
+            }
+            // MIUI-end
+            // HyperOS-begin: In HyperOS 2.0, installer package needs to be altered
+            if (privileged
+                    // TODO: 1/10/25 Check for HyperOS?
+                    && statusMessage != null
+                    && statusMessage.startsWith("INSTALL_FAILED_HYPEROS_ISOLATION_VIOLATION: ")
+                    && mAttempts <= 2) {
+                // Try a second time with installer set to shell
+                ++mAttempts;
+                Log.i(TAG, "HyperOS: %s", statusMessage);
+                Log.i(TAG, "HyperOS: Second attempt for %s", mPackageName);
+                mInteractionWatcher.countDown();
+                mInstallWatcher.countDown();
+                // Remove old broadcast receivers
+                unregisterReceiver();
+                mOnInstallListener.onSecondAttemptInHyperOsWithoutInstaller(mApkFile);
+                return;
+            }
+            // HyperOS-end
         }
-        // MIUI-end
         // No need to check package name since it's been checked before
         if (finalStatus == STATUS_FAILURE_SESSION_CREATE || (mSessionId == sessionId)) {
             if (mOnInstallListener != null) {

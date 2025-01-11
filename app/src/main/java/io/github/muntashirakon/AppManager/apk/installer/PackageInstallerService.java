@@ -135,6 +135,16 @@ public class PackageInstallerService extends ForegroundService {
             }
             // MIUI-end
 
+            // HyperOS-begin: HyperOS 2.0+ workaround
+            @Override
+            public void onSecondAttemptInHyperOsWithoutInstaller(@Nullable ApkFile apkFile) {
+                if (apkFile != null) {
+                    options.setInstallerName("com.android.shell");
+                    installer.install(apkFile, selectedSplitIds, options, mProgressHandler);
+                }
+            }
+            // HyerOS-end
+
             @Override
             public void onFinishedInstall(int sessionId, String packageName, int result,
                                           @Nullable String blockingPackage, @Nullable String statusMessage) {
