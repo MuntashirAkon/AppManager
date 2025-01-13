@@ -341,8 +341,13 @@ public final class PackageManagerCompat {
             return null;
         }
         LauncherApps launcherApps = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
-        if (!launcherApps.isPackageEnabled(packageName, userHandle)) {
-            // Package not enabled
+        try {
+            if (!launcherApps.isPackageEnabled(packageName, userHandle)) {
+                // Package not enabled
+                return null;
+            }
+        } catch (SecurityException e) {
+            Log.w(TAG, "Could not retrieve enable state of " + packageName + " for user "  + userHandle, e);
             return null;
         }
         List<LauncherActivityInfo> activityInfoList = launcherApps.getActivityList(packageName, userHandle);
