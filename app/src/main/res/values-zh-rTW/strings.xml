@@ -8,7 +8,7 @@
     <string name="loading">載入中…</string>
     <!-- &#8230; = ... -->
     <string name="system">系統</string>
-    <string name="sort">種類</string>
+    <string name="sort">排序</string>
     <string name="version_name_with_code">版本 <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="app_info">應用程式資訊</string>
     <string name="system_app">系統應用程式</string>
@@ -71,16 +71,16 @@
         <item quantity="other">無法從 %1$d 應用程式中解除封鎖追蹤器</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="other">Could not delete%1$d backup</item>
+        <item quantity="other">無法刪除 %1$d 備份</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
-        <item quantity="other">Could not restore%1$d app</item>
+        <item quantity="other">%1$d 個應用程式無法還原</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="other">Could not back up%1$d app</item>
+        <item quantity="other">無法備份 %1$d 個應用程式</item>
     </plurals>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="other">Could not back up%1$d app</item>
+        <item quantity="other">無法備份 %1$d 個應用程式</item>
     </plurals>
     <string name="backup">備份</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 已安裝</string>
@@ -132,13 +132,13 @@
     <string name="task_affinity">任務親和性</string>
     <string name="launch">啟動</string>
     <string name="filter_apps_without_backups">沒有備份的</string>
-    <string name="uninstalled_apps">解除安裝的應用程式</string>
+    <string name="uninstalled_apps">已解除安裝的應用程式</string>
     <string name="installer_app_message">按一下<b>選擇</b> 從已安裝的應用程式中選擇或按一下<b>自訂</b> 指定自訂套件名稱。</string>
     <string name="specify_custom_name">自訂</string>
     <string name="verified_using_unreliable_hash">使用不可靠的哈希值進行了驗證</string>
     <string name="working_on_adb_mode">在ADB模式下運作</string>
     <string name="screen_lock_not_enabled">在 Android 設定中啟用螢幕鎖定或清除應用程式資料。</string>
-    <string name="isolated">隔離的</string>
+    <string name="isolated">已隔離的</string>
     <string name="last_actions">最後動作</string>
     <string name="pref_enable_disable_features_msg">啟用或停用 App Manager 中的功能。</string>
     <string name="enable_disable_features">啟用/停用功能</string>
@@ -159,16 +159,17 @@
     <string name="enable_battery_optimization">啟用電池優化？</string>
     <string name="battery_optimization">電池優化</string>
     <string name="no_battery_optimization">沒有電池優化</string>
-    <string name="type_uri">位址類型</string>
+    <string name="type_uri">統一資源識別符</string>
+    <!--https://schema.gov.tw/employ-->
     <string name="type_string_array_list">字串清單</string>
-    <string name="type_string_array">字串數組</string>
+    <string name="type_string_array">字串陣列</string>
     <string name="type_float_array_list">十進制數字清單</string>
     <string name="type_float_array">十進制數字數組</string>
     <string name="type_long_array_list">長整數清單</string>
     <string name="type_long_array">長整數數組</string>
     <string name="type_int_array_list">整數清單</string>
     <string name="type_int_array">整數數組</string>
-    <string name="type_null">沒有價值</string>
+    <string name="type_null">無值</string>
     <string name="screen_lock_msg">使用 Android 螢幕鎖定以鎖定 App Manager</string>
     <string name="screen_lock">螢幕鎖定</string>
     <string name="unlock_app_manager">解鎖 App Manager</string>
@@ -249,7 +250,7 @@
     <string name="ecc">橢圓曲線密碼學</string>
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
-    <string name="none">沒有</string>
+    <string name="none">無</string>
     <string name="pref_encryption_msg">為備份加密。</string>
     <string name="encryption">加密</string>
     <string name="select_user">選擇使用者</string>
@@ -269,8 +270,8 @@
     <string name="copy">複製</string>
     <string name="view_missing_signatures">按一下以檢視或傳送尚未出現在 App Manager 的資源庫資料庫中的簽名。</string>
     <string name="tap_to_see_details">點按即可檢視詳細資訊</string>
-    <string name="lib_details">圖書館資料</string>
-    <string name="no_libs">沒有圖書館</string>
+    <string name="lib_details">函式庫資料</string>
+    <string name="no_libs">無函式庫</string>
     <string name="scanner">掃描器</string>
     <string name="sys_config">系統配置</string>
     <string name="only_install">僅安裝</string>
@@ -288,18 +289,18 @@
     <string name="format">格式</string>
     <string name="public_key">公鑰</string>
     <string name="algorithm">算法</string>
-    <string name="app_signing_signature">簽名</string>
+    <string name="app_signing_signature">簽章</string>
     <string name="checksums">校驗和</string>
     <string name="serial_no">序列號</string>
     <string name="not_yet_valid">尚未生效</string>
     <string name="expired">已到期</string>
-    <string name="valid">有效的</string>
+    <string name="valid">有效</string>
     <string name="validity">有效性</string>
     <string name="type">類型</string>
     <string name="expiry_date">到期日</string>
     <string name="issued_date">發行日期</string>
-    <string name="issuer">發行人</string>
-    <string name="subject">學科</string>
+    <string name="issuer">發行方</string>
+    <string name="subject">受驗方</string>
     <string name="filter_apps_with_backups">帶有備份的</string>
     <string name="sort_by_backup">預先備份</string>
     <string name="uninstall_updates">解除安裝更新</string>
@@ -329,60 +330,63 @@
     <string name="input_backup_name_description">備份名稱不能以數字開頭，也不能包含任何空格。如果要使用目前日期時間，請將其保留為空。</string>
     <string name="input_backup_name">備份名稱</string>
     <string name="downgrade">降級</string>
-    <string name="state_multithreaded">多線程</string>
+    <string name="state_multithreaded">多線程運行</string>
     <string name="state_foreground">前景</string>
-    <string name="state_session_leader">會議負責人</string>
+    <string name="state_session_leader">領頭行程</string>
+    <!--Ref: https://www.cnblogs.com/sparkdev/p/12714790.html-->
     <string name="state_locked_memory">鎖定的記憶體</string>
     <string name="state_low_priority">低優先級</string>
     <string name="state_high_priority">高優先級</string>
     <string name="state_unknown">未知</string>
-    <string name="state_waking">醒來</string>
-    <string name="state_wake_kill">喚醒殺戮</string>
+    <string name="state_waking">喚醒</string>
+    <!--https://developer.android.com/develop/background-work/background-tasks/awake?hl=zh-tw-->
+    <string name="state_wake_kill">喚醒終止</string>
     <string name="state_idle">閒置的</string>
     <string name="state_parked">停放</string>
     <string name="state_zombie">殭屍</string>
-    <string name="state_dead">死的</string>
+    <string name="state_dead">已終止</string>
     <string name="state_trace_stop">追蹤停止</string>
-    <string name="state_device_io">裝置I /O</string>
-    <string name="state_sleeping">睡眠</string>
+    <string name="state_device_io">裝置I/O</string>
+    <string name="state_sleeping">休眠</string>
     <string name="touchscreen_finger">手指</string>
     <string name="touchscreen_stylus">觸控筆</string>
     <string name="touchscreen_no_touch">不要觸碰</string>
     <string name="navigation_wheel">車輪</string>
     <string name="navigation_trackball">軌跡球</string>
     <string name="navigation_dial_pad">撥號盤</string>
-    <string name="navigation_no_nav">沒有導航</string>
+    <string name="navigation_no_nav">無導航</string>
     <string name="keyboard_12_keys">12鍵</string>
     <string name="keyboard_qwerty">QWERTY</string>
-    <string name="keyboard_no_keys">沒有鑰匙</string>
+    <string name="keyboard_no_keys">無按鍵</string>
     <string name="_undefined">不明確的</string>
     <string name="required">必需的</string>
-    <string name="orientation_user_portrait">使用者頭像</string>
-    <string name="orientation_user_landscape">使用者態勢</string>
-    <string name="orientation_sensor">傳感器</string>
-    <string name="orientation_sensor_portrait">傳感器肖像</string>
-    <string name="orientation_sensor_landscape">傳感器格局</string>
+    <string name="orientation_user_portrait">直向·使用者為主</string>
+    <string name="orientation_user_landscape">橫向·使用者為主</string>
+    <string name="orientation_sensor">感應器</string>
+    <string name="orientation_sensor_portrait">直向·感應器為主</string>
+    <string name="orientation_sensor_landscape">橫向·感應器為主</string>
     <string name="orientation_user">使用者</string>
-    <string name="orientation_reverse_landscape">反向景觀</string>
-    <string name="orientation_reverse_portrait">反向肖像</string>
-    <string name="orientation_portrait">肖像</string>
-    <string name="orientation_landscape">風景</string>
-    <string name="orientation_no_sensor">沒有感應器</string>
-    <string name="orientation_locked">已鎖定</string>
-    <string name="orientation_full_user">完整使用者</string>
-    <string name="orientation_full_sensor">全傳感器</string>
-    <string name="orientation_behind">在後面</string>
+    <string name="orientation_reverse_landscape">橫向反轉</string>
+    <string name="orientation_reverse_portrait">直向反轉</string>
+    <string name="orientation_portrait">直向</string>
+    <string name="orientation_landscape">橫向</string>
+    <string name="orientation_no_sensor">無感應器</string>
+    <string name="orientation_locked">鎖定</string>
+    <string name="orientation_full_user">使用者全權決定</string>
+    <string name="orientation_full_sensor">感應器全權決定</string>
+    <string name="orientation_behind">跟隨下層</string>
     <string name="orientation_unspecified">未指定</string>
+    <!--https://developer.android.com/guide/topics/manifest/activity-element?hl=zh-tw-->
     <string name="launch_mode_single_top">單頂</string>
     <string name="launch_mode_single_task">單項任務</string>
     <string name="launch_mode_single_instance">單實例</string>
-    <string name="launch_mode_multiple">多種的</string>
-    <string name="base_apk">基地 APK</string>
+    <string name="launch_mode_multiple">多重</string>
+    <string name="base_apk">基本 APK</string>
     <string name="choose_language">變更語言</string>
     <string name="auto">自動</string>
     <string name="pref_app_language">語言</string>
     <string name="backup_all_users">全部使用者</string>
-    <string name="backup_multiple">備份多個</string>
+    <string name="backup_multiple">多重備份</string>
     <string name="obb_files_extracted_successfully">提取的OBB檔案</string>
     <string name="failed_to_extract_obb_files">無法提取OBB檔案</string>
     <string name="backup_obb_media">OBB和媒體</string>
@@ -418,7 +422,7 @@
     <string name="run_in_termux">在Termux中執行</string>
     <string name="open_in_termux">在Termux開啟</string>
     <string name="export_icon">提取圖示</string>
-    <string name="no_matching_package_found">找不到任何此類別的應用程式</string>
+    <string name="no_matching_package_found">找不到此類別的任何應用程式</string>
     <string name="block_unblock_trackers">封鎖/取消封鎖追蹤器</string>
     <string name="unblock">解除封鎖</string>
     <string name="block">封鎖</string>
@@ -450,9 +454,9 @@
     <string name="data">資料</string>
     <string name="external_data">外部資料</string>
     <string name="blocking_rules">封鎖規則</string>
-    <string name="whats_new">什麼是新的</string>
+    <string name="whats_new">新聞</string>
     <string name="features">特徵</string>
-    <string name="components">成分</string>
+    <string name="components">組成部份</string>
     <string name="trackers">追蹤器</string>
     <string name="installed_version">安裝版本</string>
     <string name="select_all">全選</string>
@@ -492,7 +496,7 @@
     <string name="external_apk_no_app_op">外部 APK 沒有任何應用程式操作</string>
     <string name="changelog">變更日誌</string>
     <string name="one_click_ops">一鍵式操作</string>
-    <string name="never_ask">永遠不要問</string>
+    <string name="never_ask">不再詢問</string>
     <string name="failed_to_deny_dangerous_app_ops">無法撤消所有危險的應用程式操作</string>
     <string name="failed_to_deny_dangerous_perms">無法撤消所有危險的權限</string>
     <string name="failed_to_reset_app_ops">無法重置應用程式操作</string>
@@ -505,7 +509,7 @@
     <string name="sort_by_dangerous_permissions">危險第一</string>
     <string name="sort_by_permission_names">權限名稱</string>
     <string name="sort_by_app_ops_values">應用程式操作價值</string>
-    <string name="sort_by_denied_app_ops">首先被拒絕</string>
+    <string name="sort_by_denied_app_ops">遭拒者優先</string></string>
     <string name="sort_by_app_ops_names">應用程式操作名稱</string>
     <string name="deny_dangerous_app_ops">拒絕危險的應用程式操作</string>
     <string name="reset_to_default">重置為預設</string>
@@ -537,15 +541,16 @@
     <string name="backup_restore">備份/還原</string>
     <string name="clear_data">清除資料</string>
     <string name="disable_background_run">防止後台操作</string>
-    <string name="kill_process">殺</string>
+    <string name="kill_process">終止</string>
     <string name="running_apps">正在執行的應用程式</string>
     <string name="apk_updater">APK 更新器</string>
     <string name="the_export_was_successful">已匯出</string>
     <string name="the_import_was_successful">匯入完成</string>
     <string name="pref_import_watt">從 Watt 匯入</string>
     <string name="sort_by_mobile_data">移動資料</string>
-    <string name="sort_by_times_opened">營業時間</string>
-    <string name="sort_by_screen_time">檢測時間</string>
+    <string name="sort_by_times_opened">開啟時間</string>
+    <string name="sort_by_screen_time">螢幕時間</string>
+    <!--https://dictionary.cambridge.org/zht/%E8%A9%9E%E5%85%B8/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/screen-time-->
     <string name="sort_by_last_used">最後使用</string>
     <plurals name="no_of_times_opened">
         <item quantity="other">%1$d 次</item>
@@ -574,7 +579,7 @@
     <string name="languages">語言</string>
     <string name="battery_capacity">電池容量</string>
     <string name="memory">記憶體</string>
-    <string name="vendor">分發</string>
+    <string name="vendor">供應商</string>
     <string name="gles_version">OpenGL ES 版本</string>
     <string name="no_of_cores">核心數量</string>
     <string name="support_architectures">支援的架構</string>
@@ -685,13 +690,13 @@
     <string name="go_back">返回</string>
     <string name="usage_less_than_a_minute">不到一分鐘</string>
     <plurals name="usage_hours">
-        <item quantity="other">%1$d hr</item>
+        <item quantity="other">%1$d 小時</item>
     </plurals>
     <plurals name="usage_days">
-        <item quantity="other">%1$d day</item>
+        <item quantity="other">%1$d 天</item>
     </plurals>
     <plurals name="usage_months">
-        <item quantity="other">%1$d mo</item>
+        <item quantity="other">%1$d 月</item>
     </plurals>
     <string name="usage_7_days">最近7天</string>
     <string name="usage_today">今天</string>
@@ -781,8 +786,9 @@
     <string name="no_service">沒有服務</string>
     <string name="service">服務</string>
     <string name="authority">權威</string>
-    <string name="no_providers">無提供者</string>
-    <string name="providers">提供者</string>
+    <string name="no_providers">無供應器</string>
+    <string name="providers">供應器</string>
+    <!--https://developer.android.com/guide/topics/providers/content-provider-basics?hl=zh-tw-->
     <string name="no_receivers">無接收器</string>
     <string name="receivers">接收器</string>
     <string name="no_activities">無活動</string>
@@ -856,7 +862,7 @@
     <string name="undo">復原</string>
     <string name="pause_unpause">播放/暫停</string>
     <string name="collapse_all">全部摺疊</string>
-    <string name="expand_all">全部展开</string>
+    <string name="expand_all">全部展開</string>
     <string name="file">檔案</string>
     <string name="widget_start_recording">記錄
 \n日誌</string>
@@ -977,7 +983,7 @@
     </plurals>
     <string name="pref_thread_count_hint">值必須在 0 到 %1$d 之間，其中 0 表示給定時間 <i> 最大操作次數 </i>。</string>
     <string name="pref_thread_count">並列執行</string>
-    <string name="type_uri_array">URI 數組</string>
+    <string name="type_uri_array">URI 陣列</string>
     <string name="pref_always_on_background_msg">始終在後台安裝應用程式並在完成時顯示通知。</string>
     <string name="pref_always_on_background">在後台安裝</string>
     <string name="next">下頁</string>
