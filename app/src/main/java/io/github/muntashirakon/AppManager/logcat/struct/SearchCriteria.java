@@ -86,7 +86,10 @@ public class SearchCriteria {
             // Query string
             queryString.append(" ").append(part);
         }
-        mFilters.add(new Filter(TYPE_MSG, queryString.toString().trim()));
+        String text = queryString.toString().trim();
+        if (!text.isEmpty()) {
+            mFilters.add(new Filter(TYPE_MSG, queryString.toString().trim()));
+        }
     }
 
     public boolean isEmpty() {
@@ -120,7 +123,7 @@ public class SearchCriteria {
     private static final String TYPE_TAG = "tag";
 
     private static final String[] TYPES = new String[]{
-            TYPE_PID, TYPE_TAG
+            TYPE_MSG, TYPE_PID, TYPE_TAG
     };
 
     private static class Filter {
