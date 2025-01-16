@@ -34,6 +34,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logcat.helper.PreferenceHelper;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
 import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
+import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.settings.LogViewerPreferences;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -58,7 +59,8 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
     protected LogViewerRecyclerAdapter mLogListAdapter;
 
     protected boolean mAutoscrollToBottom = true;
-    protected volatile String mQueryString;
+    @Nullable
+    protected volatile SearchCriteria mSearchCriteria;
 
     protected final StoragePermission mStoragePermission = StoragePermission.init(this);
     protected final RecyclerView.OnScrollListener mRecyclerViewScrollListener = new RecyclerView.OnScrollListener() {
@@ -107,9 +109,9 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mRecyclerView.setItemAnimator(null);
         // Check for query string
-        mQueryString = mActivity.getSearchQuery();
-        if (mQueryString != null) {
-            mRecyclerView.postDelayed(() -> mActivity.search(mQueryString), 1000);
+        mSearchCriteria = mActivity.getSearchQuery();
+        if (mSearchCriteria != null) {
+            mRecyclerView.postDelayed(() -> mActivity.search(mSearchCriteria), 1000);
         }
         mLogListAdapter = new LogViewerRecyclerAdapter();
         mLogListAdapter.setClickListener(mActivity);
@@ -197,7 +199,7 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
                     .setOnSingleChoiceClickListener((dialog, which, selectedLogLevel, isChecked) -> {
                         mViewModel.setLogLevel(selectedLogLevel);
                         // Search again
-                        mActivity.search(mQueryString);
+                        mActivity.search(mSearchCriteria);
                     })
                     .setNegativeButton(R.string.close, null)
                     .show();
@@ -216,10 +218,10 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
 
     @CallSuper
     @Override
-    public void onQuery(@Nullable String searchTerm) {
-        mQueryString = searchTerm;
+    public void onQuery(@Nullable SearchCriteria searchCriteria) {
+        mSearchCriteria = searchCriteria;
         Filter filter = mLogListAdapter.getFilter();
-        filter.filter(searchTerm, this);
+        filter.filter(searchCriteria != null ? searchCriteria.query : null, this);
     }
 
     @Override

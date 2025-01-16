@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -156,13 +155,13 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
         }
     }
 
-    public void addWithFilter(@NonNull LogLine object, @Nullable CharSequence text, boolean notify) {
+    public void addWithFilter(@NonNull LogLine object, @Nullable SearchCriteria searchCriteria, boolean notify) {
         if (mOriginalValues != null) {
             List<LogLine> inputList = Collections.singletonList(object);
             if (mFilter == null) {
                 mFilter = new ArrayFilter();
             }
-            List<LogLine> filteredObjects = mFilter.performFilteringOnList(inputList, text);
+            List<LogLine> filteredObjects = mFilter.performFilteringOnList(inputList, searchCriteria);
             synchronized (mLock) {
                 mOriginalValues.add(object);
                 mObjects.addAll(filteredObjects);
@@ -370,7 +369,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
         View contentView = holder.itemView.findViewById(R.id.log_content);
         contentView.setBackgroundResource(position % 2 == 0 ? io.github.muntashirakon.ui.R.drawable.item_semi_transparent : io.github.muntashirakon.ui.R.drawable.item_transparent);
 
-        //OUTPUT TEXT VIEW
+        // Display message
         TextView output = holder.output;
         output.setSingleLine(!logLine.isExpanded());
         output.setText(logLine.getLogOutput());
@@ -382,7 +381,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
         tag.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 
         //EXPANDED INFO
-        boolean extraInfoIsVisible = logLine.isExpanded() && logLine.getProcessId() != -1 // -1 marks lines like 'beginning of /dev/log...'
+        boolean extraInfoIsVisible = logLine.isExpanded() && logLine.getPid() != -1 // -1 marks lines like 'beginning of /dev/log...'
                 && Prefs.LogViewer.showPidTidTimestamp();
 
         TextView pidText = holder.pid;
@@ -391,7 +390,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
         timestampText.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
 
         if (extraInfoIsVisible) {
-            pidText.setText(logLine.getProcessId() != -1 ? Integer.toString(logLine.getProcessId()) : null);
+            pidText.setText(logLine.getPid() != -1 ? Integer.toString(logLine.getPid()) : null);
             timestampText.setText(logLine.getTimestamp());
         }
 
@@ -523,7 +522,8 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
                 }
             }
 
-            ArrayList<LogLine> allValues = performFilteringOnList(mOriginalValues, prefix);
+            SearchCriteria searchCriteria = new SearchCriteria(prefix != null ? prefix.toString() : null);
+            ArrayList<LogLine> allValues = performFilteringOnList(mOriginalValues, searchCriteria);
 
             results.values = allValues;
             results.count = allValues.size();
@@ -531,9 +531,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
             return results;
         }
 
-        public ArrayList<LogLine> performFilteringOnList(List<LogLine> inputList, CharSequence query) {
-            SearchCriteria searchCriteria = new SearchCriteria(query);
-
+        public ArrayList<LogLine> performFilteringOnList(List<LogLine> inputList, @Nullable SearchCriteria searchCriteria) {
             // search by log level
             ArrayList<LogLine> allValues = new ArrayList<>();
 
@@ -550,7 +548,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
             ArrayList<LogLine> finalValues = allValues;
 
             // search by criteria
-            if (!searchCriteria.isEmpty()) {
+            if (searchCriteria != null && !searchCriteria.isEmpty()) {
                 final int count = allValues.size();
                 final ArrayList<LogLine> newValues = new ArrayList<>(count);
                 for (final LogLine value : allValues) {
