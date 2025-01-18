@@ -366,8 +366,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
         t.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 
         holder.itemView.setBackgroundResource(0);
-        View contentView = holder.itemView.findViewById(R.id.log_content);
-        contentView.setBackgroundResource(position % 2 == 0 ? io.github.muntashirakon.ui.R.drawable.item_semi_transparent : io.github.muntashirakon.ui.R.drawable.item_transparent);
+        holder.contentView.setBackgroundResource(position % 2 == 0 ? io.github.muntashirakon.ui.R.drawable.item_semi_transparent : io.github.muntashirakon.ui.R.drawable.item_transparent);
 
         // Display message
         TextView output = holder.output;
@@ -384,14 +383,21 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
         boolean extraInfoIsVisible = logLine.isExpanded() && logLine.getPid() != -1 // -1 marks lines like 'beginning of /dev/log...'
                 && Prefs.LogViewer.showPidTidTimestamp();
 
-        TextView pidText = holder.pid;
-        pidText.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
-        TextView timestampText = holder.itemView.findViewById(R.id.timestamp_text);
-        timestampText.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
+        TextView infoText = holder.info;
+        infoText.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
 
         if (extraInfoIsVisible) {
-            pidText.setText(logLine.getPid() != -1 ? Integer.toString(logLine.getPid()) : null);
-            timestampText.setText(logLine.getTimestamp());
+            StringBuilder sb = new StringBuilder(logLine.getTimestamp());
+            if (logLine.getPid() >= 0) {
+                sb.append(" • ").append(logLine.getPid());
+            }
+            if (logLine.getUidOwner() != null) {
+                sb.append(" • ").append(logLine.getUidOwner());
+            }
+            if (logLine.getPackageName() != null) {
+                sb.append(" • ").append(logLine.getPackageName());
+            }
+            infoText.setText(sb);
         }
 
         tag.setTextColor(getOrCreateTagColor(context, logLine.getTagName()));
@@ -402,7 +408,8 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
             if (isInSelectionMode()) {
                 toggleSelection(position);
             } else {
-                logLine.setExpanded(!logLine.isExpanded());
+                LogLine line = holder.logLine;
+                line.setExpanded(!line.isExpanded());
                 notifyItemChanged(position);
             }
         });
@@ -425,14 +432,14 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
                     .setIcon(io.github.muntashirakon.ui.R.drawable.ic_search)
                     .setOnMenuItemClickListener(menuItem -> {
                         if (mSearchByClickListener != null) {
-                            return mSearchByClickListener.onSearchByClick(menuItem, logLine);
+                            return mSearchByClickListener.onSearchByClick(menuItem, holder.logLine);
                         }
                         return true;
                     });
             menu.add(R.string.copy_to_clipboard)
                     .setIcon(R.drawable.ic_content_copy)
                     .setOnMenuItemClickListener(menuItem -> {
-                        Utils.copyToClipboard(context, null, logLine.getOriginalLine());
+                        Utils.copyToClipboard(context, null, holder.logLine.getOriginalLine());
                         return true;
                     });
             menu.add(R.string.item_select)
@@ -591,17 +598,19 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
 
     public static class ViewHolder extends MultiSelectionView.ViewHolder {
         LogLine logLine;
+        View contentView;
         TextView logLevel;
         TextView tag;
         TextView output;
-        TextView pid;
+        TextView info;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            contentView = itemView.findViewById(R.id.log_content);
             logLevel = itemView.findViewById(R.id.log_level_text);
             tag = itemView.findViewById(R.id.tag_text);
             output = itemView.findViewById(R.id.log_output_text);
-            pid = itemView.findViewById(R.id.pid_text);
+            info = itemView.findViewById(R.id.info);
         }
 
         public interface OnSearchByClickListener {

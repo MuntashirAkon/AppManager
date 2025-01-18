@@ -40,26 +40,15 @@
                 android:layout_height="wrap_content">
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/timestamp_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:paddingEnd="5dp"
-                    android:textAppearance="@style/TextAppearance.AppTheme.LabelSmaller"
-                    android:typeface="monospace"
-                    tools:ignore="RtlSymmetry,SmallSp"
-                    tools:text="@tools:sample/date/ddmmyy" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/pid_text"
+                    android:id="@+id/info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
                     android:maxLines="1"
-                    android:paddingEnd="5dp"
                     android:textAppearance="@style/TextAppearance.AppTheme.LabelSmaller"
                     android:typeface="monospace"
                     tools:ignore="RtlSymmetry,SmallSp"
-                    tools:text="6177" />
+                    tools:text="01-18 14:49:23.054 • 781 • shell • com.android.shell" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
