@@ -37,7 +37,9 @@ public class SearchCriteria {
     };
 
     public static final String PID_KEYWORD = TYPE_PID + ":";
-    public static final String TAG_KEYWORD = TYPE_TAG + ":";
+    public static final String PKG_KEYWORD = TYPE_PKG + "=:";
+    public static final String TAG_KEYWORD = TYPE_TAG + "=:";
+    public static final String UID_KEYWORD = TYPE_UID + "=:";
 
     @Nullable
     public final String query;

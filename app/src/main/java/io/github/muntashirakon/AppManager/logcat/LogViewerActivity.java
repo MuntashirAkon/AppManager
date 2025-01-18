@@ -469,18 +469,41 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
                 .setNegativeButton(R.string.close, null)
                 .show();
 
+        TextInputLayout pkg = view.findViewById(R.id.search_by_pkg);
         TextInputLayout tag = view.findViewById(R.id.search_by_tag);
+        TextInputLayout uid = view.findViewById(R.id.search_by_uid);
         TextInputLayout pid = view.findViewById(R.id.search_by_pid);
 
+        if (logLine.getPackageName() == null) {
+            pkg.setVisibility(View.GONE);
+        }
+        if (logLine.getUidOwner() == null) {
+            uid.setVisibility(View.GONE);
+        }
+
+        TextView pkgText = pkg.getEditText();
         TextView tagText = tag.getEditText();
+        TextView uidText = uid.getEditText();
         TextView pidText = pid.getEditText();
 
+        Objects.requireNonNull(pkgText).setText(logLine.getPackageName());
         Objects.requireNonNull(tagText).setText(logLine.getTagName());
+        Objects.requireNonNull(uidText).setText(String.format(Locale.ROOT, "%s (%d)", logLine.getUidOwner(), logLine.getUid()));
         Objects.requireNonNull(pidText).setText(String.valueOf(logLine.getPid()));
+
+        pkg.setEndIconOnClickListener(v -> {
+            setSearchQuery(SearchCriteria.PKG_KEYWORD + logLine.getPackageName());
+            dialog.dismiss();
+        });
 
         tag.setEndIconOnClickListener(v -> {
             String tagQuery = (logLine.getTagName().contains(" ")) ? ('"' + logLine.getTagName() + '"') : logLine.getTagName();
             setSearchQuery(SearchCriteria.TAG_KEYWORD + tagQuery);
+            dialog.dismiss();
+        });
+
+        uid.setEndIconOnClickListener(v -> {
+            setSearchQuery(SearchCriteria.UID_KEYWORD + logLine.getUidOwner());
             dialog.dismiss();
         });
 

@@ -10,6 +10,23 @@
     android:paddingHorizontal="@dimen/padding_medium">
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_by_pkg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/package_name"
+        app:hintEnabled="true"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_search">
+
+        <io.github.muntashirakon.widget.TextInputTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            tools:text="@tools:sample/full_names" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/search_by_tag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,6 +40,23 @@
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
             tools:text="@tools:sample/full_names" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_by_uid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/file_owner_id"
+        app:hintEnabled="true"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_search">
+
+        <io.github.muntashirakon.widget.TextInputTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            tools:text="@tools:sample/us_zipcodes" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
