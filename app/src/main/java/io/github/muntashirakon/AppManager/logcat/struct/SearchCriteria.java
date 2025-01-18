@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.logcat.struct;
 
+import android.os.Build;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -19,8 +20,24 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 // Copyright 2012 Nolan Lawson
 public class SearchCriteria {
-    public static final String PID_KEYWORD = "pid:";
-    public static final String TAG_KEYWORD = "tag:";
+
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({TYPE_MSG, TYPE_PID, TYPE_PKG, TYPE_TAG, TYPE_UID})
+    private @interface FilterType {
+    }
+
+    private static final String TYPE_MSG = "msg";
+    private static final String TYPE_PID = "pid";
+    private static final String TYPE_PKG = "pkg";
+    private static final String TYPE_TAG = "tag";
+    private static final String TYPE_UID = "uid";
+
+    private static final String[] TYPES = new String[]{
+            TYPE_MSG, TYPE_PID, TYPE_PKG, TYPE_TAG, TYPE_UID,
+    };
+
+    public static final String PID_KEYWORD = TYPE_PID + ":";
+    public static final String TAG_KEYWORD = TYPE_TAG + ":";
 
     @Nullable
     public final String query;
@@ -111,21 +128,6 @@ public class SearchCriteria {
         return true;
     }
 
-    @Retention(RetentionPolicy.SOURCE)
-    @StringDef({TYPE_MSG, TYPE_PID, TYPE_PKG, TYPE_PROC, TYPE_TAG})
-    private @interface FilterType {
-    }
-
-    private static final String TYPE_MSG = "msg";
-    private static final String TYPE_PID = "pid";
-    private static final String TYPE_PKG = "pkg";
-    private static final String TYPE_PROC = "proc";
-    private static final String TYPE_TAG = "tag";
-
-    private static final String[] TYPES = new String[]{
-            TYPE_MSG, TYPE_PID, TYPE_TAG
-    };
-
     private static class Filter {
         @FilterType
         private final String mType;
@@ -195,6 +197,11 @@ public class SearchCriteria {
                     break;
                 }
                 case TYPE_PKG: {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                        // Package name is not available for these versions
+                        // Use match-all
+                        return true;
+                    }
                     String packageName = logLine.getPackageName();
                     if (mRegex) {
                         matches = matchPattern((Pattern) mValue, packageName);
@@ -203,12 +210,21 @@ public class SearchCriteria {
                     }
                     break;
                 }
-                case TYPE_PROC: {
-                    String processName = logLine.getProcessName();
+                case TYPE_UID: {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                        // UID is not available for these versions
+                        // Use match-all
+                        return true;
+                    }
+                    String owner = logLine.getUidOwner();
+                    int uid = logLine.getUid();
                     if (mRegex) {
-                        matches = matchPattern((Pattern) mValue, processName);
+                        Pattern p = (Pattern) mValue;
+                        matches = matchPattern(p, owner) || matchPattern(p, String.valueOf(uid));
                     } else {
-                        matches = matchQuery((String) mValue, processName, mExact);
+                        if (mValue instanceof Integer) {
+                            matches = uid == ((int) mValue);
+                        } else matches = matchQuery((String) mValue, owner, mExact);
                     }
                     break;
                 }
@@ -236,9 +252,13 @@ public class SearchCriteria {
                 return Pattern.compile(Pattern.quote(value));
             }
             switch (mType) {
+                case TYPE_UID: {
+                    if (TextUtils.isDigitsOnly(value)) {
+                        return Integer.parseInt(value);
+                    } // else fallthrough
+                }
                 case TYPE_MSG:
                 case TYPE_PKG:
-                case TYPE_PROC:
                 case TYPE_TAG: {
                     return mExact ? value : value.toLowerCase(Locale.ROOT);
                 }

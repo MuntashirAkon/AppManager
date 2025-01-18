@@ -15,6 +15,39 @@ import io.github.muntashirakon.AppManager.ipc.RemoteProcess;
 import io.github.muntashirakon.AppManager.ipc.RemoteProcessImpl;
 
 public final class ProcessCompat {
+    /**
+     * Defines the start of a range of UIDs (and GIDs), going from this
+     * number to {@link #LAST_APPLICATION_UID} that are reserved for assigning
+     * to applications.
+     */
+    public static final int FIRST_APPLICATION_UID = android.os.Process.FIRST_APPLICATION_UID;
+
+    /**
+     * Last of application-specific UIDs starting at
+     * {@link #FIRST_APPLICATION_UID}.
+     */
+    public static final int LAST_APPLICATION_UID = android.os.Process.LAST_APPLICATION_UID;
+
+    /**
+     * First uid used for fully isolated sandboxed processes spawned from an app zygote
+     */
+    public static final int FIRST_APP_ZYGOTE_ISOLATED_UID = 90000;
+
+    /**
+     * Last uid used for fully isolated sandboxed processes spawned from an app zygote
+     */
+    public static final int LAST_APP_ZYGOTE_ISOLATED_UID = 98999;
+
+    /**
+     * First uid used for fully isolated sandboxed processes (with no permissions of their own)
+     */
+    public static final int FIRST_ISOLATED_UID = 99000;
+
+    /**
+     * Last uid used for fully isolated sandboxed processes (with no permissions of their own)
+     */
+    public static final int LAST_ISOLATED_UID = 99999;
+
     public static Process exec(@Nullable String[] cmd, @Nullable String[] env, @Nullable File dir) throws IOException {
         if (LocalServices.alive()) {
             try {

@@ -2,7 +2,10 @@
 
 package io.github.muntashirakon.AppManager.logcat.struct;
 
+import android.os.RemoteException;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.LruCache;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,8 +14,10 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
 import io.github.muntashirakon.AppManager.logcat.reader.ScrubberUtils;
+import io.github.muntashirakon.AppManager.users.Owners;
 
 
 // Copyright 2012 Nolan Lawson
@@ -31,8 +36,8 @@ public class LogLine {
     private static final Pattern LOG_PATTERN = Pattern.compile(
             // Timestamp
             "(\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}\\.\\d{3})\\s+" +
-                    // PID
-                    "(\\d+)\\s+" +
+                    // UID PID
+                    "(.+\\d+)\\s+" +
                     // TID
                     "(\\d+)\\s+" +
                     // Log level
@@ -137,11 +142,12 @@ public class LogLine {
     private String mLogOutput;
     private int mPid = -1;
     private int mTid = -1;
+    private int mUid = -1;
+    @Nullable
+    private String mUidOwner;
     @Nullable
     private String mPackageName;
 
-    @Nullable
-    private String mProcessName;
     private boolean mExpanded = false;
 
     public LogLine(@NonNull String originalLine) {
@@ -200,6 +206,23 @@ public class LogLine {
         mTid = tid;
     }
 
+    public int getUid() {
+        return mUid;
+    }
+
+    public void setUid(int uid) {
+        mUid = uid;
+    }
+
+    @Nullable
+    public String getUidOwner() {
+        return mUidOwner;
+    }
+
+    public void setUidOwner(@Nullable String owner) {
+        mUidOwner = owner;
+    }
+
     @Nullable
     public String getPackageName() {
         return mPackageName;
@@ -207,15 +230,6 @@ public class LogLine {
 
     public void setPackageName(@Nullable String packageName) {
         mPackageName = packageName;
-    }
-
-    @Nullable
-    public String getProcessName() {
-        return mProcessName;
-    }
-
-    public void setProcessName(@Nullable String processName) {
-        mProcessName = processName;
     }
 
     @Nullable
@@ -279,8 +293,17 @@ public class LogLine {
         }
         // Group 1: Timestamp
         logLine.setTimestamp(Objects.requireNonNull(matcher.group(1)));
-        // Group 2: PID
-        logLine.setPid(Integer.parseInt(matcher.group(2)));
+        // Group 2: UID PID
+        String[] uidPid = Objects.requireNonNull(matcher.group(2)).split("\\s+", 2);
+        if (uidPid.length == 2) {
+            String owner = uidPid[0];
+            int uid = Owners.parseUid(owner);
+            logLine.setUidOwner(owner);
+            logLine.setUid(uid);
+            // Set package name
+            logLine.setPackageName(retrievePackageName(uid));
+        }
+        logLine.setPid(Integer.parseInt(uidPid[uidPid.length == 2 ? 1 : 0]));
         // Group 3: TID
         logLine.setTid(Integer.parseInt(matcher.group(3)));
         // Group 4: Log level
@@ -290,5 +313,54 @@ public class LogLine {
         // Group 6: Message
         logLine.setLogOutput(Objects.requireNonNull(matcher.group(6)));
         return true;
+    }
+
+    private static final LruCache<Integer, String> sUidPackageNameCache = new LruCache<>(300);
+
+    @Nullable
+    private static String retrievePackageName(int uid) {
+        if (uid < 0) {
+            return null;
+        }
+        String packageName = sUidPackageNameCache.get(uid);
+        if (packageName != null) {
+            return TextUtils.isEmpty(packageName) ? null : packageName;
+        }
+        // TODO: 1/18/25
+        // Assumptions for multiple UIDs:
+        // 1. Process name likely matches/starts with the package name
+        // 2. Shortest package name is preferred (the primary package in a shared UID is likely to have the shortest package name)
+        // Ignored assumption:
+        // 3. Primary package is likely to be installed first
+        try {
+            String[] packages = PackageManagerCompat.getPackageManager().getPackagesForUid(uid);
+            String selectedPackage = null;
+            if (packages == null || packages.length == 0) {
+                selectedPackage = null;
+            } else {
+                if (packages.length == 1) {
+                    selectedPackage = packages[0];
+                } else {
+                    int shortestIndex = 0;
+                    for (int i = 0; i < packages.length; ++i) {
+                        if (packages[shortestIndex].length() > packages[i].length()) {
+                            shortestIndex = i;
+                        }
+                    }
+                    if (selectedPackage == null) {
+                        selectedPackage = packages[shortestIndex];
+                    }
+                }
+            }
+            if (selectedPackage != null) {
+                sUidPackageNameCache.put(uid, selectedPackage);
+            } else {
+                // Still cache this data
+                sUidPackageNameCache.put(uid, "");
+            }
+            return selectedPackage;
+        } catch (RemoteException e) {
+            return null;
+        }
     }
 }

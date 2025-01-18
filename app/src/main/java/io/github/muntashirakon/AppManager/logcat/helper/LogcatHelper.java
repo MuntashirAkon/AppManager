@@ -83,7 +83,7 @@ public class LogcatHelper {
         // - uid: Display UID (Android 7 onwards)
         // - descriptive: Descriptive output, currently NOP (Android 8 onwards)
         // * UID is not guaranteed
-        List<String> args = new ArrayList<>(Arrays.asList("logcat", "-v", "threadtime"));
+        List<String> args = new ArrayList<>(Arrays.asList("logcat", "-v", "threadtime", "-v", "uid"));
 
         if (buffers == LOG_ID_ALL) {
             args.add("-b");
