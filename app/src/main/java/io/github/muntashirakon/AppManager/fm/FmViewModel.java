@@ -44,6 +44,7 @@ import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.utils.AlphanumComparator;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -501,7 +502,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             return;
         }
         // Sort by name first
-        Collections.sort(filteredList, (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
+        Collections.sort(filteredList, (o1, o2) -> AlphanumComparator.compareStringIgnoreCase(o1.getName(), o2.getName()));
         if (mSortBy == FmListOptions.SORT_BY_NAME) {
             if (mReverseSort) {
                 Collections.reverse(filteredList);
