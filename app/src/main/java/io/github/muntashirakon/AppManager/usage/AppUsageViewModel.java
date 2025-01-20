@@ -104,10 +104,11 @@ public class AppUsageViewModel extends AndroidViewModel {
     }
 
     private void sortItems() {
+        Collator collator = Collator.getInstance();
         Collections.sort(mPackageUsageInfoList, ((o1, o2) -> {
             switch (mSortOrder) {
                 case SortOrder.SORT_BY_APP_LABEL:
-                    return Collator.getInstance().compare(o1.appLabel, o2.appLabel);
+                    return collator.compare(o1.appLabel, o2.appLabel);
                 case SortOrder.SORT_BY_LAST_USED:
                     return -Long.compare(o1.lastUsageTime, o2.lastUsageTime);
                 case SortOrder.SORT_BY_MOBILE_DATA:

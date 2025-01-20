@@ -67,8 +67,6 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Path;
 
 public class MainViewModel extends AndroidViewModel implements ListOptions.ListOptionActions {
-    private static final Collator sCollator = Collator.getInstance();
-
     private final PackageManager mPackageManager;
     private final PackageIntentReceiver mPackageObserver;
     private final Handler mHandler;
@@ -522,10 +520,11 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 sortApplicationList(MainListOptions.SORT_BY_APP_LABEL, false);
             }
             int mode = reverse ? -1 : 1;
+            Collator collator = Collator.getInstance();
             Collections.sort(mApplicationItems, (o1, o2) -> {
                 switch (sortBy) {
                     case MainListOptions.SORT_BY_APP_LABEL:
-                        return mode * sCollator.compare(o1.label, o2.label);
+                        return mode * collator.compare(o1.label, o2.label);
                     case MainListOptions.SORT_BY_PACKAGE_NAME:
                         return mode * o1.packageName.compareTo(o2.packageName);
                     case MainListOptions.SORT_BY_DOMAIN:

@@ -273,7 +273,7 @@ public class DeviceInfo2 implements LocalizedString {
                 } else featureStrings.add(info.name);
             }
         }
-        Collections.sort(featureStrings, (o1, o2) -> String.CASE_INSENSITIVE_ORDER.compare(o1.toString(), o2.toString()));
+        Collections.sort(featureStrings, (o1, o2) -> o1.toString().compareToIgnoreCase(o2.toString()));
         builder.append(TextUtilsCompat.joinSpannable("\n", featureStrings)).append("\n");
         return builder;
     }

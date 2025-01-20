@@ -37,6 +37,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -305,7 +306,8 @@ public class InstallerOptionsFragment extends DialogFragment {
                 for (String packageName : packageNameLabelMap.keySet()) {
                     appInfo.add(new Pair<>(packageName, packageNameLabelMap.get(packageName)));
                 }
-                Collections.sort(appInfo, (o1, o2) -> o1.second.toString().compareTo(o2.second.toString()));
+                Collator collator = Collator.getInstance();
+                Collections.sort(appInfo, (o1, o2) -> collator.compare(o1.second.toString(), o2.second.toString()));
                 mPackageNameLabelPairLiveData.postValue(appInfo);
             });
         }
