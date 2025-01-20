@@ -17,10 +17,6 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.io.Path;
 
-import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
-
 @WorkerThread
 class VerifyOp implements Closeable {
     static final String TAG = VerifyOp.class.getSimpleName();
@@ -35,6 +31,8 @@ class VerifyOp implements Closeable {
     private final BackupFiles.BackupFile mBackupFile;
     @NonNull
     private final Crypto mCrypto;
+    @NonNull
+    private final String mExtension;
     @NonNull
     private final BackupFiles.Checksum mChecksum;
     private final List<Path> mDecryptedFiles = new ArrayList<>();
@@ -51,6 +49,7 @@ class VerifyOp implements Closeable {
             throw new BackupException("Could not read metadata. Possibly due to a malformed json file.", e);
         }
         // Setup crypto
+        mExtension = CryptoUtils.getExtension(mMetadata.crypto);
         if (!CryptoUtils.isAvailable(mMetadata.crypto)) {
             throw new BackupException("Mode " + mMetadata.crypto + " is currently unavailable.");
         }
@@ -134,7 +133,7 @@ class VerifyOp implements Closeable {
     }
 
     private void verifyApkFiles() throws BackupException {
-        Path[] backupSourceFiles = getSourceFiles(mBackupPath);
+        Path[] backupSourceFiles = BackupUtils.getSourceFiles(mBackupPath, mExtension);
         if (backupSourceFiles.length == 0) {
             // No APK files found
             throw new BackupException("Backup does not contain any APK files.");
@@ -152,7 +151,7 @@ class VerifyOp implements Closeable {
     }
 
     private void verifyKeyStore() throws BackupException {
-        Path[] keyStoreFiles = getKeyStoreFiles(mBackupPath);
+        Path[] keyStoreFiles = BackupUtils.getKeyStoreFiles(mBackupPath, mExtension);
         if (keyStoreFiles.length == 0) {
             throw new BackupException("KeyStore files do not exist.");
         }
@@ -172,7 +171,7 @@ class VerifyOp implements Closeable {
         Path[] dataFiles;
         String checksum;
         for (int i = 0; i < mMetadata.dataDirs.length; ++i) {
-            dataFiles = getDataFiles(mBackupPath, i);
+            dataFiles = BackupUtils.getDataFiles(mBackupPath, i, mExtension);
             if (dataFiles.length == 0) {
                 throw new BackupException("No data files at index " + i + ".");
             }
@@ -224,24 +223,5 @@ class VerifyOp implements Closeable {
                     "\nFound: " + checksum +
                     "\nRequired: " + mChecksum.get(rulesFile.getName()));
         }
-    }
-
-    @NonNull
-    private Path[] getSourceFiles(@NonNull Path backupPath) {
-        String mode = CryptoUtils.getExtension(mMetadata.crypto);
-        return backupPath.listFiles((dir, name) -> name.startsWith(SOURCE_PREFIX) && name.endsWith(mode));
-    }
-
-    @NonNull
-    private Path[] getKeyStoreFiles(@NonNull Path backupPath) {
-        String mode = CryptoUtils.getExtension(mMetadata.crypto);
-        return backupPath.listFiles((dir, name) -> name.startsWith(KEYSTORE_PREFIX) && name.endsWith(mode));
-    }
-
-    @NonNull
-    private Path[] getDataFiles(@NonNull Path backupPath, int index) {
-        String mode = CryptoUtils.getExtension(mMetadata.crypto);
-        final String dataPrefix = DATA_PREFIX + index;
-        return backupPath.listFiles((dir, name) -> name.startsWith(dataPrefix) && name.endsWith(mode));
     }
 }

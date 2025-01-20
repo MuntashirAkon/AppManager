@@ -2,6 +2,10 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
+import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
+
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.content.Context;
@@ -69,6 +73,25 @@ public final class BackupUtils {
         // We don't need to check further at this stage.
         // It's the caller's job to check the contents if needed.
         return backupPaths;
+    }
+
+    @NonNull
+    public static Path[] getSourceFiles(@NonNull Path backupPath, @NonNull String ext) {
+        Path[] paths = backupPath.listFiles((dir, name) -> name.startsWith(SOURCE_PREFIX) && name.endsWith(ext));
+        return Paths.getSortedPaths(paths);
+    }
+
+    @NonNull
+    public static Path[] getKeyStoreFiles(@NonNull Path backupPath, @NonNull String ext) {
+        Path[] paths = backupPath.listFiles((dir, name) -> name.startsWith(KEYSTORE_PREFIX) && name.endsWith(ext));
+        return Paths.getSortedPaths(paths);
+    }
+
+    @NonNull
+    public static Path[] getDataFiles(@NonNull Path backupPath, int index, @NonNull String ext) {
+        final String dataPrefix = DATA_PREFIX + index;
+        Path[] paths = backupPath.listFiles((dir, name) -> name.startsWith(dataPrefix) && name.endsWith(ext));
+        return Paths.getSortedPaths(paths);
     }
 
     @WorkerThread
