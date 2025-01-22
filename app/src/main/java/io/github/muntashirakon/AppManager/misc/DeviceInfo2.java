@@ -84,8 +84,16 @@ public class DeviceInfo2 implements LocalizedString {
     public boolean hasRoot;
     public int selinux;
     public String encryptionStatus;
+    public String dmVerity; // enforcing, disabled, eio, ...
+    public String verifiedBootState; // green (verified), yellow (self-signed), orange (unverified), red (failed) ?: orange (unverified)
+    public String verifiedBootStateString;
+    public String avbVersion;
+    public String bootloaderState;
+    public boolean debuggable;
     public final String patchLevel;
     public final Provider[] securityProviders = Security.getProviders();
+    public final String hardwareBackedFeatures;
+    public final String strongBoxBackedFeatures;
     // CPU Info
     @Nullable
     public String cpuHardware;
@@ -135,6 +143,9 @@ public class DeviceInfo2 implements LocalizedString {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             patchLevel = getSecurityPatch();
         } else patchLevel = null;
+        features = mPm.getSystemAvailableFeatures();
+        hardwareBackedFeatures = getHardwareBackedFeatures();
+        strongBoxBackedFeatures = getStrongBoxBackedFeatures();
     }
 
     @WorkerThread
@@ -142,6 +153,14 @@ public class DeviceInfo2 implements LocalizedString {
         hasRoot = RunnerUtils.isRootAvailable();
         selinux = getSelinuxStatus();
         encryptionStatus = getEncryptionStatus();
+        if (mPm.hasSystemFeature(PackageManager.FEATURE_VERIFIED_BOOT)) {
+            verifiedBootState = SystemProperties.get("ro.boot.verifiedbootstate", "");
+            verifiedBootStateString = getVerifiedBootStateString(verifiedBootState);
+            dmVerity = SystemProperties.get("ro.boot.veritymode", "");
+            avbVersion = SystemProperties.get("ro.boot.avb_version", "");
+            bootloaderState = SystemProperties.get("ro.boot.vbmeta.device_state", "");
+        } else verifiedBootState = null;
+        debuggable = "1".equals(SystemProperties.get("ro.debuggable", "0"));
         cpuHardware = getCpuHardware();
         availableProcessors = Runtime.getRuntime().availableProcessors();
         openGlEsVersion = Utils.getGlEsVersion(mActivityManager.getDeviceConfigurationInfo().reqGlEsVersion);
@@ -164,7 +183,6 @@ public class DeviceInfo2 implements LocalizedString {
         for (UserInfo info : users) {
             userPackages.put(info.id, getPackageStats(info.id));
         }
-        features = mPm.getSystemAvailableFeatures();
     }
 
     @Override
@@ -190,21 +208,72 @@ public class DeviceInfo2 implements LocalizedString {
         builder.append("\n");
         // Security
         builder.append("\n").append(getTitleText(ctx, R.string.security)).append("\n");
-        builder.append(getStyledKeyValue(ctx, R.string.root, String.valueOf(hasRoot))).append("\n");
-        if (selinux != 2) {
-            builder.append(getStyledKeyValue(ctx, R.string.selinux, getString(selinux == 1 ?
-                    R.string.enforcing : R.string.permissive))).append("\n");
-        }
-        builder.append(getStyledKeyValue(ctx, R.string.encryption, encryptionStatus)).append("\n");
         if (patchLevel != null) {
             builder.append(getStyledKeyValue(ctx, R.string.patch_level, patchLevel)).append("\n");
         }
+        builder.append(getStyledKeyValue(ctx, R.string.root, String.valueOf(hasRoot))).append(", ")
+                .append(getStyledKeyValue(ctx, R.string.debuggable, String.valueOf(debuggable)))
+                .append("\n");
+        if (selinux != 2) {
+            builder.append(getStyledKeyValue(ctx, R.string.selinux, getString(selinux == 1 ?
+                    R.string.enforcing : R.string.permissive))).append(", ");
+        }
+        builder.append(getStyledKeyValue(ctx, R.string.encryption, encryptionStatus)).append("\n");
+        boolean verifiedBoot = false;
+        if (!TextUtils.isEmpty(verifiedBootState)) {
+            verifiedBoot = true;
+            builder.append(getStyledKeyValue(ctx, R.string.verified_boot, verifiedBootState))
+                    .append(" (").append(verifiedBootStateString).append(")");
+        }
+        if (!TextUtils.isEmpty(avbVersion)) {
+            if (verifiedBoot) {
+                builder.append(", ");
+            }
+            builder.append(getStyledKeyValue(ctx, R.string.android_verified_bootloader_version, avbVersion)).append("\n");
+        } else if (verifiedBoot) {
+            builder.append("\n");
+        }
+        boolean isDmVerity = false;
+        if (!TextUtils.isEmpty(dmVerity)) {
+            isDmVerity = true;
+            builder.append(getStyledKeyValue(ctx, "dm-verity", dmVerity));
+        }
+        if (!TextUtils.isEmpty(bootloaderState)) {
+            if (isDmVerity) {
+                builder.append(", ");
+            }
+            builder.append(getStyledKeyValue(ctx, R.string.bootloader, bootloaderState)).append("\n");
+        } else if (isDmVerity) {
+            builder.append("\n");
+        }
         List<CharSequence> securityProviders = new ArrayList<>();
+        boolean hasAndroidKeyStore = false;
         for (Provider provider : this.securityProviders) {
+            if ("AndroidKeyStore".equals(provider.getName())) {
+                hasAndroidKeyStore = true;
+            }
             securityProviders.add(provider.getName() + " (v" + provider.getVersion() + ")");
         }
         builder.append(getStyledKeyValue(ctx, R.string.security_providers,
-                TextUtilsCompat.joinSpannable(", ", securityProviders))).append("\n");
+                TextUtilsCompat.joinSpannable(", ", securityProviders))).append(".\n");
+        // Android KeyStore
+        if (hasAndroidKeyStore) {
+            builder.append("\n").append(getTitleText(ctx, "Android KeyStore")).append("\n");
+        }
+        StringBuilder sb = new StringBuilder("Software");
+        if (hardwareBackedFeatures != null) {
+            sb.append(", Hardware");
+        }
+        if (strongBoxBackedFeatures != null) {
+            sb.append(", StrongBox");
+        }
+        builder.append(getStyledKeyValue(ctx, R.string.features, sb)).append("\n");
+        if (hardwareBackedFeatures != null) {
+            builder.append("   ").append(getStyledKeyValue(ctx, "Hardware", hardwareBackedFeatures)).append("\n");
+        }
+        if (strongBoxBackedFeatures != null) {
+            builder.append("   ").append(getStyledKeyValue(ctx, "StrongBox", strongBoxBackedFeatures)).append("\n");
+        }
         // CPU info
         builder.append("\n").append(getTitleText(ctx, R.string.cpu)).append("\n");
         if (cpuHardware != null) {
@@ -518,6 +587,80 @@ public class DeviceInfo2 implements LocalizedString {
         } else if ("unencrypted".equals(state)) {
             return getString(R.string.unencrypted);
         } else return getString(R.string.state_unknown);
+    }
+
+    @NonNull
+    private String getVerifiedBootStateString(@NonNull String color) {
+        switch (color) {
+            case "green":
+                return "verified";
+            case "yellow":
+                return "self-signed";
+            case "red":
+                return "failed";
+            case "orange":
+            default:
+                return "unverified";
+        }
+    }
+
+    @Nullable
+    private String getHardwareBackedFeatures() {
+        // We use string instead of PackageManager.FEATURE_HARDWARE_KEYSTORE because it may present
+        // in older devices.
+        FeatureInfo f = getFeature("android.hardware.hardware_keystore");
+        if (f == null) {
+            return null;
+        }
+        int version;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            version = f.version;
+        } else version = 0;
+        if (version < 40) {
+            return getString(R.string.state_unknown);
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("AES, HMAC, ECDSA, RSA");
+        if (version >= 100) {
+            sb.append(", ECDH");
+        }
+        if (version >= 200) {
+            sb.append(", Curve 25519");
+        }
+        return sb.toString();
+    }
+
+    @Nullable
+    private String getStrongBoxBackedFeatures() {
+        // We use string instead of PackageManager.FEATURE_STRONGBOX_KEYSTORE because it may present
+        // in older devices.
+        FeatureInfo f = getFeature("android.hardware.strongbox_keystore");
+        if (f == null) {
+            return null;
+        }
+        int version;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            version = f.version;
+        } else version = 0;
+        if (version < 40) {
+            return getString(R.string.state_unknown);
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("AES, HMAC, ECDSA, RSA");
+        if (version >= 100) {
+            sb.append(", ECDH");
+        }
+        return sb.toString();
+    }
+
+    @Nullable
+    private FeatureInfo getFeature(@NonNull String feature) {
+        for (FeatureInfo info : features) {
+            if (feature.equals(info.name)) {
+                return info;
+            }
+        }
+        return null;
     }
 
     @Nullable

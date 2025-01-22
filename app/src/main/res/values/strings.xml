@@ -1492,4 +1492,6 @@
     <string name="vulkan_version">Vulkan version</string>
     <string name="battery_technology">Technology</string>
     <string name="battery_health">Health</string>
+    <string name="verified_boot">Verified boot</string>
+    <string name="android_verified_bootloader_version">AVB version</string>
 </resources>
