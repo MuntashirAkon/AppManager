@@ -457,6 +457,27 @@ public class Utils {
         return major + "." + minor;
     }
 
+    @Nullable
+    public static String getVulkanVersion(PackageManager pm) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            return null;
+        }
+        // https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/core/java/android/os/GraphicsEnvironment.java;l=193;drc=f80e786d308318894be30d54b93f38034496fc66
+        if (pm.hasSystemFeature(PackageManager.FEATURE_VULKAN_HARDWARE_VERSION, 0x00403000)) {
+            return "1.3";
+        }
+        if (pm.hasSystemFeature(PackageManager.FEATURE_VULKAN_HARDWARE_VERSION, 0x00402000)) {
+            return "1.2";
+        }
+        if (pm.hasSystemFeature(PackageManager.FEATURE_VULKAN_HARDWARE_VERSION, 0x00401000)) {
+            return "1.1";
+        }
+        if (pm.hasSystemFeature(PackageManager.FEATURE_VULKAN_HARDWARE_VERSION, 0x00400000)) {
+            return "1.0";
+        }
+        return null;
+    }
+
     @CheckResult
     @NonNull
     public static byte[] charsToBytes(@NonNull char[] chars) {

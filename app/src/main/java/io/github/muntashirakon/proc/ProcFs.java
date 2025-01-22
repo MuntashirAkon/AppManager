@@ -320,6 +320,7 @@ public class ProcFs {
         return null;
     }
 
+    @Nullable
     private String getStringOrNull(@Nullable Path file) {
         return file != null ? file.getContentAsString(null) : null;
     }

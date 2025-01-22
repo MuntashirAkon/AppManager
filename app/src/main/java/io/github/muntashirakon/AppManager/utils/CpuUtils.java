@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.PowerManager;
 
 import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class CpuUtils {
@@ -16,6 +15,10 @@ public class CpuUtils {
 
     @Keep
     public static native long getClockTicksPerSecond();
+
+    @Keep
+    @Nullable
+    public static native String getCpuModel();
 
     public static PowerManager.WakeLock getPartialWakeLock(String tagPostfix) {
         PowerManager pm = (PowerManager) ContextUtils.getContext().getSystemService(Context.POWER_SERVICE);

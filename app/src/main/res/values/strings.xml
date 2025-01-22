@@ -1489,4 +1489,7 @@
     <string name="activity_name">Activity Name</string>
     <string name="available_memory">Available: %s</string>
     <string name="action_manual">Manual</string>
+    <string name="vulkan_version">Vulkan version</string>
+    <string name="battery_technology">Technology</string>
+    <string name="battery_health">Health</string>
 </resources>
