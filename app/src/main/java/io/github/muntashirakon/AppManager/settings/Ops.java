@@ -29,6 +29,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -47,6 +48,7 @@ import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.session.SessionMonitoringService;
+import io.github.muntashirakon.AppManager.users.Owners;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
@@ -201,11 +203,15 @@ public class Ops {
         if (uid == ROOT_UID) {
             return context.getString(R.string.root);
         }
-        if (uid == SYSTEM_UID) {
-            return context.getString(R.string.system);
-        }
         if (uid == SHELL_UID) {
             return "ADB";
+        }
+        if (uid != Process.myUid()) {
+            String uidStr = Owners.getUidOwnerMap(false).get(uid);
+            if (!TextUtils.isEmpty(uidStr)) {
+                return uidStr.substring(0, 1).toUpperCase(Locale.ROOT)
+                        + (uidStr.length() > 1 ? uidStr.substring(1) : "");
+            }
         }
         return context.getString(R.string.no_root);
     }

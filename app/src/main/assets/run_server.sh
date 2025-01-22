@@ -17,8 +17,12 @@ JAR_PACKAGE_NAME="io.github.muntashirakon.AppManager"
 JAR_MAIN_CLASS="${JAR_PACKAGE_NAME}.server.ServerRunner"
 TMP_PATH="/data/local/tmp"
 EXEC_JAR_PATH=${TMP_PATH}/${JAR_NAME}
+# Ideally, id -u could be used, but it's not supported on older platforms
+# neither are commands like awk or sed, we're only left with grep.
+UID=$(id | grep -oE "uid=[0-9]+" | grep -oE "[0-9]+")
+GID=$(id | grep -oE "gid=[0-9]+" | grep -oE "[0-9]+")
 
-echo "Starting $SERVER_NAME..."
+echo "Starting $SERVER_NAME as $UID:$GID..."
 # Copy am.jar to executable directory
 cp -f ${JAR_PATH} ${EXEC_JAR_PATH}
 if [ $? -ne 0 ]; then
@@ -28,7 +32,7 @@ if [ $? -ne 0 ]; then
 fi
 # Fix permission
 chmod 755 ${EXEC_JAR_PATH}
-chown shell:shell ${EXEC_JAR_PATH}
+chown $UID:$GID ${EXEC_JAR_PATH}
 # Debug log
 echo "Jar path: $JAR_PATH"
 echo "Args: $ARGS"

@@ -167,7 +167,6 @@ public class DeviceInfo2 implements LocalizedString {
         vulkanVersion = Utils.getVulkanVersion(mPm);
         mActivityManager.getMemoryInfo(memoryInfo);
         getBatteryStats(mActivity);
-        // TODO(19/12/20): Get more battery info
         DisplayMetrics displayMetrics = new DisplayMetrics();
         // Actual size
         mDisplay.getRealMetrics(displayMetrics);
