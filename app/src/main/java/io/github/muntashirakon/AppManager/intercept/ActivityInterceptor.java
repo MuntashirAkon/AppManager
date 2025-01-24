@@ -542,7 +542,7 @@ public class ActivityInterceptor extends BaseActivity {
         }
         if (mUseRoot || SelfPermissions.checkCrossUserPermission(mUserHandle, false)) {
             try {
-                return PackageManagerCompat.queryIntentActivities(this, mMutableIntent, 0, mUserHandle);
+                return PackageManagerCompat.queryIntentActivities(this, mMutableIntent, PackageManager.MATCH_ALL, mUserHandle);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
