@@ -279,6 +279,30 @@ public final class UiUtils {
         return (conf.uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
     }
 
+    /**
+     * Fixes focus by forcing Android to focus on the current view and reset
+     */
+    public static void fixFocus(@NonNull View view) {
+        if (!view.hasFocus()) {
+            boolean focusable = view.isFocusable();
+            boolean focusableInTouch = view.isFocusableInTouchMode();
+            if (!focusable) {
+                view.setFocusable(true);
+            }
+            if (!focusableInTouch) {
+                view.setFocusableInTouchMode(true);
+            }
+            view.requestFocus();
+            view.post(view::clearFocus);
+            if (!focusable) {
+                view.setFocusable(false);
+            }
+            if (!focusableInTouch) {
+                view.setFocusableInTouchMode(false);
+            }
+        }
+    }
+
     @SuppressWarnings("deprecation")
     public static void setSystemBarStyle(@NonNull Window window, boolean needLightStatusBar) {
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE

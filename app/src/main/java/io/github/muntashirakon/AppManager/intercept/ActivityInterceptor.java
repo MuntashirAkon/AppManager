@@ -73,6 +73,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
+import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.MaterialAutoCompleteTextView;
 
 // Copyright 2020 Muntashir Al-Islam
@@ -578,60 +579,71 @@ public class ActivityInterceptor extends BaseActivity {
         // Setup identifier
         TextInputLayout idLayout = findViewById(R.id.type_id_layout);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            idLayout.setEndIconOnClickListener(v -> mIdView.setText(UUID.randomUUID().toString()));
+            idLayout.setEndIconOnClickListener(v -> {
+                mIdView.setText(UUID.randomUUID().toString());
+                mIdView.requestFocus();
+            });
         } else idLayout.setVisibility(View.GONE);
 
         // Setup categories
-        findViewById(R.id.intent_categories_add_btn).setOnClickListener(v ->
-                new TextInputDropdownDialogBuilder(this, R.string.category)
-                        .setTitle(R.string.category)
-                        .setDropdownItems(INTENT_CATEGORIES, -1, true)
-                        .setNegativeButton(R.string.cancel, null)
-                        .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
-                            if (!TextUtils.isEmpty(inputText)) {
-                                //noinspection ConstantConditions
-                                mMutableIntent.addCategory(inputText.toString().trim());
-                                mCategoriesAdapter.setDefaultList(mMutableIntent.getCategories());
-                                showTextViewIntentData(null);
-                            }
-                        })
-                        .show());
+        MaterialButton addCategoriesButton = findViewById(R.id.intent_categories_add_btn);
+        addCategoriesButton.setOnClickListener(v -> {
+            UiUtils.fixFocus(addCategoriesButton);
+            new TextInputDropdownDialogBuilder(this, R.string.category)
+                    .setTitle(R.string.category)
+                    .setDropdownItems(INTENT_CATEGORIES, -1, true)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
+                        if (!TextUtils.isEmpty(inputText)) {
+                            //noinspection ConstantConditions
+                            mMutableIntent.addCategory(inputText.toString().trim());
+                            mCategoriesAdapter.setDefaultList(mMutableIntent.getCategories());
+                            showTextViewIntentData(null);
+                        }
+                    })
+                    .show();
+        });
         RecyclerView categoriesRecyclerView = findViewById(R.id.intent_categories);
         categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mCategoriesAdapter = new CategoriesRecyclerViewAdapter(this);
         categoriesRecyclerView.setAdapter(mCategoriesAdapter);
 
         // Setup flags
-        findViewById(R.id.intent_flags_add_btn).setOnClickListener(v ->
-                new TextInputDropdownDialogBuilder(this, R.string.flags)
-                        .setTitle(R.string.flags)
-                        .setDropdownItems(getAllFlags(), -1, true)
-                        .setNegativeButton(R.string.cancel, null)
-                        .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
-                            if (!TextUtils.isEmpty(inputText) && mMutableIntent != null) {
-                                int i = getFlagIndex(String.valueOf(inputText).trim());
-                                if (i >= 0) {
-                                    mMutableIntent.addFlags(INTENT_FLAG_TO_STRING.keyAt(i));
-                                } else {
-                                    try {
-                                        int flag = IntegerCompat.decode(String.valueOf(inputText).trim());
-                                        mMutableIntent.addFlags(flag);
-                                    } catch (NumberFormatException e) {
-                                        return;
-                                    }
+        MaterialButton addFlagsButton = findViewById(R.id.intent_flags_add_btn);
+        addFlagsButton.setOnClickListener(v -> {
+            UiUtils.fixFocus(addFlagsButton);
+            new TextInputDropdownDialogBuilder(this, R.string.flags)
+                    .setTitle(R.string.flags)
+                    .setDropdownItems(getAllFlags(), -1, true)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
+                        if (!TextUtils.isEmpty(inputText) && mMutableIntent != null) {
+                            int i = getFlagIndex(String.valueOf(inputText).trim());
+                            if (i >= 0) {
+                                mMutableIntent.addFlags(INTENT_FLAG_TO_STRING.keyAt(i));
+                            } else {
+                                try {
+                                    int flag = IntegerCompat.decode(String.valueOf(inputText).trim());
+                                    mMutableIntent.addFlags(flag);
+                                } catch (NumberFormatException e) {
+                                    return;
                                 }
-                                mFlagsAdapter.setDefaultList(getFlags());
-                                showTextViewIntentData(null);
                             }
-                        })
-                        .show());
+                            mFlagsAdapter.setDefaultList(getFlags());
+                            showTextViewIntentData(null);
+                        }
+                    })
+                    .show();
+        });
         RecyclerView flagsRecyclerView = findViewById(R.id.intent_flags);
         flagsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mFlagsAdapter = new FlagsRecyclerViewAdapter(this);
         flagsRecyclerView.setAdapter(mFlagsAdapter);
 
         // Setup extras
-        findViewById(R.id.intent_extras_add_btn).setOnClickListener(v -> {
+        MaterialButton addExtrasButton = findViewById(R.id.intent_extras_add_btn);
+        addExtrasButton.setOnClickListener(v -> {
+            UiUtils.fixFocus(addExtrasButton);
             AddIntentExtraFragment fragment = new AddIntentExtraFragment();
             fragment.setOnSaveListener((mode, prefItem) -> {
                 if (mMutableIntent != null) {
@@ -665,11 +677,13 @@ public class ActivityInterceptor extends BaseActivity {
 
         // Send Intent on clicking the resend intent button
         mResendIntentButton.setOnClickListener(v -> {
+            UiUtils.fixFocus(mResendIntentButton);
             if (mMutableIntent == null) return;
             launchIntent(mMutableIntent, mRequestedComponent == null);
         });
         // Reset Intent data on clicking the reset intent button
         mResetIntentButton.setOnClickListener(v -> {
+            UiUtils.fixFocus(mResetIntentButton);
             mAreTextWatchersActive = false;
             showInitialIntent(false);
             mAreTextWatchersActive = true;
@@ -1105,6 +1119,7 @@ public class ActivityInterceptor extends BaseActivity {
             holder.title.setText(category);
             holder.title.setTextIsSelectable(true);
             holder.actionIcon.setOnClickListener(v -> {
+                UiUtils.fixFocus(holder.actionIcon);
                 if (mActivity.mMutableIntent != null) {
                     mActivity.mMutableIntent.removeCategory(category);
                     setDefaultList(mActivity.mMutableIntent.getCategories());
@@ -1155,6 +1170,7 @@ public class ActivityInterceptor extends BaseActivity {
             holder.title.setText(flagName);
             holder.title.setTextIsSelectable(true);
             holder.actionIcon.setOnClickListener(v -> {
+                UiUtils.fixFocus(holder.actionIcon);
                 int i = INTENT_FLAG_TO_STRING.indexOfValue(flagName);
                 if (i >= 0 && mActivity.mMutableIntent != null) {
                     IntentCompat.removeFlags(mActivity.mMutableIntent, INTENT_FLAG_TO_STRING.keyAt(i));
@@ -1208,6 +1224,7 @@ public class ActivityInterceptor extends BaseActivity {
             holder.subtitle.setText(extraItem.second.toString());
             holder.subtitle.setTextIsSelectable(true);
             holder.actionIcon.setOnClickListener(v -> {
+                UiUtils.fixFocus(holder.actionIcon);
                 if (mActivity.mMutableIntent != null) {
                     mActivity.mMutableIntent.removeExtra(extraItem.first);
                     mActivity.showTextViewIntentData(null);
@@ -1274,6 +1291,7 @@ public class ActivityInterceptor extends BaseActivity {
             holder.icon.setTag(tag);
             ImageLoader.getInstance().displayImage(tag, info, holder.icon);
             holder.actionIcon.setOnClickListener(v -> {
+                UiUtils.fixFocus(holder.actionIcon);
                 Intent intent = new Intent(mActivity.mMutableIntent);
                 intent.setClassName(info.packageName, activityName);
                 IntentCompat.removeFlags(intent, Intent.FLAG_ACTIVITY_FORWARD_RESULT);
