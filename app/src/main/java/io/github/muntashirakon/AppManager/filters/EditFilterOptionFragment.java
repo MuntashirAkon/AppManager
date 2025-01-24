@@ -87,15 +87,15 @@ public class EditFilterOptionFragment extends DialogFragment {
         }
 
         protected WrappedFilterOption(@NonNull Parcel in) {
-            logic = Objects.requireNonNull(in.readString()).charAt(0);
             filterOption = FilterOptions.create(Objects.requireNonNull(in.readString()));
+            filterOption.id = in.readInt();
             filterOption.setKeyValue(Objects.requireNonNull(in.readString()), in.readString());
         }
 
         @Override
         public void writeToParcel(@NonNull Parcel dest, int flags) {
-            dest.writeString(logic + "");
             dest.writeString(filterOption.type);
+            dest.writeInt(filterOption.id);
             dest.writeString(filterOption.getKey());
             dest.writeString(filterOption.getValue());
         }
@@ -260,7 +260,6 @@ public class EditFilterOptionFragment extends DialogFragment {
                     else {
                         newWrappedFilterOption = new WrappedFilterOption();
                     }
-                    newWrappedFilterOption.logic = '&';
                     newWrappedFilterOption.filterOption = mCurrentFilterOption;
                     Editable editable = mGenericEditText.getText();
                     try {

@@ -56,6 +56,8 @@ public abstract class FilterOption {
      * Option type (e.g., target_sdk, last_update)
      */
     public final String type;
+
+    public int id;
     /**
      * A key under the option (e.g., for target_sdk: eq, le, ge, all; for last_update: before, after, all)
      */
@@ -144,6 +146,7 @@ public abstract class FilterOption {
         }
         JSONObject object = new JSONObject();
         object.put("type", type);
+        object.put("id", id);
         object.put("key", key);
         object.put("key_type", keyType);
         if (value != null) {
@@ -156,6 +159,7 @@ public abstract class FilterOption {
     public static FilterOption fromJson(@NonNull JSONObject object) throws JSONException {
         FilterOption option = FilterOptions.create(object.getString("type"));
         option.key = object.getString("key");
+        option.id = object.getInt("id");
         option.keyType = object.getInt("key_type");
         if (object.has("value")) {
             option.value = object.getString("value");

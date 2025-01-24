@@ -12,37 +12,38 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 
-import java.util.List;
-
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.filters.options.FilterOption;
 
 // Copyright 2012 Nolan Lawson
 public class FinderFilterAdapter extends RecyclerView.Adapter<FinderFilterAdapter.ViewHolder> {
     private OnClickListener mListener;
-    private final List<FilterOption> mItems;
+    @NonNull
+    private final FilterItem mFilterItem;
 
     public void setOnItemClickListener(OnClickListener listener) {
         mListener = listener;
     }
 
     public FinderFilterAdapter(@NonNull FilterItem filterItem) {
-        mItems = filterItem.getOptions();
+        mFilterItem = filterItem;
     }
 
     public void add(@NonNull FilterOption filter) {
-        mItems.add(filter);
-        notifyItemInserted(mItems.size() - 1);
+        if (mFilterItem.addFilterOption(filter)) {
+            notifyItemInserted(mFilterItem.getSize() - 1);
+        }
     }
 
     public void update(int position, @NonNull FilterOption filter) {
-        mItems.set(position, filter);
+        mFilterItem.updateFilterOptionAt(position, filter);
         notifyItemChanged(position);
     }
 
     public void remove(int position) {
-        mItems.remove(position);
-        notifyItemRemoved(position);
+        if (mFilterItem.removeFilterOptionAt(position)) {
+            notifyItemRemoved(position);
+        }
     }
 
     @NonNull
@@ -54,8 +55,9 @@ public class FinderFilterAdapter extends RecyclerView.Adapter<FinderFilterAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final FilterOption filterOption = mItems.get(position);
-        holder.textView.setText(filterOption.type); // TODO: 14/2/24 Display a localised string
+        final FilterOption filterOption = mFilterItem.getFilterOptionAt(position);
+        holder.textView.setText(filterOption.type + "_" + filterOption.id);
+        // TODO: 14/2/24 Display a localised string
         holder.itemView.setOnClickListener(v -> {
             if (mListener != null) {
                 mListener.onClick(holder.itemView, position, filterOption);
@@ -66,7 +68,7 @@ public class FinderFilterAdapter extends RecyclerView.Adapter<FinderFilterAdapte
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return mFilterItem.getSize();
     }
 
     public interface OnClickListener {

@@ -91,7 +91,6 @@ public class FinderActivity extends BaseActivity implements EditFilterOptionFrag
 
     private void displayEditor(int position, @NonNull FilterOption filterOption) {
         EditFilterOptionFragment.WrappedFilterOption wrappedFilterOption = new EditFilterOptionFragment.WrappedFilterOption();
-        wrappedFilterOption.logic = '&';
         wrappedFilterOption.filterOption = filterOption;
         EditFilterOptionFragment dialogFragment = new EditFilterOptionFragment();
         Bundle args = new Bundle();

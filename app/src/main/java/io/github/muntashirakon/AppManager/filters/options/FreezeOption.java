@@ -33,7 +33,7 @@ public class FreezeOption extends FilterOption {
     }};
 
     public FreezeOption() {
-        super("freeze-unfreeze");
+        super("freeze_unfreeze");
     }
 
     @NonNull

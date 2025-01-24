@@ -18,7 +18,7 @@ public final class FilterOptions {
             case "components": return new ComponentsOption();
             case "data_size": return new DataSizeOption();
             case "data_usage": return new DataUsageOption();
-            case "freeze-unfreeze": return new FreezeOption();
+            case "freeze_unfreeze": return new FreezeOption();
             case "installed": return new InstalledOption();
             case "installer": return new InstallerOption();
             case "last_update": return new LastUpdateOption();
