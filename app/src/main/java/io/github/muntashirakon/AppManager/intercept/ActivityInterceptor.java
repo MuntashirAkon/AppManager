@@ -33,9 +33,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.collection.SimpleArrayMap;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -455,16 +455,16 @@ public class ActivityInterceptor extends BaseActivity {
     }
 
     @NonNull
-    private List<Pair<String, Object>> getExtras() {
+    private SimpleArrayMap<String, Object> getExtras() {
         Bundle intentBundle;
         if (mMutableIntent == null || (intentBundle = mMutableIntent.getExtras()) == null) {
-            return Collections.emptyList();
+            return new SimpleArrayMap<>(0);
         }
-        List<Pair<String, Object>> extras = new ArrayList<>();
+        SimpleArrayMap<String, Object> extras = new SimpleArrayMap<>();
         for (String extraKey : intentBundle.keySet()) {
             Object extraValue = intentBundle.get(extraKey);
             if (extraValue == null) continue;
-            extras.add(new Pair<>(extraKey, extraValue));
+            extras.put(extraKey, extraValue);
         }
         return extras;
     }
@@ -599,6 +599,7 @@ public class ActivityInterceptor extends BaseActivity {
                             mMutableIntent.addCategory(inputText.toString().trim());
                             mCategoriesAdapter.setDefaultList(mMutableIntent.getCategories());
                             showTextViewIntentData(null);
+                            showResetIntentButton(true);
                         }
                     })
                     .show();
@@ -631,6 +632,7 @@ public class ActivityInterceptor extends BaseActivity {
                             }
                             mFlagsAdapter.setDefaultList(getFlags());
                             showTextViewIntentData(null);
+                            showResetIntentButton(true);
                         }
                     })
                     .show();
@@ -649,6 +651,7 @@ public class ActivityInterceptor extends BaseActivity {
                 if (mMutableIntent != null) {
                     IntentCompat.addToIntent(mMutableIntent, prefItem);
                     mExtrasAdapter.setDefaultList(getExtras());
+                    showResetIntentButton(true);
                 }
             });
             Bundle args = new Bundle();
@@ -1124,6 +1127,7 @@ public class ActivityInterceptor extends BaseActivity {
                     mActivity.mMutableIntent.removeCategory(category);
                     setDefaultList(mActivity.mMutableIntent.getCategories());
                     mActivity.showTextViewIntentData(null);
+                    mActivity.showResetIntentButton(true);
                 }
             });
         }
@@ -1176,6 +1180,7 @@ public class ActivityInterceptor extends BaseActivity {
                     IntentCompat.removeFlags(mActivity.mMutableIntent, INTENT_FLAG_TO_STRING.keyAt(i));
                     setDefaultList(mActivity.getFlags());
                     mActivity.showTextViewIntentData(null);
+                    mActivity.showResetIntentButton(true);
                 }
             });
         }
@@ -1198,14 +1203,14 @@ public class ActivityInterceptor extends BaseActivity {
     }
 
     private static class ExtrasRecyclerViewAdapter extends RecyclerView.Adapter<ExtrasRecyclerViewAdapter.ViewHolder> {
-        private final List<Pair<String, Object>> mExtras = new ArrayList<>();
+        private final SimpleArrayMap<String, Object> mExtras = new SimpleArrayMap<>(0);
         private final ActivityInterceptor mActivity;
 
         public ExtrasRecyclerViewAdapter(ActivityInterceptor activity) {
             mActivity = activity;
         }
 
-        public void setDefaultList(@Nullable List<Pair<String, Object>> extras) {
+        public void setDefaultList(@Nullable SimpleArrayMap<String, Object> extras) {
             AdapterUtils.notifyDataSetChanged(this, mExtras, extras);
         }
 
@@ -1218,18 +1223,23 @@ public class ActivityInterceptor extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            Pair<String, Object> extraItem = mExtras.get(position);
-            holder.title.setText(extraItem.first);
+            String key = mExtras.keyAt(position);
+            Object value = mExtras.valueAt(position);
+            holder.title.setText(key);
             holder.title.setTextIsSelectable(true);
-            holder.subtitle.setText(extraItem.second.toString());
+            holder.subtitle.setText(value.toString());
             holder.subtitle.setTextIsSelectable(true);
             holder.actionIcon.setOnClickListener(v -> {
                 UiUtils.fixFocus(holder.actionIcon);
                 if (mActivity.mMutableIntent != null) {
-                    mActivity.mMutableIntent.removeExtra(extraItem.first);
+                    mActivity.mMutableIntent.removeExtra(key);
                     mActivity.showTextViewIntentData(null);
-                    mExtras.remove(position);
-                    notifyItemRemoved(position);
+                    int pos = mExtras.indexOfKey(key);
+                    if (pos >= 0) {
+                        mExtras.removeAt(pos);
+                        notifyItemRemoved(pos);
+                    }
+                    mActivity.showResetIntentButton(true);
                 }
             });
         }

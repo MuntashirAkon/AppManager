@@ -8,12 +8,38 @@ import android.view.View;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.collection.SimpleArrayMap;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collection;
 import java.util.List;
 
 public final class AdapterUtils {
+    public static <T, V> void notifyDataSetChanged(@NonNull RecyclerView.Adapter<?> adapter,
+                                                @NonNull SimpleArrayMap<T, V> baseList,
+                                                @Nullable SimpleArrayMap<T, V> newList) {
+        int previousCount = baseList.size();
+        baseList.clear();
+        if (newList != null) {
+            baseList.putAll(newList);
+        }
+        int currentCount = baseList.size();
+        notifyDataSetChanged(adapter, previousCount, currentCount);
+    }
+
+    public static <T, V> void notifyDataSetChanged(@NonNull RecyclerView.Adapter<?> adapter,
+                                                @IntRange(from = 0) int startIndex,
+                                                @NonNull SimpleArrayMap<T, V> baseList,
+                                                @Nullable SimpleArrayMap<T, V> newList) {
+        int previousCount = baseList.size();
+        baseList.clear();
+        if (newList != null) {
+            baseList.putAll(newList);
+        }
+        int currentCount = baseList.size();
+        notifyDataSetChanged(adapter, startIndex, previousCount, currentCount);
+    }
+
     public static <T> void notifyDataSetChanged(@NonNull RecyclerView.Adapter<?> adapter,
                                                 @NonNull List<T> baseList,
                                                 @Nullable Collection<T> newList) {
