@@ -33,6 +33,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.collection.LruCache;
 import androidx.collection.SimpleArrayMap;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.content.ContextCompat;
@@ -68,6 +69,7 @@ import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -299,6 +301,8 @@ public class ActivityInterceptor extends BaseActivity {
     @Nullable
     private Intent mLastResultIntent = null;
 
+    private final LruCache<String, CharSequence> mPackageLabelMap = new LruCache<>(16);
+
     private volatile boolean mAreTextWatchersActive;
 
     private final ActivityResultLauncher<Intent> mIntentLauncher = registerForActivityResult(
@@ -430,8 +434,24 @@ public class ActivityInterceptor extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             if (packageName != null) {
-                // TODO: 4/2/22 Fetch label in a different thread, for the given user
-                actionBar.setTitle(PackageUtils.getPackageLabel(getPackageManager(), packageName));
+                CharSequence label = mPackageLabelMap.get(packageName);
+                if (label != null) {
+                    actionBar.setTitle(label);
+                } else {
+                    // Need to load the label
+                    ThreadUtils.postOnBackgroundThread(() -> {
+                        CharSequence appLabel = PackageUtils.getPackageLabel(getPackageManager(), packageName, mUserHandle);
+                        ThreadUtils.postOnMainThread(() -> {
+                            if (packageName.equals(appLabel.toString())) {
+                                // Ignore labels named after their package names
+                                actionBar.setTitle(R.string.interceptor);
+                                return;
+                            }
+                            actionBar.setTitle(appLabel);
+                            mPackageLabelMap.put(packageName, appLabel);
+                        });
+                    });
+                }
             } else actionBar.setTitle(R.string.interceptor);
         }
     }
