@@ -46,10 +46,11 @@ import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
-import io.github.muntashirakon.AppManager.scanner.vt.VtFileReportScanItem;
+import io.github.muntashirakon.AppManager.scanner.vt.VtAvEngineResult;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -185,8 +186,8 @@ public class ScannerFragment extends Fragment {
                         .show());
             }
         });
-        mViewModel.vtFileScanMetaLiveData().observe(getViewLifecycleOwner(), vtFileScanMeta -> {
-            if (vtFileScanMeta == null) {
+        mViewModel.vtFileUploadLiveData().observe(getViewLifecycleOwner(), permalink -> {
+            if (permalink == null) {
                 // Uploading
                 mVtTitleView.setText(R.string.vt_uploading);
                 if (Prefs.VirusTotal.promptBeforeUpload()) {
@@ -201,7 +202,7 @@ public class ScannerFragment extends Fragment {
             } else {
                 // Upload completed and queued
                 mVtTitleView.setText(R.string.vt_queued);
-                mVtDescriptionView.setText(vtFileScanMeta.getPermalink());
+                mVtDescriptionView.setText(permalink);
             }
         });
         mViewModel.vtFileReportLiveData().observe(getViewLifecycleOwner(), vtFileReport -> {
@@ -210,10 +211,6 @@ public class ScannerFragment extends Fragment {
                 mVtTitleView.setText(R.string.vt_failed);
                 mVtDescriptionView.setText(null);
                 mVtContainerView.setOnClickListener(null);
-            } else if (vtFileReport.getPositives() == null) {
-                // Still queued
-                mVtTitleView.setText(R.string.vt_queued);
-                mVtDescriptionView.setText(vtFileReport.getPermalink());
             } else {
                 // Successful
                 publishVirusTotalReport(vtFileReport);
@@ -242,27 +239,41 @@ public class ScannerFragment extends Fragment {
         } else if (positives <= 12) {
             color = ColorCodes.getVirusTotalUnsafeIndicatorColor(mActivity);
         } else color = ColorCodes.getVirusTotalExtremelyUnsafeIndicatorColor(mActivity);
-        CharSequence scanDate = getString(R.string.vt_scan_date, vtFileReport.getScanDate());
-        String permalink = vtFileReport.getPermalink();
+        CharSequence scanDate = getString(R.string.vt_scan_date, DateUtils.formatDateTime(mActivity, vtFileReport.scanDate));
+        String permalink = vtFileReport.permalink;
         Spanned result;
-        Map<String, VtFileReportScanItem> vtFileReportScanItems = vtFileReport.getScans();
-        if (vtFileReportScanItems != null) {
+        List<VtAvEngineResult> vtFileReportScanItems = vtFileReport.results;
+        if (!vtFileReportScanItems.isEmpty()) {
             int colorUnsafe = ColorCodes.getVirusTotalExtremelyUnsafeIndicatorColor(mActivity);
             int colorSafe = ColorCodes.getVirusTotalSafeIndicatorColor(mActivity);
             ArrayList<Spannable> detectedList = new ArrayList<>();
+            ArrayList<Spannable> suspiciousList = new ArrayList<>();
             ArrayList<Spannable> undetectedList = new ArrayList<>();
-            for (String avName : vtFileReportScanItems.keySet()) {
-                VtFileReportScanItem item = Objects.requireNonNull(vtFileReportScanItems.get(avName));
-                if (item.isDetected()) {
-                    detectedList.add(new SpannableStringBuilder(getColoredText(getPrimaryText(mActivity, avName),
-                            colorUnsafe)).append(getSmallerText(" (" + item.getVersion() + ")"))
-                            .append("\n").append(item.getMalware()));
-                } else {
-                    undetectedList.add(new SpannableStringBuilder(getColoredText(getPrimaryText(mActivity, avName),
-                            colorSafe)).append(getSmallerText(" (" + item.getVersion() + ")")));
+            ArrayList<Spannable> neutralList = new ArrayList<>();
+            for (VtAvEngineResult item : vtFileReportScanItems) {
+                SpannableStringBuilder sb = new SpannableStringBuilder();
+                Spannable title = getPrimaryText(mActivity, item.engineName);
+                if (item.category < VtAvEngineResult.CAT_UNDETECTED) {
+                    sb.append(title);
+                    neutralList.add(sb);
+                } else if (item.category < VtAvEngineResult.CAT_SUSPICIOUS) {
+                    sb.append(getColoredText(title, colorSafe));
+                    undetectedList.add(sb);
+                } else if (item.category == VtAvEngineResult.CAT_SUSPICIOUS) {
+                    sb.append(getColoredText(title, colorUnsafe));
+                    suspiciousList.add(sb);
+                } else { // malicious
+                    sb.append(getColoredText(title, colorUnsafe));
+                    detectedList.add(sb);
+                }
+                sb.append(getSmallerText(" (" + item.engineVersion + ")"));
+                if (item.result != null) {
+                    sb.append("\n").append(item.result);
                 }
             }
+            detectedList.addAll(suspiciousList);
             detectedList.addAll(undetectedList);
+            detectedList.addAll(neutralList);
             result = UiUtils.getOrderedList(detectedList);
         } else result = null;
         mVtTitleView.setText(getColoredText(resultSummary, color));

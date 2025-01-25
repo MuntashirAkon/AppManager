@@ -8,7 +8,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
 
 import io.github.muntashirakon.AppManager.backup.convert.OABConverter;
 
@@ -24,21 +23,23 @@ public class VirusTotalTest {
     }
 
     @Test
-    public void scanThrowsNothing() throws IOException {
+    public void uploadFileThrowsNothing() throws IOException {
         if (vt == null) return;
         assert classLoader != null;
         File baseApk = new File(classLoader.getResource(OABConverter.PATH_SUFFIX).getFile(), "dnsfilter.android/base.apk");
         try (FileInputStream fis = new FileInputStream(baseApk)) {
-            VtFileScanMeta vtFileScanMeta = vt.scan("dnsfilter.android", fis);
+            VirusTotal.ResponseV3<String> vtFileScanMeta = vt.uploadFile("dnsfilter.android", fis);
             System.out.println(vtFileScanMeta);
         }
     }
 
     @Test
-    public void fetchReportsThrowsNothing() throws IOException {
+    public void fetchFileReportThrowsNothing() throws IOException {
         if (vt == null) return;
-        List<VtFileReport> reports = vt.fetchReports(new String[]{"029e2ed8dea7db94a293bdb7c0d197059f85d4dc51b6ff56548b29b65afe13c5", "a5146a143c7bbd6a0b8384a1aa233243b72cca94cbec62aa3d70a82f5b262550"});
+        VtFileReport report1 = vt.fetchFileReport("029e2ed8dea7db94a293bdb7c0d197059f85d4dc51b6ff56548b29b65afe13c5").response;
+        VtFileReport report2 = vt.fetchFileReport("a5146a143c7bbd6a0b8384a1aa233243b72cca94cbec62aa3d70a82f5b262550").response;
         // Throws nothing
-        System.out.println(reports);
+        System.out.println(report1);
+        System.out.println(report2);
     }
 }

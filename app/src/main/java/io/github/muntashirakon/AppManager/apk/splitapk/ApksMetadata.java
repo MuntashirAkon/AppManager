@@ -117,10 +117,10 @@ public class ApksMetadata {
         displayName = jsonObject.getString("display_name");
         versionName = jsonObject.getString("version_name");
         versionCode = jsonObject.getLong("version_code");
-        minSdk = JSONUtils.getLong(jsonObject, "min_sdk", 0);
+        minSdk = jsonObject.optLong("min_sdk", 0);
         targetSdk = jsonObject.getLong("target_sdk");
         // Build info
-        JSONObject buildInfoObject = JSONUtils.getJSONObject(jsonObject, "build_info");
+        JSONObject buildInfoObject = jsonObject.optJSONObject("build_info");
         if (buildInfoObject != null) {
             buildInfo = new BuildInfo(buildInfoObject.getLong("timestamp"),
                     buildInfoObject.getString("builder_id"),
@@ -129,7 +129,7 @@ public class ApksMetadata {
                     buildInfoObject.getString("platform"));
         }
         // Dependencies
-        JSONArray dependencyInfoArray = JSONUtils.getJSONArray(jsonObject, "dependencies");
+        JSONArray dependencyInfoArray = jsonObject.optJSONArray("dependencies");
         if (dependencyInfoArray != null) {
             for (int i = 0; i < dependencyInfoArray.length(); ++i) {
                 JSONObject dependencyInfoObject = dependencyInfoArray.getJSONObject(i);

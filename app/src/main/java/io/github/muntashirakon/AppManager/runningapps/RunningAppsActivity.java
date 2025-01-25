@@ -38,7 +38,6 @@ import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
-import io.github.muntashirakon.AppManager.scanner.vt.VtFileScanMeta;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
@@ -167,10 +166,10 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
             RunningAppDetails fragment = RunningAppDetails.getInstance(processItem);
             fragment.show(getSupportFragmentManager(), RunningAppDetails.TAG);
         });
-        model.getVtFileScanMeta().observe(this, processItemVtFileScanMetaPair -> {
-            ProcessItem processItem = processItemVtFileScanMetaPair.first;
-            VtFileScanMeta vtFileScanMeta = processItemVtFileScanMetaPair.second;
-            if (vtFileScanMeta == null) {
+        model.getVtFileUpload().observe(this, processItemVtFilePermalinkPair -> {
+            ProcessItem processItem = processItemVtFilePermalinkPair.first;
+            String permalink = processItemVtFilePermalinkPair.second;
+            if (permalink == null) {
                 // Started uploading
                 UIUtils.displayShortToast(R.string.vt_uploading);
                 if (Prefs.VirusTotal.promptBeforeUpload()) {

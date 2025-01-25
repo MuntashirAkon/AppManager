@@ -36,7 +36,7 @@ public final class JSONUtils {
     @Contract("null -> null")
     @Nullable
     public static <T> JSONArray getJSONArray(@Nullable final Collection<T> collection) {
-        if (collection == null || collection.size() == 0) return null;
+        if (collection == null || collection.isEmpty()) return null;
         JSONArray jsonArray = new JSONArray();
         for (T elem : collection) jsonArray.put(elem);
         return jsonArray;
@@ -70,38 +70,12 @@ public final class JSONUtils {
         return arrayList;
     }
 
-    @Nullable
-    public static JSONArray getJSONArray(@NonNull final JSONObject jsonObject, @NonNull String key) {
-        try {
-            return jsonObject.getJSONArray(key);
-        } catch (JSONException e) {
-            return null;
-        }
-    }
-
-    @Nullable
-    public static JSONObject getJSONObject(@NonNull final JSONObject jsonObject, @NonNull String key) {
-        try {
-            return jsonObject.getJSONObject(key);
-        } catch (JSONException e) {
-            return null;
-        }
-    }
-
     @Contract("_,_,!null -> !null")
     @Nullable
     public static String getString(@NonNull final JSONObject jsonObject, @NonNull String key,
                                    @Nullable String defaultValue) {
         try {
             return jsonObject.getString(key);
-        } catch (JSONException e) {
-            return defaultValue;
-        }
-    }
-
-    public static boolean getBoolean(@NonNull final JSONObject jsonObject, @NonNull String key, boolean defaultValue) {
-        try {
-            return jsonObject.getBoolean(key);
         } catch (JSONException e) {
             return defaultValue;
         }
@@ -116,11 +90,33 @@ public final class JSONUtils {
         return null;
     }
 
-    public static long getLong(@NonNull final JSONObject jsonObject, @NonNull String key, long defaultValue) {
-        try {
-            return jsonObject.getLong(key);
-        } catch (JSONException ignore) {
+    @Nullable
+    public static String getString(@NonNull final JSONObject jsonObject, @NonNull String key)
+            throws JSONException {
+        Object obj = jsonObject.get(key);
+        if (obj == JSONObject.NULL) {
+            return null;
         }
-        return defaultValue;
+        return jsonObject.getString(key);
+    }
+
+    @Nullable
+    public static String optString(@NonNull final JSONObject jsonObject, @NonNull String key) {
+        Object obj = jsonObject.opt(key);
+        if (obj == null || obj == JSONObject.NULL) {
+            return null;
+        }
+        return jsonObject.optString(key);
+    }
+
+
+    @Nullable
+    public static String optString(@NonNull final JSONObject jsonObject, @NonNull String key,
+                                   @Nullable String fallback) {
+        Object obj = jsonObject.opt(key);
+        if (obj == null || obj == JSONObject.NULL) {
+            return null;
+        }
+        return jsonObject.optString(key, fallback);
     }
 }

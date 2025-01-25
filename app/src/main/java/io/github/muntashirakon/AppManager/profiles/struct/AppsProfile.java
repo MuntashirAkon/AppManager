@@ -253,7 +253,7 @@ public class AppsProfile extends AbsProfile {
         profile.comment = JSONUtils.getString(profileObj, "comment", null);
         profile.type = profileObj.getInt("type");
         profile.version = profileObj.getInt("version");
-        profile.allowRoutine = JSONUtils.getBoolean(profileObj, "allow_routine", true);
+        profile.allowRoutine = profileObj.optBoolean("allow_routine", true);
         profile.state = JSONUtils.getString(profileObj, "state", STATE_ON);
         try {
             profile.users = JSONUtils.getIntArray(profileObj.getJSONArray("users"));
