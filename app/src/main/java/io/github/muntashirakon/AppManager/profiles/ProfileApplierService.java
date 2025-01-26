@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.PowerManager;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.PendingIntentCompat;
@@ -18,6 +19,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsResultsActivity;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.NotificationManagerInfo;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
@@ -27,20 +29,13 @@ import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class ProfileApplierService extends ForegroundService {
-    public static final String EXTRA_PROFILE_ID = "prof";
-    public static final String EXTRA_PROFILE_NAME = "name";
-    public static final String EXTRA_PROFILE_STATE = "state";
+    public static final String EXTRA_QUEUE_ITEM = "queue_item";
     public static final String EXTRA_NOTIFY = "notify";
     /**
      * Notification channel ID
      */
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.PROFILE_APPLIER";
 
-    @Nullable
-    private String mProfileName;
-    @Nullable
-    private String mProfileId;
-    private boolean mNotify = true;
     private QueuedProgressHandler mProgressHandler;
     private NotificationProgressHandler.NotificationInfo mNotificationInfo;
     private PowerManager.WakeLock mWakeLock;
@@ -59,11 +54,6 @@ public class ProfileApplierService extends ForegroundService {
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         if (isWorking()) return super.onStartCommand(intent, flags, startId);
-        if (intent != null) {
-            mProfileId = intent.getStringExtra(EXTRA_PROFILE_ID);
-            mProfileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
-            mNotify = intent.getBooleanExtra(EXTRA_NOTIFY, true);
-        }
         NotificationManagerInfo notificationManagerInfo = new NotificationManagerInfo(CHANNEL_ID,
                 "Profile Applier", NotificationManagerCompat.IMPORTANCE_LOW);
         mProgressHandler = new NotificationProgressHandler(this,
@@ -81,29 +71,33 @@ public class ProfileApplierService extends ForegroundService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent == null) return;
-        mProfileId = intent.getStringExtra(EXTRA_PROFILE_ID);
-        mProfileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
-        if (mProfileId == null || mProfileName == null) return;
-        String state = intent.getStringExtra(EXTRA_PROFILE_STATE);
+        ProfileQueueItem item = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, ProfileQueueItem.class);
+        if (item == null) {
+            return;
+        }
+        boolean notify = intent.getBooleanExtra(EXTRA_NOTIFY, true);
         try {
-            ProfileManager profileManager = new ProfileManager(mProfileId);
-            profileManager.applyProfile(state, mProgressHandler);
+            ProfileManager profileManager = new ProfileManager(item.getProfileId());
+            profileManager.applyProfile(item.getState(), mProgressHandler);
             profileManager.conclude();
-            sendNotification(Activity.RESULT_OK, profileManager.requiresRestart());
+            sendNotification(item.getProfileName(), Activity.RESULT_OK, notify, profileManager.requiresRestart());
         } catch (IOException e) {
-            sendNotification(Activity.RESULT_CANCELED, false);
+            sendNotification(item.getProfileName(), Activity.RESULT_CANCELED, notify, false);
         }
     }
 
     @Override
     protected void onQueued(@Nullable Intent intent) {
         if (intent == null) return;
-        String profileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
+        ProfileQueueItem item = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, ProfileQueueItem.class);
+        if (item == null) {
+            return;
+        }
         Object notificationInfo = new NotificationProgressHandler.NotificationInfo()
                 .setAutoCancel(true)
                 .setTime(System.currentTimeMillis())
                 .setOperationName(getText(R.string.profiles))
-                .setTitle(profileName)
+                .setTitle(item.getProfileName())
                 .setBody(getString(R.string.added_to_queue));
         mProgressHandler.onQueue(notificationInfo);
     }
@@ -111,16 +105,15 @@ public class ProfileApplierService extends ForegroundService {
     @Override
     protected void onStartIntent(@Nullable Intent intent) {
         if (intent == null) return;
-        mProfileId = intent.getStringExtra(EXTRA_PROFILE_ID);
-        mProfileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
-        if (mProfileId != null) {
-            Intent notificationIntent = AppsProfileActivity.getProfileIntent(this, mProfileId);
+        ProfileQueueItem item = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, ProfileQueueItem.class);
+        if (item != null) {
+            Intent notificationIntent = AppsProfileActivity.getProfileIntent(this, item.getProfileId());
             PendingIntent pendingIntent = PendingIntentCompat.getActivity(this, 0, notificationIntent,
                     0, false);
             mNotificationInfo.setDefaultAction(pendingIntent);
         }
-        // Set app name in the ongoing notification
-        mNotificationInfo.setTitle(mProfileName);
+        // Set profile name in the ongoing notification
+        mNotificationInfo.setTitle(item != null ? item.getProfileName() : null);
         mProgressHandler.onProgressStart(-1, 0, mNotificationInfo);
     }
 
@@ -134,13 +127,14 @@ public class ProfileApplierService extends ForegroundService {
         super.onDestroy();
     }
 
-    private void sendNotification(int result, boolean requiresRestart) {
+    private void sendNotification(@NonNull String profileName, int result, boolean notify,
+                                  boolean requiresRestart) {
         NotificationProgressHandler.NotificationInfo notificationInfo = new NotificationProgressHandler
                 .NotificationInfo()
                 .setAutoCancel(true)
                 .setTime(System.currentTimeMillis())
                 .setOperationName(getText(R.string.profiles))
-                .setTitle(mProfileName);
+                .setTitle(profileName);
         switch (result) {
             case Activity.RESULT_CANCELED:  // Failure
                 notificationInfo.setBody(getString(R.string.error));
@@ -155,6 +149,6 @@ public class ProfileApplierService extends ForegroundService {
                     PendingIntent.FLAG_ONE_SHOT, false);
             notificationInfo.addAction(0, getString(R.string.restart_device), pendingIntent);
         }
-        mProgressHandler.onResult(mNotify ? notificationInfo : null);
+        mProgressHandler.onResult(notify ? notificationInfo : null);
     }
 }

@@ -132,7 +132,7 @@ public class ProfileApplierActivity extends BaseActivity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         synchronized (mQueue) {
             mQueue.add(intent);
         }
@@ -170,14 +170,13 @@ public class ProfileApplierActivity extends BaseActivity {
             next();
             return;
         }
-        String state = info.state != null ? info.state : info.profile.state;
+        info.state = info.state != null ? info.state : info.profile.state;
         switch (info.shortcutType) {
             case ST_SIMPLE:
-                Intent intent = new Intent(this, ProfileApplierService.class);
-                intent.putExtra(ProfileApplierService.EXTRA_PROFILE_ID, info.profileId);
-                intent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, info.profile.name);
                 // There must be a state
-                intent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, Objects.requireNonNull(state));
+                Objects.requireNonNull(info.state);
+                Intent intent = new Intent(this, ProfileApplierService.class);
+                intent.putExtra(ProfileApplierService.EXTRA_QUEUE_ITEM, ProfileQueueItem.fromProfiledApplierInfo(info));
                 intent.putExtra(ProfileApplierService.EXTRA_NOTIFY, info.notify);
                 ContextCompat.startForegroundService(this, intent);
                 next();
@@ -193,12 +192,11 @@ public class ProfileApplierActivity extends BaseActivity {
                         .setSubtitle(R.string.choose_a_profile_state);
                 new SearchableSingleChoiceDialogBuilder<>(this, states, statesL)
                         .setTitle(titleBuilder.build())
-                        .setSelection(state)
+                        .setSelection(info.state)
                         .setPositiveButton(R.string.ok, (dialog, which, selectedState) -> {
+                            info.state = selectedState;
                             Intent aIntent = new Intent(this, ProfileApplierService.class);
-                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_ID, info.profileId);
-                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, info.profile.name);
-                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, selectedState);
+                            aIntent.putExtra(ProfileApplierService.EXTRA_QUEUE_ITEM, ProfileQueueItem.fromProfiledApplierInfo(info));
                             aIntent.putExtra(ProfileApplierService.EXTRA_NOTIFY, info.notify);
                             ContextCompat.startForegroundService(this, aIntent);
                         })
