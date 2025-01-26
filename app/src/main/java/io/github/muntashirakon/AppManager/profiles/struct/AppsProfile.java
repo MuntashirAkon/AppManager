@@ -198,42 +198,48 @@ public class AppsProfile extends AbsProfile {
         return TextUtils.join(", ", summaries);
     }
 
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject profileObj = new JSONObject();
+        profileObj.put("type", type);
+        profileObj.put("version", version);
+        if (!allowRoutine) {
+            // Only save allow_routine if it's set to false
+            profileObj.put("allow_routine", false);
+        }
+        profileObj.put("name", name);
+        profileObj.put("comment", comment);
+        profileObj.put("state", state);
+        profileObj.put("users", JSONUtils.getJSONArray(users));
+        profileObj.put("packages", JSONUtils.getJSONArray(packages));
+        profileObj.put("components", JSONUtils.getJSONArray(components));
+        profileObj.put("app_ops", JSONUtils.getJSONArray(appOps));
+        profileObj.put("permissions", JSONUtils.getJSONArray(permissions));
+        // Backup info
+        if (backupData != null) {
+            JSONObject backupInfo = new JSONObject();
+            backupInfo.put("name", backupData.name);
+            backupInfo.put("flags", backupData.flags);
+            profileObj.put("backup_data", backupInfo);
+        }
+        profileObj.put("export_rules", exportRules);
+        // Misc
+        JSONArray jsonArray = new JSONArray();
+        if (freeze) jsonArray.put("freeze");
+        if (forceStop) jsonArray.put("force_stop");
+        if (clearCache) jsonArray.put("clear_cache");
+        if (clearData) jsonArray.put("clear_data");
+        if (blockTrackers) jsonArray.put("block_trackers");
+        if (saveApk) jsonArray.put("save_apk");
+        if (jsonArray.length() > 0) profileObj.put("misc", jsonArray);
+        return profileObj;
+    }
+
     @Override
     public void write(@NonNull OutputStream out) throws IOException {
         try {
-            JSONObject profileObj = new JSONObject();
-            profileObj.put("type", type);
-            profileObj.put("version", version);
-            if (!allowRoutine) {
-                // Only save allow_routine if it's set to false
-                profileObj.put("allow_routine", false);
-            }
-            profileObj.put("name", name);
-            profileObj.put("comment", comment);
-            profileObj.put("state", state);
-            profileObj.put("users", JSONUtils.getJSONArray(users));
-            profileObj.put("packages", JSONUtils.getJSONArray(packages));
-            profileObj.put("components", JSONUtils.getJSONArray(components));
-            profileObj.put("app_ops", JSONUtils.getJSONArray(appOps));
-            profileObj.put("permissions", JSONUtils.getJSONArray(permissions));
-            // Backup info
-            if (backupData != null) {
-                JSONObject backupInfo = new JSONObject();
-                backupInfo.put("name", backupData.name);
-                backupInfo.put("flags", backupData.flags);
-                profileObj.put("backup_data", backupInfo);
-            }
-            profileObj.put("export_rules", exportRules);
-            // Misc
-            JSONArray jsonArray = new JSONArray();
-            if (freeze) jsonArray.put("freeze");
-            if (forceStop) jsonArray.put("force_stop");
-            if (clearCache) jsonArray.put("clear_cache");
-            if (clearData) jsonArray.put("clear_data");
-            if (blockTrackers) jsonArray.put("block_trackers");
-            if (saveApk) jsonArray.put("save_apk");
-            if (jsonArray.length() > 0) profileObj.put("misc", jsonArray);
-            out.write(profileObj.toString().getBytes());
+            out.write(serializeToJson().toString().getBytes());
         } catch (JSONException e) {
             throw new IOException(e);
         }

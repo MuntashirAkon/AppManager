@@ -7,7 +7,11 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
+import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
 public class BatchBackupOptions implements IBatchOpOptions {
     @BackupFlags.BackupFlag
@@ -57,5 +61,14 @@ public class BatchBackupOptions implements IBatchOpOptions {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeInt(mFlags);
         dest.writeStringArray(mBackupNames);
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("flags", mFlags);
+        jsonObject.put("backup_names", JSONUtils.getJSONArray(mBackupNames));
+        return jsonObject;
     }
 }

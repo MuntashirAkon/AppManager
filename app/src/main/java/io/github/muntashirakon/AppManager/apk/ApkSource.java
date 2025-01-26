@@ -10,7 +10,9 @@ import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public abstract class ApkSource implements Parcelable {
+import io.github.muntashirakon.AppManager.history.IJsonSerializer;
+
+public abstract class ApkSource implements Parcelable, IJsonSerializer {
     @NonNull
     public static ApkSource getApkSource(@NonNull Uri uri, @Nullable String mimeType) {
         return new UriApkSource(uri, mimeType);

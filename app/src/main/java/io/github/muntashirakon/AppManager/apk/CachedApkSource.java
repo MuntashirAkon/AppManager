@@ -10,6 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.os.ParcelCompat;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
@@ -96,6 +99,17 @@ public class CachedApkSource extends ApkSource {
         dest.writeInt(mApkFileKey);
         String file = mCachedFile != null ? mCachedFile.getAbsolutePath() : null;
         dest.writeString(file);
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("uri", mUri.toString());
+        jsonObject.put("mime_type", mMimeType);
+        jsonObject.put("apk_file_key", mApkFileKey);
+        jsonObject.put("cached_file", mCachedFile);
+        return jsonObject;
     }
 
     public static final Creator<CachedApkSource> CREATOR = new Creator<CachedApkSource>() {

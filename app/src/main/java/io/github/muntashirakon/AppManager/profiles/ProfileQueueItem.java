@@ -8,12 +8,17 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.history.IJsonSerializer;
 import io.github.muntashirakon.AppManager.profiles.ProfileApplierActivity.ProfileApplierInfo;
 import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
 
-public class ProfileQueueItem implements Parcelable {
+public class ProfileQueueItem implements Parcelable, IJsonSerializer {
     @NonNull
     public static ProfileQueueItem fromProfiledApplierInfo(@NonNull ProfileApplierInfo info) {
         return new ProfileQueueItem(info.profile, info.state);
@@ -63,6 +68,23 @@ public class ProfileQueueItem implements Parcelable {
         dest.writeString(mProfileId);
         dest.writeString(mProfileName);
         dest.writeString(mState);
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("profile_id", mProfileId);
+        jsonObject.put("profile_name", mProfileName);
+        jsonObject.put("state", mState);
+        // A profile can be altered any time. So, we need to store a snapshot of the profile
+        try {
+            AppsProfile profile = AppsProfile.fromPath(ProfileManager.findProfilePathById(mProfileId));
+            jsonObject.put("profile", profile.serializeToJson());
+        } catch (IOException e) {
+            throw new JSONException(e);
+        }
+        return jsonObject;
     }
 
     public static final Creator<ProfileQueueItem> CREATOR = new Creator<ProfileQueueItem>() {

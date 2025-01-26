@@ -7,6 +7,9 @@ import android.os.Parcel;
 
 import androidx.annotation.NonNull;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.backup.convert.ImportType;
@@ -69,5 +72,15 @@ public class BatchBackupImportOptions implements IBatchOpOptions {
         dest.writeInt(mImportType);
         dest.writeParcelable(mDirectory, flags);
         dest.writeByte((byte) (mRemoveImportedDirectory ? 1 : 0));
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("import_type", mImportType);
+        jsonObject.put("directory", mDirectory.toString());
+        jsonObject.put("remove_imported_directory", mRemoveImportedDirectory);
+        return jsonObject;
     }
 }

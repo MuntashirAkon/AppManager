@@ -6,6 +6,9 @@ import android.os.Parcel;
 
 import androidx.annotation.NonNull;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.apk.dexopt.DexOptOptions;
@@ -47,5 +50,13 @@ public class BatchDexOptOptions implements IBatchOpOptions {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeParcelable(mDexOptOptions, flags);
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("dex_opt_options", mDexOptOptions.serializeToJson());
+        return jsonObject;
     }
 }

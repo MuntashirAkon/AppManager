@@ -6,7 +6,12 @@ import android.os.Parcel;
 
 import androidx.annotation.NonNull;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Objects;
+
+import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
 public class BatchComponentOptions implements IBatchOpOptions {
     private String[] mSignatures;
@@ -27,6 +32,14 @@ public class BatchComponentOptions implements IBatchOpOptions {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeStringArray(mSignatures);
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("signatures", JSONUtils.getJSONArray(mSignatures));
+        return jsonObject;
     }
 
     @Override

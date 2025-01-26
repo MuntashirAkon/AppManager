@@ -11,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -24,10 +27,12 @@ import io.github.muntashirakon.AppManager.batchops.struct.BatchDexOptOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchNetPolicyOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchPermissionOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.IBatchOpOptions;
+import io.github.muntashirakon.AppManager.history.IJsonSerializer;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.util.ParcelUtils;
 
-public class BatchQueueItem implements Parcelable {
+public class BatchQueueItem implements Parcelable, IJsonSerializer {
     @NonNull
     public static BatchQueueItem getBatchOpQueue(@OpType int op,
                                                  @Nullable ArrayList<String> packages,
@@ -131,6 +136,18 @@ public class BatchQueueItem implements Parcelable {
         dest.writeStringList(mPackages);
         ParcelUtils.writeArrayList(mUsers, dest);
         dest.writeParcelable(mOptions, flags);
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("title_res", mTitleRes);
+        jsonObject.put("op", mOp);
+        jsonObject.put("packages", JSONUtils.getJSONArray(mPackages));
+        jsonObject.put("users", JSONUtils.getJSONArray(mUsers));
+        jsonObject.put("options", mOptions != null ? mOptions.serializeToJson() : null);
+        return jsonObject;
     }
 
     protected BatchQueueItem(@NonNull Parcel in) {

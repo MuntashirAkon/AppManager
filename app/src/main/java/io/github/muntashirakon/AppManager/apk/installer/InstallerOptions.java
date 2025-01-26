@@ -15,10 +15,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.os.ParcelCompat;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.history.IJsonSerializer;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 
-public class InstallerOptions implements Parcelable {
+public class InstallerOptions implements Parcelable, IJsonSerializer {
     @NonNull
     public static InstallerOptions getDefault() {
         return new InstallerOptions();
@@ -101,6 +105,24 @@ public class InstallerOptions implements Parcelable {
         dest.writeByte((byte) (mSignApkFiles ? 1 : 0));
         dest.writeByte((byte) (mForceDexOpt ? 1 : 0));
         dest.writeByte((byte) (mBlockTrackers ? 1 : 0));
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("user_id", mUserId);
+        jsonObject.put("install_location", mInstallLocation);
+        jsonObject.put("installer_name", mInstallerName);
+        jsonObject.put("originating_package", mOriginatingPackage);
+        jsonObject.put("originating_uri", mOriginatingUri != null ? mOriginatingUri.toString() : null);
+        jsonObject.put("package_source", mPackageSource);
+        jsonObject.put("install_scenario", mInstallScenario);
+        jsonObject.put("request_update_ownership", mRequestUpdateOwnership);
+        jsonObject.put("sign_apk_files", mSignApkFiles);
+        jsonObject.put("force_dex_opt", mForceDexOpt);
+        jsonObject.put("block_trackers", mBlockTrackers);
+        return jsonObject;
     }
 
     @Override

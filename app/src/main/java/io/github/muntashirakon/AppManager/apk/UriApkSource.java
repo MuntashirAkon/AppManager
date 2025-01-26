@@ -9,6 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.os.ParcelCompat;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Objects;
 
 public class UriApkSource extends ApkSource {
@@ -58,6 +61,16 @@ public class UriApkSource extends ApkSource {
         dest.writeParcelable(mUri, flags);
         dest.writeString(mMimeType);
         dest.writeInt(mApkFileKey);
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("uri", mUri.toString());
+        jsonObject.put("mime_type", mMimeType);
+        jsonObject.put("apk_file_key", mApkFileKey);
+        return jsonObject;
     }
 
     public static final Creator<UriApkSource> CREATOR = new Creator<UriApkSource>() {

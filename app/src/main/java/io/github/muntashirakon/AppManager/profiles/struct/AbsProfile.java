@@ -8,9 +8,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.history.IJsonSerializer;
 import io.github.muntashirakon.util.LocalizedString;
 
-public abstract class AbsProfile implements LocalizedString {
+public abstract class AbsProfile implements LocalizedString, IJsonSerializer {
     @NonNull
     public final String profileId;
 

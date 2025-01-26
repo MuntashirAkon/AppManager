@@ -6,7 +6,12 @@ import android.os.Parcel;
 
 import androidx.annotation.NonNull;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Objects;
+
+import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
 public class BatchAppOpsOptions implements IBatchOpOptions {
     @NonNull
@@ -55,5 +60,14 @@ public class BatchAppOpsOptions implements IBatchOpOptions {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeIntArray(mAppOps);
         dest.writeInt(mMode);
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("app_ops", JSONUtils.getJSONArray(mAppOps));
+        jsonObject.put("mode", mMode);
+        return jsonObject;
     }
 }

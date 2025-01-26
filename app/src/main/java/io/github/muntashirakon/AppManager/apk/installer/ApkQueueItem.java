@@ -17,14 +17,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.os.ParcelCompat;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.apk.ApkSource;
+import io.github.muntashirakon.AppManager.history.IJsonSerializer;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
+import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
-public class ApkQueueItem implements Parcelable {
+public class ApkQueueItem implements Parcelable, IJsonSerializer {
     @NonNull
     static List<ApkQueueItem> fromIntent(@NonNull Intent intent,
                                          @Nullable String originatingPackage) {
@@ -167,6 +172,21 @@ public class ApkQueueItem implements Parcelable {
         dest.writeParcelable(mApkSource, flags);
         dest.writeParcelable(mInstallerOptions, flags);
         dest.writeStringList(mSelectedSplits);
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("package_name", mPackageName);
+        jsonObject.put("app_label", mAppLabel);
+        jsonObject.put("install_existing", mInstallExisting);
+        jsonObject.put("originating_package", mOriginatingPackage);
+        jsonObject.put("originating_uri", mOriginatingUri != null ? mOriginatingUri.toString() : null);
+        jsonObject.put("apk_source", mApkSource != null ? mApkSource.serializeToJson() : null);
+        jsonObject.put("installer_options", mInstallerOptions != null ? mInstallerOptions.serializeToJson() : null);
+        jsonObject.put("selected_splits", JSONUtils.getJSONArray(mSelectedSplits));
+        return jsonObject;
     }
 
     public static final Creator<ApkQueueItem> CREATOR = new Creator<ApkQueueItem>() {

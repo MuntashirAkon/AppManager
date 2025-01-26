@@ -6,6 +6,9 @@ import android.os.Parcel;
 
 import androidx.annotation.NonNull;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Objects;
 
 public class BatchPermissionOptions implements IBatchOpOptions {
@@ -27,6 +30,14 @@ public class BatchPermissionOptions implements IBatchOpOptions {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeStringArray(mPermissions);
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("permissions", mPermissions);
+        return jsonObject;
     }
 
     @Override

@@ -10,7 +10,13 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class DexOptOptions implements Parcelable {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import io.github.muntashirakon.AppManager.history.IJsonSerializer;
+import io.github.muntashirakon.AppManager.utils.JSONUtils;
+
+public class DexOptOptions implements Parcelable, IJsonSerializer {
     @NonNull
     public static DexOptOptions getDefault() {
         DexOptOptions options = new DexOptOptions();
@@ -54,6 +60,21 @@ public class DexOptOptions implements Parcelable {
         dest.writeByte((byte) (bootComplete ? 1 : 0));
         dest.writeByte((byte) (forceCompilation ? 1 : 0));
         dest.writeByte((byte) (forceDexOpt ? 1 : 0));
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("packages", JSONUtils.getJSONArray(packages));
+        jsonObject.put("compiler_filer", compilerFiler);
+        jsonObject.put("compile_layouts", compileLayouts);
+        jsonObject.put("clear_profile_data", clearProfileData);
+        jsonObject.put("check_profiles", checkProfiles);
+        jsonObject.put("boot_complete", bootComplete);
+        jsonObject.put("force_compilation", forceCompilation);
+        jsonObject.put("force_dex_opt", forceDexOpt);
+        return jsonObject;
     }
 
     @Override

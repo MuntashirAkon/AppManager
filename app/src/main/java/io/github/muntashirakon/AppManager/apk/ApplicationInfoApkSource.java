@@ -9,6 +9,9 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.core.os.ParcelCompat;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.Objects;
 
@@ -56,6 +59,15 @@ public class ApplicationInfoApkSource extends ApkSource {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeParcelable(mApplicationInfo, flags);
         dest.writeInt(mApkFileKey);
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("file", mApplicationInfo.publicSourceDir);
+        jsonObject.put("apk_file_key", mApkFileKey);
+        return jsonObject;
     }
 
     public static final Creator<ApplicationInfoApkSource> CREATOR = new Creator<ApplicationInfoApkSource>() {

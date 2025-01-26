@@ -6,6 +6,9 @@ import android.os.Parcel;
 
 import androidx.annotation.NonNull;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat.NetPolicy;
 
 public class BatchNetPolicyOptions implements IBatchOpOptions {
@@ -47,5 +50,13 @@ public class BatchNetPolicyOptions implements IBatchOpOptions {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeInt(mPolicies);
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("policies", mPolicies);
+        return jsonObject;
     }
 }

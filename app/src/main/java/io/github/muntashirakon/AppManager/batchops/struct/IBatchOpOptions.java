@@ -4,5 +4,7 @@ package io.github.muntashirakon.AppManager.batchops.struct;
 
 import android.os.Parcelable;
 
-public interface IBatchOpOptions extends Parcelable {
+import io.github.muntashirakon.AppManager.history.IJsonSerializer;
+
+public interface IBatchOpOptions extends Parcelable, IJsonSerializer {
 }
