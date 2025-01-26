@@ -103,6 +103,7 @@ import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.batchops.BatchQueueItem;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
@@ -1076,9 +1077,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                                 for (int i = 0; i < selectedItems.size(); ++i) {
                                                     userIds.add(userId);
                                                 }
-                                                intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedItems);
-                                                intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, userIds);
-                                                intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNINSTALL);
+                                                BatchQueueItem item = BatchQueueItem.getBatchOpQueue(
+                                                        BatchOpsManager.OP_UNINSTALL, selectedItems, userIds, null);
+                                                intent.putExtra(BatchOpsService.EXTRA_QUEUE_ITEM, item);
                                                 ContextCompat.startForegroundService(mActivity, intent);
                                             }
                                         })

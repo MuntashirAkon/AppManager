@@ -41,6 +41,8 @@ import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.backup.convert.ImportType;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.batchops.BatchQueueItem;
+import io.github.muntashirakon.AppManager.batchops.struct.BatchBackupImportOptions;
 import io.github.muntashirakon.AppManager.crypto.RSACrypto;
 import io.github.muntashirakon.AppManager.settings.crypto.AESCryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.settings.crypto.ECCCryptoSelectionDialogFragment;
@@ -282,14 +284,10 @@ public class BackupRestorePreferences extends PreferenceFragment {
         // Start batch ops service
         Intent intent = new Intent(mActivity, BatchOpsService.class);
         BatchOpsManager.Result input = new BatchOpsManager.Result(Collections.emptyList());
-        intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, input.getFailedPackages());
-        intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, input.getAssociatedUserHandles());
-        intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_IMPORT_BACKUPS);
-        Bundle args = new Bundle();
-        args.putInt(BatchOpsManager.ARG_BACKUP_TYPE, backupType);
-        args.putParcelable(BatchOpsManager.ARG_URI, uri);
-        args.putBoolean(BatchOpsManager.ARG_REMOVE_IMPORTED, removeImported);
-        intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
+        BatchBackupImportOptions options = new BatchBackupImportOptions(backupType, uri, removeImported);
+        BatchQueueItem item = BatchQueueItem.getBatchOpQueue(BatchOpsManager.OP_IMPORT_BACKUPS,
+                input.getFailedPackages(), input.getAssociatedUsers(), options);
+        intent.putExtra(BatchOpsService.EXTRA_QUEUE_ITEM, item);
         ContextCompat.startForegroundService(mActivity, intent);
     }
 
@@ -312,7 +310,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
                         .setNeutralButton(R.string.cancel, null)
                         .show());
 
-        if (storageLocations.size() == 0) {
+        if (storageLocations.isEmpty()) {
             alertDialog.set(new MaterialAlertDialogBuilder(mActivity)
                     .setCustomTitle(titleBuilder.build())
                     .setMessage(R.string.no_volumes_found)

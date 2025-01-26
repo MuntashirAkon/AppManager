@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.ArraySet;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,5 +62,29 @@ public class ParcelUtils {
             map.put((K) parcel.readValue(keyCl), (V) parcel.readValue(valCl));
         }
         return map;
+    }
+
+    public static void writeArrayList(@Nullable ArrayList<?> val, @NonNull Parcel dest) {
+        final int size = (val != null) ? val.size() : -1;
+        dest.writeInt(size);
+        for (int i = 0; i < size; i++) {
+            dest.writeValue(val.get(i));
+        }
+    }
+
+
+    @Nullable
+    public static <T> ArrayList<T> readArrayList(@NonNull Parcel in, @Nullable ClassLoader loader) {
+        final int size = in.readInt();
+        if (size < 0) {
+            return null;
+        }
+        ArrayList<T> result = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            Object value = in.readValue(loader);
+            //noinspection unchecked
+            result.add((T) value);
+        }
+        return result;
     }
 }

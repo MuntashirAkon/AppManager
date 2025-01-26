@@ -41,6 +41,8 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.batchops.BatchQueueItem;
+import io.github.muntashirakon.AppManager.batchops.struct.BatchBackupOptions;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -398,13 +400,10 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
                 new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED), ContextCompat.RECEIVER_NOT_EXPORTED);
         // Start batch ops service
         Intent intent = new Intent(mActivity, BatchOpsService.class);
-        intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, operationInfo.packageList);
-        intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, operationInfo.userIdListMappedToPackageList);
-        intent.putExtra(BatchOpsService.EXTRA_OP, operationInfo.op);
-        Bundle args = new Bundle();
-        args.putInt(BatchOpsManager.ARG_FLAGS, operationInfo.flags);
-        args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, operationInfo.backupNames);
-        intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
+        BatchBackupOptions options = new BatchBackupOptions(operationInfo.flags, operationInfo.backupNames);
+        BatchQueueItem queueItem = BatchQueueItem.getBatchOpQueue(operationInfo.op,
+                operationInfo.packageList, operationInfo.userIdListMappedToPackageList, options);
+        intent.putExtra(BatchOpsService.EXTRA_QUEUE_ITEM, queueItem);
         ContextCompat.startForegroundService(mActivity, intent);
         dismiss();
     }

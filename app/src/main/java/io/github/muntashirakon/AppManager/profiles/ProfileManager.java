@@ -5,7 +5,6 @@ package io.github.muntashirakon.AppManager.profiles;
 import android.annotation.SuppressLint;
 import android.app.AppOpsManager;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
@@ -22,10 +21,14 @@ import java.util.UUID;
 
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsManager.BatchOpsInfo;
+import io.github.muntashirakon.AppManager.batchops.struct.BatchAppOpsOptions;
+import io.github.muntashirakon.AppManager.batchops.struct.BatchBackupOptions;
+import io.github.muntashirakon.AppManager.batchops.struct.BatchComponentOptions;
+import io.github.muntashirakon.AppManager.batchops.struct.BatchPermissionOptions;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
-import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -158,15 +161,18 @@ public class ProfileManager {
 
         if (mProfile.packages.length == 0) return;
         int[] users = mProfile.users == null ? Users.getUsersIds() : mProfile.users;
-        List<UserPackagePair> userPackagePairs = new ArrayList<>();
+        int size = mProfile.packages.length * users.length;
+        List<String> packages = new ArrayList<>(size);
+        List<Integer> assocUsers = new ArrayList<>(size);
         for (String packageName : mProfile.packages) {
             for (int user : users) {
-                userPackagePairs.add(new UserPackagePair(packageName, user));
+                packages.add(packageName);
+                assocUsers.add(user);
             }
         }
         // Send progress
         if (progressHandler != null) {
-            progressHandler.postUpdate(calculateMaxProgress(userPackagePairs), 0);
+            progressHandler.postUpdate(calculateMaxProgress(packages), 0);
         }
         BatchOpsManager batchOpsManager = new BatchOpsManager(mLogger);
         BatchOpsManager.Result result;
@@ -174,17 +180,20 @@ public class ProfileManager {
         String[] components = mProfile.components;
         if (components != null) {
             log("====> Started block/unblock components. State: " + state);
-            Bundle args = new Bundle();
-            args.putStringArray(BatchOpsManager.ARG_SIGNATURES, components);
-            batchOpsManager.setArgs(args);
+            BatchComponentOptions options = new BatchComponentOptions(components);
+            int op;
             switch (state) {
                 case AppsProfile.STATE_ON:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_BLOCK_COMPONENTS, userPackagePairs, progressHandler);
+                    op = BatchOpsManager.OP_BLOCK_COMPONENTS;
                     break;
                 case AppsProfile.STATE_OFF:
+                    op = BatchOpsManager.OP_UNBLOCK_COMPONENTS;
+                    break;
                 default:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_UNBLOCK_COMPONENTS, userPackagePairs, progressHandler);
+                    op = BatchOpsManager.OP_NONE;
             }
+            BatchOpsInfo info = BatchOpsInfo.getInstance(op, packages, assocUsers, options);
+            result = batchOpsManager.performOp(info, progressHandler);
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: %s", result);
             }
@@ -193,18 +202,19 @@ public class ProfileManager {
         int[] appOps = mProfile.appOps;
         if (appOps != null) {
             log("====> Started ignore/default components. State: " + state);
-            Bundle args = new Bundle();
-            args.putIntArray(BatchOpsManager.ARG_APP_OPS, appOps);
+            int mode;
             switch (state) {
                 case AppsProfile.STATE_ON:
-                    args.putInt(BatchOpsManager.ARG_APP_OP_MODE, AppOpsManager.MODE_IGNORED);
+                    mode = AppOpsManager.MODE_IGNORED;
                     break;
                 case AppsProfile.STATE_OFF:
                 default:
-                    args.putInt(BatchOpsManager.ARG_APP_OP_MODE, AppOpsManager.MODE_DEFAULT);
+                    mode = AppOpsManager.MODE_DEFAULT;
             }
-            batchOpsManager.setArgs(args);
-            result = batchOpsManager.performOp(BatchOpsManager.OP_SET_APP_OPS, userPackagePairs, progressHandler);
+            BatchAppOpsOptions options = new BatchAppOpsOptions(appOps, mode);
+            BatchOpsInfo info = BatchOpsInfo.getInstance(BatchOpsManager.OP_SET_APP_OPS, packages,
+                    assocUsers, options);
+            result = batchOpsManager.performOp(info, progressHandler);
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: %s", result);
             }
@@ -213,17 +223,20 @@ public class ProfileManager {
         String[] permissions = mProfile.permissions;
         if (permissions != null) {
             log("====> Started grant/revoke permissions.");
-            Bundle args = new Bundle();
-            args.putStringArray(BatchOpsManager.ARG_PERMISSIONS, permissions);
-            batchOpsManager.setArgs(args);
+            int op;
             switch (state) {
                 case AppsProfile.STATE_ON:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_REVOKE_PERMISSIONS, userPackagePairs, progressHandler);
+                    op = BatchOpsManager.OP_REVOKE_PERMISSIONS;
                     break;
                 case AppsProfile.STATE_OFF:
+                    op = BatchOpsManager.OP_GRANT_PERMISSIONS;
+                    break;
                 default:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_GRANT_PERMISSIONS, userPackagePairs, progressHandler);
+                    op = BatchOpsManager.OP_NONE;
             }
+            BatchPermissionOptions options = new BatchPermissionOptions(permissions);
+            BatchOpsInfo info = BatchOpsInfo.getInstance(op, packages, assocUsers, options);
+            result = batchOpsManager.performOp(info, progressHandler);
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: %s", result);
             }
@@ -237,14 +250,19 @@ public class ProfileManager {
         // Disable/enable
         if (mProfile.freeze) {
             log("====> Started freeze/unfreeze. State: " + state);
+            int op;
             switch (state) {
                 case AppsProfile.STATE_ON:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_FREEZE, userPackagePairs, progressHandler);
+                    op = BatchOpsManager.OP_FREEZE;
                     break;
                 case AppsProfile.STATE_OFF:
+                    op = BatchOpsManager.OP_UNFREEZE;
+                    break;
                 default:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_UNFREEZE, userPackagePairs, progressHandler);
+                    op = BatchOpsManager.OP_NONE;
             }
+            BatchOpsInfo info = BatchOpsInfo.getInstance(op, packages, assocUsers, null);
+            result = batchOpsManager.performOp(info, progressHandler);
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: %s", result);
             }
@@ -252,7 +270,8 @@ public class ProfileManager {
         // Force-stop
         if (mProfile.forceStop) {
             log("====> Started force-stop.");
-            result = batchOpsManager.performOp(BatchOpsManager.OP_FORCE_STOP, userPackagePairs, progressHandler);
+            BatchOpsInfo info = BatchOpsInfo.getInstance(BatchOpsManager.OP_FORCE_STOP, packages, assocUsers, null);
+            result = batchOpsManager.performOp(info, progressHandler);
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: %s", result);
             }
@@ -260,7 +279,8 @@ public class ProfileManager {
         // Clear cache
         if (mProfile.clearCache) {
             log("====> Started clear cache.");
-            result = batchOpsManager.performOp(BatchOpsManager.OP_CLEAR_CACHE, userPackagePairs, progressHandler);
+            BatchOpsInfo info = BatchOpsInfo.getInstance(BatchOpsManager.OP_CLEAR_CACHE, packages, assocUsers, null);
+            result = batchOpsManager.performOp(info, progressHandler);
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: %s", result);
             }
@@ -268,7 +288,8 @@ public class ProfileManager {
         // Clear data
         if (mProfile.clearData) {
             log("====> Started clear data.");
-            result = batchOpsManager.performOp(BatchOpsManager.OP_CLEAR_DATA, userPackagePairs, progressHandler);
+            BatchOpsInfo info = BatchOpsInfo.getInstance(BatchOpsManager.OP_CLEAR_DATA, packages, assocUsers, null);
+            result = batchOpsManager.performOp(info, progressHandler);
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: %s", result);
             }
@@ -276,14 +297,19 @@ public class ProfileManager {
         // Block trackers
         if (mProfile.blockTrackers) {
             log("====> Started block trackers. State: " + state);
+            int op;
             switch (state) {
                 case AppsProfile.STATE_ON:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_BLOCK_TRACKERS, userPackagePairs, progressHandler);
+                    op = BatchOpsManager.OP_BLOCK_TRACKERS;
                     break;
                 case AppsProfile.STATE_OFF:
+                    op = BatchOpsManager.OP_UNBLOCK_TRACKERS;
+                    break;
                 default:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_UNBLOCK_TRACKERS, userPackagePairs, progressHandler);
+                    op = BatchOpsManager.OP_NONE;
             }
+            BatchOpsInfo info = BatchOpsInfo.getInstance(op, packages, assocUsers, null);
+            result = batchOpsManager.performOp(info, progressHandler);
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: %s", result);
             }
@@ -291,7 +317,8 @@ public class ProfileManager {
         // Backup apk
         if (mProfile.saveApk) {
             log("====> Started backup apk.");
-            result = batchOpsManager.performOp(BatchOpsManager.OP_BACKUP_APK, userPackagePairs, progressHandler);
+            BatchOpsInfo info = BatchOpsInfo.getInstance(BatchOpsManager.OP_BACKUP_APK, packages, assocUsers, null);
+            result = batchOpsManager.performOp(info, progressHandler);
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: %s", result);
             }
@@ -301,30 +328,31 @@ public class ProfileManager {
         if (backupInfo != null) {
             log("====> Started backup/restore.");
             BackupFlags backupFlags = new BackupFlags(backupInfo.flags);
-            Bundle args = new Bundle();
+            String[] backupNames = null;
             if (backupFlags.backupMultiple() && backupInfo.name != null) {
                 if (state.equals(AppsProfile.STATE_OFF)) {
-                    args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, new String[]{UserHandleHidden.myUserId()
-                            + '_' + backupInfo.name});
+                    backupNames = new String[]{UserHandleHidden.myUserId() + '_' + backupInfo.name};
                 } else {
-                    args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, new String[]{backupInfo.name});
+                    backupNames = new String[]{backupInfo.name};
                 }
             }
             // Always add backup custom users
             backupFlags.addFlag(BackupFlags.BACKUP_CUSTOM_USERS);
-            args.putInt(BatchOpsManager.ARG_FLAGS, backupFlags.getFlags());
-            batchOpsManager.setArgs(args);
+            BatchBackupOptions options = new BatchBackupOptions(backupFlags.getFlags(), backupNames);
+            int op;
             switch (state) {
                 case AppsProfile.STATE_ON:  // Take backup
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_BACKUP, userPackagePairs, progressHandler);
+                    op = BatchOpsManager.OP_BACKUP;
                     break;
                 case AppsProfile.STATE_OFF:  // Restore backup
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_RESTORE_BACKUP, userPackagePairs, progressHandler);
-                    mRequiresRestart |= result.requiresRestart();
+                    op = BatchOpsManager.OP_RESTORE_BACKUP;
                     break;
                 default:
-                    result = new BatchOpsManager.Result(userPackagePairs);
+                    op = BatchOpsManager.OP_NONE;
             }
+            BatchOpsInfo info = BatchOpsInfo.getInstance(op, packages, assocUsers, options);
+            result = batchOpsManager.performOp(info, progressHandler);
+            mRequiresRestart |= result.requiresRestart();
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: %s", result);
             }
@@ -339,7 +367,7 @@ public class ProfileManager {
         }
     }
 
-    private int calculateMaxProgress(@NonNull List<UserPackagePair> userPackagePairs) {
+    private int calculateMaxProgress(@NonNull List<String> userPackagePairs) {
         int packageCount = userPackagePairs.size();
         int opCount = 0;
         if (mProfile.components != null) ++opCount;

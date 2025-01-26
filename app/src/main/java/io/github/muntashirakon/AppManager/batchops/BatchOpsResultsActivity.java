@@ -30,6 +30,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.RestartUtils;
 
@@ -37,10 +38,8 @@ public class BatchOpsResultsActivity extends BaseActivity {
     private RecyclerView mRecyclerView;
     private AppCompatEditText mLogViewer;
 
-    private ArrayList<String> mFailedPackages;
-    private ArrayList<Integer> mUserIds;
-    private int mOpConst;
-    private Bundle mArgs;
+    @Nullable
+    private BatchQueueItem mBatchQueueItem;
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
@@ -70,7 +69,7 @@ public class BatchOpsResultsActivity extends BaseActivity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
         if (restartIfNeeded(getIntent())) {
             return;
@@ -79,21 +78,21 @@ public class BatchOpsResultsActivity extends BaseActivity {
     }
 
     private void handleIntent(@NonNull Intent intent) {
-        mFailedPackages = intent.getStringArrayListExtra(BatchOpsService.EXTRA_FAILED_PKG);
-        mUserIds = intent.getIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS);
-        mOpConst = intent.getIntExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_NONE);
-        mArgs = intent.getBundleExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS);
+        mBatchQueueItem = IntentCompat.getParcelableExtra(intent, BatchOpsService.EXTRA_QUEUE_ITEM, BatchQueueItem.class);
+        if (mBatchQueueItem == null) {
+            finish();
+            return;
+        }
         setTitle(intent.getStringExtra(BatchOpsService.EXTRA_FAILURE_MESSAGE));
-        ArrayList<CharSequence> packageLabels = PackageUtils.packagesToAppLabels(getPackageManager(), mFailedPackages, mUserIds);
+        ArrayList<CharSequence> packageLabels = PackageUtils.packagesToAppLabels(getPackageManager(),
+                mBatchQueueItem.getPackages(), mBatchQueueItem.getUsers());
         RecyclerAdapter adapter = new RecyclerAdapter(packageLabels);
         mRecyclerView.setAdapter(adapter);
         if (packageLabels != null) {
             adapter.notifyItemRangeInserted(0, packageLabels.size());
         }
         mLogViewer.setText(getFormattedLogs(BatchOpsLogger.getAllLogs()));
-        intent.removeExtra(BatchOpsService.EXTRA_FAILED_PKG);
-        intent.removeExtra(BatchOpsService.EXTRA_OP_USERS);
-        intent.removeExtra(BatchOpsService.EXTRA_FAILURE_MESSAGE);
+        intent.removeExtra(BatchOpsService.EXTRA_QUEUE_ITEM);
     }
 
     private static boolean restartIfNeeded(@NonNull Intent intent) {
@@ -118,10 +117,7 @@ public class BatchOpsResultsActivity extends BaseActivity {
             return true;
         } else if (id == R.id.action_retry) {
             Intent BatchOpsIntent = new Intent(this, BatchOpsService.class);
-            BatchOpsIntent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, mFailedPackages);
-            BatchOpsIntent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, mUserIds);
-            BatchOpsIntent.putExtra(BatchOpsService.EXTRA_OP, mOpConst);
-            BatchOpsIntent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, mArgs);
+            BatchOpsIntent.putExtra(BatchOpsService.EXTRA_QUEUE_ITEM, mBatchQueueItem);
             ContextCompat.startForegroundService(this, BatchOpsIntent);
         }
         return super.onOptionsItemSelected(item);

@@ -33,6 +33,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.batchops.BatchQueueItem;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
@@ -380,9 +381,8 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         }
         Intent intent = new Intent(this, BatchOpsService.class);
         BatchOpsManager.Result input = new BatchOpsManager.Result(model.getSelectedPackagesWithUsers());
-        intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, input.getFailedPackages());
-        intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, input.getAssociatedUserHandles());
-        intent.putExtra(BatchOpsService.EXTRA_OP, op);
+        BatchQueueItem item = BatchQueueItem.getBatchOpQueue(op, input.getFailedPackages(), input.getAssociatedUsers(), null);
+        intent.putExtra(BatchOpsService.EXTRA_QUEUE_ITEM, item);
         ContextCompat.startForegroundService(this, intent);
     }
 

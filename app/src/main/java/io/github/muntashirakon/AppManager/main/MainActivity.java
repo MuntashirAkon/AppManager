@@ -48,6 +48,9 @@ import io.github.muntashirakon.AppManager.apk.list.ListExporter;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.batchops.BatchQueueItem;
+import io.github.muntashirakon.AppManager.batchops.struct.BatchNetPolicyOptions;
+import io.github.muntashirakon.AppManager.batchops.struct.IBatchOpOptions;
 import io.github.muntashirakon.AppManager.changelog.Changelog;
 import io.github.muntashirakon.AppManager.changelog.ChangelogParser;
 import io.github.muntashirakon.AppManager.changelog.ChangelogRecyclerAdapter;
@@ -414,9 +417,8 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                         for (int flag : selections) {
                             flags |= flag;
                         }
-                        Bundle args = new Bundle();
-                        args.putInt(BatchOpsManager.ARG_NET_POLICIES, flags);
-                        handleBatchOp(BatchOpsManager.OP_NET_POLICY, args);
+                        BatchNetPolicyOptions options = new BatchNetPolicyOptions(flags);
+                        handleBatchOp(BatchOpsManager.OP_NET_POLICY, options);
                     })
                     .show();
         } else if (id == R.id.action_optimize) {
@@ -564,15 +566,13 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         handleBatchOp(op, null);
     }
 
-    private void handleBatchOp(@BatchOpsManager.OpType int op, @Nullable Bundle args) {
+    private void handleBatchOp(@BatchOpsManager.OpType int op, @Nullable IBatchOpOptions options) {
         if (viewModel == null) return;
         showProgressIndicator(true);
         Intent intent = new Intent(this, BatchOpsService.class);
         BatchOpsManager.Result input = new BatchOpsManager.Result(viewModel.getSelectedPackagesWithUsers());
-        intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, input.getFailedPackages());
-        intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, input.getAssociatedUserHandles());
-        intent.putExtra(BatchOpsService.EXTRA_OP, op);
-        intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
+        BatchQueueItem item = BatchQueueItem.getBatchOpQueue(op, input.getFailedPackages(), input.getAssociatedUsers(), options);
+        intent.putExtra(BatchOpsService.EXTRA_QUEUE_ITEM, item);
         ContextCompat.startForegroundService(this, intent);
     }
 

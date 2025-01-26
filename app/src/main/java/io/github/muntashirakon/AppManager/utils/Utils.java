@@ -37,6 +37,8 @@ import androidx.annotation.StringRes;
 import androidx.core.content.pm.PermissionInfoCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import org.jetbrains.annotations.Contract;
+
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
@@ -554,9 +556,10 @@ public class Utils {
         return buf.toString();
     }
 
-    public static int getIntegerFromString(CharSequence needle,
-                                           List<CharSequence> stringsToMatch,
-                                           List<Integer> associatedIntegers)
+    @Contract("null,_,_ -> fail")
+    public static int getIntegerFromString(@Nullable CharSequence needle,
+                                           @NonNull List<CharSequence> stringsToMatch,
+                                           @NonNull List<Integer> associatedIntegers)
             throws IllegalArgumentException {
         if (needle == null) throw new IllegalArgumentException("Needle cannot be null");
         if (stringsToMatch.size() != associatedIntegers.size()) {

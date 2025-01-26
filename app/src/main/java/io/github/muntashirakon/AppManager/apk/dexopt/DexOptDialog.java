@@ -25,6 +25,8 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.batchops.BatchQueueItem;
+import io.github.muntashirakon.AppManager.batchops.struct.BatchDexOptOptions;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.adapters.AnyFilterArrayAdapter;
@@ -132,12 +134,11 @@ public class DexOptDialog extends DialogFragment {
     }
 
     private void launchOp() {
-        Bundle args = new Bundle();
-        args.putParcelable(BatchOpsManager.ARG_OPTIONS, mOptions);
+        BatchDexOptOptions options = new BatchDexOptOptions(mOptions);
+        BatchQueueItem queueItem = BatchQueueItem.getBatchOpQueue(
+                BatchOpsManager.OP_DEXOPT, null, null, options);
         Intent intent = new Intent(requireContext(), BatchOpsService.class);
-        intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, null);
-        intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_DEXOPT);
-        intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
+        intent.putExtra(BatchOpsService.EXTRA_QUEUE_ITEM, queueItem);
         ContextCompat.startForegroundService(requireContext(), intent);
     }
 }
