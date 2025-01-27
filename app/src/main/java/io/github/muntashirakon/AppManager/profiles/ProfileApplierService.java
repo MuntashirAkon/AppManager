@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.profiles;
 
+import static io.github.muntashirakon.AppManager.history.ops.OpHistoryManager.HISTORY_TYPE_PROFILE;
+
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -19,6 +21,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsResultsActivity;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.history.ops.OpHistoryManager;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.NotificationManagerInfo;
@@ -80,6 +83,7 @@ public class ProfileApplierService extends ForegroundService {
             ProfileManager profileManager = new ProfileManager(item.getProfileId());
             profileManager.applyProfile(item.getState(), mProgressHandler);
             profileManager.conclude();
+            OpHistoryManager.addHistoryItem(HISTORY_TYPE_PROFILE, item, true);
             sendNotification(item.getProfileName(), Activity.RESULT_OK, notify, profileManager.requiresRestart());
         } catch (IOException e) {
             sendNotification(item.getProfileName(), Activity.RESULT_CANCELED, notify, false);

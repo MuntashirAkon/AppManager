@@ -12,7 +12,6 @@ import java.util.Comparator;
 
 import io.github.muntashirakon.AppManager.utils.AlphanumComparator;
 
-@SuppressWarnings("NullableProblems")
 @Entity(tableName = "log_filter", indices = {@Index(name = "index_name", value = {"name"}, unique = true)})
 public class LogFilter implements Comparable<LogFilter> {
     public static final Comparator<LogFilter> COMPARATOR = (o1, o2) ->
@@ -20,7 +19,6 @@ public class LogFilter implements Comparable<LogFilter> {
 
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
-    @NonNull
     public long id;
 
     @ColumnInfo(name = "name")

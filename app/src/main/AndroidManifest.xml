@@ -661,6 +661,11 @@
             android:launchMode="singleInstance"
             android:taskAffinity="" />
         <activity
+            android:name=".history.ops.OpHistoryActivity"
+            android:exported="true"
+            android:icon="@drawable/ic_history"
+            android:label="@string/op_history" />
+        <activity
             android:name=".intercept.ActivityInterceptor"
             android:enabled="true"
             android:exported="true"

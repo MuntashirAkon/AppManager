@@ -22,6 +22,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.activity.LeadingActivityTrackerActivity;
 import io.github.muntashirakon.AppManager.editor.CodeEditorActivity;
 import io.github.muntashirakon.AppManager.fm.FmActivity;
+import io.github.muntashirakon.AppManager.history.ops.OpHistoryActivity;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.runner.TermActivity;
@@ -81,6 +82,12 @@ public class LabsActivity extends BaseActivity {
                         startActivity(intent);
                     });
         }
+        addAction(this, flowLayout, R.string.op_history, R.drawable.ic_history)
+                .setOnClickListener(v -> {
+                    Intent intent = new Intent(this, OpHistoryActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                });
     }
 
     @Override

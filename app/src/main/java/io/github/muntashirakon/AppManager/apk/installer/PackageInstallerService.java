@@ -15,6 +15,7 @@ import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerC
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_SESSION_WRITE;
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_STORAGE;
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_SUCCESS;
+import static io.github.muntashirakon.AppManager.history.ops.OpHistoryManager.HISTORY_TYPE_INSTALLER;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -41,6 +42,7 @@ import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.apk.CachedApkSource;
 import io.github.muntashirakon.AppManager.apk.dexopt.DexOptimizer;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.history.ops.OpHistoryManager;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.MainActivity;
@@ -171,6 +173,7 @@ public class PackageInstallerService extends ForegroundService {
             }
         });
         // Two possibilities: 1. Install-existing, 2. ApkFile/Uri
+        boolean success = false;
         if (apkQueueItem.isInstallExisting()) {
             // Install existing (need no progress)
             String packageName = apkQueueItem.getPackageName();
@@ -178,7 +181,7 @@ public class PackageInstallerService extends ForegroundService {
                 // No package name supplied, abort
                 return;
             }
-            installer.installExisting(packageName, options.getUserId());
+            success = installer.installExisting(packageName, options.getUserId());
         } else {
             // ApkFile/Uri
             ApkSource apkSource = apkQueueItem.getApkSource();
@@ -188,7 +191,7 @@ public class PackageInstallerService extends ForegroundService {
             }
             try {
                 ApkFile apkFile = apkSource.resolve();
-                installer.install(apkFile, selectedSplitIds, options, mProgressHandler);
+                success = installer.install(apkFile, selectedSplitIds, options, mProgressHandler);
             } catch (Throwable th) {
                 Log.w(TAG, "Could not get ApkFile", th);
             } finally {
@@ -198,6 +201,7 @@ public class PackageInstallerService extends ForegroundService {
                 }
             }
         }
+        OpHistoryManager.addHistoryItem(HISTORY_TYPE_INSTALLER, apkQueueItem, success);
     }
 
     @Override

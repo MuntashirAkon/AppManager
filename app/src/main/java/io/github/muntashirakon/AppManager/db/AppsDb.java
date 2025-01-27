@@ -10,13 +10,15 @@ import io.github.muntashirakon.AppManager.db.dao.AppDao;
 import io.github.muntashirakon.AppManager.db.dao.BackupDao;
 import io.github.muntashirakon.AppManager.db.dao.FileHashDao;
 import io.github.muntashirakon.AppManager.db.dao.LogFilterDao;
+import io.github.muntashirakon.AppManager.db.dao.OpHistoryDao;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.db.entity.FileHash;
 import io.github.muntashirakon.AppManager.db.entity.LogFilter;
+import io.github.muntashirakon.AppManager.db.entity.OpHistory;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
-@Database(entities = {App.class, LogFilter.class, FileHash.class, Backup.class}, version = 2)
+@Database(entities = {App.class, LogFilter.class, FileHash.class, Backup.class, OpHistory.class}, version = 3)
 public abstract class AppsDb extends RoomDatabase {
     private static AppsDb sAppsDb;
 
@@ -36,4 +38,6 @@ public abstract class AppsDb extends RoomDatabase {
     public abstract LogFilterDao logFilterDao();
 
     public abstract FileHashDao fileHashDao();
+
+    public abstract OpHistoryDao opHistoryDao();
 }
