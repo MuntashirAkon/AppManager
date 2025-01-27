@@ -271,18 +271,7 @@
     <string name="faq$app-components$$what-is-component-blocking-title">什么是即时组件禁用？</string>
     <string name="faq$app-components$$tracker-classes-versus-tracker-components-title">跟踪器类与跟踪器组件</string>
     <string name="appendices$changelogs$$chapter-title">更新日志</string>
-    <string name="pages$app-details-page$uses-permissions">\\textbf{系统预定义权限}(\\textit{Uses Permissions}) 是应用(申请)所使用的权限，其在应用程序清单中使用 \\texttt{uses-permission} 标签声明。
-\n其 \"标志位 (\\textit{flags})\"、\"权限名 (\\textit{permission name})\"、\"权限描述 (\\textit{permission description})\"、\"包名 ( \\textit{package name})\"、\"群组 (\\textit{group})\" 取自相关\\hyperref[subsubsec:permissions]{权限}。
-\n
-\n
-\n特权用户可通过切换按钮授予或撤销 危险 (\\textit{dangerous}) 和 开发 (\\textit{development}) 权限，也可以使用菜单中的相应选项。
-\n只能撤销以上两种权限，因为Android不允许修改 普通 (\\textit{normal}) 权限（其中大多数是）。但仍有可能撤销它们通过编辑 \\texttt{runtime-permissions.xml} 本身，但是否可能仍不明确。
-\n
-\n\\begin{tip}{提示}
-\n 由于系统默认会撤销危险权限，因此撤销所有危险权限与重置所有权限是一样的。
-\n\\end{tip}
-\n
-\n可以以升序方式按权限名称对列表排序，也可以优先显示拒绝的权限。</string>
+    <string name="pages$app-details-page$uses-permissions">\\textbf{预定义权限}(\\textit{Uses Permissions}) 是应用(申请)所使用的权限。\n这些权限在应用程序清单中通过使用 \\texttt{uses-permission} 标签声明。\n诸如 \"标志位 (\\textit{flags})\"、\"权限名 (\\textit{permission name})\"、\"权限描述 (\\textit{permission description})\"、\n\"包名 ( \\textit{package name})\"、\"群组 (\\textit{group})\" 此类的信息也取自其相关\\hyperref[subsubsec:permissions]{权限}。\n\n特权用户可通过点击每个权限右侧的切换按钮授予或撤销 危险 (\\textit{dangerous}) 和 开发 (\\textit{development}) 权限，\n也可以使用菜单中的相应选项撤销危险权限。\n因为 Android 不允许修改 普通 (\\textit{normal}) 权限（其中大多数是该类权限），只能撤销以上两种类别的权限。\n也可尝试编辑 \\texttt{runtime-permissions.xml} 以撤销这些权限，\n但是否可行尚不明确。 \n\n\\begin{tip}{提示} \n 由于系统默认撤销危险权限，\n 因此撤销所有危险权限与重置所有权限一致。\n\\end{tip} \n\n可以以升序方式按权限名称对列表进行排序，\n也可通过菜单中相应的选项优先显示拒绝的权限。</string>
     <string name="pages$app-details-page$permissions">(自定义)\\textbf{权限} 通常是应用自身定义的自定义权限，包括该应用声明的、标记为\"内部( \\textit{Internal})\" 权限，其他应用声明、标记为\"外部( \\textit{External})\"的权限。外部权限在应用程序组件中指定为依赖项，即应用只有在拥有指定的权限时才能调用该组件：
 \n\\begin{itemize}
 \n \\item \\textbf{名称} 每个权限都有的唯一的名称，如 \\texttt{android.permission.INTERNET} ，但多个应用可以请求同一个权限。
