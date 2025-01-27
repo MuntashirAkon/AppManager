@@ -204,6 +204,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         }
         synchronized (mApkQueue) {
             mApkQueue.addAll(ApkQueueItem.fromIntent(intent, Utils.getRealReferrer(this)));
+
         }
         ApkSource apkSource = IntentCompat.getParcelableExtra(intent, EXTRA_APK_FILE_LINK, ApkSource.class);
         if (apkSource != null) {

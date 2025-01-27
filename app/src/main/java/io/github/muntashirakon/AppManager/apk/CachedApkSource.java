@@ -21,6 +21,7 @@ import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.history.JsonDeserializer;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.io.Paths;
 
 public class CachedApkSource extends ApkSource {
@@ -28,9 +29,11 @@ public class CachedApkSource extends ApkSource {
 
     @NonNull
     private final Uri mUri;
+    @Nullable
     private final String mMimeType;
 
     private int mApkFileKey;
+    @Nullable
     private File mCachedFile;
 
     CachedApkSource(@NonNull Uri uri, @Nullable String mimeType) {
@@ -78,6 +81,7 @@ public class CachedApkSource extends ApkSource {
 
     public void cleanup() {
         FileUtils.deleteSilently(mCachedFile);
+        mCachedFile = null;
     }
 
     protected CachedApkSource(@NonNull Parcel in) {
@@ -108,7 +112,8 @@ public class CachedApkSource extends ApkSource {
         mUri = Uri.parse(jsonObject.getString("uri"));
         mMimeType = jsonObject.getString("mime_type");
         mApkFileKey = jsonObject.getInt("apk_file_key");
-        mCachedFile = new File(jsonObject.getString("cached_file"));
+        String cachedFile = JSONUtils.optString(jsonObject, "cached_file", null);
+        mCachedFile = cachedFile != null ? new File(cachedFile) : null;
     }
 
     @NonNull
@@ -119,7 +124,7 @@ public class CachedApkSource extends ApkSource {
         jsonObject.put("uri", mUri.toString());
         jsonObject.put("mime_type", mMimeType);
         jsonObject.put("apk_file_key", mApkFileKey);
-        jsonObject.put("cached_file", mCachedFile.getAbsolutePath());
+        jsonObject.put("cached_file", mCachedFile != null ? mCachedFile.getAbsolutePath() : null);
         return jsonObject;
     }
 

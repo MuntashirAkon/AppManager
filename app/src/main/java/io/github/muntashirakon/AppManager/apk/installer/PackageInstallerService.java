@@ -150,7 +150,9 @@ public class PackageInstallerService extends ForegroundService {
             @Override
             public void onFinishedInstall(int sessionId, String packageName, int result,
                                           @Nullable String blockingPackage, @Nullable String statusMessage) {
-                if (result == STATUS_SUCCESS) {
+                boolean success = result == STATUS_SUCCESS;
+                OpHistoryManager.addHistoryItem(HISTORY_TYPE_INSTALLER, apkQueueItem, success);
+                if (success) {
                     // Block trackers if requested
                     if (options.isBlockTrackers()) {
                         ComponentUtils.blockTrackingComponents(new UserPackagePair(packageName, options.getUserId()));
@@ -161,19 +163,10 @@ public class PackageInstallerService extends ForegroundService {
                         new DexOptimizer(PackageManagerCompat.getPackageManager(), packageName).forceDexOpt();
                     }
                 }
-                if (mOnInstallFinished != null) {
-                    ThreadUtils.postOnMainThread(() -> {
-                        if (mOnInstallFinished != null) {
-                            mOnInstallFinished.onFinished(packageName, result, blockingPackage, statusMessage);
-                        }
-                    });
-                } else {
-                    sendNotification(packageName, result, apkQueueItem.getAppLabel(), blockingPackage, statusMessage);
-                }
+                finishInstallation(packageName, result, apkQueueItem.getAppLabel(), blockingPackage, statusMessage);
             }
         });
         // Two possibilities: 1. Install-existing, 2. ApkFile/Uri
-        boolean success = false;
         if (apkQueueItem.isInstallExisting()) {
             // Install existing (need no progress)
             String packageName = apkQueueItem.getPackageName();
@@ -181,7 +174,7 @@ public class PackageInstallerService extends ForegroundService {
                 // No package name supplied, abort
                 return;
             }
-            success = installer.installExisting(packageName, options.getUserId());
+            installer.installExisting(packageName, options.getUserId());
         } else {
             // ApkFile/Uri
             ApkSource apkSource = apkQueueItem.getApkSource();
@@ -189,11 +182,17 @@ public class PackageInstallerService extends ForegroundService {
                 // No apk file, abort
                 return;
             }
+            ApkFile apkFile;
             try {
-                ApkFile apkFile = apkSource.resolve();
-                success = installer.install(apkFile, selectedSplitIds, options, mProgressHandler);
-            } catch (Throwable th) {
-                Log.w(TAG, "Could not get ApkFile", th);
+                try {
+                    apkFile = apkSource.resolve();
+                } catch (Throwable th) {
+                    Log.w(TAG, "Could not get ApkFile", th);
+                    String packageName = apkQueueItem.getPackageName();
+                    finishInstallation(packageName != null ? packageName : "Unknown Package", STATUS_FAILURE_INVALID, apkQueueItem.getAppLabel(), null, null);
+                    return;
+                }
+                installer.install(apkFile, selectedSplitIds, options, mProgressHandler);
             } finally {
                 // Delete the cached file
                 if (apkSource instanceof CachedApkSource) {
@@ -201,7 +200,6 @@ public class PackageInstallerService extends ForegroundService {
                 }
             }
         }
-        OpHistoryManager.addHistoryItem(HISTORY_TYPE_INSTALLER, apkQueueItem, success);
     }
 
     @Override
@@ -250,6 +248,20 @@ public class PackageInstallerService extends ForegroundService {
 
     public void setOnInstallFinished(@Nullable OnInstallFinished onInstallFinished) {
         this.mOnInstallFinished = onInstallFinished;
+    }
+
+    private void finishInstallation(@NonNull String packageName, int status,
+                                    @Nullable String appLabel, @Nullable String blockingPackage,
+                                    @Nullable String statusMessage) {
+        if (mOnInstallFinished != null) {
+            ThreadUtils.postOnMainThread(() -> {
+                if (mOnInstallFinished != null) {
+                    mOnInstallFinished.onFinished(packageName, status, blockingPackage, statusMessage);
+                }
+            });
+        } else {
+            sendNotification(packageName, status, appLabel, blockingPackage, statusMessage);
+        }
     }
 
     private void sendNotification(@NonNull String packageName,

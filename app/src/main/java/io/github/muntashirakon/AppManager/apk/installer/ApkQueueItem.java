@@ -6,6 +6,7 @@ import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerA
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity.EXTRA_PACKAGE_NAME;
 import static io.github.muntashirakon.AppManager.apk.installer.SupportedAppStores.isAppStoreSupported;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageInstaller;
 import android.net.Uri;
@@ -28,6 +29,8 @@ import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.history.IJsonSerializer;
 import io.github.muntashirakon.AppManager.history.JsonDeserializer;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
 public class ApkQueueItem implements Parcelable, IJsonSerializer {
@@ -44,13 +47,18 @@ public class ApkQueueItem implements Parcelable, IJsonSerializer {
         if (uris == null) {
             return apkQueueItems;
         }
+        ContentResolver cr = ContextUtils.getContext().getContentResolver();
         String mimeType = intent.getType();
         Uri originatingUri = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_ORIGINATING_URI, Uri.class);
+        int takeFlags = intent.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         for (Uri uri : uris) {
             ApkQueueItem item = new ApkQueueItem(ApkSource.getCachedApkSource(uri, mimeType));
             item.mOriginatingUri = originatingUri;
             item.mOriginatingPackage = originatingPackage;
             apkQueueItems.add(item);
+            if (takeFlags > 0) {
+                ExUtils.exceptionAsIgnored(() -> cr.takePersistableUriPermission(uri, takeFlags));
+            }
         }
         return apkQueueItems;
     }
