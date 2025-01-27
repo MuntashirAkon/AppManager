@@ -8,6 +8,8 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
 import androidx.annotation.WorkerThread;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import org.json.JSONException;
 
@@ -39,11 +41,17 @@ public final class OpHistoryManager {
     }
 
     public static final String STATUS_SUCCESS = "success";
-    public static final String STATUS_FAILURE = "success";
+    public static final String STATUS_FAILURE = "failure";
 
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({STATUS_SUCCESS, STATUS_FAILURE})
     public @interface Status {
+    }
+
+    private static final MutableLiveData<OpHistory> sHistoryAddedLiveData = new MutableLiveData<>();
+
+    public static LiveData<OpHistory> getHistoryAddedLiveData() {
+        return sHistoryAddedLiveData;
     }
 
     @WorkerThread
@@ -57,7 +65,10 @@ public final class OpHistoryManager {
             opHistory.serializedData = item.serializeToJson().toString();
             opHistory.status = success ? STATUS_SUCCESS : STATUS_FAILURE;
             opHistory.serializedExtra = null;
-            return AppsDb.getInstance().opHistoryDao().insert(opHistory);
+            long id = AppsDb.getInstance().opHistoryDao().insert(opHistory);
+            opHistory.id = id;
+            sHistoryAddedLiveData.postValue(opHistory);
+            return id;
         } catch (JSONException e) {
             Log.e(TAG, "Could not serialize " + item.getClass(), e);
             return -1;

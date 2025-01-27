@@ -188,6 +188,7 @@ public class PackageInstallerService extends ForegroundService {
                     apkFile = apkSource.resolve();
                 } catch (Throwable th) {
                     Log.w(TAG, "Could not get ApkFile", th);
+                    OpHistoryManager.addHistoryItem(HISTORY_TYPE_INSTALLER, apkQueueItem, false);
                     String packageName = apkQueueItem.getPackageName();
                     finishInstallation(packageName != null ? packageName : "Unknown Package", STATUS_FAILURE_INVALID, apkQueueItem.getAppLabel(), null, null);
                     return;

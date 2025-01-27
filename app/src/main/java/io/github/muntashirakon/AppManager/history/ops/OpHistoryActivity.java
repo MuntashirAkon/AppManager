@@ -87,6 +87,11 @@ public class OpHistoryActivity extends BaseActivity {
                 UIUtils.displayShortToast(R.string.failed);
             }
         });
+        OpHistoryManager.getHistoryAddedLiveData().observe(this, opHistory -> {
+            // New history added
+            mProgressIndicator.show();
+            mViewModel.loadOpHistories();
+        });
         mProgressIndicator.show();
         mViewModel.loadOpHistories();
     }
