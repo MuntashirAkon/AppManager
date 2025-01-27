@@ -1496,4 +1496,6 @@
     <string name="android_verified_bootloader_version">AVB version</string>
     <string name="op_history">History</string>
     <string name="no_history">No history</string>
+    <string name="title_confirm_execution">Confirm execution</string>
+    <string name="clear_history">Clear history</string>
 </resources>

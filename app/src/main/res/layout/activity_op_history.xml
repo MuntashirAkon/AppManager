@@ -63,6 +63,6 @@
         android:src="@drawable/ic_brush"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/padding_medium"
-        android:contentDescription="@string/clear" />
+        android:contentDescription="@string/clear_history" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

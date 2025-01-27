@@ -3,24 +3,32 @@
 package io.github.muntashirakon.AppManager.history.ops;
 
 import android.app.Application;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
+import org.json.JSONException;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -28,9 +36,11 @@ import java.util.concurrent.Future;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.db.entity.OpHistory;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.RecyclerView;
@@ -55,16 +65,28 @@ public class OpHistoryActivity extends BaseActivity {
         listView.setAdapter(mAdapter);
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
         UiUtils.applyWindowInsetsAsMargin(fab);
-        fab.setOnClickListener(v -> {
-            mProgressIndicator.show();
-            mViewModel.clearHistory();
-        });
+        fab.setOnClickListener(v -> new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.clear_history)
+                .setMessage(R.string.are_you_sure)
+                .setNegativeButton(R.string.no, null)
+                .setPositiveButton(R.string.yes, (dialog, which) -> {
+                    mProgressIndicator.show();
+                    mViewModel.clearHistory();
+                })
+                .show());
         mViewModel.getOpHistoriesLiveData().observe(this, opHistories -> {
             mProgressIndicator.hide();
             mAdapter.setDefaultList(opHistories);
         });
         mViewModel.getClearHistoryLiveData().observe(this, cleared ->
                 UIUtils.displayShortToast(cleared ? R.string.done : R.string.failed));
+        mViewModel.getServiceLauncherIntentLiveData().observe(this, intent -> {
+            if (intent != null) {
+                ContextCompat.startForegroundService(this, intent);
+            } else {
+                UIUtils.displayShortToast(R.string.failed);
+            }
+        });
         mProgressIndicator.show();
         mViewModel.loadOpHistories();
     }
@@ -79,27 +101,36 @@ public class OpHistoryActivity extends BaseActivity {
     }
 
     static class OpHistoryAdapter extends RecyclerView.Adapter<OpHistoryAdapter.ViewHolder> {
-        private OpHistory[] mAdapterList;
+        private OpHistoryItem[] mAdapterList;
         private final OpHistoryActivity mActivity;
+        private final int mColorSuccess;
+        private final int mColorFailure;
 
         static class ViewHolder extends RecyclerView.ViewHolder {
+            MaterialCardView itemView;
+            TextView type;
             TextView title;
-            TextView summary;
+            TextView execTime;
+            Button execBtn;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
+                this.itemView = (MaterialCardView) itemView;
+                type = itemView.findViewById(R.id.type);
                 title = itemView.findViewById(android.R.id.title);
-                summary = itemView.findViewById(android.R.id.summary);
-                itemView.findViewById(R.id.icon_frame).setVisibility(View.GONE);
+                execTime = itemView.findViewById(android.R.id.summary);
+                execBtn = itemView.findViewById(R.id.item_action);
             }
         }
 
         OpHistoryAdapter(@NonNull OpHistoryActivity activity) {
             mActivity = activity;
+            mColorSuccess = ColorCodes.getSuccessColor(activity);
+            mColorFailure = ColorCodes.getFailureColor(activity);
         }
 
-        void setDefaultList(@NonNull List<OpHistory> list) {
-            mAdapterList= list.toArray(new OpHistory[0]);
+        void setDefaultList(@NonNull List<OpHistoryItem> list) {
+            mAdapterList = list.toArray(new OpHistoryItem[0]);
             int previousCount = getItemCount();
             AdapterUtils.notifyDataSetChanged(this, previousCount, mAdapterList.length);
         }
@@ -117,15 +148,18 @@ public class OpHistoryActivity extends BaseActivity {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(io.github.muntashirakon.ui.R.layout.m3_preference, parent, false);
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_op_history, parent, false);
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            OpHistory history = mAdapterList[position];
-            holder.title.setText(history.type);
-            holder.summary.setText(DateUtils.formatLongDateTime(mActivity, history.execTime));
+            OpHistoryItem history = mAdapterList[position];
+            holder.itemView.setStrokeColor(history.getStatus() ? mColorSuccess : mColorFailure);
+            holder.type.setText(history.getLocalizedType(mActivity));
+            holder.title.setText(history.getLabel(mActivity));
+            holder.execTime.setText(DateUtils.formatLongDateTime(mActivity, history.getTimestamp()));
             holder.itemView.setOnClickListener(v -> {
                 // TODO: 1/26/25 Display history info
             });
@@ -138,24 +172,36 @@ public class OpHistoryActivity extends BaseActivity {
                 //  5. Create shortcut
                 return true;
             });
+            holder.execBtn.setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
+                    .setTitle(R.string.title_confirm_execution)
+                    .setMessage(R.string.are_you_sure)
+                    .setNegativeButton(R.string.no, null)
+                    .setPositiveButton(R.string.yes, (dialog, which) ->
+                            mActivity.mViewModel.getServiceLauncherIntent(history))
+                    .show());
         }
     }
 
     public static class OpHistoryViewModel extends AndroidViewModel {
-        private final MutableLiveData<List<OpHistory>> mOpHistoriesLiveData = new MutableLiveData<>();
+        private final MutableLiveData<List<OpHistoryItem>> mOpHistoriesLiveData = new MutableLiveData<>();
         private final MutableLiveData<Boolean> mClearHistoryLiveData = new MutableLiveData<>();
+        private final MutableLiveData<Intent> mServiceLauncherIntentLiveData = new MutableLiveData<>();
         private Future<?> mOpHistoriesResult;
 
         public OpHistoryViewModel(@NonNull Application application) {
             super(application);
         }
 
-        public LiveData<List<OpHistory>> getOpHistoriesLiveData() {
+        public LiveData<List<OpHistoryItem>> getOpHistoriesLiveData() {
             return mOpHistoriesLiveData;
         }
 
         public LiveData<Boolean> getClearHistoryLiveData() {
             return mClearHistoryLiveData;
+        }
+
+        public MutableLiveData<Intent> getServiceLauncherIntentLiveData() {
+            return mServiceLauncherIntentLiveData;
         }
 
         public void loadOpHistories() {
@@ -166,7 +212,15 @@ public class OpHistoryActivity extends BaseActivity {
                 synchronized (mOpHistoriesLiveData) {
                     List<OpHistory> opHistories = OpHistoryManager.getAllHistoryItems();
                     Collections.sort(opHistories, (o1, o2) -> -Long.compare(o1.execTime, o2.execTime));
-                    mOpHistoriesLiveData.postValue(opHistories);
+                    List<OpHistoryItem> opHistoryItems = new ArrayList<>(opHistories.size());
+                    for (OpHistory history : opHistories) {
+                        try {
+                            opHistoryItems.add(new OpHistoryItem(history));
+                        } catch (JSONException e) {
+                            Log.w(TAG, e.getMessage(), e);
+                        }
+                    }
+                    mOpHistoriesLiveData.postValue(opHistoryItems);
                 }
             });
         }
@@ -177,6 +231,18 @@ public class OpHistoryActivity extends BaseActivity {
                     OpHistoryManager.clearAllHistory();
                     mClearHistoryLiveData.postValue(true);
                     mOpHistoriesLiveData.postValue(Collections.emptyList());
+                }
+            });
+        }
+
+        public void getServiceLauncherIntent(@NonNull OpHistoryItem opHistoryItem) {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                try {
+                    Intent intent = OpHistoryManager.getExecutableIntent(getApplication(), opHistoryItem);
+                    mServiceLauncherIntentLiveData.postValue(intent);
+                } catch (JSONException e) {
+                    Log.w(TAG, e.getMessage(), e);
+                    mServiceLauncherIntentLiveData.postValue(null);
                 }
             });
         }

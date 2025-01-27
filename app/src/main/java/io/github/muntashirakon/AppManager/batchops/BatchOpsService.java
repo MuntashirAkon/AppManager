@@ -6,6 +6,7 @@ import static io.github.muntashirakon.AppManager.history.ops.OpHistoryManager.HI
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.PowerManager;
@@ -154,7 +155,7 @@ public class BatchOpsService extends ForegroundService {
         if (item == null) {
             return;
         }
-        String opTitle = getDesiredOpTitle(item.getOp());
+        String opTitle = getDesiredOpTitle(this, item.getOp());
         Object notificationInfo = new NotificationProgressHandler.NotificationInfo()
                 .setAutoCancel(true)
                 .setTime(System.currentTimeMillis())
@@ -170,7 +171,7 @@ public class BatchOpsService extends ForegroundService {
         BatchQueueItem item = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, BatchQueueItem.class);
 
         int op = item != null ? item.getOp() : BatchOpsManager.OP_NONE;
-        mNotificationInfo.setTitle(getDesiredOpTitle(op)).setOperationName(getHeader(item));
+        mNotificationInfo.setTitle(getDesiredOpTitle(this, op)).setOperationName(getHeader(item));
         mProgressHandler.onProgressStart(-1, 0, mNotificationInfo);
     }
 
@@ -203,7 +204,7 @@ public class BatchOpsService extends ForegroundService {
     }
 
     private void sendNotification(int result, @Nullable BatchQueueItem queueItem, @Nullable BatchOpsManager.Result opResult) {
-        String contentTitle = getDesiredOpTitle(queueItem != null ? queueItem.getOp() : BatchOpsManager.OP_NONE);
+        String contentTitle = getDesiredOpTitle(this, queueItem != null ? queueItem.getOp() : BatchOpsManager.OP_NONE);
         NotificationProgressHandler.NotificationInfo notificationInfo = new NotificationProgressHandler.NotificationInfo()
                 .setAutoCancel(true)
                 .setTime(System.currentTimeMillis())
@@ -255,50 +256,51 @@ public class BatchOpsService extends ForegroundService {
     }
 
     @NonNull
-    private String getDesiredOpTitle(@BatchOpsManager.OpType int op) {
+    public static String getDesiredOpTitle(@NonNull Context context,
+                                           @BatchOpsManager.OpType int op) {
         switch (op) {
             case BatchOpsManager.OP_BACKUP:
             case BatchOpsManager.OP_DELETE_BACKUP:
             case BatchOpsManager.OP_RESTORE_BACKUP:
-                return getString(R.string.backup_restore);
+                return context.getString(R.string.backup_restore);
             case BatchOpsManager.OP_BACKUP_APK:
-                return getString(R.string.save_apk);
+                return context.getString(R.string.save_apk);
             case BatchOpsManager.OP_BLOCK_TRACKERS:
-                return getString(R.string.block_trackers);
+                return context.getString(R.string.block_trackers);
             case BatchOpsManager.OP_CLEAR_DATA:
-                return getString(R.string.clear_data);
+                return context.getString(R.string.clear_data);
             case BatchOpsManager.OP_CLEAR_CACHE:
-                return getString(R.string.clear_cache);
+                return context.getString(R.string.clear_cache);
             case BatchOpsManager.OP_FREEZE:
-                return getString(R.string.freeze);
+                return context.getString(R.string.freeze);
             case BatchOpsManager.OP_DISABLE_BACKGROUND:
-                return getString(R.string.disable_background);
+                return context.getString(R.string.disable_background);
             case BatchOpsManager.OP_UNFREEZE:
-                return getString(R.string.unfreeze);
+                return context.getString(R.string.unfreeze);
             case BatchOpsManager.OP_EXPORT_RULES:
-                return getString(R.string.export_blocking_rules);
+                return context.getString(R.string.export_blocking_rules);
             case BatchOpsManager.OP_FORCE_STOP:
-                return getString(R.string.force_stop);
+                return context.getString(R.string.force_stop);
             case BatchOpsManager.OP_NET_POLICY:
-                return getString(R.string.net_policy);
+                return context.getString(R.string.net_policy);
             case BatchOpsManager.OP_UNINSTALL:
-                return getString(R.string.uninstall);
+                return context.getString(R.string.uninstall);
             case BatchOpsManager.OP_UNBLOCK_TRACKERS:
-                return getString(R.string.unblock_trackers);
+                return context.getString(R.string.unblock_trackers);
             case BatchOpsManager.OP_BLOCK_COMPONENTS:
-                return getString(R.string.block_components_dots);
+                return context.getString(R.string.block_components_dots);
             case BatchOpsManager.OP_UNBLOCK_COMPONENTS:
-                return getString(R.string.unblock_components_dots);
+                return context.getString(R.string.unblock_components_dots);
             case BatchOpsManager.OP_SET_APP_OPS:
-                return getString(R.string.set_mode_for_app_ops_dots);
+                return context.getString(R.string.set_mode_for_app_ops_dots);
             case BatchOpsManager.OP_IMPORT_BACKUPS:
-                return getString(R.string.pref_import_backups);
+                return context.getString(R.string.pref_import_backups);
             case BatchOpsManager.OP_DEXOPT:
-                return getString(R.string.batch_ops_runtime_optimization);
+                return context.getString(R.string.batch_ops_runtime_optimization);
             case BatchOpsManager.OP_NONE:
                 break;
         }
-        return getString(R.string.batch_ops);
+        return context.getString(R.string.batch_ops);
     }
 
     private String getDesiredErrorString(int op, int failedCount) {

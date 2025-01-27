@@ -55,6 +55,16 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
         public void onItemRangeRemoved(int positionStart, int itemCount) {
             checkIfEmpty();
         }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount) {
+            checkIfEmpty();
+        }
+
+        @Override
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+            checkIfEmpty();
+        }
     };
 
     public RecyclerView(@NonNull Context context) {
