@@ -28,6 +28,7 @@ import io.github.muntashirakon.AppManager.batchops.struct.BatchNetPolicyOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchPermissionOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.IBatchOpOptions;
 import io.github.muntashirakon.AppManager.history.IJsonSerializer;
+import io.github.muntashirakon.AppManager.history.JsonDeserializer;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.util.ParcelUtils;
@@ -138,6 +139,15 @@ public class BatchQueueItem implements Parcelable, IJsonSerializer {
         dest.writeParcelable(mOptions, flags);
     }
 
+    protected BatchQueueItem(@NonNull JSONObject jsonObject) throws JSONException {
+        mTitleRes = jsonObject.getInt("title_res");
+        mOp = jsonObject.getInt("op");
+        mPackages = JSONUtils.getArray(jsonObject.getJSONArray("packages"));
+        mUsers = JSONUtils.getArray(jsonObject.getJSONArray("users"));
+        JSONObject options = jsonObject.optJSONObject("options");
+        mOptions = options != null ? IBatchOpOptions.DESERIALIZER.deserialize(options) : null;
+    }
+
     @NonNull
     @Override
     public JSONObject serializeToJson() throws JSONException {
@@ -157,6 +167,8 @@ public class BatchQueueItem implements Parcelable, IJsonSerializer {
         mUsers = ParcelUtils.readArrayList(in, Integer.class.getClassLoader());
         mOptions = readOptionsFromParcel(in, mOp);
     }
+
+    public static final JsonDeserializer.Creator<BatchQueueItem> DESERIALIZER = BatchQueueItem::new;
 
     public static final Creator<BatchQueueItem> CREATOR = new Creator<BatchQueueItem>() {
         @NonNull

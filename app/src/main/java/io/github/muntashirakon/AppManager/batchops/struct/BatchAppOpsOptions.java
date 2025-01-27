@@ -14,6 +14,8 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
 public class BatchAppOpsOptions implements IBatchOpOptions {
+    public static final String TAG = BatchAppOpsOptions.class.getSimpleName();
+
     @NonNull
     private int[] mAppOps;
     private int mMode;
@@ -66,6 +68,7 @@ public class BatchAppOpsOptions implements IBatchOpOptions {
     @Override
     public JSONObject serializeToJson() throws JSONException {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("tag", TAG);
         jsonObject.put("app_ops", JSONUtils.getJSONArray(mAppOps));
         jsonObject.put("mode", mMode);
         return jsonObject;

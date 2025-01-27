@@ -14,6 +14,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.apk.dexopt.DexOptOptions;
 
 public class BatchDexOptOptions implements IBatchOpOptions {
+    public static final String TAG = BatchDexOptOptions.class.getSimpleName();
     private DexOptOptions mDexOptOptions;
 
     public BatchDexOptOptions(@NonNull DexOptOptions dexOptOptions) {
@@ -56,6 +57,7 @@ public class BatchDexOptOptions implements IBatchOpOptions {
     @Override
     public JSONObject serializeToJson() throws JSONException {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("tag", TAG);
         jsonObject.put("dex_opt_options", mDexOptOptions.serializeToJson());
         return jsonObject;
     }

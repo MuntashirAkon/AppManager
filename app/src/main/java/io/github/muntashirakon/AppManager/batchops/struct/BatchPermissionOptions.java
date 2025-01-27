@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 public class BatchPermissionOptions implements IBatchOpOptions {
+    public static final String TAG = BatchPermissionOptions.class.getSimpleName();
     private String[] mPermissions;
 
     public BatchPermissionOptions(@NonNull String[] permissions) {
@@ -36,6 +37,7 @@ public class BatchPermissionOptions implements IBatchOpOptions {
     @Override
     public JSONObject serializeToJson() throws JSONException {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("tag", TAG);
         jsonObject.put("permissions", mPermissions);
         return jsonObject;
     }

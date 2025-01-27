@@ -20,7 +20,9 @@ import org.json.JSONObject;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.history.IJsonSerializer;
+import io.github.muntashirakon.AppManager.history.JsonDeserializer;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
 public class InstallerOptions implements Parcelable, IJsonSerializer {
     @NonNull
@@ -107,6 +109,21 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
         dest.writeByte((byte) (mBlockTrackers ? 1 : 0));
     }
 
+    protected InstallerOptions(@NonNull JSONObject jsonObject) throws JSONException {
+        mUserId = jsonObject.getInt("user_id");
+        mInstallLocation = jsonObject.getInt("install_location");
+        mInstallerName = JSONUtils.optString(jsonObject, "installer_name", null);
+        mOriginatingPackage = JSONUtils.optString(jsonObject, "originating_package");
+        String originatingUri = JSONUtils.optString(jsonObject, "originating_uri", null);
+        mOriginatingUri = originatingUri != null ? Uri.parse(originatingUri) : null;
+        mPackageSource = jsonObject.getInt("package_source");
+        mInstallScenario = jsonObject.getInt("install_scenario");
+        mRequestUpdateOwnership = jsonObject.getBoolean("request_update_ownership");
+        mSignApkFiles = jsonObject.getBoolean("sign_apk_files");
+        mForceDexOpt = jsonObject.getBoolean("force_dex_opt");
+        mBlockTrackers = jsonObject.getBoolean("block_trackers");
+    }
+
     @NonNull
     @Override
     public JSONObject serializeToJson() throws JSONException {
@@ -124,6 +141,8 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
         jsonObject.put("block_trackers", mBlockTrackers);
         return jsonObject;
     }
+
+    public static final JsonDeserializer.Creator<InstallerOptions> DESERIALIZER = InstallerOptions::new;
 
     @Override
     public int describeContents() {

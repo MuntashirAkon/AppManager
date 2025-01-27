@@ -14,6 +14,8 @@ import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
 public class BatchBackupOptions implements IBatchOpOptions {
+    public static final String TAG = BatchBackupOptions.class.getSimpleName();
+
     @BackupFlags.BackupFlag
     private int mFlags;
     @Nullable
@@ -67,6 +69,7 @@ public class BatchBackupOptions implements IBatchOpOptions {
     @Override
     public JSONObject serializeToJson() throws JSONException {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("tag", TAG);
         jsonObject.put("flags", mFlags);
         jsonObject.put("backup_names", JSONUtils.getJSONArray(mBackupNames));
         return jsonObject;

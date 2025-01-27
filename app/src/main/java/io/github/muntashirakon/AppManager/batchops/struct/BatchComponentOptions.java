@@ -14,6 +14,8 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
 public class BatchComponentOptions implements IBatchOpOptions {
+    public static final String TAG = BatchComponentOptions.class.getSimpleName();
+
     private String[] mSignatures;
 
     public BatchComponentOptions(@NonNull String[] signatures) {
@@ -38,6 +40,7 @@ public class BatchComponentOptions implements IBatchOpOptions {
     @Override
     public JSONObject serializeToJson() throws JSONException {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("tag", TAG);
         jsonObject.put("signatures", JSONUtils.getJSONArray(mSignatures));
         return jsonObject;
     }

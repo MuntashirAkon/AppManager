@@ -18,11 +18,14 @@ import java.io.IOException;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.fm.FmProvider;
+import io.github.muntashirakon.AppManager.history.JsonDeserializer;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Paths;
 
 public class CachedApkSource extends ApkSource {
+    public static final String TAG = CachedApkSource.class.getSimpleName();
+
     @NonNull
     private final Uri mUri;
     private final String mMimeType;
@@ -101,16 +104,26 @@ public class CachedApkSource extends ApkSource {
         dest.writeString(file);
     }
 
+    protected CachedApkSource(@NonNull JSONObject jsonObject) throws JSONException {
+        mUri = Uri.parse(jsonObject.getString("uri"));
+        mMimeType = jsonObject.getString("mime_type");
+        mApkFileKey = jsonObject.getInt("apk_file_key");
+        mCachedFile = new File(jsonObject.getString("cached_file"));
+    }
+
     @NonNull
     @Override
     public JSONObject serializeToJson() throws JSONException {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("tag", TAG);
         jsonObject.put("uri", mUri.toString());
         jsonObject.put("mime_type", mMimeType);
         jsonObject.put("apk_file_key", mApkFileKey);
-        jsonObject.put("cached_file", mCachedFile);
+        jsonObject.put("cached_file", mCachedFile.getAbsolutePath());
         return jsonObject;
     }
+
+    public static final JsonDeserializer.Creator<CachedApkSource> DESERIALIZER = CachedApkSource::new;
 
     public static final Creator<CachedApkSource> CREATOR = new Creator<CachedApkSource>() {
         @Override

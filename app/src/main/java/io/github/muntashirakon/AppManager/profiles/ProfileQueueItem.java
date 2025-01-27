@@ -15,8 +15,10 @@ import java.io.IOException;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.history.IJsonSerializer;
+import io.github.muntashirakon.AppManager.history.JsonDeserializer;
 import io.github.muntashirakon.AppManager.profiles.ProfileApplierActivity.ProfileApplierInfo;
 import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
+import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
 public class ProfileQueueItem implements Parcelable, IJsonSerializer {
     @NonNull
@@ -70,6 +72,12 @@ public class ProfileQueueItem implements Parcelable, IJsonSerializer {
         dest.writeString(mState);
     }
 
+    protected ProfileQueueItem(@NonNull JSONObject jsonObject) throws JSONException {
+        mProfileId = jsonObject.getString("profile_id");
+        mProfileName = jsonObject.getString("profile_name");
+        mState = JSONUtils.getString(jsonObject, "state");
+    }
+
     @NonNull
     @Override
     public JSONObject serializeToJson() throws JSONException {
@@ -86,6 +94,8 @@ public class ProfileQueueItem implements Parcelable, IJsonSerializer {
         }
         return jsonObject;
     }
+
+    public static final JsonDeserializer.Creator<ProfileQueueItem> DESERIALIZER = ProfileQueueItem::new;
 
     public static final Creator<ProfileQueueItem> CREATOR = new Creator<ProfileQueueItem>() {
         @NonNull

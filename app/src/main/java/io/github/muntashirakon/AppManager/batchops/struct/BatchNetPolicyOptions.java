@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat.NetPolicy;
 
 public class BatchNetPolicyOptions implements IBatchOpOptions {
+    public static final String TAG = BatchNetPolicyOptions.class.getSimpleName();
     @NetPolicy
     private int mPolicies;
 
@@ -56,6 +57,7 @@ public class BatchNetPolicyOptions implements IBatchOpOptions {
     @Override
     public JSONObject serializeToJson() throws JSONException {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("tag", TAG);
         jsonObject.put("policies", mPolicies);
         return jsonObject;
     }

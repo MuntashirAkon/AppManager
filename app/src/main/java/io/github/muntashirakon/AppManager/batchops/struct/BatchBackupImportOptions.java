@@ -15,6 +15,8 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.backup.convert.ImportType;
 
 public class BatchBackupImportOptions implements IBatchOpOptions {
+    public static final String TAG = BatchBackupImportOptions.class.getSimpleName();
+
     @ImportType
     private int mImportType;
     @NonNull
@@ -78,6 +80,7 @@ public class BatchBackupImportOptions implements IBatchOpOptions {
     @Override
     public JSONObject serializeToJson() throws JSONException {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("tag", TAG);
         jsonObject.put("import_type", mImportType);
         jsonObject.put("directory", mDirectory.toString());
         jsonObject.put("remove_imported_directory", mRemoveImportedDirectory);

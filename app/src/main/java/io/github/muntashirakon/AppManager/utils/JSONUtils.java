@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public final class JSONUtils {
-    @Contract("null -> null")
+    @Contract("!null -> !null")
     @Nullable
     public static <T> JSONArray getJSONArray(@Nullable final T[] typicalArray) {
         if (typicalArray == null) return null;
@@ -24,7 +24,7 @@ public final class JSONUtils {
         return jsonArray;
     }
 
-    @Contract("null -> null")
+    @Contract("!null -> !null")
     @Nullable
     public static JSONArray getJSONArray(@Nullable final int[] typicalArray) {
         if (typicalArray == null) return null;
@@ -33,35 +33,41 @@ public final class JSONUtils {
         return jsonArray;
     }
 
-    @Contract("null -> null")
+    @Contract("!null -> !null")
     @Nullable
     public static <T> JSONArray getJSONArray(@Nullable final Collection<T> collection) {
-        if (collection == null || collection.isEmpty()) return null;
+        if (collection == null) return null;
         JSONArray jsonArray = new JSONArray();
         for (T elem : collection) jsonArray.put(elem);
         return jsonArray;
     }
 
-    @NonNull
-    public static <T> T[] getArray(Class<T> clazz, @NonNull final JSONArray jsonArray)
+    @Contract("_,!null -> !null")
+    @Nullable
+    public static <T> T[] getArray(Class<T> clazz, @Nullable final JSONArray jsonArray)
             throws JSONException {
+        if (jsonArray == null) return null;
         //noinspection unchecked
         T[] typicalArray = (T[]) Array.newInstance(clazz, jsonArray.length());
         for (int i = 0; i < jsonArray.length(); ++i) typicalArray[i] = clazz.cast(jsonArray.get(i));
         return typicalArray;
     }
 
-    @NonNull
-    public static int[] getIntArray(@NonNull final JSONArray jsonArray)
+    @Contract("!null -> !null")
+    @Nullable
+    public static int[] getIntArray(@Nullable final JSONArray jsonArray)
             throws JSONException {
+        if (jsonArray == null) return null;
         int[] typicalArray = new int[jsonArray.length()];
         for (int i = 0; i < jsonArray.length(); ++i) typicalArray[i] = jsonArray.getInt(i);
         return typicalArray;
     }
 
-    @NonNull
-    public static <T> ArrayList<T> getArray(@NonNull final JSONArray jsonArray)
+    @Contract("!null -> !null")
+    @Nullable
+    public static <T> ArrayList<T> getArray(@Nullable final JSONArray jsonArray)
             throws JSONException {
+        if (jsonArray == null) return null;
         ArrayList<T> arrayList = new ArrayList<>(jsonArray.length());
         for (int i = 0; i < jsonArray.length(); ++i) {
             //noinspection unchecked
