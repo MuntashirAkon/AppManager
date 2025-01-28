@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -231,7 +232,7 @@ public final class ApkUtils {
             while (attrIt.hasNext()) {
                 attr = attrIt.next();
                 attrName = attr.getName();
-                if (attrName == null || attrName.isEmpty()) {
+                if (TextUtils.isEmpty(attrName)) {
                     continue;
                 }
                 manifestAttrs.put(attrName, attr.getValueAsString());
@@ -246,14 +247,18 @@ public final class ApkUtils {
                 throw new ApkFile.ApkFileException("\"manifest\" has duplicate \"application\" tags.");
             }
             if (resApplicationElement == null) {
-                Log.w("ApkUtils", "No application tag found while parsing APK.");
+                Log.w(TAG, "No application tag found while parsing APK.");
                 return manifestAttrs;
             }
             attrIt = resApplicationElement.getAttributes();
             while (attrIt.hasNext()) {
                 attr = attrIt.next();
                 attrName = attr.getName();
-                if (attrName == null || attrName.isEmpty()) {
+                if (TextUtils.isEmpty(attrName)) {
+                    continue;
+                }
+                if (manifestAttrs.containsKey(attrName)) {
+                    Log.w(TAG, "Ignoring invalid attribute in the application tag: " + attrName);
                     continue;
                 }
                 manifestAttrs.put(attrName, attr.getValueAsString());
