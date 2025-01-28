@@ -1,0 +1,36 @@
+android_app_import {
+	name: "AppManager",
+	owner: "Muntashirakon",
+	apk: "app/build/outputs/apk_from_bundle/platform/app-platform-universal-unsigned.apk",
+	certificate: "platform",
+	dex_preopt: {
+		enabled: false,
+	},
+	privileged: true,
+	presigned: false,
+    overrides: ["PackageInstaller"],
+    required: [
+        "io.github.muntashirakon.AppManager_sysconfig.xml",
+        "default-permissions_io.github.muntashirakon.AppManager.xml",
+        "privapp-permissions_io.github.muntashirakon.AppManager.xml"
+    ],
+}
+
+
+prebuilt_etc {
+  name: "io.github.muntashirakon.AppManager_sysconfig.xml",
+  src: "platform/sysconfig.xml",
+  sub_dir: "sysconfig",
+}
+
+prebuilt_etc {
+  name: "privapp-permissions_io.github.muntashirakon.AppManager.xml",
+  src: "platform/permissions.xml",
+  sub_dir: "permissions",
+}
+
+prebuilt_etc {
+    name: "default-permissions_io.github.muntashirakon.AppManager.xml",
+    src: "platform/default-permissions.xml",
+    sub_dir: "default-permissions"
+}

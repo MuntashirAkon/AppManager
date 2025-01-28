@@ -43,6 +43,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "App Manager"
         }
+        platform {
+            initWith buildTypes.release
+            matchingFallbacks = "release"
+        }
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'

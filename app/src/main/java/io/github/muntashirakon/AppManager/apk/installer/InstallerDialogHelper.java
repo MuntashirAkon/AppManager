@@ -146,6 +146,27 @@ public final class InstallerDialogHelper {
         mMessage.setText(R.string.install_app_message);
         mFragmentContainer.setVisibility(View.GONE);
     }
+    public void showSessionConfirmationDialog(@StringRes int installButtonRes,
+                                              @NonNull OnClickButtonsListener onClickButtonsListener) {
+        mTitleBuilder.setTitle(R.string.confirm_installation)
+                .setStartIcon(R.drawable.ic_get_app)
+                .setSubtitle(null)
+                .setEndIcon(null, null);
+
+        // Buttons
+        mNeutralBtn.setVisibility(View.GONE);
+        mPositiveBtn.setVisibility(View.VISIBLE);
+        mPositiveBtn.setText(installButtonRes);
+        mPositiveBtn.setOnClickListener(v -> onClickButtonsListener.triggerInstall());
+        mNegativeBtn.setVisibility(View.VISIBLE);
+        mNegativeBtn.setText(R.string.cancel);
+        mNegativeBtn.setOnClickListener(v -> onClickButtonsListener.triggerCancel());
+        // Body
+        mLayout.setVisibility(View.GONE);
+        mMessage.setVisibility(View.VISIBLE);
+        mMessage.setText(R.string.install_app_message);
+        mFragmentContainer.setVisibility(View.GONE);
+    }
 
     public void showApkChooserDialog(@StringRes int installButtonRes, Fragment fragment,
                                      @NonNull OnClickButtonsListener onClickButtonsListener,

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <hidden-api-whitelisted-app package="io.github.muntashirakon.AppManager" />
+    <allow-in-power-save package="io.github.muntashirakon.AppManager" />
+    <app-link package="io.github.muntashirakon.AppManager" />
+    <!-- For Later . . .
+    <backup-transport-whitelisted-service service="io.github.muntashirakon.AppManager/.backup.BackupTransportService" />
+    -->
+    <initial-package-state package="io.github.muntashirakon.AppManager" stopped="false" />
+</config>

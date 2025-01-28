@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<permissions>
+    <privapp-permissions package="io.github.muntashirakon.AppManager">
+        <permission name="android.permission.BACKUP" />
+        <permission name="android.permission.CHANGE_COMPONENT_ENABLED_STATE" />
+        <permission name="android.permission.CLEAR_APP_CACHE" />
+        <permission name="android.permission.DELETE_CACHE_FILES" />
+        <permission name="android.permission.DELETE_PACKAGES" />
+        <permission name="android.permission.DUMP" />
+        <permission name="android.permission.FORCE_STOP_PACKAGES" />
+        <permission name="android.permission.GET_PACKAGE_SIZE" />
+        <permission name="android.permission.GET_APP_OPS_STATS" />
+        <permission name="android.permission.GET_TASKS" />
+        <permission name="com.android.permission.INSTALL_EXISTING_PACKAGES" />
+        <permission name="android.permission.INSTALL_PACKAGES" />
+        <permission name="android.permission.INTERACT_ACROSS_USERS" />
+        <permission name="android.permission.INTERNET" />
+        <permission name="android.permission.MANAGE_USERS" />
+        <permission name="android.permission.PACKAGE_USAGE_STATS" />
+        <permission name="android.permission.READ_LOGS" />
+        <permission name="android.permission.REAL_GET_TASKS" />
+        <permission name="android.permission.REQUEST_DELETE_PACKAGES" />
+        <permission name="android.permission.UPDATE_APP_OPS_STATS" />
+        <permission name="android.permission.UPDATE_PACKAGES_WITHOUT_USER_ACTION" />
+        <permission name="android.permission.WAKE_LOCK" />
+        <permission name="android.permission.WRITE_SECURE_SETTINGS" />
+        <permission name="android.permission.PACKAGE_VERIFICATION_AGENT" />
+    </privapp-permissions>
+</permissions>
