@@ -38,6 +38,8 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
@@ -77,7 +79,7 @@ import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.AlertDialogBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
-import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
+import io.github.muntashirakon.dialog.SearchableFlagsDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
@@ -404,11 +406,15 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
             ArrayMap<Integer, String> netPolicyMap = NetworkPolicyManagerCompat.getAllReadablePolicies(this);
             Integer[] polices = new Integer[netPolicyMap.size()];
             String[] policyStrings = new String[netPolicyMap.size()];
+            Collection<ApplicationItem> applicationItems = viewModel.getSelectedPackages().values();
+            Iterator<ApplicationItem> it = applicationItems.iterator();
+            int selectedPolicies = applicationItems.size() == 1 && it.hasNext() ?
+                    NetworkPolicyManagerCompat.getUidPolicy(it.next().uid) : 0;
             for (int i = 0; i < netPolicyMap.size(); ++i) {
                 polices[i] = netPolicyMap.keyAt(i);
                 policyStrings[i] = netPolicyMap.valueAt(i);
             }
-            new SearchableMultiChoiceDialogBuilder<>(this, polices, policyStrings)
+            new SearchableFlagsDialogBuilder<>(this, polices, policyStrings, selectedPolicies)
                     .setTitle(R.string.net_policy)
                     .showSelectAll(false)
                     .setNegativeButton(R.string.cancel, null)
