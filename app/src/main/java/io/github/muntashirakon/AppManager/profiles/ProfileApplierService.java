@@ -30,6 +30,7 @@ import io.github.muntashirakon.AppManager.progress.QueuedProgressHandler;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
+import io.github.muntashirakon.io.Path;
 
 public class ProfileApplierService extends ForegroundService {
     public static final String EXTRA_QUEUE_ITEM = "queue_item";
@@ -79,14 +80,19 @@ public class ProfileApplierService extends ForegroundService {
             return;
         }
         boolean notify = intent.getBooleanExtra(EXTRA_NOTIFY, true);
+        Path tempProfilePath = item.getTempProfilePath();
         try {
-            ProfileManager profileManager = new ProfileManager(item.getProfileId());
+            ProfileManager profileManager = new ProfileManager(item.getProfileId(), tempProfilePath);
             profileManager.applyProfile(item.getState(), mProgressHandler);
             profileManager.conclude();
             OpHistoryManager.addHistoryItem(HISTORY_TYPE_PROFILE, item, true);
             sendNotification(item.getProfileName(), Activity.RESULT_OK, notify, profileManager.requiresRestart());
         } catch (IOException e) {
             sendNotification(item.getProfileName(), Activity.RESULT_CANCELED, notify, false);
+        } finally {
+            if (tempProfilePath != null) {
+                tempProfilePath.delete();
+            }
         }
     }
 

@@ -127,14 +127,15 @@ public class ProfileManager {
     private ProfileLogger mLogger;
     private boolean mRequiresRestart;
 
-    public ProfileManager(@NonNull String profileId) throws IOException {
+    public ProfileManager(@NonNull String profileId, @Nullable Path profilePath) throws IOException {
         try {
             mLogger = new ProfileLogger(profileId);
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            mProfile = AppsProfile.fromPath(findProfilePathById(profileId));
+            Path realProfilePath = profilePath != null ? profilePath : findProfilePathById(profileId);
+            mProfile = AppsProfile.fromPath(realProfilePath);
         } catch (IOException e) {
             if (mLogger != null) {
                 mLogger.println(null, e);
