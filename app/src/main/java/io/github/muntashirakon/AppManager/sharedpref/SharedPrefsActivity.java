@@ -20,7 +20,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -76,7 +75,7 @@ public class SharedPrefsActivity extends BaseActivity implements
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         mProgressIndicator.show();
         RecyclerView recyclerView = findViewById(android.R.id.list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(this));
         recyclerView.setEmptyView(findViewById(android.R.id.empty));
         mAdapter = new SharedPrefsListingAdapter(this);
         recyclerView.setAdapter(mAdapter);

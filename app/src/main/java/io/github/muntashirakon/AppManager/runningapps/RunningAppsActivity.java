@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -113,7 +112,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         RecyclerView recyclerView = findViewById(R.id.scrollView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(this));
         mAdapter = new RunningAppsAdapter(this);
         mAdapter.setHasStableIds(false);
         recyclerView.setAdapter(mAdapter);

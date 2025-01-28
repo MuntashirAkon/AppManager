@@ -17,7 +17,6 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
@@ -26,6 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialAlertView;
@@ -130,7 +130,7 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
         swipeRefresh.setOnRefreshListener(this);
         recyclerView = view.findViewById(R.id.scrollView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(activity));
         emptyView = view.findViewById(android.R.id.empty);
         recyclerView.setEmptyView(emptyView);
         progressIndicator = view.findViewById(R.id.progress_linear);

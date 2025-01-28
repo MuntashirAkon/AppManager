@@ -19,6 +19,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.filters.options.FilterOption;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
@@ -45,7 +46,7 @@ public class FinderActivity extends BaseActivity implements EditFilterOptionFrag
         mMultiSelectionView = findViewById(R.id.selection_view);
         UiUtils.applyWindowInsetsAsMargin(mFilterBtn);
         mAdapter = new FinderAdapter();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(this));
         mRecyclerView.setAdapter(mAdapter);
         mMultiSelectionView.hide();
         mFilterBtn.setOnClickListener(v -> showFiltersDialog());

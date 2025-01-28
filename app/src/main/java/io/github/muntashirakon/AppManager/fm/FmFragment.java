@@ -227,7 +227,7 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
         mEmptyViewTitle = view.findViewById(R.id.title);
         mEmptyViewDetails = view.findViewById(R.id.message);
         mRecyclerView = view.findViewById(R.id.list_item);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        mRecyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(mActivity));
         mAdapter = new FmAdapter(mModel, mActivity);
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataChangedObserver() {
             @Override

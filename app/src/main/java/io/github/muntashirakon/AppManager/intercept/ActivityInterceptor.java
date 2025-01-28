@@ -37,7 +37,6 @@ import androidx.collection.LruCache;
 import androidx.collection.SimpleArrayMap;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
@@ -625,7 +624,7 @@ public class ActivityInterceptor extends BaseActivity {
                     .show();
         });
         RecyclerView categoriesRecyclerView = findViewById(R.id.intent_categories);
-        categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        categoriesRecyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(this));
         mCategoriesAdapter = new CategoriesRecyclerViewAdapter(this);
         categoriesRecyclerView.setAdapter(mCategoriesAdapter);
 
@@ -658,7 +657,7 @@ public class ActivityInterceptor extends BaseActivity {
                     .show();
         });
         RecyclerView flagsRecyclerView = findViewById(R.id.intent_flags);
-        flagsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        flagsRecyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(this));
         mFlagsAdapter = new FlagsRecyclerViewAdapter(this);
         flagsRecyclerView.setAdapter(mFlagsAdapter);
 
@@ -680,7 +679,7 @@ public class ActivityInterceptor extends BaseActivity {
             fragment.show(getSupportFragmentManager(), AddIntentExtraFragment.TAG);
         });
         RecyclerView extrasRecyclerView = findViewById(R.id.intent_extras);
-        extrasRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        extrasRecyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(this));
         mExtrasAdapter = new ExtrasRecyclerViewAdapter(this);
         extrasRecyclerView.setAdapter(mExtrasAdapter);
 
@@ -691,7 +690,7 @@ public class ActivityInterceptor extends BaseActivity {
             mActivitiesHeader.setVisibility(View.GONE);
         }
         RecyclerView matchingActivitiesRecyclerView = findViewById(R.id.intent_matching_activities);
-        matchingActivitiesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        matchingActivitiesRecyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(this));
         mMatchingActivitiesAdapter = new MatchingActivitiesRecyclerViewAdapter(this);
         matchingActivitiesRecyclerView.setAdapter(mMatchingActivitiesAdapter);
 

@@ -18,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -28,6 +27,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.adapters.SelectedArrayAdapter;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialSpinner;
@@ -82,7 +82,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         mAppUsageAdapter = new AppUsageAdapter(this);
         RecyclerView recyclerView = findViewById(R.id.scrollView);
         recyclerView.setEmptyView(findViewById(android.R.id.empty));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(this));
         recyclerView.setAdapter(mAppUsageAdapter);
 
         mSwipeRefresh = findViewById(R.id.swipe_refresh);

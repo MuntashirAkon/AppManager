@@ -19,7 +19,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -58,7 +57,7 @@ public class OpHistoryActivity extends BaseActivity {
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         RecyclerView listView = findViewById(android.R.id.list);
-        listView.setLayoutManager(new LinearLayoutManager(this));
+        listView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(this));
         listView.setEmptyView(findViewById(android.R.id.empty));
         UiUtils.applyWindowInsetsAsPaddingNoTop(listView);
         mAdapter = new OpHistoryAdapter(this);

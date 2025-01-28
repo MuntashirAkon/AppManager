@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -67,7 +66,7 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
         mProgressIndicator.show();
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(this));
         DebloaterRecyclerViewAdapter adapter = new DebloaterRecyclerViewAdapter(this);
         recyclerView.setAdapter(adapter);
         mMultiSelectionView = findViewById(R.id.selection_view);

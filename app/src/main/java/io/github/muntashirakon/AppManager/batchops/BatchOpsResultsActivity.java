@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
@@ -33,6 +32,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.RestartUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class BatchOpsResultsActivity extends BaseActivity {
     private RecyclerView mRecyclerView;
@@ -54,7 +54,7 @@ public class BatchOpsResultsActivity extends BaseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
         mRecyclerView = findViewById(R.id.list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(this));
         MaterialButton logToggler = findViewById(R.id.action_view_logs);
         mLogViewer = findViewById(R.id.text);
         mLogViewer.setKeyListener(null);
