@@ -256,6 +256,9 @@ public final class ApkUtils {
                 if (attrName == null || attrName.isEmpty()) {
                     continue;
                 }
+                if (attrName.equals("package")) {
+                    attrName = "application-package";
+                }
                 manifestAttrs.put(attrName, attr.getValueAsString());
             }
             return manifestAttrs;
