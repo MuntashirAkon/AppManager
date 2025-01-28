@@ -134,18 +134,26 @@ public class Signer {
             Log.i(TAG, "%s", apk);
             boolean isVerify = result.isVerified();
             if (isVerify) {
-                if (sigSchemes.v1SchemeEnabled() && result.isVerifiedUsingV1Scheme())
-                    Log.i(TAG, "V1 signature verification succeeded.");
-                else Log.w(TAG, "V1 signature verification failed/disabled.");
-                if (sigSchemes.v2SchemeEnabled() && result.isVerifiedUsingV2Scheme())
-                    Log.i(TAG, "V2 signature verification succeeded.");
-                else Log.w(TAG, "V2 signature verification failed/disabled.");
-                if (sigSchemes.v3SchemeEnabled() && result.isVerifiedUsingV3Scheme())
-                    Log.i(TAG, "V3 signature verification succeeded.");
-                else Log.w(TAG, "V3 signature verification failed/disabled.");
-                if (sigSchemes.v4SchemeEnabled() && result.isVerifiedUsingV4Scheme())
-                    Log.i(TAG, "V4 signature verification succeeded.");
-                else Log.w(TAG, "V4 signature verification failed/disabled.");
+                if (sigSchemes.v1SchemeEnabled() && result.isVerifiedUsingV1Scheme()) {
+                    Log.i(TAG, "V1 signature verified.");
+                } else Log.w(TAG, "V1 signature verification failed/disabled.");
+                if (sigSchemes.v2SchemeEnabled() && result.isVerifiedUsingV2Scheme()) {
+                    Log.i(TAG, "V2 signature verified.");
+                } else Log.w(TAG, "V2 signature verification failed/disabled.");
+                if (sigSchemes.v3SchemeEnabled()) {
+                    if (result.isVerifiedUsingV3Scheme()) {
+                        Log.i(TAG, "V3 signature verified.");
+                    } else Log.w(TAG, "V3 signature verification failed.");
+                    if (result.isVerifiedUsingV31Scheme()) {
+                        Log.i(TAG, "V3.1 signature verified.");
+                    } else Log.w(TAG, "V3.1 signature verification failed.");
+                } else Log.w(TAG, "V3 signature verification disabled.");
+                if (sigSchemes.v4SchemeEnabled() && result.isVerifiedUsingV4Scheme()) {
+                    Log.i(TAG, "V4 signature verified.");
+                } else Log.w(TAG, "V4 signature verification failed/disabled.");
+                if (result.isSourceStampVerified()) {
+                    Log.i(TAG, "SourceStamp verified.");
+                } else Log.w(TAG, "SourceStamp not verified/unavailable.");
                 int i = 0;
                 List<X509Certificate> signerCertificates = result.getSignerCertificates();
                 Log.i(TAG, "Number of signatures: %d", signerCertificates.size());
