@@ -92,21 +92,17 @@ public class Signer {
         builder.setCreatedBy("AppManager");
         builder.setAlignFileSize(alignFileSize);
         if (minSdk != -1) builder.setMinSdkVersion(minSdk);
-        if (mSigSchemes.v1SchemeEnabled()) {
-            builder.setV1SigningEnabled(true);
-        }
-        if (mSigSchemes.v2SchemeEnabled()) {
-            builder.setV2SigningEnabled(true);
-        }
-        if (mSigSchemes.v3SchemeEnabled()) {
-            builder.setV3SigningEnabled(true);
-        }
+        builder.setV1SigningEnabled(mSigSchemes.v1SchemeEnabled());
+        builder.setV2SigningEnabled(mSigSchemes.v2SchemeEnabled());
+        builder.setV3SigningEnabled(mSigSchemes.v3SchemeEnabled());
         if (mSigSchemes.v4SchemeEnabled()) {
             if (mIdsigFile == null) {
                 throw new RuntimeException("idsig file is mandatory for v4 signature scheme.");
             }
             builder.setV4SigningEnabled(true);
             builder.setV4SignatureOutputFile(mIdsigFile);
+        } else {
+            builder.setV4SigningEnabled(false);
         }
         ApkSigner signer = builder.build();
         Log.i(TAG, "SignApk: %s", in);
