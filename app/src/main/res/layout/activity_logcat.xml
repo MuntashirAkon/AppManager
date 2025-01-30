@@ -1,8 +1,7 @@
 <!-- SPDX-License-Identifier: WTFPL AND GPL-3.0-or-later -->
 <!-- Copyright 2012 Nolan Lawson -->
 <!-- Copyright 2021 Muntashir Al-Islam -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -26,9 +25,9 @@
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_linear"
             style="@style/Widget.AppTheme.LinearProgressIndicator"
-            android:indeterminate="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
 
     </io.github.muntashirakon.widget.AppBarLayout>
 
@@ -43,15 +42,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:fitsSystemWindows="true"
         android:layout_margin="@dimen/padding_medium"
-        android:visibility="gone"
+        android:contentDescription="@string/log_stop_recording"
+        android:fitsSystemWindows="true"
         android:text="@string/log_stop_recording"
         android:textColor="?attr/colorOnError"
+        android:visibility="gone"
+        app:backgroundTint="?attr/colorError"
         app:icon="@drawable/ic_stop"
         app:iconTint="?attr/colorOnError"
-        app:backgroundTint="?attr/colorError"
-        tools:visibility="visible"
-        android:contentDescription="@string/log_stop_recording" />
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        tools:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

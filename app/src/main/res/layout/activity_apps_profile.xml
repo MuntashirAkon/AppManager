@@ -1,6 +1,5 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -31,16 +30,17 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:fitsSystemWindows="true"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_add"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/padding_medium"
         android:layout_marginBottom="72dp"
+        android:clickable="true"
+        android:contentDescription="@string/add_item"
+        android:fitsSystemWindows="true"
+        android:focusable="true"
+        android:src="@drawable/ic_add"
         app:layout_anchor="@id/bottom_navigation"
         app:layout_anchorGravity="right|top"
-        android:contentDescription="@string/add_item" />
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

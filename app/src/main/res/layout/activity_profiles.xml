@@ -1,6 +1,5 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -24,9 +23,9 @@
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_linear"
             style="@style/Widget.AppTheme.LinearProgressIndicator"
-            android:indeterminate="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
 
     </io.github.muntashirakon.widget.AppBarLayout>
 
@@ -39,8 +38,8 @@
             android:id="@android:id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
             android:clipToPadding="false"
+            android:fitsSystemWindows="true"
             app:fastScrollerEnabled="true"
             tools:listitem="@layout/m3_preference" />
 
@@ -55,14 +54,15 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:fitsSystemWindows="true"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_add"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/padding_medium"
-        android:contentDescription="@string/new_profile" />
+        android:clickable="true"
+        android:contentDescription="@string/new_profile"
+        android:fitsSystemWindows="true"
+        android:focusable="true"
+        android:src="@drawable/ic_add"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
