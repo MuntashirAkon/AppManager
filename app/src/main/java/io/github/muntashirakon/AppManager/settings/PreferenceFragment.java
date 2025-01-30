@@ -21,6 +21,7 @@ import io.github.muntashirakon.util.UiUtils;
 
 public abstract class PreferenceFragment extends PreferenceFragmentCompat {
     public static final String PREF_KEY = "key";
+    public static final String PREF_SECONDARY = "secondary";
 
     @Nullable
     private String mPrefKey;
@@ -29,15 +30,20 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        boolean secondary = false;
         if (getArguments() != null) {
             mPrefKey = requireArguments().getString(PREF_KEY);
+            secondary = requireArguments().getBoolean(PREF_SECONDARY);
             requireArguments().remove(PREF_KEY);
+            requireArguments().remove(PREF_SECONDARY);
         }
         // https://github.com/androidx/androidx/blob/androidx-main/preference/preference/res/layout/preference_recyclerview.xml
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setFitsSystemWindows(true);
         recyclerView.setClipToPadding(false);
-        UiUtils.applyWindowInsetsAsPaddingNoTop(recyclerView);
+        if (secondary) {
+            UiUtils.applyWindowInsetsAsPadding(recyclerView, false, true, false, true);
+        } else UiUtils.applyWindowInsetsAsPaddingNoTop(recyclerView);
     }
 
     @CallSuper
