@@ -24,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -129,11 +130,27 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
     private SwipeRefreshLayout mSwipeRefresh;
     @Nullable
     private MultiSelectionView mMultiSelectionView;
+    private FloatingActionButtonGroup mFabGroup;
     private FmPathListAdapter mPathListAdapter;
     private FmActivity mActivity;
 
     @Nullable
     private FolderShortInfo mFolderShortInfo;
+
+    private final ViewTreeObserver.OnGlobalLayoutListener mMultiSelectionViewChangeListener = () -> {
+        if (mFabGroup != null) {
+            int defaultMargin = UiUtils.dpToPx(requireContext(), 16);
+            int newMargin;
+            if (mMultiSelectionView.getVisibility() == View.VISIBLE) {
+                newMargin = defaultMargin + mMultiSelectionView.getHeight();
+            } else newMargin = defaultMargin;
+            ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) mFabGroup.getLayoutParams();
+            if (marginLayoutParams.bottomMargin != newMargin) {
+                marginLayoutParams.bottomMargin = newMargin;
+                mFabGroup.setLayoutParams(marginLayoutParams);
+            }
+        }
+    };
 
     private final OnBackPressedCallback mBackPressedCallback = new OnBackPressedCallback(true) {
         @Override
@@ -218,9 +235,9 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
                     .setNegativeButton(R.string.close, null)
                     .show();
         });
-        FloatingActionButtonGroup fabGroup = view.findViewById(R.id.fab);
-        fabGroup.inflate(R.menu.fragment_fm_speed_dial);
-        fabGroup.setOnActionSelectedListener(this);
+        mFabGroup = view.findViewById(R.id.fab);
+        mFabGroup.inflate(R.menu.fragment_fm_speed_dial);
+        mFabGroup.setOnActionSelectedListener(this);
         UiUtils.applyWindowInsetsAsMargin(view.findViewById(R.id.fab_holder));
         mEmptyView = view.findViewById(android.R.id.empty);
         mEmptyViewIcon = view.findViewById(R.id.icon);
@@ -253,10 +270,10 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
                 if (mFolderShortInfo == null) {
                     return;
                 }
-                if (dy < 0 && mFolderShortInfo.canWrite && !fabGroup.isShown()) {
-                    fabGroup.show();
-                } else if (dy > 0 && fabGroup.isShown()) {
-                    fabGroup.hide();
+                if (dy < 0 && mFolderShortInfo.canWrite && !mFabGroup.isShown()) {
+                    mFabGroup.show();
+                } else if (dy > 0 && mFabGroup.isShown()) {
+                    mFabGroup.hide();
                 }
             }
         });
@@ -264,6 +281,7 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
         mMultiSelectionView.setOnItemSelectedListener(this);
         mMultiSelectionView.setAdapter(mAdapter);
         mMultiSelectionView.updateCounter(true);
+        mMultiSelectionView.getViewTreeObserver().addOnGlobalLayoutListener(mMultiSelectionViewChangeListener);
         BatchOpsHandler batchOpsHandler = new BatchOpsHandler(mMultiSelectionView);
         mMultiSelectionView.setOnSelectionChangeListener(batchOpsHandler);
         mActivity.addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
@@ -355,12 +373,12 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
                 }
             }
             if (!folderShortInfo.canWrite) {
-                if (fabGroup.isShown()) {
-                    fabGroup.hide();
+                if (mFabGroup.isShown()) {
+                    mFabGroup.hide();
                 }
             } else {
-                if (!fabGroup.isShown()) {
-                    fabGroup.show();
+                if (!mFabGroup.isShown()) {
+                    mFabGroup.show();
                 }
             }
             Optional.ofNullable(mActivity.getSupportActionBar()).ifPresent(actionBar ->
@@ -396,6 +414,14 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
         if (mModel != null && mRecyclerView != null) {
             Prefs.FileManager.setLastOpenedPath(mModel.getOptions(), mModel.getCurrentUri(), getRecyclerViewFirstChildPosition());
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (mMultiSelectionView != null) {
+            mMultiSelectionView.getViewTreeObserver().removeOnGlobalLayoutListener(mMultiSelectionViewChangeListener);
+        }
+        super.onDestroyView();
     }
 
     @Override
