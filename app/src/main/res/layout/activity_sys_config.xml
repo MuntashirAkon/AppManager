@@ -1,9 +1,9 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".sysconfig.SysConfigActivity">
 
     <io.github.muntashirakon.widget.AppBarLayout
@@ -21,9 +21,9 @@
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_linear"
             style="@style/Widget.AppTheme.LinearProgressIndicator"
-            android:indeterminate="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
 
     </io.github.muntashirakon.widget.AppBarLayout>
 
@@ -34,14 +34,15 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <io.github.muntashirakon.widget.MaterialSpinner
-            style="@style/Widget.AppTheme.MaterialSpinner.Spinner.Small"
             android:id="@+id/spinner"
+            style="@style/Widget.AppTheme.MaterialSpinner.Spinner.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="100dp"
             android:layout_gravity="start|center_vertical"
-            android:layout_marginVertical="@dimen/padding_small"
             android:layout_marginHorizontal="@dimen/padding_large"
+            android:layout_marginVertical="@dimen/padding_small"
+            android:fitsSystemWindows="true"
+            android:minWidth="100dp"
             android:nextFocusDown="@id/recycler_view"
             tools:hint="permissions" />
 
@@ -53,10 +54,10 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="none"
-                android:nextFocusUp="@id/spinner"
-                android:fitsSystemWindows="true"
                 android:clipToPadding="false"
+                android:fitsSystemWindows="true"
+                android:nextFocusUp="@id/spinner"
+                android:scrollbars="none"
                 app:fastScrollerEnabled="true"
                 tools:listitem="@layout/item_icon_title_subtitle" />
 
@@ -64,8 +65,8 @@
                 android:id="@android:id/empty"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:focusable="false"
+                android:gravity="center"
                 android:text="@string/no_content" />
 
         </FrameLayout>

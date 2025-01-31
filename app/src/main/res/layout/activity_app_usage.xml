@@ -20,13 +20,14 @@
             android:orientation="vertical">
 
             <io.github.muntashirakon.widget.MaterialSpinner
-                style="@style/Widget.AppTheme.MaterialSpinner.Spinner.Small"
                 android:id="@+id/spinner"
-                android:layout_width="130dp"
+                style="@style/Widget.AppTheme.MaterialSpinner.Spinner.Small"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|start"
-                android:layout_marginVertical="@dimen/padding_small"
                 android:layout_marginHorizontal="@dimen/padding_large"
+                android:layout_marginVertical="@dimen/padding_small"
+                android:fitsSystemWindows="true"
                 android:nextFocusDown="@id/recycler_view"
                 tools:hint="Interval" />
 
@@ -46,8 +47,8 @@
                     android:id="@android:id/empty"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
                     android:focusable="false"
+                    android:gravity="center"
                     android:text="@string/no_usage_in_this_time_range"
                     tools:visibility="visible" />
 
