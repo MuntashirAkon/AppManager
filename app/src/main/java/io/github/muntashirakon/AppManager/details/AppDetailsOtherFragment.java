@@ -7,7 +7,6 @@ import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.om.OverlayInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;

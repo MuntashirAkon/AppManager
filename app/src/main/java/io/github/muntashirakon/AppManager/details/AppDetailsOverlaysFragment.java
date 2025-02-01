@@ -160,10 +160,15 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
                 holder.overlayName.setText(UIUtils.getHighlightedText(overlayName, mConstraint, colorQueryStringHighlight));
             } else holder.overlayName.setText(overlayName);
             holder.packageName.setText(overlayItem.getPackageName());
-            holder.overlayTarget.setText(overlayInfo.getTargetOverlayableName());
-            holder.overlayCategory.setText(overlayItem.getCategory());
-            holder.toggleSwitch.setEnabled(overlayItem.isEnabled());
-            holder.overlayState.setText("State Unknown");
+            holder.overlayTarget.setText(getString(R.string.overlay_target, overlayInfo.getTargetOverlayableName()));
+            holder.overlayCategory.setText(getString(R.string.overlay_category, overlayItem.getCategory()));
+            holder.toggleSwitch.setEnabled(true);
+            holder.toggleSwitch.setChecked(overlayItem.isEnabled());
+            holder.overlayState.setText(getString(R.string.overlay_state, overlayItem.getReadableState(), overlayItem.getPriority()));
+            holder.toggleSwitch.setOnCheckedChangeListener((i, o)-> {
+                holder.toggleSwitch.setChecked(overlayItem.setEnabled(overlayManager, o));
+            });
+
         }
 
         @Override

@@ -1,14 +1,16 @@
 package io.github.muntashirakon.AppManager.details.struct;
 
-import static dev.rikka.tools.refine.Refine.unsafeCast;
-
 import android.annotation.SuppressLint;
 import android.content.om.OverlayInfo;
 import android.content.om.OverlayInfoHidden;
 import android.content.om.OverlayManager;
 import android.content.om.OverlayManagerHidden;
+import android.content.om.OverlayManagerTransaction;
+import android.content.om.OverlayManagerTransactionHidden;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import dev.rikka.tools.refine.Refine;
 
@@ -20,7 +22,12 @@ public class AppDetailsOverlayItem extends AppDetailsItem<OverlayInfo> {
     @SuppressLint("NewApi")
     public AppDetailsOverlayItem(@NonNull OverlayInfo overlayInfo) {
         super(overlayInfo);
-        if (overlayInfo.getOverlayName()!=null) name = overlayInfo.getOverlayName();
+        if (overlayInfo.getOverlayName()!=null) {
+            name = overlayInfo.getOverlayName();
+        } else {
+            name = overlayInfo.getOverlayIdentifier().toString();
+        }
+
         overlayInternal = Refine.<OverlayInfoHidden>unsafeCast(overlayInfo);
 
     }
@@ -37,6 +44,27 @@ public class AppDetailsOverlayItem extends AppDetailsItem<OverlayInfo> {
         return overlayInternal.isEnabled();
     }
 
+    public boolean isMutable() {
+        return overlayInternal.isMutable;
+    }
 
+    public String getReadableState() {
+        return OverlayInfoHidden.stateToString(overlayInternal.state);
+    }
+
+    public int getState() {
+        return overlayInternal.state;
+    }
+    public int getPriority() {
+        return overlayInternal.priority;
+    }
+    
+    @RequiresApi(api = Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    public boolean setEnabled(OverlayManager mgr, boolean enabled) {
+        OverlayManagerTransactionHidden.Builder builder = new OverlayManagerTransactionHidden.Builder();
+        builder.setEnabled(this.item.getOverlayIdentifier(), enabled);
+        mgr.commit(Refine.unsafeCast(builder.build()));
+        return isEnabled();
+    }
 
 }
