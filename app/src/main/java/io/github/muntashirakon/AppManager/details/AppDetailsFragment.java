@@ -46,7 +46,8 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
             FEATURES,
             CONFIGURATIONS,
             SIGNATURES,
-            SHARED_LIBRARIES
+            SHARED_LIBRARIES,
+            OVERLAYS
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface Property {
@@ -64,6 +65,7 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
     public static final int CONFIGURATIONS = 9;
     public static final int SIGNATURES = 10;
     public static final int SHARED_LIBRARIES = 11;
+    public static final int OVERLAYS = 12;
 
     @IntDef(value = {
             SORT_BY_NAME,

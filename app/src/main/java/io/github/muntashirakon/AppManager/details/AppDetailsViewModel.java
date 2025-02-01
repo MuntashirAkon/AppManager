@@ -15,6 +15,8 @@ import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.om.OverlayInfo;
+import android.content.om.OverlayManager;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
@@ -34,6 +36,7 @@ import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PermissionInfoCompat;
@@ -61,6 +64,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.apk.CachedApkSource;
@@ -78,6 +82,7 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsDefinedPermis
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsFeatureItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsLibraryItem;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsOverlayItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsServiceItem;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -111,6 +116,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public static final String TAG = AppDetailsViewModel.class.getSimpleName();
 
     private final PackageManager mPackageManager;
+    private final OverlayManager mOverlayManager;
     private final Object mBlockerLocker = new Object();
     private final ExecutorService mExecutor = Executors.newFixedThreadPool(4);
     private final CountDownLatch mPackageInfoWatcher = new CountDownLatch(1);
@@ -150,6 +156,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public AppDetailsViewModel(@NonNull Application application) {
         super(application);
         mPackageManager = application.getPackageManager();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            mOverlayManager = application.getSystemService(OverlayManager.class);
+        } else {
+            mOverlayManager = null;
+        }
         mReceiver = new PackageIntentReceiver(this);
         mWaitForBlocker = true;
     }
@@ -887,6 +898,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 return observeInternal(mSignatures);
             case AppDetailsFragment.SHARED_LIBRARIES:
                 return observeInternal(mSharedLibraries);
+            case AppDetailsFragment.OVERLAYS:
+                return observeInternal(mOverlays);
             case AppDetailsFragment.APP_INFO:
                 return observeInternal(mAppInfo);
             default:
@@ -939,6 +952,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 case AppDetailsFragment.SHARED_LIBRARIES:
                     loadSharedLibraries();
                     break;
+                case AppDetailsFragment.OVERLAYS:
+                    loadOverlays();
+                    break;
                 case AppDetailsFragment.APP_INFO:
                     loadAppInfo();
                     break;
@@ -946,6 +962,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::resumeWatcher);
         });
     }
+
 
     private final MutableLiveData<Boolean> mIsPackageExistLiveData = new MutableLiveData<>();
     private boolean mIsPackageExist = true;
@@ -1906,6 +1923,24 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
         Collections.sort(appDetailsItems, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
         mSharedLibraries.postValue(appDetailsItems);
+    }
+
+    @NonNull
+    private final MutableLiveData<List<AppDetailsOverlayItem>> mOverlays = new MutableLiveData<>();
+
+    @WorkerThread
+    private void loadOverlays() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+                || mOverlayManager == null || mPackageName == null)  {
+            mOverlays.postValue(new ArrayList<>());
+            return;
+        }
+        final List<OverlayInfo> overlays =  mOverlayManager.getOverlayInfosForTarget(mPackageName);
+        List<AppDetailsOverlayItem> overlayItems = new ArrayList<>();
+        for (OverlayInfo o : overlays) {
+            overlayItems.add(new AppDetailsOverlayItem(o));
+        }
+        mOverlays.postValue(overlayItems);
     }
 
     /**
