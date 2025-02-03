@@ -3,8 +3,6 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.storage.StorageVolume;
@@ -17,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.collection.ArrayMap;
 import androidx.core.content.ContextCompat;
-import androidx.documentfile.provider.DocumentFileUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -58,11 +55,7 @@ public class StorageUtils {
             long time = grantedUrisAndDate.valueAt(i);
             if (Paths.get(uri).isDirectory()) {
                 // Only directories are locations
-                PackageManager pm = context.getPackageManager();
-                ResolveInfo resolveInfo = DocumentFileUtils.getUriSource(context, uri);
-                String readableName = resolveInfo != null
-                        ? resolveInfo.loadLabel(pm).toString()
-                        : Paths.getLastPathSegment(uri.getPath()) + " " + DateUtils.formatDate(context, time);
+                String readableName = Paths.getLastPathSegment(uri.getPath()) + " " + DateUtils.formatDate(context, time);
                 storageLocations.put(readableName, getFixedTreeUri(uri));
             }
         }
