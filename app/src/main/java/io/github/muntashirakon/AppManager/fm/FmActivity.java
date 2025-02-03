@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.fm;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -20,6 +21,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -154,6 +157,23 @@ public class FmActivity extends BaseActivity {
     private RecyclerView mDrawerRecyclerView;
     private DrawerRecyclerViewAdapter mDrawerAdapter;
     private FmDrawerViewModel mViewModel;
+    private final ActivityResultLauncher<Intent> mAddDocumentProvider = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                try {
+                    if (result.getResultCode() != Activity.RESULT_OK) return;
+                    Intent data = result.getData();
+                    if (data == null) return;
+                    Uri treeUri = data.getData();
+                    if (treeUri == null) return;
+                    int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                            | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    getContentResolver().takePersistableUriPermission(treeUri, takeFlags);
+                } finally {
+                    // Display backup volumes again
+                    mViewModel.loadDrawerItems();
+                }
+            });
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
@@ -344,9 +364,22 @@ public class FmActivity extends BaseActivity {
         }
 
         public void getLabelView(@NonNull ViewHolder holder, FmDrawerItem item) {
-            if (holder.actionView != null) {
-                holder.actionView.setVisibility(View.GONE);
+            if (holder.actionView == null) {
+                return;
             }
+            if (item.id == -1) {
+                // Favorites
+                holder.actionView.setVisibility(View.GONE);
+            } else if (item.id == -2) {
+                // Locations
+                holder.actionView.setVisibility(View.VISIBLE);
+                holder.actionView.setIconResource(R.drawable.ic_add);
+                holder.actionView.setOnClickListener(v -> {
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                            .putExtra("android.provider.extra.SHOW_ADVANCED", true);
+                    mFmActivity.mAddDocumentProvider.launch(intent);
+                });
+            } else holder.actionView.setVisibility(View.GONE);
         }
 
         public void getView(@NonNull ViewHolder holder, FmDrawerItem item) {
