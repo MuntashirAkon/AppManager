@@ -14,6 +14,7 @@
         <item>@string/configurations</item>
         <item>@string/app_signing_signatures</item>
         <item>@string/shared_libs</item>
+        <item>@string/overlays</item>
     </array>
     <array name="rule_types">
         <item>@string/activities</item>
@@ -268,4 +269,5 @@
         <item>trackers</item>
         <item>version_name</item>
     </string-array>
+    <string name="overlays">Overlays</string>
 </resources>

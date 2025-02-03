@@ -1498,4 +1498,9 @@
     <string name="no_history">No history</string>
     <string name="title_confirm_execution">Confirm execution</string>
     <string name="clear_history">Clear history</string>
+    <string name="no_overlay_permission">No required overlay permission</string>
+    <string name="help_overlays_tab">Help with overlays tab</string>
+    <string name="overlay_state">State: %s | Priority: %i</string>
+    <string name="overlay_category">Category: %s</string>
+    <string name="overlay_target">Target: %s</string>
 </resources>
