@@ -41,9 +41,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,36 +48,53 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.history.IJsonSerializer;
-import io.github.muntashirakon.AppManager.history.JsonDeserializer;
+import io.github.muntashirakon.AppManager.db.entity.FmFavorite;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
-import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.AdapterUtils;
 
 public class FmActivity extends BaseActivity {
-    public static class Options implements Parcelable, IJsonSerializer {
+    public static class Options implements Parcelable {
+        public static final int OPTION_VFS = 1 << 0;
+        public static final int OPTION_RO = 1 << 1; // read-only
+        public static final int OPTION_MOUNT_DEX = 1 << 2;
+
         @NonNull
         public final Uri uri;
-        public final boolean isVfs;
-        public final boolean readOnly;
-        public final boolean mountDexFiles;
+        public final int options;
 
         @Nullable
         private Uri mInitUriForVfs;
 
+        public Options(@NonNull Uri uri) {
+            this(uri, false, false, false);
+        }
+
+        protected Options(@NonNull Uri uri, int options) {
+            this.uri = uri;
+            this.options = options;
+        }
+
         public Options(@NonNull Uri uri, boolean isVfs, boolean readOnly, boolean mountDexFiles) {
             this.uri = uri;
-            this.isVfs = isVfs;
-            this.readOnly = readOnly;
-            this.mountDexFiles = mountDexFiles;
+            int options = 0;
+            if (isVfs) {
+                options |= OPTION_VFS;
+            }
+            if (readOnly) {
+                options |= OPTION_RO;
+            }
+            if (mountDexFiles) {
+                options |= OPTION_MOUNT_DEX;
+            }
+            this.options = options;
         }
 
         public void setInitUriForVfs(@Nullable Uri initUriForVfs) {
-            if (!isVfs && initUriForVfs != null) {
+            if (!isVfs() && initUriForVfs != null) {
                 throw new IllegalArgumentException("initUri can only be set when the file system is virtual.");
             }
             this.mInitUriForVfs = initUriForVfs;
@@ -91,32 +105,19 @@ public class FmActivity extends BaseActivity {
             return mInitUriForVfs;
         }
 
-        protected Options(@NonNull JSONObject jsonObject) throws JSONException {
-            uri = Uri.parse(jsonObject.getString("uri"));
-            isVfs = jsonObject.getBoolean("is_vfs");
-            readOnly = jsonObject.getBoolean("read_only");
-            mountDexFiles = jsonObject.getBoolean("mount_dex");
-            String initUri = JSONUtils.optString(jsonObject, "init_uri", null);
-            if (initUri != null) {
-                mInitUriForVfs = Uri.parse(initUri);
-            }
+        public boolean isVfs() {
+            return (options & OPTION_VFS) != 0;
+        }
+
+        public boolean isMountDex() {
+            return (options & OPTION_MOUNT_DEX) != 0;
         }
 
         protected Options(Parcel in) {
             uri = Objects.requireNonNull(ParcelCompat.readParcelable(in, Uri.class.getClassLoader(), Uri.class));
-            isVfs = ParcelCompat.readBoolean(in);
-            readOnly = ParcelCompat.readBoolean(in);
-            mountDexFiles = ParcelCompat.readBoolean(in);
+            options = in.readInt();
             mInitUriForVfs = ParcelCompat.readParcelable(in, Uri.class.getClassLoader(), Uri.class);
         }
-
-        public static final JsonDeserializer.Creator<Options> DESERIALIZER = new JsonDeserializer.Creator<Options>() {
-            @NonNull
-            @Override
-            public Options deserialize(@NonNull JSONObject jsonObject) throws JSONException {
-                return new Options(jsonObject);
-            }
-        };
 
         public static final Creator<Options> CREATOR = new Creator<Options>() {
             @NonNull
@@ -137,24 +138,10 @@ public class FmActivity extends BaseActivity {
             return 0;
         }
 
-        @NonNull
-        @Override
-        public JSONObject serializeToJson() throws JSONException {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("uri", uri.toString());
-            jsonObject.put("is_vfs", isVfs);
-            jsonObject.put("read_only", readOnly);
-            jsonObject.put("mount_dex", mountDexFiles);
-            jsonObject.put("init_uri", mInitUriForVfs != null ? mInitUriForVfs.toString() : null);
-            return jsonObject;
-        }
-
         @Override
         public void writeToParcel(@NonNull Parcel dest, int flags) {
             dest.writeParcelable(uri, flags);
-            ParcelCompat.writeBoolean(dest, isVfs);
-            ParcelCompat.writeBoolean(dest, readOnly);
-            ParcelCompat.writeBoolean(dest, mountDexFiles);
+            dest.writeInt(options);
             dest.writeParcelable(mInitUriForVfs, flags);
         }
     }
@@ -166,13 +153,14 @@ public class FmActivity extends BaseActivity {
     private DrawerLayout mDrawerLayout;
     private RecyclerView mDrawerRecyclerView;
     private DrawerRecyclerViewAdapter mDrawerAdapter;
+    private FmDrawerViewModel mViewModel;
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_fm);
         setSupportActionBar(findViewById(R.id.toolbar));
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
-        FmDrawerViewModel viewModel = new ViewModelProvider(this).get(FmDrawerViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(FmDrawerViewModel.class);
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerRecyclerView = findViewById(R.id.recycler_view);
         mDrawerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -182,9 +170,13 @@ public class FmActivity extends BaseActivity {
         if (actionBar != null) {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
-        viewModel.getDrawerItemsLiveData().observe(this, drawerItems ->
+        mViewModel.getDrawerItemsLiveData().observe(this, drawerItems ->
                 mDrawerAdapter.setAdapterItems(drawerItems));
-        viewModel.loadDrawerItems();
+        FmFavoritesManager.getFavoriteAddedLiveData().observe(this, fmFavorite -> {
+            // Reload drawer
+            mViewModel.loadDrawerItems();
+        });
+        mViewModel.loadDrawerItems();
         Uri uri = getIntent().getData();
         if (uri != null && uri.getScheme() == null) {
             // file:// URI can have no schema. So, fix it by adding file://
@@ -201,12 +193,12 @@ public class FmActivity extends BaseActivity {
             Integer position = null;
             if (options == null) {
                 if (uri != null) {
-                    options = new Options(uri, false, false, false);
+                    options = new Options(uri);
                 } else if (Prefs.FileManager.isRememberLastOpenedPath()) {
                     Pair<FmActivity.Options, Pair<Uri, Integer>> optionsUriPostionPair = Prefs.FileManager.getLastOpenedPath();
                     if (optionsUriPostionPair != null) {
                         options = optionsUriPostionPair.first;
-                        if (options.isVfs) {
+                        if (options.isVfs()) {
                             uri = optionsUriPostionPair.second.first;
                         }
                         position = optionsUriPostionPair.second.second;
@@ -214,16 +206,16 @@ public class FmActivity extends BaseActivity {
                 }
                 if (options == null) {
                     // Use home
-                    options = new Options(Prefs.FileManager.getHome(), false, false, false);
+                    options = new Options(Prefs.FileManager.getHome());
                 }
             }
             Uri uncheckedUri = options.uri;
             Uri checkedUri = ExUtils.exceptionAsNull(() -> Paths.getStrict(uncheckedUri).exists() ? uncheckedUri : null);
             if (checkedUri == null) {
                 // Use default directory
-                options = new Options(Uri.fromFile(Environment.getExternalStorageDirectory()), false, false, false);
+                options = new Options(Uri.fromFile(Environment.getExternalStorageDirectory()));
             }
-            if (options.isVfs) {
+            if (options.isVfs()) {
                 options.setInitUriForVfs(uri);
             }
             loadFragment(options, position);
@@ -285,16 +277,27 @@ public class FmActivity extends BaseActivity {
             ThreadUtils.postOnBackgroundThread(() -> {
                 List<FmDrawerItem> drawerItems = new ArrayList<>();
                 Context context = getApplication();
+                // Favorites
+                drawerItems.add(new FmDrawerItem(-1, context.getString(R.string.favorites), null, FmDrawerItem.ITEM_TYPE_LABEL));
+                List<FmFavorite> fmFavorites = FmFavoritesManager.getAllFavorites();
+                for (FmFavorite fmFavorite : fmFavorites) {
+                    Options options = new Options(Uri.parse(fmFavorite.uri), fmFavorite.options);
+                    options.mInitUriForVfs = fmFavorite.initUri != null ? Uri.parse(fmFavorite.initUri) : null;
+                    FmDrawerItem drawerItem = new FmDrawerItem(fmFavorite.id, fmFavorite.name, options, FmDrawerItem.ITEM_TYPE_FAVORITE);
+                    drawerItem.iconRes = R.drawable.ic_folder;
+                    drawerItems.add(drawerItem);
+                }
+                // Locations
+                drawerItems.add(new FmDrawerItem(-2, context.getString(R.string.storage), null, FmDrawerItem.ITEM_TYPE_LABEL));
                 ArrayMap<String, Uri> storageLocations = StorageUtils.getAllStorageLocations(getApplication());
-                drawerItems.add(new FmDrawerItem(-1, context.getString(R.string.storage), null, FmDrawerItem.ITEM_TYPE_LABEL));
                 for (int i = 0; i < storageLocations.size(); ++i) {
                     Uri uri = storageLocations.valueAt(i);
-                    Options options = new Options(uri, false, false, false);
+                    Options options = new Options(uri);
                     PackageManager pm = getApplication().getPackageManager();
                     ResolveInfo resolveInfo = DocumentFileUtils.getUriSource(getApplication(), uri);
                     String name = resolveInfo != null ? resolveInfo.loadLabel(pm).toString() : storageLocations.keyAt(i);
                     Drawable icon = resolveInfo != null ? resolveInfo.loadIcon(pm) : null;
-                    FmDrawerItem drawerItem = new FmDrawerItem(-1, name, options, FmDrawerItem.ITEM_TYPE_LOCATION);
+                    FmDrawerItem drawerItem = new FmDrawerItem(-4, name, options, FmDrawerItem.ITEM_TYPE_LOCATION);
                     drawerItem.iconRes = R.drawable.ic_content_save;
                     drawerItem.icon = icon;
                     drawerItems.add(drawerItem);

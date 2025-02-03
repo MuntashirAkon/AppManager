@@ -1498,4 +1498,6 @@
     <string name="no_history">No history</string>
     <string name="title_confirm_execution">Confirm execution</string>
     <string name="clear_history">Clear history</string>
+    <string name="favorites">Favorites</string>
+    <string name="add_to_favorites">Add to Favorites</string>
 </resources>

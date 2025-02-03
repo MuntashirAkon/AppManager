@@ -315,7 +315,7 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
         });
         mModel.getUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
             FmActivity.Options options1 = mModel.getOptions();
-            String alternativeRootName = options1.isVfs ? options1.uri.getLastPathSegment() : null;
+            String alternativeRootName = options1.isVfs() ? options1.uri.getLastPathSegment() : null;
             Optional.ofNullable(mActivity.getSupportActionBar()).ifPresent(actionBar -> {
                 String title = uri1.getLastPathSegment();
                 if (TextUtils.isEmpty(title)) {
@@ -474,11 +474,17 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
             return true;
         } else if (id == R.id.action_new_window) {
             Intent intent = new Intent(mActivity, FmActivity.class);
-            if (!mModel.getOptions().isVfs) {
+            if (!mModel.getOptions().isVfs()) {
                 intent.setDataAndType(mModel.getCurrentUri(), DocumentsContract.Document.MIME_TYPE_DIR);
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             startActivity(intent);
+            return true;
+        } else if (id == R.id.action_add_to_favorites) {
+            Uri uri = mPathListAdapter.getCurrentUri();
+            if (uri != null) {
+                mModel.addToFavorite(Paths.get(uri), mModel.getOptions());
+            }
             return true;
         } else if (id == R.id.action_settings) {
             Intent intent = SettingsActivity.getIntent(requireContext(), "files_prefs");

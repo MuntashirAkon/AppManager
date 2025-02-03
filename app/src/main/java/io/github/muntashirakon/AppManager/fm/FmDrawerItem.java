@@ -24,7 +24,7 @@ public class FmDrawerItem {
     public @interface DrawerItemType {
     }
 
-    public final int id;
+    public final long id;
     @NonNull
     public final String name;
     @Nullable
@@ -38,7 +38,7 @@ public class FmDrawerItem {
     @ColorInt
     public int color;
 
-    public FmDrawerItem(int id, @NonNull String name, @Nullable FmActivity.Options options, @DrawerItemType int type) {
+    public FmDrawerItem(long id, @NonNull String name, @Nullable FmActivity.Options options, @DrawerItemType int type) {
         this.id = id;
         this.name = name;
         this.options = options;

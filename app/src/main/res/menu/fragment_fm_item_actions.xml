@@ -37,6 +37,11 @@
         android:title="@string/create_shortcut" />
 
     <item
+        android:id="@+id/action_add_to_favorites"
+        android:icon="@drawable/ic_star_outline"
+        android:title="@string/add_to_favorites" />
+
+    <item
         android:id="@+id/action_copy_path"
         android:icon="@drawable/ic_content_copy"
         android:title="@string/copy_this_path" />
