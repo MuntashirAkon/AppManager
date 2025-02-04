@@ -34,6 +34,17 @@ public final class FmFavoritesManager {
     }
 
     @WorkerThread
+    public static void removeFromFavorite(long id) {
+        AppsDb.getInstance().opFavoriteDao().delete(id);
+        sFavoriteAddedLiveData.postValue(null);
+    }
+
+    public static void renameFavorite(long id, @NonNull String newName) {
+        AppsDb.getInstance().opFavoriteDao().rename(id, newName);
+        sFavoriteAddedLiveData.postValue(null);
+    }
+
+    @WorkerThread
     public static List<FmFavorite> getAllFavorites() {
         return AppsDb.getInstance().opFavoriteDao().getAll();
     }

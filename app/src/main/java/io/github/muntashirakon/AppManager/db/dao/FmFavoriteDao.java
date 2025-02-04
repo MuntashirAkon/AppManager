@@ -20,6 +20,9 @@ public interface FmFavoriteDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insert(@NonNull FmFavorite fmFavorite);
 
-    @Query("DELETE FROM op_history WHERE id = :id")
+    @Query("UPDATE fm_favorite SET name = :newName WHERE id = :id")
+    void rename(long id, @NonNull String newName);
+
+    @Query("DELETE FROM fm_favorite WHERE id = :id")
     void delete(long id);
 }

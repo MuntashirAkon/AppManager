@@ -16,7 +16,9 @@ import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.DocumentsContract;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.collection.ArrayMap;
 import androidx.core.os.BundleCompat;
 import androidx.core.os.ParcelCompat;
@@ -43,6 +46,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,10 +56,13 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.db.entity.FmFavorite;
+import io.github.muntashirakon.AppManager.fm.dialogs.FilePropertiesDialogFragment;
+import io.github.muntashirakon.AppManager.fm.dialogs.RenameDialogFragment;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.AdapterUtils;
 
@@ -289,6 +296,27 @@ public class FmActivity extends BaseActivity {
             super(application);
         }
 
+        public void removeFavorite(long id) {
+            ThreadUtils.postOnBackgroundThread(() -> FmFavoritesManager.removeFromFavorite(id));
+        }
+
+        public void renameFavorite(long id, @NonNull String newName) {
+            ThreadUtils.postOnBackgroundThread(() -> FmFavoritesManager.renameFavorite(id, newName));
+        }
+
+        public void releaseUri(@NonNull Uri uri) {
+            try {
+                getApplication()
+                        .getContentResolver()
+                        .releasePersistableUriPermission(uri,
+                                Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                loadDrawerItems();
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+        }
+
         public LiveData<List<FmDrawerItem>> getDrawerItemsLiveData() {
             return mDrawerItemsLiveData;
         }
@@ -403,7 +431,8 @@ public class FmActivity extends BaseActivity {
             } else holder.actionView.setVisibility(View.GONE);
         }
 
-        public void getView(@NonNull ViewHolder holder, FmDrawerItem item) {
+        public void getView(@NonNull ViewHolder holder, @NonNull FmDrawerItem item) {
+            Objects.requireNonNull(item.options);
             if (holder.iconView != null) {
                 if (item.icon != null) {
                     holder.iconView.setImageDrawable(item.icon);
@@ -411,13 +440,67 @@ public class FmActivity extends BaseActivity {
             }
             holder.itemView.setOnClickListener(v -> {
                 Options options = item.options;
-                if (options != null) {
-                    mFmActivity.mDrawerLayout.close();
-                    mFmActivity.loadFragment(options, null);
-                }
+                mFmActivity.mDrawerLayout.close();
+                mFmActivity.loadFragment(options, null);
             });
             holder.itemView.setOnLongClickListener(v -> {
-                // TODO: 2/2/25 Display options to edit/remove items
+                Context context = v.getContext();
+                PopupMenu popupMenu = new PopupMenu(context, v);
+                Menu menu = popupMenu.getMenu();
+                // Copy path
+                menu.add(R.string.copy_this_path).setOnMenuItemClickListener(menuItem -> {
+                    Uri uri = item.options.getInitUriForVfs() != null
+                            ? item.options.getInitUriForVfs() : item.options.uri;
+                    String path = FmUtils.getDisplayablePath(uri);
+                    Utils.copyToClipboard(context, "Path", path);
+                    return true;
+                });
+                // Remove item
+                Uri uri = item.options.uri;
+                boolean removable = item.type != FmDrawerItem.ITEM_TYPE_LOCATION
+                        || ContentResolver.SCHEME_CONTENT.equals(uri.getScheme());
+                if (removable) {
+                    menu.add(R.string.item_remove).setOnMenuItemClickListener(menuItem -> {
+                        new MaterialAlertDialogBuilder(mFmActivity)
+                                .setTitle(context.getString(R.string.remove_filename, item.name))
+                                .setMessage(R.string.are_you_sure)
+                                .setNegativeButton(R.string.no, null)
+                                .setPositiveButton(R.string.yes, (dialog, which) -> {
+                                    if (item.type == FmDrawerItem.ITEM_TYPE_LOCATION) {
+                                        mFmActivity.mViewModel.releaseUri(uri);
+                                    } else if (item.type == FmDrawerItem.ITEM_TYPE_FAVORITE) {
+                                        mFmActivity.mViewModel.removeFavorite(item.id);
+                                    }
+                                })
+                                .show();
+                        return true;
+                    });
+                }
+                // Edit item
+                if (item.type == FmDrawerItem.ITEM_TYPE_FAVORITE) {
+                    menu.add(R.string.item_edit).setOnMenuItemClickListener(menuItem -> {
+                        RenameDialogFragment dialog = RenameDialogFragment.getInstance(item.name, (prefix, extension) -> {
+                            String displayName;
+                            if (!TextUtils.isEmpty(extension)) {
+                                displayName = prefix + "." + extension;
+                            } else {
+                                displayName = prefix;
+                            }
+                            mFmActivity.mViewModel.renameFavorite(item.id, displayName);
+                        });
+                        dialog.show(mFmActivity.getSupportFragmentManager(), RenameDialogFragment.TAG);
+                        return true;
+                    });
+                }
+                // Properties
+                if (!item.options.isVfs()) {
+                    menu.add(R.string.file_properties).setOnMenuItemClickListener(menuItem -> {
+                        FilePropertiesDialogFragment dialogFragment = FilePropertiesDialogFragment.getInstance(item.options.uri);
+                        dialogFragment.show(mFmActivity.getSupportFragmentManager(), FilePropertiesDialogFragment.TAG);
+                        return true;
+                    });
+                }
+                popupMenu.show();
                 return true;
             });
         }

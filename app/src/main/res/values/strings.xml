@@ -1500,4 +1500,7 @@
     <string name="clear_history">Clear history</string>
     <string name="favorites">Favorites</string>
     <string name="add_to_favorites">Add to Favorites</string>
+    <string name="item_remove">Remove</string>
+    <string name="item_edit">Edit</string>
+    <string name="remove_filename">Remove %s</string>
 </resources>
