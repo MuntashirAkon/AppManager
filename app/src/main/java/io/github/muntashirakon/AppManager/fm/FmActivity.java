@@ -304,7 +304,7 @@ public class FmActivity extends BaseActivity {
                     Options options = new Options(Uri.parse(fmFavorite.uri), fmFavorite.options);
                     options.mInitUriForVfs = fmFavorite.initUri != null ? Uri.parse(fmFavorite.initUri) : null;
                     FmDrawerItem drawerItem = new FmDrawerItem(fmFavorite.id, fmFavorite.name, options, FmDrawerItem.ITEM_TYPE_FAVORITE);
-                    drawerItem.iconRes = R.drawable.ic_folder;
+                    drawerItem.iconRes = getIconResFromName(fmFavorite.name);
                     drawerItems.add(drawerItem);
                 }
                 // Locations
@@ -324,6 +324,27 @@ public class FmActivity extends BaseActivity {
                 }
                 mDrawerItemsLiveData.postValue(drawerItems);
             });
+        }
+
+        private static int getIconResFromName(@NonNull String filename) {
+            switch (filename) {
+                case "Documents":
+                    return R.drawable.ic_file_document;
+                case "Download":
+                case "Downloads":
+                    return R.drawable.ic_get_app;
+                case "Pictures":
+                case "DCIM":
+                    return R.drawable.ic_image;
+                case "Movies":
+                case "Music":
+                case "Podcasts":
+                case "Recordings":
+                case "Ringtones":
+                    return R.drawable.ic_audio_file;
+                default:
+                    return R.drawable.ic_folder;
+            }
         }
     }
 
