@@ -98,7 +98,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
         if (!SelfPermissions.canFreezeUnfreezePackages()) {
             UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);

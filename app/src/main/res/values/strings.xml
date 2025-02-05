@@ -1503,4 +1503,6 @@
     <string name="item_remove">Remove</string>
     <string name="item_edit">Edit</string>
     <string name="remove_filename">Remove %s</string>
+    <string name="advanced_suspend_app">Advanced suspend</string>
+    <string name="advanced_suspend_app_description">It force-stops and suspends the app to ensure that the app is not running in the background. This method should be preferred over the regular <b>suspend</b> method.</string>
 </resources>
