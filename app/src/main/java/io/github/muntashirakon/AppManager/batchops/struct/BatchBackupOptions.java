@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
+import io.github.muntashirakon.AppManager.history.JsonDeserializer;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
 public class BatchBackupOptions implements IBatchOpOptions {
@@ -64,6 +65,15 @@ public class BatchBackupOptions implements IBatchOpOptions {
         dest.writeInt(mFlags);
         dest.writeStringArray(mBackupNames);
     }
+
+    public BatchBackupOptions(@NonNull JSONObject jsonObject) throws JSONException {
+        assert jsonObject.getString("tag").equals(TAG);
+        mFlags = jsonObject.getInt("flags");
+        mBackupNames = JSONUtils.getArray(String.class, jsonObject.optJSONArray("backup_names"));
+    }
+
+    public static final JsonDeserializer.Creator<BatchBackupOptions> DESERIALIZER
+            = BatchBackupOptions::new;
 
     @NonNull
     @Override

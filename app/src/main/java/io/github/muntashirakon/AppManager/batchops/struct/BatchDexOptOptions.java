@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.apk.dexopt.DexOptOptions;
+import io.github.muntashirakon.AppManager.history.JsonDeserializer;
 
 public class BatchDexOptOptions implements IBatchOpOptions {
     public static final String TAG = BatchDexOptOptions.class.getSimpleName();
@@ -52,6 +53,14 @@ public class BatchDexOptOptions implements IBatchOpOptions {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeParcelable(mDexOptOptions, flags);
     }
+
+    protected BatchDexOptOptions(@NonNull JSONObject jsonObject) throws JSONException {
+        assert jsonObject.getString("tag").equals(TAG);
+        mDexOptOptions = DexOptOptions.DESERIALIZER.deserialize(jsonObject.getJSONObject("dex_opt_options"));
+    }
+
+    public static final JsonDeserializer.Creator<BatchDexOptOptions> DESERIALIZER
+            = BatchDexOptOptions::new;
 
     @NonNull
     @Override

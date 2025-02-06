@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.history.JsonDeserializer;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
 public class BatchAppOpsOptions implements IBatchOpOptions {
@@ -63,6 +64,15 @@ public class BatchAppOpsOptions implements IBatchOpOptions {
         dest.writeIntArray(mAppOps);
         dest.writeInt(mMode);
     }
+
+    protected BatchAppOpsOptions(@NonNull JSONObject jsonObject) throws JSONException {
+        assert jsonObject.getString("tag").equals(TAG);
+        mAppOps = JSONUtils.getIntArray(jsonObject.getJSONArray("app_ops"));
+        mMode = jsonObject.getInt("mode");
+    }
+
+    public static final JsonDeserializer.Creator<BatchAppOpsOptions> DESERIALIZER
+            = BatchAppOpsOptions::new;
 
     @NonNull
     @Override
