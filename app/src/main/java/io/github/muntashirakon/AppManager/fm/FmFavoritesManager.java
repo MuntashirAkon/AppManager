@@ -28,24 +28,24 @@ public final class FmFavoritesManager {
         fmFavorite.uri = options.isVfs() ? options.uri.toString() : path.getUri().toString();
         fmFavorite.initUri = options.isVfs() ? path.getUri().toString() : null;
         fmFavorite.options = options.options;
-        long id = AppsDb.getInstance().opFavoriteDao().insert(fmFavorite);
+        long id = AppsDb.getInstance().fmFavoriteDao().insert(fmFavorite);
         sFavoriteAddedLiveData.postValue(fmFavorite);
         return id;
     }
 
     @WorkerThread
     public static void removeFromFavorite(long id) {
-        AppsDb.getInstance().opFavoriteDao().delete(id);
+        AppsDb.getInstance().fmFavoriteDao().delete(id);
         sFavoriteAddedLiveData.postValue(null);
     }
 
     public static void renameFavorite(long id, @NonNull String newName) {
-        AppsDb.getInstance().opFavoriteDao().rename(id, newName);
+        AppsDb.getInstance().fmFavoriteDao().rename(id, newName);
         sFavoriteAddedLiveData.postValue(null);
     }
 
     @WorkerThread
     public static List<FmFavorite> getAllFavorites() {
-        return AppsDb.getInstance().opFavoriteDao().getAll();
+        return AppsDb.getInstance().fmFavoriteDao().getAll();
     }
 }

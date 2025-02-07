@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.UserHandleHidden;
+import android.text.SpannableStringBuilder;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -20,8 +21,11 @@ import java.lang.annotation.RetentionPolicy;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 
 public final class FreezeUnfreeze {
     @IntDef(flag = true, value = {
@@ -68,6 +72,42 @@ public final class FreezeUnfreeze {
             shortcutInfo.addPrivateFlags(PRIVATE_FLAG_FREEZE_FORCE);
         }
         return shortcutInfo;
+    }
+
+    private static final Integer[] FREEZING_METHODS = new Integer[]{
+            FreezeUtils.FREEZE_SUSPEND,
+            FreezeUtils.FREEZE_ADV_SUSPEND,
+            FreezeUtils.FREEZE_DISABLE,
+            FreezeUtils.FREEZE_HIDE
+    };
+
+    private static final Integer[] FREEZING_METHOD_TITLES = new Integer[]{
+            R.string.suspend_app,
+            R.string.advanced_suspend_app,
+            R.string.disable,
+            R.string.hide_app
+    };
+
+    private static final Integer[] FREEZING_METHOD_DESCRIPTIONS = new Integer[]{
+            R.string.suspend_app_description,
+            R.string.advanced_suspend_app_description,
+            R.string.disable_app_description,
+            R.string.hide_app_description
+    };
+
+    @NonNull
+    public static SearchableSingleChoiceDialogBuilder<Integer> getFreezeDialog(
+            @NonNull Context context,
+            @FreezeUtils.FreezeType int selectedType) {
+        CharSequence[] itemDescription = new CharSequence[FREEZING_METHODS.length];
+        for (int i = 0; i < FREEZING_METHODS.length; ++i) {
+            itemDescription[i] = new SpannableStringBuilder()
+                    .append(context.getString(FREEZING_METHOD_TITLES[i]))
+                    .append("\n")
+                    .append(UIUtils.getSmallerText(context.getString(FREEZING_METHOD_DESCRIPTIONS[i])));
+        }
+        return new SearchableSingleChoiceDialogBuilder<>(context, FREEZING_METHODS, itemDescription)
+                .setSelectionIndex(ArrayUtils.indexOf(FREEZING_METHODS, selectedType));
     }
 
     static void launchApp(@NonNull FragmentActivity activity, @NonNull FreezeUnfreezeShortcutInfo shortcutInfo) {

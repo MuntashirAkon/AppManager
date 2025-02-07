@@ -14,6 +14,7 @@ import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
 import io.github.muntashirakon.AppManager.rules.struct.BatteryOptimizationRule;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
+import io.github.muntashirakon.AppManager.rules.struct.FreezeRule;
 import io.github.muntashirakon.AppManager.rules.struct.MagiskDenyListRule;
 import io.github.muntashirakon.AppManager.rules.struct.MagiskHideRule;
 import io.github.muntashirakon.AppManager.rules.struct.NetPolicyRule;
@@ -21,6 +22,7 @@ import io.github.muntashirakon.AppManager.rules.struct.NotificationListenerRule;
 import io.github.muntashirakon.AppManager.rules.struct.PermissionRule;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.rules.struct.SsaidRule;
+import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -160,6 +162,16 @@ public class PseudoRulesTest {
         assertEquals(new SsaidRule(PACKAGE_NAME, "f6740c90"), rules.getAll().get(0));
     }
 
+
+    @Test
+    public void uniquenessOfFreezeTest() {
+        rules.setFreezeType(FreezeUtils.FREEZE_ADV_SUSPEND);
+        rules.setFreezeType(FreezeUtils.FREEZE_DISABLE);
+        assertEquals(1, rules.getAll().size());
+        assertNotEquals(new FreezeRule(PACKAGE_NAME, FreezeUtils.FREEZE_ADV_SUSPEND), rules.getAll().get(0));
+        assertEquals(new FreezeRule(PACKAGE_NAME, FreezeUtils.FREEZE_DISABLE), rules.getAll().get(0));
+    }
+
     @Test
     public void interUniquenessTest() {
         rules.setComponent(".component", RuleType.ACTIVITY, ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
@@ -198,8 +210,9 @@ public class PseudoRulesTest {
         rules.setMagiskHide(mp);
         rules.setMagiskDenyList(mp);
         rules.setSsaid("bc9948c6");
+        rules.setFreezeType(FreezeUtils.FREEZE_DISABLE);
         List<RuleEntry> ruleEntries = rules.getAll();
-        assertEquals(11, ruleEntries.size());
+        assertEquals(12, ruleEntries.size());
         assertEquals(new ComponentRule(PACKAGE_NAME, RuleEntry.STUB, RuleType.ACTIVITY,
                 ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE), ruleEntries.get(0));
         assertEquals(new ComponentRule(PACKAGE_NAME, RuleEntry.STUB, RuleType.PROVIDER,
@@ -215,6 +228,7 @@ public class PseudoRulesTest {
         assertEquals(new MagiskHideRule(mp), ruleEntries.get(8));
         assertEquals(new MagiskDenyListRule(mp), ruleEntries.get(9));
         assertEquals(new SsaidRule(PACKAGE_NAME, "bc9948c6"), ruleEntries.get(10));
+        assertEquals(new FreezeRule(PACKAGE_NAME, FreezeUtils.FREEZE_DISABLE), ruleEntries.get(11));
     }
 
     @After

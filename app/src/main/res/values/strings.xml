@@ -1505,4 +1505,6 @@
     <string name="remove_filename">Remove %s</string>
     <string name="advanced_suspend_app">Advanced suspend</string>
     <string name="advanced_suspend_app_description">It force-stops and suspends the app to ensure that the app is not running in the background. This method should be preferred over the regular <b>suspend</b> method.</string>
+    <string name="freeze_prefer_per_app_option">Prefer per app option</string>
+    <string name="remember_option_for_this_app">Remember for this app</string>
 </resources>

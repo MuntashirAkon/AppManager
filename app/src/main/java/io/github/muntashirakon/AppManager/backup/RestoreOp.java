@@ -52,6 +52,7 @@ import io.github.muntashirakon.AppManager.rules.PseudoRules;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
+import io.github.muntashirakon.AppManager.rules.struct.FreezeRule;
 import io.github.muntashirakon.AppManager.rules.struct.MagiskDenyListRule;
 import io.github.muntashirakon.AppManager.rules.struct.MagiskHideRule;
 import io.github.muntashirakon.AppManager.rules.struct.NetPolicyRule;
@@ -64,6 +65,7 @@ import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
@@ -663,6 +665,10 @@ class RestoreOp implements Closeable {
                                     ((SsaidRule) entry).getSsaid());
                             mRequiresRestart = true;
                         }
+                        break;
+                    case FREEZE:
+                        int freezeType = ((FreezeRule) entry).getFreezeType();
+                        FreezeUtils.setFreezeMethod(mPackageName, freezeType);
                         break;
                 }
             } catch (Throwable e) {

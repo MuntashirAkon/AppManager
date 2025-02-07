@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,6 +50,7 @@ import io.github.muntashirakon.AppManager.batchops.struct.BatchBackupImportOptio
 import io.github.muntashirakon.AppManager.batchops.struct.BatchBackupOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchComponentOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchDexOptOptions;
+import io.github.muntashirakon.AppManager.batchops.struct.BatchFreezeOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchNetPolicyOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchPermissionOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.IBatchOpOptions;
@@ -82,6 +84,7 @@ public class BatchOpsManager {
 
     @IntDef(value = {
             OP_NONE,
+            OP_ADVANCED_FREEZE,
             OP_BACKUP_APK,
             OP_BACKUP,
             OP_BLOCK_COMPONENTS,
@@ -132,6 +135,7 @@ public class BatchOpsManager {
     public static final int OP_IMPORT_BACKUPS = 19;
     public static final int OP_NET_POLICY = 20;
     public static final int OP_DEXOPT = 21;
+    public static final int OP_ADVANCED_FREEZE = 22;
 
     private static final String GROUP_ID = BuildConfig.APPLICATION_ID + ".notification_group.BATCH_OPS";
 
@@ -226,6 +230,8 @@ public class BatchOpsManager {
     @NonNull
     private Result performOp(@NonNull BatchOpsInfo info) {
         switch (info.op) {
+            case OP_ADVANCED_FREEZE:
+                return opFreeze(info);
             case OP_BACKUP_APK:
                 return opBackupApk(info);
             case OP_BACKUP:
@@ -237,11 +243,11 @@ public class BatchOpsManager {
             case OP_DELETE_BACKUP:
                 return opBackupRestore(info, BackupRestoreDialogFragment.MODE_DELETE);
             case OP_FREEZE:
-                return opFreeze(info, true);
+                return opFreezeUnfreeze(info, true);
             case OP_DISABLE_BACKGROUND:
                 return opDisableBackground(info);
             case OP_UNFREEZE:
-                return opFreeze(info, false);
+                return opFreezeUnfreeze(info, false);
             case OP_EXPORT_RULES:
                 break;  // Done in the main activity
             case OP_FORCE_STOP:
@@ -572,7 +578,32 @@ public class BatchOpsManager {
     }
 
     @NonNull
-    private Result opFreeze(@NonNull BatchOpsInfo info, boolean freeze) {
+    private Result opFreeze(@NonNull BatchOpsInfo info) {
+        BatchFreezeOptions options = (BatchFreezeOptions) Objects.requireNonNull(info.options);
+        List<UserPackagePair> failedPackages = new ArrayList<>();
+        float lastProgress = mProgressHandler != null ? mProgressHandler.getLastProgress() : 0;
+        int max = info.size();
+        UserPackagePair pair;
+        for (int i = 0; i < max; ++i) {
+            updateProgress(lastProgress, i + 1);
+            pair = info.getPair(i);
+            int type;
+            if (options.isPreferCustom()) {
+                type = Optional.ofNullable(FreezeUtils.getFreezingMethod(pair.getPackageName()))
+                        .orElse(options.getType());
+            } else type = options.getType();
+            try {
+                FreezeUtils.freeze(pair.getPackageName(), pair.getUserId(), type);
+            } catch (Throwable e) {
+                log("====> op=ADVANCED_FREEZE, pkg=" + pair + ", type = " + type, e);
+                failedPackages.add(pair);
+            }
+        }
+        return new Result(failedPackages);
+    }
+
+    @NonNull
+    private Result opFreezeUnfreeze(@NonNull BatchOpsInfo info, boolean freeze) {
         List<UserPackagePair> failedPackages = new ArrayList<>();
         float lastProgress = mProgressHandler != null ? mProgressHandler.getLastProgress() : 0;
         int max = info.size();

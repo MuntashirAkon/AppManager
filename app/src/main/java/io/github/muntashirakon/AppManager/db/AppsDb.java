@@ -13,17 +13,19 @@ import io.github.muntashirakon.AppManager.db.dao.AppDao;
 import io.github.muntashirakon.AppManager.db.dao.BackupDao;
 import io.github.muntashirakon.AppManager.db.dao.FileHashDao;
 import io.github.muntashirakon.AppManager.db.dao.FmFavoriteDao;
+import io.github.muntashirakon.AppManager.db.dao.FreezeTypeDao;
 import io.github.muntashirakon.AppManager.db.dao.LogFilterDao;
 import io.github.muntashirakon.AppManager.db.dao.OpHistoryDao;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.db.entity.FileHash;
 import io.github.muntashirakon.AppManager.db.entity.FmFavorite;
+import io.github.muntashirakon.AppManager.db.entity.FreezeType;
 import io.github.muntashirakon.AppManager.db.entity.LogFilter;
 import io.github.muntashirakon.AppManager.db.entity.OpHistory;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
-@Database(entities = {App.class, LogFilter.class, FileHash.class, Backup.class, OpHistory.class, FmFavorite.class}, version = 4)
+@Database(entities = {App.class, LogFilter.class, FileHash.class, Backup.class, OpHistory.class, FmFavorite.class, FreezeType.class}, version = 5)
 public abstract class AppsDb extends RoomDatabase {
     private static AppsDb sAppsDb;
 
@@ -39,11 +41,17 @@ public abstract class AppsDb extends RoomDatabase {
             db.execSQL("CREATE TABLE IF NOT EXISTS `fm_favorite` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `uri` TEXT NOT NULL, `init_uri` TEXT, `options` INTEGER NOT NULL, `order` INTEGER NOT NULL, `type` INTEGER NOT NULL)");
         }
     };
+    public static final Migration M_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+            db.execSQL("CREATE TABLE IF NOT EXISTS `freeze_type` (`package_name` TEXT NOT NULL, `type` INTEGER NOT NULL, PRIMARY KEY(`package_name`))");
+        }
+    };
 
     public static AppsDb getInstance() {
         if (sAppsDb == null) {
             sAppsDb = Room.databaseBuilder(ContextUtils.getContext(), AppsDb.class, "apps.db")
-                    .addMigrations(M_2_3, M_3_4)
+                    .addMigrations(M_2_3, M_3_4, M_4_5)
                     .fallbackToDestructiveMigrationOnDowngrade()
                     .build();
         }
@@ -60,5 +68,7 @@ public abstract class AppsDb extends RoomDatabase {
 
     public abstract OpHistoryDao opHistoryDao();
 
-    public abstract FmFavoriteDao opFavoriteDao();
+    public abstract FmFavoriteDao fmFavoriteDao();
+
+    public abstract FreezeTypeDao freezeTypeDao();
 }

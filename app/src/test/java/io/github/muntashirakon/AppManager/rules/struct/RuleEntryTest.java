@@ -8,6 +8,7 @@ import org.robolectric.RobolectricTestRunner;
 
 import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
 import io.github.muntashirakon.AppManager.rules.RuleType;
+import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -128,6 +129,13 @@ public class RuleEntryTest {
         RuleEntry rule = new SsaidRule(PACKAGE_NAME, "bc9948c6");
         assertEquals(PACKAGE_NAME + "\tSTUB\tSSAID\tbc9948c6", rule.flattenToString(true));
         assertEquals("STUB\tSSAID\tbc9948c6", rule.flattenToString(false));
+    }
+
+    @Test
+    public void flattenFreezeToString() {
+        RuleEntry rule = new FreezeRule(PACKAGE_NAME, FreezeUtils.FREEZE_DISABLE);
+        assertEquals(PACKAGE_NAME + "\tSTUB\tFREEZE\t" + FreezeUtils.FREEZE_DISABLE, rule.flattenToString(true));
+        assertEquals("STUB\tFREEZE\t" + FreezeUtils.FREEZE_DISABLE, rule.flattenToString(false));
     }
 
     @Test
@@ -296,5 +304,13 @@ public class RuleEntryTest {
         assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\tSTUB\tSSAID\tbc9948c6", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\tSTUB\tSSAID\tbc9948c6", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, "STUB\tSSAID\tbc9948c6", false), rule);
+    }
+
+    @Test
+    public void unflattenFreezeFromString() {
+        RuleEntry rule = new FreezeRule(PACKAGE_NAME, FreezeUtils.FREEZE_DISABLE);
+        assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\tSTUB\tFREEZE\t" + FreezeUtils.FREEZE_DISABLE, true), rule);
+        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\tSTUB\tFREEZE\t" + FreezeUtils.FREEZE_DISABLE, true), rule);
+        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, "STUB\tFREEZE\t" + FreezeUtils.FREEZE_DISABLE, false), rule);
     }
 }

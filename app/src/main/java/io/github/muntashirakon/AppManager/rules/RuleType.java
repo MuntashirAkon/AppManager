@@ -19,4 +19,5 @@ public enum RuleType {
     NOTIFICATION,
     URI_GRANT,
     SSAID,
+    FREEZE,
 }
