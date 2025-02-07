@@ -1,7 +1,7 @@
 package io.github.muntashirakon.AppManager.details;
 
-import android.content.om.OverlayInfo;
-import android.content.om.OverlayManager;
+import android.content.om.IOverlayManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,31 +23,33 @@ import com.google.android.material.materialswitch.MaterialSwitch;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.OverlayManagerCompact;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsOverlayItem;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.pref.TipsPrefs;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialAlertView;
 import io.github.muntashirakon.widget.RecyclerView;
 
+@RequiresApi(Build.VERSION_CODES.O)
 public class AppDetailsOverlaysFragment extends AppDetailsFragment {
 
-    private String mPackageName;
+    private static final String TAG = AppDetailsOverlaysFragment.class.getSimpleName();
     private AppDetailsRecyclerAdapter mAdapter;
-    private OverlayManager overlayManager;
+    private IOverlayManager overlayManager;
 
-    @RequiresApi(api = Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        assert viewModel != null;
-        mPackageName = viewModel.getPackageName();
-        overlayManager = requireContext().getSystemService(OverlayManager.class);
+        overlayManager = OverlayManagerCompact.getOverlayManager();
     }
 
     @Override
@@ -72,10 +74,8 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
             alertView.setVisibility(View.GONE);
         }
         if (viewModel == null) return;
-        mPackageName = viewModel.getPackageName();
         viewModel.get(AppDetailsFragment.OVERLAYS).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (appDetailsItems != null && mAdapter !=null && viewModel.isPackageExist()) {
-                mPackageName = viewModel.getPackageName();
                 mAdapter.setDefaultList(appDetailsItems);
             } else ProgressIndicatorCompat.setVisibility(progressIndicator, false);
         });
@@ -112,7 +112,7 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
         return true;
     }
 
-    private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsOverlaysFragment.AppDetailsRecyclerAdapter.ViewHolder> {
+    private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> {
 
         @NonNull
         private final List<AppDetailsItem<?>> mAdapterList;
@@ -139,35 +139,64 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            return new AppDetailsRecyclerAdapter.ViewHolder(
+            return new ViewHolder(
                     LayoutInflater.from(viewGroup.getContext())
-                            .inflate(R.layout.item_app_details_perm, viewGroup, false)
+                            .inflate(R.layout.item_app_details_overlay, viewGroup, false)
             );
         }
 
         @RequiresApi(api = Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
         @Override
-        public void onBindViewHolder(@NonNull AppDetailsRecyclerAdapter.ViewHolder holder, int index) {
+        public void onBindViewHolder(@NonNull ViewHolder holder, int index) {
             AppDetailsOverlayItem overlayItem;
             synchronized (mAdapterList) {
                 overlayItem = (AppDetailsOverlayItem) mAdapterList.get(index);
             }
-            @NonNull OverlayInfo overlayInfo = overlayItem.item;
-            final String overlayName = overlayItem.name;
+            String overlayName = overlayItem.name;
 
             if (mConstraint != null && overlayName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 holder.overlayName.setText(UIUtils.getHighlightedText(overlayName, mConstraint, colorQueryStringHighlight));
             } else holder.overlayName.setText(overlayName);
             holder.packageName.setText(overlayItem.getPackageName());
-            holder.overlayTarget.setText(getString(R.string.overlay_target, overlayInfo.getTargetOverlayableName()));
+            holder.overlayTarget.setText(getString(R.string.overlay_target, overlayItem.getTargetOverlayableName()));
+            if (overlayItem.getTargetOverlayableName()==null) holder.overlayTarget.setVisibility(View.GONE);
             holder.overlayCategory.setText(getString(R.string.overlay_category, overlayItem.getCategory()));
-            holder.toggleSwitch.setEnabled(true);
+            if (overlayItem.getCategory()==null) holder.overlayCategory.setVisibility(View.GONE);
+            holder.toggleSwitch.setEnabled(overlayItem.isMutable());
+            holder.toggleSwitch.setClickable(true);
             holder.toggleSwitch.setChecked(overlayItem.isEnabled());
             holder.overlayState.setText(getString(R.string.overlay_state, overlayItem.getReadableState(), overlayItem.getPriority()));
-            holder.toggleSwitch.setOnCheckedChangeListener((i, o)-> {
-                holder.toggleSwitch.setChecked(overlayItem.setEnabled(overlayManager, o));
-            });
+            holder.itemView.setClickable(false);
+            if (overlayItem.isMutable()) {
+                holder.toggleSwitch.setClickable(true);
+                holder.toggleSwitch.setOnClickListener((v) -> ThreadUtils.postOnBackgroundThread(()-> {
+                    try {
+                        if (overlayItem.setEnabled(overlayManager, !overlayItem.isEnabled(), Objects.requireNonNull(viewModel).getUserId())) {
+                            ThreadUtils.postOnMainThread(()-> notifyItemChanged(index));
+                        }
+//                            holder.itemView.setChecked(!holder.itemView.isChecked());
+
+
+                    } catch (Exception e) {
+                        Log.e(TAG, "Couldn't Change Overlay State", e);
+                        ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(!overlayItem.isEnabled()
+                                ? R.string.failed_to_enable_overlay
+                                : R.string.failed_to_disable_overlay));
+                    }
+                }
+                ));
+            } else {
+                holder.toggleSwitch.setOnClickListener(null);
+                holder.toggleSwitch.setClickable(false);
+                holder.toggleSwitch.setVisibility(View.GONE);
+            }
+
+
+
+            if (overlayItem.isFabricated()) {
+                holder.itemView.setStrokeColor(ColorCodes.getPermissionDangerousIndicatorColor(requireContext()));
+            } holder.itemView.setStrokeColor(Color.TRANSPARENT);
 
         }
 

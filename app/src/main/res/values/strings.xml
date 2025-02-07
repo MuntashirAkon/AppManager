@@ -1500,7 +1500,9 @@
     <string name="clear_history">Clear history</string>
     <string name="no_overlay_permission">No required overlay permission</string>
     <string name="help_overlays_tab">Help with overlays tab</string>
-    <string name="overlay_state">State: %s | Priority: %i</string>
+    <string name="overlay_state">State: %s | Priority: %o</string>
     <string name="overlay_category">Category: %s</string>
     <string name="overlay_target">Target: %s</string>
+    <string name="failed_to_disable_overlay">Fail to disable Overlay</string>
+    <string name="failed_to_enable_overlay">Failed to enable Overlay</string>
 </resources>

@@ -36,7 +36,6 @@ import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PermissionInfoCompat;
@@ -57,6 +56,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -64,7 +64,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.apk.CachedApkSource;
@@ -73,6 +72,7 @@ import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
+import io.github.muntashirakon.AppManager.compat.OverlayManagerCompact;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsActivityItem;
@@ -1928,15 +1928,22 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @NonNull
     private final MutableLiveData<List<AppDetailsOverlayItem>> mOverlays = new MutableLiveData<>();
 
+
     @WorkerThread
     private void loadOverlays() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O
                 || mOverlayManager == null || mPackageName == null)  {
             mOverlays.postValue(new ArrayList<>());
             return;
         }
-        final List<OverlayInfo> overlays =  mOverlayManager.getOverlayInfosForTarget(mPackageName);
-        List<AppDetailsOverlayItem> overlayItems = new ArrayList<>();
+        List<OverlayInfo> overlays;
+        final Map<String, List<OverlayInfo>> allOverlays = OverlayManagerCompact.getOverlayManager().getAllOverlays(mUserId);
+        overlays = allOverlays.get(mPackageName);
+        if (overlays == null) {
+            mOverlays.postValue(new ArrayList<>());
+            return;
+        }
+        List<AppDetailsOverlayItem> overlayItems = new ArrayList<>(overlays.size());
         for (OverlayInfo o : overlays) {
             overlayItems.add(new AppDetailsOverlayItem(o));
         }
