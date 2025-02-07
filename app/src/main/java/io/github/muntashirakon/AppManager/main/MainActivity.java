@@ -386,24 +386,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                             handleBatchOp(BatchOpsManager.OP_CLEAR_DATA))
                     .show();
         } else if (id == R.id.action_freeze_unfreeze) {
-            View view = View.inflate(this, R.layout.item_checkbox, null);
-            MaterialCheckBox checkBox = view.findViewById(R.id.checkbox);
-            checkBox.setText(R.string.freeze_prefer_per_app_option);
-            FreezeUnfreeze.getFreezeDialog(this, Prefs.Blocking.getDefaultFreezingMethod())
-                    .setIcon(R.drawable.ic_snowflake)
-                    .setTitle(R.string.freeze_unfreeze)
-                    .setView(view)
-                    .setPositiveButton(R.string.freeze, (dialog, which, selectedItem) -> {
-                        if (selectedItem == null) {
-                            return;
-                        }
-                        BatchFreezeOptions options = new BatchFreezeOptions(selectedItem, checkBox.isChecked());
-                        handleBatchOp(BatchOpsManager.OP_ADVANCED_FREEZE, options);
-                    })
-                    .setNegativeButton(R.string.cancel, null)
-                    .setNeutralButton(R.string.unfreeze, (dialog, which, selectedItem) ->
-                            handleBatchOp(BatchOpsManager.OP_UNFREEZE))
-                    .show();
+            showFreezeUnfreezeDialog(Prefs.Blocking.getDefaultFreezingMethod());
         } else if (id == R.id.action_disable_background) {
             new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.are_you_sure)
@@ -576,6 +559,27 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                         });
                     });
                 }).show();
+    }
+
+    private void showFreezeUnfreezeDialog(int freezeType) {
+        View view = View.inflate(this, R.layout.item_checkbox, null);
+        MaterialCheckBox checkBox = view.findViewById(R.id.checkbox);
+        checkBox.setText(R.string.freeze_prefer_per_app_option);
+        FreezeUnfreeze.getFreezeDialog(this, freezeType)
+                .setIcon(R.drawable.ic_snowflake)
+                .setTitle(R.string.freeze_unfreeze)
+                .setView(view)
+                .setPositiveButton(R.string.freeze, (dialog, which, selectedItem) -> {
+                    if (selectedItem == null) {
+                        return;
+                    }
+                    BatchFreezeOptions options = new BatchFreezeOptions(selectedItem, checkBox.isChecked());
+                    handleBatchOp(BatchOpsManager.OP_ADVANCED_FREEZE, options);
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .setNeutralButton(R.string.unfreeze, (dialog, which, selectedItem) ->
+                        handleBatchOp(BatchOpsManager.OP_UNFREEZE))
+                .show();
     }
 
     private void handleBatchOp(@BatchOpsManager.OpType int op) {

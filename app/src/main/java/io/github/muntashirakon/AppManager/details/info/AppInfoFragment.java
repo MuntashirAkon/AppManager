@@ -85,6 +85,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -303,6 +304,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             mAppLabel = appLabel;
             // Set Application Name, aka Label
             mLabelView.setText(mAppLabel);
+        });
+        mMainModel.getFreezeTypeLiveData().observe(getViewLifecycleOwner(), freezeType -> {
+            int freezeTypeN = Optional.ofNullable(freezeType)
+                    .orElse(Prefs.Blocking.getDefaultFreezingMethod());
+            showFreezeDialog(freezeTypeN, freezeType != null);
         });
         mIconView.setOnClickListener(v -> {
             ClipboardManager clipboard = (ClipboardManager) ContextUtils.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
@@ -1925,33 +1931,30 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void freeze(boolean freeze) {
         if (mMainModel == null) return;
         if (freeze) {
-            ThreadUtils.postOnBackgroundThread(() -> {
-                // Retrieve app-specific freeze type
-                Integer freezeType = FreezeUtils.getFreezingMethod(mPackageName);
-                ThreadUtils.postOnMainThread(() -> {
-                    View view = View.inflate(mActivity, R.layout.item_checkbox, null);
-                    MaterialCheckBox checkBox = view.findViewById(R.id.checkbox);
-                    checkBox.setText(R.string.remember_option_for_this_app);
-                    checkBox.setChecked(freezeType != null);
-                    FreezeUnfreeze.getFreezeDialog(mActivity, freezeType != null ? freezeType
-                                    : Prefs.Blocking.getDefaultFreezingMethod())
-                            .setIcon(R.drawable.ic_snowflake)
-                            .setTitle(R.string.freeze)
-                            .setView(view)
-                            .setPositiveButton(R.string.freeze, (dialog, which, selectedItem) -> {
-                                if (selectedItem == null) {
-                                    return;
-                                }
-                                ThreadUtils.postOnBackgroundThread(() -> doFreeze(selectedItem, checkBox.isChecked()));
-                            })
-                            .setNegativeButton(R.string.cancel, null)
-                            .show();
-                });
-            });
+            mMainModel.loadFreezeType();
         } else {
             // Unfreeze
             ThreadUtils.postOnBackgroundThread(this::doUnfreeze);
         }
+    }
+
+    private void showFreezeDialog(int freezeType, boolean isCustom) {
+        View view = View.inflate(mActivity, R.layout.item_checkbox, null);
+        MaterialCheckBox checkBox = view.findViewById(R.id.checkbox);
+        checkBox.setText(R.string.remember_option_for_this_app);
+        checkBox.setChecked(isCustom);
+        FreezeUnfreeze.getFreezeDialog(mActivity, freezeType)
+                .setIcon(R.drawable.ic_snowflake)
+                .setTitle(R.string.freeze)
+                .setView(view)
+                .setPositiveButton(R.string.freeze, (dialog, which, selectedItem) -> {
+                    if (selectedItem == null) {
+                        return;
+                    }
+                    ThreadUtils.postOnBackgroundThread(() -> doFreeze(selectedItem, checkBox.isChecked()));
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     @WorkerThread
