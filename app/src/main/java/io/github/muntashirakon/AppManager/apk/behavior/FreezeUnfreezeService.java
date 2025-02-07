@@ -35,6 +35,7 @@ import androidx.core.graphics.drawable.IconCompat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -42,6 +43,7 @@ import io.github.muntashirakon.AppManager.DummyActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.misc.ScreenLockChecker;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
@@ -172,7 +174,9 @@ public class FreezeUnfreezeService extends Service {
                                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, shortcutInfo.userId);
                     Bitmap icon = getBitmapFromDrawable(applicationInfo.loadIcon(getApplication().getPackageManager()));
                     shortcutInfo.setName(applicationInfo.loadLabel(getApplication().getPackageManager()));
-                    FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId);
+                    int freezeType = Optional.ofNullable(FreezeUtils.getFreezingMethod(shortcutInfo.packageName))
+                            .orElse(Prefs.Blocking.getDefaultFreezingMethod());
+                    FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId, freezeType);
                     shortcutInfo.setIcon(getDimmedBitmap(icon));
                     updateShortcuts(shortcutInfo);
                 } catch (RemoteException | PackageManager.NameNotFoundException e) {
