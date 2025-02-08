@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -34,14 +35,15 @@ public class ActivityLauncherShortcutActivity extends BaseActivity {
     private static final String EXTRA_AST = BuildConfig.APPLICATION_ID + ".intent.EXTRA.shortcut.ast";
     private static final String EXTRA_USR = BuildConfig.APPLICATION_ID + ".intent.EXTRA.shortcut.usr";
 
+    @NonNull
     public static Intent getShortcutIntent(@NonNull Context context, @NonNull String pkg, @NonNull String clazz,
                                            @UserIdInt int userId, boolean launchViaAssist) {
         return new Intent()
                 .setClass(context, ActivityLauncherShortcutActivity.class)
-                .putExtra(ActivityLauncherShortcutActivity.EXTRA_PKG, pkg)
-                .putExtra(ActivityLauncherShortcutActivity.EXTRA_CLS, clazz)
-                .putExtra(ActivityLauncherShortcutActivity.EXTRA_USR, userId)
-                .putExtra(ActivityLauncherShortcutActivity.EXTRA_AST, launchViaAssist)
+                .putExtra(EXTRA_PKG, pkg)
+                .putExtra(EXTRA_CLS, clazz)
+                .putExtra(EXTRA_USR, userId)
+                .putExtra(EXTRA_AST, launchViaAssist)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     }
@@ -54,10 +56,12 @@ public class ActivityLauncherShortcutActivity extends BaseActivity {
             finish();
             return;
         }
+        String pkg = Objects.requireNonNull(intent.getStringExtra(EXTRA_PKG));
+        String cls = Objects.requireNonNull(intent.getStringExtra(EXTRA_CLS));
+        ComponentName cn = new ComponentName(pkg, cls);
         intent.setAction(null);
-        intent.setClassName(intent.getStringExtra(EXTRA_PKG), intent.getStringExtra(EXTRA_CLS));
-        int currentUserId = UserHandleHidden.myUserId();
-        int userId = intent.getIntExtra(EXTRA_USR, currentUserId);
+        intent.setComponent(cn);
+        int userId = intent.getIntExtra(EXTRA_USR, UserHandleHidden.myUserId());
         boolean canLaunchViaAssist = SelfPermissions.checkSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS);
         boolean launchViaAssist = intent.getBooleanExtra(EXTRA_AST, false) && canLaunchViaAssist;
         intent.removeExtra(EXTRA_PKG);
@@ -65,7 +69,7 @@ public class ActivityLauncherShortcutActivity extends BaseActivity {
         intent.removeExtra(EXTRA_AST);
         intent.removeExtra(EXTRA_USR);
         if (launchViaAssist && !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.START_ANY_ACTIVITY)) {
-            launchViaAssist(intent.getComponent());
+            launchViaAssist(cn);
         } else {
             try {
                 ActivityManagerCompat.startActivity(intent, userId);
@@ -74,7 +78,7 @@ public class ActivityLauncherShortcutActivity extends BaseActivity {
                 UIUtils.displayLongToast("Error: " + e.getMessage());
                 // Try assist instead
                 if (canLaunchViaAssist) {
-                    launchViaAssist(intent.getComponent());
+                    launchViaAssist(cn);
                 }
             }
             finish();
