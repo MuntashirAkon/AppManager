@@ -1927,8 +1927,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @NonNull
     private final MutableLiveData<List<AppDetailsOverlayItem>> mOverlays = new MutableLiveData<>();
-
-
     @WorkerThread
     private void loadOverlays() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O
@@ -1936,16 +1934,15 @@ public class AppDetailsViewModel extends AndroidViewModel {
             mOverlays.postValue(new ArrayList<>());
             return;
         }
-        List<OverlayInfo> overlays;
-        final Map<String, List<OverlayInfo>> allOverlays = OverlayManagerCompact.getOverlayManager().getAllOverlays(mUserId);
-        overlays = allOverlays.get(mPackageName);
+        final List<OverlayInfo> overlays = OverlayManagerCompact.getOverlayManager()
+                .getAllOverlays(mUserId).get(mPackageName);
         if (overlays == null) {
             mOverlays.postValue(new ArrayList<>());
             return;
         }
         List<AppDetailsOverlayItem> overlayItems = new ArrayList<>(overlays.size());
-        for (OverlayInfo o : overlays) {
-            overlayItems.add(new AppDetailsOverlayItem(o));
+        for (OverlayInfo overlay : overlays) {
+            overlayItems.add(new AppDetailsOverlayItem(overlay));
         }
         mOverlays.postValue(overlayItems);
     }

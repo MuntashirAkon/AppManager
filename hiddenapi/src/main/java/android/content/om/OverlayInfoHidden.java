@@ -1,24 +1,8 @@
-/*
- * Copyright (C) 2015 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// SPDX-License-Identifier: Apache-2.0
+
 package android.content.om;
 
-import android.annotation.UserIdInt;
 import android.os.Build;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -30,6 +14,8 @@ import java.lang.annotation.RetentionPolicy;
 
 import dev.rikka.tools.refine.RefineAs;
 import misc.utils.HiddenUtil;
+
+// Copied From Aosp: https://cs.android.com/android/_/android/platform/frameworks/base/+/1d5e43b41c90b7bc059c5fbb5ea343f94dddd09e:core/java/android/content/om/OverlayInfo.java
 
 /**
  * An immutable information about an overlay.
@@ -44,8 +30,9 @@ import misc.utils.HiddenUtil;
  *
  * @see OverlayManager#getOverlayInfosForTarget(String)
  */
+@RequiresApi(Build.VERSION_CODES.O)
 @RefineAs(OverlayInfo.class)
-public final class OverlayInfoHidden implements Parcelable {
+public final class OverlayInfoHidden {
     @IntDef(value = {
             STATE_UNKNOWN,
             STATE_MISSING_TARGET,
@@ -159,11 +146,11 @@ public final class OverlayInfoHidden implements Parcelable {
      * 
      */
     @Nullable
+    @RequiresApi(Build.VERSION_CODES.S)
     public final String overlayName;
 
     /**
      * Package name of the target package
-     *
      * 
      */
     @NonNull
@@ -174,6 +161,7 @@ public final class OverlayInfoHidden implements Parcelable {
      *
      * 
      */
+    @RequiresApi(Build.VERSION_CODES.Q)
     @Nullable
     public final String targetOverlayableName;
 
@@ -183,6 +171,7 @@ public final class OverlayInfoHidden implements Parcelable {
      * 
      */
     @Nullable
+    @RequiresApi(Build.VERSION_CODES.P)
     public final String category;
 
     /**
@@ -200,15 +189,12 @@ public final class OverlayInfoHidden implements Parcelable {
 
     /**
      * User handle for which this overlay applies
-     * 
      */
     public final int userId;
 
     /**
      * Priority as configured by {@link com.android.internal.content.om.OverlayConfig}.
      * Not intended to be exposed to 3rd party.
-     *
-     * 
      */
     public final int priority;
 
@@ -216,21 +202,17 @@ public final class OverlayInfoHidden implements Parcelable {
      * isMutable as configured by {@link com.android.internal.content.om.OverlayConfig}.
      * If false, the overlay is unconditionally loaded and cannot be unloaded. Not intended to be
      * exposed to 3rd party.
-     *
-     * 
      */
+    @RequiresApi(Build.VERSION_CODES.Q)
     public final boolean isMutable;
+    /**
+     * isFabricated if this Overlay was made by the shell/ some SystemUI "theme" loaders, also
+     * this value is not updated nor tracked outside of the real manager so this value can't be trusted.
+     */
+    @RequiresApi(Build.VERSION_CODES.S)
     public final boolean isFabricated;
 
-    public OverlayInfoHidden(@NonNull String packageName, @NonNull String targetPackageName,
-                             @Nullable String targetOverlayableName, @Nullable String category,
-                             @NonNull String baseCodePath, int state, int userId, int priority, boolean isMutable) {
-        this(packageName, null /* overlayName */, targetPackageName, targetOverlayableName,
-                category, baseCodePath, state, userId, priority, isMutable,
-                false /* isFabricated */);
-    }
-
-    /**  */
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     public OverlayInfoHidden(@NonNull String packageName, @Nullable String overlayName,
                              @NonNull String targetPackageName, @Nullable String targetOverlayableName,
                              @Nullable String category, @NonNull String baseCodePath, int state, int userId,
@@ -247,103 +229,6 @@ public final class OverlayInfoHidden implements Parcelable {
         this.isMutable = isMutable;
         this.isFabricated = isFabricated;
     }
-
-    /**
-     * @return the package name of the overlay.
-     */
-    @NonNull
-    public String getPackageName() {
-        return HiddenUtil.throwUOE();
-    }
-
-    /**
-     * Get the overlay name from the registered fabricated overlay.
-     *
-     * @return the overlay name
-     */
-    @Nullable
-    public String getOverlayName() {
-        return HiddenUtil.throwUOE();
-    }
-
-    /**
-     * Returns the name of the target overlaid package.
-     *
-     * @return the target package name
-     */
-    @NonNull
-    public String getTargetPackageName() {
-        return HiddenUtil.throwUOE();
-    }
-
-    /**
-     * Returns the category of the current overlay.
-     *
-     * 
-     */
-    
-    @Nullable
-    public String getCategory() {
-        return HiddenUtil.throwUOE();
-    }
-
-    /**
-     * Returns user handle for which this overlay applies to.
-     *
-     * 
-     */
-    
-    @UserIdInt
-    public int getUserId() {
-        return HiddenUtil.throwUOE();
-    }
-
-    /**
-     * Return the target overlayable name.
-     *
-     * @return the name of the target overlayable resources set
-     */
-    @Nullable
-    public String getTargetOverlayableName() {
-        return HiddenUtil.throwUOE();
-    }
-
-    public boolean isFabricated() {
-        return HiddenUtil.throwUOE();
-    }
-
-    /**
-     * Full path to the base APK or fabricated overlay for this overlay package.
-     */
-    @NonNull
-    public String getBaseCodePath() {
-        return HiddenUtil.throwUOE();
-    }
-
-    /**
-     * Get the unique identifier from the overlay information.
-     *
-     * <p>The return value of this function can be used to unregister the related overlay.
-     *
-     * @return an identifier representing the current overlay.
-     */
-    @NonNull
-    public OverlayIdentifier getOverlayIdentifier() {
-        return HiddenUtil.throwUOE();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        HiddenUtil.throwUOE(dest, flags);
-    }
-
-    public static final @NonNull Parcelable.Creator<OverlayInfoHidden> CREATOR = HiddenUtil.throwUOE();
 
     /**
      * Return true if this overlay is enabled, i.e. should be used to overlay
@@ -364,7 +249,7 @@ public final class OverlayInfoHidden implements Parcelable {
      * debugging purposes.
      *
      * @return a human readable String representing the state.
-     * 
+     *
      */
     public static String stateToString(@State int state) {
         return HiddenUtil.throwUOE(state);

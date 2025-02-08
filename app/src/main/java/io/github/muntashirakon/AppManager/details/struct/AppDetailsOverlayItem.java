@@ -1,5 +1,6 @@
 package io.github.muntashirakon.AppManager.details.struct;
 
+import android.annotation.UserIdInt;
 import android.content.om.IOverlayManager;
 import android.content.om.OverlayInfo;
 import android.content.om.OverlayInfoHidden;
@@ -11,51 +12,53 @@ import androidx.annotation.RequiresApi;
 
 import dev.rikka.tools.refine.Refine;
 
-
-@SuppressWarnings("NewApi") // Required due to sdk lying about the real api version requirement for overlay info
 @RequiresApi(Build.VERSION_CODES.O)
-public class AppDetailsOverlayItem extends AppDetailsItem<OverlayInfo> {
-    private final OverlayInfoHidden internal;
+public class AppDetailsOverlayItem extends AppDetailsItem<OverlayInfoHidden> {
 
-
+    @SuppressWarnings("NewApi") // Required due to sdk lying about the real api version requirement for overlay info
     public AppDetailsOverlayItem(@NonNull OverlayInfo overlayInfo) {
-        super(overlayInfo);
-        this.internal = Refine.unsafeCast(overlayInfo);
+        super(Refine.unsafeCast(overlayInfo));
         if (overlayInfo.getOverlayName()!=null) {
             name = overlayInfo.getOverlayName();
         } else {
             name = overlayInfo.getOverlayIdentifier().toString();
         }
-        Parcel source = Parcel.obtain();
-        overlayInfo.writeToParcel(source, 0);
     }
 
 
     public String getPackageName() {
-        return internal.getPackageName();
+        return item.packageName;
     }
 
     public String getCategory() {
-            return internal.getCategory();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            return item.category;
+        }
+        return null;
     }
 
     public boolean isEnabled() {
-        return internal.isEnabled();
+        return item.isEnabled();
     }
 
+
+    @SuppressWarnings("deprecation")
     public boolean isMutable() {
-        return internal.isMutable;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return item.isMutable;
+        }
+        return getState() != OverlayInfoHidden.STATE_ENABLED_IMMUTABLE;
     }
 
     public String getReadableState() {
-        return stateToString(internal.state);
+        return stateToString(item.state);
     }
 
     public int getState() {
-        return internal.state;
+        return item.state;
     }
     public int getPriority() {
-        return internal.priority;
+        return item.priority;
     }
     
 
@@ -67,26 +70,42 @@ public class AppDetailsOverlayItem extends AppDetailsItem<OverlayInfo> {
         return OverlayInfoHidden.stateToString(state);
     }
     public String getOverlayName() {
-        return internal.getOverlayName();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            return item.overlayName;
+        }
+        return null;
     }
 
     public String getTargetPackageName() {
-        return internal.getTargetPackageName();
+        return item.targetPackageName;
     }
 
     public String getTargetOverlayableName() {
-        return internal.getTargetOverlayableName();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return item.targetOverlayableName;
+        }
+        return null;
     }
 
     public String getBaseCodePath() {
-        return internal.getBaseCodePath();
+        return item.baseCodePath;
     }
 
+    @UserIdInt
     public int getUserId() {
-        return internal.getUserId();
+        return item.userId;
     }
 
     public boolean isFabricated() {
-        return internal.isFabricated();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            return item.isFabricated;
+        }
+        return false;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "AppDetailsOverlayItem: { "+item+" }";
     }
 }

@@ -30,6 +30,7 @@ import io.github.muntashirakon.AppManager.compat.OverlayManagerCompact;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsOverlayItem;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.pref.TipsPrefs;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -39,7 +40,6 @@ import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialAlertView;
 import io.github.muntashirakon.widget.RecyclerView;
 
-@RequiresApi(Build.VERSION_CODES.O)
 public class AppDetailsOverlaysFragment extends AppDetailsFragment {
 
     private static final String TAG = AppDetailsOverlaysFragment.class.getSimpleName();
@@ -49,7 +49,9 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overlayManager = OverlayManagerCompact.getOverlayManager();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            overlayManager = OverlayManagerCompact.getOverlayManager();
+        }
     }
 
     @Override
@@ -61,7 +63,16 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        emptyView.setText(R.string.require_no_permission);
+        String emptyStringText;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            emptyStringText = getString(R.string.overlay_sdk_version_to_low);
+        } else if (!SelfPermissions.checkSelfOrRemotePermission("android.permission.CHANGE_OVERLAY_PACKAGES")) {
+            emptyStringText = getString(R.string.no_overlay_permission);
+        } else {
+            emptyStringText = getString(R.string.no_overlays);
+        }
+        emptyView.setText(emptyStringText);
+
         mAdapter = new AppDetailsRecyclerAdapter();
         recyclerView.setAdapter(mAdapter);
         alertView.setEndIconOnClickListener(v -> {
@@ -174,10 +185,7 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
                     try {
                         if (overlayItem.setEnabled(overlayManager, !overlayItem.isEnabled(), Objects.requireNonNull(viewModel).getUserId())) {
                             ThreadUtils.postOnMainThread(()-> notifyItemChanged(index));
-                        }
-//                            holder.itemView.setChecked(!holder.itemView.isChecked());
-
-
+                        } else throw new Exception("Error Changing Overlay State " + overlayItem);
                     } catch (Exception e) {
                         Log.e(TAG, "Couldn't Change Overlay State", e);
                         ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(!overlayItem.isEnabled()
