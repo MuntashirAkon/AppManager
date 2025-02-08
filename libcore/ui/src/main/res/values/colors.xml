@@ -12,6 +12,9 @@
     <color name="sixty_percent_white">#9AFFFFFF</color>
     <color name="sixty_percent_black">#9A000000</color>
     <color name="tracker">#FFFF8017</color> <!-- dark orange -->
+    <color name="changelog_new">#198754</color>
+    <color name="changelog_improve">#563d7c</color>
+    <color name="changelog_fix">#ffc107</color>
 
     <color name="grey">#ffe0e0e0</color>
     <color name="original_orange">#ff9702</color>
