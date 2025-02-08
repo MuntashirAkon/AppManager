@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,17 +17,21 @@ import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.behavior.FreezeUnfreeze;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.batchops.BatchQueueItem;
+import io.github.muntashirakon.AppManager.batchops.struct.BatchFreezeOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.IBatchOpOptions;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.profiles.AddToProfileDialogFragment;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
@@ -129,13 +134,7 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
         } else if (id == R.id.action_put_back) {
             // TODO: 8/8/22
         } else if (id == R.id.action_freeze_unfreeze) {
-            new MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.freeze_unfreeze)
-                    .setMessage(R.string.choose_what_to_do)
-                    .setPositiveButton(R.string.freeze, (dialog, which) -> handleBatchOp(BatchOpsManager.OP_FREEZE))
-                    .setNegativeButton(R.string.cancel, null)
-                    .setNeutralButton(R.string.unfreeze, (dialog, which) -> handleBatchOp(BatchOpsManager.OP_UNFREEZE))
-                    .show();
+            showFreezeUnfreezeDialog(Prefs.Blocking.getDefaultFreezingMethod());
         } else if (id == R.id.action_save_apk) {
             mStoragePermission.request(granted -> {
                 if (granted) handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
@@ -167,6 +166,27 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
     @Override
     public boolean onQueryTextSubmit(String query, int type) {
         return false;
+    }
+
+    private void showFreezeUnfreezeDialog(int freezeType) {
+        View view = View.inflate(this, R.layout.item_checkbox, null);
+        MaterialCheckBox checkBox = view.findViewById(R.id.checkbox);
+        checkBox.setText(R.string.freeze_prefer_per_app_option);
+        FreezeUnfreeze.getFreezeDialog(this, freezeType)
+                .setIcon(R.drawable.ic_snowflake)
+                .setTitle(R.string.freeze_unfreeze)
+                .setView(view)
+                .setPositiveButton(R.string.freeze, (dialog, which, selectedItem) -> {
+                    if (selectedItem == null) {
+                        return;
+                    }
+                    BatchFreezeOptions options = new BatchFreezeOptions(selectedItem, checkBox.isChecked());
+                    handleBatchOp(BatchOpsManager.OP_ADVANCED_FREEZE, options);
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .setNeutralButton(R.string.unfreeze, (dialog, which, selectedItem) ->
+                        handleBatchOp(BatchOpsManager.OP_UNFREEZE))
+                .show();
     }
 
     private void handleBatchOpWithWarning(@BatchOpsManager.OpType int op) {

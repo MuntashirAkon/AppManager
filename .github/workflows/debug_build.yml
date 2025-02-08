@@ -43,7 +43,7 @@ jobs:
       - name: Rename the APK file
         run: mv ./app/build/outputs/apk_from_bundle/debug/app-debug-universal.apk ./${{ env.APP_NAME }}.apk
       - name: Store generated APK file
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APP_NAME }}
           path: ./${{ env.APP_NAME }}.apk

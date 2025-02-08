@@ -35,8 +35,6 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/padding_medium"
             android:gravity="center_horizontal"
-            android:nextFocusUp="@id/version"
-            android:nextFocusDown="@id/horizontal_layout"
             tools:listItem="@layout/item_app_info_action" />
 
     </io.github.muntashirakon.widget.NestedScrollView>

@@ -3,6 +3,8 @@
 package io.github.muntashirakon.AppManager.settings;
 
 import android.app.Application;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
@@ -12,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.collection.ArrayMap;
 import androidx.core.util.Pair;
+import androidx.documentfile.provider.DocumentFileUtils;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -179,7 +182,23 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
     }
 
     public void loadStorageVolumes() {
-        ThreadUtils.postOnBackgroundThread(() -> mStorageVolumesLiveData.postValue(StorageUtils.getAllStorageLocations(getApplication())));
+        ThreadUtils.postOnBackgroundThread(() -> {
+            ArrayMap<String, Uri> locations = StorageUtils.getAllStorageLocations(getApplication());
+            ArrayMap<String, Uri> newLocations = new ArrayMap<>(locations.size());
+            PackageManager pm = getApplication().getPackageManager();
+            for (int i = 0; i < locations.size(); ++i) {
+                Uri uri = locations.valueAt(i);
+                String authority = uri.getAuthority();
+                if (authority != null) {
+                    ResolveInfo resolveInfo = DocumentFileUtils.getUriSource(getApplication(), uri);
+                    String readableName = resolveInfo != null
+                            ? resolveInfo.loadLabel(pm).toString()
+                            : locations.keyAt(i);
+                    newLocations.put(readableName, locations.valueAt(i));
+                } else newLocations.put(locations.keyAt(i), locations.valueAt(i));
+            }
+            mStorageVolumesLiveData.postValue(newLocations);
+        });
     }
 
     public LiveData<String> getSigningKeySha256HashLiveData() {

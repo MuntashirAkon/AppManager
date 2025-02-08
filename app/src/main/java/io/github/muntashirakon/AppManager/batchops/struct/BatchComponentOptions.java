@@ -11,11 +11,13 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.history.JsonDeserializer;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
 public class BatchComponentOptions implements IBatchOpOptions {
     public static final String TAG = BatchComponentOptions.class.getSimpleName();
 
+    @NonNull
     private String[] mSignatures;
 
     public BatchComponentOptions(@NonNull String[] signatures) {
@@ -35,6 +37,14 @@ public class BatchComponentOptions implements IBatchOpOptions {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeStringArray(mSignatures);
     }
+
+    protected BatchComponentOptions(@NonNull JSONObject jsonObject) throws JSONException {
+        assert jsonObject.getString("tag").equals(TAG);
+        mSignatures = JSONUtils.getArray(String.class, jsonObject.getJSONArray("signatures"));
+    }
+
+    public static final JsonDeserializer.Creator<BatchComponentOptions> DESERIALIZER
+            = BatchComponentOptions::new;
 
     @NonNull
     @Override

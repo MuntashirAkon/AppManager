@@ -231,8 +231,7 @@ public final class Prefs {
                 if (!SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS)) {
                     return FreezeUtils.FREEZE_DISABLE;
                 }
-            }
-            if (freezeType == FreezeUtils.FREEZE_SUSPEND) {
+            } else if (freezeType == FreezeUtils.FREEZE_SUSPEND || freezeType == FreezeUtils.FREEZE_ADV_SUSPEND) {
                 // 7+ only. Requires MANAGE_USERS permission until P. Requires SUSPEND_APPS permission after that.
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N
                         || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.SUSPEND_APPS)
@@ -325,14 +324,13 @@ public final class Prefs {
 
         public static void setLastOpenedPath(@NonNull FmActivity.Options options, @NonNull Uri initUri, int position) {
             try {
-                if (options.isVfs) {
+                if (options.isVfs()) {
                     // Ignore VFS for now
                     return;
                 }
                 JSONObject object = new JSONObject();
                 object.put("pos", position);
-                //noinspection ConstantValue
-                if (options.isVfs) {
+                if (options.isVfs()) {
                     object.put("vfs", true);
                     object.put("path", options.uri.toString());
                     object.put("init", initUri.toString());

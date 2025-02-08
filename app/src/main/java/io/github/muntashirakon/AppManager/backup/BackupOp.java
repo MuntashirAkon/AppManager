@@ -68,6 +68,7 @@ import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
@@ -477,6 +478,12 @@ class BackupOp implements Closeable {
                 Log.e(TAG, e);
             }
         }
+        // Backup freezeType
+        Integer freezeType = FreezeUtils.getFreezingMethod(mPackageName);
+        if (freezeType != null) {
+            rules.setFreezeType(freezeType);
+        }
+        // Commit
         rules.commitExternal(miscFile);
         if (!miscFile.exists()) return;
         try {

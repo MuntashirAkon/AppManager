@@ -209,6 +209,9 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
     @Override
     protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
+        if (superState == null) {
+            return null;
+        }
         SavedState ss = new SavedState(superState);
         ss.currentHeight = mCurrentHeight;
         ss.selectionBottomPadding = mSelectionBottomPadding;
@@ -259,7 +262,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
     @NonNull
     public WindowInsetsCompat onApplyWindowInsets(@NonNull View v, @NonNull WindowInsetsCompat insets) {
         WindowInsetsCompat newInsets = null;
-        if (ViewCompat.getFitsSystemWindows(this)) {
+        if (getFitsSystemWindows()) {
             newInsets = insets;
         }
         if (!ObjectsCompat.equals(mLastInsets, newInsets)) {
@@ -334,7 +337,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         if (mAdapter != null) {
             //noinspection PointlessNullCheck
             if (mAdapter.mRecyclerView != null
-                    && ViewCompat.getFitsSystemWindows(mAdapter.mRecyclerView)
+                    && mAdapter.mRecyclerView.getFitsSystemWindows()
                     && mLastInsets != null) {
                 mSelectionBottomPadding += mLastInsets.getSystemWindowInsetBottom();
             }

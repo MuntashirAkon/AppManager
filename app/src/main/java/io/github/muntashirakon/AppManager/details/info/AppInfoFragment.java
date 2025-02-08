@@ -33,7 +33,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.os.UserHandleHidden;
 import android.provider.Settings;
 import android.text.Spannable;
@@ -69,6 +68,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
@@ -85,6 +85,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -94,6 +95,7 @@ import io.github.muntashirakon.AppManager.accessibility.NoRootAccessibilityServi
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
+import io.github.muntashirakon.AppManager.apk.behavior.FreezeUnfreeze;
 import io.github.muntashirakon.AppManager.apk.dexopt.DexOptDialog;
 import io.github.muntashirakon.AppManager.apk.behavior.FreezeUnfreezeShortcutInfo;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
@@ -138,6 +140,7 @@ import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.ssaid.ChangeSsaidDialog;
@@ -301,6 +304,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             mAppLabel = appLabel;
             // Set Application Name, aka Label
             mLabelView.setText(mAppLabel);
+        });
+        mMainModel.getFreezeTypeLiveData().observe(getViewLifecycleOwner(), freezeType -> {
+            int freezeTypeN = Optional.ofNullable(freezeType)
+                    .orElse(Prefs.Blocking.getDefaultFreezingMethod());
+            showFreezeDialog(freezeTypeN, freezeType != null);
         });
         mIconView.setOnClickListener(v -> {
             ClipboardManager clipboard = (ClipboardManager) ContextUtils.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
@@ -1922,15 +1930,53 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @MainThread
     private void freeze(boolean freeze) {
         if (mMainModel == null) return;
+        if (freeze) {
+            mMainModel.loadFreezeType();
+        } else {
+            // Unfreeze
+            ThreadUtils.postOnBackgroundThread(this::doUnfreeze);
+        }
+    }
+
+    private void showFreezeDialog(int freezeType, boolean isCustom) {
+        View view = View.inflate(mActivity, R.layout.item_checkbox, null);
+        MaterialCheckBox checkBox = view.findViewById(R.id.checkbox);
+        checkBox.setText(R.string.remember_option_for_this_app);
+        checkBox.setChecked(isCustom);
+        FreezeUnfreeze.getFreezeDialog(mActivity, freezeType)
+                .setIcon(R.drawable.ic_snowflake)
+                .setTitle(R.string.freeze)
+                .setView(view)
+                .setPositiveButton(R.string.freeze, (dialog, which, selectedItem) -> {
+                    if (selectedItem == null) {
+                        return;
+                    }
+                    ThreadUtils.postOnBackgroundThread(() -> doFreeze(selectedItem, checkBox.isChecked()));
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    @WorkerThread
+    private void doFreeze(@FreezeUtils.FreezeType int freezeType, boolean remember) {
         try {
-            if (freeze) {
-                FreezeUtils.freeze(mPackageName, mUserId);
-            } else {
-                FreezeUtils.unfreeze(mPackageName, mUserId);
+            if (remember) {
+                FreezeUtils.setFreezeMethod(mPackageName, freezeType);
             }
-        } catch (RemoteException | SecurityException e) {
-            Log.e(TAG, e);
-            displayLongToast(freeze ? R.string.failed_to_freeze : R.string.failed_to_unfreeze, mAppLabel);
+            FreezeUtils.freeze(mPackageName, mUserId, freezeType);
+        } catch (Throwable th) {
+            Log.e(TAG, th);
+            ThreadUtils.postOnMainThread(() -> displayLongToast(R.string.failed_to_freeze, mAppLabel));
+        }
+    }
+
+    @WorkerThread
+    private void doUnfreeze() {
+        try {
+            FreezeUtils.unfreeze(mPackageName, mUserId);
+        } catch (Throwable th) {
+            Log.e(TAG, th);
+            ThreadUtils.postOnMainThread(() -> displayLongToast(R.string.failed_to_unfreeze, mAppLabel));
         }
     }
 

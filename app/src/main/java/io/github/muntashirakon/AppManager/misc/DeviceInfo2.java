@@ -85,6 +85,7 @@ public class DeviceInfo2 implements LocalizedString {
     public int selinux;
     public String encryptionStatus;
     public String dmVerity; // enforcing, disabled, eio, ...
+    @Nullable
     public String verifiedBootState; // green (verified), yellow (self-signed), orange (unverified), red (failed) ?: orange (unverified)
     public String verifiedBootStateString;
     public String avbVersion;
@@ -108,6 +109,7 @@ public class DeviceInfo2 implements LocalizedString {
     public boolean batteryPresent;
     public double batteryCapacityMAh;
     public double batteryCapacityMAhAlt;
+    @Nullable
     public String batteryTechnology;
     public int batteryCycleCount;
     public String batteryHealth;
@@ -303,11 +305,13 @@ public class DeviceInfo2 implements LocalizedString {
                 builder.append(getStyledKeyValue(ctx, R.string.battery_capacity, String.valueOf(batteryCapacityMAh)))
                         .append(" mAh");
                 if (batteryCapacityMAhAlt > 0) {
-                    builder.append(" (est. ").append(String.valueOf(batteryCapacityMAhAlt)).append(" mAh)");
+                    builder.append(" (est. ")
+                            .append(String.format(Locale.ROOT, "%.1f", batteryCapacityMAhAlt))
+                            .append(" mAh)");
                 }
                 builder.append("\n");
             } else if (batteryCapacityMAhAlt > 0) {
-                builder.append(getStyledKeyValue(ctx, R.string.battery_capacity, String.valueOf(batteryCapacityMAhAlt)))
+                builder.append(getStyledKeyValue(ctx, R.string.battery_capacity, String.format(Locale.ROOT, "%.1f", batteryCapacityMAhAlt)))
                         .append(" mAh (est.)").append("\n");
             }
             if (batteryHealth != null) {
@@ -466,6 +470,14 @@ public class DeviceInfo2 implements LocalizedString {
             int batteryCapacityUAh = mBatteryStatusBundle.getInt("charge_counter", 0);
             if (batteryCapacityUAh != 0) {
                 batteryCapacityMAhAlt = batteryCapacityUAh / 1000.;
+                // This is the current capacity, calculate the actual capacity using the battery
+                // percentage
+                int level = mBatteryStatusBundle.getInt(BatteryManager.EXTRA_LEVEL, 0);
+                int scale = mBatteryStatusBundle.getInt(BatteryManager.EXTRA_SCALE, 0);
+                double batteryPercent = scale > 0 ? (level * 100. / scale) : 0;
+                if (batteryPercent > 0) {
+                    batteryCapacityMAhAlt = (batteryCapacityMAhAlt * 100. / batteryPercent);
+                }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 batteryCycleCount = mBatteryStatusBundle.getInt(BatteryManager.EXTRA_CYCLE_COUNT, 0);

@@ -29,12 +29,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Queue;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -98,7 +100,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
         if (!SelfPermissions.canFreezeUnfreezePackages()) {
             UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
@@ -161,7 +163,9 @@ public class FreezeUnfreezeActivity extends BaseActivity {
                             mOpenAppOrFreeze.postValue(shortcutInfo);
                             return;
                         }
-                        FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId);
+                        int freezeType = Optional.ofNullable(FreezeUtils.getFreezingMethod(shortcutInfo.packageName))
+                                        .orElse(Prefs.Blocking.getDefaultFreezingMethod());
+                        FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId, freezeType);
                     }
                     mIsFrozenLiveData.postValue(new Pair<>(shortcutInfo, !isFrozen));
                 } catch (RemoteException | PackageManager.NameNotFoundException e) {
@@ -173,7 +177,9 @@ public class FreezeUnfreezeActivity extends BaseActivity {
         public void freezeFinal(FreezeUnfreezeShortcutInfo shortcutInfo) {
             ThreadUtils.postOnBackgroundThread(() -> {
                 try {
-                    FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId);
+                    int freezeType = Optional.ofNullable(FreezeUtils.getFreezingMethod(shortcutInfo.packageName))
+                            .orElse(Prefs.Blocking.getDefaultFreezingMethod());
+                    FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId, freezeType);
                     mIsFrozenLiveData.postValue(new Pair<>(shortcutInfo, true));
                 } catch (RemoteException e) {
                     e.printStackTrace();

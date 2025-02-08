@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -131,6 +132,12 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
                         intent.setDataAndType(calculateUri(position), DocumentsContract.Document.MIME_TYPE_DIR);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                         context.startActivity(intent);
+                        return true;
+                    });
+            // Add to favorites
+            menu.add(R.string.add_to_favorites)
+                    .setOnMenuItemClickListener(item -> {
+                        mViewModel.addToFavorite(Paths.get(calculateUri(position)), mViewModel.getOptions());
                         return true;
                     });
             // Properties

@@ -122,6 +122,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private final CountDownLatch mPackageInfoWatcher = new CountDownLatch(1);
     private final MutableLiveData<PackageInfo> mPackageInfoLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mTagsAlteredLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mFreezeTypeLiveData = new MutableLiveData<>();
     private final MutableLiveData<AppDetailsComponentItem> mComponentChangedLiveData = new MutableLiveData<>();
 
     @Nullable
@@ -189,6 +190,17 @@ public class AppDetailsViewModel extends AndroidViewModel {
             ((CachedApkSource) mApkSource).cleanup();
         }
         mExecutor.shutdownNow();
+    }
+
+    public LiveData<Integer> getFreezeTypeLiveData() {
+        return mFreezeTypeLiveData;
+    }
+
+    public void loadFreezeType() {
+        mExecutor.submit(() -> {
+            Integer freezeType = FreezeUtils.getFreezingMethod(mPackageName);
+            mFreezeTypeLiveData.postValue(freezeType);
+        });
     }
 
     public MutableLiveData<Boolean> getTagsAlteredLiveData() {

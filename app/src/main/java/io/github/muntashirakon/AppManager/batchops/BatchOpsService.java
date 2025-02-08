@@ -272,6 +272,7 @@ public class BatchOpsService extends ForegroundService {
             case BatchOpsManager.OP_CLEAR_CACHE:
                 return context.getString(R.string.clear_cache);
             case BatchOpsManager.OP_FREEZE:
+            case BatchOpsManager.OP_ADVANCED_FREEZE:
                 return context.getString(R.string.freeze);
             case BatchOpsManager.OP_DISABLE_BACKGROUND:
                 return context.getString(R.string.disable_background);
@@ -321,6 +322,7 @@ public class BatchOpsService extends ForegroundService {
             case BatchOpsManager.OP_CLEAR_DATA:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_clear_data, failedCount, failedCount);
             case BatchOpsManager.OP_FREEZE:
+            case BatchOpsManager.OP_ADVANCED_FREEZE:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_freeze, failedCount, failedCount);
             case BatchOpsManager.OP_UNFREEZE:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_unfreeze, failedCount, failedCount);

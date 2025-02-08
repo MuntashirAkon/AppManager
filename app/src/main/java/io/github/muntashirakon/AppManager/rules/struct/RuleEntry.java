@@ -115,6 +115,8 @@ public abstract class RuleEntry {
                 return new UriGrantRule(packageName, tokenizer);
             case SSAID:
                 return new SsaidRule(packageName, tokenizer);
+            case FREEZE:
+                return new FreezeRule(packageName, tokenizer);
             default:
                 throw new IllegalArgumentException("Invalid type=" + type.name());
         }

@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -40,7 +39,6 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
@@ -287,7 +285,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
             mViewModel.shareFiles(Collections.singletonList(item.path));
             return true;
         });
-        boolean isVfs = mViewModel.getOptions().isVfs;
+        boolean isVfs = mViewModel.getOptions().isVfs();
         menu.findItem(R.id.action_shortcut)
                 // TODO: 31/5/23 Enable creating shortcuts for VFS
                 .setEnabled(!isVfs)
@@ -296,6 +294,13 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
                     mViewModel.createShortcut(item);
                     return true;
                 });
+        MenuItem favItem = menu.findItem(R.id.action_add_to_favorites);
+        favItem.setOnMenuItemClickListener(menuItem -> {
+            mViewModel.addToFavorite(item.path, mViewModel.getOptions());
+            return true;
+        });
+        favItem.setEnabled(item.isDirectory);
+        favItem.setVisible(item.isDirectory);
         menu.findItem(R.id.action_copy_path).setOnMenuItemClickListener(menuItem -> {
             String path = FmUtils.getDisplayablePath(item.path);
             Utils.copyToClipboard(mFmActivity, "Path", path);

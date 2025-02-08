@@ -3,8 +3,6 @@
 package io.github.muntashirakon.AppManager.fm;
 
 import static io.github.muntashirakon.AppManager.fm.FmTasks.FmTask.TYPE_CUT;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -15,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.DocumentsContract;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
@@ -24,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,7 +33,6 @@ import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SearchView;
-import androidx.collection.ArrayMap;
 import androidx.core.content.ContextCompat;
 import androidx.core.os.BundleCompat;
 import androidx.core.provider.DocumentsContractCompat;
@@ -75,11 +72,9 @@ import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
-import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -95,20 +90,16 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
         MultiSelectionActionsView.OnItemSelectedListener {
     public static final String TAG = FmFragment.class.getSimpleName();
 
-    public static final String ARG_URI = "uri";
+    private static final String ARG_URI = "uri";
     public static final String ARG_OPTIONS = "opt";
     public static final String ARG_POSITION = "pos";
 
     @NonNull
-    public static FmFragment getNewInstance(@NonNull FmActivity.Options options, @Nullable Uri initUri,
+    public static FmFragment getNewInstance(@NonNull FmActivity.Options options,
                                             @Nullable Integer position) {
-        if (!options.isVfs && initUri != null) {
-            throw new IllegalArgumentException("initUri can only be set when the file system is virtual.");
-        }
         FmFragment fragment = new FmFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_OPTIONS, options);
-        args.putParcelable(ARG_URI, initUri);
         if (position != null) {
             args.putInt(ARG_POSITION, position);
         }
@@ -129,11 +120,27 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
     private SwipeRefreshLayout mSwipeRefresh;
     @Nullable
     private MultiSelectionView mMultiSelectionView;
+    private FloatingActionButtonGroup mFabGroup;
     private FmPathListAdapter mPathListAdapter;
     private FmActivity mActivity;
 
     @Nullable
     private FolderShortInfo mFolderShortInfo;
+
+    private final ViewTreeObserver.OnGlobalLayoutListener mMultiSelectionViewChangeListener = () -> {
+        if (mFabGroup != null && getActivity() != null) {
+            int defaultMargin = UiUtils.dpToPx(requireContext(), 16);
+            int newMargin;
+            if (mMultiSelectionView.getVisibility() == View.VISIBLE) {
+                newMargin = defaultMargin + mMultiSelectionView.getHeight();
+            } else newMargin = defaultMargin;
+            ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) mFabGroup.getLayoutParams();
+            if (marginLayoutParams.bottomMargin != newMargin) {
+                marginLayoutParams.bottomMargin = newMargin;
+                mFabGroup.setLayoutParams(marginLayoutParams);
+            }
+        }
+    };
 
     private final OnBackPressedCallback mBackPressedCallback = new OnBackPressedCallback(true) {
         @Override
@@ -174,11 +181,11 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
             options = BundleCompat.getParcelable(savedInstanceState, ARG_OPTIONS, FmActivity.Options.class);
             scrollPosition.set(savedInstanceState.getInt(ARG_POSITION, RecyclerView.NO_POSITION));
         }
-        if (uri == null) {
-            uri = BundleCompat.getParcelable(requireArguments(), ARG_URI, Uri.class);
-        }
         if (options == null) {
             options = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_OPTIONS, FmActivity.Options.class));
+            if (uri == null) {
+                uri = options.getInitUriForVfs();
+            }
             if (requireArguments().containsKey(ARG_POSITION)) {
                 scrollPosition.set(requireArguments().getInt(ARG_POSITION, RecyclerView.NO_POSITION));
             }
@@ -218,9 +225,9 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
                     .setNegativeButton(R.string.close, null)
                     .show();
         });
-        FloatingActionButtonGroup fabGroup = view.findViewById(R.id.fab);
-        fabGroup.inflate(R.menu.fragment_fm_speed_dial);
-        fabGroup.setOnActionSelectedListener(this);
+        mFabGroup = view.findViewById(R.id.fab);
+        mFabGroup.inflate(R.menu.fragment_fm_speed_dial);
+        mFabGroup.setOnActionSelectedListener(this);
         UiUtils.applyWindowInsetsAsMargin(view.findViewById(R.id.fab_holder));
         mEmptyView = view.findViewById(android.R.id.empty);
         mEmptyViewIcon = view.findViewById(R.id.icon);
@@ -253,10 +260,10 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
                 if (mFolderShortInfo == null) {
                     return;
                 }
-                if (dy < 0 && mFolderShortInfo.canWrite && !fabGroup.isShown()) {
-                    fabGroup.show();
-                } else if (dy > 0 && fabGroup.isShown()) {
-                    fabGroup.hide();
+                if (dy < 0 && mFolderShortInfo.canWrite && !mFabGroup.isShown()) {
+                    mFabGroup.show();
+                } else if (dy > 0 && mFabGroup.isShown()) {
+                    mFabGroup.hide();
                 }
             }
         });
@@ -264,6 +271,7 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
         mMultiSelectionView.setOnItemSelectedListener(this);
         mMultiSelectionView.setAdapter(mAdapter);
         mMultiSelectionView.updateCounter(true);
+        mMultiSelectionView.getViewTreeObserver().addOnGlobalLayoutListener(mMultiSelectionViewChangeListener);
         BatchOpsHandler batchOpsHandler = new BatchOpsHandler(mMultiSelectionView);
         mMultiSelectionView.setOnSelectionChangeListener(batchOpsHandler);
         mActivity.addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
@@ -307,7 +315,7 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
         });
         mModel.getUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
             FmActivity.Options options1 = mModel.getOptions();
-            String alternativeRootName = options1.isVfs ? options1.uri.getLastPathSegment() : null;
+            String alternativeRootName = options1.isVfs() ? options1.uri.getLastPathSegment() : null;
             Optional.ofNullable(mActivity.getSupportActionBar()).ifPresent(actionBar -> {
                 String title = uri1.getLastPathSegment();
                 if (TextUtils.isEmpty(title)) {
@@ -355,12 +363,12 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
                 }
             }
             if (!folderShortInfo.canWrite) {
-                if (fabGroup.isShown()) {
-                    fabGroup.hide();
+                if (mFabGroup.isShown()) {
+                    mFabGroup.hide();
                 }
             } else {
-                if (!fabGroup.isShown()) {
-                    fabGroup.show();
+                if (!mFabGroup.isShown()) {
+                    mFabGroup.show();
                 }
             }
             Optional.ofNullable(mActivity.getSupportActionBar()).ifPresent(actionBar ->
@@ -396,6 +404,14 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
         if (mModel != null && mRecyclerView != null) {
             Prefs.FileManager.setLastOpenedPath(mModel.getOptions(), mModel.getCurrentUri(), getRecyclerViewFirstChildPosition());
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (mMultiSelectionView != null) {
+            mMultiSelectionView.getViewTreeObserver().removeOnGlobalLayoutListener(mMultiSelectionViewChangeListener);
+        }
+        super.onDestroyView();
     }
 
     @Override
@@ -445,40 +461,6 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
                 mModel.createShortcut(uri);
             }
             return true;
-        } else if (id == R.id.action_storage) {
-            ThreadUtils.postOnBackgroundThread(() -> {
-                ArrayMap<String, Uri> storageLocations = StorageUtils.getAllStorageLocations(mActivity);
-                if (storageLocations.isEmpty()) {
-                    mActivity.runOnUiThread(() -> {
-                        if (isDetached()) return;
-                        new MaterialAlertDialogBuilder(mActivity)
-                                .setTitle(R.string.storage)
-                                .setMessage(R.string.no_volumes_found)
-                                .setNegativeButton(R.string.ok, null)
-                                .show();
-                    });
-                    return;
-                }
-                Uri[] backupVolumes = new Uri[storageLocations.size()];
-                CharSequence[] backupVolumesStr = new CharSequence[storageLocations.size()];
-                for (int i = 0; i < storageLocations.size(); ++i) {
-                    backupVolumes[i] = storageLocations.valueAt(i);
-                    backupVolumesStr[i] = new SpannableStringBuilder(storageLocations.keyAt(i)).append("\n")
-                            .append(getSecondaryText(mActivity, getSmallerText(backupVolumes[i].getPath())));
-                }
-                mActivity.runOnUiThread(() -> {
-                    if (isDetached()) return;
-                    new SearchableItemsDialogBuilder<>(mActivity, backupVolumesStr)
-                            .setTitle(R.string.storage)
-                            .setOnItemClickListener((dialog, which, item1) -> {
-                                mModel.loadFiles(backupVolumes[which]);
-                                dialog.dismiss();
-                            })
-                            .setNegativeButton(R.string.cancel, null)
-                            .show();
-                });
-            });
-            return true;
         } else if (id == R.id.action_list_options) {
             FmListOptions listOptions = new FmListOptions();
             listOptions.setListOptionActions(mModel);
@@ -492,11 +474,17 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
             return true;
         } else if (id == R.id.action_new_window) {
             Intent intent = new Intent(mActivity, FmActivity.class);
-            if (!mModel.getOptions().isVfs) {
+            if (!mModel.getOptions().isVfs()) {
                 intent.setDataAndType(mModel.getCurrentUri(), DocumentsContract.Document.MIME_TYPE_DIR);
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             startActivity(intent);
+            return true;
+        } else if (id == R.id.action_add_to_favorites) {
+            Uri uri = mPathListAdapter.getCurrentUri();
+            if (uri != null) {
+                mModel.addToFavorite(Paths.get(uri), mModel.getOptions());
+            }
             return true;
         } else if (id == R.id.action_settings) {
             Intent intent = SettingsActivity.getIntent(requireContext(), "files_prefs");

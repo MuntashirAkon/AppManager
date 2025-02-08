@@ -22,11 +22,13 @@ public interface IBatchOpOptions extends Parcelable, IJsonSerializer {
         } else if (BatchComponentOptions.TAG.equals(tag)) {
             return BatchComponentOptions.DESERIALIZER.deserialize(jsonObject);
         } else if (BatchDexOptOptions.TAG.equals(tag)) {
-            return BatchComponentOptions.DESERIALIZER.deserialize(jsonObject);
+            return BatchDexOptOptions.DESERIALIZER.deserialize(jsonObject);
+        }  else if (BatchFreezeOptions.TAG.equals(tag)) {
+            return BatchFreezeOptions.DESERIALIZER.deserialize(jsonObject);
         } else if (BatchNetPolicyOptions.TAG.equals(tag)) {
             return BatchNetPolicyOptions.DESERIALIZER.deserialize(jsonObject);
         } else if (BatchPermissionOptions.TAG.equals(tag)) {
-            return BatchNetPolicyOptions.DESERIALIZER.deserialize(jsonObject);
+            return BatchPermissionOptions.DESERIALIZER.deserialize(jsonObject);
         } else throw new JSONException("Invalid tag: " + tag);
     };
 }

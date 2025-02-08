@@ -12,10 +12,13 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.ArrayList;
@@ -26,6 +29,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.util.UiUtils;
 
 public class SettingsActivity extends BaseActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     public static final String TAG = SettingsActivity.class.getSimpleName();
@@ -61,18 +65,36 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
     @NonNull
     private ArrayList<String> mSavedKeys = new ArrayList<>();
     private int mLevel = 0;
+    private boolean mDualPaneMode;
+    @Nullable
+    private MaterialToolbar mSecondaryToolbar;
 
     @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_settings);
+        int mainPrefSize = UiUtils.dpToPx(this, 450);
+        int windowWidth = getResources().getDisplayMetrics().widthPixels;
+        mDualPaneMode = windowWidth >= 2 * mainPrefSize;
+        setContentView(mDualPaneMode ? R.layout.activity_settings_dual_pane : R.layout.activity_settings);
         setSupportActionBar(findViewById(R.id.toolbar));
+        mSecondaryToolbar = findViewById(R.id.toolbar2);
+        FragmentContainerView secondaryContainer = findViewById(R.id.secondary_layout);
         progressIndicator = findViewById(R.id.progress_linear);
         progressIndicator.setVisibilityAfterHide(View.GONE);
         progressIndicator.hide();
+        // Apply necessary padding: ignore start
+        if (mSecondaryToolbar != null) {
+            UiUtils.applyWindowInsetsAsPadding(mSecondaryToolbar, true, false, false, true);
+        }
+        if (secondaryContainer != null) {
+            UiUtils.applyWindowInsetsAsPadding(secondaryContainer, false, true, false, true);
+        }
 
         if (savedInstanceState != null) {
             clearBackStack();
-            mSavedKeys = savedInstanceState.getStringArrayList(SAVED_KEYS);
+            ArrayList<String> savedKeys = savedInstanceState.getStringArrayList(SAVED_KEYS);
+            if (savedKeys != null) {
+                mSavedKeys = savedKeys;
+            }
         }
         setKeysFromIntent(getIntent());
 
@@ -91,6 +113,10 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
             }
         });
 
+        String defaultPref = getKey(mLevel);
+        if (defaultPref == null && mDualPaneMode) {
+            defaultPref = "appearance_prefs";
+        }
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(
@@ -99,12 +125,12 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
                         R.animator.exit_from_right,
                         R.animator.exit_from_left
                 )
-                .replace(R.id.main_layout, MainPreferences.getInstance(getKey(mLevel)))
+                .replace(R.id.main_layout, MainPreferences.getInstance(defaultPref))
                 .commit();
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
         if (setKeysFromIntent(intent)) {
             // Clear old items
@@ -116,6 +142,13 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
                 Log.d(TAG, "Selected pref: %s", fragment.getClass().getName());
             }
         }
+    }
+
+    @Override
+    public void setTitle(int titleId) {
+        if (mDualPaneMode) {
+            Objects.requireNonNull(mSecondaryToolbar).setTitle(titleId);
+        } else super.setTitle(titleId);
     }
 
     @Override
@@ -136,6 +169,8 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
         Bundle args = pref.getExtras();
         Fragment fragment = fragmentManager.getFragmentFactory().instantiate(getClassLoader(), pref.getFragment());
         if (fragment instanceof PreferenceFragment) {
+            // Inject dual pane mode
+            args.putBoolean(PreferenceFragment.PREF_SECONDARY, mDualPaneMode);
             // Inject subKey to the arguments
             String subKey = getKey(mLevel + 1);
             if (subKey != null && Objects.equals(pref.getKey(), getKey(mLevel))) {
@@ -147,15 +182,17 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
         fragment.setArguments(args);
         // The line below is kept because this is how it is handled in AndroidX library
         fragment.setTargetFragment(caller, 0);
-        fragmentManager.beginTransaction()
-                .setCustomAnimations(
-                        R.animator.enter_from_left,
-                        R.animator.enter_from_right,
-                        R.animator.exit_from_right,
-                        R.animator.exit_from_left
-                )
-                .replace(R.id.main_layout, fragment)
-                .addToBackStack(null)
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if (!mDualPaneMode) {
+            transaction.setCustomAnimations(
+                    R.animator.enter_from_left,
+                    R.animator.enter_from_right,
+                    R.animator.exit_from_right,
+                    R.animator.exit_from_left
+            ).addToBackStack(null);
+        }
+        transaction
+                .replace(mDualPaneMode ? R.id.secondary_layout : R.id.main_layout, fragment)
                 .commit();
         return true;
     }

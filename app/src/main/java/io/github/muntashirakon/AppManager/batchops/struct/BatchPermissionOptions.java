@@ -11,8 +11,12 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.history.JsonDeserializer;
+import io.github.muntashirakon.AppManager.utils.JSONUtils;
+
 public class BatchPermissionOptions implements IBatchOpOptions {
     public static final String TAG = BatchPermissionOptions.class.getSimpleName();
+    @NonNull
     private String[] mPermissions;
 
     public BatchPermissionOptions(@NonNull String[] permissions) {
@@ -33,12 +37,20 @@ public class BatchPermissionOptions implements IBatchOpOptions {
         dest.writeStringArray(mPermissions);
     }
 
+    protected BatchPermissionOptions(@NonNull JSONObject jsonObject) throws JSONException {
+        assert jsonObject.getString("tag").equals(TAG);
+        mPermissions = JSONUtils.getArray(String.class, jsonObject.getJSONArray("permissions"));
+    }
+
+    public static final JsonDeserializer.Creator<BatchPermissionOptions> DESERIALIZER
+            = BatchPermissionOptions::new;
+
     @NonNull
     @Override
     public JSONObject serializeToJson() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("tag", TAG);
-        jsonObject.put("permissions", mPermissions);
+        jsonObject.put("permissions", JSONUtils.getJSONArray(mPermissions));
         return jsonObject;
     }
 

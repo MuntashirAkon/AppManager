@@ -163,7 +163,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             mFmFileSystemLoaderResult.cancel(true);
         }
         mOptions = options;
-        if (!options.isVfs) {
+        if (!options.isVfs()) {
             // No need to mount anything. Options#uri is the base URI
             loadFiles(defaultUri != null ? defaultUri : options.uri, null);
             return;
@@ -268,7 +268,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
 
     @MainThread
     private void updateOptions(@NonNull Uri refUri) {
-        FmActivity.Options options = new FmActivity.Options(refUri, false, false, false);
+        FmActivity.Options options = new FmActivity.Options(refUri);
         setOptions(options, null);
     }
 
@@ -405,6 +405,12 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                 }
                 mFolderShortInfoLiveData.postValue(folderShortInfo);
             }
+        });
+    }
+
+    public void addToFavorite(@NonNull Path path, @NonNull FmActivity.Options options) {
+        ThreadUtils.postOnBackgroundThread(() -> {
+            FmFavoritesManager.addToFavorite(path, options);
         });
     }
 
@@ -547,7 +553,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     @WorkerThread
     @NonNull
     private VirtualFileSystem mountVfs() throws IOException {
-        if (!mOptions.isVfs) {
+        if (!mOptions.isVfs()) {
             throw new IOException("VFS expected, found regular FS.");
         }
         VirtualFileSystem fs = VirtualFileSystem.getFileSystem(mOptions.uri);

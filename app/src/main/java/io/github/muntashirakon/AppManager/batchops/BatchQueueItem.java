@@ -24,6 +24,7 @@ import io.github.muntashirakon.AppManager.batchops.struct.BatchBackupImportOptio
 import io.github.muntashirakon.AppManager.batchops.struct.BatchBackupOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchComponentOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchDexOptOptions;
+import io.github.muntashirakon.AppManager.batchops.struct.BatchFreezeOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchNetPolicyOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchPermissionOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.IBatchOpOptions;
@@ -187,6 +188,8 @@ public class BatchQueueItem implements Parcelable, IJsonSerializer {
     @Nullable
     private static IBatchOpOptions readOptionsFromParcel(@NonNull Parcel in, @OpType int op) {
         switch (op) {
+            case BatchOpsManager.OP_ADVANCED_FREEZE:
+                return BatchFreezeOptions.CREATOR.createFromParcel(in);
             case BatchOpsManager.OP_BACKUP:
             case BatchOpsManager.OP_DELETE_BACKUP:
             case BatchOpsManager.OP_RESTORE_BACKUP:

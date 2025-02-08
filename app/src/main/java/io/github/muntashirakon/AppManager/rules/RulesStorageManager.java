@@ -28,6 +28,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
 import io.github.muntashirakon.AppManager.rules.struct.BatteryOptimizationRule;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
+import io.github.muntashirakon.AppManager.rules.struct.FreezeRule;
 import io.github.muntashirakon.AppManager.rules.struct.MagiskDenyListRule;
 import io.github.muntashirakon.AppManager.rules.struct.MagiskHideRule;
 import io.github.muntashirakon.AppManager.rules.struct.NetPolicyRule;
@@ -38,6 +39,7 @@ import io.github.muntashirakon.AppManager.rules.struct.SsaidRule;
 import io.github.muntashirakon.AppManager.rules.struct.UriGrantRule;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathReader;
 import io.github.muntashirakon.io.Paths;
@@ -180,6 +182,10 @@ public class RulesStorageManager implements Closeable {
 
     public void setSsaid(@NonNull String ssaid) {
         addUniqueEntry(new SsaidRule(packageName, ssaid));
+    }
+
+    public void setFreezeType(@FreezeUtils.FreezeType int freezeType) {
+        addUniqueEntry(new FreezeRule(packageName, freezeType));
     }
 
     /**

@@ -33,9 +33,9 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_storage"
-        android:icon="@drawable/ic_zip_disk"
-        android:title="@string/storage"
+        android:id="@+id/action_add_to_favorites"
+        android:icon="@drawable/ic_star_outline"
+        android:title="@string/add_to_favorites"
         app:showAsAction="never" />
 
     <item
