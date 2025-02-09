@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.main;
 
+import static io.github.muntashirakon.AppManager.BaseActivity.ASKED_PERMISSIONS;
+
 import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
 import android.content.Intent;
@@ -25,6 +27,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.color.DynamicColors;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -33,6 +37,7 @@ import io.github.muntashirakon.AppManager.compat.BiometricAuthenticatorsCompat;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreActivity;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.life.BuildExpiryChecker;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
@@ -52,6 +57,12 @@ public class SplashActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 // Need authentication and/or verify mode of operation
                 ensureSecurityAndModeOfOp();
+            });
+    private final ActivityResultLauncher<String[]> mPermissionCheckActivity = registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(),
+            permissionStatusMap -> {
+                // Run authentication
+                doAuthenticate();
             });
 
     @Override
@@ -76,8 +87,11 @@ public class SplashActivity extends AppCompatActivity {
             BuildExpiryChecker.getBuildExpiredDialog(this, (dialog, which) -> doAuthenticate()).show();
             return;
         }
-        // Run authentication
-        doAuthenticate();
+        // Init permission checks
+        if (!initPermissionChecks()) {
+            // Run authentication
+            doAuthenticate();
+        }
     }
 
     @CallSuper
@@ -194,5 +208,20 @@ public class SplashActivity extends AppCompatActivity {
         if (mViewModel != null) {
             mViewModel.setModeOfOps();
         }
+    }
+
+    private boolean initPermissionChecks() {
+        List<String> permissionsToBeAsked = new ArrayList<>(ASKED_PERMISSIONS.size());
+        for (String permission : ASKED_PERMISSIONS.keySet()) {
+            if (!SelfPermissions.checkSelfPermission(permission)) {
+                permissionsToBeAsked.add(permission);
+            }
+        }
+        if (!permissionsToBeAsked.isEmpty()) {
+            // Ask required permissions
+            mPermissionCheckActivity.launch(permissionsToBeAsked.toArray(new String[0]));
+            return true;
+        }
+        return false;
     }
 }

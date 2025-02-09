@@ -39,7 +39,7 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 public abstract class BaseActivity extends PerProcessActivity {
     public static final String TAG = BaseActivity.class.getSimpleName();
 
-    private static final HashMap<String, Boolean> ASKED_PERMISSIONS = new HashMap<String, Boolean>() {{
+    public static final HashMap<String, Boolean> ASKED_PERMISSIONS = new HashMap<String, Boolean>() {{
         // (permission, required) pairs
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             put(Manifest.permission.POST_NOTIFICATIONS, false);
@@ -54,6 +54,8 @@ public abstract class BaseActivity extends PerProcessActivity {
     private SecurityAndOpsViewModel mViewModel;
     private boolean mDisplayLoader = true;
     private BiometricPrompt mBiometricPrompt;
+    @Nullable
+    private Bundle mSavedInstanceState;
 
     private final ActivityResultLauncher<Intent> mKeyStoreActivity = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -63,6 +65,9 @@ public abstract class BaseActivity extends PerProcessActivity {
     private final ActivityResultLauncher<String[]> mPermissionCheckActivity = registerForActivityResult(
             new ActivityResultContracts.RequestMultiplePermissions(),
             permissionStatusMap -> {
+                // Run authentication
+                doAuthenticate(mSavedInstanceState);
+                mSavedInstanceState = null;
             });
 
     @Override
@@ -79,8 +84,13 @@ public abstract class BaseActivity extends PerProcessActivity {
             BuildExpiryChecker.getBuildExpiredDialog(this, (dialog, which) -> doAuthenticate(savedInstanceState)).show();
             return;
         }
-        // Run authentication
-        doAuthenticate(savedInstanceState);
+        // Init permission checks
+        mSavedInstanceState = savedInstanceState;
+        if (!initPermissionChecks(true)) {
+            mSavedInstanceState = null;
+            // Run authentication
+            doAuthenticate(savedInstanceState);
+        }
     }
 
     protected abstract void onAuthenticated(@Nullable Bundle savedInstanceState);
@@ -167,7 +177,6 @@ public abstract class BaseActivity extends PerProcessActivity {
                     if (mAlertDialog != null) mAlertDialog.dismiss();
                     Ops.setAuthenticated(this, true);
                     onAuthenticated(savedInstanceState);
-                    initPermissionChecks(true);
                     InternalCacheCleanerService.scheduleAlarm(getApplicationContext());
             }
         });
@@ -227,7 +236,7 @@ public abstract class BaseActivity extends PerProcessActivity {
         }
     }
 
-    private void initPermissionChecks(boolean checkAll) {
+    private boolean initPermissionChecks(boolean checkAll) {
         List<String> permissionsToBeAsked = new ArrayList<>(ASKED_PERMISSIONS.size());
         for (String permission : ASKED_PERMISSIONS.keySet()) {
             boolean required = Boolean.TRUE.equals(ASKED_PERMISSIONS.get(permission));
@@ -238,6 +247,8 @@ public abstract class BaseActivity extends PerProcessActivity {
         if (!permissionsToBeAsked.isEmpty()) {
             // Ask required permissions
             mPermissionCheckActivity.launch(permissionsToBeAsked.toArray(new String[0]));
+            return true;
         }
+        return false;
     }
 }
