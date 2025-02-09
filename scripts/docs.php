@@ -586,7 +586,7 @@ switch($verb) {
         break;
     case 'update':
         if (!isset($argv[2])) {
-            fprintf(STDERR, 'update <lang>\n');
+            fprintf(STDERR, "update <lang>\n");
             exit(1);
         }
         if ($argv[2] == 'en') {
