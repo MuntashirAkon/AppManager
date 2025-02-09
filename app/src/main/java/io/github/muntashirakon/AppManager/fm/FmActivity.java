@@ -60,6 +60,7 @@ import io.github.muntashirakon.AppManager.fm.dialogs.FilePropertiesDialogFragmen
 import io.github.muntashirakon.AppManager.fm.dialogs.RenameDialogFragment;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
+import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -181,6 +182,7 @@ public class FmActivity extends BaseActivity {
                     mViewModel.loadDrawerItems();
                 }
             });
+    private final StoragePermission mStoragePermission = StoragePermission.init(this);
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
@@ -282,6 +284,15 @@ public class FmActivity extends BaseActivity {
     }
 
     private void loadFragment(@NonNull Options options, @Nullable Integer position) {
+        if (ContentResolver.SCHEME_FILE.equals(options.uri.getScheme())) {
+            mStoragePermission.request(granted -> {
+                // Return value does not matter
+                doLoadFragment(options, position);
+            });
+        } else doLoadFragment(options, position);
+    }
+
+    private void doLoadFragment(@NonNull Options options, @Nullable Integer position) {
         Fragment fragment = FmFragment.getNewInstance(options, position);
         getSupportFragmentManager()
                 .beginTransaction()
