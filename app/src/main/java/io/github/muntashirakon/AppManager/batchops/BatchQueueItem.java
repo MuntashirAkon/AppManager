@@ -10,6 +10,7 @@ import android.os.UserHandleHidden;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.core.os.ParcelCompat;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,14 +20,6 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager.OpType;
-import io.github.muntashirakon.AppManager.batchops.struct.BatchAppOpsOptions;
-import io.github.muntashirakon.AppManager.batchops.struct.BatchBackupImportOptions;
-import io.github.muntashirakon.AppManager.batchops.struct.BatchBackupOptions;
-import io.github.muntashirakon.AppManager.batchops.struct.BatchComponentOptions;
-import io.github.muntashirakon.AppManager.batchops.struct.BatchDexOptOptions;
-import io.github.muntashirakon.AppManager.batchops.struct.BatchFreezeOptions;
-import io.github.muntashirakon.AppManager.batchops.struct.BatchNetPolicyOptions;
-import io.github.muntashirakon.AppManager.batchops.struct.BatchPermissionOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.IBatchOpOptions;
 import io.github.muntashirakon.AppManager.history.IJsonSerializer;
 import io.github.muntashirakon.AppManager.history.JsonDeserializer;
@@ -166,7 +159,7 @@ public class BatchQueueItem implements Parcelable, IJsonSerializer {
         mOp = in.readInt();
         mPackages = Objects.requireNonNull(in.createStringArrayList());
         mUsers = ParcelUtils.readArrayList(in, Integer.class.getClassLoader());
-        mOptions = readOptionsFromParcel(in, mOp);
+        mOptions = ParcelCompat.readParcelable(in, IBatchOpOptions.class.getClassLoader(), IBatchOpOptions.class);
     }
 
     public static final JsonDeserializer.Creator<BatchQueueItem> DESERIALIZER = BatchQueueItem::new;
@@ -184,44 +177,4 @@ public class BatchQueueItem implements Parcelable, IJsonSerializer {
             return new BatchQueueItem[size];
         }
     };
-
-    @Nullable
-    private static IBatchOpOptions readOptionsFromParcel(@NonNull Parcel in, @OpType int op) {
-        switch (op) {
-            case BatchOpsManager.OP_ADVANCED_FREEZE:
-                return BatchFreezeOptions.CREATOR.createFromParcel(in);
-            case BatchOpsManager.OP_BACKUP:
-            case BatchOpsManager.OP_DELETE_BACKUP:
-            case BatchOpsManager.OP_RESTORE_BACKUP:
-                return BatchBackupOptions.CREATOR.createFromParcel(in);
-            case BatchOpsManager.OP_BACKUP_APK:
-            case BatchOpsManager.OP_BLOCK_TRACKERS:
-            case BatchOpsManager.OP_CLEAR_CACHE:
-            case BatchOpsManager.OP_CLEAR_DATA:
-            case BatchOpsManager.OP_DISABLE_BACKGROUND:
-            case BatchOpsManager.OP_EXPORT_RULES:
-            case BatchOpsManager.OP_FORCE_STOP:
-            case BatchOpsManager.OP_FREEZE:
-            case BatchOpsManager.OP_NONE:
-            case BatchOpsManager.OP_UNBLOCK_TRACKERS:
-            case BatchOpsManager.OP_UNFREEZE:
-            case BatchOpsManager.OP_UNINSTALL:
-                break;
-            case BatchOpsManager.OP_BLOCK_COMPONENTS:
-            case BatchOpsManager.OP_UNBLOCK_COMPONENTS:
-                return BatchComponentOptions.CREATOR.createFromParcel(in);
-            case BatchOpsManager.OP_DEXOPT:
-                return BatchDexOptOptions.CREATOR.createFromParcel(in);
-            case BatchOpsManager.OP_GRANT_PERMISSIONS:
-            case BatchOpsManager.OP_REVOKE_PERMISSIONS:
-                return BatchPermissionOptions.CREATOR.createFromParcel(in);
-            case BatchOpsManager.OP_IMPORT_BACKUPS:
-                return BatchBackupImportOptions.CREATOR.createFromParcel(in);
-            case BatchOpsManager.OP_NET_POLICY:
-                return BatchNetPolicyOptions.CREATOR.createFromParcel(in);
-            case BatchOpsManager.OP_SET_APP_OPS:
-                return BatchAppOpsOptions.CREATOR.createFromParcel(in);
-        }
-        return null;
-    }
 }

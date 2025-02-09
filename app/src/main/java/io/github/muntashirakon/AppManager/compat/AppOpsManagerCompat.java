@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.RequiresPermission;
 import androidx.collection.SparseArrayCompat;
+import androidx.core.os.ParcelCompat;
 
 import com.android.internal.app.IAppOpsService;
 
@@ -395,7 +396,9 @@ public class AppOpsManagerCompat {
         }
 
         protected OpEntry(Parcel in) {
-            mOpEntry = AppOpsManagerHidden.OpEntry.CREATOR.createFromParcel(in);
+            mOpEntry = ParcelCompat.readParcelable(in,
+                    AppOpsManagerHidden.OpEntry.class.getClassLoader(),
+                    AppOpsManagerHidden.OpEntry.class);
         }
 
         public static final Creator<OpEntry> CREATOR = new Creator<OpEntry>() {
@@ -611,7 +614,7 @@ public class AppOpsManagerCompat {
 
     @NonNull
     public static List<OpEntry> getConfiguredOpsForPackage(@NonNull AppOpsManagerCompat appOpsManager,
-                                                                               @NonNull String packageName, int uid)
+                                                           @NonNull String packageName, int uid)
             throws RemoteException {
         List<PackageOps> packageOpsList = appOpsManager.getOpsForPackage(uid, packageName, null);
         if (packageOpsList.size() == 1) {

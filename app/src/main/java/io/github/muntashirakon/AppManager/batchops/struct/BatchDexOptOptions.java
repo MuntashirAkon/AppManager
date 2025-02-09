@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.batchops.struct;
 import android.os.Parcel;
 
 import androidx.annotation.NonNull;
+import androidx.core.os.ParcelCompat;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +28,8 @@ public class BatchDexOptOptions implements IBatchOpOptions {
     }
 
     protected BatchDexOptOptions(@NonNull Parcel in) {
-        mDexOptOptions = Objects.requireNonNull(in.readParcelable(DexOptOptions.class.getClassLoader()));
+        mDexOptOptions = Objects.requireNonNull(ParcelCompat.readParcelable(in,
+                DexOptOptions.class.getClassLoader(), DexOptOptions.class));
     }
 
     public static final Creator<BatchDexOptOptions> CREATOR = new Creator<BatchDexOptOptions>() {

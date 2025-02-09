@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Parcel;
 
 import androidx.annotation.NonNull;
+import androidx.core.os.ParcelCompat;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +48,8 @@ public class BatchBackupImportOptions implements IBatchOpOptions {
 
     protected BatchBackupImportOptions(@NonNull Parcel in) {
         mImportType = in.readInt();
-        mDirectory = Objects.requireNonNull(in.readParcelable(Uri.class.getClassLoader()));
+        mDirectory = Objects.requireNonNull(ParcelCompat.readParcelable(in,
+                Uri.class.getClassLoader(), Uri.class));
         mRemoveImportedDirectory = in.readByte() != 0;
     }
 

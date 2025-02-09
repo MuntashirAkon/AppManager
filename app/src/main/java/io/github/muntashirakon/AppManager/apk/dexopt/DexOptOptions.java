@@ -29,6 +29,7 @@ public class DexOptOptions implements Parcelable, IJsonSerializer {
 
     @Nullable
     public String[] packages;
+    @Nullable
     public String compilerFiler;
     public boolean compileLayouts;
     public boolean clearProfileData;
