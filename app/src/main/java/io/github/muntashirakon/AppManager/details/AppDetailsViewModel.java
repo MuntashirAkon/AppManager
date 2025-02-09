@@ -16,7 +16,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.om.OverlayInfo;
-import android.content.om.OverlayManager;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
@@ -56,7 +55,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -116,7 +114,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public static final String TAG = AppDetailsViewModel.class.getSimpleName();
 
     private final PackageManager mPackageManager;
-    private final OverlayManager mOverlayManager;
     private final Object mBlockerLocker = new Object();
     private final ExecutorService mExecutor = Executors.newFixedThreadPool(4);
     private final CountDownLatch mPackageInfoWatcher = new CountDownLatch(1);
@@ -157,11 +154,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public AppDetailsViewModel(@NonNull Application application) {
         super(application);
         mPackageManager = application.getPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            mOverlayManager = application.getSystemService(OverlayManager.class);
-        } else {
-            mOverlayManager = null;
-        }
         mReceiver = new PackageIntentReceiver(this);
         mWaitForBlocker = true;
     }
@@ -1061,6 +1053,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             loadServices();
             loadReceivers();
             loadProviders();
+            loadOverlays();
             Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::resumeWatcher);
         });
     }
@@ -1942,7 +1935,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     private void loadOverlays() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O
-                || mOverlayManager == null || mPackageName == null)  {
+                || mPackageName == null)  {
             mOverlays.postValue(new ArrayList<>());
             return;
         }
