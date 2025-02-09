@@ -265,7 +265,7 @@ public class SearchCriteria {
                     return mExact ? value : value.toLowerCase(Locale.ROOT);
                 }
                 case TYPE_PID: {
-                    return Integer.parseInt(value);
+                    return TextUtils.isDigitsOnly(value) ? Integer.parseInt(value) : null;
                 }
                 default:
                     throw new IllegalArgumentException("Invalid filter: " + mType);
