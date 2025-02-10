@@ -58,7 +58,7 @@
             3. Other: User apps, System apps (mutually exclusive), Installed apps and Uninstalled
             apps (mutually exclusive).
         </note>
-        <new>A (almost) fully-featured File Manager</new>
+        <new>An (almost) fully-featured File Manager</new>
         <note subtext="true">
             Features:[br/]
             - Thumbnail previews for media files, pictures, PDFs, ePubs, OpenDocument files, APK,
@@ -74,7 +74,8 @@
             - Other operations: sharing, creating shortcuts, open with[br/]
             - Settings: set default home directory, remember last opened folder and position, and
             whether to display the file manager as “Files” in the app drawer[br/]
-            - Displaying file/folder properties.
+            - Displaying file/folder properties.[br/]
+            - Favorites (i.e., bookmarks).
         </note>
         <new>Integrated code editor</new>
         <note subtext="true">
@@ -110,7 +111,7 @@
             configurations used at that point in time in order to ensure the consistency of
             operation.
         </note>
-        <new>Replaced log viewer, sys config, Termux, etc. with Labs page</new>
+        <new>Replaced log viewer, sys config, Terminal, etc. with Labs page</new>
         <note subtext="true">
             Labs is a new page where various handy tools are listed. They include Sys Config,
             Log Viewer, Terminal (not an actual Terminal emulator), File Manager, UI Tracker,

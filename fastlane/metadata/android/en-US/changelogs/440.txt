@@ -1,0 +1,24 @@
+App Manager v4.0.0 comes with a lot of new features and improvements. Visit in-app changelog for details.
+- New logo!
+- Android 14 and 15 support
+- Revamped debloater
+- Introducing file manager
+- Integrated code editor
+- History of operations
+- Per-app freezing, and more
+- Log viewer enhancements
+- Launching non-exported activities
+- New tags in App Info tab
+- Per-session installer options
+- Advanced mode of operations, ADB enhancements, etc.
+- Data usage widget, and more
+- Replaced log viewer, sys config, Terminal, etc. with Labs page
+- Added an option to disable sensors for each app in the App Info tab
+- Added an option to perform runtime optimization of applications in the 1-click Ops page and in the App Info tab
+- Added support for Zstandard compression for backup/restore
+- Enabling APK signing now automatically enables zip align feature
+- Support exporting application list as CSV or JSON in the batch operations
+- Added pure black theme support
+- Display current activity name (when possible) in the UI Tracker window
+- Added an option to filter apps by user in the Main page
+- Display a link to Pithus report in the scanner page if available.
