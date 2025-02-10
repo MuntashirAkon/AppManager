@@ -15,6 +15,7 @@ import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.om.OverlayInfo;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
@@ -69,6 +70,7 @@ import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
+import io.github.muntashirakon.AppManager.compat.OverlayManagerCompact;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsActivityItem;
@@ -78,6 +80,7 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsDefinedPermis
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsFeatureItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsLibraryItem;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsOverlayItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsServiceItem;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -899,6 +902,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 return observeInternal(mSignatures);
             case AppDetailsFragment.SHARED_LIBRARIES:
                 return observeInternal(mSharedLibraries);
+            case AppDetailsFragment.OVERLAYS:
+                return observeInternal(mOverlays);
             case AppDetailsFragment.APP_INFO:
                 return observeInternal(mAppInfo);
             default:
@@ -951,6 +956,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 case AppDetailsFragment.SHARED_LIBRARIES:
                     loadSharedLibraries();
                     break;
+                case AppDetailsFragment.OVERLAYS:
+                    loadOverlays();
+                    break;
                 case AppDetailsFragment.APP_INFO:
                     loadAppInfo();
                     break;
@@ -958,6 +966,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::resumeWatcher);
         });
     }
+
 
     private final MutableLiveData<Boolean> mIsPackageExistLiveData = new MutableLiveData<>();
     private boolean mIsPackageExist = true;
@@ -1044,6 +1053,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             loadServices();
             loadReceivers();
             loadProviders();
+            loadOverlays();
             Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::resumeWatcher);
         });
     }
@@ -1918,6 +1928,28 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
         Collections.sort(appDetailsItems, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
         mSharedLibraries.postValue(appDetailsItems);
+    }
+
+    @NonNull
+    private final MutableLiveData<List<AppDetailsOverlayItem>> mOverlays = new MutableLiveData<>();
+    @WorkerThread
+    private void loadOverlays() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O
+                || mPackageName == null)  {
+            mOverlays.postValue(new ArrayList<>());
+            return;
+        }
+        final List<OverlayInfo> overlays = OverlayManagerCompact.getOverlayManager()
+                .getAllOverlays(mUserId).get(mPackageName);
+        if (overlays == null) {
+            mOverlays.postValue(new ArrayList<>());
+            return;
+        }
+        List<AppDetailsOverlayItem> overlayItems = new ArrayList<>(overlays.size());
+        for (OverlayInfo overlay : overlays) {
+            overlayItems.add(new AppDetailsOverlayItem(overlay));
+        }
+        mOverlays.postValue(overlayItems);
     }
 
     /**
