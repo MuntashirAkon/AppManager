@@ -187,7 +187,9 @@ public class TrackerWindow implements View.OnTouchListener {
             mWindowManager.addView(mView, mWindowLayoutParams);
         }
         if (!mPaused) {
-            if (BuildConfig.APPLICATION_ID.contentEquals(event.getPackageName())) {
+            @Nullable
+            CharSequence packageName = event.getPackageName();
+            if (packageName != null && BuildConfig.APPLICATION_ID.contentEquals(packageName)) {
                 // On some devices, this window always gets the focus
                 if ("android.widget.EditText".contentEquals(event.getClassName())) {
                     // For some reason, only this class is focused
@@ -200,7 +202,7 @@ public class TrackerWindow implements View.OnTouchListener {
             if (mClassHierarchyResult != null) {
                 mClassHierarchyResult.cancel(true);
             }
-            mPackageNameView.setText(event.getPackageName());
+            mPackageNameView.setText(packageName);
             mClassNameView.setText(event.getClassName());
             mClassHierarchyResult = ThreadUtils.postOnBackgroundThread(() -> {
                 CharSequence classHierarchy = TextUtils.join("\n", getClassHierarchy(event));
@@ -277,6 +279,9 @@ public class TrackerWindow implements View.OnTouchListener {
         do {
             UsageEvents queryEvents = UsageStatsManagerCompat.queryEvents(currentTimeMillis - timeDiff,
                     currentTimeMillis, UserHandleHidden.myUserId());
+            if (queryEvents == null) {
+                return null;
+            }
             long lastTime = 0L;
             String activityName = null;
             while (queryEvents.hasNextEvent()) {
