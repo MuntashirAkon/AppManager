@@ -28,7 +28,6 @@
     <item
         android:id="@+id/action_finder"
         android:icon="@drawable/ic_search"
-        android:visible="false"
         android:title="@string/finder_title" />
 
     <item
