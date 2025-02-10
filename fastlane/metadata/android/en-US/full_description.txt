@@ -1,29 +1,32 @@
 <i>App Manager</i> began by merging the features of <i>App_packages Info</i> (formerly <i>Application Info</i>), <i>ClassyShark3xodus</i>, <i>Activity Launcher</i> and <i>Watt</i> into a single app with material design and dark mode to give a modern look and feel.
 
 <b>Features:</b>
-<ul>
-    <li>Free and open source</li>
-    <li>Material design (and a nice UI)</li>
-    <li>No useless permissions requested</li>
-    <li>Does not connect to the Internet without explicit permission from the user</li>
-    <li>Display as much information as possible in the main window</li>
-    <li>Lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app</li>
-    <li>Launch (exportable) activities, create (customizable) shortcuts</li>
-    <li>Block any activities, broadcast receivers, services or providers with native import/export as well as Watt and Blocker import support (requires root)</li>
-    <li>Revoke <i>dangerous</i> permissions (requires root/ADB)</li>
-    <li>Disable any app ops, therefore any hidden permissions (requires root/ADB)</li>
-    <li>Scan for trackers in apps and list (all or only) tracking classes (and their code dump)</li>
-    <li>Generate dynamic manifest for any application</li>
-    <li>View/edit/delete shared preferences of any app (requires root)</li>
-    <li>View/kill/force-stop running apps/process (requires root/ADB)</li>
-    <li>View app usage, data usage and app storage info (requires “Usage Access” permission)</li>
-    <li>Apk file sharing (hence the use of a provider)</li>
-    <li>Clear app data or app cache (requires root/ADB)</li>
-    <li>Batch operations: clear app data, disable run in background, disable/kill/uninstall apps</li>
-    <li>One-click operations: block ads/tracker components, block components by signature, block multiple app ops</li>
-</ul>
 
-...and other minor features such as installing/uninstalling/updating/enabling/disabling apps, displaying app installation info, opening on F-Droid, Aurora Droid or Aurora Store.
+• Free and open source
+• Material design (and a nice UI)
+• No useless permissions requested
+• Does not connect to the Internet without explicit permission from the user
+• Display as much information as possible in the main window
+• Lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app
+• Launch any activities, create (customizable) shortcuts
+• Block any activities, broadcast receivers, services or providers with native import/export as well as Watt and Blocker import support (requires root)
+• Revoke <i>dangerous</i> permissions (requires root/ADB)
+• Disable any app ops, therefore any hidden permissions (requires root/ADB)
+• Scan for trackers in apps and list (all or only) tracking classes (and their code dump)
+• Generate dynamic manifest for any application
+• View/edit/delete shared preferences of any app (requires root)
+• View/kill/force-stop running apps/process (requires root/ADB)
+• View app usage, data usage and app storage info (requires “Usage Access” permission)
+• Apk file sharing
+• Debloater
+• File management
+• Profiles for quick and routine operations
+• Code editor
+• Clear app data or app cache (requires root/ADB)
+• Batch operations: clear app data, disable run in background, freeze/kill/uninstall apps
+• One-click operations: block ads/tracker components, block components by signature, block multiple app ops
+
+...and other features such as installing/uninstalling/updating/freezing/unfreezing apps, displaying app installation info, opening on F-Droid, Aurora Droid or Aurora Store.
 
 It basically combines the features of 5 or 6 apps that any tech-savvy person needs to use in order to have a life.
 

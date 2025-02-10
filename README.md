@@ -20,8 +20,7 @@
 - Fully reproducible, copylefted libre software (GPLv3+)
 - Material 3 with dynamic colours
 - Displays as much information as possible in the main page
-- Lists activities, broadcast receivers, services, providers, app ops, permissions, signatures, shared libraries, etc.
-  of an application
+- Lists activities, broadcast receivers, services, providers, app ops, permissions, signatures, shared libraries, etc. of an application
 - Launch activities and services
 - Create shortcuts of activities
 - [Intercept activities](https://muntashirakon.github.io/AppManager/#sec:interceptor-page)
@@ -34,7 +33,10 @@
 - Batch operations
 - Single-click operations
 - Logcat viewer, manager and exporter
-- [Profiles](https://muntashirakon.github.io/AppManager/#sec:profiles-page) (including presets for quick debloating)
+- [Profiles](https://muntashirakon.github.io/AppManager/#sec:profiles-page)
+- Debloater
+- Code editor
+- File manager
 - Open an app in Aurora Store or in your favourite F-Droid client directly from App Manager
 - Sign APK files with custom signatures before installing
 - Backup encryption: OpenPGP via OpenKeychain, RSA, ECC (hybrid encryption with AES) and AES.
@@ -48,21 +50,20 @@
 - Clear app data or app cache
 - View/change net policy
 - Control battery optimization
+- Freeze/unfreeze apps
 
 ### Root-only features
 
-- Block any activities, broadcast receivers, services, or providers of an app with native import/export as well as Watt
-  and Blocker import support
+- Block any activities, broadcast receivers, services, or providers of an app with native import/export as well as Watt and Blocker import support
 - View/edit/delete shared preferences of any app
 - Back up/restore apps with data, rules and extras (such as permissions, battery optimization, SSAID, etc.)
 - View system configurations including blacklisted or whitelisted apps, permissions, etc.
-- View/change SSAID
+- View/change SSAID.
 
 …and many more! This single app combines the features of 5 or 6 apps any tech-savvy person needs!
 
 ### Upcoming features
 - APK editing
-- Code editor
 - Routine operations
 - Finder: Find app components, permissions etc. in all apps
 - Enable/disable app actions such as launch on boot
@@ -71,7 +72,6 @@
 - Systemless disabling/uninstalling of the system apps
 - Import app list exported by App Manager
 - More advance terminal emulator
-- File manager
 - Database viewer and editor, etc.
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"

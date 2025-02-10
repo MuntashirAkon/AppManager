@@ -1,1 +1,1 @@
-App Manager - Android向けパッケージマネージャ
+App Manager

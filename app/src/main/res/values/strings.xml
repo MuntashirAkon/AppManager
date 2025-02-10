@@ -386,7 +386,8 @@
     <string name="community">Community</string>
     <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> •
         <a href="https://t.me/AppManagerChannel">Telegram</a> •
-        <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+        <a href="https://x.com/AppManagerNews">Twitter/X</a> •
+        <a href="https://floss.social/@appmanager">Mastodon</a></string>
     <string name="pref_import_existing">Import existing rules</string>
     <string name="pref_import_existing_msg">Add components disabled by others apps to App Manager.
         Be careful when using this tool as there can be many false positives. Choose only the apps you\'re certain about.</string>
@@ -507,7 +508,7 @@
     <string name="run_in_termux">Run in Termux</string>
     <string name="website">Website</string>
     <string name="website_message" translatable="false">https://muntashirakon.github.io/AppManager</string>
-    <string name="discussions_site" translatable="false">https://github.com/MuntashirAkon/AppManager/discussions</string>
+    <string name="discussions_site" translatable="false">https://github.com/MuntashirAkon/AppManager/issues</string>
     <string name="pref_remove_all_rules">Remove all rules</string>
     <string name="pref_remove_all_rules_msg">Permissions will be granted, app ops and components will return to their default values.</string>
     <string name="are_you_sure">Are you sure?</string>
