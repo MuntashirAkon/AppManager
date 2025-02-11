@@ -62,10 +62,19 @@ public class AppDetailsOverlayItem extends AppDetailsItem<OverlayInfoHidden> {
     }
     
 
-    public boolean setEnabled(@NonNull IOverlayManager mgr, boolean enabled, int userId) {
-        return mgr.setEnabled(getPackageName(), enabled, userId);
+    public boolean setEnabled(@NonNull IOverlayManager mgr, boolean enabled) {
+        return mgr.setEnabled(getPackageName(), enabled, item.userId);
     }
 
+    public boolean setPriority(@NonNull IOverlayManager mgr, String newParentPackageName) {
+        return mgr.setPriority(getPackageName(),newParentPackageName, item.userId);
+    }
+    public boolean setHighestPriority(@NonNull IOverlayManager mgr) {
+        return mgr.setHighestPriority(item.packageName, item.userId);
+    }
+    public boolean setLowestPriority(@NonNull IOverlayManager mgr) {
+        return mgr.setLowestPriority(item.packageName, item.userId);
+    }
     public static String stateToString(@OverlayInfoHidden.State int state) {
         return OverlayInfoHidden.stateToString(state);
     }

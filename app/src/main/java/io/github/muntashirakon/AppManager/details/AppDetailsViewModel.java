@@ -145,6 +145,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private int mSortOrderAppOps = Prefs.AppDetailsPage.getAppOpsSortOrder();
     @AppDetailsFragment.SortOrder
     private int mSortOrderPermissions = Prefs.AppDetailsPage.getPermissionsSortOrder();
+    @AppDetailsFragment.SortOrder
+    private int mSortOrderOverlays = Prefs.AppDetailsPage.getOverlaysSortOrder();
     private String mSearchQuery;
     @AdvancedSearchView.SearchType
     private int mSearchType;
@@ -324,6 +326,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 mSortOrderPermissions = sortOrder;
                 Prefs.AppDetailsPage.setPermissionsSortOrder(sortOrder);
                 break;
+            case AppDetailsFragment.OVERLAYS:
+                mSortOrderOverlays = sortOrder;
+                Prefs.AppDetailsPage.setOverlaysSortOrder(sortOrder);
         }
         mExecutor.submit(() -> filterAndSortItemsInternal(property));
     }
@@ -342,6 +347,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 return mSortOrderAppOps;
             case AppDetailsFragment.USES_PERMISSIONS:
                 return mSortOrderPermissions;
+            case AppDetailsFragment.OVERLAYS:
+                return mSortOrderOverlays;
         }
         return AppDetailsFragment.SORT_BY_NAME;
     }
@@ -363,7 +370,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         mExecutor.submit(() -> filterAndSortItemsInternal(property));
     }
 
-    @SuppressLint("SwitchIntDef")
+    @SuppressLint({"SwitchIntDef", "NewApi"})
     @WorkerThread
     private void filterAndSortItemsInternal(@AppDetailsFragment.Property int property) {
         switch (property) {
@@ -444,6 +451,27 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     mPermissions.postValue(filterAndSortPermissions(mPermissionItems));
                 }
                 break;
+            case AppDetailsFragment.OVERLAYS: {
+                List<AppDetailsOverlayItem> appDetailsItems;
+                synchronized (mOverlays) {
+                    if (!TextUtils.isEmpty(mSearchQuery)) {
+                        appDetailsItems = AdvancedSearchView.matches(mSearchQuery, mOverlays.getValue(),
+                                (ChoiceGenerator<AppDetailsOverlayItem>) item -> lowercaseIfNotRegex(item.name,
+                                        mSearchType), mSearchType);
+                    } else appDetailsItems = mOverlays.getValue();
+                }
+                Collections.sort(appDetailsItems, (o1, o2) -> {
+                    switch (mSortOrderOverlays) {
+                        case AppDetailsFragment.SORT_BY_NAME:
+                            return o1.name.compareToIgnoreCase(o2.name);
+                        case AppDetailsFragment.SORT_BY_PRIORITY:
+                            return Integer.compare(o1.getPriority(), o2.getPriority());
+                    }
+                    return 0;
+                });
+                mOverlays.postValue(new ArrayList<>(appDetailsItems));
+                break;
+            }
             case AppDetailsFragment.APP_INFO:
             case AppDetailsFragment.CONFIGURATIONS:
             case AppDetailsFragment.FEATURES:

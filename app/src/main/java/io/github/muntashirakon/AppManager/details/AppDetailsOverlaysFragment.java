@@ -56,7 +56,7 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
 
     @Override
     public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-        menuInflater.inflate(R.menu.fragment_app_details_refresh_actions, menu);
+        menuInflater.inflate(R.menu.fragment_app_details_overlay_actions, menu);
     }
 
 
@@ -103,11 +103,27 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
     public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
         int id = menuItem.getItemId();
         if (id == R.id.action_refresh_details) {
-            if (viewModel == null) return false;
-            ProgressIndicatorCompat.setVisibility(progressIndicator, true);
-            viewModel.triggerPackageChange();
+            refreshDetails();
+        } else if (id == R.id.action_sort_by_name) {
+            setSortBy(SORT_BY_NAME);
+            menuItem.setChecked(true);
+        } else if (id == R.id.action_sort_by_priority) {
+            setSortBy(SORT_BY_PRIORITY);
+            menuItem.setChecked(true);
         } else return false;
         return true;
+    }
+
+    private void setSortBy(@SortOrder int sortBy) {
+        ProgressIndicatorCompat.setVisibility(progressIndicator, true);
+        if (viewModel == null) return;
+        viewModel.setSortOrder(sortBy, OVERLAYS);
+    }
+
+    private void refreshDetails() {
+        if (viewModel == null || overlayManager == null) return;
+        ProgressIndicatorCompat.setVisibility(progressIndicator, true);
+        viewModel.triggerPackageChange();
     }
 
     @Override
@@ -183,7 +199,7 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
                 holder.toggleSwitch.setClickable(true);
                 holder.toggleSwitch.setOnClickListener((v) -> ThreadUtils.postOnBackgroundThread(()-> {
                     try {
-                        if (overlayItem.setEnabled(overlayManager, !overlayItem.isEnabled(), Objects.requireNonNull(viewModel).getUserId())) {
+                        if (overlayItem.setEnabled(overlayManager, !overlayItem.isEnabled())) {
                             ThreadUtils.postOnMainThread(()-> notifyItemChanged(index));
                         } else throw new Exception("Error Changing Overlay State " + overlayItem);
                     } catch (Exception e) {
@@ -192,8 +208,7 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
                                 ? R.string.failed_to_enable_overlay
                                 : R.string.failed_to_disable_overlay));
                     }
-                }
-                ));
+                }));
             } else {
                 holder.toggleSwitch.setOnClickListener(null);
                 holder.toggleSwitch.setClickable(false);

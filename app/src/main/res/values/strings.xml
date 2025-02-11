@@ -1516,4 +1516,6 @@
     <string name="failed_to_enable_overlay">Failed to enable Overlay</string>
     <string name="overlay_sdk_version_to_low">SDK Version too low overlay\'s can\'t be load</string>
     <string name="no_overlays">No overlays</string>
+    <string name="sort_by_overlay_names">Sort by Overlay name</string>
+    <string name="sort_by_priority">Sort By Priority</string>
 </resources>
