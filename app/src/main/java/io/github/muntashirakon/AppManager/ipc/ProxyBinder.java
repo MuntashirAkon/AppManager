@@ -43,6 +43,21 @@ public class ProxyBinder implements IBinder {
             binder = ServiceManager.getService(serviceName);
             sServiceCache.put(serviceName, binder);
         }
+        if (binder==null && LocalServices.alive()) {
+            // Redirect to AMService.
+            // some services can't be called without certain permissions
+            // so we redirect to AMService who can make that call no mater which mode it's in.
+            // as 0, 1000, and 2000 all have access to the overlay service.
+            try {
+                binder = LocalServices.getAmService().getService(serviceName);
+            } catch (RemoteException e) {
+                throw new RuntimeException("Unable to load AMService while alive?", e);
+            }
+        }
+        if (binder==null) {
+            throw new UnsupportedOperationException("service name not recognised: "+serviceName);
+        }
+
         return new ProxyBinder(binder);
     }
 
