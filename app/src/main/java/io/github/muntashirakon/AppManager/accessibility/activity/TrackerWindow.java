@@ -62,7 +62,6 @@ public class TrackerWindow implements View.OnTouchListener {
     private boolean mPaused = false;
     private boolean mIconified = false;
     private boolean mViewAttached = false;
-    private boolean mDragging = false;
     @Nullable
     private Future<?> mClassHierarchyResult;
 
@@ -154,13 +153,11 @@ public class TrackerWindow implements View.OnTouchListener {
         Point point;
         int action = event.getAction();
         if (action == MotionEvent.ACTION_DOWN) {
-            mDragging = false;
             point = new Point((int) event.getRawX(), (int) event.getRawY());
             mPressPosition.set(point.x, point.y);
             mWindowPosition.set(mWindowLayoutParams.x, mWindowLayoutParams.y);
             return true;
         } else if (action == MotionEvent.ACTION_MOVE) {
-            mDragging = true;
             point = new Point((int) event.getRawX(), (int) event.getRawY());
             int delX = point.x - mPressPosition.x;
             int delY = point.y - mPressPosition.y;
@@ -169,10 +166,10 @@ public class TrackerWindow implements View.OnTouchListener {
             updateLayout();
             return true;
         }
-        if (!mDragging && v == mIconView && action == MotionEvent.ACTION_UP) {
+        if (v == mIconView && action == MotionEvent.ACTION_UP) {
             point = new Point((int) event.getRawX(), (int) event.getRawY());
-            int delX = point.x - mPressPosition.x;
-            int delY = point.y - mPressPosition.y;
+            int delX = Math.abs(point.x - mPressPosition.x);
+            int delY = Math.abs(point.y - mPressPosition.y);
             if (delX < 1 && delY < 1) {
                 v.performClick();
                 return true;
@@ -191,7 +188,8 @@ public class TrackerWindow implements View.OnTouchListener {
             CharSequence packageName = event.getPackageName();
             if (packageName != null && BuildConfig.APPLICATION_ID.contentEquals(packageName)) {
                 // On some devices, this window always gets the focus
-                if ("android.widget.EditText".contentEquals(event.getClassName())) {
+                CharSequence className = event.getClassName();
+                if (className != null && "android.widget.EditText".contentEquals(className)) {
                     // For some reason, only this class is focused
                     if (event.getSource() == null) {
                         // No class hierarchy. This is the intended event
