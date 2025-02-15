@@ -609,7 +609,7 @@
     <string name="share">اشتراک</string>
     <string name="set_custom_app_op">تنظیمات برنامه سفارشی</string>
     <string name="about_device">درباره دستگاه</string>
-    <string name="pref_about_device_msg">اطلاعات پایه مانند نسخه سیستم اندروید، پردازنده، گرافیک، حافظه رم، باتری و ...</string>
+    <string name="pref_about_device_msg">اطلاعات پایه مانند نسخه سیستم اندروید، پردازنده، گرافیک، حافظه رم، باتری و …</string>
     <string name="board_name">مادربورد</string>
     <string name="manufacturer">سازنده</string>
     <string name="gles_version">OpenGL ES نسخه</string>
