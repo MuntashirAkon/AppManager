@@ -12,6 +12,7 @@ import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.io.CipherInputStream;
 import org.bouncycastle.crypto.io.CipherOutputStream;
 import org.bouncycastle.crypto.modes.GCMBlockCipher;
+import org.bouncycastle.crypto.modes.GCMModeCipher;
 import org.bouncycastle.crypto.params.AEADParameters;
 import org.bouncycastle.crypto.params.KeyParameter;
 
@@ -130,7 +131,7 @@ public class AESCrypto implements Crypto {
     public void encrypt(@NonNull InputStream unencryptedStream, @NonNull OutputStream encryptedStream)
             throws IOException {
         // Init cipher
-        GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
+        GCMModeCipher cipher = GCMBlockCipher.newInstance(AESEngine.newInstance());
         cipher.init(true, getParams());
         // Convert unencrypted stream to encrypted stream
         try (OutputStream cipherOS = new CipherOutputStream(encryptedStream, cipher)) {
@@ -148,7 +149,7 @@ public class AESCrypto implements Crypto {
     public void decrypt(@NonNull InputStream encryptedStream, @NonNull OutputStream unencryptedStream)
             throws IOException {
         // Init cipher
-        GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
+        GCMModeCipher cipher = GCMBlockCipher.newInstance(AESEngine.newInstance());
         cipher.init(false, getParams());
         // Convert encrypted stream to unencrypted stream
         try (InputStream cipherIS = new CipherInputStream(encryptedStream, cipher)) {
@@ -165,7 +166,7 @@ public class AESCrypto implements Crypto {
             return;
         }
         // Init cipher
-        GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
+        GCMModeCipher cipher = GCMBlockCipher.newInstance(AESEngine.newInstance());
         cipher.init(forEncryption, getParams());
         // Get desired extension
         String ext = CryptoUtils.getExtension(mParentMode);

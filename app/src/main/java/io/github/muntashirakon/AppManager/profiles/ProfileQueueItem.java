@@ -102,7 +102,8 @@ public class ProfileQueueItem implements Parcelable, IJsonSerializer {
             try (InputStream is = new ByteArrayInputStream(profile.toString().getBytes(StandardCharsets.UTF_8))) {
                 profilePath = FileCache.getGlobalFileCache().getCachedFile(is, ProfileManager.PROFILE_EXT);
             } catch (IOException e) {
-                throw new JSONException(e);
+                //noinspection UnnecessaryInitCause
+                throw (JSONException) new JSONException(e.getMessage()).initCause(e);
             }
         }
         mTempProfilePath = profilePath != null ? Paths.get(profilePath) : null;
@@ -120,7 +121,8 @@ public class ProfileQueueItem implements Parcelable, IJsonSerializer {
             AppsProfile profile = AppsProfile.fromPath(ProfileManager.findProfilePathById(mProfileId));
             jsonObject.put("profile", profile.serializeToJson());
         } catch (IOException e) {
-            throw new JSONException(e);
+            //noinspection UnnecessaryInitCause
+            throw (JSONException) new JSONException(e.getMessage()).initCause(e);
         }
         return jsonObject;
     }

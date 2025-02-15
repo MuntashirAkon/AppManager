@@ -132,12 +132,12 @@ public class AppOpsManagerCompat {
      * Control whether an application is allowed to run in the background.
      */
     @RequiresApi(Build.VERSION_CODES.N)
-    public static final int OP_RUN_IN_BACKGROUND = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? AppOpsManagerHidden.OP_RUN_IN_BACKGROUND : 0;
+    public static final int OP_RUN_IN_BACKGROUND = AppOpsManagerHidden.OP_RUN_IN_BACKGROUND;
     /**
      * Run jobs when in background
      */
     @RequiresApi(Build.VERSION_CODES.P)
-    public static final int OP_RUN_ANY_IN_BACKGROUND = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? AppOpsManagerHidden.OP_RUN_ANY_IN_BACKGROUND : 0;
+    public static final int OP_RUN_ANY_IN_BACKGROUND = AppOpsManagerHidden.OP_RUN_ANY_IN_BACKGROUND;
     public static final int _NUM_OP = AppOpsManagerHidden._NUM_OP;
     /**
      * Mapping from a permission to the corresponding app op.

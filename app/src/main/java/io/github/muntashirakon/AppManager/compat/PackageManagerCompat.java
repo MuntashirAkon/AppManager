@@ -452,7 +452,7 @@ public final class PackageManagerCompat {
             getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, null, null, (SuspendDialogInfo) null, callingPackage, userId);
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.P) {
             getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, null, null, (String) null, callingPackage, userId);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        } else {
             getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, userId);
         }
         if (userId != UserHandleHidden.myUserId()) {

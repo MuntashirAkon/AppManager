@@ -148,7 +148,7 @@ public class InstallerPreferences extends PreferenceFragment {
                         .setMessage(R.string.pref_sign_apk_error_signing_key_not_added)
                         .enableAnchors()
                         .setPositiveButton(R.string.add, (dialog, which, isChecked) -> {
-                            Intent intent = new Intent()
+                            Intent intent = new Intent(Intent.ACTION_VIEW)
                                     .setData(Uri.parse("app-manager://settings/apk_signing_prefs/signing_keys"));
                             startActivity(intent);
                         })
