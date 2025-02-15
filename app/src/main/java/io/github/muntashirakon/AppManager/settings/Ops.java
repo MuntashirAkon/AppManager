@@ -246,21 +246,23 @@ public class Ops {
             autoDetectRootSystemOrAdbAndPersist(context);
             return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
         }
-        if (!force && isAMServiceUpAndRunning(context, mode)) {
-            // An instance of AMService is already running
-            return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
-        }
         if (MODE_NO_ROOT.equals(mode)) {
             sDirectRoot = false;
             sIsAdb = sIsSystem = sIsRoot = false;
             // Also, stop existing services if any
-            ExUtils.exceptionAsIgnored(() -> {
-                if (LocalServer.alive(context)) {
-                    LocalServer.getInstance().closeBgServer();
-                }
-            });
-            LocalServices.stopServices();
+            if (LocalServices.alive()) {
+                LocalServices.stopServices();
+            }
+            if (LocalServer.alive(context)) {
+                // We don't care about its results
+                ThreadUtils.postOnBackgroundThread(() -> ExUtils.exceptionAsIgnored(() ->
+                        LocalServer.getInstance().closeBgServer()));
+            }
             return STATUS_SUCCESS;
+        }
+        if (!force && isAMServiceUpAndRunning(context, mode)) {
+            // An instance of AMService is already running
+            return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
         }
         try {
             switch (mode) {
