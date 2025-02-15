@@ -16,6 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.collection.ArrayMap;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.FileDescriptor;
 import java.util.Collections;
 import java.util.Map;
@@ -42,15 +44,8 @@ public class ProxyBinder implements IBinder {
     public static IBinder getService(String serviceName) {
         IBinder binder = sServiceCache.get(serviceName);
         if (binder == null) {
-            if (LocalServices.alive()) {
-                binder = getServiceRemote(serviceName);
-            } else {
-                binder = ServiceManager.getService(serviceName);
-            }
+            binder = getServiceInternal(serviceName);
             sServiceCache.put(serviceName, binder);
-        }
-        if (binder == null) {
-            throw new UnsupportedOperationException("Service couldn't be loaded: "+serviceName);
         }
         return new ProxyBinder(binder);
     }
@@ -62,14 +57,21 @@ public class ProxyBinder implements IBinder {
      * @param serviceName service to be loaded
      * @return binder to that service
      */
-    @Nullable
-    public static IBinder getServiceRemote(String serviceName) {
-        try {
-            return LocalServices.getAmService().getService(serviceName);
-        } catch (RemoteException e) {
-            Log.w(TAG, e);
+    @NotNull
+    private static IBinder getServiceInternal(String serviceName) {
+        IBinder binder = ServiceManager.getService(serviceName);
+        if (LocalServices.alive() && binder==null) {
+            try {
+                binder = LocalServices.getAmService().getService(serviceName);
+            } catch (RemoteException e) {
+                Log.e(TAG, e);
+                throw new RuntimeException("Service couldn't be loaded: "+serviceName, e);
+            }
         }
-        return null;
+        if (binder == null) {
+            throw new RuntimeException("Service couldn't be found");
+        }
+        return binder;
     }
 
     @NonNull
