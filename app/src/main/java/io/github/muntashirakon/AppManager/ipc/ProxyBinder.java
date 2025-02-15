@@ -22,11 +22,13 @@ import java.util.Map;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.compat.BinderCompat;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.server.common.IRootServiceManager;
 import io.github.muntashirakon.compat.os.ParcelCompat2;
 
 // Copyright 2020 Rikka
 public class ProxyBinder implements IBinder {
+    private static final String TAG = ProxyBinder.class.getSimpleName();
     public static final int PROXY_BINDER_TRANSACTION = 2;
     /**
      * IBinder protocol transaction code: execute a shell command.
@@ -40,25 +42,34 @@ public class ProxyBinder implements IBinder {
     public static IBinder getService(String serviceName) {
         IBinder binder = sServiceCache.get(serviceName);
         if (binder == null) {
-            binder = ServiceManager.getService(serviceName);
+            if (LocalServices.alive()) {
+                binder = getServiceRemote(serviceName);
+            } else {
+                binder = ServiceManager.getService(serviceName);
+            }
             sServiceCache.put(serviceName, binder);
         }
-        if (binder==null && LocalServices.alive()) {
-            // Redirect to AMService.
-            // some services can't be called without certain permissions
-            // so we redirect to AMService who can make that call no mater which mode it's in.
-            // as 0, 1000, and 2000 all have access to the overlay service.
-            try {
-                binder = LocalServices.getAmService().getService(serviceName);
-            } catch (RemoteException e) {
-                throw new RuntimeException("Unable to load AMService while alive?", e);
-            }
+        if (binder == null) {
+            throw new UnsupportedOperationException("Service couldn't be loaded: "+serviceName);
         }
-        if (binder==null) {
-            throw new UnsupportedOperationException("service name not recognised: "+serviceName);
-        }
-
         return new ProxyBinder(binder);
+    }
+
+    /**
+     * Some services can't be called without certain permissions
+     * so we redirect to AMService who can make that call no mater which mode it's in.
+     * as 0, 1000, and 2000 all have access to the overlay service.
+     * @param serviceName service to be loaded
+     * @return binder to that service
+     */
+    @Nullable
+    public static IBinder getServiceRemote(String serviceName) {
+        try {
+            return LocalServices.getAmService().getService(serviceName);
+        } catch (RemoteException e) {
+            Log.w(TAG, e);
+        }
+        return null;
     }
 
     @NonNull

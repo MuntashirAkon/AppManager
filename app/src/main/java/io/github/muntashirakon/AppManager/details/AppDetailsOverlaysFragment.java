@@ -1,7 +1,5 @@
 package io.github.muntashirakon.AppManager.details;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.om.IOverlayManager;
 import android.graphics.Color;
 import android.os.Build;

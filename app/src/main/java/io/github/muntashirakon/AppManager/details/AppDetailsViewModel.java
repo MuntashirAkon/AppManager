@@ -1967,8 +1967,15 @@ public class AppDetailsViewModel extends AndroidViewModel {
             mOverlays.postValue(new ArrayList<>());
             return;
         }
-        final List<OverlayInfo> overlays = OverlayManagerCompact.getOverlayManager()
-                .getAllOverlays(mUserId).get(mPackageName);
+        final List<OverlayInfo> overlays;
+        try {
+            overlays = OverlayManagerCompact.getOverlayManager()
+                    .getAllOverlays(mUserId).get(mPackageName);
+        } catch (RemoteException e) {
+            Log.w(TAG, "Unable to load overlays", e);
+            mOverlays.postValue(new ArrayList<>());
+            return;
+        }
         if (overlays == null) {
             mOverlays.postValue(new ArrayList<>());
             return;
