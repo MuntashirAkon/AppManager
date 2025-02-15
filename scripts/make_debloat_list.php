@@ -26,9 +26,12 @@ foreach (list_files(REPO_DIR) as $filename) {
             fprintf(STDERR, "Removing unsafe item {$item['id']}\n");
             continue;
         }
+        if (isset($item['suppress'])) {
+            unset($item['suppress']);
+        }
         $item['type'] = $type;
         $debloat_list[] = $item;
     }
 }
 
-file_put_contents($target_file, json_encode($debloat_list, JSON_UNESCAPED_UNICODE));
+file_put_contents($target_file, json_encode($debloat_list, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
