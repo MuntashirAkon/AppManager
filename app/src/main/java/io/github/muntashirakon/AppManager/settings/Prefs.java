@@ -88,6 +88,15 @@ public final class Prefs {
         public static void setPermissionsSortOrder(@AppDetailsFragment.SortOrder int sortOrder) {
             AppPref.set(AppPref.PrefKey.PREF_PERMISSIONS_SORT_ORDER_INT, sortOrder);
         }
+
+        @AppDetailsFragment.SortOrder
+        public static int getOverlaysSortOrder() {
+            return AppPref.getInt(AppPref.PrefKey.PREF_OVERLAYS_SORT_ORDER_INT);
+        }
+
+        public static void setOverlaysSortOrder(@AppDetailsFragment.SortOrder int sortOrder) {
+            AppPref.set(AppPref.PrefKey.PREF_OVERLAYS_SORT_ORDER_INT, sortOrder);
+        }
     }
 
     public static final class Appearance {
