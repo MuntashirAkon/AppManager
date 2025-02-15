@@ -814,7 +814,7 @@
     <string name="app_signing_signatures">Sygnatury</string>
     <string name="soft_input">Tryb delikatnego wprowadzenia</string>
     <string name="authority">Autorytet</string>
-    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://x.com/AppManagerNews">Twitter/X</a> • <a href="https://floss.social/@appmanager">Mastodon</a></string>
     <string name="community">Społeczność</string>
     <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="subject">Temat</string>
@@ -1494,7 +1494,7 @@
     <string name="status_remote_services_inactive">Usługi zdalne są nieaktywne</string>
     <string name="status_connecting">Łączenie…</string>
     <string name="status_not_connected_via_mode">Nie udało się połączyć przez %s</string>
-    <string name="adb_pairing_instruction">Przejdź do opcji programisty, aby włączyć debugowanie bezprzewodowe i wygenerować kod parowania.</string>
+    <string name="adb_pairing_instruction">Przejdź do opcji programisty, aby włączyć debugowanie bezprzewodowe i wygenerować kod parowania.Kliknij <b>Ręcznie</b>, jeśli masz otwarte już opcje programisty.</string>
     <string name="adb_pairing_pairing_in_progress">Parowanie…</string>
     <string name="adb_pairing_retry_pairing">Ponów</string>
     <string name="netpolicy_reject_metered_data">Odrzucaj dane w sieciach z pomiarem</string>
@@ -1532,4 +1532,24 @@
     <string name="apk_source">Źródło APK</string>
     <string name="backup_cache">Pamięć podręczna</string>
     <string name="activity_name">Nazwa aktywności</string>
+    <string name="available_memory">Dostępne: %s</string>
+    <string name="action_manual">Ręcznie</string>
+    <string name="vulkan_version">Wersja Vulkan</string>
+    <string name="battery_technology">Technologia</string>
+    <string name="battery_health">Zdrowie</string>
+    <string name="verified_boot">Zweryfikowany rozruch</string>
+    <string name="android_verified_bootloader_version">Wersja AVB</string>
+    <string name="op_history">Historia</string>
+    <string name="no_history">Brak historii</string>
+    <string name="title_confirm_execution">Potwierdź wykonanie</string>
+    <string name="clear_history">Wyczyść historię</string>
+    <string name="favorites">Ulubione</string>
+    <string name="add_to_favorites">Dodaj do ulubionych</string>
+    <string name="item_remove">Usuń</string>
+    <string name="item_edit">Edytuj</string>
+    <string name="remove_filename">Usuń %s</string>
+    <string name="advanced_suspend_app">Zaawansowane wstrzymanie</string>
+    <string name="advanced_suspend_app_description">Wymusza ona zatrzymanie i zawieszenie aplikacji, aby upewnić się, że nie działa ona w tle. Ta metoda powinna być preferowana w stosunku do zwykłej metody <b>wstrzymania</b>.</string>
+    <string name="freeze_prefer_per_app_option">Preferowana opcja dla każdej aplikacji</string>
+    <string name="remember_option_for_this_app">Zapamiętaj dla tej aplikacji</string>
 </resources>
