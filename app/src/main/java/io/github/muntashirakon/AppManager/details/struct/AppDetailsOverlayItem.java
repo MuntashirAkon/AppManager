@@ -6,6 +6,7 @@ import android.content.om.OverlayInfo;
 import android.content.om.OverlayInfoHidden;
 import android.os.Build;
 import android.os.Parcel;
+import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -57,22 +58,23 @@ public class AppDetailsOverlayItem extends AppDetailsItem<OverlayInfoHidden> {
     public int getState() {
         return item.state;
     }
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public int getPriority() {
         return item.priority;
     }
     
 
-    public boolean setEnabled(@NonNull IOverlayManager mgr, boolean enabled) {
+    public boolean setEnabled(@NonNull IOverlayManager mgr, boolean enabled) throws RemoteException {
         return mgr.setEnabled(getPackageName(), enabled, item.userId);
     }
 
-    public boolean setPriority(@NonNull IOverlayManager mgr, String newParentPackageName) {
+    public boolean setPriority(@NonNull IOverlayManager mgr, String newParentPackageName) throws RemoteException {
         return mgr.setPriority(getPackageName(),newParentPackageName, item.userId);
     }
-    public boolean setHighestPriority(@NonNull IOverlayManager mgr) {
+    public boolean setHighestPriority(@NonNull IOverlayManager mgr) throws RemoteException {
         return mgr.setHighestPriority(item.packageName, item.userId);
     }
-    public boolean setLowestPriority(@NonNull IOverlayManager mgr) {
+    public boolean setLowestPriority(@NonNull IOverlayManager mgr) throws RemoteException {
         return mgr.setLowestPriority(item.packageName, item.userId);
     }
     public static String stateToString(@OverlayInfoHidden.State int state) {

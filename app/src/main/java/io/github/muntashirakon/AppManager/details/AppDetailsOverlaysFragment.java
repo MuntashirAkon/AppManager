@@ -1,5 +1,7 @@
 package io.github.muntashirakon.AppManager.details;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.om.IOverlayManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -23,7 +25,6 @@ import com.google.android.material.materialswitch.MaterialSwitch;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.OverlayManagerCompact;
@@ -172,8 +173,8 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
             );
         }
 
-        @RequiresApi(api = Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
         @Override
+        @RequiresApi(Build.VERSION_CODES.O)
         public void onBindViewHolder(@NonNull ViewHolder holder, int index) {
             AppDetailsOverlayItem overlayItem;
             synchronized (mAdapterList) {
@@ -193,7 +194,12 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
             holder.toggleSwitch.setEnabled(overlayItem.isMutable());
             holder.toggleSwitch.setClickable(true);
             holder.toggleSwitch.setChecked(overlayItem.isEnabled());
-            holder.overlayState.setText(getString(R.string.overlay_state, overlayItem.getReadableState(), overlayItem.getPriority()));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                holder.overlayState.setText(getString(R.string.overlay_state_and_priority, overlayItem.getReadableState(), overlayItem.getPriority()));
+            } else {
+                holder.overlayState.setText(getString(R.string.overlay_state, overlayItem.getReadableState()));
+            }
             holder.itemView.setClickable(false);
             if (overlayItem.isMutable()) {
                 holder.toggleSwitch.setClickable(true);

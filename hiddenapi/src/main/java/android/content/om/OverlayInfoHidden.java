@@ -2,6 +2,7 @@
 
 package android.content.om;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 
 import androidx.annotation.IntDef;
@@ -14,8 +15,6 @@ import java.lang.annotation.RetentionPolicy;
 
 import dev.rikka.tools.refine.RefineAs;
 import misc.utils.HiddenUtil;
-
-// Copied From Aosp: https://cs.android.com/android/_/android/platform/frameworks/base/+/1d5e43b41c90b7bc059c5fbb5ea343f94dddd09e:core/java/android/content/om/OverlayInfo.java
 
 /**
  * An immutable information about an overlay.
@@ -30,9 +29,10 @@ import misc.utils.HiddenUtil;
  *
  * @see OverlayManager#getOverlayInfosForTarget(String)
  */
-@RequiresApi(Build.VERSION_CODES.O)
+@RequiresApi(api = Build.VERSION_CODES.O)
 @RefineAs(OverlayInfo.class)
 public final class OverlayInfoHidden {
+    @SuppressLint("InlinedApi")
     @IntDef(value = {
             STATE_UNKNOWN,
             STATE_MISSING_TARGET,
@@ -96,14 +96,15 @@ public final class OverlayInfoHidden {
      * In all other cases, the process and therefore Activity is killed, so the state loop is
      * irrelevant.
      */
-    @Deprecated
+    @RequiresApi(Build.VERSION_CODES.P)
+    @Deprecated//SinceApi(api = Build.VERSION_CODES.Q)
     public static final int STATE_TARGET_IS_BEING_REPLACED = 4;
-
     /**
      * The overlay package is currently being upgraded or downgraded; the state
      * will change once the package installation has finished.
      * 
      */
+    @RequiresApi(Build.VERSION_CODES.P)
     public static final int STATE_OVERLAY_IS_BEING_REPLACED = 5;
 
     /**
@@ -112,7 +113,8 @@ public final class OverlayInfoHidden {
      * its target is uninstalled.
      * 
      */
-    @Deprecated
+    @RequiresApi(Build.VERSION_CODES.P)
+    @Deprecated//SinceApi(api = Build.VERSION_CODES.R)
     public static final int STATE_ENABLED_IMMUTABLE = 6;
 
     /**
@@ -121,6 +123,7 @@ public final class OverlayInfoHidden {
      * differ in resources/policy from the /data variant that was uninstalled.
      * 
      */
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     public static final int STATE_SYSTEM_UPDATE_UNINSTALL = 7;
 
     /**
@@ -130,6 +133,7 @@ public final class OverlayInfoHidden {
      *
      * 
      */
+    @RequiresApi(Build.VERSION_CODES.P)
     public static final String CATEGORY_THEME = "android.theme";
 
     /**
@@ -138,7 +142,7 @@ public final class OverlayInfoHidden {
      * 
      */
     @NonNull
-    public final String packageName;
+    public final String packageName = HiddenUtil.throwUOE();
 
     /**
      * The unique name within the package of the overlay.
@@ -147,14 +151,14 @@ public final class OverlayInfoHidden {
      */
     @Nullable
     @RequiresApi(Build.VERSION_CODES.S)
-    public final String overlayName;
+    public final String overlayName = HiddenUtil.throwUOE();
 
     /**
      * Package name of the target package
      * 
      */
     @NonNull
-    public final String targetPackageName;
+    public final String targetPackageName = HiddenUtil.throwUOE();
 
     /**
      * Name of the target overlayable declaration.
@@ -163,7 +167,7 @@ public final class OverlayInfoHidden {
      */
     @RequiresApi(Build.VERSION_CODES.Q)
     @Nullable
-    public final String targetOverlayableName;
+    public final String targetOverlayableName = HiddenUtil.throwUOE();
 
     /**
      * Category of the overlay package
@@ -172,31 +176,32 @@ public final class OverlayInfoHidden {
      */
     @Nullable
     @RequiresApi(Build.VERSION_CODES.P)
-    public final String category;
+    public final String category = HiddenUtil.throwUOE();
 
     /**
      * Full path to the base APK for this overlay package
      * 
      */
     @NonNull
-    public final String baseCodePath;
+    public final String baseCodePath = HiddenUtil.throwUOE();
 
     /**
      * The state of this OverlayInfo as defined by the STATE_* constants in this class.
      * 
      */
-    public final @State int state;
+    public final @State int state = HiddenUtil.throwUOE();
 
     /**
      * User handle for which this overlay applies
      */
-    public final int userId;
+    public final int userId = HiddenUtil.throwUOE();
 
     /**
      * Priority as configured by {@link com.android.internal.content.om.OverlayConfig}.
      * Not intended to be exposed to 3rd party.
      */
-    public final int priority;
+    @RequiresApi(Build.VERSION_CODES.P)
+    public final int priority = HiddenUtil.throwUOE();
 
     /**
      * isMutable as configured by {@link com.android.internal.content.om.OverlayConfig}.
@@ -204,31 +209,14 @@ public final class OverlayInfoHidden {
      * exposed to 3rd party.
      */
     @RequiresApi(Build.VERSION_CODES.Q)
-    public final boolean isMutable;
+    public final boolean isMutable = HiddenUtil.throwUOE();
     /**
      * isFabricated if this Overlay was made by the shell/ some SystemUI "theme" loaders, also
      * this value is not updated nor tracked outside of the real manager so this value can't be trusted.
      */
     @RequiresApi(Build.VERSION_CODES.S)
-    public final boolean isFabricated;
+    public final boolean isFabricated = HiddenUtil.throwUOE();
 
-    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-    public OverlayInfoHidden(@NonNull String packageName, @Nullable String overlayName,
-                             @NonNull String targetPackageName, @Nullable String targetOverlayableName,
-                             @Nullable String category, @NonNull String baseCodePath, int state, int userId,
-                             int priority, boolean isMutable, boolean isFabricated) {
-        this.packageName = packageName;
-        this.overlayName = overlayName;
-        this.targetPackageName = targetPackageName;
-        this.targetOverlayableName = targetOverlayableName;
-        this.category = category;
-        this.baseCodePath = baseCodePath;
-        this.state = state;
-        this.userId = userId;
-        this.priority = priority;
-        this.isMutable = isMutable;
-        this.isFabricated = isFabricated;
-    }
 
     /**
      * Return true if this overlay is enabled, i.e. should be used to overlay

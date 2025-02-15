@@ -269,5 +269,4 @@
         <item>trackers</item>
         <item>version_name</item>
     </string-array>
-    <string name="overlays">Overlays</string>
 </resources>

@@ -1509,13 +1509,16 @@
     <string name="remember_option_for_this_app">Remember for this app</string>
     <string name="no_overlay_permission">No required overlay permission</string>
     <string name="help_overlays_tab">Help with overlays tab</string>
-    <string name="overlay_state">State: %s | Priority: %o</string>
+    <string name="overlay_state_and_priority">State: %s | Priority: %o</string>
+    <string name="overlay_state">State: %s</string>
     <string name="overlay_category">Category: %s</string>
     <string name="overlay_target">Target: %s</string>
     <string name="failed_to_disable_overlay">Failed to disable Overlay</string>
     <string name="failed_to_enable_overlay">Failed to enable Overlay</string>
-    <string name="overlay_sdk_version_to_low">SDK Version too low overlay\'s can\'t be load</string>
+    <string name="overlay_sdk_version_to_low">SDK Version too low overlay\'s can\'t be loaded</string>
     <string name="no_overlays">No overlays</string>
-    <string name="sort_by_overlay_names">Sort by Overlay name</string>
-    <string name="sort_by_priority">Sort By Priority</string>
+    <string name="sort_by_overlay_names">Overlay name</string>
+    <string name="sort_by_priority">Priority</string>
+    <string name="overlays">Overlays</string>
+
 </resources>
