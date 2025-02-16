@@ -955,7 +955,7 @@
     <string name="wireless_debugging">无线调试</string>
     <string name="unknown_net_policy">未知的 netpolicy (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">无法防止 %1$s 在后台运行</string>
-    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://x.com/AppManagerNews">Twitter/X</a>• <a href="https://floss.social/@appmanager">Mastodon</a></string>
     <string name="community">社区</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="other">无法导入 %1$d 个备份</item>
@@ -1386,7 +1386,7 @@
     <string name="status_connecting_via_mode">正在通过%s连接</string>
     <string name="status_connected_via_mode">已通过%s连接</string>
     <string name="status_not_connected_via_mode">无法通过%s连接</string>
-    <string name="adb_pairing_instruction">请转到开发者选项以启用无线调试并生成配对码。</string>
+    <string name="adb_pairing_instruction">请转到开发者选项以启用无线调试并生成配对码。如果已经打开了开发者选项，请单击 <b>手册</b>。</string>
     <string name="adb_pairing_searching_for_port">搜索中…</string>
     <string name="adb_pairing_stop_searching">停止</string>
     <string name="adb_pairing_input_pairing_code">配对码</string>
@@ -1406,4 +1406,24 @@
     <string name="tag_sensors_disabled">已禁用传感器</string>
     <string name="pref_use_system_font_msg">使用系统默认字体而非 material 字体。<font fgcolor="#ff0000">这是实验性功能。</font></string>
     <string name="activity_name">Activity 名称</string>
+    <string name="available_memory">可用内存：%s</string>
+    <string name="action_manual">手动</string>
+    <string name="vulkan_version">Vulkan 版本</string>
+    <string name="battery_technology">技术</string>
+    <string name="battery_health">健康度</string>
+    <string name="verified_boot">已验证的启动</string>
+    <string name="android_verified_bootloader_version">AVB 版本</string>
+    <string name="op_history">历史记录</string>
+    <string name="no_history">无记录</string>
+    <string name="title_confirm_execution">确认执行</string>
+    <string name="clear_history">清除记录</string>
+    <string name="favorites">收藏</string>
+    <string name="add_to_favorites">添加到收藏</string>
+    <string name="item_remove">删除</string>
+    <string name="item_edit">编辑</string>
+    <string name="remove_filename">删除 %s</string>
+    <string name="advanced_suspend_app">高级暂停</string>
+    <string name="advanced_suspend_app_description">它强制停止并暂停应用确保应用不在后台运行。此方法的优先程度应高于常规的 <b>暂停</b>方法。</string>
+    <string name="freeze_prefer_per_app_option">优先考虑不同应用不同选项</string>
+    <string name="remember_option_for_this_app">记住此应用的选项</string>
 </resources>
