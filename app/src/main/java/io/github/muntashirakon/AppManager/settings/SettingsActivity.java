@@ -29,13 +29,11 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.self.SelfUriManager;
 import io.github.muntashirakon.util.UiUtils;
 
 public class SettingsActivity extends BaseActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     public static final String TAG = SettingsActivity.class.getSimpleName();
-
-    private static final String SCHEME = "app-manager";
-    private static final String HOST = "settings";
 
     private static final String SAVED_KEYS = "saved_keys";
 
@@ -43,7 +41,7 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
     public static Intent getIntent(@NonNull Context context, @Nullable String... paths) {
         Intent intent = new Intent(context, SettingsActivity.class);
         if (paths != null) {
-            intent.setData(SettingsActivity.getSettingUri(paths));
+            intent.setData(getSettingUri(paths));
         }
         return intent;
     }
@@ -51,8 +49,8 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
     @NonNull
     private static Uri getSettingUri(@NonNull String... pathSegments) {
         Uri.Builder builder = new Uri.Builder()
-                .scheme(SCHEME)
-                .authority(HOST);
+                .scheme(SelfUriManager.APP_MANAGER_SCHEME)
+                .authority(SelfUriManager.SETTINGS_HOST);
         for (String pathSegment : pathSegments) {
             builder.appendPath(pathSegment);
         }
@@ -233,7 +231,8 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
 
     private boolean setKeysFromIntent(@NonNull Intent intent) {
         Uri uri = intent.getData();
-        if (uri != null && SCHEME.equals(uri.getScheme()) && HOST.equals(uri.getHost()) && uri.getPath() != null) {
+        if (uri != null && SelfUriManager.APP_MANAGER_SCHEME.equals(uri.getScheme())
+                && SelfUriManager.SETTINGS_HOST.equals(uri.getHost()) && uri.getPath() != null) {
             mKeys = Objects.requireNonNull(uri.getPathSegments());
             return true;
         }
