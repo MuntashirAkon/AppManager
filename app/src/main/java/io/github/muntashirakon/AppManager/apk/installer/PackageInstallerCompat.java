@@ -885,7 +885,7 @@ public final class PackageInstallerCompat {
     private static int getInstallFlags(@UserIdInt int userId) {
         int flags = INSTALL_ALLOW_TEST | INSTALL_REPLACE_EXISTING;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            flags |= INSTALL_ALLOW_DOWNGRADE_API29;
+            flags |= INSTALL_REQUEST_DOWNGRADE | INSTALL_ALLOW_DOWNGRADE_API29;
         } else flags |= INSTALL_ALLOW_DOWNGRADE;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             flags |= INSTALL_BYPASS_LOW_TARGET_SDK_BLOCK;
