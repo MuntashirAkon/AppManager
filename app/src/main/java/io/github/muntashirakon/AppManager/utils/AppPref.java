@@ -123,6 +123,7 @@ public class AppPref {
         PREF_OPEN_PGP_PACKAGE_STR,
         PREF_OPEN_PGP_USER_ID_STR,
         PREF_PERMISSIONS_SORT_ORDER_INT,
+        PREF_OVERLAYS_SORT_ORDER_INT,
 
         PREF_RUNNING_APPS_FILTER_FLAGS_INT,
         PREF_RUNNING_APPS_SORT_ORDER_INT,
@@ -139,8 +140,7 @@ public class AppPref {
         PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL,
 
         PREF_USE_SYSTEM_FONT_BOOL,
-        PREF_ZIP_ALIGN_BOOL,
-        ;
+        PREF_ZIP_ALIGN_BOOL;
 
         private static final String[] sKeys = new String[values().length];
         @Type
@@ -420,6 +420,8 @@ public class AppPref {
             case PREF_COMPONENTS_SORT_ORDER_INT:
             case PREF_PERMISSIONS_SORT_ORDER_INT:
                 return AppDetailsFragment.SORT_BY_NAME;
+            case PREF_OVERLAYS_SORT_ORDER_INT:
+                return AppDetailsFragment.SORT_BY_PRIORITY;
             case PREF_RUNNING_APPS_SORT_ORDER_INT:
                 return RunningAppsActivity.SORT_BY_PID;
             case PREF_RUNNING_APPS_FILTER_FLAGS_INT:
