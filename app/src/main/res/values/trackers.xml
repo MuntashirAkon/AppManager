@@ -3,18 +3,36 @@
 <resources>
     <string-array name="tracker_signatures">
         <item>com.threesixtydialog.sdk.</item>
+        <item>com.geopla.</item>
+        <item>com.threebitter.sdk.</item>
+        <item>com.m7.imkfsdk.</item>
+        <item>com.moor.imkf.</item>
         <item>com.abtasty</item>
+        <item>org.acra.</item>
+        <item>ch.acra.</item>
         <item>com.acrcloud</item>
         <item>com.adxcorp.ads</item>
         <item>com.adxcorp.nativead</item>
         <item>com.mocoplex.adlib.</item>
+        <item>com.adop.sdk.</item>
+        <item>com.admanmedia.</item>
+        <item>com.ljoy.chatbot.</item>
+        <item>com.aihelp.alice.</item>
         <item>com.amoad.</item>
+        <item>com.apicloud.</item>
+        <item>com.apm.insight</item>
         <item>com.atinternet.</item>
+        <item>com.amazonaws.metrics.</item>
+        <item>com.amazonaws.util.AWSRequestMetrics.</item>
         <item>com.aarki</item>
         <item>com.facebook.accountkit</item>
+        <item>com.faendir.acra.</item>
+        <item>com.actmobile</item>
         <item>me.actv8</item>
         <item>com.acuant.acuantcamera</item>
         <item>com.socdm.d.adgeneration.</item>
+        <item>com.ad2iction.</item>
+        <item>com.a4gpublisher.</item>
         <item>com.ad4screen.sdk</item>
         <item>com.adadapted.android.sdk.</item>
         <item>com.purplebrain.adbuddiz.sdk.</item>
@@ -22,19 +40,26 @@
         <item>com.jirbo.adcolony.</item>
         <item>com.noqoush.adfalcon.android.sdk</item>
         <item>com.kakao.adfit.</item>
-        <item>com.adform.sdk.</item>
+        <item>mobi.mclick.ad.</item>
         <item>com.adgatemedia.</item>
         <item>com.adgem.android.</item>
         <item>com.adlocus.</item>
         <item>com.admarvel.</item>
         <item>com.admuing.danmaku.</item>
+        <item>com.adtech.adtechmobile</item>
+        <item>com.adtheorent.</item>
         <item>com.aiming.mdt.</item>
         <item>com.adtiming.</item>
         <item>com.adtrial.sdk.</item>
+        <item>com.kuaiyou.loader.</item>
+        <item>com.adwhirl.</item>
         <item>com.igaworks.adbrix</item>
         <item>com.adcash.mobileads.</item>
         <item>com.adcenix.</item>
+        <item>com.adchina.android</item>
         <item>com.intentsoftware.addapptr.</item>
+        <item>com.adflake</item>
+        <item>com.adform.sdk.</item>
         <item>jp.tjkapp.adfurikunsdk.</item>
         <item>com.glossomads.sdk.</item>
         <item>com.adincube.sdk.</item>
@@ -51,11 +76,37 @@
         <item>com.adobe.marketing.mobile</item>
         <item>com.adotmob</item>
         <item>.adswizz.</item>
+        <item>com.adscendmedia.sdk.</item>
+        <item>.AdscendFiles.AdscendOffersActivity</item>
+        <item>com.advangelists.</item>
         <item>com.aerserv.sdk.</item>
+        <item>jp.co.agoop.</item>
+        <item>io.agora.rtc.</item>
+        <item>io.agora.utils.</item>
+        <item>com.aitype.android</item>
+        <item>com.holly.marge</item>
+        <item>com.bear.data</item>
+        <item>com.mb.num</item>
+        <item>io.airbridge.</item>
         <item>com.airpush.</item>
         <item>com.akamai.android.sdk.AkaMap</item>
+        <item>com.anythink.</item>
+        <item>com.alxad.</item>
+        <item>anythink.</item>
+        <item>com.alibaba.sdk.android.mns</item>
+        <item>com.alibaba.sdk.android.httpdns</item>
+        <item>com.ta.utdid2</item>
+        <item>com.alibaba.analytics.</item>
+        <item>com.aliexpress.module.imsdk.</item>
+        <item>com.aliexpress.module.traffic.DDLAccsService</item>
+        <item>com.aliexpress.module.ugc.adapter.powermsg.PowermsgAccsReceiveService</item>
+        <item>com.aliexpress.sky.user.service.SkyAccsService</item>
+        <item>com.taobao.artc.accs.</item>
+        <item>com.taobao.orange.accssupport.</item>
+        <item>com.taobao.sophix.</item>
         <item>com.adsmogo.</item>
         <item>com.alimama.</item>
+        <item>com.alipay.sdk.</item>
         <item>org.alohalytics.</item>
         <item>com.github.aloomaio.androidsdk</item>
         <item>tv.alphonso.service</item>
@@ -63,32 +114,44 @@
         <item>com.altbeacon.beacon.</item>
         <item>org.altbeacon.bluetooth.</item>
         <item>com.altamob.sdk</item>
-        <item>com.amap.api</item>
         <item>com.amazon.device.ads</item>
         <item>com.amazon.insights</item>
         <item>com.amazonaws.mobileconnectors.pinpoint.analytics.</item>
         <item>com.amazonaws.mobileconnectors.amazonmobileanalytics</item>
         <item>com.amplifyframework.analytics.</item>
         <item>com.amazon.device.associates</item>
+        <item>com.amberweather.sdk.amberadsdk.</item>
         <item>com.amobee.</item>
         <item>com.amplitude.</item>
         <item>com.anagog.jedai</item>
         <item>com.npaw.youbora.</item>
+        <item>anet.channel</item>
         <item>com.anvato.androidsdk.</item>
         <item>com.anysdk.framework.AnalyticsWrapper</item>
         <item>com.anysdk.framework.AdsWrapper</item>
+        <item>com.anzu.sdk.</item>
+        <item>com.appsamurai.</item>
         <item>io.appanalytics.sdk</item>
         <item>com.appbrain.</item>
+        <item>com.sfbx.appconsent.</item>
+        <item>io.applink.applinkio.AppLinkIO</item>
+        <item>com.applink.security.</item>
         <item>com.applovin</item>
         <item>com.yandex.metrica.</item>
         <item>com.monet.</item>
         <item>com.appnexus.opensdk.</item>
+        <item>com.gryphonet:appright</item>
         <item>com.appsee.</item>
         <item>com.appvador.ads.</item>
+        <item>com.appzilo.sdk.</item>
         <item>com.appcelerator.aps.</item>
         <item>org.appcelerator.titanium.analytics</item>
         <item>com.appdynamics.</item>
+        <item>com.appenda.</item>
+        <item>com.apperhand.device.</item>
+        <item>com.appirits.pusher.</item>
         <item>com.applause.android.</item>
+        <item>com.hf.appliftsdk.</item>
         <item>com.appnext.sdk</item>
         <item>com.appodeal.ads.</item>
         <item>com.appodealx.</item>
@@ -102,13 +165,23 @@
         <item>com.crittercism.app.Crittercism</item>
         <item>com.areametrics.areametricssdk</item>
         <item>com.areametrics.nosdkandroid</item>
+        <item>com.askingpoint.</item>
         <item>com.krux.androidsdk</item>
         <item>com.auditude.ads</item>
+        <item>com.amap.api</item>
+        <item>az.nativead.</item>
+        <item>com.avazu.tracking.</item>
         <item>com.axonix.android.sdk</item>
         <item>com.mobclix.android.sdk</item>
+        <item>com.babator.babatorui.</item>
         <item>com.backelite.android.</item>
         <item>com.backelite.bkdroid.</item>
+        <item>com.backendless.</item>
+        <item>com.github.backtrace-labs.</item>
+        <item>backtraceio.library.</item>
         <item>com.baidu.appx</item>
+        <item>com.baidu.crashpad.</item>
+        <item>com.baidu.xenv.</item>
         <item>com.baidu.location</item>
         <item>com.baidu.mapapi</item>
         <item>com.baidu.BaiduMap</item>
@@ -117,26 +190,35 @@
         <item>com.baidu.navi</item>
         <item>com.batch.android.</item>
         <item>com.bazaarvoice.bvandroidsdk</item>
+        <item>jp.beaconbank.</item>
         <item>com.beaconsinspace.android.beacon.detector.</item>
+        <item>com.beemray.</item>
         <item>com.beintoo.nucleon</item>
         <item>io.bidmachine.</item>
+        <item>ai.bitlabs.sdk.</item>
         <item>com.bitly.Bitly</item>
         <item>com.blesh.sdk.</item>
         <item>com.blueconic</item>
         <item>com.bluekai.sdk.</item>
         <item>com.bluecats.sdk</item>
         <item>com.parse.bolts</item>
+        <item>com.braintreepayments.api</item>
         <item>io.branch.</item>
+        <item>com.brandio.ads</item>
         <item>com.appboy</item>
         <item>com.brightcove</item>
+        <item>com.bugclipper.android.</item>
         <item>com.bugsense.trace.</item>
         <item>com.bugfender.sdk.</item>
+        <item>com.buglife.sdk.</item>
         <item>com.tencent.bugly.</item>
         <item>com.bugsee.library.Bugsee</item>
         <item>com.bugsnag.</item>
         <item>com.usebutton.sdk.</item>
         <item>com.buzzvil.</item>
+        <item>com.adfonic.</item>
         <item>com.calldorado.android</item>
+        <item>com.caramelads.</item>
         <item>com.carnival.sdk</item>
         <item>com.carnivalmobile</item>
         <item>com.nutiteq</item>
@@ -149,37 +231,54 @@
         <item>com.chartbeat.androidsdk</item>
         <item>com.cmcm.</item>
         <item>com.cifrasoft.</item>
+        <item>io.cleaninsights.sdk.piwik.</item>
+        <item>com.clearblade.platform.api.</item>
         <item>com.clevertap.</item>
         <item>com.cloudtech.</item>
         <item>net.crowdconnected.androidcolocator</item>
         <item>com.comscore.</item>
+        <item>com.contentsquare.android.</item>
         <item>com.conversantmedia</item>
         <item>com.greystripe.android.</item>
         <item>com.conviva.</item>
         <item>com.cooladata.android.</item>
+        <item>com.copilot.analytics.</item>
         <item>coelib.c.couluslibrary</item>
         <item>ly.count.android.</item>
-        <item>io.fabric.</item>
-        <item>com.crashlytics.</item>
-        <item>com.google.firebase.crashlytics</item>
-        <item>com.google.firebase.crash.</item>
-        <item>io.invertase.firebase.crashlytics.</item>
+        <item>com.summer.crashsdk.</item>
         <item>com.criteo.</item>
+        <item>io.inventiv.critic.android</item>
+        <item>com.evidon.</item>
         <item>com.cuebiq.cuebiqsdk.model.Collector</item>
         <item>com.cuebiq.cuebiqsdk.receiver.CoverageReceiver</item>
+        <item>cat.ereza.customactivityoncrash</item>
         <item>com.dv.DVSDK</item>
+        <item>com.thinkyeah.common.</item>
+        <item>com.databox.</item>
+        <item>com.datadoghq</item>
+        <item>com.incross.dawin</item>
+        <item>com.locationvalue.</item>
+        <item>io.palaima.debugdrawer.</item>
         <item>com.adobe.mobile.Analytics</item>
         <item>com.adobe.mobile.Config.</item>
         <item>io.didomi.sdk.</item>
+        <item>cn.shuzilm.core.</item>
+        <item>com.discord.analytics</item>
         <item>io.display.</item>
         <item>com.duapps.</item>
         <item>com.dynamicyield.</item>
         <item>com.dynatrace.android.app</item>
         <item>com.dynatrace.agent</item>
         <item>com.dynatrace.tools</item>
+        <item>com.evrythng</item>
+        <item>com.hawk</item>
+        <item>com.emarsys.core.</item>
         <item>com.emarsys.predict</item>
+        <item>io.embrace.android.embracesdk.</item>
         <item>co.enhance.Enhance</item>
         <item>com.ensighten.</item>
+        <item>.services.analytics.AnalyticsProviderService</item>
+        <item>.services.analytics.HeartbeatJobService</item>
         <item>com.esri.arcgisruntime.</item>
         <item>com.estimote.</item>
         <item>com.eulerian.android.sdk</item>
@@ -187,6 +286,9 @@
         <item>com.infinario.android.infinariosdk.</item>
         <item>com.exponea.sdk</item>
         <item>com.sygic.aura.</item>
+        <item>com.ew.sdk.adboost.</item>
+        <item>.adboost.</item>
+        <item>jp.appAdForce.android.</item>
         <item>com.fluzo.sdk.</item>
         <item>com.facebook.ads</item>
         <item>com.facebook.appevents</item>
@@ -202,494 +304,19 @@
         <item>com.factual.Factual</item>
         <item>com.fidzup.</item>
         <item>com.fiksu.asotracking</item>
-        <item>com.google.firebase.analytics.</item>
-        <item>com.google.android.gms.measurement.</item>
-        <item>com.google.firebase.firebase_analytics</item>
+        <item>com.pontiflex.mobile.</item>
+        <item>io.flowup</item>
         <item>com.flowsense.flowsensesdk.</item>
+        <item>jp.fluct.fluctsdk.</item>
         <item>com.flurry.</item>
         <item>com.followanalytics.</item>
         <item>com.footmarks.footmarkssdkm2</item>
+        <item>com.foresee.sdk.ForeSee</item>
         <item>tv.freewheel.ad.</item>
         <item>com.fyber.</item>
         <item>com.sponsorpay</item>
         <item>com.giphy.sdk.analytics</item>
         <item>com.giphy.sdk.tracking</item>
-        <item>com.gomfactory.adpie.</item>
-        <item>com.gpshopper</item>
-        <item>com.gameanalytics.sdk</item>
-        <item>com.gemius.sdk</item>
-        <item>jp.co.geniee.gnadsdk.</item>
-        <item>com.gigya.</item>
-        <item>com.gimbal.android</item>
-        <item>com.avocarrot.sdk</item>
-        <item>com.glympse.android.</item>
-        <item>com.google.ads.</item>
-        <item>com.google.android.gms.ads.AdView</item>
-        <item>com.google.android.gms.ads.AdActivity</item>
-        <item>com.google.android.gms.ads.AdRequest</item>
-        <item>com.google.android.gms.ads.mediation</item>
-        <item>com.google.android.gms.ads.doubleclick</item>
-        <item>com.google.android.ads.</item>
-        <item>com.google.unity.ads.</item>
-        <item>com.google.android.gms.admob</item>
-        <item>com.google.firebase.firebase_ads.</item>
-        <item>com.google.android.apps.analytics.</item>
-        <item>com.google.android.gms.analytics.</item>
-        <item>com.google.analytics.</item>
-        <item>com.danielcwilson.plugins.analytics</item>
-        <item>com.google.tagmanager</item>
-        <item>com.google.android.gms.tagmanager</item>
-        <item>com.heapanalytics</item>
-        <item>com.helpshift</item>
-        <item>com.connecthings.herow</item>
-        <item>com.heyzap.sdk.ads.</item>
-        <item>com.heyzap.mediation.</item>
-        <item>net.hockeyapp.</item>
-        <item>com.hound</item>
-        <item>com.huawei.hms.analytics</item>
-        <item>com.huawei.hms.location</item>
-        <item>com.huawei.hms.plugin.analytics</item>
-        <item>com.huawei.hms.plugin.ads</item>
-        <item>com.huawei.updatesdk.</item>
-        <item>com.huawei.agconnect.</item>
-        <item>com.huawei.hms.support.api.push.</item>
-        <item>com.huawei.hms.flutter.analytics.</item>
-        <item>io.huq.sourcekit.</item>
-        <item>com.hypertrack</item>
-        <item>com.hypertracklive.</item>
-        <item>io.hypertrack</item>
-        <item>com.hyprmx.android.sdk.</item>
-        <item>com.iab.omid.library</item>
-        <item>com.prime31.util.IabHelperImpl</item>
-        <item>com.prime31.IAB.</item>
-        <item>com.digitalanalytics.</item>
-        <item>com.ibm.mce.sdk.</item>
-        <item>co.acoustic.mobile.push.sdk.</item>
-        <item>com.xtify.mce.sdk.</item>
-        <item>com.xtify.android.sdk.</item>
-        <item>de.infonline.</item>
-        <item>com.ipqualityscore.</item>
-        <item>com.iqzone</item>
-        <item>com.inlocomedia.android</item>
-        <item>com.inmarket</item>
-        <item>com.inmobi</item>
-        <item>in.inmobi.</item>
-        <item>com.indooratlas.android.sdk</item>
-        <item>com.inneractive.api.ads</item>
-        <item>com.inrix.sdk</item>
-        <item>com.useinsider.insider</item>
-        <item>com.instabug.</item>
-        <item>com.instreamatic</item>
-        <item>com.integralads.avid.library</item>
-        <item>com.longtailvideo.jwplayer.</item>
-        <item>com.janrain.android</item>
-        <item>com.janrain.android.engage</item>
-        <item>com.janrain.android.capture</item>
-        <item>cn.jpush.android</item>
-        <item>com.jumio.MobileSDK</item>
-        <item>com.jumptap.adtag.</item>
-        <item>com.kidoz.sdk</item>
-        <item>com.kissmetrics</item>
-        <item>io.keen.client.</item>
-        <item>me.kiip.sdk</item>
-        <item>com.kochava.base.</item>
-        <item>com.kochava.android.tracker.</item>
-        <item>.kochavaccpa.</item>
-        <item>com.kontakt.sdk.android.</item>
-        <item>com.leanplum.</item>
-        <item>com.lenddo.mobile</item>
-        <item>.LigatusManager</item>
-        <item>.LigatusViewClient</item>
-        <item>com.ligatus.android.adframework</item>
-        <item>com.lisnr.</item>
-        <item>com.localytics.android.</item>
-        <item>com.localytics.androidx</item>
-        <item>com.localytics.react.</item>
-        <item>com.locuslabs.sdk</item>
-        <item>com.github.tony19.timber.loggly</item>
-        <item>com.github.tony19.loggly</item>
-        <item>com.visiware.sync2ad.logger.loggly.</item>
-        <item>com.loopme.</item>
-        <item>com.lotadata.moments.</item>
-        <item>com.lotame.android</item>
-        <item>com.mngads.sdk</item>
-        <item>com.mngads.views</item>
-        <item>com.mngads.</item>
-        <item>com.mdotm.android</item>
-        <item>com.innoquant.moca</item>
-        <item>ru.mail.mrgservice.advertising</item>
-        <item>ru.mail.mrgservice.analytics</item>
-        <item>com.mapbox.mapboxsdk.module.telemetry</item>
-        <item>com.mapbox.mapboxsdk.maps.TelemetryDefinition</item>
-        <item>com.mapbox.android.telemetry.</item>
-        <item>com.marketo.</item>
-        <item>org.piwik</item>
-        <item>org.piwik.mobile</item>
-        <item>org.matomo</item>
-        <item>com.metaps</item>
-        <item>com.codahale.metrics</item>
-        <item>com.microsoft.appcenter.analytics</item>
-        <item>com.microsoft.azure.mobile.analytics</item>
-        <item>com.microsoft.appcenter.crashes</item>
-        <item>com.millennialmedia.</item>
-        <item>com.mintegral.</item>
-        <item>com.mbridge.msdk.</item>
-        <item>com.mixpanel.</item>
-        <item>com.moengage.</item>
-        <item>com.moat.analytics.mobile.</item>
-        <item>com.mobfox.</item>
-        <item>com.adsdk.sdk.</item>
-        <item>com.mobpower.</item>
-        <item>com.ubikod.capptain.</item>
-        <item>com.microsoft.azure.engagement.</item>
-        <item>com.mobvista.</item>
-        <item>com.moodmedia</item>
-        <item>com.mopinion.mopinionsdk</item>
-        <item>org.mozilla.telemetry</item>
-        <item>org.mozilla.gecko.telemetry</item>
-        <item>mozilla.telemetry.glean.</item>
-        <item>org.mozilla.fenix.GleanMetrics</item>
-        <item>org.mozilla.fenix.components.metrics</item>
-        <item>com.nativex</item>
-        <item>com.newrelic.agent.</item>
-        <item>com.newrelic.mobile.</item>
-        <item>com.nexage.android.</item>
-        <item>org.nexage.</item>
-        <item>com.nielsen.app</item>
-        <item>com.offertoro.sdk.</item>
-        <item>io.presage.</item>
-        <item>com.omniture.</item>
-        <item>com.adobe.adms.measurement.</item>
-        <item>com.oneaudience.sdk.</item>
-        <item>com.onesignal.</item>
-        <item>com.ooyala</item>
-        <item>com.openback</item>
-        <item>com.safegraph.</item>
-        <item>com.openlocate</item>
-        <item>io.opencensus</item>
-        <item>io.opentelemetry</item>
-        <item>com.openx.view.plugplay</item>
-        <item>com.openx.android_sdk_openx</item>
-        <item>com.opensignal.datacollection.</item>
-        <item>com.optimizely.</item>
-        <item>com.otherlevels.</item>
-        <item>com.outbrain.</item>
-        <item>au.com.oztam.</item>
-        <item>com.pokkt.sdk.</item>
-        <item>com.bytedance.sdk.openadsdk</item>
-        <item>com.bytedance.tea.crash.</item>
-        <item>com.bytedance.embedapplog.</item>
-        <item>com.bytedance.applog.</item>
-        <item>com.parsely.parselyandroid</item>
-        <item>sdk.insert.io.</item>
-        <item>sdk.pendo.io.</item>
-        <item>ly.persona.sdk</item>
-        <item>com.foursquare.pilgrim</item>
-        <item>com.foursquare.pilgrimsdk.android</item>
-        <item>com.pincrux.</item>
-        <item>com.pingstart.adsdk.</item>
-        <item>com.placed.client</item>
-        <item>com.placer.client.Placer</item>
-        <item>com.playtestcloud.Analytics</item>
-        <item>co.vmob.sdk</item>
-        <item>com.pointinside</item>
-        <item>com.pollfish</item>
-        <item>org.prebid.mobile</item>
-        <item>com.telescope.android</item>
-        <item>io.predic.tracker</item>
-        <item>io.proximi.proximiiolibrary</item>
-        <item>com.pubmatic.sdk</item>
-        <item>net.pubnative</item>
-        <item>com.pushspring.sdk.PushSpring</item>
-        <item>com.pusher.client.</item>
-        <item>com.pushwoosh</item>
-        <item>com.pyze.</item>
-        <item>com.qualtrics.digital.</item>
-        <item>com.quantcast.measurement.service.</item>
-        <item>io.radar.sdk.Radar</item>
-        <item>com.radiusnetworks</item>
-        <item>com.mindscapehq.android.raygun4android</item>
-        <item>com.mediabrix.android</item>
-        <item>io.repro.android.</item>
-        <item>com.retency.sdk.android</item>
-        <item>com.stepleaderdigital.reveal</item>
-        <item>com.revmob.ads.</item>
-        <item>com.rjfun.cordova.ad</item>
-        <item>com.rjfun.cordova.admob</item>
-        <item>com.rollbar.android.</item>
-        <item>com.roximity.sdk.</item>
-        <item>com.rfm.sdk</item>
-        <item>com.sam4mobile.</item>
-        <item>.S4MAnalytic</item>
-        <item>com.skplanet.tad</item>
-        <item>com.salesforce.marketingcloud</item>
-        <item>com.scandit.</item>
-        <item>.schibsted.</item>
-        <item>com.scoreloop.client.android</item>
-        <item>com.segment.analytics.</item>
-        <item>com.sense360.android.</item>
-        <item>com.sensoro.beacon.kit.</item>
-        <item>com.sensoro.cloud</item>
-        <item>com.sensorsdata.analytics.android.sdk</item>
-        <item>com.sentiance.sdk.</item>
-        <item>com.jm.co.shallwead.sdk.</item>
-        <item>com.co.shallwead.sdk.</item>
-        <item>com.shopkick.sdk.api.</item>
-        <item>com.shopkick.fetchers.</item>
-        <item>com.signal360.sdk.core.</item>
-        <item>com.sonicnotify.sdk.core.</item>
-        <item>com.rnsignal360</item>
-        <item>com.wirelessregistry.observersdk.</item>
-        <item>com.silverpush.</item>
-        <item>com.sptproximitykit.</item>
-        <item>com.singular.sdk</item>
-        <item>.sizmek.</item>
-        <item>com.smaato.</item>
-        <item>com.smartadserver.</item>
-        <item>com.smartlook.sdk.smartlook.</item>
-        <item>com.snap.adkit</item>
-        <item>com.snap.appadskit</item>
-        <item>com.snapchat.kit.sdk.SnapLogin</item>
-        <item>com.snowplowanalytics.</item>
-        <item>com.ansca.corona</item>
-        <item>com.soomla.</item>
-        <item>io.split.android.</item>
-        <item>com.splunk.mint</item>
-        <item>com.beaconinside.proximitysdk.ProximityService</item>
-        <item>com.startapp.</item>
-        <item>tv.superawesome.sdk</item>
-        <item>tv.superawesome.lib.</item>
-        <item>com.supersonic.adapters.supersonicads</item>
-        <item>com.supersonicads.sdk</item>
-        <item>com.swirl</item>
-        <item>com.swrve.sdk</item>
-        <item>com.visiware.sync2ad.dmp.</item>
-        <item>com.synerise.sdk</item>
-        <item>com.tnkfactory.ad</item>
-        <item>com.taboola.</item>
-        <item>com.tagcommander.</item>
-        <item>com.talkingdata.sdk.</item>
-        <item>com.tendcloud.tenddata.</item>
-        <item>com.talkingdata.appanalytics.</item>
-        <item>com.talkingdata.adtracking.</item>
-        <item>com.tendcloud.appcpa.</item>
-        <item>com.apptalkingdata.push.</item>
-        <item>com.gametalkingdata.push.</item>
-        <item>com.tamoco.sdk</item>
-        <item>com.tapr.sdk.</item>
-        <item>com.tapr.internal.</item>
-        <item>com.tapr.helpers.</item>
-        <item>com.tapdaq.sdk.</item>
-        <item>com.tapdaq.adapters.</item>
-        <item>com.tapjoy.</item>
-        <item>com.taplytics.sdk</item>
-        <item>com.tappx.sdk.android</item>
-        <item>com.tapstream.sdk</item>
-        <item>tv.teads.</item>
-        <item>teads.tv.</item>
-        <item>com.tl.uic.Tealeaf</item>
-        <item>.tealium.</item>
-        <item>com.databerries.</item>
-        <item>com.geolocstation.</item>
-        <item>com.telequid.</item>
-        <item>com.tencent.mta</item>
-        <item>com.tencent.lbs</item>
-        <item>com.tencent.mobwin</item>
-        <item>com.tencent.stat</item>
-        <item>com.tencent.wxop.stat</item>
-        <item>com.tencent.weiyun</item>
-        <item>com.tenjin.android.</item>
-        <item>cn.thinkingdata.</item>
-        <item>com.tinder.analytics</item>
-        <item>com.tinder.ads</item>
-        <item>com.treasuredata</item>
-        <item>com.tune</item>
-        <item>com.mobileapptracker</item>
-        <item>com.tutelatechnologies.sdk</item>
-        <item>org.lasque.tusdk.core</item>
-        <item>org.lasque.tusdkpulse.core</item>
-        <item>com.twine.sdk</item>
-        <item>com.mopub.</item>
-        <item>com.uxcam.</item>
-        <item>com.ubercab.analytics.</item>
-        <item>com.ubercab.library.metrics.analytics.</item>
-        <item>com.ubercab.client.core.analytics.</item>
-        <item>com.umeng.analytics</item>
-        <item>com.umeng.fb</item>
-        <item>com.pure.internal.</item>
-        <item>com.pure.sdk.</item>
-        <item>com.unity3d.services</item>
-        <item>com.unity3d.ads</item>
-        <item>com.upsight.android</item>
-        <item>com.urbanairship</item>
-        <item>com.userexperior</item>
-        <item>com.vk.sdk.</item>
-        <item>com.vk.api.sdk.</item>
-        <item>com.vdopia.client.android.</item>
-        <item>com.vdopia.ads.</item>
-        <item>io.vectaury.</item>
-        <item>net.veloxity.</item>
-        <item>com.foresee.sdk.ForeSee</item>
-        <item>com.verizon.ads</item>
-        <item>com.verizondigitalmedia.mobile.</item>
-        <item>com.oath.mobile.</item>
-        <item>com.vervewireless.advert.</item>
-        <item>com.virgo.ads.</item>
-        <item>com.vpon.ads</item>
-        <item>com.vpadn.analytics</item>
-        <item>com.vpadn.ads.</item>
-        <item>com.vpadn.widget.</item>
-        <item>com.vungle.publisher.</item>
-        <item>com.vungle.warren.</item>
-        <item>com.tencent.map.geolocation</item>
-        <item>com.tencent.mm.plugin.location.</item>
-        <item>com.tencent.mm.plugin.location_soso.</item>
-        <item>com.tencent.mm.plugin.location_google</item>
-        <item>com.weborama.</item>
-        <item>com.webtrekk.webtrekksdk</item>
-        <item>com.webtrends.mobile.analytics.</item>
-        <item>com.webtrends.mobile.android</item>
-        <item>com.widespace.</item>
-        <item>com.wootric.androidsdk.</item>
-        <item>io.xmode.BcnConfig</item>
-        <item>io.xmode.locationsdk</item>
-        <item>io.mysdk.</item>
-        <item>com.yoc.visx</item>
-        <item>com.yandex.mobile.ads</item>
-        <item>com.yinzcam.sobek</item>
-        <item>com.yoadx.yoadx.</item>
-        <item>com.youappi.sdk.</item>
-        <item>com.yume.android</item>
-        <item>com.redbricklane.zapr</item>
-        <item>com.zendrive.sdk.</item>
-        <item>com.zoho.zanalytics.</item>
-        <item>com.igaworks.adpopcorn</item>
-        <item>com.igaworks.ssp.</item>
-        <item>com.deltadna</item>
-        <item>com.fineboost.</item>
-        <item>com.flymob.sdk.</item>
-        <item>com.fullstory.instrumentation.</item>
-        <item>com.fullstory.util.</item>
-        <item>com.fullstory.jni.</item>
-        <item>com.fullstory.FS</item>
-        <item>com.fullstory.rust.</item>
-        <item>com.fullstory.FSSessionData</item>
-        <item>com.ironsource.</item>
-        <item>com.mparticle</item>
-        <item>jp.maio.sdk.</item>
-        <item>com.mediba.jp</item>
-        <item>mediba.ad.sdk.android.openx</item>
-        <item>com.my.target.</item>
-        <item>com.my.tracker.</item>
-        <item>net.nend.android</item>
-        <item>net.nend.unity.</item>
-        <item>com.geopla.</item>
-        <item>com.threebitter.sdk.</item>
-        <item>com.m7.imkfsdk.</item>
-        <item>com.moor.imkf.</item>
-        <item>org.acra.</item>
-        <item>ch.acra.</item>
-        <item>com.adop.sdk.</item>
-        <item>com.admanmedia.</item>
-        <item>com.ljoy.chatbot.</item>
-        <item>com.aihelp.alice.</item>
-        <item>com.apicloud.</item>
-        <item>com.amazonaws.metrics.</item>
-        <item>com.amazonaws.util.AWSRequestMetrics.</item>
-        <item>com.faendir.acra.</item>
-        <item>com.ad2iction.</item>
-        <item>com.a4gpublisher.</item>
-        <item>mobi.mclick.ad.</item>
-        <item>com.adtech.adtechmobile</item>
-        <item>com.adtheorent.</item>
-        <item>com.kuaiyou.loader.</item>
-        <item>com.adwhirl.</item>
-        <item>com.adchina.android</item>
-        <item>com.adflake</item>
-        <item>com.adscendmedia.sdk.</item>
-        <item>.AdscendFiles.AdscendOffersActivity</item>
-        <item>com.advangelists.</item>
-        <item>jp.co.agoop.</item>
-        <item>io.agora.rtc.</item>
-        <item>io.agora.utils.</item>
-        <item>com.aitype.android</item>
-        <item>com.holly.marge</item>
-        <item>com.bear.data</item>
-        <item>com.mb.num</item>
-        <item>io.airbridge.</item>
-        <item>com.anythink.</item>
-        <item>com.alxad.</item>
-        <item>anythink.</item>
-        <item>com.alibaba.sdk.android.mns</item>
-        <item>com.alibaba.sdk.android.httpdns</item>
-        <item>com.ta.utdid2</item>
-        <item>com.alibaba.analytics.</item>
-        <item>com.aliexpress.module.imsdk.</item>
-        <item>com.aliexpress.module.traffic.DDLAccsService</item>
-        <item>com.aliexpress.module.ugc.adapter.powermsg.PowermsgAccsReceiveService</item>
-        <item>com.aliexpress.sky.user.service.SkyAccsService</item>
-        <item>com.taobao.artc.accs.</item>
-        <item>com.taobao.orange.accssupport.</item>
-        <item>com.taobao.sophix.</item>
-        <item>com.alipay.sdk.</item>
-        <item>com.amberweather.sdk.amberadsdk.</item>
-        <item>anet.channel</item>
-        <item>com.anzu.sdk.</item>
-        <item>com.appsamurai.</item>
-        <item>com.sfbx.appconsent.</item>
-        <item>io.applink.applinkio.AppLinkIO</item>
-        <item>com.applink.security.</item>
-        <item>com.gryphonet</item>
-        <item>com.appzilo.sdk.</item>
-        <item>com.appenda.</item>
-        <item>com.apperhand.device.</item>
-        <item>com.appirits.pusher.</item>
-        <item>com.hf.appliftsdk.</item>
-        <item>com.askingpoint.</item>
-        <item>az.nativead.</item>
-        <item>com.avazu.tracking.</item>
-        <item>com.babator.babatorui.</item>
-        <item>com.backendless.</item>
-        <item>com.github.backtrace-labs.</item>
-        <item>backtraceio.library.</item>
-        <item>com.baidu.crashpad.</item>
-        <item>com.baidu.xenv.</item>
-        <item>jp.beaconbank.</item>
-        <item>com.beemray.</item>
-        <item>ai.bitlabs.sdk.</item>
-        <item>com.braintreepayments.api</item>
-        <item>com.brandio.ads</item>
-        <item>com.bugclipper.android.</item>
-        <item>com.buglife.sdk.</item>
-        <item>com.adfonic.</item>
-        <item>com.caramelads.</item>
-        <item>io.cleaninsights.sdk.piwik.</item>
-        <item>com.clearblade.platform.api.</item>
-        <item>com.contentsquare.android.</item>
-        <item>com.crashsdk.</item>
-        <item>io.inventiv.critic.android</item>
-        <item>com.evidon.</item>
-        <item>cat.ereza.customactivityoncrash</item>
-        <item>com.thinkyeah.common.</item>
-        <item>com.databox.</item>
-        <item>com.datadoghq</item>
-        <item>com.incross.dawin</item>
-        <item>com.locationvalue.</item>
-        <item>io.palaima.debugdrawer.</item>
-        <item>cn.shuzilm.core.</item>
-        <item>com.discord.analytics</item>
-        <item>com.evrythng</item>
-        <item>com.hawk</item>
-        <item>io.embrace.android.embracesdk.</item>
-        <item>.services.analytics.AnalyticsProviderService</item>
-        <item>.services.analytics.HeartbeatJobService</item>
-        <item>com.evidon.</item>
-        <item>com.ew.sdk.adboost.</item>
-        <item>.adboost.</item>
-        <item>jp.appAdForce.android.</item>
-        <item>com.pontiflex.mobile.</item>
-        <item>io.flowup</item>
-        <item>jp.fluct.fluctsdk.</item>
         <item>com.reach.ActionMonitor</item>
         <item>com.reach.ActionService</item>
         <item>com.reach.AdServiceManager</item>
@@ -708,13 +335,45 @@
         <item>com.reach.OverlayActivity</item>
         <item>com.reach.PeerActivity</item>
         <item>com.reach.widget</item>
+        <item>com.gomfactory.adpie.</item>
         <item>com.gad.sdk.</item>
+        <item>com.gpshopper</item>
         <item>com.gamania.beanfunsdk.</item>
         <item>com.gamesparks.sdk.</item>
+        <item>com.gameanalytics.sdk</item>
+        <item>com.gemius.sdk</item>
+        <item>jp.co.geniee.gnadsdk.</item>
         <item>com.geouniq.android.</item>
+        <item>com.gimbal.android</item>
+        <item>com.avocarrot.sdk</item>
+        <item>com.glympse.android.</item>
+        <item>com.google.ads.</item>
+        <item>com.google.android.gms.ads.AdView</item>
+        <item>com.google.android.gms.ads.AdActivity</item>
+        <item>com.google.android.gms.ads.AdRequest</item>
+        <item>com.google.android.gms.ads.mediation</item>
+        <item>com.google.android.gms.ads.doubleclick</item>
+        <item>com.google.android.ads.</item>
+        <item>com.google.unity.ads.</item>
+        <item>com.google.android.gms.admob</item>
+        <item>com.google.firebase.firebase_ads.</item>
+        <item>com.google.android.apps.analytics.</item>
+        <item>com.google.android.gms.analytics.</item>
+        <item>com.google.analytics.</item>
+        <item>com.danielcwilson.plugins.analytics</item>
         <item>com.google.cloud.audit</item>
+        <item>io.fabric.</item>
+        <item>com.crashlytics.</item>
+        <item>com.google.firebase.crashlytics</item>
+        <item>com.google.firebase.crash.</item>
+        <item>io.invertase.firebase.crashlytics.</item>
+        <item>com.google.firebase.analytics.FirebaseAnalytics</item>
+        <item>com.google.android.gms.measurement.</item>
+        <item>com.google.firebase.firebase_analytics</item>
         <item>com.google.mlkit</item>
         <item>com.android.billingclient</item>
+        <item>com.google.tagmanager</item>
+        <item>com.google.android.gms.tagmanager</item>
         <item>com.grab.grabidpartnersdk</item>
         <item>com.timerazor.gravysdk.</item>
         <item>com.greedygame.legacy</item>
@@ -723,33 +382,90 @@
         <item>com.growingio.</item>
         <item>com.growthpush.</item>
         <item>com.growthbeat.</item>
+        <item>com.heapanalytics</item>
+        <item>com.helpshift</item>
+        <item>com.connecthings.herow</item>
         <item>com.heytap.nearx.track</item>
         <item>com.heytap.msp.</item>
+        <item>com.heyzap.sdk.ads.</item>
+        <item>com.heyzap.mediation.</item>
+        <item>net.hockeyapp.</item>
         <item>com.hotmob.sdk.</item>
+        <item>com.hound</item>
         <item>.houseads</item>
+        <item>com.huawei.hms.analytics</item>
+        <item>com.huawei.hms.location</item>
+        <item>com.huawei.hms.plugin.analytics</item>
+        <item>com.huawei.hms.plugin.ads</item>
+        <item>com.huawei.updatesdk.</item>
+        <item>com.huawei.agconnect.</item>
+        <item>com.huawei.hms.support.api.push.</item>
+        <item>com.huawei.hms.flutter.analytics.</item>
+        <item>io.huq.sourcekit.</item>
+        <item>com.hypertrack</item>
+        <item>com.hypertracklive.</item>
+        <item>io.hypertrack</item>
+        <item>com.hyprmx.android.sdk.</item>
+        <item>com.iab.omid.library</item>
+        <item>com.prime31.util.IabHelperImpl</item>
+        <item>com.prime31.IAB.</item>
         <item>com.iac.notification.</item>
+        <item>com.digitalanalytics.</item>
+        <item>com.ibm.mce.sdk.</item>
+        <item>co.acoustic.mobile.push.sdk.</item>
+        <item>com.xtify.mce.sdk.</item>
+        <item>com.xtify.android.sdk.</item>
         <item>com.igg.android.ad.</item>
         <item>com.igg.android.gamecenter.</item>
         <item>com.igg.libs.</item>
         <item>com.android.skyunion.ad.</item>
         <item>com.android.skyunion.statistics.</item>
         <item>com.skyunion.android.</item>
+        <item>de.infonline.</item>
+        <item>com.ipqualityscore.</item>
         <item>com.iqv.</item>
+        <item>com.iqzone</item>
         <item>com.igexin.sdk.</item>
+        <item>com.inlocomedia.android</item>
         <item>com.inbrain.sdk.</item>
+        <item>com.inmarket</item>
+        <item>com.indooratlas.android.sdk</item>
+        <item>com.inmobi</item>
+        <item>in.inmobi.</item>
+        <item>com.inneractive.api.ads</item>
+        <item>com.inrix.sdk</item>
+        <item>com.useinsider.insider</item>
+        <item>com.instabug.</item>
         <item>com.instal.mobileads.</item>
         <item>com.instal.common</item>
         <item>com.instal.mopub.</item>
         <item>com.instal.nativeads</item>
         <item>com.instal.discovery</item>
         <item>com.instal.userprofile</item>
+        <item>com.instreamatic</item>
+        <item>com.integralads.avid.library</item>
         <item>com.intrasonics.</item>
         <item>com.ad.intromi.</item>
+        <item>com.longtailvideo.jwplayer.</item>
+        <item>com.janrain.android</item>
+        <item>com.janrain.android.engage</item>
+        <item>com.janrain.android.capture</item>
+        <item>cn.jpush.android</item>
+        <item>com.jumio.MobileSDK</item>
+        <item>com.jumptap.adtag.</item>
         <item>io.karte.android.tracker.</item>
+        <item>com.kidoz.sdk</item>
         <item>com.kakao.ad.</item>
         <item>com.kakao.kakaolink</item>
+        <item>io.keen.client.</item>
         <item>com.adzerk</item>
+        <item>me.kiip.sdk</item>
+        <item>com.kissmetrics</item>
+        <item>com.kochava.base.</item>
+        <item>com.kochava.android.tracker.</item>
+        <item>.kochavaccpa.</item>
         <item>com.zestadz.android.</item>
+        <item>com.kontakt.sdk.android.</item>
         <item>com.linecorp.line.admolin</item>
         <item>com.five_corp.ad.</item>
         <item>jp.naver.line.android.analytics.</item>
@@ -758,9 +474,32 @@
         <item>com.apptracker.android.</item>
         <item>com.pad.android.xappad.</item>
         <item>com.Leadbolt.</item>
+        <item>com.leanplum.</item>
+        <item>com.lenddo.mobile</item>
         <item>io.liftoff.liftoffads.</item>
+        <item>.LigatusManager</item>
+        <item>.LigatusViewClient</item>
+        <item>com.ligatus.android.adframework</item>
+        <item>com.lisnr.</item>
+        <item>com.localytics.android.</item>
+        <item>com.localytics.androidx</item>
+        <item>com.localytics.react.</item>
+        <item>com.locuslabs.sdk</item>
+        <item>com.github.tony19.timber.loggly</item>
+        <item>com.github.tony19.loggly</item>
+        <item>com.visiware.sync2ad.logger.loggly.</item>
+        <item>com.loopme.</item>
+        <item>com.lotadata.moments.</item>
+        <item>com.lotame.android</item>
+        <item>com.mngads.sdk</item>
+        <item>com.mngads.views</item>
+        <item>com.mngads.</item>
+        <item>com.mdotm.android</item>
         <item>com.megvii.zhimasdk.</item>
+        <item>com.innoquant.moca</item>
         <item>com.madhouse.android.ads</item>
+        <item>ru.mail.mrgservice.advertising</item>
+        <item>ru.mail.mrgservice.analytics</item>
         <item>com.deflocculent.fecklessness.</item>
         <item>.BxcActivity</item>
         <item>.B2sActivity</item>
@@ -791,90 +530,221 @@
         <item>com.fungame.advertisingsdk</item>
         <item>com.hz.keep.</item>
         <item>cn.rs.keepalive.</item>
+        <item>com.mapbox.mapboxsdk.module.telemetry</item>
+        <item>com.mapbox.mapboxsdk.maps.TelemetryDefinition</item>
+        <item>com.mapbox.android.telemetry.</item>
+        <item>com.marketo.</item>
+        <item>org.piwik</item>
+        <item>org.piwik.mobile</item>
+        <item>org.matomo</item>
+        <item>com.metaps</item>
+        <item>com.codahale.metrics</item>
         <item>com.mapps.android.</item>
         <item>com.mz.common.</item>
         <item>com.mmc.common</item>
         <item>com.mezzomedia.</item>
+        <item>com.microsoft.appcenter.analytics</item>
+        <item>com.microsoft.azure.mobile.analytics</item>
+        <item>com.microsoft.appcenter.crashes</item>
+        <item>com.millennialmedia.</item>
+        <item>com.mintegral.</item>
+        <item>com.mbridge.msdk.</item>
+        <item>com.mixpanel.</item>
+        <item>com.moengage.</item>
+        <item>com.moat.analytics.mobile.</item>
+        <item>com.mobfox.</item>
+        <item>com.adsdk.sdk.</item>
+        <item>com.mobpower.</item>
         <item>com.mobclick.android</item>
+        <item>com.ubikod.capptain.</item>
+        <item>com.microsoft.azure.engagement.</item>
         <item>com.mobimento.caponate.ad.</item>
         <item>com.mobiquitynetworks.</item>
         <item>com.moblin.pxl.</item>
         <item>com.mobon.sdk.</item>
+        <item>com.mobvista.</item>
         <item>com.mofiler.android</item>
         <item>kr.com.mojise.sdk</item>
+        <item>com.moodmedia</item>
+        <item>com.mopinion.mopinionsdk</item>
         <item>com.morgoo.droidplugin.</item>
         <item>mozilla.components.lib.crash.service</item>
+        <item>org.mozilla.telemetry</item>
+        <item>org.mozilla.gecko.telemetry</item>
+        <item>mozilla.telemetry.glean.</item>
+        <item>org.mozilla.fenix.GleanMetrics</item>
+        <item>org.mozilla.fenix.components.metrics</item>
+        <item>com.nativex</item>
         <item>com.inn.passivesdk.</item>
         <item>com.inn.feedback.</item>
+        <item>com.newrelic.agent.</item>
+        <item>com.newrelic.mobile.</item>
         <item>kr.newspic.offerwall.</item>
+        <item>com.nexage.android.</item>
+        <item>org.nexage.</item>
+        <item>com.nielsen.app</item>
         <item>com.ninjametrics.</item>
         <item>jp.noahapps.sdk.</item>
         <item>com.aiadmobi.sdk.</item>
         <item>com.mNewsK.sdk.</item>
-        <item>com.ogury.cm.</item>
-        <item>com.ogury.analytics.</item>
-        <item>com.ogury.consent.</item>
-        <item>com.ogury.sdk.</item>
+        <item>com.offertoro.sdk.</item>
+        <item>com.ogury</item>
+        <item>io.presage.</item>
+        <item>com.omniture.</item>
+        <item>com.adobe.adms.measurement.</item>
+        <item>com.oneaudience.sdk.</item>
+        <item>com.onesignal.</item>
         <item>com.onetrust.</item>
-        <item>com.openmediation.sdk.</item>
+        <item>com.ooyala</item>
+        <item>com.openback</item>
+        <item>com.safegraph.</item>
+        <item>com.openlocate</item>
+        <item>com.openmediation.</item>
         <item>com.crosspromotion.sdk</item>
+        <item>io.opencensus</item>
+        <item>io.opentelemetry</item>
         <item>org.openudid.</item>
         <item>org.OpenUDID.</item>
+        <item>com.openx.view.plugplay</item>
+        <item>com.openx.android_sdk_openx</item>
         <item>com.huawei.openalliance.ad.</item>
         <item>com.huawei.hms.aaid.</item>
         <item>com.huawei.hianalytics.</item>
+        <item>com.opensignal.datacollection.</item>
         <item>net.opentracker.android</item>
+        <item>com.optimizely.</item>
+        <item>com.otherlevels.</item>
+        <item>com.outbrain.</item>
         <item>outbid.com.outbidsdk.</item>
+        <item>au.com.oztam.</item>
         <item>com.peanutlabs.plsdk.</item>
+        <item>com.pokkt.sdk.</item>
+        <item>com.bytedance</item>
+        <item>com.pgl</item>
+        <item>com.pangle.global</item>
         <item>com.papaya.offer.</item>
         <item>com.appflood</item>
         <item>com.parse.Parse</item>
         <item>com.parse.PushServiceApi</item>
+        <item>com.parsely.parselyandroid</item>
         <item>it.partytrack.sdk.</item>
+        <item>sdk.insert.io.</item>
+        <item>sdk.pendo.io.</item>
+        <item>ly.persona.sdk</item>
         <item>com.phunware.advertising.</item>
+        <item>com.foursquare.pilgrim</item>
+        <item>com.foursquare.pilgrimsdk.android</item>
+        <item>com.pincrux.</item>
+        <item>com.pingstart.adsdk.</item>
         <item>com.pinterest.android.pdk.</item>
+        <item>com.placed.client</item>
+        <item>com.placer.client.Placer</item>
         <item>com.playfab.PlayFab</item>
+        <item>com.playtestcloud.Analytics</item>
+        <item>co.vmob.sdk</item>
         <item>com.plleti.offerwall.</item>
-        <item>com.pontiflex.mobile</item>
+        <item>com.pointinside</item>
+        <item>com.pollfish</item>
+        <item>com/pontiflex/mobile</item>
         <item>com.posthog.android</item>
+        <item>org.prebid.mobile</item>
+        <item>com.telescope.android</item>
+        <item>io.predic.tracker</item>
         <item>jp.profilepassport.android.</item>
         <item>.ppSDK.</item>
+        <item>io.proximi.proximiiolibrary</item>
+        <item>com.pubmatic.sdk</item>
+        <item>net.pubnative</item>
         <item>com.pubnub.api.</item>
         <item>com.pulsatehq.</item>
+        <item>com.pushspring.sdk.PushSpring</item>
+        <item>com.pusher.client.</item>
+        <item>com.pushwoosh</item>
         <item>me.pushy.sdk.</item>
+        <item>com.pyze.</item>
         <item>com.qihoo.util.</item>
         <item>com.qihoo360.mobilesafe.loader.</item>
         <item>com.qihoo360.replugin.</item>
         <item>data.acquisition.sdk.</item>
+        <item>com.qualtrics.digital.</item>
+        <item>com.quantcast.measurement.service.</item>
         <item>com.quantumgraph.</item>
         <item>com.appier.</item>
+        <item>io.radar.sdk.Radar</item>
+        <item>com.radiusnetworks</item>
         <item>com.rakuten.tech.mobile.analytics.</item>
         <item>co.jp.rakuten.sdtd.analytics</item>
         <item>com.rakuten.android.ads</item>
         <item>com.rakuten.gap.ads</item>
+        <item>com.mindscapehq.android.raygun4android</item>
+        <item>com.mediabrix.android</item>
+        <item>io.repro.android.</item>
+        <item>com.retency.sdk.android</item>
+        <item>com.stepleaderdigital.reveal</item>
         <item>com.revenuecat.</item>
+        <item>com.revmob.ads.</item>
+        <item>com.rjfun.cordova.ad</item>
+        <item>com.rjfun.cordova.admob</item>
+        <item>com.rollbar.android.</item>
+        <item>com.roximity.sdk.</item>
+        <item>com.rfm.sdk</item>
         <item>com.rumble.sdk</item>
+        <item>com.sam4mobile.</item>
+        <item>.S4MAnalytic</item>
         <item>com.gigya.</item>
         <item>com.sas.mkt.mobile.sdk.</item>
         <item>com.sdkbox.</item>
+        <item>com.skplanet.tad</item>
         <item>com.ss.android.</item>
         <item>com.sailthru</item>
+        <item>com.salesforce.marketingcloud</item>
         <item>com.samsung.context.sdk.samsunganalytics.</item>
         <item>com.sec.android.diagmonagent.</item>
         <item>com.sayso.ui.</item>
         <item>com.sayso.utils.</item>
-        <item>com.optimizely</item>
+        <item>com.scandit.</item>
+        <item>.schibsted.</item>
+        <item>com.scoreloop.client.android</item>
+        <item>com.segment.analytics.</item>
+        <item>com.sense360.android.</item>
+        <item>com.sensoro.beacon.kit.</item>
+        <item>com.sensoro.cloud</item>
+        <item>com.sensorsdata.analytics.android.sdk</item>
+        <item>com.sentiance.sdk.</item>
         <item>io.sentry.</item>
         <item>com.joshdholtz.sentry</item>
         <item>seventynine.sdk.</item>
+        <item>com.jm.co.shallwead.sdk.</item>
+        <item>com.co.shallwead.sdk.</item>
+        <item>com.shopkick.sdk.api.</item>
+        <item>com.shopkick.fetchers.</item>
         <item>com.shuwei.location.</item>
+        <item>com.signal360.sdk.core.</item>
+        <item>com.sonicnotify.sdk.core.</item>
+        <item>com.rnsignal360</item>
+        <item>com.wirelessregistry.observersdk.</item>
+        <item>com.silverpush.</item>
+        <item>com.sptproximitykit.</item>
+        <item>com.singular.sdk</item>
         <item>com.sina.weibo.sdk</item>
         <item>es.situm.sdk.</item>
+        <item>.sizmek.</item>
         <item>com.skillz.Skillz</item>
         <item>com.skyhook.context.Accelerator</item>
+        <item>com.smaato.</item>
+        <item>com.smartadserver.</item>
         <item>com.smrtbeat.</item>
+        <item>com.smartlook.sdk.smartlook.</item>
         <item>com.smartyads</item>
+        <item>com.snap.adkit</item>
+        <item>com.snap.appadskit</item>
+        <item>com.snapchat.kit.sdk.SnapLogin</item>
+        <item>com.snowplowanalytics.</item>
+        <item>com.ansca.corona</item>
+        <item>com.soomla.</item>
         <item>com.soundhound.android.adverts</item>
+        <item>io.split.android.</item>
+        <item>com.splunk.mint</item>
         <item>com.spoteer.arc.</item>
         <item>com.spotify.mobile.android.ads.</item>
         <item>com.spotify.music.features.ads.</item>
@@ -882,28 +752,83 @@
         <item>com.spotify.ads.</item>
         <item>com.spotify.music.libs.adbasedondemand.</item>
         <item>com.spotify.nativeads.</item>
+        <item>com.beaconinside.proximitysdk.ProximityService</item>
+        <item>com.startapp.</item>
+        <item>tv.superawesome.sdk</item>
+        <item>tv.superawesome.lib.</item>
         <item>jp.supership.vamp.</item>
+        <item>com.supersonic.adapters.supersonicads</item>
+        <item>com.supersonicads.sdk</item>
+        <item>com.swirl</item>
+        <item>com.swrve.sdk</item>
+        <item>com.visiware.sync2ad.dmp.</item>
+        <item>com.synerise.sdk</item>
         <item>net.taparound.</item>
         <item>com.taiwanmobile.pt.adp.</item>
         <item>com.tjhello.ab.</item>
+        <item>com.tnkfactory.ad</item>
+        <item>com.taboola.</item>
+        <item>com.tagcommander.</item>
+        <item>com.talkingdata.sdk.</item>
+        <item>com.tendcloud.tenddata.</item>
+        <item>com.talkingdata.appanalytics.</item>
+        <item>com.talkingdata.adtracking.</item>
+        <item>com.tendcloud.appcpa.</item>
+        <item>com.apptalkingdata.push.</item>
+        <item>com.gametalkingdata.push.</item>
+        <item>com.tamoco.sdk</item>
         <item>com.tapit.</item>
+        <item>com.tapr.sdk.</item>
+        <item>com.tapr.internal.</item>
+        <item>com.tapr.helpers.</item>
         <item>com.tapad.adserving</item>
         <item>com.tapad.tracking</item>
+        <item>com.tapdaq.sdk.</item>
+        <item>com.tapdaq.adapters.</item>
+        <item>com.tapjoy.</item>
+        <item>com.taplytics.sdk</item>
+        <item>com.tappx.sdk.android</item>
+        <item>com.tapstream.sdk</item>
+        <item>tv.teads.</item>
+        <item>teads.tv.</item>
+        <item>com.tl.uic.Tealeaf</item>
+        <item>.tealium.</item>
+        <item>com.databerries.</item>
+        <item>com.geolocstation.</item>
         <item>com.tremorvideo.sdk.</item>
+        <item>com.telequid.</item>
         <item>com.teliver.sdk.</item>
+        <item>com.tencent.mta</item>
+        <item>com.tencent.lbs</item>
+        <item>com.tencent.mobwin</item>
         <item>com.qq.e.tg.</item>
         <item>com.qq.e.ads.</item>
         <item>com.qq.e.comm.</item>
+        <item>com.tencent.stat</item>
+        <item>com.tencent.wxop.stat</item>
         <item>com.tencent.mm.opensdk</item>
         <item>com.tencent.connect.</item>
         <item>.wxapi.</item>
+        <item>com.tencent.weiyun</item>
+        <item>com.tenjin.android.</item>
         <item>theoremreach.com.theoremreach.</item>
+        <item>cn.thinkingdata.</item>
         <item>com.muf.sdk.tiktok.</item>
+        <item>com.tinder.analytics</item>
+        <item>com.tinder.ads</item>
         <item>com.matthewchen.togetherad</item>
         <item>com.tradplus.ads.</item>
+        <item>com.treasuredata</item>
         <item>com.trillbit.</item>
         <item>com.triplelift.sdk.</item>
         <item>com.triplelift.tl_sdk.</item>
+        <item>com.tune</item>
+        <item>com.mobileapptracker</item>
+        <item>com.tutelatechnologies.sdk</item>
+        <item>org.lasque.tusdk.core</item>
+        <item>org.lasque.tusdkpulse.core</item>
+        <item>com.twine.sdk</item>
+        <item>com.mopub.</item>
         <item>.ads.AdsInfoWebViewActivity</item>
         <item>.ads.AdsCompanionWebViewActivity</item>
         <item>.analytics.TweetAnalyticsWebViewActivity</item>
@@ -911,14 +836,24 @@
         <item>com.twitter.analytics.</item>
         <item>com.ucweb.union.ads.</item>
         <item>com.UCMobile.Apollo.</item>
+        <item>com.uxcam.</item>
+        <item>com.ubercab.analytics.</item>
+        <item>com.ubercab.library.metrics.analytics.</item>
+        <item>com.ubercab.client.core.analytics.</item>
+        <item>com.umeng.analytics</item>
         <item>com.umeng.commonsdk.stateless</item>
         <item>com.umeng.commonsdk.statistics</item>
         <item>com.umeng.socialize.</item>
+        <item>com.umeng.fb</item>
         <item>com.umeng.umsdk</item>
         <item>com.umeng.message</item>
         <item>com.taobao.accs</item>
         <item>com.taobao.agoo</item>
         <item>org.android.agoo</item>
+        <item>com.pure.internal.</item>
+        <item>com.pure.sdk.</item>
+        <item>com.unity3d.services</item>
+        <item>com.unity3d.ads</item>
         <item>.qwapi.adclient.android.view.</item>
         <item>.MediaPlayerWrapper.</item>
         <item>.nbpcorp.</item>
@@ -937,23 +872,59 @@
         <item>com.yoc.sdk</item>
         <item>com.yt.promolib.</item>
         <item>com.growstarry.</item>
+        <item>com.upsight.android</item>
+        <item>com.urbanairship</item>
         <item>com.usabilla.sdk.</item>
+        <item>com.userexperior</item>
+        <item>com.vk.sdk.</item>
+        <item>com.vk.api.sdk.</item>
         <item>mobi.vserv.android.adengine.</item>
+        <item>com.vdopia.client.android.</item>
+        <item>com.vdopia.ads.</item>
+        <item>io.vectaury.</item>
+        <item>net.veloxity.</item>
+        <item>com.verizon.ads</item>
+        <item>com.verizondigitalmedia.mobile.</item>
+        <item>com.oath.mobile.</item>
+        <item>com.vervewireless.advert.</item>
+        <item>com.virgo.ads.</item>
         <item>com.vivo.push.sdk.</item>
         <item>com.vodafone.netperform.runtime.</item>
+        <item>com.vpon.ads</item>
+        <item>com.vpadn.analytics</item>
+        <item>com.vpadn.ads.</item>
+        <item>com.vpadn.widget.</item>
+        <item>com.vungle.publisher.</item>
+        <item>com.vungle.warren.</item>
         <item>com.walkme.wmads</item>
         <item>com.walkme.wmanalytics</item>
         <item>com.walkme.wmcrosspromotion</item>
         <item>abbi.io.abbisdk.</item>
         <item>com.wannads.sdk.</item>
         <item>ru.wapstart.plus1.sdk.</item>
+        <item>com.tencent.map.geolocation</item>
+        <item>com.tencent.mm.plugin.location.</item>
+        <item>com.tencent.mm.plugin.location_soso.</item>
+        <item>com.tencent.mm.plugin.location_google</item>
+        <item>com.weborama.</item>
+        <item>com.webtrekk.webtrekksdk</item>
+        <item>com.webtrends.mobile.analytics.</item>
+        <item>com.webtrends.mobile.android</item>
         <item>com.sina.deviceidjnisdk</item>
+        <item>com.cumberland.weplansdk</item>
+        <item>com.widespace.</item>
         <item>com.wonderpush</item>
         <item>com.woopra.tracking.</item>
         <item>com.woorlds.woorldssdk.</item>
+        <item>com.wootric.androidsdk.</item>
         <item>com.wortise.</item>
+        <item>io.xmode.BcnConfig</item>
+        <item>io.xmode.locationsdk</item>
+        <item>io.mysdk.</item>
         <item>com.xiaomi.push</item>
         <item>com.xiaomi.mipush.</item>
+        <item>com.yoc.visx</item>
+        <item>com.yahoo.ads.</item>
         <item>jp.co.yahoo.android.yssens.YSSensDataShareService</item>
         <item>jp.co.yahoo.yconnect.sdk.SharedDataService</item>
         <item>jp.co.yahoo.android.hssens.HSSensDataShareService</item>
@@ -962,50 +933,97 @@
         <item>jp.co.yahoo.android.yssens.YSSensActivityLifecycleContentProvider</item>
         <item>jp.co.yahoo.android.yssens.YSSensBeaconer</item>
         <item>jp.co.yahoo.android.yssens.YSSensAnalytics</item>
+        <item>com.yandex.mobile.ads</item>
         <item>com.yext.locationsdk.</item>
         <item>com.yieldlab.</item>
+        <item>com.yinzcam.sobek</item>
+        <item>com.yoadx.yoadx.</item>
+        <item>com.youappi.sdk.</item>
         <item>com.yougood.basebusiness.</item>
         <item>com.yougoodtech.</item>
         <item>net.youmi</item>
+        <item>com.yume.android</item>
         <item>com.uc.crashsdk</item>
         <item>com.uc2.crashsdk</item>
+        <item>com.redbricklane.zapr</item>
         <item>zendesk.</item>
+        <item>com.zendrive.sdk.</item>
         <item>com.zenjoy.ads</item>
+        <item>com.zoho.zanalytics.</item>
         <item>net.zucks.</item>
-        <item>com.ew.sdk.adboost</item>
+        <item>com.igaworks.adpopcorn</item>
+        <item>com.igaworks.ssp.</item>
+        <item>.com.ew.sdk.adboost</item>
         <item>de.appplant.</item>
         <item>com.apptv.android.</item>
         <item>com.appgeneration.ituner.ad</item>
         <item>com.ayetstudios.publishersdk.</item>
         <item>co.nearbee</item>
+        <item>com.deltadna</item>
         <item>com.deploygate.sdk.</item>
         <item>com.fineapptech.fineadscreensdk.</item>
         <item>com.fineapptech.finechubsdk.</item>
         <item>com.mfine.sdk.capp.</item>
         <item>com.fineapptech.finead.</item>
+        <item>com.fineboost.</item>
+        <item>com.flymob.sdk.</item>
         <item>com.frogermcs.activityframemetrics</item>
+        <item>com.fullstory.instrumentation.</item>
+        <item>com.fullstory.util.</item>
+        <item>com.fullstory.jni.</item>
+        <item>com.fullstory.FS</item>
+        <item>com.fullstory.rust.</item>
+        <item>com.fullstory.FSSessionData</item>
         <item>jp.co.imobile.sdkads.android.</item>
         <item>jp.iridge.popinfo.</item>
+        <item>com.ironsource.</item>
+        <item>com.mparticle</item>
         <item>com.mtraction.mtractioninapptracker.</item>
+        <item>jp.maio.sdk.</item>
+        <item>com.mediba.jp</item>
+        <item>mediba.ad.sdk.android.openx</item>
+        <item>com.my.target.</item>
+        <item>com.my.tracker.</item>
+        <item>net.nend.android</item>
+        <item>net.nend.unity.</item>
         <item>com.netmera.</item>
         <item>jp.pinable.ssbp.</item>
         <item>com.smixx.fabric.</item>
         <item>com.tabtale</item>
     </string-array>
+
     <string-array name="tracker_names">
         <item>360Dialog</item>
+        <item>39Geopla</item>
+        <item>3bitter Beacon</item>
+        <item>7Moor SDK</item>
+        <item>7Moor SDK</item>
         <item>ABTasty</item>
+        <item>ACRA</item>
+        <item>ACRA</item>
         <item>ACRCloud</item>
         <item>AD(X)</item>
         <item>AD(X)</item>
         <item>ADLIB</item>
+        <item>ADOP</item>
+        <item>ADman Media</item>
+        <item>AIHelp</item>
+        <item>AIHelp</item>
         <item>AMoAd</item>
+        <item>APICloud</item>
+        <item>APM Insight</item>
         <item>ATInternet</item>
+        <item>AWS Kinesis</item>
+        <item>AWS Kinesis</item>
         <item>Aarki</item>
         <item>AccountKit</item>
+        <item>Acrarium</item>
+        <item>ActMobile</item>
         <item>Actv8me</item>
         <item>Acuant</item>
         <item>Ad Generation</item>
+        <item>Ad2</item>
+        <item>Ad4Game</item>
         <item>Ad4Screen</item>
         <item>AdAdapted</item>
         <item>AdBuddiz</item>
@@ -1013,19 +1031,26 @@
         <item>AdColony</item>
         <item>AdFalcon</item>
         <item>AdFit (Daum)</item>
-        <item>AdForm</item>
+        <item>AdFlex</item>
         <item>AdGateMedia</item>
         <item>AdGem</item>
         <item>AdLocus</item>
         <item>AdMarvel</item>
         <item>AdMuing</item>
+        <item>AdTech</item>
+        <item>AdTheorent</item>
         <item>AdTiming</item>
         <item>AdTiming</item>
         <item>AdTrial</item>
+        <item>AdView</item>
+        <item>AdWhirl (AdMob)</item>
         <item>Adbrix</item>
         <item>Adcash</item>
         <item>Adcenix</item>
+        <item>Adchina</item>
         <item>Add Apt Tr</item>
+        <item>Adflake</item>
+        <item>Adform</item>
         <item>Adfurikun</item>
         <item>Adfurikun</item>
         <item>Adincube</item>
@@ -1042,11 +1067,37 @@
         <item>Adobe Experience Cloud</item>
         <item>Adot</item>
         <item>AdsWizz</item>
+        <item>Adscend Media</item>
+        <item>Adscend Media</item>
+        <item>Advangelists</item>
         <item>AerServ</item>
+        <item>Agoop</item>
+        <item>Agora Analytics</item>
+        <item>Agora Analytics</item>
+        <item>Ai.type *Malverting related</item>
+        <item>Ai.type *Malverting related</item>
+        <item>Ai.type *Malverting related</item>
+        <item>Ai.type *Malverting related</item>
+        <item>Airbridge</item>
         <item>Airpush</item>
         <item>Akamai MAP</item>
+        <item>Algorix</item>
+        <item>Algorix</item>
+        <item>Algorix</item>
+        <item>Alibaba Cloud Messaging</item>
+        <item>Alibaba HTTPDNS</item>
+        <item>Alibaba UserTrack Device IDentity (UTDID)</item>
+        <item>Alibaba analytics</item>
+        <item>Alibaba analytics</item>
+        <item>Alibaba analytics</item>
+        <item>Alibaba analytics</item>
+        <item>Alibaba analytics</item>
+        <item>Alibaba analytics</item>
+        <item>Alibaba analytics</item>
+        <item>Alibaba analytics</item>
         <item>Alimama (formerly AdsMogo)</item>
         <item>Alimama (formerly AdsMogo)</item>
+        <item>Alipay SDK</item>
         <item>Alohalytics</item>
         <item>Alooma</item>
         <item>Alphonso</item>
@@ -1054,32 +1105,44 @@
         <item>AltBeacon</item>
         <item>AltBeacon</item>
         <item>Altamob</item>
-        <item>Amap</item>
         <item>Amazon Advertisement</item>
         <item>Amazon Analytics (Amazon insights)</item>
         <item>Amazon Analytics (Amazon insights)</item>
         <item>Amazon Analytics (Amazon insights)</item>
         <item>Amazon Mobile Analytics (Amplify)</item>
         <item>Amazon Mobile Associates</item>
+        <item>Amber Weather Ad SDK</item>
         <item>Amobee</item>
-        <item>Amplitude Android SDK</item>
+        <item>Amplitude</item>
         <item>Anagog</item>
         <item>Analytics by NPAW (Youbora Suite)</item>
+        <item>Anet channel library</item>
         <item>Anvato (A Google Company)</item>
         <item>AnySDK</item>
         <item>AnySDK</item>
+        <item>Anzu</item>
+        <item>App Samurai</item>
         <item>AppAnalytics</item>
         <item>AppBrain</item>
-        <item>AppLovin</item>
+        <item>AppConsent CMP</item>
+        <item>AppLink.io</item>
+        <item>AppLink.io</item>
+        <item>AppLovin (MAX and SparkLabs)</item>
         <item>AppMetrica</item>
         <item>AppMonet</item>
         <item>AppNexus</item>
+        <item>AppRight (by Gryphonet)</item>
         <item>AppSee</item>
         <item>AppVador</item>
+        <item>AppZilo</item>
         <item>Appcelerator Analytics</item>
         <item>Appcelerator Analytics</item>
         <item>Appdynamics</item>
+        <item>Appenda</item>
+        <item>Apperhand</item>
+        <item>Appirits</item>
         <item>Applause</item>
+        <item>Applift</item>
         <item>Appnext</item>
         <item>Appodeal</item>
         <item>Appodeal</item>
@@ -1093,13 +1156,23 @@
         <item>Apteligent by VMWare (formerly Crittercism)</item>
         <item>Areametrics</item>
         <item>Areametrics</item>
+        <item>Askingpoint</item>
         <item>Audience Studio (Krux)</item>
         <item>Auditude</item>
+        <item>AutoNavi / Amap</item>
+        <item>Avazu aNative</item>
+        <item>Avazu aNative</item>
         <item>Axonix</item>
         <item>Axonix</item>
+        <item>Babator</item>
         <item>Backelite</item>
         <item>Backelite</item>
+        <item>Backendless</item>
+        <item>Backtrace</item>
+        <item>Backtrace</item>
         <item>Baidu APPX</item>
+        <item>Baidu Crash Reporter</item>
+        <item>Baidu Crash Reporter</item>
         <item>Baidu Location</item>
         <item>Baidu Map</item>
         <item>Baidu Maps</item>
@@ -1108,26 +1181,35 @@
         <item>Baidu Navigation</item>
         <item>Batch</item>
         <item>Bazaarvoice</item>
+        <item>BeaconBank</item>
         <item>BeaconsInSpace (Fysical)</item>
+        <item>Beemray</item>
         <item>Beintoo</item>
         <item>BidMachine</item>
+        <item>BitLabs</item>
         <item>Bitly</item>
         <item>Blesh</item>
         <item>BlueConic</item>
         <item>BlueKai (acquired by Oracle)</item>
         <item>Bluecats</item>
         <item>Bolts</item>
+        <item>Braintree</item>
         <item>Branch</item>
+        <item>Brandio</item>
         <item>Braze (formerly Appboy)</item>
         <item>Brightcove</item>
+        <item>BugClipper</item>
         <item>BugSense</item>
         <item>Bugfender</item>
+        <item>Buglife</item>
         <item>Bugly</item>
         <item>Bugsee</item>
         <item>Bugsnag</item>
         <item>Button</item>
         <item>BuzzAd Benefit</item>
+        <item>Byyd (Adfonic)</item>
         <item>CallDorado</item>
+        <item>CaramelAds</item>
         <item>Carnival</item>
         <item>Carnival</item>
         <item>Carto (formerly Nutiteq)</item>
@@ -1140,37 +1222,55 @@
         <item>Chartbeat</item>
         <item>Cheetah Ads</item>
         <item>Cifrasoft</item>
+        <item>CleanInsights</item>
+        <item>ClearBlade</item>
         <item>CleverTap</item>
         <item>Cloudmobi</item>
         <item>Colocator</item>
         <item>ComScore</item>
+        <item>Contentsquare</item>
         <item>Conversant</item>
         <item>Conversant</item>
         <item>Conviva</item>
         <item>CoolaData</item>
-        <item>Coulus Coelib</item>
+        <item>Copilot</item>
+        <item>Coulus Coelib
+Malverting/Adfrauds</item>
         <item>Countly</item>
-        <item>Crashlytics</item>
-        <item>Crashlytics</item>
-        <item>Crashlytics</item>
-        <item>Crashlytics</item>
-        <item>Crashlytics</item>
+        <item>CrashSDK</item>
         <item>Criteo</item>
+        <item>Critic</item>
+        <item>Crownpeak</item>
         <item>Cuebiq</item>
         <item>Cuebiq</item>
+        <item>Custom Activity On Crash</item>
         <item>DOV-E</item>
+        <item>DaoCheng(Thinkyeah)</item>
+        <item>Databox</item>
+        <item>Datadog</item>
+        <item>Dawin</item>
+        <item>DearOne(LocationValue)</item>
+        <item>DebugDrawer</item>
         <item>Demdex</item>
         <item>Demdex</item>
         <item>Didomi</item>
+        <item>Digital Union (shuzilm)</item>
+        <item>Discord Telemetry</item>
         <item>Display</item>
         <item>Duapps</item>
         <item>Dynamic Yield</item>
         <item>Dynatrace</item>
         <item>Dynatrace</item>
         <item>Dynatrace</item>
+        <item>EVRYTHNG</item>
+        <item>Ehawk</item>
+        <item>Emarsys Engage</item>
         <item>Emarsys Predict</item>
+        <item>Embrace</item>
         <item>Enhance</item>
         <item>Ensighten</item>
+        <item>Epic games analytics</item>
+        <item>Epic games analytics</item>
         <item>Esri ArcGIS</item>
         <item>Estimote</item>
         <item>Eulerian</item>
@@ -1178,6 +1278,9 @@
         <item>Exponea</item>
         <item>Exponea</item>
         <item>Exponea</item>
+        <item>Eyewind</item>
+        <item>Eyewind</item>
+        <item>F.O.X(appadforce)</item>
         <item>FLUZO</item>
         <item>Facebook Ads</item>
         <item>Facebook Analytics</item>
@@ -1193,24 +1296,46 @@
         <item>Factual</item>
         <item>FidZup</item>
         <item>Fiksu</item>
-        <item>Firebase Analytics</item>
-        <item>Firebase Analytics</item>
-        <item>Firebase Analytics</item>
+        <item>Flatiron Media</item>
+        <item>FlowUp</item>
         <item>Flowsense</item>
-        <item>Flurry Analytics</item>
+        <item>FluctSDK</item>
+        <item>Flurry</item>
         <item>FollowAnalytics</item>
         <item>Footmarks</item>
+        <item>Foresee</item>
         <item>FreeWheel</item>
         <item>Fyber</item>
         <item>Fyber SponsorPay</item>
         <item>GIPHY Analytics</item>
         <item>GIPHY Analytics</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>GMobi - Go2Reach (General Mobile Corporation)</item>
         <item>GOM Factory AdPie</item>
+        <item>GPA KOREA</item>
         <item>GPShopper</item>
+        <item>Gamania Beanfun</item>
+        <item>Game Sparks</item>
         <item>GameAnalytics</item>
         <item>Gemius HeatMap</item>
         <item>Geniee</item>
-        <item>Gigya</item>
+        <item>GeoUniq (Cloud4Win)</item>
         <item>Gimbal</item>
         <item>Glispa Connect (Formerly Avocarrot)</item>
         <item>Glympse</item>
@@ -1228,15 +1353,38 @@
         <item>Google Analytics</item>
         <item>Google Analytics</item>
         <item>Google Analytics Plugin (Cordova)</item>
+        <item>Google Cloud Audit</item>
+        <item>Google CrashLytics</item>
+        <item>Google CrashLytics</item>
+        <item>Google CrashLytics</item>
+        <item>Google CrashLytics</item>
+        <item>Google CrashLytics</item>
+        <item>Google Firebase Analytics</item>
+        <item>Google Firebase Analytics</item>
+        <item>Google Firebase Analytics</item>
+        <item>Google ML Kit</item>
+        <item>Google Play Billing Library / Service</item>
         <item>Google Tag Manager</item>
         <item>Google Tag Manager</item>
+        <item>Grab Analytics</item>
+        <item>Gravy Analytics</item>
+        <item>GreedyGame</item>
+        <item>GreenRobot</item>
+        <item>GroundTruth</item>
+        <item>GrowingIO</item>
+        <item>Growth Push</item>
+        <item>Growth Push</item>
         <item>Heap</item>
         <item>HelpShift</item>
         <item>Herow</item>
+        <item>HeyTap</item>
+        <item>HeyTap</item>
         <item>Heyzap (bought by Fyber)</item>
         <item>Heyzap (bought by Fyber)</item>
         <item>HockeyApp</item>
+        <item>Hotmob SDK</item>
         <item>Houndify</item>
+        <item>Houseads</item>
         <item>Huawei Mobile Services (HMS) Core</item>
         <item>Huawei Mobile Services (HMS) Core</item>
         <item>Huawei Mobile Services (HMS) Core</item>
@@ -1253,25 +1401,43 @@
         <item>IAB Open Measurement</item>
         <item>IAB Open Measurement</item>
         <item>IAB Open Measurement</item>
+        <item>IAC</item>
         <item>IBM Digital Analytics</item>
         <item>IBM Mobile Marketing (Acoustic)</item>
         <item>IBM Mobile Marketing (Acoustic)</item>
         <item>IBM Mobile Marketing (Acoustic)</item>
         <item>IBM Mobile Marketing (Acoustic)</item>
+        <item>IGG.com</item>
+        <item>IGG.com</item>
+        <item>IGG.com</item>
+        <item>IGG.com</item>
+        <item>IGG.com</item>
+        <item>IGG.com</item>
         <item>INFOnline</item>
         <item>IPQualityScore</item>
+        <item>IQV</item>
         <item>IQzone</item>
+        <item>Igexin</item>
         <item>In Loco</item>
+        <item>InBrainSurveys SDK</item>
         <item>InMarket</item>
-        <item>InMobi</item>
-        <item>InMobi</item>
         <item>IndoorAtlas</item>
+        <item>Inmobi</item>
+        <item>Inmobi</item>
         <item>Inneractive</item>
         <item>Inrix</item>
         <item>Insider</item>
         <item>Instabug</item>
+        <item>Instal</item>
+        <item>Instal</item>
+        <item>Instal</item>
+        <item>Instal</item>
+        <item>Instal</item>
+        <item>Instal</item>
         <item>Instreamatic (Adman)</item>
         <item>Integral Ad Science</item>
+        <item>Intrasonics</item>
+        <item>IntroMi</item>
         <item>JW Player</item>
         <item>Janrain</item>
         <item>Janrain</item>
@@ -1279,16 +1445,30 @@
         <item>JiGuang Aurora Mobile JPush</item>
         <item>Jumio</item>
         <item>JumpTap</item>
+        <item>KARTE</item>
         <item>KIDOZ</item>
-        <item>KISSmetrics Android API</item>
+        <item>Kakao AD SDK</item>
+        <item>KakaoTalk Link</item>
         <item>Keen</item>
+        <item>Kevel (formerly Adzerk)</item>
         <item>Kiip</item>
+        <item>Kissmetrics</item>
         <item>Kochava</item>
         <item>Kochava</item>
         <item>Kochava</item>
+        <item>Komli Mobile (ZestAdz)</item>
         <item>Kontakt</item>
+        <item>LINE Admolin</item>
+        <item>LINE Ads Five</item>
+        <item>LINE Telemetry</item>
+        <item>LINE Telemetry</item>
+        <item>LINE Telemetry</item>
+        <item>LeadBolt</item>
+        <item>LeadBolt</item>
+        <item>LeadBolt</item>
         <item>LeanPlum</item>
         <item>Lenddo</item>
+        <item>Liftoff</item>
         <item>Ligatus</item>
         <item>Ligatus</item>
         <item>Ligatus</item>
@@ -1307,9 +1487,41 @@
         <item>MAdvertise</item>
         <item>MAdvertise</item>
         <item>MDOTM</item>
+        <item>MEGVII</item>
         <item>MOCA</item>
+        <item>Madhouse</item>
         <item>Mail.ru</item>
         <item>Mail.ru</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds</item>
+        <item>Malverting/Adfrauds#2</item>
+        <item>Malverting/Adfrauds#2</item>
+        <item>Malverting/Adfrauds#2</item>
+        <item>Malverting/Adfrauds#2</item>
+        <item>Malverting/Adfrauds#2</item>
+        <item>Malverting/Adfrauds#2</item>
+        <item>Malverting/Adfrauds#2</item>
+        <item>Malverting/Adfrauds#2</item>
+        <item>Malverting/Adfrauds#2</item>
+        <item>Malverting/Adfrauds#2</item>
+        <item>Malverting/Adfrauds#2</item>
+        <item>Malverting/Adfrauds#2</item>
         <item>Mapbox</item>
         <item>Mapbox</item>
         <item>Mapbox</item>
@@ -1319,6 +1531,10 @@
         <item>Matomo (Piwik)</item>
         <item>Metaps</item>
         <item>Metrics</item>
+        <item>Mezzomedia AD Platform</item>
+        <item>Mezzomedia AD Platform</item>
+        <item>Mezzomedia AD Platform</item>
+        <item>Mezzomedia AD Platform</item>
         <item>Microsoft Visual Studio App Center Analytics</item>
         <item>Microsoft Visual Studio App Center Analytics</item>
         <item>Microsoft Visual Studio App Center Crashes</item>
@@ -1331,89 +1547,153 @@
         <item>MobFox</item>
         <item>MobFox</item>
         <item>MobPower</item>
+        <item>Mobclick</item>
         <item>Mobile Engagement</item>
         <item>Mobile Engagement</item>
+        <item>Mobincube</item>
+        <item>Mobiquity Networks</item>
+        <item>Moblin</item>
+        <item>Mobon SDK</item>
         <item>Mobvista</item>
+        <item>Mofiler</item>
+        <item>Mojise</item>
         <item>Moodmedia</item>
         <item>Mopinion</item>
+        <item>Morgoo Packer</item>
+        <item>Mozilla Crashreport</item>
         <item>Mozilla Telemetry</item>
         <item>Mozilla Telemetry</item>
         <item>Mozilla Telemetry</item>
         <item>Mozilla Telemetry</item>
         <item>Mozilla Telemetry</item>
         <item>NativeX</item>
+        <item>NetVelocity Passive SDK</item>
+        <item>NetVelocity Passive SDK</item>
         <item>New Relic</item>
         <item>New Relic</item>
+        <item>NewsPic</item>
         <item>Nexage</item>
         <item>Nexage</item>
         <item>Nielsen</item>
+        <item>Ninja Metics</item>
+        <item>Noah Pass</item>
+        <item>NoxMobi(AiAdMobi)</item>
+        <item>ONEstore</item>
         <item>OfferToro</item>
+        <item>Ogury</item>
         <item>Ogury Presage</item>
         <item>Omniture</item>
         <item>Omniture</item>
         <item>OneAudience</item>
         <item>OneSignal</item>
+        <item>Onetrust</item>
         <item>Ooyala</item>
         <item>OpenBack</item>
         <item>OpenLocate</item>
         <item>OpenLocate</item>
+        <item>OpenMeditation</item>
+        <item>OpenMeditation</item>
         <item>OpenTelemetry (OpenCensus, OpenTracing)</item>
         <item>OpenTelemetry (OpenCensus, OpenTracing)</item>
+        <item>OpenUDID</item>
+        <item>OpenUDID</item>
         <item>OpenX</item>
         <item>OpenX</item>
+        <item>Openalliance (Huawei ads kit)</item>
+        <item>Openalliance (Huawei ads kit)</item>
+        <item>Openalliance (Huawei ads kit)</item>
         <item>Opensignal</item>
+        <item>Opentracker</item>
         <item>Optimizely</item>
         <item>OtherLevels</item>
         <item>OutBrain</item>
+        <item>Outbid</item>
         <item>OzTAM</item>
+        <item>PEANUT LABS</item>
         <item>POKKT</item>
         <item>Pangle</item>
         <item>Pangle</item>
         <item>Pangle</item>
-        <item>Pangle</item>
+        <item>Papaya</item>
+        <item>Papaya</item>
+        <item>Parse</item>
+        <item>Parse</item>
         <item>Parse.ly</item>
+        <item>PartyTrack</item>
         <item>Pendo</item>
         <item>Pendo</item>
         <item>Persona.ly</item>
+        <item>Phunware Advertising</item>
         <item>Pilgrim by Foursquare</item>
         <item>Pilgrim by Foursquare</item>
         <item>Pincrux</item>
         <item>PingStart</item>
+        <item>Pinterest</item>
         <item>Placed</item>
         <item>Placer</item>
+        <item>PlayFab java</item>
         <item>PlaytestCloud Event Tracking</item>
         <item>Plexure</item>
+        <item>Plleti</item>
         <item>Point Inside</item>
         <item>Pollfish</item>
+        <item>Pontiflex</item>
+        <item>Posthog</item>
         <item>Prebid Mobile</item>
         <item>PredicIO</item>
         <item>PredicIO</item>
+        <item>Profile Passport</item>
+        <item>Profile Passport</item>
         <item>Proximi.io</item>
         <item>PubMatic</item>
         <item>PubNative</item>
+        <item>PubNub</item>
+        <item>Pulsate</item>
         <item>PushSpring</item>
         <item>Pusher</item>
         <item>Pushwoosh</item>
+        <item>Pushy</item>
         <item>Pyze</item>
+        <item>Qihoo Packer</item>
+        <item>Qihoo Packer</item>
+        <item>Qihoo Packer</item>
+        <item>Quadrant Data Acquisition SDK</item>
         <item>Qualtrics</item>
         <item>Quantcast</item>
+        <item>Quantumgraph(QGraph)/Appier</item>
+        <item>Quantumgraph(QGraph)/Appier</item>
         <item>Radar</item>
         <item>Radius Networks</item>
+        <item>Rakuten Analytics SDK</item>
+        <item>Rakuten Analytics SDK</item>
+        <item>Rakuten Unified Ads</item>
+        <item>Rakuten Unified Ads</item>
         <item>Raygun</item>
         <item>Receptiv (formerly Mediabrix)</item>
         <item>Repro</item>
         <item>Retency</item>
         <item>Reveal Mobile</item>
+        <item>RevenueCat</item>
         <item>Revmob</item>
         <item>RjFun</item>
         <item>RjFun</item>
         <item>Rollbar</item>
         <item>Roximity</item>
         <item>Rubicon Project</item>
+        <item>Rumble</item>
         <item>S4M</item>
         <item>S4M</item>
+        <item>SAP CDC (Gigya)</item>
+        <item>SAS</item>
+        <item>SDKBOX</item>
         <item>SK planet Tad</item>
+        <item>SNS SDK(bytedance)</item>
+        <item>Sailthru</item>
         <item>Salesforce Marketing Cloud</item>
+        <item>Samsung Telemetry</item>
+        <item>Samsung Telemetry</item>
+        <item>SaySo Rewards</item>
+        <item>SaySo Rewards</item>
         <item>Scandit</item>
         <item>Schibsted</item>
         <item>ScoreLoop</item>
@@ -1423,10 +1703,14 @@
         <item>Sensoro</item>
         <item>Sensors Analytics</item>
         <item>Sentiance</item>
+        <item>Sentry</item>
+        <item>Sentry</item>
+        <item>Seventynine</item>
         <item>ShallWeAD</item>
         <item>ShallWeAD</item>
         <item>Shopkick</item>
         <item>Shopkick</item>
+        <item>Shuwei</item>
         <item>Signal360</item>
         <item>Signal360</item>
         <item>Signal360</item>
@@ -1434,28 +1718,46 @@
         <item>SilverPush</item>
         <item>Singlespot</item>
         <item>Singular</item>
+        <item>Sino Weibo SDK</item>
+        <item>Situm SDK</item>
         <item>Sizmek</item>
+        <item>Skillz Android Unity</item>
+        <item>Skyhook</item>
         <item>Smaato</item>
         <item>Smart</item>
+        <item>SmartBeat</item>
         <item>SmartLook</item>
+        <item>SmartyAds</item>
         <item>Snap Ad Kit</item>
         <item>Snap Ad Kit</item>
         <item>Snapchat Login Kit</item>
         <item>Snowplow</item>
         <item>Solar2D (Corona)</item>
         <item>Soomla</item>
+        <item>SoundHaund Adverts</item>
         <item>Split</item>
         <item>Splunk MINT</item>
+        <item>Spoteer Arc</item>
+        <item>Spotify Advertising</item>
+        <item>Spotify Advertising</item>
+        <item>Spotify Advertising</item>
+        <item>Spotify Advertising</item>
+        <item>Spotify Advertising</item>
+        <item>Spotify Advertising</item>
         <item>Square Metrics</item>
-        <item>StartApp-SDK</item>
+        <item>Startapp</item>
         <item>SuperAwesome</item>
         <item>SuperAwesome</item>
+        <item>Supership</item>
         <item>Supersonic Ads</item>
         <item>Supersonic Ads</item>
         <item>Swirl</item>
         <item>Swrve</item>
         <item>Sync2Ad</item>
         <item>Synerise</item>
+        <item>TAPTrack</item>
+        <item>TAmedia</item>
+        <item>TJHello ADEasy</item>
         <item>TNK Factory</item>
         <item>Taboola</item>
         <item>TagCommander (Commanders Act.)</item>
@@ -1467,9 +1769,12 @@
         <item>TalkingData</item>
         <item>TalkingData</item>
         <item>Tamoco</item>
+        <item>TapIt</item>
         <item>TapResearch</item>
         <item>TapResearch</item>
         <item>TapResearch</item>
+        <item>Tapad</item>
+        <item>Tapad</item>
         <item>Tapdaq</item>
         <item>Tapdaq</item>
         <item>Tapjoy</item>
@@ -1482,18 +1787,33 @@
         <item>Tealium</item>
         <item>Teemo</item>
         <item>Teemo</item>
+        <item>Telaria (Tremor Video SDK)</item>
         <item>TeleQuid</item>
+        <item>Teliver</item>
         <item>Tencent MTA</item>
         <item>Tencent Map LBS</item>
         <item>Tencent MobWin</item>
+        <item>Tencent QQ SDK</item>
+        <item>Tencent QQ SDK</item>
+        <item>Tencent QQ SDK</item>
         <item>Tencent Stats</item>
         <item>Tencent Stats</item>
+        <item>Tencent Wechat SDK</item>
+        <item>Tencent Wechat SDK</item>
+        <item>Tencent Wechat SDK</item>
         <item>Tencent Weiyun</item>
         <item>Tenjin</item>
+        <item>TheoremReach</item>
         <item>ThinkingData Analytics</item>
+        <item>TikTok SDK</item>
         <item>Tinder Analytics</item>
         <item>Tinder Analytics</item>
+        <item>TogetherAd</item>
+        <item>TradPlus</item>
         <item>Treasure Data</item>
+        <item>Trillbit</item>
+        <item>TripleLift</item>
+        <item>TripleLift</item>
         <item>Tune</item>
         <item>Tune</item>
         <item>Tutela</item>
@@ -1501,37 +1821,79 @@
         <item>Tutucloud</item>
         <item>Twine Data</item>
         <item>Twitter MoPub</item>
+        <item>Twitter ads</item>
+        <item>Twitter ads</item>
+        <item>Twitter ads</item>
+        <item>Twitter ads</item>
+        <item>Twitter ads</item>
+        <item>UCWeb UC Ads</item>
+        <item>UCWeb UC Ads</item>
         <item>UXCam</item>
         <item>Uber Analytics</item>
         <item>Uber Analytics</item>
         <item>Uber Analytics</item>
         <item>Umeng Analytics</item>
+        <item>Umeng Common SDK logging</item>
+        <item>Umeng Common SDK logging</item>
+        <item>Umeng Common SDK logging</item>
         <item>Umeng Feedback</item>
+        <item>Umeng Mobile tracking SDK</item>
+        <item>Umeng Push SDK</item>
+        <item>Umeng Push SDK</item>
+        <item>Umeng Push SDK</item>
+        <item>Umeng Push SDK</item>
         <item>Unacast Pure</item>
         <item>Unacast Pure</item>
         <item>Unity3d Ads</item>
         <item>Unity3d Ads</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
+        <item>Unknown Trackers</item>
         <item>Upsight</item>
         <item>Urbanairship</item>
+        <item>Usabilla by Salesforce</item>
         <item>UserExperior</item>
         <item>VKontakte SDK</item>
         <item>VKontakte SDK</item>
+        <item>VServ</item>
         <item>Vdopia</item>
         <item>Vdopia</item>
         <item>Vectaury</item>
         <item>Veloxity</item>
-        <item>Verint ForeSee</item>
         <item>Verizon Ads</item>
         <item>Verizon Ads</item>
         <item>Verizon Ads</item>
         <item>Verve</item>
         <item>Virgo Mobile</item>
+        <item>Vivo Push SDK</item>
+        <item>Vodafone NetPerform</item>
         <item>Vpon</item>
         <item>Vpon</item>
         <item>Vpon</item>
         <item>Vpon</item>
         <item>Vungle</item>
         <item>Vungle</item>
+        <item>WalkMe/Abbi.io</item>
+        <item>WalkMe/Abbi.io</item>
+        <item>WalkMe/Abbi.io</item>
+        <item>WalkMe/Abbi.io</item>
+        <item>Wannads</item>
+        <item>WapStart.Plus1</item>
         <item>WeChat Location</item>
         <item>WeChat Location</item>
         <item>WeChat Location</item>
@@ -1540,33 +1902,75 @@
         <item>Webtrekk</item>
         <item>Webtrends</item>
         <item>Webtrends</item>
+        <item>Weibo DeviceID</item>
+        <item>Weplan</item>
         <item>Widespace</item>
+        <item>WonderPush</item>
+        <item>Woopra</item>
+        <item>Woorlds</item>
         <item>Wootric</item>
+        <item>Wortise</item>
         <item>X-Mode</item>
         <item>X-Mode</item>
         <item>X-Mode</item>
+        <item>Xiaomi Push Service</item>
+        <item>Xiaomi Push Service</item>
         <item>YOC VIS.X</item>
+        <item>Yahoo Ads</item>
+        <item>Yahoo!Japan DataShare</item>
+        <item>Yahoo!Japan DataShare</item>
+        <item>Yahoo!Japan DataShare</item>
+        <item>Yahoo!Japan DataShare</item>
+        <item>Yahoo!Japan DataShare</item>
+        <item>Yahoo!Japan DataShare</item>
+        <item>Yahoo!Japan DataShare</item>
+        <item>Yahoo!Japan DataShare</item>
         <item>Yandex Ad</item>
+        <item>Yext</item>
+        <item>Yieldlab</item>
         <item>Yinzcam Sobek</item>
         <item>Yoadx</item>
         <item>YouAppi</item>
+        <item>Yougoodtech</item>
+        <item>Yougoodtech</item>
+        <item>Youmi</item>
         <item>YuMe</item>
+        <item>Yueying Crash SDK</item>
+        <item>Yueying Crash SDK</item>
         <item>Zapr</item>
+        <item>Zendesk</item>
         <item>Zendrive</item>
+        <item>Zenjoy</item>
         <item>Zoho Analytics</item>
+        <item>Zucks</item>
         <item>adPOPcorn</item>
         <item>adPOPcorn</item>
+        <item>adboost</item>
+        <item>appPlant</item>
+        <item>appTV</item>
+        <item>appgeneration</item>
+        <item>ayeT-Studios</item>
+        <item>beaconstac/NearBee (MobStac Inc.)</item>
         <item>deltaDNA</item>
+        <item>deploygate</item>
+        <item>fineapptech</item>
+        <item>fineapptech</item>
+        <item>fineapptech</item>
+        <item>fineapptech</item>
         <item>fineboost</item>
         <item>flymob</item>
+        <item>froger_mcs</item>
         <item>fullstory</item>
         <item>fullstory</item>
         <item>fullstory</item>
         <item>fullstory</item>
         <item>fullstory</item>
         <item>fullstory</item>
+        <item>i-mobile</item>
+        <item>iridge popinfo</item>
         <item>ironSource</item>
         <item>mParticle</item>
+        <item>mTraction (mFaaS)</item>
         <item>maio by i-mobile</item>
         <item>mediba</item>
         <item>mediba</item>
@@ -1574,413 +1978,9 @@
         <item>myTracker</item>
         <item>nend</item>
         <item>nend</item>
-        <item>²39Geopla</item>
-        <item>²3bitter Beacon</item>
-        <item>²7Moor SDK</item>
-        <item>²7Moor SDK</item>
-        <item>²ACRA</item>
-        <item>²ACRA</item>
-        <item>²ADOP</item>
-        <item>²ADman Media</item>
-        <item>²AIHelp</item>
-        <item>²AIHelp</item>
-        <item>²APICloud</item>
-        <item>²AWS Kinesis</item>
-        <item>²AWS Kinesis</item>
-        <item>²Acrarium</item>
-        <item>²Ad2</item>
-        <item>²Ad4Game</item>
-        <item>²AdFlex</item>
-        <item>²AdTech</item>
-        <item>²AdTheorent</item>
-        <item>²AdView</item>
-        <item>²AdWhirl (AdMob)</item>
-        <item>²Adchina</item>
-        <item>²Adflake</item>
-        <item>²Adscend Media</item>
-        <item>²Adscend Media</item>
-        <item>²Advangelists</item>
-        <item>²Agoop</item>
-        <item>²Agora Analytics</item>
-        <item>²Agora Analytics</item>
-        <item>²Ai.type *Malverting related</item>
-        <item>²Ai.type *Malverting related</item>
-        <item>²Ai.type *Malverting related</item>
-        <item>²Ai.type *Malverting related</item>
-        <item>²Airbridge</item>
-        <item>²Algorix</item>
-        <item>²Algorix</item>
-        <item>²Algorix</item>
-        <item>²Alibaba Cloud Messaging</item>
-        <item>²Alibaba HTTPDNS</item>
-        <item>²Alibaba UserTrack Device IDentity (UTDID)</item>
-        <item>²Alibaba analytics</item>
-        <item>²Alibaba analytics</item>
-        <item>²Alibaba analytics</item>
-        <item>²Alibaba analytics</item>
-        <item>²Alibaba analytics</item>
-        <item>²Alibaba analytics</item>
-        <item>²Alibaba analytics</item>
-        <item>²Alibaba analytics</item>
-        <item>²Alipay SDK</item>
-        <item>²Amber Weather Ad SDK</item>
-        <item>²Anet channel library</item>
-        <item>²Anzu</item>
-        <item>²App Samurai</item>
-        <item>²AppConsent CMP</item>
-        <item>²AppLink.io</item>
-        <item>²AppLink.io</item>
-        <item>²AppRight (by Gryphonet)</item>
-        <item>²AppZilo</item>
-        <item>²Appenda</item>
-        <item>²Apperhand</item>
-        <item>²Appirits</item>
-        <item>²Applift</item>
-        <item>²Askingpoint</item>
-        <item>²Avazu aNative</item>
-        <item>²Avazu aNative</item>
-        <item>²Babator</item>
-        <item>²Backendless</item>
-        <item>²Backtrace</item>
-        <item>²Backtrace</item>
-        <item>²Baidu Crash Reporter</item>
-        <item>²Baidu Crash Reporter</item>
-        <item>²BeaconBank</item>
-        <item>²Beemray</item>
-        <item>²BitLabs</item>
-        <item>²Braintree</item>
-        <item>²Brandio</item>
-        <item>²BugClipper</item>
-        <item>²Buglife</item>
-        <item>²Byyd (Adfonic)</item>
-        <item>²CaramelAds</item>
-        <item>²CleanInsights</item>
-        <item>²ClearBlade</item>
-        <item>²Contentsquare</item>
-        <item>²CrashSDK</item>
-        <item>²Critic</item>
-        <item>²Crownpeak</item>
-        <item>²Custom Activity On Crash library</item>
-        <item>²DaoCheng(Thinkyeah)</item>
-        <item>²Databox</item>
-        <item>²Datadog</item>
-        <item>²Dawin</item>
-        <item>²DearOne(LocationValue)</item>
-        <item>²DebugDrawer</item>
-        <item>²Digital Union (shuzilm)</item>
-        <item>²Discord Telemetry</item>
-        <item>²EVRYTHNG</item>
-        <item>²Ehawk</item>
-        <item>²Embrace</item>
-        <item>²Epic games analytics</item>
-        <item>²Epic games analytics</item>
-        <item>²Evidon (now Crownpeak)</item>
-        <item>²Eyewind</item>
-        <item>²Eyewind</item>
-        <item>²F.O.X</item>
-        <item>²Flatiron Media</item>
-        <item>²FlowUp</item>
-        <item>²FluctSDK</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GPA KOREA</item>
-        <item>²Gamania Beanfun</item>
-        <item>²Game Sparks</item>
-        <item>²GeoUniq (Cloud4Win)</item>
-        <item>²Google Cloud Audit</item>
-        <item>²Google ML Kit</item>
-        <item>²Google Play Billing Library / Service</item>
-        <item>²Grab Analytics</item>
-        <item>²Gravy Analytics</item>
-        <item>²GreedyGame</item>
-        <item>²GreenRobot</item>
-        <item>²GroundTruth</item>
-        <item>²GrowingIO</item>
-        <item>²Growth Push</item>
-        <item>²Growth Push</item>
-        <item>²HeyTap</item>
-        <item>²HeyTap</item>
-        <item>²Hotmob SDK</item>
-        <item>²Houseads</item>
-        <item>²IAC</item>
-        <item>²IGG.com</item>
-        <item>²IGG.com</item>
-        <item>²IGG.com</item>
-        <item>²IGG.com</item>
-        <item>²IGG.com</item>
-        <item>²IGG.com</item>
-        <item>²IQV</item>
-        <item>²Igexin</item>
-        <item>²InBrainSurveys SDK</item>
-        <item>²Instal</item>
-        <item>²Instal</item>
-        <item>²Instal</item>
-        <item>²Instal</item>
-        <item>²Instal</item>
-        <item>²Instal</item>
-        <item>²Intrasonics</item>
-        <item>²IntroMi</item>
-        <item>²KARTE</item>
-        <item>²Kakao AD SDK</item>
-        <item>²KakaoTalk Link</item>
-        <item>²Kevel (formerly Adzerk)</item>
-        <item>²Komli Mobile (ZestAdz)</item>
-        <item>²LINE Admolin</item>
-        <item>²LINE Ads Five</item>
-        <item>²LINE Telemetry</item>
-        <item>²LINE Telemetry</item>
-        <item>²LINE Telemetry</item>
-        <item>²LeadBolt</item>
-        <item>²LeadBolt</item>
-        <item>²LeadBolt</item>
-        <item>²Liftoff</item>
-        <item>²MEGVII</item>
-        <item>²Madhouse</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds#2</item>
-        <item>²Malverting/Adfrauds#2</item>
-        <item>²Malverting/Adfrauds#2</item>
-        <item>²Malverting/Adfrauds#2</item>
-        <item>²Malverting/Adfrauds#2</item>
-        <item>²Malverting/Adfrauds#2</item>
-        <item>²Malverting/Adfrauds#2</item>
-        <item>²Malverting/Adfrauds#2</item>
-        <item>²Malverting/Adfrauds#2</item>
-        <item>²Malverting/Adfrauds#2</item>
-        <item>²Malverting/Adfrauds#2</item>
-        <item>²Malverting/Adfrauds#2</item>
-        <item>²Mezzomedia AD Platform</item>
-        <item>²Mezzomedia AD Platform</item>
-        <item>²Mezzomedia AD Platform</item>
-        <item>²Mezzomedia AD Platform</item>
-        <item>²Mobclick</item>
-        <item>²Mobincube</item>
-        <item>²Mobiquity Networks</item>
-        <item>²Moblin</item>
-        <item>²Mobon SDK</item>
-        <item>²Mofiler</item>
-        <item>²Mojise</item>
-        <item>²Morgoo Packer</item>
-        <item>²Mozilla Crashreport</item>
-        <item>²NetVelocity Passive SDK</item>
-        <item>²NetVelocity Passive SDK</item>
-        <item>²NewsPic</item>
-        <item>²Ninja Metics</item>
-        <item>²Noah Pass</item>
-        <item>²NoxMobi(AiAdMobi)</item>
-        <item>²ONEstore</item>
-        <item>²Ogury</item>
-        <item>²Ogury</item>
-        <item>²Ogury</item>
-        <item>²Ogury</item>
-        <item>²Onetrust</item>
-        <item>²OpenMeditation</item>
-        <item>²OpenMeditation</item>
-        <item>²OpenUDID</item>
-        <item>²OpenUDID</item>
-        <item>²Openalliance (Huawei ads kit)</item>
-        <item>²Openalliance (Huawei ads kit)</item>
-        <item>²Openalliance (Huawei ads kit)</item>
-        <item>²Opentracker</item>
-        <item>²Outbid</item>
-        <item>²PEANUT LABS</item>
-        <item>²Papaya</item>
-        <item>²Papaya</item>
-        <item>²Parse</item>
-        <item>²Parse</item>
-        <item>²PartyTrack</item>
-        <item>²Phunware Advertising</item>
-        <item>²Pinterest</item>
-        <item>²PlayFab java</item>
-        <item>²Plleti</item>
-        <item>²Pontiflex</item>
-        <item>²Posthog</item>
-        <item>²Profile Passport</item>
-        <item>²Profile Passport</item>
-        <item>²PubNub</item>
-        <item>²Pulsate</item>
-        <item>²Pushy</item>
-        <item>²Qihoo Packer</item>
-        <item>²Qihoo Packer</item>
-        <item>²Qihoo Packer</item>
-        <item>²Quadrant Data Acquisition SDK</item>
-        <item>²Quantumgraph(QGraph)/Appier</item>
-        <item>²Quantumgraph(QGraph)/Appier</item>
-        <item>²Rakuten Analytics SDK</item>
-        <item>²Rakuten Analytics SDK</item>
-        <item>²Rakuten Unified Ads</item>
-        <item>²Rakuten Unified Ads</item>
-        <item>²RevenueCat</item>
-        <item>²Rumble</item>
-        <item>²SAP CDC (Gigya)</item>
-        <item>²SAS</item>
-        <item>²SDKBOX</item>
-        <item>²SNS SDK(bytedance)</item>
-        <item>²Sailthru</item>
-        <item>²Samsung Telemetry</item>
-        <item>²Samsung Telemetry</item>
-        <item>²SaySo Rewards</item>
-        <item>²SaySo Rewards</item>
-        <item>²Score Card Research</item>
-        <item>²Sentry</item>
-        <item>²Sentry</item>
-        <item>²Seventynine</item>
-        <item>²Shuwei</item>
-        <item>²Sino Weibo SDK</item>
-        <item>²Situm SDK</item>
-        <item>²Skillz Android Unity</item>
-        <item>²Skyhook</item>
-        <item>²SmartBeat</item>
-        <item>²SmartyAds</item>
-        <item>²SoundHaund Adverts</item>
-        <item>²Spoteer Arc</item>
-        <item>²Spotify Advertising</item>
-        <item>²Spotify Advertising</item>
-        <item>²Spotify Advertising</item>
-        <item>²Spotify Advertising</item>
-        <item>²Spotify Advertising</item>
-        <item>²Spotify Advertising</item>
-        <item>²Supership</item>
-        <item>²TAPTrack</item>
-        <item>²TAmedia</item>
-        <item>²TJHello ADEasy</item>
-        <item>²TapIt</item>
-        <item>²Tapad</item>
-        <item>²Tapad</item>
-        <item>²Telaria (Tremor Video SDK)</item>
-        <item>²Teliver</item>
-        <item>²Tencent QQ SDK</item>
-        <item>²Tencent QQ SDK</item>
-        <item>²Tencent QQ SDK</item>
-        <item>²Tencent Wechat SDK</item>
-        <item>²Tencent Wechat SDK</item>
-        <item>²Tencent Wechat SDK</item>
-        <item>²TheoremReach</item>
-        <item>²TikTok SDK</item>
-        <item>²TogetherAd</item>
-        <item>²TradPlus</item>
-        <item>²Trillbit</item>
-        <item>²TripleLift</item>
-        <item>²TripleLift</item>
-        <item>²Twitter ads</item>
-        <item>²Twitter ads</item>
-        <item>²Twitter ads</item>
-        <item>²Twitter ads</item>
-        <item>²Twitter ads</item>
-        <item>²UCWeb UC Ads</item>
-        <item>²UCWeb UC Ads</item>
-        <item>²Umeng Common SDK logging</item>
-        <item>²Umeng Common SDK logging</item>
-        <item>²Umeng Common SDK logging</item>
-        <item>²Umeng Mobile tracking SDK</item>
-        <item>²Umeng Push SDK</item>
-        <item>²Umeng Push SDK</item>
-        <item>²Umeng Push SDK</item>
-        <item>²Umeng Push SDK</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Usabilla by Salesforce</item>
-        <item>²VServ</item>
-        <item>²Vivo Push SDK</item>
-        <item>²Vodafone NetPerform</item>
-        <item>²WalkMe/Abbi.io</item>
-        <item>²WalkMe/Abbi.io</item>
-        <item>²WalkMe/Abbi.io</item>
-        <item>²WalkMe/Abbi.io</item>
-        <item>²Wannads</item>
-        <item>²WapStart.Plus1</item>
-        <item>²Weibo DeviceID</item>
-        <item>²WonderPush</item>
-        <item>²Woopra</item>
-        <item>²Woorlds</item>
-        <item>²Wortise</item>
-        <item>²Xiaomi Push Service</item>
-        <item>²Xiaomi Push Service</item>
-        <item>²Yahoo!Japan DataShare</item>
-        <item>²Yahoo!Japan DataShare</item>
-        <item>²Yahoo!Japan DataShare</item>
-        <item>²Yahoo!Japan DataShare</item>
-        <item>²Yahoo!Japan DataShare</item>
-        <item>²Yahoo!Japan DataShare</item>
-        <item>²Yahoo!Japan DataShare</item>
-        <item>²Yahoo!Japan DataShare</item>
-        <item>²Yext</item>
-        <item>²Yieldlab</item>
-        <item>²Yougoodtech</item>
-        <item>²Yougoodtech</item>
-        <item>²Youmi</item>
-        <item>²Yueying Crash SDK</item>
-        <item>²Yueying Crash SDK</item>
-        <item>²Zendesk</item>
-        <item>²Zenjoy</item>
-        <item>²Zucks</item>
-        <item>²adboost</item>
-        <item>²appPlant</item>
-        <item>²appTV</item>
-        <item>²appgeneration</item>
-        <item>²ayeT-Studios</item>
-        <item>²beaconstac/NearBee (MobStac Inc.)</item>
-        <item>²deploygate</item>
-        <item>²fineapptech</item>
-        <item>²fineapptech</item>
-        <item>²fineapptech</item>
-        <item>²fineapptech</item>
-        <item>²froger_mcs</item>
-        <item>²i-mobile</item>
-        <item>²iridge popinfo</item>
-        <item>²mTraction (mFaaS)</item>
-        <item>²netmera</item>
-        <item>²pinable</item>
-        <item>²react-native-fabric</item>
-        <item>²tabtale</item>
+        <item>netmera</item>
+        <item>pinable</item>
+        <item>react-native-fabric</item>
+        <item>tabtale</item>
     </string-array>
 </resources>
