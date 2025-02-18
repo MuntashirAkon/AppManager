@@ -1084,7 +1084,7 @@
     <string name="paste">Paste</string>
     <string name="user_root">Use root</string>
     <string name="trim_caches_in_all_apps">Trim caches in all apps</string>
-    <string name="trim_caches_in_all_apps_description">Deletes cache files from all applications, including android system</string>
+    <string name="trim_caches_in_all_apps_description">Deletes cache files from all applications, including the Android system</string>
     <string name="background">Background</string>
     <string name="staging_apk_files">Staging…</string>
     <string name="installer_app_installed">App installed</string>
