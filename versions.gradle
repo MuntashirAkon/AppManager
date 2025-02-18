@@ -38,7 +38,7 @@ ext {
     speed_dial_version = "3.3.0"
     splashscreen_version = "1.2.0-alpha02"
     sun_security_version = "1.1"
-    swipe_refresh_version = "1.2.0-alpha01"
+    swipe_refresh_version = "1.2.0-beta01"
     unapkm_version = "1.2"
     webkit_version = "1.12.1"
     zstd_version = "1.5.6-10"
