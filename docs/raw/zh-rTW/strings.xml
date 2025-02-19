@@ -256,7 +256,6 @@
     <string name="pages$interceptor-page$$categories-title">類別(Categories)</string>
     <string name="faq$misc$$i-dont-use-root-adb-title">我不使用root/ADB，是否完全安全？</string>
     <string name="guide$aot$$adb-mode-am-title">在App Manager上啟用ADB模式</string>
-    <string name="guide$aot$$references-title">參考</string>
     <string name="faq$app-components$$also-blocked-by-other-tools-title">被 App Manager 禁用但同時也被其他工具禁用的組件會發生什麽？</string>
     <string name="faq$app-components$$what-is-component-blocking-title">什麽是即時組件禁用？</string>
     <string name="faq$app-components$$tracker-classes-versus-tracker-components-title">跟蹤器類與跟蹤器組件</string>

@@ -1405,7 +1405,6 @@
 \nIntent, wo sie eine wichtige Rolle spielt. In anderen Fällen dient sie als erste Möglichkeit, die relevanten Anwendungskomponenten herauszufiltern.
 \nGenerische Aktionen wie \\texttt{android.intent.action.VIEW} und \\texttt{android.intent.action.SEND} werden von vielen Anwendungen verwendet.
 \nDaher kann diese Einstellung allein viele Anwendungskomponenten abdecken.</string>
-    <string name="guide$aot$$references-title">Verweise</string>
     <string name="guide$aot$$aot-lineage-os-title">Lineage OS 17.1 und vorherige</string>
     <string name="guide$aot$$enable-aot-via-pc-title">ADB über TCP mittels einem PC oder Mac</string>
     <string name="guide$aot$$adb-mode-am-title">ADB-Modus im App Manager aktivieren</string>
