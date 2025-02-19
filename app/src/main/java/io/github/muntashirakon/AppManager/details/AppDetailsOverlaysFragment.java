@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.OverlayManagerCompact;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsOverlayItem;
@@ -65,7 +66,7 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
         String emptyStringText;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             emptyStringText = getString(R.string.overlay_sdk_version_to_low);
-        } else if (!SelfPermissions.checkSelfOrRemotePermission("android.permission.CHANGE_OVERLAY_PACKAGES")) {
+        } else if (!SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CHANGE_OVERLAY_PACKAGES)) {
             emptyStringText = getString(R.string.no_overlay_permission);
         } else {
             emptyStringText = getString(R.string.no_overlays);

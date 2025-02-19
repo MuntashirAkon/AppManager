@@ -54,5 +54,7 @@ public final class ManifestCompat {
         public static final String UPDATE_DOMAIN_VERIFICATION_USER_SELECTION = "android.permission.UPDATE_DOMAIN_VERIFICATION_USER_SELECTION";
         @RequiresApi(Build.VERSION_CODES.P)
         public static final String WATCH_APPOPS = "android.permission.WATCH_APPOPS";
+        @RequiresApi(Build.VERSION_CODES.O)
+        public static final String CHANGE_OVERLAY_PACKAGES = "android.permission.CHANGE_OVERLAY_PACKAGES";
     }
 }
