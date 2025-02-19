@@ -46,7 +46,8 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
             FEATURES,
             CONFIGURATIONS,
             SIGNATURES,
-            SHARED_LIBRARIES
+            SHARED_LIBRARIES,
+            OVERLAYS,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface Property {
@@ -64,6 +65,7 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
     public static final int CONFIGURATIONS = 9;
     public static final int SIGNATURES = 10;
     public static final int SHARED_LIBRARIES = 11;
+    public static final int OVERLAYS = 12;
 
     @IntDef(value = {
             SORT_BY_NAME,
@@ -72,7 +74,8 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
             SORT_BY_APP_OP_VALUES,
             SORT_BY_DENIED_APP_OPS,
             SORT_BY_DANGEROUS_PERMS,
-            SORT_BY_DENIED_PERMS
+            SORT_BY_DENIED_PERMS,
+            SORT_BY_PRIORITY,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface SortOrder {
@@ -85,12 +88,13 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
     public static final int SORT_BY_DENIED_APP_OPS = 4;
     public static final int SORT_BY_DANGEROUS_PERMS = 5;
     public static final int SORT_BY_DENIED_PERMS = 6;
+    public static final int SORT_BY_PRIORITY = 7;
 
     public static final int[] sSortMenuItemIdsMap = {
             R.id.action_sort_by_name, R.id.action_sort_by_blocked_components,
             R.id.action_sort_by_tracker_components, R.id.action_sort_by_app_ops_values,
             R.id.action_sort_by_denied_app_ops, R.id.action_sort_by_dangerous_permissions,
-            R.id.action_sort_by_denied_permissions};
+            R.id.action_sort_by_denied_permissions, R.id.action_sort_by_priority};
 
     public static final String ARG_TYPE = "type";
 

@@ -15,6 +15,7 @@ import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.om.OverlayInfo;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
@@ -69,6 +70,7 @@ import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
+import io.github.muntashirakon.AppManager.compat.OverlayManagerCompact;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsActivityItem;
@@ -78,6 +80,7 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsDefinedPermis
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsFeatureItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsLibraryItem;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsOverlayItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsServiceItem;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -142,6 +145,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private int mSortOrderAppOps = Prefs.AppDetailsPage.getAppOpsSortOrder();
     @AppDetailsFragment.SortOrder
     private int mSortOrderPermissions = Prefs.AppDetailsPage.getPermissionsSortOrder();
+    @AppDetailsFragment.SortOrder
+    private int mSortOrderOverlays = Prefs.AppDetailsPage.getOverlaysSortOrder();
     private String mSearchQuery;
     @AdvancedSearchView.SearchType
     private int mSearchType;
@@ -321,6 +326,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 mSortOrderPermissions = sortOrder;
                 Prefs.AppDetailsPage.setPermissionsSortOrder(sortOrder);
                 break;
+            case AppDetailsFragment.OVERLAYS:
+                mSortOrderOverlays = sortOrder;
+                Prefs.AppDetailsPage.setOverlaysSortOrder(sortOrder);
         }
         mExecutor.submit(() -> filterAndSortItemsInternal(property));
     }
@@ -339,6 +347,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 return mSortOrderAppOps;
             case AppDetailsFragment.USES_PERMISSIONS:
                 return mSortOrderPermissions;
+            case AppDetailsFragment.OVERLAYS:
+                return mSortOrderOverlays;
         }
         return AppDetailsFragment.SORT_BY_NAME;
     }
@@ -360,7 +370,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         mExecutor.submit(() -> filterAndSortItemsInternal(property));
     }
 
-    @SuppressLint("SwitchIntDef")
+    @SuppressLint({"SwitchIntDef", "NewApi"})
     @WorkerThread
     private void filterAndSortItemsInternal(@AppDetailsFragment.Property int property) {
         switch (property) {
@@ -441,6 +451,27 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     mPermissions.postValue(filterAndSortPermissions(mPermissionItems));
                 }
                 break;
+            case AppDetailsFragment.OVERLAYS: {
+                List<AppDetailsOverlayItem> appDetailsItems;
+                synchronized (mOverlays) {
+                    if (!TextUtils.isEmpty(mSearchQuery)) {
+                        appDetailsItems = AdvancedSearchView.matches(mSearchQuery, mOverlays.getValue(),
+                                (ChoiceGenerator<AppDetailsOverlayItem>) item -> lowercaseIfNotRegex(item.name,
+                                        mSearchType), mSearchType);
+                    } else appDetailsItems = mOverlays.getValue();
+                }
+                Collections.sort(appDetailsItems, (o1, o2) -> {
+                    switch (mSortOrderOverlays) {
+                        case AppDetailsFragment.SORT_BY_NAME:
+                            return o1.name.compareToIgnoreCase(o2.name);
+                        case AppDetailsFragment.SORT_BY_PRIORITY:
+                            return Integer.compare(o1.getPriority(), o2.getPriority());
+                    }
+                    return 0;
+                });
+                mOverlays.postValue(new ArrayList<>(appDetailsItems));
+                break;
+            }
             case AppDetailsFragment.APP_INFO:
             case AppDetailsFragment.CONFIGURATIONS:
             case AppDetailsFragment.FEATURES:
@@ -899,6 +930,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 return observeInternal(mSignatures);
             case AppDetailsFragment.SHARED_LIBRARIES:
                 return observeInternal(mSharedLibraries);
+            case AppDetailsFragment.OVERLAYS:
+                return observeInternal(mOverlays);
             case AppDetailsFragment.APP_INFO:
                 return observeInternal(mAppInfo);
             default:
@@ -951,6 +984,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 case AppDetailsFragment.SHARED_LIBRARIES:
                     loadSharedLibraries();
                     break;
+                case AppDetailsFragment.OVERLAYS:
+                    loadOverlays();
+                    break;
                 case AppDetailsFragment.APP_INFO:
                     loadAppInfo();
                     break;
@@ -958,6 +994,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::resumeWatcher);
         });
     }
+
 
     private final MutableLiveData<Boolean> mIsPackageExistLiveData = new MutableLiveData<>();
     private boolean mIsPackageExist = true;
@@ -1044,6 +1081,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             loadServices();
             loadReceivers();
             loadProviders();
+            loadOverlays();
             Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::resumeWatcher);
         });
     }
@@ -1918,6 +1956,26 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
         Collections.sort(appDetailsItems, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
         mSharedLibraries.postValue(appDetailsItems);
+    }
+
+    @NonNull
+    private final MutableLiveData<List<AppDetailsOverlayItem>> mOverlays = new MutableLiveData<>();
+
+    @WorkerThread
+    private void loadOverlays() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || mPackageName == null || mExternalApk
+                || !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CHANGE_OVERLAY_PACKAGES)) {
+            mOverlays.postValue(Collections.emptyList());
+            return;
+        }
+        final List<OverlayInfo> overlays = ExUtils.requireNonNullElse(() -> OverlayManagerCompact
+                        .getOverlayManager().getOverlayInfosForTarget(mPackageName, mUserId),
+                Collections.emptyList());
+        List<AppDetailsOverlayItem> overlayItems = new ArrayList<>(overlays.size());
+        for (OverlayInfo overlay : overlays) {
+            overlayItems.add(new AppDetailsOverlayItem(overlay));
+        }
+        mOverlays.postValue(overlayItems);
     }
 
     /**

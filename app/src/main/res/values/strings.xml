@@ -1508,4 +1508,15 @@
     <string name="advanced_suspend_app_description">It force-stops and suspends the app to ensure that the app is not running in the background. This method should be preferred over the regular <b>suspend</b> method.</string>
     <string name="freeze_prefer_per_app_option">Prefer per app option</string>
     <string name="remember_option_for_this_app">Remember for this app</string>
+    <string name="no_overlay_permission">No permission to display overlays</string>
+    <string name="overlay_state_and_priority">State: %1$s | Priority: %2$o</string>
+    <string name="overlay_state">State: %s</string>
+    <string name="overlay_category">Category: %s</string>
+    <string name="overlay_target">Target: %s</string>
+    <string name="overlay_sdk_version_too_low">Overlays are not supported.</string>
+    <string name="no_overlays">No overlays</string>
+    <string name="sort_by_overlay_names">Overlay name</string>
+    <string name="sort_by_priority">Priority</string>
+    <string name="overlays">Overlays</string>
+
 </resources>

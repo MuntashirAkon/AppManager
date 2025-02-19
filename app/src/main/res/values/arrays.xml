@@ -14,6 +14,7 @@
         <item>@string/configurations</item>
         <item>@string/app_signing_signatures</item>
         <item>@string/shared_libs</item>
+        <item>@string/overlays</item>
     </array>
     <array name="rule_types">
         <item>@string/activities</item>

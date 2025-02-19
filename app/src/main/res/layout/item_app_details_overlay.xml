@@ -1,0 +1,79 @@
+<!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.AppTheme.CardView.ListItem.Outlined"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="?attr/listItemMarginHorizontal"
+    android:layout_marginVertical="?attr/listItemMarginVertical"
+    android:focusable="true"
+    app:cardElevation="0dp">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="?attr/listItemPaddingHorizontal"
+        android:paddingVertical="?attr/listItemPaddingVertical">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/overlay_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:textIsSelectable="true"
+                tools:text="OverlayName" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/overlay_package_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                tools:text="@tools:sample/lorem[5]" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/overlay_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textSize="10sp"
+                tools:ignore="SmallSp"
+                tools:text="Category: rro" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/overlay_target"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textIsSelectable="true"
+                tools:text="Overlay Target: configuration" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/overlay_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textIsSelectable="true"
+                tools:text="State: enabled | Priority: 1" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/overlay_toggle_btn"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0"
+            android:clickable="false"
+            android:focusable="false" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</com.google.android.material.card.MaterialCardView>

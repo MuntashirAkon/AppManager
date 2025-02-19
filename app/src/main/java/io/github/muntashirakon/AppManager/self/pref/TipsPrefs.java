@@ -10,6 +10,7 @@ public class TipsPrefs {
     private static final int TIPS_TAB_APP_OPS = 1 << 0;
     private static final int TIPS_TAB_USES_PERMISSIONS = 1 << 1;
     private static final int TIPS_TAB_PERMISSIONS = 1 << 2;
+    private static final int TIPS_TAB_OVERLAYS = 1 << 3;
 
     private static TipsPrefs sInstance;
 
@@ -49,6 +50,14 @@ public class TipsPrefs {
 
     public void setDisplayInPermissionsTab(boolean display) {
         save(TIPS_TAB_PERMISSIONS, display);
+    }
+
+    public boolean displayInOverlaysTab() {
+        return (mFlags & TIPS_TAB_USES_PERMISSIONS) != 0;
+    }
+
+    public void setDisplayInOverlaysTab(boolean display) {
+        save(TIPS_TAB_OVERLAYS, display);
     }
 
     private void save(int flag, boolean display) {

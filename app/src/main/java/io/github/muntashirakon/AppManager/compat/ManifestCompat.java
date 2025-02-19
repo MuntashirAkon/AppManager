@@ -12,6 +12,8 @@ public final class ManifestCompat {
 
         @RequiresApi(Build.VERSION_CODES.Q)
         public static final String ADJUST_RUNTIME_PERMISSIONS_POLICY = "android.permission.ADJUST_RUNTIME_PERMISSIONS_POLICY";
+        @RequiresApi(Build.VERSION_CODES.O)
+        public static final String CHANGE_OVERLAY_PACKAGES = "android.permission.CHANGE_OVERLAY_PACKAGES";
         public static final String CLEAR_APP_USER_DATA = "android.permission.CLEAR_APP_USER_DATA";
         @RequiresApi(Build.VERSION_CODES.N)
         public static final String CREATE_USERS = "android.permission.CREATE_USERS";

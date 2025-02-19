@@ -363,6 +363,12 @@ public class AppDetailsActivity extends BaseActivity {
                     fragment.setArguments(args);
                     return mTabFragments[position] = fragment;
                 }
+                case AppDetailsFragment.OVERLAYS:
+                    AppDetailsOverlaysFragment fragment = new AppDetailsOverlaysFragment();
+                    Bundle args = new Bundle();
+                    args.putInt(AppDetailsFragment.ARG_TYPE, position);
+                    fragment.setArguments(args);
+                    return mTabFragments[position] = fragment;
             }
             return mTabFragments[position];
         }

@@ -16,17 +16,21 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.collection.ArrayMap;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.FileDescriptor;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.compat.BinderCompat;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.server.common.IRootServiceManager;
 import io.github.muntashirakon.compat.os.ParcelCompat2;
 
 // Copyright 2020 Rikka
 public class ProxyBinder implements IBinder {
+    private static final String TAG = ProxyBinder.class.getSimpleName();
     public static final int PROXY_BINDER_TRANSACTION = 2;
     /**
      * IBinder protocol transaction code: execute a shell command.
@@ -40,10 +44,35 @@ public class ProxyBinder implements IBinder {
     public static IBinder getService(String serviceName) {
         IBinder binder = sServiceCache.get(serviceName);
         if (binder == null) {
-            binder = ServiceManager.getService(serviceName);
+            binder = getServiceInternal(serviceName);
             sServiceCache.put(serviceName, binder);
         }
         return new ProxyBinder(binder);
+    }
+
+    /**
+     * Some services can't be called without certain permissions
+     * so we redirect to AMService who can make that call no mater which mode it's in.
+     * as 0, 1000, and 2000 all have access to the overlay service.
+     *
+     * @param serviceName service to be loaded
+     * @return binder to that service
+     */
+    @NotNull
+    private static IBinder getServiceInternal(String serviceName) {
+        IBinder binder = ServiceManager.getService(serviceName);
+        if (LocalServices.alive() && binder == null) {
+            try {
+                binder = LocalServices.getAmService().getService(serviceName);
+            } catch (RemoteException e) {
+                Log.e(TAG, e);
+                throw new RuntimeException("Service couldn't be loaded: " + serviceName, e);
+            }
+        }
+        if (binder == null) {
+            throw new RuntimeException("Service couldn't be found");
+        }
+        return binder;
     }
 
     @NonNull
