@@ -1552,4 +1552,14 @@
     <string name="advanced_suspend_app_description">Wymusza ona zatrzymanie i zawieszenie aplikacji, aby upewnić się, że nie działa ona w tle. Ta metoda powinna być preferowana w stosunku do zwykłej metody <b>wstrzymania</b>.</string>
     <string name="freeze_prefer_per_app_option">Preferowana opcja dla każdej aplikacji</string>
     <string name="remember_option_for_this_app">Zapamiętaj dla tej aplikacji</string>
+    <string name="no_overlay_permission">Brak uprawnień do wyświetlania nakładek</string>
+    <string name="overlay_state_and_priority">Stan: %1$s | Priorytet: %2$o</string>
+    <string name="overlay_state">Stan: %s</string>
+    <string name="overlay_category">Kategoria: %s</string>
+    <string name="overlay_target">Cel: %s</string>
+    <string name="overlay_sdk_version_too_low">Nakładki nie są obsługiwane.</string>
+    <string name="no_overlays">Brak nakładek</string>
+    <string name="sort_by_overlay_names">Nazwa nakładki</string>
+    <string name="sort_by_priority">Priorytet</string>
+    <string name="overlays">Nakładki</string>
 </resources>
