@@ -397,6 +397,10 @@ public class OneClickOpsActivity extends BaseActivity {
 
     private void clearData(@NonNull List<String> candidatePackages) {
         CpuUtils.releaseWakeLock(wakeLock);
+        if (candidatePackages.isEmpty()) {
+            UIUtils.displayLongToast(R.string.no_matching_package_found);
+            return;
+        }
         String[] packages = candidatePackages.toArray(new String[0]);
         new SearchableMultiChoiceDialogBuilder<>(this, packages, packages)
                 .setTitle(R.string.filtered_packages)
