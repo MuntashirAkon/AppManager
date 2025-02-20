@@ -1426,4 +1426,14 @@
     <string name="advanced_suspend_app_description">它强制停止并暂停应用确保应用不在后台运行。此方法的优先程度应高于常规的 <b>暂停</b>方法。</string>
     <string name="freeze_prefer_per_app_option">优先考虑不同应用不同选项</string>
     <string name="remember_option_for_this_app">记住此应用的选项</string>
+    <string name="overlay_state_and_priority">状态：%1$s | 优先级： %2$o</string>
+    <string name="overlay_state">状态: %s</string>
+    <string name="overlay_category">类别: %s</string>
+    <string name="overlay_sdk_version_too_low">遮盖层不被支持。</string>
+    <string name="no_overlays">无遮盖层</string>
+    <string name="overlays">遮盖层</string>
+    <string name="no_overlay_permission">没有展示遮盖层的权限</string>
+    <string name="sort_by_overlay_names">遮盖层名称</string>
+    <string name="sort_by_priority">优先级</string>
+    <string name="overlay_target">目标: %s</string>
 </resources>
