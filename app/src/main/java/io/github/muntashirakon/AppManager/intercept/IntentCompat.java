@@ -56,9 +56,17 @@ public final class IntentCompat {
      * @see Intent#putExtra(String, Parcelable)
      */
     @Nullable
+    @SuppressWarnings("deprecation")
     public static <T extends Parcelable> T getParcelableExtra(@NonNull Intent intent, @Nullable String name,
                                                               @NonNull Class<T> clazz) {
-        return androidx.core.content.IntentCompat.getParcelableExtra(intent, name, clazz);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            // See androidx.core.content.IntentCompat.getParcelableExtra(intent, name, clazz)
+            return intent.getParcelableExtra(name, clazz);
+        }
+        // May need to set class loader to prevent crash
+        intent.setExtrasClassLoader(clazz.getClassLoader());
+        T extra = intent.getParcelableExtra(name);
+        return clazz.isInstance(extra) ? extra : null;
     }
 
     /**
@@ -66,7 +74,7 @@ public final class IntentCompat {
      *
      * @param name  The name of the desired item.
      * @param clazz The type of the items inside the array list. This is only verified when
-     *              unparceling.
+     *              parcelling.
      * @return the value of an item previously added with
      * putParcelableArrayListExtra(), or null if no
      * ArrayList<Parcelable> value was found.
@@ -246,7 +254,7 @@ public final class IntentCompat {
     }
 
     @Nullable
-    private static Pair<Integer, String> valueToParsableStringAndType(Object object) {
+    private static Pair<Integer, String> valueToParsableStringAndType(@Nullable Object object) {
         if (object == null) {
             return new Pair<>(TYPE_NULL, null);
         } else if (object instanceof String) {
@@ -306,7 +314,7 @@ public final class IntentCompat {
         } else if (object instanceof List) {
             @SuppressWarnings("rawtypes")
             List list = (List) object;
-            if (list.size() == 0) {
+            if (list.isEmpty()) {
                 // Type is lost forever, return null
                 // FIXME: Try to infer type using reflection
                 return new Pair<>(TYPE_NULL, null);
@@ -789,8 +797,9 @@ public final class IntentCompat {
         }
     }
 
-    private static void toUriInner(Intent intent, StringBuilder uri, @Nullable String scheme, String defAction,
-                                   @Nullable String defPackage, int flags) {
+    private static void toUriInner(Intent intent, StringBuilder uri, @Nullable String scheme,
+                                   @Nullable String defAction, @Nullable String defPackage,
+                                   int flags) {
         if (scheme != null) {
             uri.append("scheme=").append(scheme).append(';');
         }
