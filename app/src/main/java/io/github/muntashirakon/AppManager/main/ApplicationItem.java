@@ -149,6 +149,8 @@ public class ApplicationItem extends PackageItemInfo {
     public long diffInstallUpdateInDays;
     public long lastBackupDays;
     public StringBuilder backupFlagsStr;
+    public String overlayTarget;
+
 
     public ApplicationItem() {
         super();
@@ -216,6 +218,7 @@ public class ApplicationItem extends PackageItemInfo {
                 backupFlagsStr.append("rules");
             }
         }
+
     }
 
     @WorkerThread

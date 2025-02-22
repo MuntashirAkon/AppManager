@@ -1518,5 +1518,6 @@
     <string name="sort_by_overlay_names">Overlay name</string>
     <string name="sort_by_priority">Priority</string>
     <string name="overlays">Overlays</string>
-
+    <string name="filter_apps_with_overlays">With Overlays</string>
+    <string name="filter_overlay_apps">Not Overlay</string>
 </resources>

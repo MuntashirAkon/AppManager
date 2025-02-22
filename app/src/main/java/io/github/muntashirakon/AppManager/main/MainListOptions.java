@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.main;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,6 +22,7 @@ import java.util.concurrent.Future;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.UserInfo;
@@ -93,6 +95,8 @@ public class MainListOptions extends ListOptions {
             FILTER_APPS_WITH_SAF,
             FILTER_APPS_WITH_SSAID,
             FILTER_STOPPED_APPS,
+            FILTER_OVERLAYS_APPS,
+            FILTER_APPS_WITH_OVERLAYS,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface Filter {
@@ -114,6 +118,8 @@ public class MainListOptions extends ListOptions {
     public static final int FILTER_APPS_WITH_SAF = 1 << 12;
     public static final int FILTER_APPS_WITH_SSAID = 1 << 13;
     public static final int FILTER_STOPPED_APPS = 1 << 14;
+    public static final int FILTER_OVERLAY_APPS = 1 << 15;
+    public static final int FILTER_APPS_WITH_OVERLAYS = 1 << 16;
 
     private final List<String> mProfileNames = new ArrayList<>();
     private final TextWatcher mProfileInputWatcher = new TextWatcher() {
@@ -256,6 +262,10 @@ public class MainListOptions extends ListOptions {
                 put(FILTER_APPS_WITH_KEYSTORE, R.string.filter_apps_with_keystore);
                 put(FILTER_APPS_WITH_SAF, R.string.filter_apps_with_saf);
                 put(FILTER_APPS_WITH_SSAID, R.string.filter_apps_with_ssaid);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                put(FILTER_APPS_WITH_OVERLAYS, R.string.filter_apps_with_overlays);
+                put(FILTER_OVERLAY_APPS, R.string.filter_overlay_apps);
             }
         }};
     }

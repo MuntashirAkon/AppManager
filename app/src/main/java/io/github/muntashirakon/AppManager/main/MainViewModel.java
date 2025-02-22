@@ -466,6 +466,8 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                         continue;
                     } else if ((mFilterFlags & MainListOptions.FILTER_STOPPED_APPS) != 0 && (item.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
                         continue;
+                    } else if ((mFilterFlags & MainListOptions.FILTER_OVERLAY_APPS) != 0 && item.overlayTarget == null) {
+                        continue;
                     }
                     filteredApplicationItems.add(item);
                 }
