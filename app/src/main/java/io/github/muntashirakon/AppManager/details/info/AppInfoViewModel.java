@@ -228,7 +228,7 @@ public class AppInfoViewModel extends AndroidViewModel {
             if (ThreadUtils.isInterrupted()) {
                 return;
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+            if (!isExternalApk && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
                     && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_SENSORS)) {
                 tagCloud.sensorsEnabled = SensorServiceCompat.isSensorEnabled(packageName, userId);
             } else tagCloud.sensorsEnabled = true;
