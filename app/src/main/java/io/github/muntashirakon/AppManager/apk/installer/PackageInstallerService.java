@@ -111,8 +111,7 @@ public class PackageInstallerService extends ForegroundService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        if (intent == null) return;
-        ApkQueueItem apkQueueItem = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, ApkQueueItem.class);
+        ApkQueueItem apkQueueItem = getQueueItem(intent);
         if (apkQueueItem == null) {
             return;
         }
@@ -205,8 +204,7 @@ public class PackageInstallerService extends ForegroundService {
 
     @Override
     protected void onQueued(@Nullable Intent intent) {
-        if (intent == null) return;
-        ApkQueueItem apkQueueItem = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, ApkQueueItem.class);
+        ApkQueueItem apkQueueItem = getQueueItem(intent);
         String appLabel = apkQueueItem != null ? apkQueueItem.getAppLabel() : null;
         Object notificationInfo = new NotificationInfo()
                 .setAutoCancel(true)
@@ -219,9 +217,8 @@ public class PackageInstallerService extends ForegroundService {
 
     @Override
     protected void onStartIntent(@Nullable Intent intent) {
-        if (intent == null) return;
         // Set app name in the ongoing notification
-        ApkQueueItem apkQueueItem = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, ApkQueueItem.class);
+        ApkQueueItem apkQueueItem = getQueueItem(intent);
         String appName;
         if (apkQueueItem != null) {
             String appLabel = apkQueueItem.getAppLabel();
@@ -249,6 +246,14 @@ public class PackageInstallerService extends ForegroundService {
 
     public void setOnInstallFinished(@Nullable OnInstallFinished onInstallFinished) {
         this.mOnInstallFinished = onInstallFinished;
+    }
+
+    @Nullable
+    private ApkQueueItem getQueueItem(@Nullable Intent intent) {
+        if (intent == null) {
+            return null;
+        }
+        return IntentCompat.getUnwrappedParcelableExtra(intent, EXTRA_QUEUE_ITEM, ApkQueueItem.class);
     }
 
     private void finishInstallation(@NonNull String packageName, int status,

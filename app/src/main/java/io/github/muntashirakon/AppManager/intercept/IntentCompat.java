@@ -33,6 +33,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.os.BundleCompat;
 import androidx.core.util.Pair;
 
 import java.util.ArrayList;
@@ -46,6 +47,24 @@ import io.github.muntashirakon.AppManager.fm.FmUtils;
 import io.github.muntashirakon.AppManager.utils.MotorolaUtils;
 
 public final class IntentCompat {
+    public static void putWrappedParcelableExtra(@NonNull Intent intent, @Nullable String name,
+                                                 @Nullable Parcelable parcelable) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(name, parcelable);
+        intent.putExtra(name, bundle);
+    }
+
+    @Nullable
+    public static <T extends Parcelable> T getUnwrappedParcelableExtra(@NonNull Intent intent,
+                                                                       @Nullable String name,
+                                                                       @NonNull Class<T> clazz) {
+        Bundle bundle = intent.getBundleExtra(name);
+        if (bundle == null) {
+            return null;
+        }
+        return BundleCompat.getParcelable(bundle, name, clazz);
+    }
+
     /**
      * Retrieve extended data from the intent.
      *
@@ -56,17 +75,9 @@ public final class IntentCompat {
      * @see Intent#putExtra(String, Parcelable)
      */
     @Nullable
-    @SuppressWarnings("deprecation")
     public static <T extends Parcelable> T getParcelableExtra(@NonNull Intent intent, @Nullable String name,
                                                               @NonNull Class<T> clazz) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            // See androidx.core.content.IntentCompat.getParcelableExtra(intent, name, clazz)
-            return intent.getParcelableExtra(name, clazz);
-        }
-        // May need to set class loader to prevent crash
-        intent.setExtrasClassLoader(clazz.getClassLoader());
-        T extra = intent.getParcelableExtra(name);
-        return clazz.isInstance(extra) ? extra : null;
+        return androidx.core.content.IntentCompat.getParcelableExtra(intent, name, clazz);
     }
 
     /**
@@ -596,9 +607,12 @@ public final class IntentCompat {
                 sb.append(prefix).append(" CATEGORY\t").append(category).append("\n");
             }
         }
-        if (cn != null) sb.append(prefix).append(" COMPONENT\t").append(cn.flattenToString()).append("\n");
-        if (packageName != null) sb.append(prefix).append(" PACKAGE\t").append(packageName).append("\n");
-        if (flags != 0) sb.append(prefix).append(" FLAGS\t0x").append(Integer.toHexString(flags)).append("\n");
+        if (cn != null)
+            sb.append(prefix).append(" COMPONENT\t").append(cn.flattenToString()).append("\n");
+        if (packageName != null)
+            sb.append(prefix).append(" PACKAGE\t").append(packageName).append("\n");
+        if (flags != 0)
+            sb.append(prefix).append(" FLAGS\t0x").append(Integer.toHexString(flags)).append("\n");
         if (extras != null) {
             for (String key : extras.keySet()) {
                 Pair<Integer, String> typeAndString = valueToParsableStringAndType(extras.get(key));

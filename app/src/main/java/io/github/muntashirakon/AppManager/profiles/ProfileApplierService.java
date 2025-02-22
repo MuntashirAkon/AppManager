@@ -6,6 +6,7 @@ import static io.github.muntashirakon.AppManager.history.ops.OpHistoryManager.HI
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
 
@@ -33,12 +34,20 @@ import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.io.Path;
 
 public class ProfileApplierService extends ForegroundService {
-    public static final String EXTRA_QUEUE_ITEM = "queue_item";
-    public static final String EXTRA_NOTIFY = "notify";
+    private static final String EXTRA_QUEUE_ITEM = "queue_item";
+    private static final String EXTRA_NOTIFY = "notify";
     /**
      * Notification channel ID
      */
-    public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.PROFILE_APPLIER";
+    private static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.PROFILE_APPLIER";
+
+    @NonNull
+    public static Intent getIntent(@NonNull Context context, @NonNull ProfileQueueItem queueItem, boolean notify) {
+        Intent intent = new Intent(context, ProfileApplierService.class);
+        IntentCompat.putWrappedParcelableExtra(intent, EXTRA_QUEUE_ITEM, queueItem);
+        intent.putExtra(EXTRA_NOTIFY, notify);
+        return intent;
+    }
 
     private QueuedProgressHandler mProgressHandler;
     private NotificationProgressHandler.NotificationInfo mNotificationInfo;
@@ -74,8 +83,7 @@ public class ProfileApplierService extends ForegroundService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        if (intent == null) return;
-        ProfileQueueItem item = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, ProfileQueueItem.class);
+        ProfileQueueItem item = getQueueItem(intent);
         if (item == null) {
             return;
         }
@@ -98,8 +106,7 @@ public class ProfileApplierService extends ForegroundService {
 
     @Override
     protected void onQueued(@Nullable Intent intent) {
-        if (intent == null) return;
-        ProfileQueueItem item = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, ProfileQueueItem.class);
+        ProfileQueueItem item = getQueueItem(intent);
         if (item == null) {
             return;
         }
@@ -114,8 +121,7 @@ public class ProfileApplierService extends ForegroundService {
 
     @Override
     protected void onStartIntent(@Nullable Intent intent) {
-        if (intent == null) return;
-        ProfileQueueItem item = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, ProfileQueueItem.class);
+        ProfileQueueItem item = getQueueItem(intent);
         if (item != null) {
             Intent notificationIntent = AppsProfileActivity.getProfileIntent(this, item.getProfileId());
             PendingIntent pendingIntent = PendingIntentCompat.getActivity(this, 0, notificationIntent,
@@ -135,6 +141,14 @@ public class ProfileApplierService extends ForegroundService {
         }
         CpuUtils.releaseWakeLock(mWakeLock);
         super.onDestroy();
+    }
+
+    @Nullable
+    private ProfileQueueItem getQueueItem(@Nullable Intent intent) {
+        if (intent == null) {
+            return null;
+        }
+        return IntentCompat.getUnwrappedParcelableExtra(intent, EXTRA_QUEUE_ITEM, ProfileQueueItem.class);
     }
 
     private void sendNotification(@NonNull String profileName, int result, boolean notify,

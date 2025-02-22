@@ -1080,14 +1080,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                                     });
                                                 });
                                             } else {
-                                                Intent intent = new Intent(mActivity, BatchOpsService.class);
                                                 ArrayList<Integer> userIds = new ArrayList<>(selectedItems.size());
                                                 for (int i = 0; i < selectedItems.size(); ++i) {
                                                     userIds.add(userId);
                                                 }
                                                 BatchQueueItem item = BatchQueueItem.getBatchOpQueue(
                                                         BatchOpsManager.OP_UNINSTALL, selectedItems, userIds, null);
-                                                intent.putExtra(BatchOpsService.EXTRA_QUEUE_ITEM, item);
+                                                Intent intent = BatchOpsService.getIntent(mActivity, item);
                                                 ContextCompat.startForegroundService(mActivity, intent);
                                             }
                                         })

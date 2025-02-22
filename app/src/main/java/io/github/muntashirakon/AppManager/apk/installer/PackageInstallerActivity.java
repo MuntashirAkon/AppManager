@@ -102,7 +102,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     @NonNull
     public static Intent getLaunchableInstance(@NonNull Context context, ApkSource apkSource) {
         Intent intent = new Intent(context, PackageInstallerActivity.class);
-        intent.putExtra(EXTRA_APK_FILE_LINK, apkSource);
+        IntentCompat.putWrappedParcelableExtra(intent, EXTRA_APK_FILE_LINK, apkSource);
         return intent;
     }
 
@@ -206,7 +206,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             mApkQueue.addAll(ApkQueueItem.fromIntent(intent, Utils.getRealReferrer(this)));
 
         }
-        ApkSource apkSource = IntentCompat.getParcelableExtra(intent, EXTRA_APK_FILE_LINK, ApkSource.class);
+        ApkSource apkSource = IntentCompat.getUnwrappedParcelableExtra(intent, EXTRA_APK_FILE_LINK, ApkSource.class);
         if (apkSource != null) {
             synchronized (mApkQueue) {
                 mApkQueue.add(ApkQueueItem.fromApkSource(apkSource));
@@ -358,7 +358,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         boolean canDisplayNotification = Utils.canDisplayNotification(this);
         boolean alwaysOnBackground = canDisplayNotification && Prefs.Installer.installInBackground();
         Intent intent = new Intent(this, PackageInstallerService.class);
-        intent.putExtra(PackageInstallerService.EXTRA_QUEUE_ITEM, mCurrentItem);
+        IntentCompat.putWrappedParcelableExtra(intent, PackageInstallerService.EXTRA_QUEUE_ITEM, mCurrentItem);
         if (!SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES)) {
             // For unprivileged mode, use accessibility service if enabled
             mMultiplexer.enableInstall(true);

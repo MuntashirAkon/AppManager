@@ -82,6 +82,13 @@ public class BatchOpsService extends ForegroundService {
      */
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.BATCH_OPS";
 
+    @NonNull
+    public static Intent getIntent(@NonNull Context context, @NonNull BatchQueueItem queueItem) {
+        Intent intent = new Intent(context, BatchOpsService.class);
+        IntentCompat.putWrappedParcelableExtra(intent, EXTRA_QUEUE_ITEM, queueItem);
+        return intent;
+    }
+
     private QueuedProgressHandler mProgressHandler;
     private NotificationProgressHandler.NotificationInfo mNotificationInfo;
     private PowerManager.WakeLock mWakeLock;
@@ -100,10 +107,7 @@ public class BatchOpsService extends ForegroundService {
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         if (isWorking()) return super.onStartCommand(intent, flags, startId);
-        BatchQueueItem item = null;
-        if (intent != null) {
-            item = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, BatchQueueItem.class);
-        }
+        BatchQueueItem item = getQueueItem(intent);
         NotificationManagerInfo notificationManagerInfo = new NotificationManagerInfo(CHANNEL_ID,
                 "Batch Ops Progress", NotificationManagerCompat.IMPORTANCE_LOW);
         mProgressHandler = new NotificationProgressHandler(this,
@@ -123,11 +127,7 @@ public class BatchOpsService extends ForegroundService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        if (intent == null) {
-            sendResults(Activity.RESULT_CANCELED, null, null);
-            return;
-        }
-        BatchQueueItem item = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, BatchQueueItem.class);
+        BatchQueueItem item = getQueueItem(intent);
         if (item == null || item.getOp() == BatchOpsManager.OP_NONE) {
             sendResults(Activity.RESULT_CANCELED, item, null);
             return;
@@ -150,8 +150,7 @@ public class BatchOpsService extends ForegroundService {
 
     @Override
     protected void onQueued(@Nullable Intent intent) {
-        if (intent == null) return;
-        BatchQueueItem item = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, BatchQueueItem.class);
+        BatchQueueItem item = getQueueItem(intent);
         if (item == null) {
             return;
         }
@@ -167,9 +166,7 @@ public class BatchOpsService extends ForegroundService {
 
     @Override
     protected void onStartIntent(@Nullable Intent intent) {
-        if (intent == null) return;
-        BatchQueueItem item = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, BatchQueueItem.class);
-
+        BatchQueueItem item = getQueueItem(intent);
         int op = item != null ? item.getOp() : BatchOpsManager.OP_NONE;
         mNotificationInfo.setTitle(getDesiredOpTitle(this, op)).setOperationName(getHeader(item));
         mProgressHandler.onProgressStart(-1, 0, mNotificationInfo);
@@ -183,6 +180,14 @@ public class BatchOpsService extends ForegroundService {
         }
         CpuUtils.releaseWakeLock(mWakeLock);
         super.onDestroy();
+    }
+
+    @Nullable
+    private BatchQueueItem getQueueItem(@Nullable Intent intent) {
+        if (intent == null) {
+            return null;
+        }
+        return IntentCompat.getUnwrappedParcelableExtra(intent, EXTRA_QUEUE_ITEM, BatchQueueItem.class);
     }
 
     private void sendStarted(@NonNull BatchQueueItem queueItem) {
@@ -228,7 +233,7 @@ public class BatchOpsService extends ForegroundService {
                     intent.setIdentifier(String.valueOf(System.currentTimeMillis()));
                 }
                 intent.putExtra(EXTRA_FAILURE_MESSAGE, message);
-                intent.putExtra(EXTRA_QUEUE_ITEM, queueItem);
+                IntentCompat.putWrappedParcelableExtra(intent, EXTRA_QUEUE_ITEM, queueItem);
                 PendingIntent pendingIntent = PendingIntentCompat.getActivity(this, 0, intent,
                         PendingIntent.FLAG_ONE_SHOT, false);
                 notificationInfo.setDefaultAction(pendingIntent);

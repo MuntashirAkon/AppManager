@@ -78,7 +78,7 @@ public class BatchOpsResultsActivity extends BaseActivity {
     }
 
     private void handleIntent(@NonNull Intent intent) {
-        mBatchQueueItem = IntentCompat.getParcelableExtra(intent, BatchOpsService.EXTRA_QUEUE_ITEM, BatchQueueItem.class);
+        mBatchQueueItem = IntentCompat.getUnwrappedParcelableExtra(intent, BatchOpsService.EXTRA_QUEUE_ITEM, BatchQueueItem.class);
         if (mBatchQueueItem == null) {
             finish();
             return;
@@ -116,9 +116,10 @@ public class BatchOpsResultsActivity extends BaseActivity {
             finish();
             return true;
         } else if (id == R.id.action_retry) {
-            Intent BatchOpsIntent = new Intent(this, BatchOpsService.class);
-            BatchOpsIntent.putExtra(BatchOpsService.EXTRA_QUEUE_ITEM, mBatchQueueItem);
-            ContextCompat.startForegroundService(this, BatchOpsIntent);
+            if (mBatchQueueItem != null) {
+                Intent BatchOpsIntent = BatchOpsService.getIntent(this, mBatchQueueItem);
+                ContextCompat.startForegroundService(this, BatchOpsIntent);
+            }
         }
         return super.onOptionsItemSelected(item);
     }

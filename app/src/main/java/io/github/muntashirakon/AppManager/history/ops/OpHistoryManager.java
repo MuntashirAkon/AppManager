@@ -24,6 +24,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchQueueItem;
 import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.entity.OpHistory;
 import io.github.muntashirakon.AppManager.history.IJsonSerializer;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.profiles.ProfileApplierService;
 import io.github.muntashirakon.AppManager.profiles.ProfileQueueItem;
@@ -91,21 +92,17 @@ public final class OpHistoryManager {
         switch (item.getType()) {
             case HISTORY_TYPE_BATCH_OPS: {
                 BatchQueueItem batchQueueItem = BatchQueueItem.DESERIALIZER.deserialize(item.jsonData);
-                Intent intent = new Intent(context, BatchOpsService.class);
-                intent.putExtra(BatchOpsService.EXTRA_QUEUE_ITEM, batchQueueItem);
-                return intent;
+                return BatchOpsService.getIntent(context, batchQueueItem);
             }
             case HISTORY_TYPE_INSTALLER: {
                 ApkQueueItem apkQueueItem = ApkQueueItem.DESERIALIZER.deserialize(item.jsonData);
                 Intent intent = new Intent(context, PackageInstallerService.class);
-                intent.putExtra(PackageInstallerService.EXTRA_QUEUE_ITEM, apkQueueItem);
+                IntentCompat.putWrappedParcelableExtra(intent, PackageInstallerService.EXTRA_QUEUE_ITEM, apkQueueItem);
                 return intent;
             }
             case HISTORY_TYPE_PROFILE: {
                 ProfileQueueItem profileQueueItem = ProfileQueueItem.DESERIALIZER.deserialize(item.jsonData);
-                Intent intent = new Intent(context, ProfileApplierService.class);
-                intent.putExtra(ProfileApplierService.EXTRA_QUEUE_ITEM, profileQueueItem);
-                return intent;
+                return ProfileApplierService.getIntent(context, profileQueueItem, true);
             }
         }
         throw new IllegalStateException("Invalid type: " + item.getType());

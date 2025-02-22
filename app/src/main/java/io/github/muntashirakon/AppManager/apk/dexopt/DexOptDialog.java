@@ -137,8 +137,7 @@ public class DexOptDialog extends DialogFragment {
         BatchDexOptOptions options = new BatchDexOptOptions(mOptions);
         BatchQueueItem queueItem = BatchQueueItem.getBatchOpQueue(
                 BatchOpsManager.OP_DEXOPT, null, null, options);
-        Intent intent = new Intent(requireContext(), BatchOpsService.class);
-        intent.putExtra(BatchOpsService.EXTRA_QUEUE_ITEM, queueItem);
+        Intent intent = BatchOpsService.getIntent(requireContext(), queueItem);
         ContextCompat.startForegroundService(requireContext(), intent);
     }
 }

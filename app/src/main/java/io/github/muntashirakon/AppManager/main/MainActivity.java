@@ -589,10 +589,9 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
     private void handleBatchOp(@BatchOpsManager.OpType int op, @Nullable IBatchOpOptions options) {
         if (viewModel == null) return;
         showProgressIndicator(true);
-        Intent intent = new Intent(this, BatchOpsService.class);
         BatchOpsManager.Result input = new BatchOpsManager.Result(viewModel.getSelectedPackagesWithUsers());
         BatchQueueItem item = BatchQueueItem.getBatchOpQueue(op, input.getFailedPackages(), input.getAssociatedUsers(), options);
-        intent.putExtra(BatchOpsService.EXTRA_QUEUE_ITEM, item);
+        Intent intent = BatchOpsService.getIntent(this, item);
         ContextCompat.startForegroundService(this, intent);
     }
 

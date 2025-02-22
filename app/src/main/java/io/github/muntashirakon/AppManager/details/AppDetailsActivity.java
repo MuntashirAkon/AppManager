@@ -57,8 +57,8 @@ public class AppDetailsActivity extends BaseActivity {
     @NonNull
     public static Intent getIntent(@NonNull Context context, @NonNull String packageName, @UserIdInt int userId) {
         Intent intent = new Intent(context, AppDetailsActivity.class);
-        intent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, packageName);
-        intent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, userId);
+        intent.putExtra(EXTRA_PACKAGE_NAME, packageName);
+        intent.putExtra(EXTRA_USER_HANDLE, userId);
         return intent;
     }
 
@@ -66,17 +66,17 @@ public class AppDetailsActivity extends BaseActivity {
     public static Intent getIntent(@NonNull Context context, @NonNull String packageName, @UserIdInt int userId,
                                    boolean backToMainPage) {
         Intent intent = new Intent(context, AppDetailsActivity.class);
-        intent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, packageName);
-        intent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, userId);
-        intent.putExtra(AppDetailsActivity.EXTRA_BACK_TO_MAIN, backToMainPage);
+        intent.putExtra(EXTRA_PACKAGE_NAME, packageName);
+        intent.putExtra(EXTRA_USER_HANDLE, userId);
+        intent.putExtra(EXTRA_BACK_TO_MAIN, backToMainPage);
         return intent;
     }
 
     @NonNull
     public static Intent getIntent(@NonNull Context context, @NonNull ApkSource apkSource, boolean backToMainPage) {
         Intent intent = new Intent(context, AppDetailsActivity.class);
-        intent.putExtra(AppDetailsActivity.EXTRA_APK_SOURCE, apkSource);
-        intent.putExtra(AppDetailsActivity.EXTRA_BACK_TO_MAIN, backToMainPage);
+        IntentCompat.putWrappedParcelableExtra(intent, EXTRA_APK_SOURCE, apkSource);
+        intent.putExtra(EXTRA_BACK_TO_MAIN, backToMainPage);
         return intent;
     }
 
@@ -93,7 +93,7 @@ public class AppDetailsActivity extends BaseActivity {
         } else {
             intent.setData(apkPath);
         }
-        intent.putExtra(AppDetailsActivity.EXTRA_BACK_TO_MAIN, backToMainPage);
+        intent.putExtra(EXTRA_BACK_TO_MAIN, backToMainPage);
         return intent;
     }
 
@@ -229,7 +229,7 @@ public class AppDetailsActivity extends BaseActivity {
         if (uri != null) {
             return ApkSource.getApkSource(uri, intent.getType());
         }
-        return IntentCompat.getParcelableExtra(intent, EXTRA_APK_SOURCE, ApkSource.class);
+        return IntentCompat.getUnwrappedParcelableExtra(intent, EXTRA_APK_SOURCE, ApkSource.class);
     }
 
     static class SavedState implements Parcelable {

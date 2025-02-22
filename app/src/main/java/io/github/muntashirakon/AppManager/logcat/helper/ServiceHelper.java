@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logcat.CrazyLoggerService;
 import io.github.muntashirakon.AppManager.logcat.LogcatRecordingService;
 import io.github.muntashirakon.AppManager.logcat.reader.LogcatReaderLoader;
@@ -51,7 +52,7 @@ public class ServiceHelper {
         intent.putExtra(LogcatRecordingService.EXTRA_FILENAME, filename);
         // Load "lastLine" in the background
         LogcatReaderLoader loader = LogcatReaderLoader.create(true);
-        intent.putExtra(LogcatRecordingService.EXTRA_LOADER, loader);
+        IntentCompat.putWrappedParcelableExtra(intent, LogcatRecordingService.EXTRA_LOADER, loader);
         // Add query text and log level
         intent.putExtra(LogcatRecordingService.EXTRA_QUERY_FILTER, queryFilter);
         intent.putExtra(LogcatRecordingService.EXTRA_LEVEL, logLevel);

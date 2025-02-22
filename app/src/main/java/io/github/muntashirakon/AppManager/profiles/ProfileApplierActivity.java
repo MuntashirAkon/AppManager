@@ -175,9 +175,8 @@ public class ProfileApplierActivity extends BaseActivity {
             case ST_SIMPLE:
                 // There must be a state
                 Objects.requireNonNull(info.state);
-                Intent intent = new Intent(this, ProfileApplierService.class);
-                intent.putExtra(ProfileApplierService.EXTRA_QUEUE_ITEM, ProfileQueueItem.fromProfiledApplierInfo(info));
-                intent.putExtra(ProfileApplierService.EXTRA_NOTIFY, info.notify);
+                Intent intent = ProfileApplierService.getIntent(this,
+                        ProfileQueueItem.fromProfiledApplierInfo(info), info.notify);
                 ContextCompat.startForegroundService(this, intent);
                 next();
                 break;
@@ -195,9 +194,8 @@ public class ProfileApplierActivity extends BaseActivity {
                         .setSelection(info.state)
                         .setPositiveButton(R.string.ok, (dialog, which, selectedState) -> {
                             info.state = selectedState;
-                            Intent aIntent = new Intent(this, ProfileApplierService.class);
-                            aIntent.putExtra(ProfileApplierService.EXTRA_QUEUE_ITEM, ProfileQueueItem.fromProfiledApplierInfo(info));
-                            aIntent.putExtra(ProfileApplierService.EXTRA_NOTIFY, info.notify);
+                            Intent aIntent = ProfileApplierService.getIntent(this,
+                                    ProfileQueueItem.fromProfiledApplierInfo(info), info.notify);
                             ContextCompat.startForegroundService(this, aIntent);
                         })
                         .setNegativeButton(R.string.cancel, null)
