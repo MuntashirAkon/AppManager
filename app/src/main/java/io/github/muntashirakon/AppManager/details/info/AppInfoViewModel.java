@@ -49,6 +49,7 @@ import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat
 import io.github.muntashirakon.AppManager.compat.InstallSourceInfoCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
+import io.github.muntashirakon.AppManager.compat.PackageInfoCompat2;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.SensorServiceCompat;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
@@ -181,6 +182,7 @@ public class AppInfoViewModel extends AndroidViewModel {
             tagCloud.isDebuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
             tagCloud.isTestOnly = ApplicationInfoCompat.isTestOnly(applicationInfo);
             tagCloud.hasCode = (applicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) != 0;
+            tagCloud.isOverlay = PackageInfoCompat2.getOverlayTarget(packageInfo) != null;
             tagCloud.hasRequestedLargeHeap = (applicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0;
             if (ThreadUtils.isInterrupted()) {
                 return;
@@ -453,6 +455,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isDebuggable;
         public boolean isTestOnly;
         public boolean hasCode;
+        public boolean isOverlay;
         public boolean hasRequestedLargeHeap;
         public List<ActivityManager.RunningServiceInfo> runningServices;
         public List<MagiskProcess> magiskHiddenProcesses;

@@ -16,7 +16,8 @@ import dev.rikka.tools.refine.Refine;
 @RequiresApi(Build.VERSION_CODES.O)
 public class AppDetailsOverlayItem extends AppDetailsItem<OverlayInfoHidden> {
 
-    @SuppressWarnings("NewApi") // Required due to sdk lying about the real api version requirement for overlay info
+    @SuppressWarnings("NewApi")
+    // Required due to sdk lying about the real api version requirement for overlay info
     public AppDetailsOverlayItem(@NonNull OverlayInfo overlayInfo) {
         super(Refine.unsafeCast(overlayInfo));
         if (overlayInfo.getOverlayName() != null) {
@@ -63,7 +64,7 @@ public class AppDetailsOverlayItem extends AppDetailsItem<OverlayInfoHidden> {
         return item.state;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
+    @RequiresApi(Build.VERSION_CODES.P)
     public int getPriority() {
         return item.priority;
     }
@@ -93,18 +94,6 @@ public class AppDetailsOverlayItem extends AppDetailsItem<OverlayInfoHidden> {
     public String getOverlayName() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             return item.overlayName;
-        }
-        return null;
-    }
-
-    public String getTargetPackageName() {
-        return item.targetPackageName;
-    }
-
-    @Nullable
-    public String getTargetOverlayableName() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return item.targetOverlayableName;
         }
         return null;
     }

@@ -113,6 +113,7 @@ import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat
 import io.github.muntashirakon.AppManager.compat.InstallSourceInfoCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
+import io.github.muntashirakon.AppManager.compat.PackageInfoCompat2;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.SensorServiceCompat;
 import io.github.muntashirakon.AppManager.debloat.BloatwareDetailsDialog;
@@ -828,6 +829,44 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
         if (!tagCloud.hasCode) {
             tagItems.add(new TagItem().setTextRes(R.string.no_code));
+        }
+        if (tagCloud.isOverlay) {
+            TagItem overlayTag = new TagItem();
+            tagItems.add(overlayTag);
+            overlayTag.setTextRes(R.string.title_overlay)
+                    .setOnClickListener(v -> {
+                        Context ctx = v.getContext();
+                        String target = Objects.requireNonNull(PackageInfoCompat2.getOverlayTarget(mPackageInfo));
+                        String targetName = PackageInfoCompat2.getTargetOverlayableName(mPackageInfo);
+                        String category = PackageInfoCompat2.getOverlayCategory(mPackageInfo);
+                        int priority = PackageInfoCompat2.getOverlayPriority(mPackageInfo);
+                        boolean isStatic = PackageInfoCompat2.isStaticOverlayPackage(mPackageInfo);
+                        SpannableStringBuilder spannable = new SpannableStringBuilder();
+                        if (targetName != null) {
+                            spannable.append(getStyledKeyValue(ctx, R.string.overlay_target, targetName))
+                                    .append("\n")
+                                    .append(getSmallerText(target));
+                        } else {
+                            spannable.append(getStyledKeyValue(ctx, R.string.overlay_target, target));
+                        }
+                        if (category != null) {
+                            spannable.append("\n")
+                                    .append(getSmallerText(getStyledKeyValue(ctx, R.string.overlay_category, category)));
+                        }
+                        if (!isStatic) {
+                            spannable.append("\n")
+                                    .append(getSmallerText(getStyledKeyValue(ctx, R.string.priority, String.valueOf(priority))));
+                        } // else static overlays have the highest priority
+                        new MaterialAlertDialogBuilder(ctx)
+                                .setTitle(R.string.title_overlay)
+                                .setMessage(spannable)
+                                .setNeutralButton(R.string.app_info, (dialog, which) -> {
+                                    Intent appDetailsIntent = AppDetailsActivity.getIntent(ctx, target, mUserId);
+                                    startActivity(appDetailsIntent);
+                                })
+                                .setNegativeButton(R.string.close, null)
+                                .show();
+                    });
         }
         if (tagCloud.hasRequestedLargeHeap) {
             tagItems.add(new TagItem().setTextRes(R.string.requested_large_heap));

@@ -48,14 +48,6 @@
                 tools:text="Category: rro" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/overlay_target"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceBodySmall"
-                android:textIsSelectable="true"
-                tools:text="Overlay Target: configuration" />
-
-            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/overlay_state"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

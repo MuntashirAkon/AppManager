@@ -32,6 +32,7 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsOverlayItem;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.pref.TipsPrefs;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
@@ -188,20 +189,27 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
                 holder.overlayName.setText(UIUtils.getHighlightedText(overlayName, mConstraint, colorQueryStringHighlight));
             } else holder.overlayName.setText(overlayName);
             holder.packageName.setText(overlayItem.getPackageName());
-            holder.overlayTarget.setText(getString(R.string.overlay_target, overlayItem.getTargetOverlayableName()));
-            if (overlayItem.getTargetOverlayableName() == null)
-                holder.overlayTarget.setVisibility(View.GONE);
-            holder.overlayCategory.setText(getString(R.string.overlay_category, overlayItem.getCategory()));
-            if (overlayItem.getCategory() == null) holder.overlayCategory.setVisibility(View.GONE);
+            if (overlayItem.getCategory() != null) {
+                holder.overlayCategory.setVisibility(View.VISIBLE);
+                String category = getString(R.string.overlay_category) + LangUtils.getSeparatorString() + overlayItem.getCategory();
+                holder.overlayCategory.setText(category);
+            } else {
+                holder.overlayCategory.setVisibility(View.GONE);
+            }
             holder.toggleSwitch.setEnabled(overlayItem.isMutable());
             holder.toggleSwitch.setClickable(true);
             holder.toggleSwitch.setChecked(overlayItem.isEnabled());
 
+            StringBuilder sb = new StringBuilder(getString(R.string.state))
+                    .append(LangUtils.getSeparatorString())
+                    .append(overlayItem.getReadableState());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                holder.overlayState.setText(getString(R.string.overlay_state_and_priority, overlayItem.getReadableState(), overlayItem.getPriority()));
-            } else {
-                holder.overlayState.setText(getString(R.string.overlay_state, overlayItem.getReadableState()));
+                sb.append(" | ")
+                        .append(getString(R.string.priority))
+                        .append(LangUtils.getSeparatorString())
+                        .append(overlayItem.getPriority());
             }
+            holder.overlayState.setText(sb);
             holder.itemView.setClickable(false);
             if (overlayItem.isMutable()) {
                 holder.toggleSwitch.setClickable(true);
@@ -216,6 +224,7 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
                         ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed));
                     }
                 }));
+                holder.toggleSwitch.setVisibility(View.VISIBLE);
             } else {
                 holder.toggleSwitch.setOnClickListener(null);
                 holder.toggleSwitch.setClickable(false);
@@ -247,7 +256,6 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
             TextView overlayName;
             TextView packageName;
             TextView overlayCategory;
-            TextView overlayTarget;
             TextView overlayState;
             MaterialSwitch toggleSwitch;
 
@@ -257,7 +265,6 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
                 overlayName = itemView.findViewById(R.id.overlay_name);
                 packageName = itemView.findViewById(R.id.overlay_package_name);
                 overlayCategory = itemView.findViewById(R.id.overlay_category);
-                overlayTarget = itemView.findViewById(R.id.overlay_target);
                 overlayState = itemView.findViewById(R.id.overlay_state);
                 toggleSwitch = itemView.findViewById(R.id.overlay_toggle_btn);
             }
