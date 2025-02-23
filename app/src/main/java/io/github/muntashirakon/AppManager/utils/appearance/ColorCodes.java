@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.elevation.SurfaceColors;
 
+import io.github.muntashirakon.AppManager.debloat.DebloatObject;
 import io.github.muntashirakon.ui.R;
 
 public final class ColorCodes {
@@ -75,8 +76,16 @@ public final class ColorCodes {
         return ContextCompat.getColor(context, R.color.red);
     }
 
-    public static int getBloatwareIndicatorColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.tracker);
+    public static int getBloatwareIndicatorColor(@NonNull Context context, @DebloatObject.Removal int removal) {
+        switch (removal) {
+            case DebloatObject.REMOVAL_REPLACE:
+                return getRemovalReplaceIndicatorColor(context);
+            case DebloatObject.REMOVAL_SAFE:
+                return getRemovalSafeIndicatorColor(context);
+            case DebloatObject.REMOVAL_CAUTION:
+            default:
+                return getRemovalCautionIndicatorColor(context);
+        }
     }
 
     public static int getAppSuspendedIndicatorColor(@NonNull Context context) {

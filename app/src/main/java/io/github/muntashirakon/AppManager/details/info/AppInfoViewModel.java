@@ -223,7 +223,7 @@ public class AppInfoViewModel extends AndroidViewModel {
             List<DebloatObject> debloatObjects = StaticDataset.getDebloatObjects();
             for (DebloatObject debloatObject : debloatObjects) {
                 if (packageName.equals(debloatObject.packageName)) {
-                    tagCloud.isBloatware = true;
+                    tagCloud.bloatwareRemovalType = debloatObject.getRemoval();
                     break;
                 }
             }
@@ -466,7 +466,8 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isAppSuspended;
         public boolean isMagiskHideEnabled;
         public boolean isMagiskDenyListEnabled;
-        public boolean isBloatware;
+        @DebloatObject.Removal
+        public int bloatwareRemovalType;
         public boolean sensorsEnabled;
         @Nullable
         public XposedModuleInfo xposedModuleInfo;

@@ -962,11 +962,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     .setNegativeButton(R.string.close, null)
                                     .show());
         }
-        if (tagCloud.isBloatware) {
+        if (tagCloud.bloatwareRemovalType != 0) {
             TagItem bloatwareTag = new TagItem();
             tagItems.add(bloatwareTag);
             bloatwareTag.setText("Bloatware")
-                    .setColor(ColorCodes.getBloatwareIndicatorColor(context))
+                    .setColor(ColorCodes.getBloatwareIndicatorColor(context, tagCloud.bloatwareRemovalType))
                     .setOnClickListener(v -> {
                         BloatwareDetailsDialog dialog = BloatwareDetailsDialog.getInstance(mPackageName);
                         dialog.show(getChildFragmentManager(), BloatwareDetailsDialog.TAG);
