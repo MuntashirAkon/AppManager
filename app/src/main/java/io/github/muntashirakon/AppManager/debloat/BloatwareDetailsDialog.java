@@ -4,6 +4,8 @@ package io.github.muntashirakon.AppManager.debloat;
 
 import android.app.Application;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -18,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
@@ -211,12 +214,12 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
         return sb;
     }
 
-    private void addTag(@NonNull ViewGroup parent, @StringRes int titleRes, @ColorInt int textColor) {
+    private void addTag(@NonNull ViewGroup parent, @StringRes int titleRes, @ColorInt int background) {
         Chip chip = (Chip) LayoutInflater.from(requireContext()).inflate(R.layout.item_chip, parent, false);
         chip.setText(titleRes);
-        if (textColor >= 0) {
-            chip.setTextColor(textColor);
-        }
+        chip.setChipBackgroundColor(ColorStateList.valueOf(background));
+        double luminance = ColorUtils.calculateLuminance(background);
+        chip.setTextColor(luminance < 0.5 ? Color.WHITE : Color.BLACK);
         parent.addView(chip);
     }
 

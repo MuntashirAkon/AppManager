@@ -3,6 +3,10 @@
     <color name="textColorPrimary">#DE000000</color>
     <color name="textColorSecondary">#99000000</color>
 
+    <color name="salem_green">#1b8654</color>
+    <color name="lilac_bush_purple">#8267b8</color>
+    <color name="pumpkin_orange">#ff8017</color>
+
     <color name="disabled_user">#FF8A80</color>
     <color name="highlight">@color/background_tan</color>
     <color name="red">#B3FF0000</color>

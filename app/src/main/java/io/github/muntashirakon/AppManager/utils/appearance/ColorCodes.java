@@ -132,15 +132,15 @@ public final class ColorCodes {
     }
 
     public static int getRemovalSafeIndicatorColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.stopped);
+        return ContextCompat.getColor(context, R.color.salem_green);
     }
 
     public static int getRemovalReplaceIndicatorColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.sand_tan);
+        return ContextCompat.getColor(context, R.color.lilac_bush_purple);
     }
 
     public static int getRemovalCautionIndicatorColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.tracker);
+        return ContextCompat.getColor(context, R.color.pumpkin_orange);
     }
 
     public static int getScannerNoTrackerIndicatorColor(@NonNull Context context) {
