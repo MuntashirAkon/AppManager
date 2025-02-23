@@ -4,7 +4,7 @@
     <color name="textColorSecondary">#FFBEBEBE</color>
 
     <color name="disabled_user">#BF4F1C14</color>
-    <color name="highlight">@color/purple_shadow</color>
+    <color name="highlight">#6f5f4f</color>
     <color name="red">#790D0D</color>
     <color name="running">@color/purple</color>
     <color name="semi_transparent">#10FFFFFF</color>

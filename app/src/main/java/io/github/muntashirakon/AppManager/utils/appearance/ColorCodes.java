@@ -31,13 +31,8 @@ public final class ColorCodes {
     }
 
     @ColorInt
-    public static int getListItemSelectionColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.highlight);
-    }
-
-    @ColorInt
     public static int getQueryStringHighlightColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.red);
+        return ContextCompat.getColor(context, R.color.highlight);
     }
 
     public static int getSuccessColor(@NonNull Context context) {

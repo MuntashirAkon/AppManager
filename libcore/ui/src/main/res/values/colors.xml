@@ -8,7 +8,7 @@
     <color name="pumpkin_orange">#ff8017</color>
 
     <color name="disabled_user">#FF8A80</color>
-    <color name="highlight">@color/background_tan</color>
+    <color name="highlight">#FFFF9F</color>
     <color name="red">#B3FF0000</color>
     <color name="running">#EA80FC</color>
     <color name="semi_transparent">#10000000</color>
