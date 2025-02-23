@@ -169,10 +169,10 @@ public final class ColorCodes {
     }
 
     public static int getWhatsNewPlusIndicatorColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.stopped);
+        return getSuccessColor(context);
     }
 
     public static int getWhatsNewMinusIndicatorColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.electric_red);
+        return getFailureColor(context);
     }
 }
