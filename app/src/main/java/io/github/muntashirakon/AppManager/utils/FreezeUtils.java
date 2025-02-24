@@ -62,7 +62,7 @@ public final class FreezeUtils {
         if (ApplicationInfoCompat.isSuspended(applicationInfo)) {
             return true;
         }
-        return (ApplicationInfoCompat.getPrivateFlags(applicationInfo) & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;
+        return ApplicationInfoCompat.isHidden(applicationInfo);
     }
 
     @Deprecated

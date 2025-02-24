@@ -1517,4 +1517,6 @@
     <string name="sort_by_priority">Priority</string>
     <string name="overlays">Overlays</string>
     <string name="title_overlay">Overlay</string>
+    <string name="title_shortcut_for_frozen_app">Frozen app</string>
+    <string name="message_shortcut_for_frozen_app">The app corresponding to the shortcut appears to have been frozen. Unfreeze temporarily and open the shortcut?</string>
 </resources>

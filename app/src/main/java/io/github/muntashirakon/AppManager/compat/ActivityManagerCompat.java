@@ -59,7 +59,7 @@ public final class ActivityManagerCompat {
             ManifestCompat.permission.INJECT_EVENTS
     })
     @MainThread
-    public static void startActivityViaAssist(@NonNull Context context, @NonNull ComponentName activity,
+    public static boolean startActivityViaAssist(@NonNull Context context, @NonNull ComponentName activity,
                                               @Nullable ActivityLaunchUserInteractionRequiredCallback callback)
             throws SecurityException {
         // Need two permissions: WRITE_SECURE_SETTINGS and INJECT_EVENTS
@@ -96,6 +96,7 @@ public final class ActivityManagerCompat {
                 }
             });
         } // else do nothing
+        return canInjectEvents;
     }
 
     @SuppressWarnings("deprecation")

@@ -491,7 +491,7 @@ public final class PackageManagerCompat {
                 // Find using private flags
                 ApplicationInfo info = getApplicationInfo(packageName,
                         PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
-                return (ApplicationInfoCompat.getPrivateFlags(info) & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;
+                return ApplicationInfoCompat.isHidden(info);
             } catch (PackageManager.NameNotFoundException ignore) {
             }
         }

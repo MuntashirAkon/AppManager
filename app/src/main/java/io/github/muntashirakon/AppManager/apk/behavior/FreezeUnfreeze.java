@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.apk.behavior;
 
+import android.annotation.UserIdInt;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -54,6 +55,16 @@ public final class FreezeUnfreeze {
         intent.putExtra(EXTRA_PACKAGE_NAME, shortcutInfo.packageName);
         intent.putExtra(EXTRA_USER_ID, shortcutInfo.userId);
         intent.putExtra(EXTRA_FLAGS, shortcutInfo.flags);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
+    }
+
+    @NonNull
+    public static Intent getShortcutIntent(@NonNull Context context, @NonNull String packageName, @UserIdInt int userId, int flags) {
+        Intent intent = new Intent(context, FreezeUnfreezeActivity.class);
+        intent.putExtra(EXTRA_PACKAGE_NAME, packageName);
+        intent.putExtra(EXTRA_USER_ID, userId);
+        intent.putExtra(EXTRA_FLAGS, flags);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }

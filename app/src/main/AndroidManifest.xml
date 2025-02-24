@@ -1016,8 +1016,10 @@
         <activity
             android:name=".details.ActivityLauncherShortcutActivity"
             android:excludeFromRecents="true"
+            android:noHistory="true"
             android:exported="false"
-            android:taskAffinity=""
+            android:launchMode="singleTask"
+            android:taskAffinity=".details.ActivityLauncherShortcutActivity"
             android:theme="@style/AppTheme.TransparentBackground" />
         <activity
             android:name=".apk.behavior.FreezeUnfreezeActivity"
