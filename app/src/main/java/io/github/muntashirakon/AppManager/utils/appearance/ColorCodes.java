@@ -36,7 +36,7 @@ public final class ColorCodes {
     }
 
     public static int getSuccessColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.stopped);
+        return ContextCompat.getColor(context, R.color.salem_green);
     }
 
     public static int getFailureColor(@NonNull Context context) {
@@ -96,7 +96,7 @@ public final class ColorCodes {
     }
 
     public static int getBackupLatestIndicatorColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.stopped);
+        return getSuccessColor(context);
     }
 
     public static int getBackupOutdatedIndicatorColor(@NonNull Context context) {
@@ -116,7 +116,7 @@ public final class ColorCodes {
     }
 
     public static int getComponentTrackerBlockedIndicatorColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.stopped);
+        return getSuccessColor(context);
     }
 
     public static int getComponentBlockedIndicatorColor(@NonNull Context context) {
@@ -132,11 +132,11 @@ public final class ColorCodes {
     }
 
     public static int getScannerTrackerIndicatorColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.electric_red);
+        return getFailureColor(context);
     }
 
     public static int getRemovalSafeIndicatorColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.salem_green);
+        return getSuccessColor(context);
     }
 
     public static int getRemovalReplaceIndicatorColor(@NonNull Context context) {
@@ -148,11 +148,11 @@ public final class ColorCodes {
     }
 
     public static int getScannerNoTrackerIndicatorColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.stopped);
+        return getSuccessColor(context);
     }
 
     public static int getVirusTotalSafeIndicatorColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.stopped);
+        return getSuccessColor(context);
     }
 
     public static int getVirusTotalUnsafeIndicatorColor(@NonNull Context context) {
@@ -160,7 +160,7 @@ public final class ColorCodes {
     }
 
     public static int getVirusTotalExtremelyUnsafeIndicatorColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.electric_red);
+        return getFailureColor(context);
     }
 
     public static int getWhatsNewPlusIndicatorColor(@NonNull Context context) {
