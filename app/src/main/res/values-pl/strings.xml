@@ -1553,11 +1553,14 @@
     <string name="freeze_prefer_per_app_option">Preferowana opcja dla każdej aplikacji</string>
     <string name="remember_option_for_this_app">Zapamiętaj dla tej aplikacji</string>
     <string name="no_overlay_permission">Brak uprawnień do wyświetlania nakładek</string>
-    <string name="overlay_category">Kategoria: %s</string>
-    <string name="overlay_target">Cel: %s</string>
+    <string name="overlay_category">Kategoria</string>
+    <string name="overlay_target">Cel</string>
     <string name="overlay_sdk_version_too_low">Nakładki nie są obsługiwane.</string>
     <string name="no_overlays">Brak nakładek</string>
     <string name="sort_by_overlay_names">Nazwa nakładki</string>
     <string name="sort_by_priority">Priorytet</string>
     <string name="overlays">Nakładki</string>
+    <string name="title_shortcut_for_frozen_app">Zamrożona aplikacja</string>
+    <string name="title_overlay">Nakładka</string>
+    <string name="message_shortcut_for_frozen_app">Wygląda na to, że aplikacja odpowiadająca skrótowi została zamrożona. Odblokować tymczasowo i otworzyć skrót?</string>
 </resources>
