@@ -32,41 +32,36 @@ Shizuku (which now has Apache 2.0 license) for App Manager:
 
 \subsection{What are bloatware and how to remove them?}\label{subsec:faq:what-are-bloatware} %%##$bloatware-title>>
 %%!!bloatware<<
-Bloatware are the unnecessary apps supplied by the vendor or OEM and are usually system apps. These apps are often used
-to track users and collect user data which they might sell for profits. System apps do not need to request any
-permission in order to access device info, contacts and messaging data, and other usage info such as your phone usage
-habits and everything you store on your shared storage(s).
+Bloatware are the unnecessary pre-installed apps, usually system apps. Some of the apps are often
+used to track users and collect user data which they might sell for profits. Many system apps do not
+need to request any permission to access device info, contacts and messaging data, and other usage
+info, such as your phone usage habits and everything you store on your shared storage(s).
 
-The bloatware may also include Google apps (such as Google Play Services, Google Play Store, Gmail, Google, Messages,
-Dialer, Contacts), Facebook apps (the Facebook app consists of four or five apps), Facebook Messenger, Instagram,
-Twitter and many other apps which can also track users and/or collect user data without consent given that they all are
-system apps. You can disable a few permissions from the Android settings but be aware that Android settings hides almost
-every permission any security specialist would call potentially \emph{dangerous}.
+The bloatware may also include Google apps, Meta apps, and Twitter/X which can also track users
+and/or collect user data without consent. You can disable a few permissions from Android settings
+but be aware that Android settings hides many permissions a security researcher would call
+potentially \emph{dangerous} (e.g., internet, sensor).
 
-If the bloatware were user apps, you could easily uninstall them either from Android settings or AM. Uninstalling system
-apps is not possible without root permission. You can also uninstall system apps using ADB, but it may not work for all
-apps. AM can uninstall system apps with root or ADB (the latter with certain limitations, of course), but these methods
-cannot \emph{remove} the system apps completely as they are located in the \emph{system} partition which is a read-only
-partition. If you have root, you can remount this partition to manually \emph{purge} these apps but this will break Over
-the Air (OTA) updates since data in the system partition has been modified. There are two kind of updates, delta
-(small-size, consisting of only the changes between two versions) and full updates. You can still apply full updates,
-but the bloatware will be installed again, and consequently, you have to delete them all over again. Besides, not all
-vendors provide full updates.
+Were the bloatware user apps, they could be easily uninstalled either from Android settings or AM\@.
+Uninstalling system apps is not possible without privileged permission, but even then, it cannot
+\emph{remove} the system apps completely as they are located in the \emph{system} partition which is
+a read-only partition. If you have root, you can remount this partition to manually \emph{purge}
+these apps but this will break Over the Air (OTA) updates since data in the system partition has
+been modified. There are two kind of updates, delta (small-size, consisting of only the changes
+between two versions) and full updates. You may still be able to apply full updates, but the
+bloatware will be installed again, and consequently, you have to delete them all over again.
 
-Another solution is to disable these apps either from Android settings (no-root) or AM, but certain services can still
-run in the background as they can be started by other system apps using Inter-process Communication (IPC). One possible
-solution is to disable all bloatware until the service has finally stopped (after a restart). However, due to heavy
-modifications of the Android frameworks by the vendors, removing or disabling certain bloatware may cause the System UI
-to crash or even cause bootloop, thus, (soft) bricking your device. You may search the web or consult the fellow users
-to find out more about how to debloat your device.
-
-From v2.5.19, AM has a new feature called \hyperref[sec:profile-page]{profiles}. The
-\hyperref[sec:profiles-page]{profiles page} has an option to create new profiles from one of the presets. The presets
-consist of debloating profiles which can be used as a starting point to monitor, disable, and remove the bloatware from
-a proprietary Android operating system.
+Another solution is to disable these apps either from Android settings or AM, but certain services
+can still run in the background as they can be started by other system apps using Inter-process
+Communication (IPC). One possible solution is to disable all bloatware until the service has finally
+stopped (after a restart). However, due to heavy modifications of the Android frameworks by the
+vendors, removing or disabling certain bloatware may cause the System UI to crash or even cause
+bootloop. From v4.0.0, AM has a new feature called \textbf{Debloater} which can be used as a
+starting point to monitor, disable, and remove the bloatware from a proprietary Android operating
+system.
 
 \begin{warning}{Note}
-    In most cases, you cannot completely debloat your device. Therefore, it is recommended that you use a custom ROM
-    free from bloatware such as Graphene OS, Lineage OS or their derivatives.
+    In most cases, you cannot completely debloat your device. Therefore, it is recommended that you
+    use a custom ROM free from bloatware, such as Graphene OS, Lineage OS or their derivatives.
 \end{warning}
 %%!!>>
