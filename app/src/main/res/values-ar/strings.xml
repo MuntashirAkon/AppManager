@@ -1641,8 +1641,6 @@
     <string name="advanced_suspend_app_description">إنه يفرض إيقاف التطبيق وتعليقه للتأكد من أن التطبيق لا يعمل في الخلفية. يجب تفضيل هذه الطريقة على طريقة <b>التعليق</b> العادية.</string>
     <string name="favorites">المفضلات</string>
     <string name="no_overlay_permission">لا تصريح للعرض فوق التطبيقات الأخرى</string>
-    <string name="overlay_state_and_priority">الحالة: %1$s | الأولوية: %2$o</string>
-    <string name="overlay_state">الحالة: %s</string>
     <string name="overlay_category">الفئة: %s</string>
     <string name="overlay_target">الهدف: %s</string>
     <string name="overlay_sdk_version_too_low">التراكبات غير مدعومة.</string>
