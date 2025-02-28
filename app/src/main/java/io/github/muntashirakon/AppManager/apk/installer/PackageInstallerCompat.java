@@ -64,11 +64,13 @@ import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.utils.HuaweiUtils;
 import io.github.muntashirakon.AppManager.utils.MiuiUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -804,8 +806,10 @@ public final class PackageInstallerCompat {
                                 @Nullable String originatingPackage, @Nullable Uri originatingUri,
                                 int installScenario, int packageSource,
                                 boolean requestUpdateOwnership) {
-        String requestedInstallerPackageName = mHasInstallPackagePermission ? installerName : null;
-        String installerPackageName = Build.VERSION.SDK_INT < Build.VERSION_CODES.P && mHasInstallPackagePermission
+        // Changing package installer in stock Huawei with UID 2000 does not work
+        boolean canChangeInstaller = mHasInstallPackagePermission && (!HuaweiUtils.isStockHuawei() || Users.getSelfOrRemoteUid() != Ops.SHELL_UID);
+        String requestedInstallerPackageName = canChangeInstaller ? installerName : null;
+        String installerPackageName = Build.VERSION.SDK_INT < Build.VERSION_CODES.P && canChangeInstaller
                 ? installerName : BuildConfig.APPLICATION_ID;
         try {
             mPackageInstaller = PackageManagerCompat.getPackageInstaller();
