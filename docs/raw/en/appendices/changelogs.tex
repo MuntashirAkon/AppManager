@@ -1,6 +1,50 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
 \chapter{Changelogs}\label{ch:changelogs} %%##$chapter-title>>
 
+\section{v4.0.1 (441)}\label{sec:v4.0.1-(441)}
+\subsection{Overlay management}
+In the App Details page, a new tab ``Overlays'' is added where per-app overlays are displayed. They
+can also be enabled or disabled using the toggle button. In addition, if the App Details page of an
+overlay package is opened, a ``Overlay'' tag will be displayed in the App Info tab. Clicking on the
+tag opens a dialog containing additional info along with a button that allows navigating to the
+App Details page of the overlay target package if it is installed.
+
+\paragraph{Known limitation} At present, it only works for root/ADB users in Android 8 (Oreo) and
+later.
+
+\subsection{Unfreeze option in activity shortcuts}
+If the application corresponding to the shortcut being launched is frozen, App Manager will now
+offer you to unfreeze the app temporarily so that the shortcut can be launched. The app will be
+frozen again once the screen is locked.
+
+\paragraph{Known limitation} This may not work on devices without a screen lock or if the screen is
+locked some time after the display goes off.
+
+\subsection{\texttt{market}-like URL support}
+Third-party applications can now open the App Details page of any installed package by invoking an
+Intent with an URL with the following format:
+
+\begin{verbatim}
+app-manager://details?id=<pkg>&user=<user_id>
+\end{verbatim}
+
+where \texttt{<pkg>} stands for package name, and \texttt{<user\_id>} stands for the user ID which
+is optional.
+
+\subsection{Updated color codes}
+In order to improve accessibility, certain color codes have been improved. Visit
+\href{app-manager://settings/about/version}{Settings > About > Version/Changelog} for details.
+
+\subsection{Others}
+\begin{itemize}
+    \item Avoided waiting for the remote server to respond when no-root mode is set
+    \item Fixed downgrading apps in Android 10 onwards
+    \item Fixed installer issues in the Huawei stock operating systems
+    \item Improved text formatting in the ``What's New'' dialog
+    \item In the UI tracker window, fixed clicking on the icon after it is iconified
+    \item Updated bloatware and suggestions
+\end{itemize}
+
 \section{v4.0.0 (440)}\label{sec:v4.0.0-(440)}
 
 App Manager v4.0.0 comes with a lot of new features and improvements. Visit

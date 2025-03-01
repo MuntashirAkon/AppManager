@@ -1,0 +1,7 @@
+- Overlay package management
+- Unfreeze option in activity shortcuts
+- Support market-like URL to open App Details page
+- Updated color codes
+- Fixed downgrading apps in Android 10 onwards
+- Fixed installer issues in the Huawei devices
+- In UI tracker, fixed clicking on the icon after it is iconified

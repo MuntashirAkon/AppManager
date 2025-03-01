@@ -2,6 +2,76 @@
 <changelog>
     <release
         type="stable release"
+        version="v4.0.1"
+        code="441"
+        date="28 February 2025">
+        <improve>Upgraded to Android 15</improve>
+
+        <title>App Details page</title>
+        <new>Added Overlays tab to display and manage per-app overlays</new>
+        <new>
+            Allow opening the App Details page via [tt]app-manager://details?id=&lt;pkg>&amp;user=&lt;user_id>[/tt]
+        </new>
+        <note subtext="true">
+            The uri is similar to [tt]market://details?id=&lt;pkg>[/tt] in addition to supporting an
+            optional user ID as a query parameter. If user ID is provided but does not exist in
+            system, it does not fall back to the default user ID to avoid inconsistent behavior.
+        </note>
+        <improve>Offer to unfreeze temporarily when launching activity shortcuts</improve>
+        <note subtext="true">
+            If the app corresponding to the shortcut being launched is frozen, offer user to
+            unfreeze the app temporarily so that the shortcut can be launched. The app will be
+            frozen again once the screen is locked. However, this may not work on devices without
+            a screen lock or if the screen is locked some time after the display goes off (possibly
+            due to power management issues).
+        </note>
+
+        <title>App Info tab</title>
+        <new>New tag: Overlay</new>
+        <note subtext="true">
+            Clicking on the tag opens a dialog containing the target package name, label, category,
+            and priority, if available. In the dialog, there is an "App Info" button that allows
+            navigating to the App Details page of the target package if it is installed.
+        </note>
+        <improve>Set debloater tag color based on its removal type</improve>
+
+        <title>Debloater</title>
+        <improve>Altered color codes</improve>
+        <note subtext="true">
+            The color codes are improved to make the texts readable in dark mode as well as to
+            facilitate color blind users.[br/]
+            - Green: Safe to delete[br/]
+            - Purple: Replace with alternative[br/]
+            - Orange: Exercise caution.
+        </note>
+        <improve>Updated bloatware and suggestions</improve>
+
+        <title>Installer</title>
+        <improve>Improved text formatting in the "What's New" dialog</improve>
+        <fix>Fixed downgrading apps in Android 10 onwards</fix>
+        <fix>Fixed installer issues in the Huawei stock operating systems</fix>
+
+
+        <title>UI Tracker</title>
+        <fix>Fixed clicking on the icon after it is iconified</fix>
+
+        <title>Others</title>
+        <improve>Avoided waiting for the remote server to respond when no-root mode is set</improve>
+        <note subtext="true">
+            If a remote server is running in the background but the mode of operations in App
+            Manager is set to "no-root", it will directly launch in no-root mode instead of waiting
+            for a response from the remote server.
+        </note>
+        <improve>Improve query highlighting</improve>
+        <note subtext="true">
+            Instead of red, which is used in the texts, a variant of yellow (canary) is used for
+            highlighting texts in the light mode and a variant of brown (domino) is used for
+            highlighting texts in the dark mode.
+        </note>
+        <improve>Use green instead of dark cyan for "success"-related operations</improve>
+    </release>
+    <release
+        type="stable release"
         version="v4.0.0"
         code="440"
         date="10 February 2025">

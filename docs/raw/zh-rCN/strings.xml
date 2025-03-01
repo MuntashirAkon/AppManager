@@ -652,7 +652,7 @@
 \n这将在新活动中打开\\hyperref[sec:1-click-ops-page]{相应页面}。</string>
     <string name="keywords$see_also">\\newcommand{\\KeywordSeeAlso}{另见:}</string>
     <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\KeywordEndOfKeyWordInAlert}{.}</string>
-    <string name="titlepage$quotation">\\begin{quotation
+    <string name="titlepage$quotation">\\begin{quotation}
 \n 睿智而缓慢。跑得快的人会跌倒。
 \n %\\sourceatright
 \n {---劳伦斯修士，\\textit{罗密欧与朱丽叶}}
