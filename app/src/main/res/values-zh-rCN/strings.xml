@@ -1435,4 +1435,6 @@
     <string name="sort_by_priority">优先级</string>
     <string name="overlay_target">目标</string>
     <string name="title_shortcut_for_frozen_app">冻结的应用</string>
+    <string name="title_overlay">遮罩</string>
+    <string name="message_shortcut_for_frozen_app">对应于该快捷方式的应用似乎已被冻结。临时解冻并打开该快捷方式？</string>
 </resources>
