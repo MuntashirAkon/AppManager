@@ -1641,11 +1641,14 @@
     <string name="advanced_suspend_app_description">إنه يفرض إيقاف التطبيق وتعليقه للتأكد من أن التطبيق لا يعمل في الخلفية. يجب تفضيل هذه الطريقة على طريقة <b>التعليق</b> العادية.</string>
     <string name="favorites">المفضلات</string>
     <string name="no_overlay_permission">لا تصريح للعرض فوق التطبيقات الأخرى</string>
-    <string name="overlay_category">الفئة: %s</string>
-    <string name="overlay_target">الهدف: %s</string>
+    <string name="overlay_category">الفئة</string>
+    <string name="overlay_target">الهدف</string>
     <string name="overlay_sdk_version_too_low">التراكبات غير مدعومة.</string>
     <string name="no_overlays">لا توجد تراكبات</string>
     <string name="sort_by_overlay_names">اسم التراكبات</string>
     <string name="sort_by_priority">الأولوية</string>
     <string name="overlays">التراكبات</string>
+    <string name="message_shortcut_for_frozen_app">يبدو أن التطبيق التابع للاختصار قد تم تجميده. هل تريد إلغاء التجميد مؤقتًا وفتح الاختصار ؟</string>
+    <string name="title_shortcut_for_frozen_app">تطبيق مجمد</string>
+    <string name="title_overlay">التراكب</string>
 </resources>
