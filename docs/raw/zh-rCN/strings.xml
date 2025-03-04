@@ -4,23 +4,23 @@
     <string name="intro$main$$supported-versions-title">受支持的版本</string>
     <string name="intro$main$$source-code-links-title">源码链接</string>
     <string name="intro$main$$contributing-title">贡献</string>
-    <string name="intro$main$buiding">在位于源码根目录下的BUILDING文件中可以获得编译指导。</string>
+    <string name="intro$main$buiding">在位于源码根目录下的BUILDING文件中可以获得编译教程。</string>
     <string name="titlepage$user_manual">{\\huge\\bfseries 用户手册\\par}</string>
-    <string name="intro$main$translations">App Manager 不接受直接通过pull/merge进行的翻译。翻译通过Hosted Weblate进行管理。
-\n要翻译App Manager，请访问 \\url{https://hosted.weblate.org/engage/app-manager/}。</string>
-    <string name="intro$main$supported-versions">当前，支持的版本是 v3.0.0 -- v3.0.3（稳定版），v3.1.0（alpha 和 debug 版）。先前版本的 App
-\nManager 可能包含安全漏洞，不应继续使用。</string>
+    <string name="intro$main$translations">App Manager 不接受通过 pull/merge 请求进行的翻译。\n翻译通过 Hosted Weblate 管理。
+\n要翻译App Manager，请访问 \\url{https://hosted.weblate.org/engage/app-manager/}。开始前请阅读 \\textbf{信息} 部分。</string>
+    <string name="intro$main$supported-versions">当前，支持的版本是 v4.0.1。\n先前版本的 App
+Manager 可能包含安全漏洞，不应继续使用。</string>
     <string name="intro$main$intro">App Manager 是一个高级的 Android 包管理器。
-\n它提供了不计其数的功能，因此需要用户手册来帮助用户。本文档作为 App Manager 的用户手册，旨在描述 App Manager 提供的每一个功能。
+\n它提供了许多功能，因此需要用户手册来帮助用户。本文档作为 App Manager 的用户手册，旨在描述 App Manager 提供的每一个功能。
 \n本文档也可以被认为是 App Manager 的“官方”指南，
 \n并代表了 App Manager 的预期行为。翻译对文档理解可能有误（原文是用英语写的）。
-\n因此，每个有能力的用户都应该阅读英文版本的文档，以充分发挥 App Manager 的作用。
-\n可能还有其他非官方或第三方资源，如博客文章、视频、聊天、群组等。
+\n因此，有能力的用户应该阅读英文文档，以充分发挥文档 的作用。
+\n可能还有其他非官方或第三方资源，如博客文章、视频、论坛、聊天、群组等。
 \n虽然这些资源可能对很多人有用，但它们的内容可能跟不上最新的 App Manager 版本。
 \n如果在 App Manager 中发现任何偏离本文档的情况，应在
 \n\\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager 问题追踪}进行报告。</string>
     <string name="intro$main$bin-sources">App Manager 通过以下渠道发布。
-\n非官方来源可能分发 App Manager 的修改版本，后果自负。
+\n非官方来源可能分发 App Manager 的修改版本，使用这样版本的后果由你自己单独承担。
 \n\\begin{enumerate}
 \n \\item F-Droid \\footnote{For distributing normal releases only}\\\\
 \n \\textit{Link:} \\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}
@@ -31,8 +31,8 @@
 \n \\textit{Normal releases:} \\url{https://t.me/AppManagerChannel}\\\\
 \n \\textit{Debug releases:} \\url{https://t.me/AppManagerDebug}
 \n\\end{enumerate}</string>
-    <string name="intro$main$source-code-links">除了GitHub外其他都是镜像链接。tags 应当始终是最新的，但 master 分支不保证是
-\n最新的。如果计划 clone master 分支，请使用 GitHub 链接而不是其他链接。</string>
+    <string name="intro$main$source-code-links">除了GitHub外其他都是镜像链接。tags 应当始终是最新的，但 master 分支也许不是
+。 \n如果计划克隆 master 分支，请使用 GitHub 链接而不是其他链接。</string>
     <string name="intro$main$terminologies">\\begin{itemize}
 \n \\item \\textbf{AM} --- App Manager 应用
 \n \\item \\textbf{Block/Unblock} --- 用于拦截组件或解除组件拦截。 如何拦截取决于
@@ -41,7 +41,7 @@
 \n \\item \\textbf{Ops} --- operations (操作), e.g.\\ app ops, batch ops, 1-click ops
 \n \\item \\textbf{SAF} --- 存储访问框架（SAF）的缩写形式，Android 系统所用的抽象概念，允许应用无需担忧底层文件系统便能
 \n 使用或提供文件。
-\n \\item \\textbf{SSAID} --- \\texttt{Settings.Secure.ANDROID\\_ID} - 分配给每个应用的设备标识符 (Android Oreo及以上版本)，
+\n \\item \\textbf{SSAID} --- \\texttt{Settings.Secure.ANDROID\\_ID} - 分配给每个应用的设备标识符 (Android Oreo以上版本)，
 \n 由应用签名与包\\texttt{android}的SSAID组合生成。
 \n 因此，除非用户选择格式化设备，否则它保证对每个应用来说都是独一无二的。
 \n 它被普遍用于跟踪用户。
@@ -58,8 +58,8 @@
     <string name="intro$main$$official-sources-title">官方来源</string>
     <string name="intro$main$$donation-title">捐赠 \\&amp; 资助</string>
     <string name="intro$main$$contact-title">联系我们</string>
-    <string name="intro$main$contributing">用户可有通过多种方式做出贡献，如创建有用 issues 、参加讨论、
-\n改进文档和翻译，添加未被认可的库或跟踪器，
+    <string name="intro$main$contributing">用户可有通过多种方式作贡献，如创建有用 issues 、参加讨论、
+\n改进文档和翻译、报告未知的库或跟踪器、
 \n审查源代码以及报告安全漏洞。</string>
     <string name="pages$main$$pages-chapter-title">页面</string>
     <string name="pages$main-page$$section-title">主页</string>
@@ -95,18 +95,18 @@
     <string name="pages$main-page$$colour-codes-title">颜色代码含义</string>
     <string name="intro$main$submit-patches">除GitHub之外的仓库目前被视为镜像，在这些网站提交的 PR/MR 将不被接受.
 \n\\footnote{GitHub 的 PR 将使用 git patch 进行手动合并, 因此, GitHub 可能会错误地将它们标记为closed而不是merged.}
-\n相反，patches (\\texttt{.patch} 文件) 可以通过电子邮件附件提交。\\textit{请务必对Commits签名(Signing-off)} 
+\n相反，patches (\\texttt{.patch} 文件) 可以通过电子邮件附件提交。\\textit{请务必对Commits签名(Signing-off)}
 \n更多信息请参见位于源码根目录下的CONTRIBUTING文件.
 \n
 \n\\begin{warning}{注意}
-\n在通过电子邮件提交补丁是，整个邮件对话在将来可能会被公开访问.
-\n所以，请不要除了您的姓名和电子邮件地址之外，不要包含任何个人身份信息（PII）.
+\n至于通过电子邮件提交补丁，完整邮件对话在将来可能可以公开访问.
+\n所以，请不要包含除了您的姓名和电子邮件地址之外的任何个人身份信息（PII）.
 \n\\end{warning}</string>
     <string name="pages$main-page$colour-codes">\\begin{itemize}\n \\item \\colorbox{uninstalled-day}{\\textcolor{black}{红色 (日间模式下)}} / \\colorbox{uninstalled-night}{\\textcolor{white}\n {深红色 (夜间模式下)}} --已卸载的应用程序\n \\item \\colorbox{disabled-day}{\\textcolor{black}{浅红色 (日间模式下)}} / \\colorbox{disabled-night}{\\textcolor{white}\n {暗红色 (夜间模式下)}} -- 已停用的应用程序\n \\item \\colorbox{force-stopped}{\\textcolor{white}{暗青色}} -- 已强行停止的应用程序\n \\item \\colorbox{AMYellow}{\\textcolor{black}{黄色星标}} -- 可调试的应用程序\n\n \\item \\textcolor{AMOrange}{橙色 \\textit{日期}} -- 可读取日志的应用程序\n \\item \\textcolor{AMOrange}{橙色 \\textit{UID}} -- UID在多个应用程序中被共享\n \\item \\textcolor{AMOrange}{橙色 \\textit{SDK}} -- 使用明文网络通信(即 HTTP)\n \\item \\textcolor{tracker-day}{亮橙色 \\textit{包名}} -- 有一个或多个跟踪器的应用程序\n \\item \\textcolor{red}{红色 \\textit{应用标签}} -- 不允许清空数据的应用程序\n \\item \\textcolor{AMDarkCyan}{暗青色 \\textit{版本}} -- 未运行的应用程序\n \\item \\textcolor{magenta}{紫红色} -- 常驻应用(即一直运行的应用程序)\n\n \\item \\textcolor{red}{红色 \\textit{备份标识}} -- 已卸载的应用程序存在一个或多个备份 \n 在App Manager中\n \\item \\textcolor{AMOrange}{橙色 \\textit{备份标识}} -- 存在的备份已过期，\n 即基本备份中包含已安装应用程序的旧版本\n \\item \\textcolor{AMDarkCyan}{暗青色 \\textit{备份标识}} -- 存在的备份已更新，\n 即基本备份中包含已安装应用程序的相同版本或更高版本\n\\end{itemize}</string>
     <string name="pages$main-page$instructions">单击 \\textbf{用户手册} 打开离线版本的 App Manager 用户手册。\n如果单独拆分出来的相应功能（即\\ \\texttt{feat\\_docs} ）未安装, 或系统里不存在加载手册的 WebView\n也可以打开用户手册的在线版本。</string>
     <string name="pages$main-page$$list-options-title">列表选项</string>
     <string name="pages$main-page$$apk-updater-title">APK更新器</string>
-    <string name="intro$main$donation">% \\emph{捐赠或购买并不是使用App Manager的必要条件。} 虽然 App Manager 不支持任何内购，\n% 但可以通过 Open Source Collective 向 App Manager 的所有者进行捐赠。 \n%\n% Open Source Collective 是 Open Collective 平台上的一个财政托管机构，\n% 帮助开源项目管理他们的财务状况。 \n% 目前支持通过银行账户、PayPal、信用卡或借记卡以及加密货币发起捐赠。\n%\n% \\textit{链接：} \\url{https://opencollective.com/muntashir} 。\n%\n% 向开发者捐赠意味着捐赠者同意\n% “不应将捐款当作使作者优先考虑其所请求的功能的筹码” 。 \n% 新功能的优先级根据开发者的偏好决定，并不需要任何报酬或捐赠。\n%\n% \\emph{App Manager 接受任何主动提供的资助或赠款} \n% 有兴趣组织的代表可以通过 \\Sref{sec:contact} 中给出的选项联系所有者。\n\n截至2024年9月，\n在另行通知前 App Manager 不接受任何经济支持。\n但你仍可以向开发者赠送礼物（例如礼品卡、订阅、食物和饮料、鲜花甚至是现金）。\n请用 \\Sref{sec:contact} 中给出的选项联系维护者以获得进一步帮助。</string>
+    <string name="intro$main$donation">% \\emph{捐赠或购买并不是使用App Manager的必要条件。} 虽然 App Manager 不支持任何内购，\n% 但可以通过 Open Source Collective 向 App Manager 的所有者进行捐赠。 \n%\n% Open Source Collective 是 Open Collective 平台上的一个财政托管机构，\n% 帮助开源项目管理他们的财务状况。 \n% 目前支持通过银行账户、PayPal、信用卡或借记卡以及加密货币发起捐赠。\n%\n% \\textit{链接：} \\url{https://opencollective.com/muntashir} 。\n%\n% 向开发者捐赠意味着捐赠者同意\n% “不应将捐款当作使作者优先考虑其所请求的功能的筹码” 。 \n% 新功能的优先级根据开发者的偏好决定，并不需要任何报酬或捐赠。\n%\n% \\emph{App Manager 接受任何主动提供的资助或赠款} \n% 有兴趣组织的代表可以通过 \\Sref{sec:contact} 中给出的选项联系所有者。\n\n截至2024年9月，\n在另行通知前 App Manager 不接受经济支持。\n但你仍可以向开发者赠送礼物（例如礼品卡、订阅、食物和饮料、鲜花甚至是现金）。\n请用 \\Sref{sec:contact} 中给出的选项联系维护者以获得进一步帮助。</string>
     <string name="intro$main$contact">App Manager 社区\\\\\n邮箱: \\href{mailto:am4android@riseup.net}{am4android [at] riseup [dot] net}\\\\\nGitHub 账户: \\url{https://github.com/AMCommunity}\\\\\nTwitter/X 账户: \\url{https://x.com/AppManagerNews}\\\\\nMastodon 账户: \\href{https://floss.social/@appmanager}{@appmanager@floss.social}\\\\\n\\\\\n\nMuntashir Al-Islam\\footnote{你也可以叫我``Muntashir Akon\'\'}\\\\ \n邮箱: \\href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\\\ \n密钥指纹: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\ \nGitHub 账户: \\url{https://github.com/MuntashirAkon}\\\\ \nTwitter 账户: \\url{https://twitter.com/Muntashir}</string>
     <string name="pages$main-page$$batch-operations-title">批处理</string>
     <string name="pages$main-page$$version-info-title">版本信息</string>
@@ -127,7 +127,7 @@
     <string name="pages$app-details-page$$signatures-tab-title">签名选项卡</string>
     <string name="pages$app-details-page$$blocking-trackers-title">拦截跟踪器。</string>
     <string name="pages$app-details-page$$app-ops-title">App Ops</string>
-    <string name="pages$app-details-page$colour-codes">本页中使用的颜色列表，以及对应的含义:\n\\begin{itemize}\n \\item \\colorbox{uninstalled-day}{\\textcolor{black}{红色 (日间模式)}} / \\colorbox{uninstalled-night}{\\textcolor{white}{深红色 (夜间模式)}}\n -- 表示任何应用操作(App ops)或权限存在危险的标志(flag)，或者任何组件在 App Manager 中被阻止，\n 又或者是任何需要却又不受支持的功能特性。\n\n \\item \\colorbox{disabled-day}{\\textcolor{black}{亮红色 (日间模式)}} / \\colorbox{disabled-night}{\\textcolor{white}{暗红色 (夜间模式)}}\n-- 表示组件在 App Manager 外被禁用，或任何不受支持的\n可选功能特性。 \n\n \\begin{tip}{注意}\n 标记为禁用（停用/阻止）的组件并不意味着它被用户禁用，它也可能被系统禁用，\n或者在其清单(Android-Manifest.xml)中被标记为禁用（停用/阻止）。\n被禁用（停用/阻止）的应用程序也会被系统（和App Manager）视为禁用（停用/阻止）。 \n \\end{tip}\n\n \\item \\colorbox{tracker-day}{\\textcolor{black}{鲜橙色 (日间模式)}} / \\colorbox{tracker-night}{\n \\textcolor{white}{暗橙色 (夜间模式)}} -- 表示存在跟踪器组件\n\n \\item \\colorbox{AMSoftMagenta}{\\textcolor{black}{紫色 (日间模式)}} / \\colorbox{AMVeryDarkViolet}{\n \\textcolor{white}{深紫色 (夜间模式)}} -- 表示存在正在运行的服务。\n\n \\item \\colorbox{AMDarkCyan}{\\textcolor{black}{暗青色}} -- 表示当前应用程序中的所有跟踪器\n 已在 跟踪器指示器 标签页内被阻止。\n\\end{itemize}</string>
+    <string name="pages$app-details-page$colour-codes">本页中使用的颜色列表，以及对应的含义:\n\\begin{itemize}\n \\item \\colorbox{uninstalled-day}{\\textcolor{black}{红色 (日间模式)}} / \\colorbox{uninstalled-night}{\\textcolor{white}{深红色 (夜间模式)}}\n -- 表示任何应用操作(App ops)或权限存在危险的标志(flag)，或者任何组件在 App Manager 中被阻止，\n 又或者是任何需要却又不受支持的功能特性。\n\n \\item \\colorbox{disabled-day}{\\textcolor{black}{亮红色 (日间模式)}} / \\colorbox{disabled-night}{\\textcolor{white}{暗红色 (夜间模式)}}\n-- 表示组件在 App Manager 外被禁用，或任何不受支持的\n可选功能特性。 \n\n \\begin{tip}{注意}\n 标记为禁用（停用/阻止）的组件并不意味着它被用户禁用，它也可能被系统禁用，\n或者在其清单(Android-Manifest.xml)中被标记为禁用（停用/阻止）。\n被禁用（停用/阻止）的应用程序也会被系统（和App Manager）视为禁用（停用/阻止）。 \n \\end{tip}\n\n \\item \\colorbox{tracker-day}{\\textcolor{black}{鲜橙色 (日间模式)}} / \\colorbox{tracker-night}{\n \\textcolor{white}{暗橙色 (夜间模式)}} -- 表示存在跟踪器组件\n\n \\item \\colorbox{AMSoftMagenta}{\\textcolor{black}{紫色 (日间模式)}} / \\colorbox{AMVeryDarkViolet}{\n \\textcolor{white}{深紫色 (夜间模式)}} -- 表示存在正在运行的服务。\n\n \\item \\colorbox{AMGreen}{\\textcolor{白色}{绿色}} -- 表示当前应用程序中的所有跟踪器\n 已在 跟踪器指示器 标签页内被阻止。\n\\end{itemize}</string>
     <string name="pages$app-details-page$$shared-libs-tab-title">共享库选项卡</string>
     <string name="pages$one-click-ops-page$$1-click-back-up-title">备份</string>
     <string name="pages$one-click-ops-page$$1-click-restore-title">恢复</string>
@@ -459,7 +459,7 @@
     <string name="guide$wireless_debugging$connect-am-to-adb">若运行模式设置为 \\textit{自动}, \\textit{通过 TCP 启动的 ADB} 或 \\textit{无线调试}，\nApp Manager 应该能够自动连接到 ADB。\n若并非如此，则在\\textbf{设置} &gt; \\hyperref[subsec:mode-of-operation]{操作模式} 中选择 \\textit{无线调试} 。\n若 App Manager 无法检测或连接到 ADB ，\n则会显示一个提示对话框以用于连接或配对 ADB 。 选择 \\textit{连接} 。\n\n现在，从 Android 设置中转到 \\textbf{无线调试} 页面，记下页面显示的端口号。\n在 App Manager 的提示对话框中，\n用你记下的端口号替换当前端口号，然后点击 \\textit{连接} 。\n\n一旦成功建立连接，你就能够禁用 Android 设置的 \\textbf{无线调试}。\n\n\\begin{danger}{小心}\n 不要禁用 \\textbf{USB 调试} 或 \\Sref{subsec:enable-developer-options-and-usb-debugging}{启用开发者选项和 USB 调试} 提及的任何附加选项。\n 一旦禁用，App Manager 使用的远程服务器会被终止，你可能不得不重新开始。\n\\end{danger}</string>
     <string name="guide$backup-restore$intro">App Manager 具有从零开始的现代、高级和易于使用的备份/还原系统实现。\n可能仅本应用有能力\n同时还原应用程序和数据以及你在 App Manager 内配置的权限和规则。\n你还可以选择多次备份应用程序 (使用自定义名称) 或为所有用户进行备份。\n\n\\begin{amseealso}{另请参阅}\n \\item \\hyperref[subsec:1-click-back-up]{一键操作：备份}\n \\item \\hyperref[subsec:1-click-restore]{一键操作：还原}\n\\end{amseealso}</string>
     <string name="guide$backup-restore$location">备份/还原是 \\hyperref[subsec:batch-operations]{批处理操作} 的一部分。\n它也位于 \\hyperref[subsec:app-info-tab]{应用信息标签页} 的\n\\hyperref[subsubsec:app-info-options-menu]{选项菜单} 中。\nClicking on \\textbf{Backup/Restore} opens the \\textbf{Backup Options}.\n默认情况下，备份存放在 \\texttt{/storage/emulated/0/AppManager} 。\n你可以在 \\hyperref[subsubsec:backup-volume]{设置页面} 配置自定义的备份位置。\n无论如何配置，备份都会存放在所选卷的 \\texttt{AppManager} 文件夹。\n\n\\begin{tip}{注意}\n 若一个或多个应用程序并没有任何备份，\n 则不会显示 \\textbf{还原} 和 \\textbf{删除备份} 选项。\n\\end{tip}</string>
-    <string name="guide$automation$generating-authorization-key">为了确保适当的安全性，需要授权密钥。前往 \\textbf{设置} 页面然后点击底部的 \\textbf{授权管理器} 以生成授权密钥。\n若并未生成过授权密钥，则会自动生成。该密钥可根据需求重新生成。\n\n\\begin{danger}{小心}\n 重新生成授权密钥可能会产生一些副作用，比如说令所有先前配置的意图失效。\n\\end{danger}</string>
+    <string name="guide$automation$generating-authorization-key">为了确保适当的安全性，需要授权密钥。前往 \\textbf{设置} 页面，接着是 \\textbf{隐私} &gt; \\textbf{授权管理器} 以生成授权密钥。\n若并未生成过授权密钥，则会自动生成。该密钥可根据需求重新生成。\n\n\\begin{danger}{小心}\n 重新生成授权密钥可能会产生一些副作用，比如说令所有先前配置的意图失效。\n\\end{danger}</string>
     <string name="guide$backup-restore$backup">备份功能会遵守除了 \\textbf{跳过签名检查} 以外的所有备份选项。\n若基本备份 (即并未选择\\textbf{多重备份} 选项) 已存在，由于备份会被覆盖，你会看到一条警告信息。\n若设置了 \\textbf{多重备份} ，你需要在选项中输入(指定)备份名称，或者你也可以留空以使用当前日期时间作为备份名称。</string>
     <string name="guide$backup-restore$restore">还原会遵守全部备份选项，并在出现以下情况时失败：若设置了 \\textbf{APK 文件} 选项，\n备份内容却不包括 APK 文件选项设定的内容，或者其他情况下，未安装该应用程序。\n当为多个应用还原备份时，你只能选择还原基础备份 (参阅 \\hyperref[subsec:backup-restore-backup]{备份} 章节以了解更多)。\n然而，当为单个应用程序还原备份时，你需要通过选项选择还原哪个备份。\n若设定了 \\textbf{所有用户} 选项，则 App Manager 将在后一种情况为所有用户还原所选备份。但是在前一种情况中，将会为各个用户还原基础备份。\n\n\\begin{tip}{注意}\n 使用存储访问框架 (Storage Access Framework 即 SAF)、SSAID 或 Android 密钥库只有在还原并立即重新启动后正常工作。\n\\end{tip}</string>
     <string name="guide$automation$triggering-a-profile">为了触发配置文件， \\texttt{feature} (功能) 字段必须具有 \\texttt{profile} (配置文件) 值。 此外，接下来的 extras (额外选项) 可包括：\n\\begin{enumerate}\n \\item \\textbf{\\texttt{prof}.} (字符串值 -- 必须) 显示在 \\hyperref[sec:profiles-page]{配置页面} 的配置名称。\n \\item \\textbf{\\texttt{state}.} (字符串值 -- 可选) 配置文件的状态 -- 目前 \\texttt{on} (启用) 或者 \\texttt{off} (禁用) -- 如文档所述。.\n 若此时未设置额外选项，则 App Manager 会提示需要选择的状态。\n因此，为了完全自动化，应该设置该选项。\n\\end{enumerate}</string>
@@ -470,7 +470,7 @@
     <string name="faq$misc$i-dont-use-root-adb">是的，App Manager 不能在无 Root 或 ADB\\@ 时修改任何系统设置。</string>
     <string name="faq$misc$apks-deleted-after-installed">不会，在安装后，APK 不会被 App Manager 删除。</string>
     <string name="faq$misc$$apks-deleted-after-installed">APK 安装后是否被删除？</string>
-    <string name="faq$misc$bloatware">预装软件 (Bloatware直译为臃肿软件) 是由供应商 (vendor) 或 原始设备制造商 (OEM) 提供的不必要应用，并且通常情况下是系统应用。\n这些应用经常用于跟踪用户和收集用户数据并出售以从中获利。\n系统应用访问设备信息、通讯录和信息数据以及其他使用情况信息，\n诸如你的手机使用习惯和你在共享存储器存储的一切内容时并不需要请求任何权限。\n\n预装软件 (Bloatware) 也可能包括 Google 应用 (诸如 Google Play 服务、Google Play 商店、Gmail、Google、信息、电话、通讯录)、\nFacebook 应用 (Facebook应用由四或者五个应用组成)、Facebook Messenger、Instagram、Twitter 以及许多其他可跟踪用户\n和/或未经许可收集用户数据的应用，并且他们全部是系统应用。\n你可以从 Android 设置中禁用一些权限。\n但是请注意，Android 设置中隐藏了几乎全部的权限，任何专家都会称其为潜在 \\emph{危险}。\n\n若预装软件 (Bloatware) 为用户应用，则你可以通过 Android 设置或 App Manager 轻易卸载它们。\n无 Root 权限时无法卸载系统应用。你也可以通过 ADB 卸载系统应用，但这并不会对所有应用有效。\nApp Manager 能够通过 Root 或者 ADB 卸载系统应用 (当然，后者存在某些限制)，\n但由于它们位于只读的 \\emph{system} 分区，这些方法无法完全 \\emph{移除} 系统应用。\n如果你有 Root 权限，你可以手动重新挂载该分区并 \\emph{清除} 这些应用，\n但因为系统分区数据被修改，会破坏 OTA 更新 (Over the Air，无线下载)。\n对 Android 而言有两种更新方式，增量更新 (delta) (占用小，仅包括两个版本之间的变化) 和全量更新。\n你仍可使用全量更新，但预装软件 (Bloatware) 会被再次安装，\n结果你不得不再次删除它们。此外，也不是所有的供应商会提供全量更新。\n\n另一个解决方案就是从 Android 设置 (无 Root) 或 App Manager 中禁用它们，\n但由于它们能被其他系统应用通过进程间通信 (IPC，Inter-process Communication) 启动，某些服务仍然能在后台运行。\n一个可能的解决方案是禁用所有的预装软件 (Bloatware) 直到服务最终停止 (重新启动后)。\n然而，由于 Android 框架被供应商各种魔改 (相当重度的胡乱修改)，移除或禁用某些预装软件 (Bloatware) 可能会导致系统界面崩溃\n甚至是引导循环 (bootloop，手机不断重启，卡在开机第一屏或者开机动画但无法正常进入系统)，\n因此，你的手机会变(软)砖。你可能需要上网搜寻资料或咨询同 (机型) 用户以找到救砖办法。\n\n从 v2.5.19 开始，App Manager 新增 \\hyperref[sec:profile-page]{配置文件} 功能。\n\\hyperref[sec:profiles-page]{配置文件页面} 具有一个选项，可从其中一个预设创建新的配置文件。\n该预设包括去预装软件 (Debloat) 的配置文件，\n可作为专有 Android 操作系统监控、禁用、移除预装软件 (Bloatware) 的起点。\n\n\\begin{warning}{注意}\n 绝大多数情况下，你无法将预装软件 (Bloatware) 完全从你的设备中移除。\n 因此，推荐你使用第三方 ROM，诸如 Graphene OS、Lineage OS 或其他衍生 ROM 以摆脱预装软件 (Bloatware)。\n\\end{warning}</string>
+    <string name="faq$misc$bloatware">臃肿软件（Bloatware）为不必要的预装应用，通常是系统应用。\n一些臃肿软件通常用来跟踪用户并收集它们可能为了获利而出售的用户数据。\n许多系统应用无需请求任何权限便可访问设备信息、联系人和消息数据，以及其他使用信息，\n比如手机使用习惯和存储在共享存储空间中的一切。\n\n臃肿软件同样包括 Google 地图、Meta 出品的应用，以及Twitter/X，\n这些应用也可以在没有用户同意情况下跟踪和/或收集用户数据。\n你可以在 Andeoid 系统设置那里禁用这些应用的一些权限，\n但请知晓，系统设置藏有很多权限被安全研究者认为具潜在\\emph{危险性} （比如联网、传感器等）。\n\n如果臃肿软件是用户应用，可以轻易从系统设置或AM\\@ 进行卸载。\n而属于系统应用的臃肿应用没有特权是不可能卸载的。\n即使有特权也无法完全\\emph{卸载} 这样的系统应用，\n因为它们位于 \\emph{system} 分区，这是一个只读分区。\n如果你有 root 权限，你可以重新挂载这个分区来手动 \\emph{清除} 这些应用，但这样做会破化系统的 OTA 更新，\n因为系统分区中的数据已经被修改。\n有两种更新，一种是 delta 更新（仅由两个系统版本间的差异构成，下载东西少）和完整更新。\n你仍能使用完整更新，但更新后臃肿软件又会出现，你不得不再次彻底清理它们。\n\n另一个解决方案是通过系统设置或 AM 停用这些应用，\n但某些服务仍能在后台运行，\n因为它们可以被其他系统应用使用进程间通信（IPC）方式启动。\n一个可能的解决方案是停用所有臃肿软件，直到服务最终停止（在重启后）。\n不过，由于厂商对 ANdroid 框架所做的巨大改动，\n删除或停用某些臃肿软件可能导致系统 UI 崩溃甚至造成启动循环。\n从 v4.0.0 版本起，AM 有了一个新功能，叫做 \\textbf{Debloater}，\n可以用作从专有权利的 Android 操作系统中监控、停用，及删除臃肿软件的基础。\n\n\\begin{warning}{注意}\n多数情况下，你无法完全 debloat 设备。\n因此，建议你使用没有臃肿软件的定制 ROM，如 Graphene OS、Lineage OS 或它们的衍生品。\n\\end{warning}</string>
     <string name="faq$aot$restart">很不幸的是，是的。这是因为响应 ADB 连接的 ADB daemon (ADB 守护进程) 也会在重新启动后重新开始。\n 而这并不会重新启用通过 TCP\\@ 运行的 ADB。</string>
     <string name="faq$aot$usb-debugging">参阅位于 \\Cref{ch:guides}{指引} 的 \\Sref{subsec:enable-usb-debugging}{启用 USB 调试} 。</string>
     <string name="faq$misc$how-tracker-updated">在新版本发布前，会手动更新跟踪器和库。</string>
