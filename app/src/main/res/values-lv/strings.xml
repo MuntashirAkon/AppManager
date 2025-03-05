@@ -58,4 +58,11 @@
     <string name="clear_data_from_uninstalled_apps">Dzēst noņemto lietotņu datus</string>
     <string name="clear_data_from_uninstalled_apps_description">Dzēš lietotņu datus, kas noņemtas ar <tt>DONT_DELETE_DATA</tt> atzīmi</string>
     <string name="uninstall_updates">Noņemt atjauninājumus</string>
+    <string name="update_uninstalled_successfully">Lietotnes <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> atjauninājumi veiksmīgi noņemti.</string>
+    <string name="failed_to_uninstall_updates">Nevarēja noņemt lietotnes <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> atjauninājumus.</string>
+    <string name="do_you_want_to_uninstall_and_install">Vai vēlaties noņemt un atkal uzstādīt lietotni?</string>
+    <string name="uninstalled_apps">Noņemtās lietotnes</string>
+    <string name="confirm_uninstallation">Apstiprinu noņemšanu</string>
+    <string name="uninstall_app_again_message">Lietotne tika noņemta bez datu un paraksta dzēšanas. Vai vēlaties to pilnībā noņemt?</string>
+    <string name="uninstall_app">Noņemt %1$s</string>
 </resources>
