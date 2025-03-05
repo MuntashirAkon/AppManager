@@ -1,2 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <plurals name="usage_seconds">
+        <item quantity="zero">%1$d sekundes</item>
+        <item quantity="one">%1$d sekundi</item>
+        <item quantity="other">%1$d sekundes</item>
+    </plurals>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="zero">Nevarēja noņemt %1$d lietotnes</item>
+        <item quantity="one">Nevarēja noņemt %1$d lietotni</item>
+        <item quantity="other">Nevarēja noņemt %1$d lietotnes</item>
+    </plurals>
+    <string name="permissions">Izmantotās atļaujas</string>
+    <string name="require_no_permission">Nepieprasa atļauju</string>
+    <string name="activities">Darbības</string>
+    <string name="uninstall">Noņemt</string>
+    <string name="launch">Palaist</string>
+    <string name="found_trackers">Atrastie izsekotāji:</string>
+    <string name="no_tracker_class">Nav izsekotāja klases</string>
+    <string name="tracker_details">Informācija par izsekotāju</string>
+    <string name="tracker_classes">Izsekotāja klases</string>
+    <string name="all_classes">Visas klases</string>
+    <plurals name="main_list_date_days">
+        <item quantity="zero"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dienas</item>
+        <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> diena</item>
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dienas</item>
+    </plurals>
+    <string name="app_usage">Lietotņu lietojums</string>
+    <string name="usage_today">Šodien</string>
+    <string name="usage_7_days">Pēdējās 7 dienās</string>
+    <string name="usage_less_than_a_minute">Mazāk par minūti</string>
+    <string name="go_back">Iet atpakaļ</string>
+    <string name="go">Atļaut (Aiziet)</string>
+    <string name="grant_usage_access">Piešķiriet lietošanas vēstures piekļuvi</string>
+    <string name="grant_usage_acess_message">Izmanto, lai parādītu informāciju par lietotņu izmantošanu.</string>
+    <string name="share_apk">Kopīgot APK</string>
+    <string name="failed_to_extract_apk_file">Neizdevās iegūt APK failu</string>
+    <string name="menu_remove_rules">Noņemt noteikumus</string>
+    <string name="menu_apply_rules">Piemērot (izmantot) noteikumus</string>
+    <string name="search">Meklēt</string>
+    <string name="native_library_dir">Dzimtā JNI bibliotēku mape</string>
+    <string name="process_name">Procesa nosaukums</string>
+    <string name="no_code">Nav koda</string>
+    <string name="requested_large_heap">Daudz (liela) kaudzes atmiņas</string>
+    <string name="updated_app">Atjaunināta</string>
+    <string name="debuggable">Atkļūdojama</string>
+    <string name="test_only">Tikai pārbaudei</string>
+    <string name="shared_prefs">Kopīgie iestatījumi</string>
+    <string name="databases">Datubāzes</string>
+    <string name="save">Saglabāt</string>
+    <string name="discard">Atcelt</string>
+    <string name="delete">Dzēst</string>
+    <string name="uninstall_app_message">Vai vēlaties noņemt šo lietotni?</string>
+    <string name="failed_to_uninstall">Nevarēja noņemt <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> lietotni.</string>
+    <string name="failed_to_uninstall_app">Nevarēja noņemt</string>
+    <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> lietotne veiksmīgi noņemta.</string>
+    <string name="uninstall_system_app_message">Šī ir sistēmas lietotne. Vai tiešām vēlaties noņemt šo lietotni?</string>
+    <string name="clear_data_from_uninstalled_apps">Dzēst noņemto lietotņu datus</string>
+    <string name="clear_data_from_uninstalled_apps_description">Dzēš lietotņu datus, kas noņemtas ar <tt>DONT_DELETE_DATA</tt> atzīmi</string>
+    <string name="uninstall_updates">Noņemt atjauninājumus</string>
+</resources>
