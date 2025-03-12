@@ -1,6 +1,7 @@
 package io.github.muntashirakon.AppManager.details;
 
 import android.content.om.IOverlayManager;
+import android.content.om.OverlayManagerTransactionHidden;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialAlertView;
 import io.github.muntashirakon.widget.RecyclerView;
 
+@RequiresApi(Build.VERSION_CODES.O)
 public class AppDetailsOverlaysFragment extends AppDetailsFragment {
 
     private static final String TAG = AppDetailsOverlaysFragment.class.getSimpleName();
@@ -112,6 +114,8 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
         } else if (id == R.id.action_sort_by_priority) {
             setSortBy(SORT_BY_PRIORITY);
             menuItem.setChecked(true);
+        } else if (id == R.id.action_create_overlay) {
+            OverlayManagerCompact.testCreateSelfTag("demotestfire");
         } else return false;
         return true;
     }
@@ -182,6 +186,8 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 overlayItem = (AppDetailsOverlayItem) mAdapterList.get(index);
             }
+            if (viewModel==null)
+                return;
             String overlayName = overlayItem.name;
 
             if (mConstraint != null && overlayName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
@@ -216,7 +222,11 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
                 holder.toggleSwitch.setOnClickListener((v) -> ThreadUtils.postOnBackgroundThread(() -> {
                     try {
                         // TODO: 2/18/25 Move to ViewModel
-                        if (overlayItem.setEnabled(overlayManager, !overlayItem.isEnabled())) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            OverlayManagerTransactionHidden.Builder builder = new OverlayManagerTransactionHidden.Builder();
+                            builder.setEnabled(overlayItem.getOverlayIdentifier(), !overlayItem.isEnabled(), viewModel.getUserId());
+                            overlayManager.commit(builder.build());
+                        } else if (overlayItem.setEnabled(overlayManager, !overlayItem.isEnabled())) {
                             ThreadUtils.postOnMainThread(() -> notifyItemChanged(index));
                         } else throw new Exception("Error Changing Overlay State " + overlayItem);
                     } catch (Exception e) {
