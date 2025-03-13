@@ -21,16 +21,11 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.content.res.AssetFileDescriptor;
-import android.os.FabricatedOverlayInternal;
-import android.os.FabricatedOverlayInternalEntry;
 import android.os.ParcelFileDescriptor;
-import android.text.TextUtils;
 import android.util.TypedValue;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
-import java.util.Objects;
 
 import dev.rikka.tools.refine.RefineAs;
 import misc.utils.HiddenUtil;

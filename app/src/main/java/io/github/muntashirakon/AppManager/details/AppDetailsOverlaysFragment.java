@@ -115,7 +115,9 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
             setSortBy(SORT_BY_PRIORITY);
             menuItem.setChecked(true);
         } else if (id == R.id.action_create_overlay) {
-            OverlayManagerCompact.testCreateSelfTag("demotestfire");
+            OverlayManagerCompact.createFabOverlayTest("AM"+Integer.toHexString(this.hashCode())+"Overlay");
+            menuItem.setChecked(true);
+            refreshDetails();
         } else return false;
         return true;
     }
@@ -223,9 +225,12 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
                     try {
                         // TODO: 2/18/25 Move to ViewModel
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                            OverlayManagerTransactionHidden.Builder builder = new OverlayManagerTransactionHidden.Builder();
-                            builder.setEnabled(overlayItem.getOverlayIdentifier(), !overlayItem.isEnabled(), viewModel.getUserId());
-                            overlayManager.commit(builder.build());
+                            overlayManager.commit(new OverlayManagerTransactionHidden.Builder()
+                                    .setEnabled(
+                                            overlayItem.getOverlayIdentifier(),
+                                            !overlayItem.isEnabled(),
+                                            viewModel.getUserId()
+                                    ).build());
                         } else if (overlayItem.setEnabled(overlayManager, !overlayItem.isEnabled())) {
                             ThreadUtils.postOnMainThread(() -> notifyItemChanged(index));
                         } else throw new Exception("Error Changing Overlay State " + overlayItem);
