@@ -879,6 +879,10 @@ public final class PackageUtils {
      * @see <a href="https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java;l=72;drc=1bc76ef01ec070d5155d99be0c495fd4ee60d074">FrameworkParsingPackageUtils.java</a>
      */
     public static boolean validateName(@NonNull String packageName) {
+        if (packageName.equals("android")) {
+            // platform package
+            return true;
+        }
         final int N = packageName.length();
         boolean hasSep = false;
         boolean front = true;
