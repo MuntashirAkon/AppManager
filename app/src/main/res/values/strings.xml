@@ -94,7 +94,7 @@
     <string name="third_party_message" translatable="false">-
         <a href="https://github.com/zhanghai/AndroidFastScroll">AndroidFastScroll</a> (Apache 2.0)
         \n- <a href="https://github.com/LSPosed/AndroidHiddenApiBypass">AndroidHiddenApiBypass</a> (Apache 2.0)
-        \n- <a href="https://github.com/MuntashirAkon/apk-parser">APK-parser</a> (BSD-2-Clause)
+        \n- <a href="https://github.com/MuntashirAkon/apk-parser">APK-parser</a> (BSD 2-Clause)
         \n- <a href="https://github.com/MuntashirAkon/apksig-android">apksig for android</a> (Apache 2.0)
         \n- <a href="https://github.com/REAndroid/ARSCLib">ARSCLib</a> (Apache 2.0)
         \n- <a href="https://github.com/bcgit/bc-java">Bouncy Castle</a> (MIT)
@@ -106,7 +106,7 @@
         \n- <a href="https://github.com/topjohnwu/libsu">libsu</a> (Apache 2.0)
         \n- <a href="https://github.com/material-components/material-components-android">Material Components</a> (Apache 2.0)
         \n- <a href="https://github.com/google/material-design-icons">Material Design Icons</a> (Apache 2.0)
-        \n- <a href="https://github.com/JesusFreke/smali">Smali/basksmali</a> (MIT/Apache 2.0)
+        \n- <a href="https://github.com/google/smali">smali/baksmali</a> (BSD 3-Clause and Apache 2.0)
         \n- <a href="https://github.com/Rosemoe/sora-editor">sora-editor</a> (LGPL-2.1)
         \n- <a href="https://github.com/MuntashirAkon/spake2-java">SPAKE2 for Java</a> (GPLv3.0)
         \n- <a href="https://github.com/MuntashirAkon/sun-security-android">sun.security for Android</a> (GPL-2.0 \"Classpath Exception\")
