@@ -90,6 +90,7 @@ import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -270,6 +271,10 @@ public final class PackageUtils {
         }
         List<PackageInfo> packageInfoList = new ArrayList<>();
         for (int userId : Users.getUsersIds()) {
+            if (!SelfPermissions.checkCrossUserPermission(userId, false)) {
+                // No support for cross user
+                continue;
+            }
             packageInfoList.addAll(PackageManagerCompat.getInstalledPackages(flags, userId));
             if (ThreadUtils.isInterrupted()) {
                 break;
