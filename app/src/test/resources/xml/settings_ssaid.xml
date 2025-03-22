@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<settings version="-1">
+  <setting id="0" name="userkey" value="A1F3C47E89D45B60C29E70A3F58D92E11B6AD02C78FE4D50937CA1B446E98F12" package="android" defaultValue="A1F3C47E89D45B60C29E70A3F58D92E11B6AD02C78FE4D50937CA1B446E98F12" defaultSysSet="true" tag="null" />
+  <setting id="1" name="10123" value="3E9B72CDA48150F4" package="com.google.android.gms" defaultValue="3E9B72CDA48150F4" defaultSysSet="false" tag="null" />
+  <setting id="2" name="10124" value="3E9B72CDA48150F4" package="com.android.vending" defaultValue="3E9B72CDA48150F4" defaultSysSet="false" tag="null" />
+  <setting id="3" name="10125" value="3E9B72CDA48150F4" package="com.android.chrome" defaultValue="3E9B72CDA48150F4" defaultSysSet="false" tag="null" />
+  <setting id="4" name="10126" value="9F4C3A7E21D86B52" package="com.whatsapp" defaultValue="9F4C3A7E21D86B52" defaultSysSet="false" tag="null" />
+</settings>

@@ -3,9 +3,6 @@
 package io.github.muntashirakon.AppManager.ssaid;
 
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -117,8 +114,6 @@ public final class SettingsStateV26 implements SettingsState {
 
     private final Object mLock;
 
-    private final Handler mHandler;
-
     @GuardedBy("mLock")
     private final ArrayMap<String, Setting> mSettings = new ArrayMap<>();
 
@@ -210,7 +205,7 @@ public final class SettingsStateV26 implements SettingsState {
                 + settingTypeToString(getTypeFromKey(key)) + "]";
     }
 
-    public SettingsStateV26(Object lock, Path file, int key, int maxBytesPerAppPackage, Looper looper)
+    public SettingsStateV26(Object lock, Path file, int key, int maxBytesPerAppPackage)
             throws IllegalStateException {
         // It is important that we use the same lock as the settings provider
         // to ensure multiple mutations on this state are atomically persisted
@@ -218,7 +213,6 @@ public final class SettingsStateV26 implements SettingsState {
         mLock = lock;
         mStatePersistFile = file;
         mKey = key;
-        mHandler = new MyHandler(looper);
         if (maxBytesPerAppPackage == MAX_BYTES_PER_APP_PACKAGE_LIMITED) {
             mMaxBytesPerAppPackage = maxBytesPerAppPackage;
             mPackageToMemoryUsage = new ArrayMap<>();
@@ -477,7 +471,6 @@ public final class SettingsStateV26 implements SettingsState {
 
     // The settings provider must hold its lock when calling here.
     public void persistSyncLocked() {
-        mHandler.removeMessages(MyHandler.MSG_PERSIST_SETTINGS);
         doWriteState();
     }
 
@@ -533,13 +526,9 @@ public final class SettingsStateV26 implements SettingsState {
     // The settings provider must hold its lock when calling here.
     @GuardedBy("mLock")
     public void destroyLocked(Runnable callback) {
-        mHandler.removeMessages(MyHandler.MSG_PERSIST_SETTINGS);
         if (callback != null) {
             if (mDirty) {
-                // Do it without a delay.
-                mHandler.obtainMessage(MyHandler.MSG_PERSIST_SETTINGS,
-                        callback).sendToTarget();
-                return;
+                doWriteState();
             }
             callback.run();
         }
@@ -615,32 +604,7 @@ public final class SettingsStateV26 implements SettingsState {
 
     @GuardedBy("mLock")
     private void writeStateAsyncLocked() {
-        final long currentTimeMillis = SystemClock.uptimeMillis();
-
-        if (mWriteScheduled) {
-            mHandler.removeMessages(MyHandler.MSG_PERSIST_SETTINGS);
-
-            // If enough time passed, write without holding off anymore.
-            final long timeSinceLastNotWrittenMutationMillis = currentTimeMillis
-                    - mLastNotWrittenMutationTimeMillis;
-            if (timeSinceLastNotWrittenMutationMillis >= MAX_WRITE_SETTINGS_DELAY_MILLIS) {
-                mHandler.obtainMessage(MyHandler.MSG_PERSIST_SETTINGS).sendToTarget();
-                return;
-            }
-
-            // Hold off a bit more as settings are frequently changing.
-            final long maxDelayMillis = Math.max(mLastNotWrittenMutationTimeMillis
-                    + MAX_WRITE_SETTINGS_DELAY_MILLIS - currentTimeMillis, 0);
-            final long writeDelayMillis = Math.min(WRITE_SETTINGS_DELAY_MILLIS, maxDelayMillis);
-
-            Message message = mHandler.obtainMessage(MyHandler.MSG_PERSIST_SETTINGS);
-            mHandler.sendMessageDelayed(message, writeDelayMillis);
-        } else {
-            mLastNotWrittenMutationTimeMillis = currentTimeMillis;
-            Message message = mHandler.obtainMessage(MyHandler.MSG_PERSIST_SETTINGS);
-            mHandler.sendMessageDelayed(message, WRITE_SETTINGS_DELAY_MILLIS);
-            mWriteScheduled = true;
-        }
+        doWriteState();
     }
 
     private void doWriteState() {
@@ -667,14 +631,7 @@ public final class SettingsStateV26 implements SettingsState {
             try {
                 out = destination.startWrite();
 
-                TypedXmlSerializer serializer;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    serializer = Xml.newBinarySerializer();
-                } else {
-                    serializer = Xml.newFastSerializer();
-                    serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output",
-                            true);
-                }
+                TypedXmlSerializer serializer = Xml.resolveSerializer(out);
                 serializer.startDocument(null, true);
                 serializer.startTag(null, TAG_SETTINGS);
                 serializer.attributeInt(null, ATTR_VERSION, version);
@@ -1012,25 +969,6 @@ public final class SettingsStateV26 implements SettingsState {
             }
         }
         return keyValues;
-    }
-
-    private final class MyHandler extends Handler {
-        public static final int MSG_PERSIST_SETTINGS = 1;
-
-        public MyHandler(Looper looper) {
-            super(looper);
-        }
-
-        @Override
-        public void handleMessage(Message message) {
-            if (message.what == MSG_PERSIST_SETTINGS) {
-                Runnable callback = (Runnable) message.obj;
-                doWriteState();
-                if (callback != null) {
-                    callback.run();
-                }
-            }
-        }
     }
 
     private class HistoricalOperation {
