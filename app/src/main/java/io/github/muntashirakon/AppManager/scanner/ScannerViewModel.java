@@ -33,6 +33,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.fm.ContentType2;
@@ -375,7 +376,10 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
             libraryInfoList.add(signatureInfo);
         }
         mLibraryClassesLiveData.postValue(libraryInfoList);
-        mMissingClassesLiveData.postValue(missingLibs);
+
+        if (BuildConfig.DEBUG) {
+            mMissingClassesLiveData.postValue(missingLibs);
+        }
     }
 
     @WorkerThread
