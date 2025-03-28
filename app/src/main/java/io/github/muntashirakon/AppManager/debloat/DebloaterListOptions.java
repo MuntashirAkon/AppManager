@@ -33,7 +33,6 @@ public class DebloaterListOptions extends CapsuleBottomSheetDialogFragment {
             FILTER_LIST_CARRIER,
             FILTER_LIST_GOOGLE,
             FILTER_LIST_MISC,
-            FILTER_LIST_PENDING,
 
             FILTER_REMOVAL_SAFE,
             FILTER_REMOVAL_REPLACE,
@@ -55,7 +54,6 @@ public class DebloaterListOptions extends CapsuleBottomSheetDialogFragment {
     public static final int FILTER_LIST_CARRIER = 1 << 2;
     public static final int FILTER_LIST_GOOGLE = 1 << 3;
     public static final int FILTER_LIST_MISC = 1 << 4;
-    public static final int FILTER_LIST_PENDING = 1 << 5;
 
     public static final int FILTER_REMOVAL_SAFE = 1 << 6;
     public static final int FILTER_REMOVAL_REPLACE = 1 << 7;
@@ -73,7 +71,6 @@ public class DebloaterListOptions extends CapsuleBottomSheetDialogFragment {
         put(FILTER_LIST_CARRIER, R.string.debloat_list_carrier);
         put(FILTER_LIST_GOOGLE, R.string.debloat_list_google);
         put(FILTER_LIST_MISC, R.string.debloat_list_misc);
-        put(FILTER_LIST_PENDING, R.string.debloat_list_pending);
     }};
 
     private static final SparseIntArray REMOVAL_FILTER_MAP = new SparseIntArray() {{
@@ -91,9 +88,9 @@ public class DebloaterListOptions extends CapsuleBottomSheetDialogFragment {
 
     @Filter
     public static int getDefaultFilterFlags() {
-       return FILTER_LIST_AOSP | FILTER_LIST_OEM | FILTER_LIST_CARRIER | FILTER_LIST_GOOGLE | FILTER_LIST_MISC
-               | FILTER_LIST_PENDING | FILTER_REMOVAL_SAFE | FILTER_REMOVAL_REPLACE | FILTER_REMOVAL_CAUTION
-               | FILTER_INSTALLED_APPS | FILTER_SYSTEM_APPS;
+       return FILTER_LIST_AOSP | FILTER_LIST_OEM | FILTER_LIST_CARRIER | FILTER_LIST_GOOGLE
+               | FILTER_LIST_MISC | FILTER_REMOVAL_SAFE | FILTER_REMOVAL_REPLACE
+               | FILTER_REMOVAL_CAUTION | FILTER_INSTALLED_APPS | FILTER_SYSTEM_APPS;
     }
 
     private DebloaterViewModel mModel;

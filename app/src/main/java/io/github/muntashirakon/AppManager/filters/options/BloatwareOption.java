@@ -10,7 +10,6 @@ import static io.github.muntashirakon.AppManager.debloat.DebloaterListOptions.FI
 import static io.github.muntashirakon.AppManager.debloat.DebloaterListOptions.FILTER_LIST_GOOGLE;
 import static io.github.muntashirakon.AppManager.debloat.DebloaterListOptions.FILTER_LIST_MISC;
 import static io.github.muntashirakon.AppManager.debloat.DebloaterListOptions.FILTER_LIST_OEM;
-import static io.github.muntashirakon.AppManager.debloat.DebloaterListOptions.FILTER_LIST_PENDING;
 
 import androidx.annotation.NonNull;
 
@@ -33,7 +32,6 @@ public class BloatwareOption extends FilterOption {
         put(FILTER_LIST_GOOGLE, "Google");
         put(FILTER_LIST_MISC, "Misc");
         put(FILTER_LIST_OEM, "OEM");
-        put(FILTER_LIST_PENDING, "Pending");
     }};
 
     private final Map<Integer, CharSequence> mRemovalFlags = new LinkedHashMap<Integer, CharSequence>() {{
@@ -91,8 +89,6 @@ public class BloatwareOption extends FilterOption {
                 return FILTER_LIST_MISC;
             case "oem":
                 return FILTER_LIST_OEM;
-            case "pending":
-                return FILTER_LIST_PENDING;
             default:
                 throw new IllegalArgumentException("Unknown type: " + type);
         }

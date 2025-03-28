@@ -1368,7 +1368,6 @@
     <string name="debloat_list_carrier">Carrier/ISP</string>
     <string name="debloat_list_google">Google</string>
     <string name="debloat_list_misc">Miscellany</string>
-    <string name="debloat_list_pending">Pending</string>
     <string name="debloat_removal_safe">Safe</string>
     <string name="debloat_removal_replace">Replace</string>
     <string name="debloat_removal_caution">Caution</string>
