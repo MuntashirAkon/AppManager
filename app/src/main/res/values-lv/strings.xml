@@ -65,4 +65,20 @@
     <string name="confirm_uninstallation">Apstiprinu noņemšanu</string>
     <string name="uninstall_app_again_message">Lietotne tika noņemta bez datu un paraksta dzēšanas. Vai vēlaties to pilnībā noņemt?</string>
     <string name="uninstall_app">Noņemt %1$s</string>
+    <string name="refresh">Atsvaidzināt</string>
+    <string name="sort_by_last_update">Pēdējo reizi atjaunināta</string>
+    <string name="signatures">Paraksti</string>
+    <string name="sort_by_sha">Paraksta</string>
+    <string name="app_signing_signatures">Paraksti</string>
+    <string name="app_signing_no_signatures">Nav derīgu parakstu</string>
+    <string name="error">Kļūda</string>
+    <string name="sort_by_app_label">Lietotnes nosaukuma (etiķetes)</string>
+    <string name="sort_by_target_sdk">Mērķa SDK versijas</string>
+    <string name="about">Par lietotni</string>
+    <string name="app_not_installed">Lietotne nav uzstādīta</string>
+    <string name="sort">Kārtot</string>
+    <string name="system_app">Sistēmas lietotne</string>
+    <string name="user_app">Lietotāja lietotne</string>
+    <string name="shared_libs">Koplietotās bibliotēkas</string>
+    <string name="group">Grupa</string>
 </resources>
