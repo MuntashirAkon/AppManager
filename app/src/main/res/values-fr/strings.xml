@@ -1499,4 +1499,5 @@
     <string name="remove_filename">Retirer %s</string>
     <string name="advanced_suspend_app">Suspension avancée</string>
     <string name="vulkan_version">Version de Vulkan</string>
+    <string name="pref_files_remember_last_path_msg">Lorsque cette option est activée, ouvrir une nouvelle fenêtre ouvre la dernière page ouverte à la place de la page d\'accueil.</string>
 </resources>
