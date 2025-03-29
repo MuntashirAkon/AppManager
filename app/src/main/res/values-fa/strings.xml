@@ -1275,7 +1275,6 @@
     <string name="debloat_list_oem">OEM</string>
     <string name="debloat_list_google">گوگل</string>
     <string name="debloat_list_misc">متفرقه</string>
-    <string name="debloat_list_pending">در انتظار</string>
     <string name="debloat_removal_caution">باند</string>
     <string name="finder_title">جستجوگر</string>
     <string name="action_replace_all">جایگزینی همه</string>

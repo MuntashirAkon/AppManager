@@ -1356,7 +1356,6 @@
     <string name="debloat_list_oem">OEM</string>
     <string name="debloat_list_carrier">Operatore/ISP</string>
     <string name="debloat_list_google">Google</string>
-    <string name="debloat_list_pending">In attesa</string>
     <string name="debloat_removal_replace">Sostituisci</string>
     <string name="debloat_removal_caution">Attenzione</string>
     <string name="static_shared_library">Libreria condivisa statica</string>

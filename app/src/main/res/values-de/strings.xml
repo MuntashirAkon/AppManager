@@ -1289,7 +1289,6 @@
     <string name="debloat_removal_safe">Sicher</string>
     <string name="debloat_removal_type">Typ</string>
     <string name="debloat_list_oem">OEM</string>
-    <string name="debloat_list_pending">Ausstehend</string>
     <string name="debloat_removal_replace">Ersetzen</string>
     <string name="debloat_removal_caution">Vorsicht</string>
     <string name="static_shared_library">Statische gemeinsame Bibliothek</string>

@@ -1357,7 +1357,6 @@
     <string name="system_app_put_back">Повернути назад</string>
     <string name="debloat_list_carrier">Оператор/провайдер</string>
     <string name="debloat_list_misc">Різне</string>
-    <string name="debloat_list_pending">Розглядається</string>
     <string name="debloat_removal_caution">З обережністю</string>
     <plurals name="alert_failed_to_unblock_components">
         <item quantity="one">Не вдалося розблокувати компоненти %1$d додатку</item>

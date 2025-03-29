@@ -1213,7 +1213,6 @@
     <string name="search_option_match_case">匹配大小寫</string>
     <string name="search_option_whole_word">單字</string>
     <string name="system_app_put_back">放回</string>
-    <string name="debloat_list_pending">等待中</string>
     <string name="debloat_removal_safe">安全</string>
     <string name="installing_package">正在安裝 %1$s…</string>
     <string name="symbolic_link">符號連結</string>

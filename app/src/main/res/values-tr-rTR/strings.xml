@@ -1321,7 +1321,6 @@
     <string name="debloater_title">Temizleyici</string>
     <string name="debloat_list_carrier">Operatör/İnternet Servis Sağlayıcısı</string>
     <string name="debloat_list_google">Google</string>
-    <string name="debloat_list_pending">Beklemede</string>
     <string name="debloat_removal_safe">Güvenli</string>
     <string name="debloat_removal_caution">Dikkat</string>
     <string name="static_shared_library">Statik paylaşımlı kütüphane</string>

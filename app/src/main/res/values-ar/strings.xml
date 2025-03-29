@@ -1471,7 +1471,6 @@
     <string name="debloat_list_carrier">الناقل / مزود خدمة الإنترنت</string>
     <string name="debloat_list_google">جوجل</string>
     <string name="debloat_list_misc">المنوعات</string>
-    <string name="debloat_list_pending">معلَّقة</string>
     <string name="debloat_removal_safe">آمن</string>
     <string name="debloat_removal_replace">تبديل</string>
     <string name="debloat_removal_caution">الحذر</string>

@@ -1393,7 +1393,6 @@
     <string name="debloat_list_carrier">Operator/dostawca usług internetowych</string>
     <string name="debloat_list_google">Google</string>
     <string name="debloat_list_misc">Składanka</string>
-    <string name="debloat_list_pending">Trwające</string>
     <string name="debloat_removal_safe">Bezpieczny</string>
     <string name="debloat_removal_replace">Zastąp</string>
     <string name="debloat_removal_caution">Uwaga</string>

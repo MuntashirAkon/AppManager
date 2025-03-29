@@ -1336,7 +1336,6 @@
     <string name="debloat_list_oem">OEM</string>
     <string name="debloat_list_carrier">Operadora/ISP</string>
     <string name="debloat_list_google">Google</string>
-    <string name="debloat_list_pending">Pendente</string>
     <string name="debloat_list_misc">Miscelânea</string>
     <string name="debloat_removal_safe">Seguro</string>
     <string name="debloat_removal_replace">Repor</string>

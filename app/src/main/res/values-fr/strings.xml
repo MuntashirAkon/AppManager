@@ -1285,7 +1285,6 @@
     <string name="debloat_list_carrier">Opérateur/FAI</string>
     <string name="debloat_list_google">Google</string>
     <string name="debloat_list_misc">Recueil</string>
-    <string name="debloat_list_pending">En attente</string>
     <string name="debloat_removal_safe">Sécurisé</string>
     <string name="debloat_removal_replace">Remplacer</string>
     <string name="debloat_removal_caution">Attention</string>

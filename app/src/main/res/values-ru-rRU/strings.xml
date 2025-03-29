@@ -1393,7 +1393,6 @@
     <string name="debloat_removal_type">Тип</string>
     <string name="system_app_put_back">Вернуть</string>
     <string name="debloat_list_misc">Разное</string>
-    <string name="debloat_list_pending">На рассмотрении</string>
     <string name="debloat_removal_replace">Замена</string>
     <string name="debloat_removal_caution">Осторожно</string>
     <string name="debloat_removal_safe">Безопасно</string>

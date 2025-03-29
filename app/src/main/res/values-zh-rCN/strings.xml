@@ -1283,7 +1283,6 @@
     <string name="debloat_list_google">Google(谷歌)</string>
     <string name="debloat_list_aosp">AOSP(Android原生)</string>
     <string name="debloat_list_misc">杂项</string>
-    <string name="debloat_list_pending">待定</string>
     <string name="debloat_removal_safe">安全</string>
     <string name="debloat_removal_replace">替换</string>
     <string name="debloat_removal_caution">留意</string>

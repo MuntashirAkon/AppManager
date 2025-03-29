@@ -1272,7 +1272,6 @@
     <string name="system_app_put_back">Để lại chỗ cũ</string>
     <string name="debloat_list_carrier">Nhà cung cấp dịch vụ/ISP</string>
     <string name="debloat_list_misc">Linh tinh</string>
-    <string name="debloat_list_pending">Đang chờ</string>
     <string name="debloat_removal_safe">An toàn</string>
     <string name="debloat_removal_replace">Thay thế</string>
     <string name="debloat_removal_caution">Cẩn trọng</string>
