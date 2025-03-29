@@ -2,6 +2,24 @@
 <changelog>
     <release
         type="stable release"
+        version="v4.0.2"
+        code="442"
+        date="28 March 2025">
+        <improve>Updated bloatware</improve>
+        <note subtext="true">Removed "Pending" list as it was removed from ADL.</note>
+
+        <fix>Fixed fetching applications in multi-user environment in no-root mode</fix>
+        <fix>Fixed opening [tt]app-manager[/tt] URLs from the web browsers</fix>
+        <fix>Fixed updating SSAID</fix>
+        <fix>Prevented a crash in Android &lt; 9.0 that occurs due to invalid app ops</fix>
+
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v4.0.1...v4.0.2"]v4.0.1...v4.0.2[/a]
+        </note>
+    </release>
+    <release
+        type="stable release"
         version="v4.0.1"
         code="441"
         date="28 February 2025">
@@ -69,6 +87,11 @@
             highlighting texts in the dark mode.
         </note>
         <improve>Use green instead of dark cyan for "success"-related operations</improve>
+
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v4.0.0...v4.0.1"]v4.0.0...v4.0.1[/a]
+        </note>
     </release>
     <release
         type="stable release"
