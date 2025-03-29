@@ -285,6 +285,8 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         } catch (PackageManager.NameNotFoundException e) {
             apkUpdaterMenu.setVisible(false);
         }
+        MenuItem finderMenu = menu.findItem(R.id.action_finder);
+        finderMenu.setVisible(BuildConfig.DEBUG);
         return super.onCreateOptionsMenu(menu);
     }
 
