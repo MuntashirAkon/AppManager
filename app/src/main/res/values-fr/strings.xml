@@ -95,7 +95,7 @@
     <string name="select_apk">Sélectionner le fichier APK</string>
     <string name="send_crash_report">Envoyer le rapport de plantage</string>
     <string name="tap_to_submit_crash_report">Appuyez pour envoyer le rapport de plantage.</string>
-    <string name="am_crashed">App Manager vient de planté</string>
+    <string name="am_crashed">App Manager vient de planter</string>
     <string name="filter_running_apps">Applications en cours d\'exécution</string>
     <string name="copy">Copier</string>
     <string name="view_missing_signatures">Appuyez pour visualiser ou envoyer des signatures pas encore présantes dans la base de données ou les bibliothèques de App Manager.</string>
@@ -104,7 +104,7 @@
     <string name="no_libs">Aucune bibliothèque</string>
     <string name="sys_config">Configuration du système</string>
     <string name="only_install">Installation seule</string>
-    <string name="app_signing_install_without_data_loss">Si vous avez désactivé la vérification des signaturs, vous pouvez utiliser l\'option <b>Installation seule</b> pour installer l\'application sans perdre de données.</string>
+    <string name="app_signing_install_without_data_loss">Si vous avez désactivé la vérification des signatures, vous pouvez utiliser l\'option <b>Installation seule</b> pour installer l\'application sans perdre de données.</string>
     <string name="app_data_will_be_lost">Les données existantes seront perdues.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Impossible d\'installer l\'application car une application système avec une signature différente possède déjà ce nom de paquet.</string>
     <string name="do_you_want_to_uninstall_and_install">Voulez-vous désinstaller et installer à nouveau l\'application \?</string>
@@ -650,7 +650,7 @@
     <string name="restore_latest_msg">Restaurer les applications déjà installées dont les codes de version sont supérieurs au code de version installée.</string>
     <string name="extras">Extras</string>
     <string name="category">Catégories</string>
-    <string name="board_name">Tableau</string>
+    <string name="board_name">Carte mère</string>
     <string name="model">Modèle</string>
     <string name="brand_name">Marque</string>
     <string name="vendor">Vendeur</string>
@@ -1060,7 +1060,7 @@
     <string name="added_to_queue">Ajouté à la file d\'attente</string>
     <string name="help_uses_permissions_tab">Cliquez sur un élément pour <b>l\'accorder</b> ou <b>le révoquer</b>. Seules les permissions <b>dangereuses</b> et <b>développement</b> peuvent être accordées ou révoquées.</string>
     <string name="notice_saf">Contrairement aux volumes, le répertoire sélectionné sera utilisé pour stocker tous les fichiers en relation avec App Manager, y compris les APK enregistrés et les sauvegardes. Le Storage Access Framework (SAF) étant très lent, ne l\'utilisez qu\'en dernier recours.</string>
-    <string name="backup_volume_dialog_description">Les volumes avec le préfixe <tt>/tree</tt> sont des dossiers sélectionnés à l\'aide de Storage Access Framework (SAF). À l\'exception de ces dossiers, le répertoire par défaut du gestionnaire d\'applications est un sous-dossier nommé <tt>AppManager</tt>.</string>
+    <string name="backup_volume_dialog_description">Les volumes avec le préfixe <tt>/tree</tt> sont des dossiers sélectionnés à l\'aide de Storage Access Framework (SAF). À l\'exception de ces dossiers, le répertoire par défaut d\'App Manager est un sous-dossier nommé <tt>AppManager</tt>.</string>
     <string name="keystore_password_info">Ceci est le mot de passe du KeyStore. Veillez à le stocker dans un endroit sûr si vous souhaitez sauvegarder/restaurer le KeyStore depuis App Manager. <b>Ce message ne s\'affichera plus.</b></string>
     <string name="adb_pair">Appairer</string>
     <string name="identifier">Identifiant</string>
@@ -1171,7 +1171,7 @@
     <string name="open_developer_options_page">Ouvrir la page des options de développeur dans les préférences Android</string>
     <string name="vt_confirm_uploading_file">Ce fichier n\'a pas été trouvé dans la base VirusTotal. Voulez-vous l\'envoyer \?</string>
     <string name="pref_vt_prompt_before_uploading">Afficher une confirmation avec l\'envoyer un fichier.</string>
-    <string name="pref_pure_black_theme_msg">Utilise un arrière-plan complètement noir quand le mode nuit est actif.</string>
+    <string name="pref_pure_black_theme_msg">Utilise un arrière-plan complètement noir quand le thème sombre est actif.</string>
     <string name="pref_pure_black_theme">Thème noir pur</string>
     <string name="apk_checksums">Checksums de l\'APK</string>
     <string name="regenerate_auth_key">Regénérer la clé d\'autorisation</string>
@@ -1202,10 +1202,10 @@
     <string name="usage_times_opened">Nombre d\'ouvertures</string>
     <string name="pref_reload_apps">Recharger les applications</string>
     <string name="troubleshooting">Problèmes</string>
-    <string name="changelog_type_improve">Améliorer</string>
+    <string name="changelog_type_improve">Amélioré</string>
     <string name="pref_reload_apps_msg">Recharge la liste des applications enregistrées dans la base du Gestionnaire d\'Applications en cas de comportement inattendu.</string>
     <string name="changelog_type_new">Nouveau</string>
-    <string name="changelog_type_fix">Corriger</string>
+    <string name="changelog_type_fix">Corrigé</string>
     <string name="unsupported_split_apk">Non pris en charge</string>
     <string name="view_changelog">Découvrez les nouveautés</string>
     <string name="sort_by_total_size">Taille totale</string>
@@ -1435,7 +1435,7 @@
     <string name="app_manager_is_running">Le gestionnaire d\'applications est en cours d\'exécution</string>
     <string name="app_manager_is_unlocked">Le gestionnaire d\'applications est déverrouillé</string>
     <string name="action_lock_app">Verrouiller</string>
-    <string name="pref_enable_persistent_session">Exécutez le gestionnaire d\'applications en arrière-plan</string>
+    <string name="pref_enable_persistent_session">Exécuter App Manager en arrière-plan</string>
     <string name="profile_modified_are_you_sure">Le profil a été modifié. Annuler toutes vos modifications et quitter ?</string>
     <string name="apply_profile">Appliquer le profil \"%1$s\"</string>
     <string name="choose_a_profile_state">Sélectionnez un état de profil</string>
@@ -1448,7 +1448,7 @@
     <string name="date">Date</string>
     <string name="pref_use_vt">Utiliser VirusTotal</string>
     <string name="pref_use_log_viewer">Utiliser le Visualiseur de journaux</string>
-    <string name="pref_installer">Utiliser l\'Installeur</string>
+    <string name="pref_installer">Utiliser l\'installeur</string>
     <string name="pref_cat_general">Général</string>
     <string name="status_remote_server_active">Le serveur distant est actif</string>
     <string name="status_remote_services_inactive">Les services distants sont inactifs</string>
@@ -1482,4 +1482,21 @@
     <string name="adb_pairing_retry_pairing">Réessayer</string>
     <string name="pref_use_system_font">Utiliser la police système</string>
     <string name="pref_use_system_font_msg">Utiliser la police Material système par défaut. <font fgcolor="#ff0000">Ceci est une fonctionnalité expérimentale.</font></string>
+    <string name="backup_cache">Cache</string>
+    <string name="add_to_favorites">Ajouter aux favoris</string>
+    <string name="advanced_suspend_app_description">Cela force l\'arrêt et suspend l\'application pour s\'assurer qu\'elle ne tourne pas en arrière-plan. Cette méthode devrait être préférée par rapport à la méthode normale <b>suspendre</b>.</string>
+    <string name="no_history">Historique vide</string>
+    <string name="battery_technology">Technologie</string>
+    <string name="battery_health">Santé</string>
+    <string name="virus_total">VirusTotal</string>
+    <string name="available_memory">Disponible : %s</string>
+    <string name="op_history">Historique</string>
+    <string name="title_confirm_execution">Confirmer l\'exécution</string>
+    <string name="clear_history">Effacer l\'historique</string>
+    <string name="favorites">Favoris</string>
+    <string name="item_remove">Retirer</string>
+    <string name="item_edit">Éditer</string>
+    <string name="remove_filename">Retirer %s</string>
+    <string name="advanced_suspend_app">Suspension avancée</string>
+    <string name="vulkan_version">Version de Vulkan</string>
 </resources>
