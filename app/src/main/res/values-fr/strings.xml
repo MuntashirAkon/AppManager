@@ -34,7 +34,7 @@
     <string name="path_permissions">Autorisations de chemin d\'accès</string>
     <string name="grant_uri_permission">Autoriser l\'accès aux URI</string>
     <string name="flags">Drapeaux</string>
-    <string name="soft_input">Mode saisie douce</string>
+    <string name="soft_input">Mode de saisie logicielle</string>
     <string name="orientation">Orientation</string>
     <string name="no_service">Aucun service</string>
     <string name="service">Services</string>
@@ -522,8 +522,8 @@
         <item quantity="other">%1$d mois</item>
     </plurals>
     <string name="usage_7_days">Les 7 derniers jours</string>
-    <string name="usage_today">Aujourdh\'ui</string>
-    <string name="usage_weekly">Chaque semaine</string>
+    <string name="usage_today">Aujourd\'hui</string>
+    <string name="usage_weekly">Semaine dernière</string>
     <string name="app_usage">Utilisation de l\'application</string>
     <string name="no_tracker_class">Aucune classe de traqueur</string>
     <string name="no_shared_libs">Aucune bibliothèque partagée</string>
@@ -708,7 +708,7 @@
     <string name="text_include_device_info">Inclure les informations de l\'appareil</string>
     <string name="record_log">Journaux d\'enregistrement</string>
     <string name="disable_background_run_description">Défini le mode <i>Ignore</i> pour les opérations d\'application suivantes : <tt>RUN_IN_BACKGROUND</tt> (depuis Android 7.0) et <tt>RUN_ANY_IN_BACKGROUND</tt> (depuis Android 9).</string>
-    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://x.com/AppManagerNews">Twitter/X</a> • <a href="https://floss.social/@appmanager">Mastodon</a></string>
     <string name="community">Communauté</string>
     <string name="pref_selected_users_msg">Restreindre l\'utilisation d\'App Manager aux seuls utilisateurs sélectionnés.</string>
     <string name="backup_extras_description">Sauvegardez les autorisations de l\'application, les options d\'économie de batterie et d\'utilisation des données, le statut MagiskHide, SSAID, etc. <font fgcolor="#ff0000">En fonction des autorisations, tous les extras ne peuvent pas être restaurés.</font></string>
@@ -1092,7 +1092,7 @@
     <string name="search_type_suffix">Suffixe</string>
     <string name="search_type_prefix">Préfixe</string>
     <string name="authenticating">Authentification…</string>
-    <string name="pref_default_blocking_method_description">Méthode à utiliser par défaut dans les endroits où il n\'y a pas d\'option pour sélectionner une méthode de blocage.</string>
+    <string name="pref_default_blocking_method_description">Méthode à utiliser par défaut dans les endroits où il n\'y a pas d\'option pour sélectionner une méthode de blocage.\n<b>Note :</b> \"IFW\" ne fonctionne pas avec les fournisseurs, \"désactiver\" est utilisé à la place.</string>
     <string name="toggle_internet">Utiliser Internet</string>
     <string name="vt_checking">VirusTotal : Vérification…</string>
     <string name="vt_uploading">VirusTotal : Envoi en cours…</string>
@@ -1140,7 +1140,7 @@
     <string name="failed_to_change_app_op_mode">Impossible de changer le mode de fonctionnement de l\'application.</string>
     <string name="pref_intent_firewall_description">Bloquer les composants en utilisant uniquement le pare-feu Intent. Non recommandé car certaines applications système peuvent contourner les pare-feu.</string>
     <string name="pref_disable_description">Désactivez uniquement les composants. Non recommandé pour les utilisateurs root car les applications peuvent contourner cette méthode. Dans les modes ADB, les applications de test uniquement peuvent être désactivées avec cette méthode.</string>
-    <string name="tracker">Suiveur</string>
+    <string name="tracker">Traqueur</string>
     <string name="shortcut_icon">Icône du raccourci</string>
     <string name="sort_by_installation_date">Date d\'installation</string>
     <string name="vt_confirm_upload_and_scan">Oui, envoyer et scanner</string>
@@ -1233,7 +1233,7 @@
     <string name="suspend_app_description">C\'est la méthode de congélation la plus faible. Une application suspendue peut toujours apparaître dans le lanceur mais sera grisée et ne pourra pas être lancée.</string>
     <string name="disable_app_description">Méthode de congélation recommandée. Il désactive l\'application et ainsi que tous ses composants, mais tous les raccourcis seront perdus.</string>
     <string name="hide_app_description">Cette méthode n\'est recommandée que pour une utilisation quotidienne. Une application masquée apparaît comme si elle était désinstallée. Mais l\'application peut réapparaître si elle est réinstallée ou mise à jour.</string>
-    <string name="sort_by_frozen_app">Congelé d\'abord</string>
+    <string name="sort_by_frozen_app">Gelé en premier</string>
     <string name="filter_frozen_apps">Applications gelées</string>
     <string name="pref_appearance_description">Thème, orientation, fonctionnalités, etc.</string>
     <string name="pref_privacy_description">Verrouillage de l\'écran, autorisation, etc.</string>
@@ -1371,7 +1371,7 @@
     <string name="path_not_a_folder">“%1$s” n\'est pas un dossier</string>
     <string name="pref_enable_auto_lock_msg">Verrouiller le gestionnaire d\'application lorsque l\'appareil est verrouillé.</string>
     <string name="optimize_option_compile_layouts">Compiler les ressources de mise en page</string>
-    <string name="sort_by_data_usage">L\'utilisation de données</string>
+    <string name="sort_by_data_usage">Utilisation des données</string>
     <string name="grant_overlay_permission_message">Autoriser App Manager à afficher une fenêtre flottante au-dessus de toutes les autres fenêtres</string>
     <string name="select_a_dex2oat_compiler_filter">Filtre du compilateur <tt>dex2oat</tt></string>
     <string name="optimize_option_force_compilation">­Forcer la compilation même si cela n\'est pas nécessaire</string>
@@ -1500,4 +1500,5 @@
     <string name="advanced_suspend_app">Suspension avancée</string>
     <string name="vulkan_version">Version de Vulkan</string>
     <string name="pref_files_remember_last_path_msg">Lorsque cette option est activée, ouvrir une nouvelle fenêtre ouvre la dernière page ouverte à la place de la page d\'accueil.</string>
+    <string name="title_shortcut_for_frozen_app">Application gelée</string>
 </resources>
