@@ -81,4 +81,6 @@
     <string name="user_app">Lietotāja lietotne</string>
     <string name="shared_libs">Koplietotās bibliotēkas</string>
     <string name="group">Grupa</string>
+    <string name="declared_permission">Atļaujas</string>
+    <string name="loading">Ielādē…</string>
 </resources>
