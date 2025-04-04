@@ -83,17 +83,42 @@
     <string name="group">Grupa</string>
     <string name="declared_permission">Atļaujas</string>
     <string name="loading">Ielādē…</string>
-    <string name="sort_by_shared_user_id">Vispārīgā lietotāja identifikatora</string>
+    <string name="sort_by_shared_user_id">Vispārīgā (koplietotā) lietotāja identifikatora</string>
     <string name="sort_by_last_used">Pēdējo reizi lietota</string>
     <string name="sort_by_installation_date">Uzstādīšanas datuma</string>
-    <string name="sort_by_package_name">Pakotnes nosaukuma</string>
+    <string name="sort_by_package_name">Lietotnes unikālā nosaukuma</string>
     <string name="sort_by_domain">Lietotāja lietotnes augšgalā</string>
     <string name="sort_by_memory_usage">Izmantotās atmiņas apjoma</string>
     <string name="sort_by_apps_first">Lietotnes augšgalā</string>
     <string name="sort_by_process_name">Procesa nosaukuma</string>
     <string name="sort_by_process_id">Procesa ID</string>
-    <string name="sort_by_backup">Ir rezerves kopija augšgalā</string>
+    <string name="sort_by_backup">Dublētās augšgalā</string>
     <string name="sort_by_total_size">Kopējā izmēra</string>
     <string name="sort_by_frozen_app">Iesaldētās augšgalā</string>
     <string name="sort_by_data_usage">Izmantotā datu apjoma</string>
+    <string name="sort_by_overlay_names">Pārklājuma nosaukuma</string>
+    <string name="sort_by_priority">Prioritātes</string>
+    <string name="sort_by_blocked_components">Bloķētās augšgalā</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a>﻿</string>
+    <string name="sort_by_screen_time">Lietošanas ilguma</string>
+    <string name="sort_by_times_opened">Atvēršanas skaita</string>
+    <string name="sort_by_mobile_data">Izmantotā mobilo datu apjoma</string>
+    <string name="sort_by_wifi_data">Izmantotā Wi-Fi datu apjoma</string>
+    <string name="pref_about_msg">App Manager versija, licence, pateicības, saites utt.</string>
+    <string name="sort_by_component_name">Komponenta nosaukuma</string>
+    <string name="sort_by_app_ops_names">Lietotnes darbību nosaukuma</string>
+    <string name="sort_by_app_ops_values">Lietotnes darbību vērtības</string>
+    <string name="sort_by_permission_names">Atļaujas nosaukuma</string>
+    <string name="sort_by_dangerous_permissions">Bīstamās augšgalā</string>
+    <string name="sort_by_tracker_components">Izsekotājus augšgalā</string>
+    <string name="sort_by_denied_app_ops">Liegtās darbības augšgalā</string>
+    <string name="sort_by_denied_permissions">Liegtajām atļaujām augšgalā</string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://x.com/AppManagerNews">Twitter/X</a> • <a href="https://floss.social/@appmanager">Mastodon</a>﻿</string>
+    <string name="about_device">Par ierīci</string>
+    <string name="pref_about_device_msg">Pamatinformācija par ierīci - Android versija, CPU, GPU, RAM, baterija utt.</string>
+    <string name="last_actions">Nesenās darbības</string>
+    <string name="sort_by_filename">Nosaukuma</string>
+    <string name="sort_by_last_modified">Pēdējo reizi modificēts</string>
+    <string name="sort_by_file_size">Faila izmēra</string>
+    <string name="sort_by_file_type">Faila tipa</string>
 </resources>
