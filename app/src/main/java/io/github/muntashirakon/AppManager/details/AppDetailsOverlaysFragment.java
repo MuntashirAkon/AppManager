@@ -115,7 +115,6 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
             setSortBy(SORT_BY_PRIORITY);
             menuItem.setChecked(true);
         } else if (id == R.id.action_create_overlay) {
-            OverlayManagerCompact.createFabOverlayTest("AM"+Integer.toHexString(this.hashCode())+"Overlay");
             menuItem.setChecked(true);
             refreshDetails();
         } else return false;

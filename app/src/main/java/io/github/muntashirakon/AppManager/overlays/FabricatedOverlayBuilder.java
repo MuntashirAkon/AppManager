@@ -2,10 +2,10 @@ package io.github.muntashirakon.AppManager.overlays;
 
 import android.annotation.SuppressLint;
 import android.content.om.FabricatedOverlay;
-import android.content.om.FabricatedOverlayHidden;
 import android.content.om.OverlayIdentifier;
-import android.content.om.OverlayInfo;
+import android.content.om.OverlayManagerTransaction;
 import android.content.om.OverlayManagerTransactionHidden;
+import android.content.om.OverlayableInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManagerHidden;
@@ -18,7 +18,6 @@ import android.util.TypedValue;
 
 import androidx.annotation.AnyRes;
 import androidx.annotation.BoolRes;
-import androidx.annotation.Discouraged;
 import androidx.annotation.IntRange;
 import androidx.annotation.IntegerRes;
 import androidx.annotation.NonNull;
@@ -29,9 +28,9 @@ import androidx.annotation.StringRes;
 
 import org.jetbrains.annotations.Contract;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -64,18 +63,14 @@ import io.github.muntashirakon.AppManager.utils.ResourceUtil;
  *
  */
 // Copyright TherayTharow 2025
-@RequiresApi(api = Build.VERSION_CODES.P)
+@RequiresApi(api = Build.VERSION_CODES.O)
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class FabricatedOverlayBuilder {
     private static final String TAG = FabricatedOverlayBuilder.class.getSimpleName();
-    private FabricatedOverlayHidden internal;
-
     private final String targetPackage;
     private String owningPackage;
     private String targetOverlayable;
     private final String overlayName;
-
-
     private final Resources pkgres;
     private final String configuration;
 
@@ -98,7 +93,7 @@ public class FabricatedOverlayBuilder {
     public static FabricatedOverlayBuilder getNonPersistentOverlayBuilder(@NonNull String overlayName, @NonNull String packageName) {
         ResourceUtil u = new ResourceUtil();
         if (u.loadAndroidResources()) {
-            throw new IllegalStateException("android Resources failed to load");
+            throw new IllegalStateException("Android Resources failed to load");
         }
         return new FabricatedOverlayBuilder(overlayName, packageName, u.getString("android:string/config_systemShell"), null);
     }
@@ -130,7 +125,6 @@ public class FabricatedOverlayBuilder {
             @NonNull String targetPackage,
             @NonNull String owningPackage,
             @Nullable String configuration) {
-        this.internal = new FabricatedOverlayHidden(overlayName, targetPackage);
         ResourceUtil resourceUtil = new ResourceUtil();
         PackageManager pm = ContextUtils.getContext().getPackageManager();
         resourceUtil.loadResources(pm, targetPackage);
@@ -141,19 +135,7 @@ public class FabricatedOverlayBuilder {
         this.owningPackage = owningPackage;
         this.overlayName = overlayName;
         this.pkgres = resourceUtil.resources;
-        if (this.internal!=null) {
-            this.internal.setOwningPackage(owningPackage);
-        }
         this.configuration = configuration;
-    }
-
-    /**
-     * Forces Internal use of the IdmapMode;
-     * @return {@link FabricatedOverlayBuilder self}
-     */
-    public FabricatedOverlayBuilder forceIdmapMode() {
-        internal = null;
-        return this;
     }
 
     /**
@@ -203,9 +185,6 @@ public class FabricatedOverlayBuilder {
      */
     @ReturnThis
     public FabricatedOverlayBuilder setOwningPackage(@NonNull String owningPackage) {
-        if (internal!=null) {
-            internal.setOwningPackage(owningPackage);
-        }
         this.owningPackage = owningPackage;
         return this;
     }
@@ -213,10 +192,14 @@ public class FabricatedOverlayBuilder {
     /**
      * Get the available overlay Targets
      */
-    public Map<String, String> getTargetOverlayable() {
+    public List<OverlayableInfo> getTargetOverlayable() {
         AssetManagerHidden am = Refine.unsafeCast(pkgres.getAssets());
+        final List<OverlayableInfo> result = new ArrayList<>();
         //noinspection DataFlowIssue Can't Actually be null otherwise it wouldn't be a valid application
-        return am.getOverlayableMap(targetPackage);
+        for (Map.Entry<String, String> entry : am.getOverlayableMap(targetPackage).entrySet()) {
+            result.add(new OverlayableInfo(entry.getKey(), entry.getValue()));
+        }
+        return result;
     }
 
     /**
@@ -225,8 +208,8 @@ public class FabricatedOverlayBuilder {
      * @return {@link FabricatedOverlayBuilder self}
      */
     @ReturnThis
-    public FabricatedOverlayBuilder getTargetOverlayable(@NonNull Map<String, String> output) {
-        output.putAll(getTargetOverlayable());
+    public FabricatedOverlayBuilder getTargetOverlayable(@NonNull List<OverlayableInfo> overlay) {
+        overlay.addAll(getTargetOverlayable());
         return this;
     }
 
@@ -240,9 +223,6 @@ public class FabricatedOverlayBuilder {
      */
     @ReturnThis
     public FabricatedOverlayBuilder setTargetOverlayable(@Nullable String targetOverlayable) {
-        if (internal!=null) {
-            internal.setTargetOverlayable(targetOverlayable);
-        }
         this.targetOverlayable = targetOverlayable;
         return this;
     }
@@ -332,20 +312,6 @@ public class FabricatedOverlayBuilder {
     @SuppressLint("DiscouragedApi")
     private void setResourceValue(@NonNull String resourceName, AssetFileDescriptor assetFileDescriptor, ParcelFileDescriptor parcelFileDescriptor, CharSequence string, int data, int dataType, @Nullable String configuration, boolean isNinePatch) {
         final String name = ensureValidResourceName(resourceName);
-        if (internal!=null) {
-            if (assetFileDescriptor!=null) {
-                internal.setResourceValue(name, assetFileDescriptor, configuration);
-            }
-            if (parcelFileDescriptor!=null) {
-                internal.setResourceValue(name, parcelFileDescriptor, configuration);
-            }
-            if (string!=null) {
-                internal.setResourceValue(name, dataType, (String) string,  configuration);
-            }
-            if (data!=0) {
-                internal.setResourceValue(name, dataType, data, configuration);
-            }
-        }
         TypedValue tmp = obtainTempTypedValue();
         pkgres.getValue(name, tmp, true);
         FabricatedOverlayInternalEntry entry = createEntry(name, dataType, data, string, parcelFileDescriptor, configuration, parcelFileDescriptor!=null?parcelFileDescriptor.getStatSize():0L, 0L, isNinePatch);
@@ -364,28 +330,13 @@ public class FabricatedOverlayBuilder {
         releaseTempTypedValue(tmp);
     }
 
-
-    /**
-     * Build the FabricatedOverlay for use with the the normal
-     * @return new Standard Fabricated Overlay
-     */
-    public FabricatedOverlay build() {
-        if (internal==null) {
-            throw new IllegalStateException("build() called in Idmap mode");
-        }
-        return Refine.unsafeCast(internal);
-    }
-
     /**
      * Builds a {@link android.os.Parcelable} version of the FabricatedOverlay
      * Used for internal binder communication between the {@link android.content.om.IOverlayManager}
      * and {@link android.os.IIdmap2 }
      * @return {@link FabricatedOverlayInternal}
      */
-    public FabricatedOverlayInternal buildInternal() {
-        if (internal!=null) {
-            Log.w(TAG, "buildInternal was called when internal wasn't null");
-        }
+    public FabricatedOverlayInternal build() {
         FabricatedOverlayInternal result = new FabricatedOverlayInternal();
         result.overlayName = overlayName;
         result.packageName = owningPackage==null? BuildConfig.APPLICATION_ID:owningPackage;
@@ -396,6 +347,10 @@ public class FabricatedOverlayBuilder {
         return result;
     }
 
+    /**
+     * Enables this overlay after it has been built
+     * @throws SecurityException if the {@link android.content.om.IOverlayManager#commit(OverlayManagerTransaction) transaction} failed
+     */
 
     @ReturnThis
     public FabricatedOverlayBuilder setEnabled() throws SecurityException {
@@ -405,39 +360,39 @@ public class FabricatedOverlayBuilder {
 
     /**
      * Automatically Registers this Fabricated Overlay with the Overlay Manager
-     * In IdmapMode
-     * @throws SecurityException
+     * This method does some trickery as we use the internal Fabricated Overlay data class instead of the user space version
+     * so we have to replace it.
+     * @throws SecurityException if the {@link android.content.om.IOverlayManager#commit(OverlayManagerTransaction) transaction} failed
      */
     @SuppressLint("NewApi")
     @ReturnThis
     public FabricatedOverlayBuilder commit() throws SecurityException {
-        if (internal!=null) {
-            OverlayManagerCompact.getOverlayManager().commit(new OverlayManagerTransactionHidden.Builder().registerFabricatedOverlay(this.build()).build());
-        }
-        OverlayManagerTransactionHidden.Builder builder = new OverlayManagerTransactionHidden.Builder();
-        builder.registerFabricatedOverlay(new FabricatedOverlay("", ""));
-        OverlayManagerTransactionHidden hidden = Refine.unsafeCast(builder.build());
-        Iterator<OverlayManagerTransactionHidden.Request> requestIterator = hidden.getRequests();
-        while (requestIterator.hasNext()) {
-            final OverlayManagerTransactionHidden.Request request = requestIterator.next();
-            switch (request.type) {
-                case OverlayManagerTransactionHidden.Request.TYPE_REGISTER_FABRICATED: {
-                    if (request.extras!=null) {
-                        request.extras.putParcelable(OverlayManagerTransactionHidden.Request.BUNDLE_FABRICATED_OVERLAY, buildInternal());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            OverlayManagerTransactionHidden.Builder builder = new OverlayManagerTransactionHidden.Builder();
+            builder.registerFabricatedOverlay(new FabricatedOverlay(overlayName, targetPackage));
+            OverlayManagerTransactionHidden hidden = Refine.unsafeCast(builder.build());
+            Iterator<OverlayManagerTransactionHidden.Request> requestIterator = hidden.getRequests();
+            while (requestIterator.hasNext()) {
+                final OverlayManagerTransactionHidden.Request request = requestIterator.next();
+                switch (request.type) {
+                    case OverlayManagerTransactionHidden.Request.TYPE_REGISTER_FABRICATED: {
+                        if (request.extras!=null) {
+                            request.extras.putParcelable(OverlayManagerTransactionHidden.Request.BUNDLE_FABRICATED_OVERLAY, build());
+                        }
+                        break;
                     }
-                    break;
-                }
-                case OverlayManagerTransactionHidden.Request.TYPE_SET_DISABLED:
-                case OverlayManagerTransactionHidden.Request.TYPE_SET_ENABLED:
-                case OverlayManagerTransactionHidden.Request.TYPE_UNREGISTER_FABRICATED:
-                    Log.d(TAG, "Unused Transaction Type");
-                    break;
-                default: {
-                    Log.e(TAG, "Unknown Transaction Type");
+                    case OverlayManagerTransactionHidden.Request.TYPE_SET_DISABLED:
+                    case OverlayManagerTransactionHidden.Request.TYPE_SET_ENABLED:
+                    case OverlayManagerTransactionHidden.Request.TYPE_UNREGISTER_FABRICATED:
+                        Log.d(TAG, "Unused Transaction Type");
+                        break;
+                    default: {
+                        Log.e(TAG, "Unknown Transaction Type");
+                    }
                 }
             }
+            OverlayManagerCompact.getOverlayManager().commit(Refine.unsafeCast(hidden));
         }
-        OverlayManagerCompact.getOverlayManager().commit(Refine.unsafeCast(hidden));
         return this;
     }
 
@@ -551,6 +506,7 @@ public class FabricatedOverlayBuilder {
      * @throws Resources.NotFoundException if resource doesn't exist with in the target package
      */
     @ReturnThis
+    @SuppressLint("Range")
     public FabricatedOverlayBuilder setFloat(@NonNull String name, float value) throws Resources.NotFoundException {
         setResourceValue(name, TypedValue.TYPE_FLOAT, Float.floatToIntBits(value), configuration);
         return this;

@@ -16,12 +16,18 @@
 
 package android.content.om;
 
-import androidx.annotation.Discouraged;
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 
+import androidx.annotation.Nullable;
+import android.annotation.SuppressLint;
+import android.content.res.AssetManagerHidden;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Iterator;
 import java.util.List;
 
@@ -52,9 +58,6 @@ import misc.utils.HiddenUtil;
 @SuppressWarnings("unused")
 @RefineAs(OverlayManagerTransaction.class)
 public final class OverlayManagerTransactionHidden implements Parcelable {
-    private final List<Request> mRequests = HiddenUtil.throwUOE();
-    private final boolean mSelfTargeting = HiddenUtil.throwUOE();
-
 
     /**
      * Get an overlay manager transaction.
@@ -69,12 +72,10 @@ public final class OverlayManagerTransactionHidden implements Parcelable {
      * Get the iterator of requests
      *
      * @return the iterator of request
-     *
+     * @SystemApi (client = SystemApi.Client.SYSTEM_SERVER)
      */
-    @SuppressWarnings("ReferencesHidden")
     @NonNull
-    @Discouraged(message = "Will at some point be only accessible from the system server")
-    //@SystemApi(client = SystemApi.Client.SYSTEM_SERVER)
+    //
     public Iterator<Request> getRequests() {
         return HiddenUtil.throwUOE();
     }
@@ -89,7 +90,60 @@ public final class OverlayManagerTransactionHidden implements Parcelable {
         return HiddenUtil.throwUOE();
     }
 
-    public static class Request {}
+    /**
+     * A single unit of the transaction, such as a request to enable an
+     * overlay, or to disable an overlay.
+     *
+     * @hide
+     */
+   // @SystemApi(client = SYSTEM_SERVER)
+    public static final class Request {
+        @IntDef(value = {
+                TYPE_SET_ENABLED,
+                TYPE_SET_DISABLED,
+                TYPE_UNREGISTER_FABRICATED,
+                TYPE_REGISTER_FABRICATED
+        })
+        @Retention(RetentionPolicy.SOURCE)
+        @interface RequestType {}
+
+        public static final int TYPE_SET_ENABLED = 0;
+        public static final int TYPE_SET_DISABLED = 1;
+        public static final int TYPE_REGISTER_FABRICATED = 2;
+        public static final int TYPE_UNREGISTER_FABRICATED = 3;
+
+        public static final String BUNDLE_FABRICATED_OVERLAY = "fabricated_overlay";
+
+        @RequestType
+        public final int type;
+        public final OverlayIdentifier overlay;
+        public final int userId;
+
+        @SuppressLint("NullableCollection")
+        @androidx.annotation.Nullable
+        public final Bundle extras;
+
+        public Request(@RequestType final int type, @NonNull final OverlayIdentifier overlay,
+                       final int userId) {
+            this(type, overlay, userId, null /* extras */);
+        }
+
+        public Request(@RequestType final int type, @NonNull final OverlayIdentifier overlay,
+                       final int userId, @Nullable Bundle extras) {
+            this.type = type;
+            this.overlay = overlay;
+            this.userId = userId;
+            this.extras = extras;
+        }
+
+        /**
+         * Translate the request type into a human readable string. Only
+         * intended for debugging.
+         */
+        public String typeToString() {
+            return HiddenUtil.throwUOE();
+        }
+    }
 
     /**
      * Builder class for OverlayManagerTransaction objects.
@@ -110,7 +164,7 @@ public final class OverlayManagerTransactionHidden implements Parcelable {
          *
          * An enabled overlay is a part of target package's resources, i.e. it will
          * be part of any lookups performed via {@link android.content.res.Resources}
-         * and {@link android.content.res.AssetManager}. A disabled overlay will no
+         * and {@link AssetManagerHidden}. A disabled overlay will no
          * longer affect the resources of the target package. If the target is
          * currently running, its outdated resources will be replaced by new ones.
          *
@@ -195,16 +249,6 @@ public final class OverlayManagerTransactionHidden implements Parcelable {
 
     @NonNull
     public static final Parcelable.Creator<OverlayManagerTransactionHidden> CREATOR = HiddenUtil.creator();
-
-    private static Request generateRegisterFabricatedOverlayRequest(
-            @NonNull FabricatedOverlay overlay) {
-        return HiddenUtil.throwUOE(overlay);
-    }
-
-    private static Request generateUnRegisterFabricatedOverlayRequest(
-            @NonNull OverlayIdentifier overlayIdentifier) {
-        return HiddenUtil.throwUOE(overlayIdentifier);
-    }
 
     /**
      * Registers the fabricated overlays with the overlay manager so it can be used to overlay
