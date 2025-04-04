@@ -76,7 +76,7 @@
     <string name="sort_by_target_sdk">Mērķa SDK versijas</string>
     <string name="about">Par lietotni</string>
     <string name="app_not_installed">Lietotne nav uzstādīta</string>
-    <string name="sort">Kārtot</string>
+    <string name="sort">Kārtot pēc</string>
     <string name="system_app">Sistēmas lietotne</string>
     <string name="user_app">Lietotāja lietotne</string>
     <string name="shared_libs">Koplietotās bibliotēkas</string>
@@ -86,4 +86,14 @@
     <string name="sort_by_shared_user_id">Vispārīgā lietotāja identifikatora</string>
     <string name="sort_by_last_used">Pēdējo reizi lietota</string>
     <string name="sort_by_installation_date">Uzstādīšanas datuma</string>
+    <string name="sort_by_package_name">Pakotnes nosaukuma</string>
+    <string name="sort_by_domain">Lietotāja lietotnes augšgalā</string>
+    <string name="sort_by_memory_usage">Izmantotās atmiņas apjoma</string>
+    <string name="sort_by_apps_first">Lietotnes augšgalā</string>
+    <string name="sort_by_process_name">Procesa nosaukuma</string>
+    <string name="sort_by_process_id">Procesa ID</string>
+    <string name="sort_by_backup">Ir rezerves kopija augšgalā</string>
+    <string name="sort_by_total_size">Kopējā izmēra</string>
+    <string name="sort_by_frozen_app">Iesaldētās augšgalā</string>
+    <string name="sort_by_data_usage">Izmantotā datu apjoma</string>
 </resources>
