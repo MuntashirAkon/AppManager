@@ -7,13 +7,12 @@ import static io.github.muntashirakon.AppManager.ssaid.SettingsState.SYSTEM_PACK
 import android.annotation.UserIdInt;
 import android.content.pm.PackageInfo;
 import android.os.Build;
-import android.os.HandlerThread;
-import android.os.Process;
 import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.VisibleForTesting;
 import androidx.annotation.WorkerThread;
 
 import java.io.IOException;
@@ -44,17 +43,25 @@ public class SsaidSettings {
 
     @WorkerThread
     public SsaidSettings(@UserIdInt int userId) throws IOException {
-        HandlerThread thread = new HandlerThread("SSAID", Process.THREAD_PRIORITY_BACKGROUND);
-        thread.start();
-        int ssaidKey = SettingsStateV26.makeKey(SettingsState.SETTINGS_TYPE_SSAID, userId);
         Path ssaidLocation = OsEnvironment.getUserSystemDirectory(userId)
                 .findFile("settings_ssaid.xml");
         if (!ssaidLocation.canRead()) {
             throw new IOException("settings_ssaid.xml is inaccessible.");
         }
+        mSettingsState = init(ssaidLocation, userId);
+    }
+
+    @VisibleForTesting
+    public SsaidSettings(Path ssaidLocation, @UserIdInt int userId) throws IOException {
+        mSettingsState = init(ssaidLocation, userId);
+    }
+
+    @NonNull
+    private SettingsState init(Path ssaidLocation, @UserIdInt int userId) throws IOException {
+        int ssaidKey = SettingsStateV26.makeKey(SettingsState.SETTINGS_TYPE_SSAID, userId);
         try {
-            mSettingsState = new SettingsStateV26(mLock, ssaidLocation, ssaidKey,
-                    SettingsState.MAX_BYTES_PER_APP_PACKAGE_UNLIMITED, thread.getLooper());
+            return new SettingsStateV26(mLock, ssaidLocation, ssaidKey,
+                    SettingsState.MAX_BYTES_PER_APP_PACKAGE_UNLIMITED);
         } catch (IllegalStateException e) {
             throw new IOException(e);
         }

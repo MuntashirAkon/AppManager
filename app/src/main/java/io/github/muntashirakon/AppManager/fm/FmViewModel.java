@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Process;
 import android.provider.DocumentsContract;
 import android.text.TextUtils;
 
@@ -43,7 +44,9 @@ import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AlphanumComparator;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
@@ -303,8 +306,11 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                 // Since we couldn't resolve the path, try currentPath instead
             }
         }
-        Path path = currentPath;
+        Path finalPath = currentPath;
         mFmFileLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
+            // Update paths
+            Path path = getFixedPath(finalPath);
+            mCurrentUri = path.getUri();
             if (!path.isDirectory()) {
                 IOException e;
                 if (path.exists()) {
@@ -578,5 +584,29 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             }
         }
         return fs;
+    }
+
+    // This fix is temporary
+    private static final String STORAGE_EMULATED = "/storage/emulated/";
+
+    @NonNull
+    private static Path getFixedPath(@NonNull Path originalPath) {
+        int uid = Users.getSelfOrRemoteUid();
+        if (uid != Process.myUid() && uid != Ops.SHELL_UID) {
+            // Need no fixing
+            return originalPath;
+        }
+        String filePath = originalPath.getFilePath();
+        if (filePath == null || !filePath.startsWith(STORAGE_EMULATED) || filePath.length() == STORAGE_EMULATED.length()) {
+            // Need no fixing
+            return originalPath;
+        }
+        if (filePath.startsWith(STORAGE_EMULATED + '\u200B')) {
+            // Already fixed
+            return originalPath;
+        }
+        // Add ZWSP
+        String newFilePath = STORAGE_EMULATED + '\u200B' + filePath.substring(STORAGE_EMULATED.length());
+        return Paths.get(newFilePath);
     }
 }

@@ -261,6 +261,11 @@ public class AppDb {
                 // Interrupt thread on request
                 if (ThreadUtils.isInterrupted()) return;
 
+                if (!SelfPermissions.checkCrossUserPermission(userId, false)) {
+                    // No support for cross user
+                    continue;
+                }
+
                 List<PackageInfo> packageInfoList = PackageManagerCompat.getInstalledPackages(
                         GET_SIGNING_CERTIFICATES | PackageManager.GET_ACTIVITIES
                                 | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS

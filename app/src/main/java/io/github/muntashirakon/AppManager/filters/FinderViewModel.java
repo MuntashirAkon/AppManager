@@ -90,6 +90,12 @@ public class FinderViewModel extends AndroidViewModel {
         boolean hasUsageAccess = FeatureController.isUsageAccessEnabled() && SelfPermissions.checkUsageStatsPermission();
         for (int userId : userIds) {
             if (ThreadUtils.isInterrupted()) return;
+
+            if (!SelfPermissions.checkCrossUserPermission(userId, false)) {
+                // No support for cross user
+                continue;
+            }
+
             // List packages
             List<PackageInfo> packageInfoList = PackageManagerCompat.getInstalledPackages(
                     PackageManager.GET_META_DATA | GET_SIGNING_CERTIFICATES
