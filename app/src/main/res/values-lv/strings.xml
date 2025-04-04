@@ -72,7 +72,7 @@
     <string name="app_signing_signatures">Paraksti</string>
     <string name="app_signing_no_signatures">Nav derīgu parakstu</string>
     <string name="error">Kļūda</string>
-    <string name="sort_by_app_label">Lietotnes nosaukuma (etiķetes)</string>
+    <string name="sort_by_app_label">Lietotnes nosaukuma</string>
     <string name="sort_by_target_sdk">Mērķa SDK versijas</string>
     <string name="about">Par lietotni</string>
     <string name="app_not_installed">Lietotne nav uzstādīta</string>
@@ -83,4 +83,7 @@
     <string name="group">Grupa</string>
     <string name="declared_permission">Atļaujas</string>
     <string name="loading">Ielādē…</string>
+    <string name="sort_by_shared_user_id">Vispārīgā lietotāja identifikatora</string>
+    <string name="sort_by_last_used">Pēdējo reizi lietota</string>
+    <string name="sort_by_installation_date">Uzstādīšanas datuma</string>
 </resources>
