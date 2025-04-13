@@ -55,6 +55,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -473,9 +474,39 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 break;
             }
             case AppDetailsFragment.APP_INFO:
-            case AppDetailsFragment.CONFIGURATIONS:
-            case AppDetailsFragment.FEATURES:
-            case AppDetailsFragment.SHARED_LIBRARIES:
+            case AppDetailsFragment.CONFIGURATIONS: {
+                List<AppDetailsItem<ConfigurationInfo>> appDetailsItems;
+                synchronized (mConfigurations) {
+                    if (!TextUtils.isEmpty(mSearchQuery)) {
+                        appDetailsItems = AdvancedSearchView.matches(mSearchQuery, mConfigurations.getValue(),
+                                (ChoiceGenerator<AppDetailsItem<ConfigurationInfo>>) item -> lowercaseIfNotRegex(item.name, mSearchType), mSearchType);
+                    } else appDetailsItems = mConfigurations.getValue();
+                    mConfigurations.postValue(appDetailsItems);
+                }
+                break;
+            }
+            case AppDetailsFragment.FEATURES: {
+                List<AppDetailsFeatureItem> appDetailsFeatureItems;
+                synchronized (mFeatures) {
+                    if (!TextUtils.isEmpty(mSearchQuery)) {
+                        appDetailsFeatureItems = AdvancedSearchView.matches(mSearchQuery, mFeatures.getValue(),
+                                (ChoiceGenerator<AppDetailsFeatureItem>) item -> lowercaseIfNotRegex(item.name, mSearchType), mSearchType);
+                    } else appDetailsFeatureItems = mFeatures.getValue();
+                    mFeatures.postValue(appDetailsFeatureItems);
+                }
+                break;
+            }
+            case AppDetailsFragment.SHARED_LIBRARIES: {
+                List<AppDetailsLibraryItem<?>> appDetailsItems;
+                synchronized (mSharedLibraries) {
+                    if (!TextUtils.isEmpty(mSearchQuery)) {
+                        appDetailsItems = AdvancedSearchView.matches(mSearchQuery, mSharedLibraries.getValue(),
+                                (ChoiceGenerator<AppDetailsLibraryItem<?>>) item -> lowercaseIfNotRegex(item.name, mSearchType), mSearchType);
+                    } else appDetailsItems = mSharedLibraries.getValue();
+                    mSharedLibraries.postValue(appDetailsItems);
+                }
+                break;
+            }
             case AppDetailsFragment.SIGNATURES:
                 // do nothing
                 break;
