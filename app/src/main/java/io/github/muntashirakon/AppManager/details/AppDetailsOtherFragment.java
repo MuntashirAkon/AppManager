@@ -14,7 +14,9 @@ import android.content.pm.PackageInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
@@ -80,9 +82,6 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mNeededProperty = requireArguments().getInt(ARG_TYPE);
-        if (mNeededProperty == SHARED_LIBRARIES) {
-            activity.searchView.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -92,9 +91,6 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
         mAdapter = new AppDetailsRecyclerAdapter();
         recyclerView.setAdapter(mAdapter);
         alertView.setVisibility(View.GONE);
-        if (mNeededProperty == SHARED_LIBRARIES) {
-            activity.searchView.setVisibility(View.GONE);
-        }
         if (viewModel == null) return;
         viewModel.get(mNeededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (appDetailsItems != null && mAdapter != null && viewModel.isPackageExist()) {
@@ -139,9 +135,6 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
         super.onResume();
         if (activity.searchView != null) {
             if (!activity.searchView.isShown()) {
-                if (mNeededProperty == SHARED_LIBRARIES) {
-                    activity.searchView.setVisibility(View.GONE);
-                }
                 activity.searchView.setVisibility(View.VISIBLE);
             }
             activity.searchView.setOnQueryTextListener(this);
@@ -306,6 +299,9 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                 default:
                     break;
             }
+            if (mConstraint !=null && holder.textView1.getText().toString().contains(mConstraint)) {
+                holder.textView1.setText(UIUtils.getHighlightedText(holder.textView1.getText(), mConstraint, colorQueryStringHighlight));
+            }
         }
 
         @Override
@@ -327,9 +323,6 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
             }
             holder.textView1.setText(item.name);
             holder.chipType.setText(item.type);
-            if (mConstraint != null && item.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
-                holder.textView1.setText(UIUtils.getHighlightedText(item.name, mConstraint, colorQueryStringHighlight));
-            }
             switch (item.type) {
                 case "APK": {
                     PackageInfo packageInfo = (PackageInfo) item.item;
@@ -408,10 +401,6 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                 return;
             } else holder.textView1.setText(item.name);
 
-            if (mConstraint != null && holder.textView1.getText().toString().toLowerCase(Locale.ROOT).contains(mConstraint)) {
-                holder.textView1.setText(UIUtils.getHighlightedText(holder.textView1.getText().toString().toLowerCase(Locale.ROOT), mConstraint, colorQueryStringHighlight));
-            }
-
             // Feature version: 0 means any version
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && featureInfo.version != 0) {
                 holder.textView3.setVisibility(View.VISIBLE);
@@ -445,7 +434,6 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
         private void getSignatureView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             TextView textView = holder.textView1;
             AppDetailsItem<?> item;
-            activity.searchView.setVisibility(GONE);
             synchronized (mAdapterList) {
                 item = mAdapterList.get(index);
             }

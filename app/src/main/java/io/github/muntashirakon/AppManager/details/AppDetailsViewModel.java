@@ -508,7 +508,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 break;
             }
             case AppDetailsFragment.SIGNATURES:
-                // do nothing
+                mSignatures.postValue(mSignatures.getValue());
                 break;
         }
     }
