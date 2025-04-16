@@ -26,7 +26,7 @@
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dienas</item>
     </plurals>
     <string name="app_usage">Lietotņu lietojums</string>
-    <string name="usage_today">Šodien</string>
+    <string name="usage_today">Šodienas</string>
     <string name="usage_7_days">Pēdējās 7 dienās</string>
     <string name="usage_less_than_a_minute">Mazāk par minūti</string>
     <string name="go_back">Iet atpakaļ</string>
@@ -121,4 +121,35 @@
     <string name="sort_by_last_modified">Pēdējo reizi modificēts</string>
     <string name="sort_by_file_size">Faila izmēra</string>
     <string name="sort_by_file_type">Faila tipa</string>
+    <string name="credits_message">Pateicība izstrādātājiem:\n- The Android Open Source Project \n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a> \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a> \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a> \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a> \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a> \n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a> \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a> \n- <a href="https://github.com/billthefarmer/editor">Editor</a> \n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a> \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a> \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a> \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> \n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a> \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a> \n- <a href="https://github.com/pluscubed/matlog">MatLog</a> \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a> \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a> \n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a> \n- <a href="https://github.com/Aefyr/SAI">SAI</a> \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a> \n- <a href="https://github.com/eclipse/tm4e">tm4e</a> \n- <a href="https://github.com/tuyafeng/Watt">Watt</a></string>
+    <plurals name="usage_hours">
+        <item quantity="zero">%1$d stundas</item>
+        <item quantity="one">%1$d stundu</item>
+        <item quantity="other">%1$d stundas</item>
+    </plurals>
+    <plurals name="usage_days">
+        <item quantity="zero">%1$d dienas</item>
+        <item quantity="one">%1$d dienu</item>
+        <item quantity="other">%1$d dienas</item>
+    </plurals>
+    <plurals name="usage_months">
+        <item quantity="zero">%1$d mēnešus</item>
+        <item quantity="one">%1$d mēnesi</item>
+        <item quantity="other">%1$d mēnešus</item>
+    </plurals>
+    <plurals name="usage_minutes">
+        <item quantity="zero">%1$d minūtes</item>
+        <item quantity="one">%1$d minūti</item>
+        <item quantity="other">%1$d minūtes</item>
+    </plurals>
+    <string name="data_usage_msg">Izmantotais datu apjoms</string>
+    <string name="package_name">Lietotnes unikālais nosaukums</string>
+    <string name="license">Licence</string>
+    <string name="usage_weekly">Nedēļas</string>
+    <string name="usage_access">Piekļuve lietošanas (lietojuma) datiem</string>
+    <string name="usage_yesterday">Vakardienas</string>
+    <string name="usage_times_opened">Atvēršanas skaita</string>
+    <string name="usage_last_used">Pēdējo reizi lietota</string>
+    <string name="usage_mobile_data">Izmantotā mobilo datu apjoma</string>
+    <string name="usage_wifi_data">Izmantotā Wi-Fi datu apjoma</string>
 </resources>
