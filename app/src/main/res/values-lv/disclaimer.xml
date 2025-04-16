@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disclaimer_header">Brīdinājums</string>
-    <string name="disclaimer_footer">© 2020–2024 Muntashir Al-Islam</string>
+    <string name="disclaimer_footer">© 2020–2025 Muntashir Al-Islam</string>
     <string name="disclaimer_agree_forever">Nekad vairs nerādīt</string>
     <string name="disclaimer_agree">Piekrītu</string>
     <string name="disclaimer_exit">Iziet</string>
