@@ -32,7 +32,7 @@
     <string name="go_back">Iet atpakaļ</string>
     <string name="go">Atļaut (Aiziet)</string>
     <string name="grant_usage_access">Piešķiriet lietošanas vēstures piekļuvi</string>
-    <string name="grant_usage_acess_message">Izmanto, lai parādītu informāciju par lietotņu izmantošanu.</string>
+    <string name="grant_usage_acess_message">Izmanto, lai parādītu informāciju par lietotņu lietojumu.</string>
     <string name="share_apk">Kopīgot APK</string>
     <string name="failed_to_extract_apk_file">Neizdevās iegūt APK failu</string>
     <string name="menu_remove_rules">Noņemt noteikumus</string>
@@ -146,10 +146,18 @@
     <string name="package_name">Lietotnes unikālais nosaukums</string>
     <string name="license">Licence</string>
     <string name="usage_weekly">Nedēļas</string>
-    <string name="usage_access">Piekļuve lietošanas (lietojuma) datiem</string>
+    <string name="usage_access">Piekļuve lietojumu datiem</string>
     <string name="usage_yesterday">Vakardienas</string>
     <string name="usage_times_opened">Atvēršanas skaita</string>
     <string name="usage_last_used">Pēdējo reizi lietota</string>
     <string name="usage_mobile_data">Izmantotā mobilo datu apjoma</string>
     <string name="usage_wifi_data">Izmantotā Wi-Fi datu apjoma</string>
+    <string name="installer_app">Uzstādīšanas lietotne</string>
+    <string name="empty_package_name">Tuksš lietotnes unikālais nosaukums</string>
+    <string name="no_usage_in_this_time_range">Šajā laika diapazonā nav lietojumu datu</string>
+    <string name="installer_error_storage">Nav pietiekami daudz krātuves vietas, lai uzstādītu lietotni</string>
+    <string name="installer_error_generic">Uzstādīšana neizdevās</string>
+    <string name="usage_access_not_supported">Nevarēja pieprasīt atļauju piekļūt lietošanas vēsturei, jo attiecīgā iestatījumu sadaļa neeksistē.</string>
+    <string name="installer">Uzstādīšana</string>
+    <string name="installer_app_message">Noklikšķiniet uz <b>Atlasīt</b>, lai izmantotu kādu no uzstādītajām lietotnēm, vai <b>Pielāgots</b>, lai ievadītu savu lietotnes unikālo nosaukumu.</string>
 </resources>
