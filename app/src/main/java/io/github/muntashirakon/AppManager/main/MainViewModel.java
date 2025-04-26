@@ -44,6 +44,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.apk.list.ListExporter;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
@@ -63,13 +64,13 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Path;
 
 public class MainViewModel extends AndroidViewModel implements ListOptions.ListOptionActions {
     private final PackageManager mPackageManager;
     private final PackageIntentReceiver mPackageObserver;
-    private final Handler mHandler;
     @MainListOptions.SortOrder
     private int mSortBy;
     private boolean mReverseSort;
@@ -82,6 +83,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     private String mSearchQuery;
     @AdvancedSearchView.SearchType
     private int mSearchType;
+    private Future<?> mFilterResult;
     private final Map<String, ApplicationItem> mSelectedPackageApplicationItemMap = Collections.synchronizedMap(new LinkedHashMap<>());
     final MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
 
@@ -89,7 +91,6 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         super(application);
         Log.d("MVM", "New instance created");
         mPackageManager = application.getPackageManager();
-        mHandler = new Handler(application.getMainLooper());
         mPackageObserver = new PackageIntentReceiver(this);
         mSortBy = Prefs.MainPage.getSortOrder();
         mReverseSort = Prefs.MainPage.isReverseSort();
@@ -207,7 +208,8 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     public void setSearchQuery(String searchQuery, @AdvancedSearchView.SearchType int searchType) {
         this.mSearchQuery = searchType != AdvancedSearchView.SEARCH_TYPE_REGEX ? searchQuery.toLowerCase(Locale.ROOT) : searchQuery;
         this.mSearchType = searchType;
-        executor.submit(this::filterItemsByFlags);
+        cancelIfRunning();
+        mFilterResult = executor.submit(this::filterItemsByFlags);
     }
 
     @Override
@@ -217,7 +219,8 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
 
     @Override
     public void setReverseSort(boolean reverseSort) {
-        executor.submit(() -> {
+        cancelIfRunning();
+        mFilterResult = executor.submit(() -> {
             sortApplicationList(mSortBy, mReverseSort);
             filterItemsByFlags();
         });
@@ -233,7 +236,8 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     @Override
     public void setSortBy(int sortBy) {
         if (mSortBy != sortBy) {
-            executor.submit(() -> {
+            cancelIfRunning();
+            mFilterResult = executor.submit(() -> {
                 sortApplicationList(sortBy, mReverseSort);
                 filterItemsByFlags();
             });
@@ -251,14 +255,16 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     public void addFilterFlag(@MainListOptions.Filter int filterFlag) {
         mFilterFlags |= filterFlag;
         Prefs.MainPage.setFilters(mFilterFlags);
-        executor.submit(this::filterItemsByFlags);
+        cancelIfRunning();
+        mFilterResult = executor.submit(this::filterItemsByFlags);
     }
 
     @Override
     public void removeFilterFlag(@MainListOptions.Filter int filterFlag) {
         mFilterFlags &= ~filterFlag;
         Prefs.MainPage.setFilters(mFilterFlags);
-        executor.submit(this::filterItemsByFlags);
+        cancelIfRunning();
+        mFilterResult = executor.submit(this::filterItemsByFlags);
     }
 
     public void setFilterProfileName(@Nullable String filterProfileName) {
@@ -267,7 +273,8 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         } else if (mFilterProfileName.equals(filterProfileName)) return;
         mFilterProfileName = filterProfileName;
         Prefs.MainPage.setFilteredProfileName(filterProfileName);
-        executor.submit(this::filterItemsByFlags);
+        cancelIfRunning();
+        mFilterResult = executor.submit(this::filterItemsByFlags);
     }
 
     @Nullable
@@ -298,7 +305,8 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         }
         mSelectedUsers = selectedUsers;
         // TODO: 5/6/23 Store value to prefs
-        executor.submit(this::filterItemsByFlags);
+        cancelIfRunning();
+        mFilterResult = executor.submit(this::filterItemsByFlags);
     }
 
     @Nullable
@@ -310,7 +318,8 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     public void onResume() {
         if ((mFilterFlags & MainListOptions.FILTER_RUNNING_APPS) != 0) {
             // Reload filters to get running apps again
-            executor.submit(this::filterItemsByFlags);
+            cancelIfRunning();
+            mFilterResult = executor.submit(this::filterItemsByFlags);
         }
     }
 
@@ -337,7 +346,8 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
 
     @GuardedBy("applicationItems")
     public void loadApplicationItems() {
-        executor.submit(() -> {
+        cancelIfRunning();
+        mFilterResult = executor.submit(() -> {
             List<ApplicationItem> updatedApplicationItems = PackageUtils
                     .getInstalledOrBackedUpApplicationsFromDb(getApplication(), true, true);
             synchronized (mApplicationItems) {
@@ -353,6 +363,13 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         });
     }
 
+    private void cancelIfRunning() {
+        if (mFilterResult != null) {
+            mFilterResult.cancel(true);
+        }
+    }
+
+    @WorkerThread
     private void filterItemsByQuery(@NonNull List<ApplicationItem> applicationItems) {
         List<ApplicationItem> filteredApplicationItems;
         if (mSearchType == AdvancedSearchView.SEARCH_TYPE_REGEX) {
@@ -361,12 +378,15 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                         add(item.packageName);
                         add(item.label);
                     }}, AdvancedSearchView.SEARCH_TYPE_REGEX);
-            mHandler.post(() -> mApplicationItemsLiveData.postValue(filteredApplicationItems));
+            mApplicationItemsLiveData.postValue(filteredApplicationItems);
             return;
         }
         // Others
         filteredApplicationItems = new ArrayList<>();
         for (ApplicationItem item : applicationItems) {
+            if (ThreadUtils.isInterrupted()) {
+                return;
+            }
             if (AdvancedSearchView.matches(mSearchQuery, item.packageName.toLowerCase(Locale.ROOT), mSearchType)) {
                 filteredApplicationItems.add(item);
             } else if (mSearchType == AdvancedSearchView.SEARCH_TYPE_CONTAINS) {
@@ -377,7 +397,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 filteredApplicationItems.add(item);
             }
         }
-        mHandler.post(() -> mApplicationItemsLiveData.postValue(filteredApplicationItems));
+        mApplicationItemsLiveData.postValue(filteredApplicationItems);
     }
 
     @WorkerThread
@@ -392,6 +412,9 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                     AppsProfile profile = AppsProfile.fromPath(profilePath);
                     List<Integer> indexes = new ArrayList<>();
                     for (String packageName : profile.packages) {
+                        if (ThreadUtils.isInterrupted()) {
+                            return;
+                        }
                         ApplicationItem item = new ApplicationItem();
                         item.packageName = packageName;
                         int index = mApplicationItems.indexOf(item);
@@ -401,6 +424,9 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                     }
                     Collections.sort(indexes);
                     for (int index : indexes) {
+                        if (ThreadUtils.isInterrupted()) {
+                            return;
+                        }
                         ApplicationItem item = mApplicationItems.get(index);
                         if (isAmongSelectedUsers(item)) {
                             candidateApplicationItems.add(item);
@@ -411,6 +437,9 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 }
             } else {
                 for (ApplicationItem item : mApplicationItems) {
+                    if (ThreadUtils.isInterrupted()) {
+                        return;
+                    }
                     if (isAmongSelectedUsers(item)) {
                         candidateApplicationItems.add(item);
                     }
@@ -421,7 +450,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 if (!TextUtils.isEmpty(mSearchQuery)) {
                     filterItemsByQuery(candidateApplicationItems);
                 } else {
-                    mHandler.post(() -> mApplicationItemsLiveData.postValue(candidateApplicationItems));
+                    mApplicationItemsLiveData.postValue(candidateApplicationItems);
                 }
             } else {
                 List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
@@ -429,6 +458,9 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                     loadRunningApps();
                 }
                 for (ApplicationItem item : candidateApplicationItems) {
+                    if (ThreadUtils.isInterrupted()) {
+                        return;
+                    }
                     // Filter user and system apps first (if requested)
                     if ((mFilterFlags & MainListOptions.FILTER_USER_APPS) != 0 && !item.isUser) {
                         continue;
@@ -472,7 +504,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 if (!TextUtils.isEmpty(mSearchQuery)) {
                     filterItemsByQuery(filteredApplicationItems);
                 } else {
-                    mHandler.post(() -> mApplicationItemsLiveData.postValue(filteredApplicationItems));
+                    mApplicationItemsLiveData.postValue(filteredApplicationItems);
                 }
             }
         }
@@ -499,9 +531,15 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 runningAppProcessInfoList = ActivityManagerCompat.getRunningAppProcesses();
                 Set<String> runningPackages = new HashSet<>();
                 for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : runningAppProcessInfoList) {
+                    if (ThreadUtils.isInterrupted()) {
+                        return;
+                    }
                     Collections.addAll(runningPackages, runningAppProcessInfo.pkgList);
                 }
                 for (int i = 0; i < mApplicationItems.size(); ++i) {
+                    if (ThreadUtils.isInterrupted()) {
+                        return;
+                    }
                     ApplicationItem applicationItem = mApplicationItems.get(i);
                     applicationItem.isRunning = applicationItem.isInstalled
                             && runningPackages.contains(applicationItem.packageName);
@@ -787,6 +825,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         @Override
         @WorkerThread
         protected void onPackageChanged(Intent intent, @Nullable Integer uid, @Nullable String[] packages) {
+            mModel.cancelIfRunning();
             if (uid != null) {
                 mModel.updateInfoForUid(uid, intent.getAction());
             } else if (packages != null) {
