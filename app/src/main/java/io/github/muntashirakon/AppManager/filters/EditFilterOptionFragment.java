@@ -400,7 +400,7 @@ public class EditFilterOptionFragment extends DialogFragment {
 
         public void setFlag(int flag) {
             mFlag = flag;
-            notifyItemRangeChanged(0, mFlags.size());
+            notifyItemRangeChanged(0, mFlags.size(), AdapterUtils.STUB);
         }
 
         public int getFlag() {

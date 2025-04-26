@@ -192,7 +192,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
                 mOriginalValues.add(index, object);
             } else {
                 mObjects.add(index, object);
-                notifyItemChanged(index);
+                notifyItemChanged(index, AdapterUtils.STUB);
             }
         }
     }
@@ -410,7 +410,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
             } else {
                 LogLine line = holder.logLine;
                 line.setExpanded(!line.isExpanded());
-                notifyItemChanged(position);
+                notifyItemChanged(position, AdapterUtils.STUB);
             }
         });
         // Long click on the item:

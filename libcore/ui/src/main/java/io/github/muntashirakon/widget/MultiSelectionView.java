@@ -42,6 +42,7 @@ import java.util.Locale;
 
 import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
 import io.github.muntashirakon.ui.R;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.UiUtils;
 
 @SuppressLint("RestrictedApi")
@@ -509,12 +510,12 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         public void toggleSelection(int position) {
             if (isSelected(position)) {
                 deselect(position);
-                notifyItemChanged(position);
+                notifyItemChanged(position, AdapterUtils.STUB);
                 notifySelectionChange();
             } else {
                 select(position);
                 notifySelectionChange();
-                notifyItemChanged(position);
+                notifyItemChanged(position, AdapterUtils.STUB);
             }
         }
 
@@ -534,7 +535,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
             for (int position = 0; position < getItemCount(); ++position) {
                 if (isSelected(position)) {
                     deselect(position);
-                    notifyItemChanged(position);
+                    notifyItemChanged(position, AdapterUtils.STUB);
                 }
             }
             notifySelectionChange();
@@ -549,7 +550,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
                 select(position);
             }
             notifySelectionChange();
-            notifyItemRangeChanged(beginPosition, endPosition - beginPosition + 1);
+            notifyItemRangeChanged(beginPosition, endPosition - beginPosition + 1, AdapterUtils.STUB);
         }
 
         @Override

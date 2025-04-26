@@ -115,7 +115,7 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
     }
 
     public SearchableItemsDialogBuilder<T> reloadListUi() {
-        mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount());
+        mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount(), AdapterUtils.STUB);
         return this;
     }
 

@@ -619,7 +619,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                 // TODO: 22/5/23 Perform using a ViewModel
                 ThreadUtils.postOnBackgroundThread(() -> {
                     if (viewModel != null && viewModel.setAppOpMode(item)) {
-                        ThreadUtils.postOnMainThread(() -> notifyItemChanged(index));
+                        ThreadUtils.postOnMainThread(() -> notifyItemChanged(index, AdapterUtils.STUB));
                     } else {
                         ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(isAllowed
                                 ? R.string.failed_to_enable_op : R.string.failed_to_disable_op));
@@ -636,7 +636,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                             // TODO: 22/5/23 Perform using a ViewModel
                             ThreadUtils.postOnBackgroundThread(() -> {
                                 if (viewModel != null && viewModel.setAppOpMode(item, opMode)) {
-                                    ThreadUtils.postOnMainThread(() -> notifyItemChanged(index));
+                                    ThreadUtils.postOnMainThread(() -> notifyItemChanged(index, AdapterUtils.STUB));
                                 } else {
                                     ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(
                                             R.string.failed_to_change_app_op_mode));
@@ -699,7 +699,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                 holder.itemView.setOnClickListener(v -> ThreadUtils.postOnBackgroundThread(() -> {
                     try {
                         if (Objects.requireNonNull(viewModel).togglePermission(permissionItem)) {
-                            ThreadUtils.postOnMainThread(() -> notifyItemChanged(index));
+                            ThreadUtils.postOnMainThread(() -> notifyItemChanged(index, AdapterUtils.STUB));
                         } else throw new Exception("Couldn't grant permission: " + permName);
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -44,6 +44,7 @@ import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public abstract class AbsLogViewerFragment extends Fragment implements MenuProvider,
@@ -126,7 +127,7 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
         mViewModel.getExpandLogsLiveData().observe(getViewLifecycleOwner(), expanded -> {
             int oldFirstVisibleItem = ((LinearLayoutManager) Objects.requireNonNull(mRecyclerView.getLayoutManager())).findFirstVisibleItemPosition();
             mLogListAdapter.setCollapseMode(!expanded);
-            mLogListAdapter.notifyItemRangeChanged(0, mLogListAdapter.getItemCount());
+            mLogListAdapter.notifyItemRangeChanged(0, mLogListAdapter.getItemCount(), AdapterUtils.STUB);
             // Scroll to bottom or the first visible item
             if (mAutoscrollToBottom) {
                 mRecyclerView.scrollToPosition(mLogListAdapter.getItemCount() - 1);

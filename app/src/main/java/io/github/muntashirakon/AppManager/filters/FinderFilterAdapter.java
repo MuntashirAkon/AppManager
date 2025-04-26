@@ -14,6 +14,7 @@ import com.google.android.material.button.MaterialButton;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.filters.options.FilterOption;
+import io.github.muntashirakon.util.AdapterUtils;
 
 // Copyright 2012 Nolan Lawson
 public class FinderFilterAdapter extends RecyclerView.Adapter<FinderFilterAdapter.ViewHolder> {
@@ -37,7 +38,7 @@ public class FinderFilterAdapter extends RecyclerView.Adapter<FinderFilterAdapte
 
     public void update(int position, @NonNull FilterOption filter) {
         mFilterItem.updateFilterOptionAt(position, filter);
-        notifyItemChanged(position);
+        notifyItemChanged(position, AdapterUtils.STUB);
     }
 
     public void remove(int position) {

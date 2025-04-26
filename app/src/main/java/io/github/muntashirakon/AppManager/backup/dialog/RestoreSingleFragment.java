@@ -35,6 +35,7 @@ import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.SearchableFlagsDialogBuilder;
+import io.github.muntashirakon.util.AdapterUtils;
 
 public class RestoreSingleFragment extends Fragment {
     public static RestoreSingleFragment getInstance() {
@@ -93,7 +94,7 @@ public class RestoreSingleFragment extends Fragment {
                         }
                     }
                 }
-                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+                adapter.notifyItemRangeChanged(0, adapter.getItemCount(), AdapterUtils.STUB);
                 return true;
             });
             unfreezeMenuItem.setOnMenuItemClickListener(item -> {
@@ -107,7 +108,7 @@ public class RestoreSingleFragment extends Fragment {
                         }
                     }
                 }
-                adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+                adapter.notifyItemRangeChanged(0, adapter.getItemCount(), AdapterUtils.STUB);
                 return true;
             });
             popupMenu.show();
@@ -249,7 +250,7 @@ public class RestoreSingleFragment extends Fragment {
                     }
                     mSelectionListener.onSelectionChanged(metadata, mSelectedPositions.size(), true);
                 }
-                notifyItemChanged(position);
+                notifyItemChanged(position, AdapterUtils.STUB);
             });
         }
 

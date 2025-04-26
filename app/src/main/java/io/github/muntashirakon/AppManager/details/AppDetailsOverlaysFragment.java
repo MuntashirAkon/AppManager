@@ -217,7 +217,7 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
                     try {
                         // TODO: 2/18/25 Move to ViewModel
                         if (overlayItem.setEnabled(overlayManager, !overlayItem.isEnabled())) {
-                            ThreadUtils.postOnMainThread(() -> notifyItemChanged(index));
+                            ThreadUtils.postOnMainThread(() -> notifyItemChanged(index, AdapterUtils.STUB));
                         } else throw new Exception("Error Changing Overlay State " + overlayItem);
                     } catch (Exception e) {
                         Log.e(TAG, "Couldn't Change Overlay State", e);

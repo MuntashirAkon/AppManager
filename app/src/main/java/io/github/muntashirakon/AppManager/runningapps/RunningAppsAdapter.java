@@ -72,14 +72,15 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         synchronized (mLock) {
             int previousCount = mProcessItems.size() + 1;
             mProcessItems = processItems;
-            AdapterUtils.notifyDataSetChanged(this, previousCount, mProcessItems.size() + 1);
+            int currentCount = mProcessItems.size() + 1;
+            AdapterUtils.notifyDataSetChanged(this, 1, previousCount, currentCount);
         }
         notifySelectionChange();
     }
 
     public void setDeviceMemoryInfo(ProcMemoryInfo procMemoryInfo) {
         mProcMemoryInfo = procMemoryInfo;
-        notifyItemChanged(0);
+        notifyItemChanged(0, AdapterUtils.STUB);
     }
 
     @Override

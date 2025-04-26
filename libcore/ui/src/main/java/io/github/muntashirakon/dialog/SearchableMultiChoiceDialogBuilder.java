@@ -149,7 +149,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
     }
 
     public SearchableMultiChoiceDialogBuilder<T> reloadListUi() {
-        mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount());
+        mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount(), AdapterUtils.STUB);
         return this;
     }
 
@@ -362,7 +362,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
                     for (int index : newSelections) {
                         triggerMultiChoiceClickListener(index, true);
                     }
-                    notifyItemRangeChanged(0, getItemCount());
+                    notifyItemRangeChanged(0, getItemCount(), AdapterUtils.STUB);
                 }
             }
         }
@@ -382,7 +382,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
                     for (int index : oldSelections) {
                         triggerMultiChoiceClickListener(index, false);
                     }
-                    notifyItemRangeChanged(0, getItemCount());
+                    notifyItemRangeChanged(0, getItemCount(), AdapterUtils.STUB);
                 }
             }
         }

@@ -15,9 +15,11 @@ import java.util.Collection;
 import java.util.List;
 
 public final class AdapterUtils {
+    public static final Object STUB = new Object();
+
     public static <T, V> void notifyDataSetChanged(@NonNull RecyclerView.Adapter<?> adapter,
-                                                @NonNull SimpleArrayMap<T, V> baseList,
-                                                @Nullable SimpleArrayMap<T, V> newList) {
+                                                   @NonNull SimpleArrayMap<T, V> baseList,
+                                                   @Nullable SimpleArrayMap<T, V> newList) {
         int previousCount = baseList.size();
         baseList.clear();
         if (newList != null) {
@@ -28,9 +30,9 @@ public final class AdapterUtils {
     }
 
     public static <T, V> void notifyDataSetChanged(@NonNull RecyclerView.Adapter<?> adapter,
-                                                @IntRange(from = 0) int startIndex,
-                                                @NonNull SimpleArrayMap<T, V> baseList,
-                                                @Nullable SimpleArrayMap<T, V> newList) {
+                                                   @IntRange(from = 0) int startIndex,
+                                                   @NonNull SimpleArrayMap<T, V> baseList,
+                                                   @Nullable SimpleArrayMap<T, V> newList) {
         int previousCount = baseList.size();
         baseList.clear();
         if (newList != null) {
@@ -82,18 +84,18 @@ public final class AdapterUtils {
         if (previousCount > currentCount) {
             // Some values are removed
             if (currentCount > 0) {
-                adapter.notifyItemRangeChanged(startIndex, currentCount);
+                adapter.notifyItemRangeChanged(startIndex, currentCount, STUB);
             }
             adapter.notifyItemRangeRemoved(currentCount + startIndex, previousCount - currentCount);
         } else if (previousCount < currentCount) {
             // Some values are added
             if (previousCount > 0) {
-                adapter.notifyItemRangeChanged(startIndex, previousCount);
+                adapter.notifyItemRangeChanged(startIndex, previousCount, STUB);
             }
             adapter.notifyItemRangeInserted(previousCount + startIndex, currentCount - previousCount);
         } else if (previousCount > 0) {
             // No values are added or removed
-            adapter.notifyItemRangeChanged(startIndex, previousCount);
+            adapter.notifyItemRangeChanged(startIndex, previousCount, STUB);
         }
     }
 
