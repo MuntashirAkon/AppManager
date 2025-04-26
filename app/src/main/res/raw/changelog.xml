@@ -2,6 +2,22 @@
 <changelog>
     <release
         type="stable release"
+        version="v4.0.3"
+        code="443"
+        date="25 April 2025">
+        <improve>Updated translations</improve>
+        <improve>Improved handling the list items throughout App Manager</improve>
+
+        <fix>Fixed a regression error in file manager</fix>
+        <fix>Fixed spinners in the App Usage and the System Config pages</fix>
+
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v4.0.2...v4.0.3"]v4.0.2...v4.0.3[/a]
+        </note>
+    </release>
+    <release
+        type="stable release"
         version="v4.0.2"
         code="442"
         date="28 March 2025">
