@@ -40,6 +40,7 @@ import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.adapters.SelectedArrayAdapter;
+import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.MaterialSpinner;
 import io.github.muntashirakon.widget.RecyclerView;
 
@@ -57,6 +58,7 @@ public class SysConfigActivity extends BaseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         mViewModel = new ViewModelProvider(this).get(SysConfigViewModel.class);
         MaterialSpinner spinner = findViewById(R.id.spinner);
+        UiUtils.applyWindowInsetsAsMargin(spinner, false, false);
         // Make spinner the first item to focus on
         spinner.requestFocus();
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
