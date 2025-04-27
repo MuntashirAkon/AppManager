@@ -379,10 +379,11 @@
     <string name="install">Install</string>
     <string name="update">Update</string>
     <string name="source_code">Source Code</string>
-    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> •
+    <string name="source_code_links" translatable="false"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> •
+        <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a> •
         <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> •
         <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> •
-        <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
+        <a href="https://git.sr.ht/~muntashir/AppManager">sourcehut</a></string>
     <string name="community">Community</string>
     <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> •
         <a href="https://t.me/AppManagerChannel">Telegram</a> •
