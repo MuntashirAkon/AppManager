@@ -89,8 +89,10 @@ Help translate [the app strings](https://hosted.weblate.org/engage/app-manager/)
 
 ## Mirrors
 
-[GitLab](https://gitlab.com/muntashir/AppManager) · [Riseup](https://0xacab.org/muntashir/AppManager) ·
-[Codeberg](https://codeberg.org/muntashir/AppManager)
+[Codeberg](https://codeberg.org/muntashir/AppManager) ·
+[GitLab](https://gitlab.com/muntashir/AppManager) ·
+[Riseup](https://0xacab.org/muntashir/AppManager) ·
+[sourcehut](https://git.sr.ht/~muntashir/AppManager)
 
 ## Screenshots
 
