@@ -22,7 +22,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.textview.MaterialTextView;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
@@ -31,7 +31,7 @@ import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<DebloaterRecyclerViewAdapter.ViewHolder> {
-    private List<DebloatObject> mAdapterList = Collections.emptyList();
+    private final List<DebloatObject> mAdapterList = new ArrayList<>();
 
     private final FragmentActivity mActivity;
     @ColorInt
@@ -61,9 +61,7 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
 
     public void setAdapterList(List<DebloatObject> adapterList) {
         synchronized (mLock) {
-            int previousCount = mAdapterList.size();
-            mAdapterList = adapterList;
-            AdapterUtils.notifyDataSetChanged(this, previousCount, mAdapterList.size());
+            AdapterUtils.notifyDataSetChanged(this, mAdapterList, adapterList);
         }
     }
 
@@ -144,16 +142,18 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
     }
 
     @Override
-    protected void select(int position) {
+    protected boolean select(int position) {
         synchronized (mLock) {
             mViewModel.select(mAdapterList.get(position));
+            return true;
         }
     }
 
     @Override
-    protected void deselect(int position) {
+    protected boolean deselect(int position) {
         synchronized (mLock) {
             mViewModel.deselect(mAdapterList.get(position));
+            return true;
         }
     }
 

@@ -395,7 +395,7 @@ public class EditFilterOptionFragment extends DialogFragment {
 
         public void setFlagMap(@NonNull Map<Integer, CharSequence> flagMap) {
             mFlagMap = flagMap;
-            AdapterUtils.notifyDataSetChanged(this, mFlags, flagMap.keySet());
+            AdapterUtils.notifyDataSetChanged(this, mFlags, new ArrayList<>(flagMap.keySet()));
         }
 
         public void setFlag(int flag) {

@@ -27,7 +27,6 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -120,7 +119,7 @@ public class SysConfigActivity extends BaseActivity {
             return new ViewHolder(view);
         }
 
-        void setList(Collection<SysConfigInfo> list) {
+        void setList(List<SysConfigInfo> list) {
             AdapterUtils.notifyDataSetChanged(this, mList, list);
         }
 

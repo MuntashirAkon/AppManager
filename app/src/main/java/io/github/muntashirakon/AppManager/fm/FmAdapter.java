@@ -179,13 +179,15 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
     }
 
     @Override
-    protected void select(int position) {
+    protected boolean select(int position) {
         mViewModel.setSelectedItem(mAdapterList.get(position).path, true);
+        return true;
     }
 
     @Override
-    protected void deselect(int position) {
+    protected boolean deselect(int position) {
         mViewModel.setSelectedItem(mAdapterList.get(position).path, false);
+        return true;
     }
 
     @Override
