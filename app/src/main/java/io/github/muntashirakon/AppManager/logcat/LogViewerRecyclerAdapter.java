@@ -295,22 +295,24 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
     }
 
     @Override
-    protected void select(int position) {
+    protected boolean select(int position) {
         synchronized (mSelectedLogLines) {
             LogLine logLine = getItemSafe(position);
             if (logLine != null) {
                 mSelectedLogLines.add(logLine);
             }
+            return logLine != null;
         }
     }
 
     @Override
-    protected void deselect(int position) {
+    protected boolean deselect(int position) {
         synchronized (mSelectedLogLines) {
             LogLine logLine = getItemSafe(position);
             if (logLine != null) {
-                mSelectedLogLines.remove(logLine);
+                return mSelectedLogLines.remove(logLine);
             }
+            return false;
         }
     }
 

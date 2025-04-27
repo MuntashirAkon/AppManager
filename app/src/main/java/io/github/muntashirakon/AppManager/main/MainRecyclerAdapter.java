@@ -128,17 +128,19 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
 
     @GuardedBy("mAdapterList")
     @Override
-    protected void select(int position) {
+    protected boolean select(int position) {
         synchronized (mAdapterList) {
             mAdapterList.set(position, mActivity.viewModel.select(mAdapterList.get(position)));
+            return true;
         }
     }
 
     @GuardedBy("mAdapterList")
     @Override
-    protected void deselect(int position) {
+    protected boolean deselect(int position) {
         synchronized (mAdapterList) {
             mAdapterList.set(position, mActivity.viewModel.deselect(mAdapterList.get(position)));
+            return true;
         }
     }
 

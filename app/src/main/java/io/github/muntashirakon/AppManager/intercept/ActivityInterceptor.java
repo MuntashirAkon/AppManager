@@ -1125,7 +1125,7 @@ public class ActivityInterceptor extends BaseActivity {
         }
 
         public void setDefaultList(@Nullable Collection<String> categories) {
-            AdapterUtils.notifyDataSetChanged(this, mCategories, categories);
+            AdapterUtils.notifyDataSetChanged(this, mCategories, categories != null ? new ArrayList<>(categories) : null);
         }
 
         @NonNull
@@ -1176,7 +1176,7 @@ public class ActivityInterceptor extends BaseActivity {
             mActivity = activity;
         }
 
-        public void setDefaultList(@Nullable Collection<String> flags) {
+        public void setDefaultList(@Nullable List<String> flags) {
             AdapterUtils.notifyDataSetChanged(this, mFlags, flags);
         }
 

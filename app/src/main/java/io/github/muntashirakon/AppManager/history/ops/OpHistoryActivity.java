@@ -105,7 +105,7 @@ public class OpHistoryActivity extends BaseActivity {
     }
 
     static class OpHistoryAdapter extends RecyclerView.Adapter<OpHistoryAdapter.ViewHolder> {
-        private OpHistoryItem[] mAdapterList;
+        private final List<OpHistoryItem> mAdapterList = new ArrayList<>();
         private final OpHistoryActivity mActivity;
         private final int mColorSuccess;
         private final int mColorFailure;
@@ -134,19 +134,23 @@ public class OpHistoryActivity extends BaseActivity {
         }
 
         void setDefaultList(@NonNull List<OpHistoryItem> list) {
-            mAdapterList = list.toArray(new OpHistoryItem[0]);
-            int previousCount = getItemCount();
-            AdapterUtils.notifyDataSetChanged(this, previousCount, mAdapterList.length);
+            synchronized (mAdapterList) {
+                AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
+            }
         }
 
         @Override
         public int getItemCount() {
-            return mAdapterList == null ? 0 : mAdapterList.length;
+            synchronized (mAdapterList) {
+                return mAdapterList.size();
+            }
         }
 
         @Override
         public long getItemId(int position) {
-            return mAdapterList[position].hashCode();
+            synchronized (mAdapterList) {
+                return mAdapterList.get(position).hashCode();
+            }
         }
 
         @NonNull
@@ -159,7 +163,10 @@ public class OpHistoryActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            OpHistoryItem history = mAdapterList[position];
+            OpHistoryItem history;
+            synchronized (mAdapterList) {
+                history = mAdapterList.get(position);
+            }
             holder.itemView.setStrokeColor(history.getStatus() ? mColorSuccess : mColorFailure);
             holder.type.setText(history.getLocalizedType(mActivity));
             holder.title.setText(history.getLabel(mActivity));
