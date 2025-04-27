@@ -277,4 +277,7 @@
     <string name="app_manager_build_expiring_soon_warning">Šīs App Manager lietotnes versijas derīguma termiņš ļoti drīz beigsies. Lūdzu, atjauniniet lietotni uz jaunāko versiju.</string>
     <string name="app_manager_build_expired">Nepieciešams atjaunināt</string>
     <string name="debloat_list_type">Saraksts</string>
+    <string name="ago">atpakaļ</string>
+    <string name="accept_time">Apstiprināšanas laiks</string>
+    <string name="reject_time">Noraidīšanas laiks</string>
 </resources>
