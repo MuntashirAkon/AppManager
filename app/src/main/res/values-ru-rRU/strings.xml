@@ -1417,7 +1417,7 @@
         <item quantity="other">%d папок</item>
     </plurals>
     <plurals name="file_count">
-        <item quantity="one">%%d файл</item>
+        <item quantity="one">%d файл</item>
         <item quantity="few">%d файла</item>
         <item quantity="many">%d файлов</item>
         <item quantity="other">%d файлов</item>
