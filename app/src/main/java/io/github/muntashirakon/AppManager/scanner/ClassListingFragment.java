@@ -263,7 +263,6 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
                     @Override
                     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                         synchronized (mAdapterList) {
-                            mAdapterList.clear();
                             if (filterResults.values == null) {
                                 AdapterUtils.notifyDataSetChanged(ClassListingAdapter.this, mAdapterList, mDefaultList);
                             } else {
