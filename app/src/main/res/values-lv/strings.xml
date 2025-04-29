@@ -247,8 +247,8 @@
     <string name="enable">Iespējot</string>
     <string name="force_stop">Piespiest apturēt</string>
     <string name="storage_and_cache">Krātuve un kešatmiņa</string>
-    <string name="total_size">Kopējais</string>
-    <string name="app_size">Lietotnes</string>
+    <string name="total_size">Kopējais izmērs</string>
+    <string name="app_size">Lietotnes izmērs</string>
     <string name="str_logo">Logotips</string>
     <string name="app_settings">Iestatījumi</string>
     <string name="exodus_link">εxodus saite</string>
@@ -372,4 +372,34 @@
     <string name="country_name" tools:ignore="TypographyOther">Valsts nosaukums (C)</string>
     <string name="locality_name">Vietas (pilsētas) nosaukums (L)</string>
     <string name="filter_apps">Lietotnes</string>
+    <string name="version_name_with_code">Versija <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
+    <string name="user_with_id">Lietotājs: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> uzstādīta</string>
+    <string name="valid">Derīgs</string>
+    <string name="not_yet_valid">Vēl nav derīgs</string>
+    <string name="v1_scheme">v1 shēma (kopš Android 1.0)</string>
+    <string name="v2_scheme">v2 shēma (kopš Android 7.0)</string>
+    <string name="input_keystore_alias_pass_msg">Noklikšķiniet šeit, lai ievadītu %1$s paroli</string>
+    <string name="magisk_hide_enabled">MagiskHide</string>
+    <string name="screen_lock_msg">Bloķēt App Manager, izmantojot Android ekrāna bloķēšanu</string>
+    <string name="screen_lock_not_enabled">Lūdzu, ieslēdziet ekrāna bloķēšanu Android iestatījumos vai notīriet lietotnes datus.</string>
+    <string name="invalid_rsa_key_size">Nederīgs RSA šifrēšanas atslēgas lielums. Atslēgas lielums var būt 1024, 2048 vai 4096 biti.</string>
+    <string name="enter_good_filename">Lūdzu, ievadiet derīgu faila nosaukumu.</string>
+    <string name="pref_display_limit_hint" tools:ignore="PluralsCandidate">Lūdzu, ievadiet derīgu skaitli no %1$d līdz %2$d.</string>
+    <string name="hidden">Paslēpts</string>
+    <string name="invalid_password">Nederīga parole, mēģiniet vēlreiz.</string>
+    <string name="open_developer_options_page">Atvērt \"Izstrādātāja iespējas\" sadaļu Android iestatījumos</string>
+    <string name="pref_sign_apk_error_signing_key_not_added">APK faila parakstīšanai ir nepieciešama derīga paraksta atslēga.</string>
+    <string name="open_as_video">Video</string>
+    <string name="search_option_regex">regulāra izteiksme</string>
+    <string name="invalid_target_path">Nederīgs ceļš</string>
+    <string name="invalid_regex">Nederīga regulāra izteiksme!</string>
+    <string name="v4_scheme">v4 shēma (kopš Android 11)</string>
+    <string name="user_and_uid">Lietotājs: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
+    <string name="validity">Derīguma termiņš</string>
+    <string name="v3_scheme">v3 shēma (kopš Android 9)</string>
+    <string name="invalid_aes_key_size">Nederīgs AES šifrēšanas atslēgas lielums. Atslēgas lielums var būt vai nu 128, vai 256 biti.</string>
+    <string name="system_partition">Sistēmas root nodalījums</string>
+    <string name="trim_caches_in_all_apps_description">Izdzēš kešatmiņas failus visām lietotnēm, tostarp arī Android sistēmas</string>
+    <string name="installer_error_bad_apks">Atlasīti nederīgi APK faili</string>
 </resources>
