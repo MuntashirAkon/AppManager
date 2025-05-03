@@ -30,7 +30,7 @@
     <string name="usage_7_days">Pēdējās 7 dienās</string>
     <string name="usage_less_than_a_minute">Mazāk par minūti</string>
     <string name="go_back">Iet atpakaļ</string>
-    <string name="go">Atļaut (Aiziet)</string>
+    <string name="go">Atļaut</string>
     <string name="grant_usage_access">Piešķiriet lietošanas vēstures piekļuvi</string>
     <string name="grant_usage_acess_message">Izmanto, lai parādītu informāciju par lietotņu lietojumu.</string>
     <string name="share_apk">Kopīgot APK</string>
@@ -309,7 +309,7 @@
     <string name="selinux">SELinux statuss</string>
     <string name="add">Pievienot</string>
     <string name="os_version">Operētājsistēmas versija</string>
-    <string name="state_name">Valsts nosaukums (ST)</string>
+    <string name="state_name">Štata nosaukums (ST)</string>
     <string name="organization_name">Organizācijas nosaukums (O)</string>
     <string name="organization_unit">Organizācijas vienība (OU)</string>
     <plurals name="file_deletion_confirmation">
@@ -402,4 +402,40 @@
     <string name="system_partition">Sistēmas root nodalījums</string>
     <string name="trim_caches_in_all_apps_description">Izdzēš kešatmiņas failus visām lietotnēm, tostarp arī Android sistēmas</string>
     <string name="installer_error_bad_apks">Atlasīti nederīgi APK faili</string>
+    <plurals name="no_of_trackers">
+        <item quantity="zero">%1$d izsekotāji</item>
+        <item quantity="one">%1$d izsekotājs</item>
+        <item quantity="other">%1$d izsekotāji</item>
+    </plurals>
+    <string name="pref_import_watt">Ievietot Watt noteikumus</string>
+    <string name="pref_import">Ievietot</string>
+    <string name="import_options">Ievietošanas iestatījumi</string>
+    <string name="import_failed">Neizdevās ievietot!</string>
+    <string name="pref_app_theme">Lietotnes motīvs</string>
+    <string name="follow_system">Izmantot sistēmas iestatījumus</string>
+    <string name="day">Gaišs</string>
+    <string name="version">Versija</string>
+    <string name="select_theme">Motīvs</string>
+    <string name="night">Tumšs</string>
+    <string name="launch_app">Palaist</string>
+    <string name="source_code">Pirmkods</string>
+    <string name="pref_import_existing">Ievietot esošos noteikumus</string>
+    <string name="clear_data_message">Vai tiešām vēlaties notīrīt šīs lietotnes datus?</string>
+    <string name="common_name">Vispārpieņemtais nosaukums (CN)</string>
+    <string name="import_key">Ievietot atslēgu</string>
+    <string name="pref_import_backups">Ievietot dublējumkopijas</string>
+    <string name="import_from_oab">Ievietot OAndBackup dublējumkopijas</string>
+    <string name="import_from_sb">Ievietot Swift Backup 3.0 – 3.2 dublējumkopijas</string>
+    <string name="pref_import_backups_msg">Ievietot OAndBackup, Swift Backup (3.0–3.2) vai Titanium Backup dublējumkopijas.</string>
+    <string name="export_failed">Neizdevās izgūt!</string>
+    <string name="import_from_tb">Ievietot Titanium Backup dublējumkopijas</string>
+    <string name="pref_import_blocker">Ievietot Blocker noteikumus</string>
+    <string name="scan_report_from_pithus">Pithus atskaite</string>
+    <string name="pref_import_msg">Ievietot iepriekš izgūtos App Manager bloķēšanas noteikumus.</string>
+    <string name="delete_backup">Dzēst dublējumkopiju</string>
+    <plurals name="failed_to_import_files">
+        <item quantity="zero">Nevarēja importēt %1$d datnes.</item>
+        <item quantity="one">Nevarēja importēt %1$d datni.</item>
+        <item quantity="other">Nevarēja importēt %1$d datnes.</item>
+    </plurals>
 </resources>
