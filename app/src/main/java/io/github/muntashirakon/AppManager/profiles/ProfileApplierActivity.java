@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Queue;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
@@ -66,9 +65,6 @@ public class ProfileApplierActivity extends BaseActivity {
             intent.putExtra(EXTRA_SHORTCUT_TYPE, shortcutType);
             if (state != null) {
                 intent.putExtra(EXTRA_STATE, state);
-            } else if (shortcutType.equals(ST_SIMPLE)) {
-                // Shortcut is set to simple but no state set
-                intent.putExtra(EXTRA_STATE, AppsProfile.STATE_ON);
             }
         }
         return intent;
@@ -173,8 +169,6 @@ public class ProfileApplierActivity extends BaseActivity {
         info.state = info.state != null ? info.state : info.profile.state;
         switch (info.shortcutType) {
             case ST_SIMPLE:
-                // There must be a state
-                Objects.requireNonNull(info.state);
                 Intent intent = ProfileApplierService.getIntent(this,
                         ProfileQueueItem.fromProfiledApplierInfo(info), info.notify);
                 ContextCompat.startForegroundService(this, intent);
