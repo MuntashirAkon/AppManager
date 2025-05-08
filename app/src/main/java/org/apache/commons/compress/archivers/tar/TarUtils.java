@@ -696,13 +696,16 @@ public class TarUtils {
                     while((ch = inputStream.read()) != -1) {
                         read++;
                         totalRead++;
+                        if (totalRead < 0 || (headerSize >= 0 && totalRead >= headerSize)) {
+                             break;
+                         }
                         if (ch == '='){ // end of keyword
                             final String keyword = coll.toString(CharsetNames.UTF_8);
                             // Get rest of entry
                             final int restLen = len - read;
                             if (restLen <= 1) { // only NL
                                 headers.remove(keyword);
-                            } else if (headerSize >= 0 && totalRead + restLen > headerSize) {
+                            } else if (headerSize >= 0 && restLen > headerSize - totalRead) {
                                 throw new IOException("Paxheader value size " + restLen
                                     + " exceeds size of header record");
 
