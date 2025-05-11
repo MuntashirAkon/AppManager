@@ -50,17 +50,17 @@
     <string name="save">Saglabāt</string>
     <string name="discard">Atcelt izmaiņas</string>
     <string name="delete">Dzēst</string>
-    <string name="uninstall_app_message">Vai vēlaties noņemt šo lietotni?</string>
+    <string name="uninstall_app_message">Vai tiešām noņemt šo lietotni?</string>
     <string name="failed_to_uninstall">Nevarēja noņemt <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> lietotni.</string>
     <string name="failed_to_uninstall_app">Nevarēja noņemt</string>
     <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> lietotne veiksmīgi noņemta.</string>
-    <string name="uninstall_system_app_message">Šī ir sistēmas lietotne. Vai tiešām vēlaties noņemt šo lietotni?</string>
+    <string name="uninstall_system_app_message">Šī ir sistēmas lietotne. Vai tiešām noņemt šo lietotni?</string>
     <string name="clear_data_from_uninstalled_apps">Dzēst noņemto lietotņu datus</string>
     <string name="clear_data_from_uninstalled_apps_description">Dzēš lietotņu datus, kas noņemtas ar <tt>DONT_DELETE_DATA</tt> atzīmi</string>
     <string name="uninstall_updates">Noņemt atjauninājumus</string>
     <string name="update_uninstalled_successfully">Lietotnes <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> atjauninājumi veiksmīgi noņemti.</string>
     <string name="failed_to_uninstall_updates">Nevarēja noņemt lietotnes <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> atjauninājumus.</string>
-    <string name="do_you_want_to_uninstall_and_install">Vai vēlaties noņemt un atkal uzstādīt lietotni?</string>
+    <string name="do_you_want_to_uninstall_and_install">Vai tiešām noņemt un atkal uzstādīt lietotni?</string>
     <string name="uninstalled_apps">Noņemtās lietotnes</string>
     <string name="confirm_uninstallation">Apstiprinu noņemšanu</string>
     <string name="uninstall_app_again_message">Lietotne tika noņemta bez datu un paraksta dzēšanas. Vai vēlaties to pilnībā noņemt?</string>
@@ -420,7 +420,7 @@
     <string name="launch_app">Palaist</string>
     <string name="source_code">Pirmkods</string>
     <string name="pref_import_existing">Ievietot esošos noteikumus</string>
-    <string name="clear_data_message">Vai tiešām vēlaties notīrīt šīs lietotnes datus?</string>
+    <string name="clear_data_message">Vai tiešām notīrīt šīs lietotnes datus?</string>
     <string name="common_name">Vispārpieņemtais nosaukums (CN)</string>
     <string name="import_key">Ievietot atslēgu</string>
     <string name="pref_import_backups">Ievietot dublējumkopijas</string>
@@ -438,4 +438,25 @@
         <item quantity="one">Nevarēja importēt %1$d datni.</item>
         <item quantity="other">Nevarēja importēt %1$d datnes.</item>
     </plurals>
+    <string name="select_type">Atlasiet tipu</string>
+    <string name="pref_export">Izgūt</string>
+    <string name="export_options">Izgūšanas iestatījumi</string>
+    <string name="changelog">Izmaiņu žurnāls</string>
+    <string name="only_works_in_root_or_adb_mode">Pieejams tikai root vai ADB režīmā</string>
+    <string name="select_all">Atlasīt visas</string>
+    <string name="features">Funkcionalitāte</string>
+    <string name="apply_to_system_apps_question">Vai piemērot arī sistēmas lietotnēm? Ja neesiet pārliecināti, izvēlieties \"Nē\".</string>
+    <string name="are_you_sure">Vai tiešām?</string>
+    <string name="backup_volume_unavailable_warning">Atlasītā dublējuma datu nesēja krātuve pašlaik nav pieejams. Ja dublējumu krātuve iestatīta ārējā datu nesējā - SD karte, pārnēsājams datu nesējs, lūdzu, ievietojiet vai pievienojiet to ierīcei vai nu nomainiet dublējuma krātuvi.</string>
+    <string name="item_select">Atlasīt</string>
+    <string name="export_app_list_select_format">Atlasiet lietotņu saraksta izgūšanas formātu</string>
+    <string name="report_not_available">Nav pieejama</string>
+    <string name="select_filter">Atlasiet filtru</string>
+    <string name="pref_selected_users">Atlasītie lietotāji</string>
+    <string name="keep_data_and_app_signing_signatures">Saglabāt datus un parakstus</string>
+    <string name="send_selected">Nosūtīt atlasītos</string>
+    <string name="pref_selected_users_msg">Atļaut App Manager strādāt tikai ar atlasītajiem lietotājiem.</string>
+    <string name="pref_backup_volume_msg">Atlasiet krātuvi vai disku, kur saglabāt dublējumus.</string>
+    <string name="install_app_message">Vai tiešām uzstādīt šo lietotni?</string>
+    <string name="installer_error_blocked_device">ierīce</string>
 </resources>
