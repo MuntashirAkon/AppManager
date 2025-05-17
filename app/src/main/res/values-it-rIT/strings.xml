@@ -174,7 +174,7 @@
     <string name="pref_import_existing_msg">Aggiungi componenti disabilitati da altre app ad App Manager. Fai attenzione quando usi questo strumento perché possono esserci molti falsi positivi. Scegli solo le app di cui sei certo.</string>
     <string name="pref_import_existing">Importa regole esistenti</string>
     <string name="source_code">Codice sorgente</string>
-    <string name="update">Aggiorna</string>
+    <string name="update">Aggiornamento</string>
     <plurals name="no_of_trackers">
         <item quantity="one">%1$d tracker</item>
         <item quantity="many">%1$d tracker</item>
