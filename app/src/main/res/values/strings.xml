@@ -31,8 +31,8 @@
     <string name="group">Group</string>
     <string name="uses_feature">Uses features</string>
     <string name="no_feature">No features</string>
-    <string name="sort_by_shared_user_id">Shared User ID</string>
-    <string name="shared_user_id">Shared User ID</string>
+    <string name="sort_by_shared_user_id">Shared user ID</string>
+    <string name="shared_user_id">Shared user ID</string>
     <string name="sort_by_sha">Signature</string>
     <string name="signatures">Signatures</string>
     <string name="app_signing_signatures">Signatures</string>
@@ -61,36 +61,36 @@
     <string name="user">User</string>
     <string name="sort">Sort</string>
     <string name="version_name_with_code">Version <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
-    <string name="app_info">App Info</string>
+    <string name="app_info">App info</string>
     <string name="fdroid" translatable="false">F-Droid</string>
-    <string name="system_app">System App</string>
-    <string name="user_app">User App</string>
-    <string name="paths_and_directories">Paths &amp; Directories</string>
-    <string name="source_dir">Source Directory</string>
-    <string name="data_dir">Data Directory</string>
+    <string name="system_app">System app</string>
+    <string name="user_app">User app</string>
+    <string name="paths_and_directories">Paths &amp; directories</string>
+    <string name="source_dir">Source directory</string>
+    <string name="data_dir">Data directory</string>
     <string name="sdk_min">Min</string>
     <string name="sdk_max">Target</string>
     <string name="sdk_flags">Flags</string>
-    <string name="more_info">More Info</string>
-    <string name="date_installed">Date Installed</string>
-    <string name="date_updated">Date Updated</string>
-    <string name="installer_app">Installer App</string>
+    <string name="more_info">More info</string>
+    <string name="date_installed">Date installed</string>
+    <string name="date_updated">Date updated</string>
+    <string name="installer_app">Installer app</string>
     <string name="user_id">User ID</string>
-    <string name="main_activity">Main Activity</string>
+    <string name="main_activity">Main activity</string>
     <string name="empty_package_name">Empty package name</string>
     <string name="error_creating_shortcut">Error creating shortcut</string>
     <string name="error_verbose_pin_shortcut">Current launcher does not support PinShortcut. Unable to create shortcut.</string>
     <string name="starting_activity">Starting activity: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
-    <string name="create_shortcut">Create Shortcut</string>
-    <string name="shortcut_name">Shortcut Name</string>
-    <string name="package_name">Package Name</string>
-    <string name="class_name">Class Name</string>
-    <string name="icon_picker">Icon Picker</string>
+    <string name="create_shortcut">Create shortcut</string>
+    <string name="shortcut_name">Shortcut name</string>
+    <string name="package_name">Package name</string>
+    <string name="class_name">Class name</string>
+    <string name="icon_picker">Icon picker</string>
     <string name="license">License</string>
     <string name="license_message" translatable="false"><a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General
         Public License v3.0</a></string>
     <string name="copyright_message" translatable="false">© 2020–2025 <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a></string>
-    <string name="third_party">Third-party Libraries and Icons</string>
+    <string name="third_party">Third-party libraries and icons</string>
     <string name="third_party_message" translatable="false">-
         <a href="https://github.com/zhanghai/AndroidFastScroll">AndroidFastScroll</a> (Apache 2.0)
         \n- <a href="https://github.com/LSPosed/AndroidHiddenApiBypass">AndroidHiddenApiBypass</a> (Apache 2.0)
@@ -137,8 +137,8 @@
         \n- <a href="https://github.com/eclipse/tm4e">tm4e</a>
         \n- <a href="https://github.com/tuyafeng/Watt">Watt</a></string>
     <string name="word_wrap">Toggle word wrap</string>
-    <string name="class_viewer">Class Viewer</string>
-    <string name="toggle_class_listing">Toggle Class Listing</string>
+    <string name="class_viewer">Class viewer</string>
+    <string name="toggle_class_listing">Toggle class listing</string>
     <plurals name="tracker_and_classes">
         <item quantity="one">1 tracker with <xliff:g id="class_no" example="50">%1$d</xliff:g> class</item>
         <item quantity="other">1 tracker with <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
@@ -151,7 +151,7 @@
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
     </plurals>
-    <string name="found_trackers">Found Trackers:</string>
+    <string name="found_trackers">Found trackers:</string>
     <string name="tracker_details">Tracker details</string>
     <string name="tracker_classes">Tracker classes</string>
     <string name="all_classes">All classes</string>
@@ -161,7 +161,7 @@
     </plurals>
     <string name="no_shared_libs">No shared libraries</string>
     <string name="no_tracker_class">No tracker classes</string>
-    <string name="app_usage">App Usage</string>
+    <string name="app_usage">App usage</string>
     <string name="usage_weekly">Weekly</string>
     <string name="usage_today">Today</string>
     <string name="usage_7_days">Last 7 days</string>
@@ -188,22 +188,22 @@
     <string name="usage_less_than_a_minute">Less than a minute</string>
     <string name="go_back">Go back</string>
     <string name="go">Go</string>
-    <string name="grant_usage_access">Grant Usage Access</string>
+    <string name="grant_usage_access">Grant usage access</string>
     <string name="grant_usage_acess_message">Used to display app usage info.</string>
     <string name="share_apk">Share APK</string>
     <string name="failed_to_extract_apk_file">Could not extract APK file</string>
     <string name="menu_remove_rules">Remove rules</string>
     <string name="menu_apply_rules">Apply rules</string>
     <string name="search">Search</string>
-    <string name="dev_protected_data_dir">Device-protected Data Directory</string>
-    <string name="native_library_dir">Native JNI Library Directory</string>
-    <string name="process_name">Process Name</string>
+    <string name="dev_protected_data_dir">Device-protected data directory</string>
+    <string name="native_library_dir">Native JNI library directory</string>
+    <string name="process_name">Process name</string>
     <string name="no_code">No code</string>
     <string name="requested_large_heap">Large heap</string>
     <string name="updated_app">Updated</string>
     <string name="debuggable">Debuggable</string>
     <string name="test_only">Test only</string>
-    <string name="shared_prefs">Shared Prefs</string>
+    <string name="shared_prefs">Shared prefs</string>
     <string name="databases">Databases</string>
     <string name="save">Save</string>
     <string name="discard">Discard</string>
@@ -217,12 +217,12 @@
     <string name="integer_value">Integer value</string>
     <string name="decimal_value">Decimal value</string>
     <string name="boolean_value">Boolean value</string>
-    <string name="key_name">Key Name</string>
+    <string name="key_name">Key name</string>
     <string name="select_type">Select a type</string>
     <string name="add_item">Add item</string>
     <string name="done">Done</string>
     <string name="type_boolean">True/false</string>
-    <string name="type_float">Decimal Number</string>
+    <string name="type_float">Decimal number</string>
     <string name="type_int">Integer</string>
     <string name="type_long">Long integer</string>
     <string name="type_string">Characters</string>
@@ -242,10 +242,10 @@
     <string name="enable">Enable</string>
     <string name="force_stop">Force-stop</string>
     <string name="failed_to_stop">Could not stop <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
-    <string name="storage_and_cache">Storage and Cache</string>
+    <string name="storage_and_cache">Storage and cache</string>
     <string name="total_size">Total</string>
     <string name="app_size">App</string>
-    <string name="app_ops">App Ops</string>
+    <string name="app_ops">App ops</string>
     <string name="no_app_ops">No app operations</string>
     <string name="failed_to_enable_op">Could not enable the requested app op</string>
     <string name="failed_to_disable_op">Could not disable the requested app op</string>
@@ -256,11 +256,11 @@
     <string name="usage_access">Usage access</string>
     <string name="app_settings">Settings</string>
     <string name="usage_yesterday">Yesterday</string>
-    <string name="exodus_link">\u03b5xodus Link</string>
-    <string name="second_degree_tracker_note">² prefix indicates that the trackers are in the <a href="https://etip.exodus-privacy.eu.org/">ETIP stand-by list</a> i.e. whether they are actual trackers are still being investigated.</string>
+    <string name="exodus_link">\u03b5xodus link</string>
+    <string name="second_degree_tracker_note">² prefix indicates that the trackers are in the <a href="https://etip.exodus-privacy.eu.org/">ETIP stand-by list</a> i.e., whether they are actual trackers are still being investigated.</string>
     <string name="sort_by_blocked_components">Blocked first</string>
-    <string name="external_data_dir">External Data Directory</string>
-    <string name="external_multiple_data_dir">External Data Directory <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
+    <string name="external_data_dir">External data directory</string>
+    <string name="external_multiple_data_dir">External data directory <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <plurals name="no_of_times_opened">
         <item quantity="one">%1$d time</item>
         <item quantity="other">%1$d times</item>
@@ -281,17 +281,17 @@
     </plurals>
     <string name="apk_updater">APK Updater</string>
     <string name="open_in_aurora_store" translatable="false">Store</string>
-    <string name="running_apps">Running Apps</string>
+    <string name="running_apps">Running apps</string>
     <string name="kill_process">Kill</string>
     <string name="disable_background_run">Prevent background operation</string>
-    <string name="pid_and_ppid">Process ID: %1$d, Parent Process ID: %2$d</string>
-    <string name="memory_virtual_memory">Memory: %1$s, Virtual Memory: %2$s</string>
+    <string name="pid_and_ppid">Process ID: %1$d, Parent process ID: %2$d</string>
+    <string name="memory_virtual_memory">Memory: %1$s, Virtual memory: %2$s</string>
     <string name="user_with_id">User: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <string name="user_and_uid">User: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
-    <string name="clear_data">Clear Data</string>
-    <string name="backup_restore">Backup/Restore</string>
+    <string name="clear_data">Clear data</string>
+    <string name="backup_restore">Backup/restore</string>
     <string name="disable_background">Prevent background operation</string>
-    <string name="export_blocking_rules">Export Blocking Rules</string>
+    <string name="export_blocking_rules">Export blocking rules</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">Could not clear data from %1$d app</item>
         <item quantity="other">Could not clear data from %1$d apps</item>
@@ -310,20 +310,20 @@
         <item quantity="other">Could not force-stop %1$d apps</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">Toggle kill system apps</string>
-    <string name="permission_name">Permission Name</string>
+    <string name="permission_name">Permission name</string>
     <string name="mode">Mode</string>
     <string name="running">Running</string>
     <string name="duration">Duration</string>
-    <string name="accept_time">Accept Time</string>
-    <string name="reject_time">Reject Time</string>
+    <string name="accept_time">Accept time</string>
+    <string name="reject_time">Reject time</string>
     <string name="ago">ago</string>
     <string name="pref_import">Import</string>
     <string name="pref_export">Export</string>
-    <string name="import_options">Import Options</string>
-    <string name="export_options">Export Options</string>
+    <string name="import_options">Import options</string>
+    <string name="export_options">Export options</string>
     <string name="import_failed">Import failed!</string>
     <string name="export_failed">Export failed!</string>
-    <string name="keyboard_type">Keyboard Type</string>
+    <string name="keyboard_type">Keyboard type</string>
     <string name="navigation">Navigation</string>
     <string name="touchscreen">Touchscreen</string>
     <string name="pref_export_msg">Export blocking rules configured within App Manager to external storage.</string>
@@ -352,7 +352,7 @@
     <string name="sort_by_denied_permissions">Denied first</string>
     <string name="deny_dangerous_permissions">Deny dangerous permissions</string>
     <string name="sort_by_tracker_components">Trackers first</string>
-    <string name="unknown_op">Unknown Operation</string>
+    <string name="unknown_op">Unknown operation</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">Could not disable trackers from %1$d app</item>
         <item quantity="other">Could not disable trackers from %1$d apps</item>
@@ -364,10 +364,10 @@
     <string name="failed_to_deny_dangerous_app_ops">Could not revoke all dangerous app ops</string>
     <string name="launch_app">Launch</string>
     <string name="never_ask">Never ask</string>
-    <string name="one_click_ops">1-Click Ops</string>
+    <string name="one_click_ops">1-Click ops</string>
     <string name="changelog">Changelog</string>
     <string name="external_apk_no_app_op">External APK does not have any app operations</string>
-    <string name="manifest_viewer">Manifest Viewer</string>
+    <string name="manifest_viewer">Manifest viewer</string>
     <plurals name="no_of_trackers">
         <item quantity="one">%1$d tracker</item>
         <item quantity="other">%1$d trackers</item>
@@ -378,7 +378,7 @@
     </plurals>
     <string name="install">Install</string>
     <string name="update">Update</string>
-    <string name="source_code">Source Code</string>
+    <string name="source_code">Source code</string>
     <string name="source_code_links" translatable="false"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> •
         <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a> •
         <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> •
@@ -392,13 +392,13 @@
     <string name="pref_import_existing">Import existing rules</string>
     <string name="pref_import_existing_msg">Add components disabled by others apps to App Manager.
         Be careful when using this tool as there can be many false positives. Choose only the apps you\'re certain about.</string>
-    <string name="clear_cache">Clear Cache</string>
+    <string name="clear_cache">Clear cache</string>
     <string name="block_unblock_trackers_description">Block or unblock ad and tracking components in all the installed apps</string>
     <string name="block_components_dots">Block components…</string>
     <string name="block_unblock_components_dots">Block/unblock components…</string>
     <string name="unblock_components_dots">Unblock components…</string>
     <string name="block_unblock_components_description">Block or unblock all components identified by the given signatures</string>
-    <string name="deny_app_ops_description">Set a mode for app operations identified by the constant values, i.e. <tt>63</tt> or <tt>RUN_IN_BACKGROUND</tt></string>
+    <string name="deny_app_ops_description">Set a mode for app operations identified by the constant values, i.e., <tt>63</tt> or <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="clear_data_from_uninstalled_apps">Clear data from uninstalled apps</string>
     <string name="clear_data_from_uninstalled_apps_description">Clear data from apps that are uninstalled with <tt>DONT_DELETE_DATA</tt> flag</string>
     <string name="clear_app_cache">Clear app cache</string>
@@ -406,11 +406,11 @@
     <string name="no_tracker_found">No tracker found</string>
     <string name="failed_packages">Failed packages</string>
     <string name="input_signatures">Input signatures</string>
-    <string name="input_signatures_description">Input signatures with spaces, e.g. <tt>com.facebook org.app2 com.app3</tt> etc.</string>
+    <string name="input_signatures_description">Input signatures with spaces, e.g., <tt>com.facebook org.app2 com.app3</tt> etc.</string>
     <string name="filtered_packages">Filtered packages</string>
     <string name="input_app_ops">Input app ops</string>
-    <string name="input_app_ops_description">Input app op names and/or constants with spaces, e.g. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.</string>
-    <string name="input_app_ops_description_profile">Input app op names and/or constants with spaces, e.g. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc. Use <tt>*</tt> to apply for all configured app ops.</string>
+    <string name="input_app_ops_description">Input app op names and/or constants with spaces, e.g., <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.</string>
+    <string name="input_app_ops_description_profile">Input app op names and/or constants with spaces, e.g., <tt>WAKE_LOCK 63 72 CAMERA</tt> etc. Use <tt>*</tt> to apply for all configured app ops.</string>
     <string name="only_works_in_root_or_adb_mode">Only works in root or ADB mode</string>
     <string name="failed_to_parse_some_numbers">Could not parse some numbers</string>
     <plurals name="no_of_splits">
@@ -423,12 +423,12 @@
     <string name="filter_user_apps">User apps</string>
     <string name="filter_system_apps">System apps</string>
     <string name="filter_apps_with_rules">With rules</string>
-    <string name="select_all">Select All</string>
-    <string name="installed_version">Installed Version</string>
+    <string name="select_all">Select all</string>
+    <string name="installed_version">Installed version</string>
     <string name="trackers">Trackers</string>
     <string name="components">Components</string>
     <string name="features">Features</string>
-    <string name="whats_new">What\'s New</string>
+    <string name="whats_new">What\'s new</string>
     <string name="blocking_rules">Blocking rules</string>
     <string name="external_data">External data</string>
     <string name="internal_data">Internal data</string>
@@ -436,7 +436,7 @@
     <string name="backup">Backup</string>
     <string name="restore">Restore</string>
     <string name="delete_backup">Delete backup</string>
-    <string name="backup_options">Backup Options</string>
+    <string name="backup_options">Backup options</string>
     <plurals name="failed_to_backup_some_apk_files">
         <item quantity="one">Could not back up %1$d app</item>
         <item quantity="other">Could not back up %1$d apps</item>
@@ -504,7 +504,7 @@
     <string name="unblock">Unblock</string>
     <string name="block_unblock_trackers">Block/unblock trackers</string>
     <string name="no_matching_package_found">Could not find any such app</string>
-    <string name="export_icon">Extract Icon</string>
+    <string name="export_icon">Extract icon</string>
     <string name="open_in_termux">Open in Termux</string>
     <string name="run_in_termux">Run in Termux</string>
     <string name="website">Website</string>
@@ -525,14 +525,14 @@
     <string name="installer_error_generic">Installation failed</string>
     <string name="installer_error_lidl_rom">Your ROM is incompatible with Rootless Installer.</string>
     <string name="failed_to_fetch_package_info">Could not fetch package info</string>
-    <string name="batch_ops">Batch Operations</string>
+    <string name="batch_ops">Batch operations</string>
     <string name="operation_running">Operation running…</string>
     <string name="full_stop_tap_to_see_details">. Tap to see details.</string>
     <string name="try_again">Try again</string>
     <string name="install_app_message">Do you want to install this app?</string>
     <string name="reinstall">Reinstall</string>
     <string name="unblock_trackers">Unblock trackers</string>
-    <string name="package_installer">Package Installer</string>
+    <string name="package_installer">Package installer</string>
     <string name="install_in_progress">Installing…</string>
     <string name="installer_error_security">Could not access APK files</string>
     <string name="installer_error_session_create">Could not create an installer session</string>
@@ -540,7 +540,7 @@
     <string name="installer_error_session_commit">Could not commit the APK files</string>
     <string name="installer_error_session_abandon">Could not abandon the installer session</string>
     <string name="backup_apk_files">APK files</string>
-    <string name="backup_obb_media">OBB and Media</string>
+    <string name="backup_obb_media">OBB and media</string>
     <string name="failed_to_extract_obb_files">Could not extract OBB files</string>
     <string name="obb_files_extracted_successfully">OBB files extracted</string>
     <string name="backup_multiple">Back up multiple</string>
@@ -615,8 +615,8 @@
     <string name="input_backup_name_description">Backup name should not start with a digit nor should it contain any spaces. Leave it empty if you want to use current date-time.</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="systemless_app">Systemless App</string>
-    <string name="open_pgp_provider">OpenPGP Provider</string>
+    <string name="systemless_app">Systemless app</string>
+    <string name="open_pgp_provider">OpenPGP provider</string>
     <string name="profiles">Profiles</string>
     <string name="no_profiles">No profiles</string>
     <string name="keystore">KeyStore</string>
@@ -636,7 +636,7 @@
     <string name="pref_backup_flags_msg">Adding a preset for backup options removes the burden of selecting flags every time you back up/restore.</string>
     <string name="confirm_installation">Confirm installation</string>
     <string name="allow_open_pgp_operation">Tap to allow App Manager to use OpenPGP</string>
-    <string name="uninstall_updates">Uninstall Updates</string>
+    <string name="uninstall_updates">Uninstall updates</string>
     <string name="update_uninstalled_successfully">Updates for <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> has been uninstalled.</string>
     <string name="failed_to_uninstall_updates">Could not uninstall updates for <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="sort_by_backup">Backed up first</string>
@@ -650,28 +650,28 @@
     <string name="valid">Valid</string>
     <string name="expired">Expired</string>
     <string name="not_yet_valid">Not yet valid</string>
-    <string name="serial_no">Serial Number</string>
+    <string name="serial_no">Serial number</string>
     <string name="checksums">Checksums</string>
     <string name="app_signing_signature">Signature</string>
     <string name="algorithm">Algorithm</string>
-    <string name="public_key">Public Key</string>
+    <string name="public_key">Public key</string>
     <string name="format">Format</string>
     <string name="rsa_exponent">Exponent</string>
     <string name="rsa_modulus">Modulus</string>
     <string name="dsa_affine_x">Affine x coordinate</string>
     <string name="dsa_affine_y">Affine y coordinate</string>
-    <string name="critical_exts">Critical Extensions</string>
-    <string name="non_critical_exts">Non-critical Extensions</string>
+    <string name="critical_exts">Critical extensions</string>
+    <string name="non_critical_exts">Non-critical extensions</string>
     <string name="usage_access_not_supported">Could not request usage access, as the corresponding settings page does not exist.</string>
     <string name="do_you_want_to_uninstall_and_install">Do you want to uninstall and install the app again?</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Could not install app because a system app with a different signature has this package name.</string>
     <string name="app_data_will_be_lost">The existing data will be lost.</string>
     <string name="app_signing_install_without_data_loss">If you have turned off signature verification, you can use the <b>Only install</b> option to install the app without losing data.</string>
-    <string name="only_install">Only Install</string>
-    <string name="sys_config">System Config</string>
+    <string name="only_install">Only install</string>
+    <string name="sys_config">System config</string>
     <string name="scanner">Scanner</string>
     <string name="no_libs">No libraries</string>
-    <string name="lib_details">Library Details</string>
+    <string name="lib_details">Library details</string>
     <string name="tap_to_see_details">Tap to see details</string>
     <string name="view_missing_signatures">Tap to view or send in signatures not yet present in App Manager\'s database of libraries.</string>
     <string name="copy">Copy</string>
@@ -710,7 +710,7 @@
     <string name="off">Off</string>
     <string name="options">Options</string>
     <string name="input_permissions">Input permissions</string>
-    <string name="input_permissions_description">Input permissions with spaces, e.g. <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> etc. Use <tt>*</tt> to apply for all permissions.</string>
+    <string name="input_permissions_description">Input permissions with spaces, e.g., <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> etc. Use <tt>*</tt> to apply for all permissions.</string>
     <string name="choose">Choose</string>
     <string name="enabled">Enabled</string>
     <string name="simple">Simple</string>
@@ -764,7 +764,7 @@
     <string name="category">Categories</string>
     <string name="extras">Extras</string>
     <string name="share">Share</string>
-    <string name="resend_intent">Resend Intent</string>
+    <string name="resend_intent">Resend intent</string>
     <string name="interceptor">Interceptor</string>
     <string name="set_custom_app_op">Set custom app op</string>
     <string name="about_device">About the device</string>
@@ -841,14 +841,14 @@
     <string name="restore_msg">Restore apps with data</string>
     <string name="drm_free_apkm_msg">The APKM file is DRM-free, no need to convert it to APKS.</string>
     <string name="back_up">Back up</string>
-    <string name="internal_storage">Internal Storage</string>
-    <string name="external_storage">External Storage</string>
-    <string name="sd_card">SD Card</string>
+    <string name="internal_storage">Internal storage</string>
+    <string name="external_storage">External storage</string>
+    <string name="sd_card">SD card</string>
     <string name="unlock_app_manager">Unlock App Manager</string>
-    <string name="screen_lock">Screen Lock</string>
+    <string name="screen_lock">Screen lock</string>
     <string name="screen_lock_msg">Lock App Manager using Android screen lock</string>
     <string name="type_null">No value</string>
-    <string name="type_component_name">Component Name</string>
+    <string name="type_component_name">Component name</string>
     <string name="type_int_array">Array of integers</string>
     <string name="type_int_array_list">List of integers</string>
     <string name="type_long_array">Array of long integers</string>
@@ -925,7 +925,7 @@
     <string name="pref_import_backups_msg">Import backups from OAndBackup, Swift Backup (3.0–3.2) or Titanium Backup.</string>
     <string name="import_from_oab">Import from OAndBackup</string>
     <string name="import_from_tb">Import from Titanium Backup</string>
-    <string name="log_viewer">Log Viewer</string>
+    <string name="log_viewer">Log viewer</string>
     <string name="pref_log_viewer_msg">Configure how logs are displayed.</string>
     <string name="restart_log_viewer_to_see_changes">Restart log viewer window to see changes.</string>
     <string name="filename">Filename</string>
@@ -938,14 +938,14 @@
     <string name="pref_filter_pattern_default" translatable="false">ResourceType|memtrack|android.os.Debug|BufferItemConsumer|DPM.*|MDM.*|ChimeraUtils|BatteryExternalStats.*|chatty.*|DisplayPowerController|WidgetHelper|WearableService|DigitalWidget.*|^ANDR-PERF-.*</string>
     <string name="pref_hide_partial_select_help" translatable="false">pref_hide_partial_select_help</string>
     <string name="pref_include_device_info" translatable="false">device_info</string>
-    <string name="add_filter">Add Filter</string>
-    <string name="add_filter_ellipsis">Add Filter…</string>
+    <string name="add_filter">Add filter</string>
+    <string name="add_filter_ellipsis">Add filter…</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">%d file will be deleted</item>
         <item quantity="other">%d files will be deleted</item>
     </plurals>
     <string name="copy_to_clipboard">Copy to clipboard</string>
-    <string name="delete_saved_log">Delete Saved Logs</string>
+    <string name="delete_saved_log">Delete saved logs</string>
     <string name="dialog_compiling_log">Compiling log…</string>
     <string name="enter_filename">Enter filename</string>
     <string name="enter_good_filename">Please enter a valid filename.</string>
@@ -953,36 +953,36 @@
     <string name="filter_choice_pid">PID</string>
     <string name="filter_choice_tag">Tag</string>
     <string name="log_cleared">Logs cleared</string>
-    <string name="log_level">Log Level</string>
+    <string name="log_level">Log level</string>
     <string name="log_recording_started">Log recording started.</string>
     <string name="log_saved">Log saved.</string>
-    <string name="manage_saved_logs">Manage Saved Logs</string>
+    <string name="manage_saved_logs">Manage saved logs</string>
     <string name="no_saved_logs">No saved logs.</string>
     <string name="notification_subtext">Touch to stop recording</string>
     <string name="notification_ticker">Log recording started</string>
     <string name="notification_title">Log recording in progress</string>
     <string name="open">Open</string>
-    <string name="pref_buffer_title">Log Buffer(s)</string>
+    <string name="pref_buffer_title">Log buffer(s)</string>
     <string name="pref_cat_advanced">Advanced</string>
     <string name="pref_cat_appearance">Appearance</string>
     <string name="pref_cat_configuration">Configuration</string>
     <string name="pref_default_log_level_summary">Log level at startup, when opening files, and when recording.</string>
-    <string name="pref_default_log_level_title">Default Log Level</string>
+    <string name="pref_default_log_level_title">Default log level</string>
     <string name="pref_display_limit_summary" tools:ignore="PluralsCandidate">Show only the last %1$d logs in order to avoid out of memory errors.</string>
-    <string name="pref_display_limit_title">Log Display Limit</string>
+    <string name="pref_display_limit_title">Log display limit</string>
     <string name="pref_filter_pattern_summary">Filter out the selected tags from logs.</string>
-    <string name="pref_filter_pattern_title">Filter Out Tags</string>
+    <string name="pref_filter_pattern_title">Filter out tags</string>
     <string name="pref_expanded_by_default_summary">Show full log text by default.</string>
-    <string name="pref_expanded_by_default_title">Expand by Default</string>
+    <string name="pref_expanded_by_default_title">Expand by default</string>
     <string name="pref_log_line_period_error">Please enter an integer between 1 and 1000.</string>
     <string name="pref_log_write_period_summary" tools:ignore="PluralsCandidate">When recording, write to SD card every %1$d lines.</string>
-    <string name="pref_log_write_period_title">Write Period</string>
+    <string name="pref_log_write_period_title">Write period</string>
     <string name="pref_show_timestamp_summary">Show process id and timestamp when expanded.</string>
-    <string name="pref_show_timestamp_title">Show Pid &amp; Timestamp</string>
-    <string name="record_log">Record Log</string>
-    <string name="save_as">Save As…</string>
-    <string name="save_log">Save Log</string>
-    <string name="send_log_title">Send Log</string>
+    <string name="pref_show_timestamp_title">Show PID &amp; timestamp</string>
+    <string name="record_log">Record log</string>
+    <string name="save_as">Save as…</string>
+    <string name="save_log">Save log</string>
+    <string name="send_log_title">Send log</string>
     <string name="settings">Settings</string>
     <string name="start_recording_log">Record</string>
     <string name="subject_log_report">Log report</string>
@@ -1000,9 +1000,9 @@
     <string name="widget_recording_in_progress">Recording…</string>
     <string name="widget_start_recording">Record\nLog</string>
     <string name="file">File</string>
-    <string name="expand_all">Expand All</string>
-    <string name="collapse_all">Collapse All</string>
-    <string name="pause_unpause">Play/Pause</string>
+    <string name="expand_all">Expand all</string>
+    <string name="collapse_all">Collapse all</string>
+    <string name="pause_unpause">Play/pause</string>
     <string name="undo">Undo</string>
     <string name="omit_sensitive_info">Omit sensitive info</string>
     <string name="omit_sensitive_info_summary">Omit sensitive info like web urls, phone numbers or emails.</string>
@@ -1010,7 +1010,7 @@
     <string name="pref_include_dmesg" translatable="false">dmesg</string>
     <string name="share_log">Share</string>
     <string name="view_logs">View logs</string>
-    <string name="running_services">Running Services</string>
+    <string name="running_services">Running services</string>
     <string name="save_apk">Save APK</string>
     <string name="profile_save_apk_msg">Saves APK files in <tt>AppManager/apks</tt></string>
     <string name="failed_to_block_trackers">Could not block trackers</string>
@@ -1140,17 +1140,17 @@
     <string name="pref_vt_apikey">VirusTotal API Key</string>
     <string name="pref_vt_apikey_description">An API key enables App Manager to upload APK files to VirusTotal as well as fetch reports. Sign up at https://virustotal.com to get an API key for free.</string>
     <string name="pref_vt_apikey_summary">Enable scanning APK files via VirusTotal.</string>
-    <string name="uses_play_app_signing">Play App Signing</string>
+    <string name="uses_play_app_signing">Play app signing</string>
     <string name="uses_play_app_signing_description">This app contains certain markers that indicate that it <i>might</i> be using <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play App Signing</a>. With this scheme, the signing keys are stored in Google\'s servers, and Google is responsible for signing the app. Note that matching signing information is the only way to verify that the app has not been modified by any person other than the developer (and in this case, Google too).</string>
     <string name="scan_in_vt">Scan in VirusTotal</string>
     <string name="process_id">Process ID</string>
-    <string name="parent_process_id">Parent Process ID</string>
-    <string name="virtual_memory">Virtual Memory</string>
+    <string name="parent_process_id">Parent process ID</string>
+    <string name="virtual_memory">Virtual memory</string>
     <string name="cpu_percent">%% CPU</string>
-    <string name="cpu_time">CPU Time</string>
+    <string name="cpu_time">CPU time</string>
     <string name="priority">Priority</string>
-    <string name="threads">Thread Count</string>
-    <string name="state">Process State</string>
+    <string name="threads">Thread count</string>
+    <string name="state">Process state</string>
     <string name="commandline_args">Commandline arguments</string>
     <string name="swap">Swap</string>
     <string name="memory_chart_info">● %1$s Applications ● %2$s Cached ● %3$s Buffers ● %4$s Free</string>
@@ -1179,13 +1179,13 @@
     <string name="so_type_executable">Executable</string>
     <string name="file_modified_are_you_sure">The file was modified. Discard all your changes and exit?</string>
     <string name="save_and_exit">Save and exit</string>
-    <string name="pref_saved_apk_name_format">Saved APK Name Format</string>
+    <string name="pref_saved_apk_name_format">Saved APK name format</string>
     <string name="pref_saved_apk_name_format_msg">The format to be used for naming the APK files when you save them.</string>
     <string name="auth_manager_description">To launch an Intent from an external app, it is necessary to supply an extra field called <tt>auth</tt>, and it must contain the following key:</string>
-    <string name="auth_manager_title">Authorization Manager</string>
+    <string name="auth_manager_title">Authorization manager</string>
     <string name="regenerate_auth_key">Regenerate authorization key</string>
     <string name="regenerate_auth_key_warning">Are you sure? All the third-party apps have to be reconfigured with the new authorization key.</string>
-    <string name="shortcut_icon">Shortcut Icon</string>
+    <string name="shortcut_icon">Shortcut icon</string>
     <string name="sort_by_installation_date">Installation date</string>
     <string name="backup_volume_unavailable_warning">The selected backup volume is not currently available. If it is located in an external storage, please insert it, or change the backup volume.</string>
     <string name="change_backup_volume">Change volume</string>
@@ -1193,16 +1193,16 @@
     <string name="internal">Internal</string>
     <string name="tracker">Tracker</string>
     <string name="input_ssaid_instruction">SSAID is a %1$d byte hexadecimal number i.e. a string of length %2$d containing 0 to 9 and a to f.</string>
-    <string name="screen_time">Screen Time</string>
+    <string name="screen_time">Screen time</string>
     <string name="open_in_new_window">New window</string>
     <string name="type_string_set">Set of strings</string>
     <string name="pref_vt_prompt_before_uploading">Display prompt before uploading a file.</string>
     <string name="vt_confirm_uploading_file">The file was not found in the VirusTotal database. Do you want to upload it?</string>
     <string name="vt_confirm_upload_and_scan">Yes, upload and scan</string>
     <string name="log_stop_recording">Stop recording</string>
-    <string name="apk_checksums">APK Checksums</string>
+    <string name="apk_checksums">APK checksums</string>
     <string name="item_select">Select</string>
-    <string name="app_explorer">App Explorer</string>
+    <string name="app_explorer">App explorer</string>
     <string name="netpolicy_cannot_be_modified_for_core_apps">Net policy cannot be modified for Android core apps.</string>
     <string name="open_developer_options_page">Open developer options page in Android settings</string>
     <string name="pref_pure_black_theme">Pure black theme</string>
@@ -1259,7 +1259,7 @@
     <string name="user_manual">User manual</string>
     <string name="get_help">Get help</string>
     <string name="pref_advanced_pref">Users, APK name format, parallel execution, etc.</string>
-    <string name="pref_version_changelog">Version/Changelog</string>
+    <string name="pref_version_changelog">Version/changelog</string>
     <string name="file_creation_date">Created</string>
     <string name="file_modification_date">Modified</string>
     <string name="file_accessed_date">Accessed</string>
@@ -1287,7 +1287,7 @@
     <string name="tap_to_freeze_app">Tap to freeze</string>
     <string name="waiting_for_the_phone_to_be_locked">Waiting for the phone to be locked…</string>
     <string name="action_stop_service">Stop</string>
-    <string name="app_manager_build_expired">Update Required</string>
+    <string name="app_manager_build_expired">Update required</string>
     <string name="app_manager_build_expired_message">To ensure the safety of your device and data, the version of App Manager you\'re using has been retired. You have to update it to the latest version to continue to use it, or uninstall it if no update is available.</string>
     <string name="app_manager_build_expiring_soon_warning">This version of App Manager will expire very soon. Please update it to the latest version.</string>
     <string name="app_can_write_and_execute_in_same_place">The app violates <a href="https://en.wikipedia.org/wiki/W%5EX">W^X policy</a> and is capable of writing and executing in the same directory or in the same portion of memory. This allows the execution of arbitrary executables either by the modification of executables embedded within the app or by downloading them from the Internet. Unless this is the intended behaviour of the app (e.g. terminal emulators), it is recommended to find a newer version of the app that targets SDK 29 (Android 10) and later, or find alternatives.</string>
@@ -1309,8 +1309,8 @@
     <string name="export_option_markdown">Markdown</string>
     <string name="funding_campaign_dialog_message">We\'re running a <b>funding campaign</b> for App Manager for a limited period. Visit <a href="https://opencollective.com/app-manager#category-ABOUT">opencollective.com/app-manager</a> to learn more about the campaign. This notice will not be displayed again, but you can find it in the Settings page during the entire campaign.</string>
     <string name="funding_campaign_text">We\'re running a <b>funding campaign</b> for App Manager for a limited period. <a href="https://opencollective.com/app-manager#category-ABOUT">learn more…</a></string>
-    <string name="adb_incomplete_usb_debugging_title">Incomplete USB Debugging</string>
-    <string name="adb_incomplete_usb_debugging_message">It looks like USB Debugging is not configured properly. Please read <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">the documentation</a> for additional steps. If you already know the steps, please click “Open” to open the developer options, or click “Close” to continue to use no-root mode.</string>
+    <string name="adb_incomplete_usb_debugging_title">Incomplete USB debugging</string>
+    <string name="adb_incomplete_usb_debugging_message">It looks like USB debugging is not configured properly. Please read <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">the documentation</a> for additional steps. If you already know the steps, please click “Open” to open the developer options, or click “Close” to continue to use no-root mode.</string>
     <string name="sort_by_data_usage">Data usage</string>
     <string name="filter_apps_with_keystore">With KeyStore</string>
     <string name="filter_apps_with_saf">With SAF</string>
@@ -1322,7 +1322,7 @@
     <string name="grant_overlay_permission_message">Allow App Manager to display a floating window on top of all other windows</string>
     <string name="grant_accessibility_permission_for_tracking_window_contents">Allow App Manager to utilise the accessibility feature to track the contents of the leading window.</string>
     <string name="class_hierarchy">Hierarchy</string>
-    <string name="title_ui_tracker">UI Tracker</string>
+    <string name="title_ui_tracker">UI tracker</string>
     <string name="title_terminal_emulator">Terminal</string>
     <string name="title_labs_activity">Labs</string>
     <string name="select_a_dex2oat_compiler_filter"><tt>dex2oat</tt> compiler filter</string>
@@ -1337,14 +1337,14 @@
     <string name="action_optimize_app">Optimize</string>
     <string name="batch_ops_runtime_optimization">Runtime optimization</string>
     <string name="app_info_tag_open_links">Open links</string>
-    <string name="title_domains_supported_by_the_app">Supported Domains</string>
+    <string name="title_domains_supported_by_the_app">Supported domains</string>
     <string name="pref_zip_align">Align APK files</string>
     <string name="pref_zip_align_msg">Aligning an APK file reduces its memory usage as the files in the APK can be accessed directly without copying the data to RAM. This step is required if <tt>extractNativeLibs</tt> is set to <tt>true</tt>.</string>
     <plurals name="alert_failed_to_optimize_apps">
         <item quantity="one">Could not optimize %1$d app</item>
         <item quantity="other">Could not optimize %1$d apps</item>
     </plurals>
-    <string name="title_code_editor">Code Editor</string>
+    <string name="title_code_editor">Code editor</string>
     <string name="redo">Redo</string>
     <string name="read_only_file">Read only file</string>
     <string name="read_only_file_warning">The changes cannot be written into the file, possibly because it is located in a volume that App Manager has no permission to write to. Do you want to save it in a different place?</string>
@@ -1354,7 +1354,7 @@
         <item quantity="other">%d results</item>
     </plurals>
     <string name="replacement_text">Replacement</string>
-    <string name="action_replace_all">Replace All</string>
+    <string name="action_replace_all">Replace all</string>
     <string name="search_option_match_case">Match case</string>
     <string name="search_option_whole_word">Whole word</string>
     <string name="search_option_regex">Regex</string>
@@ -1384,7 +1384,7 @@
     </plurals>
     <string name="go_to_path">Go to…</string>
     <string name="copy_this_path">Copy path</string>
-    <string name="title_audio_player">Audio Player</string>
+    <string name="title_audio_player">Audio player</string>
     <string name="filter_force_stopped_apps">Stopped apps</string>
     <string name="installing_package">Installing %1$s…</string>
     <string name="backing_up_app">Backing up %1$s…</string>
@@ -1426,7 +1426,7 @@
     <string name="pref_files_remember_last_path">Remember last opened path and its position</string>
     <string name="pref_files_remember_last_path_msg">When this option is enabled, opening a new window opens the last opened folder instead of the home folder.</string>
     <string name="pref_set_home">Set home</string>
-    <string name="xposed_module_info">Xposed Module Info</string>
+    <string name="xposed_module_info">Xposed module info</string>
     <string name="title_description">Description</string>
     <string name="module_name">Module name</string>
     <string name="app_manager_is_running">App Manager is running</string>
@@ -1447,7 +1447,7 @@
     <string name="choose_a_profile_state">Select a profile state</string>
     <string name="profile_id">Profile ID</string>
     <string name="copy_profile_id">Copy profile ID</string>
-    <string name="launch_activity_dialog_title">Launch Activity: Action Required</string>
+    <string name="launch_activity_dialog_title">Launch activity: action required</string>
     <string name="launch_activity_dialog_message">App Manager is trying to launch the activity via <b>Search assistant</b> (usually Google Assistant), but it\'s unable to do so due to insufficient permission. To open the activity, please activate <b>Search assistant</b> manually (which is usually done by long clicking on the Home button). Click on the <b>Close</b> button after you\'ve finished launching the activity to revert back to the original assistant.</string>
     <string name="finder_title">Finder</string>
     <string name="select_filter">Select a filter</string>
@@ -1458,7 +1458,7 @@
     <string name="pref_use_vt">Use VirusTotal</string>
     <string name="virus_total">VirusTotal</string>
     <string name="pref_use_vt_no_internet">VirusTotal requires the Internet to operate which isn\'t enabled. Please enable <a href="app-manager://settings/privacy_prefs/toggle_internet">“Use the Internet”</a> first.</string>
-    <string name="pref_use_log_viewer">Use Log Viewer</string>
+    <string name="pref_use_log_viewer">Use log viewer</string>
     <string name="pref_installer">Use the installer</string>
     <string name="pref_cat_general">General</string>
     <string name="status_remote_server_active">Remote server is active</string>
@@ -1477,17 +1477,17 @@
     <string name="adb_pairing_found_pairing_service_with_port">Found a service with port %d</string>
     <string name="adb_pairing_pairing_in_progress">Pairing…</string>
     <string name="adb_pairing_retry_pairing">Retry</string>
-    <string name="mode_of_op_custom_command_title">Custom Command</string>
+    <string name="mode_of_op_custom_command_title">Custom command</string>
     <string name="mode_of_op_custom_command">If you are unable to use any of the modes, you can run the following command in any supported shell to run App Manager in privileged mode:</string>
     <string name="mode_of_op_alternative_custom_command">If you get a “permission denied” error with the above command, run the following command instead:</string>
     <string name="sensors">Sensors</string>
     <string name="tag_sensors_disabled">Sensors disabled</string>
     <string name="pref_use_system_font">Use system font</string>
     <string name="pref_use_system_font_msg">Use the system-default font instead of the material font. <font fgcolor="#ff0000">This is an experimental feature.</font></string>
-    <string name="actual_installer">Actual Installer</string>
-    <string name="apk_source">APK Source</string>
+    <string name="actual_installer">Actual installer</string>
+    <string name="apk_source">APK source</string>
     <string name="backup_cache">Cache</string>
-    <string name="activity_name">Activity Name</string>
+    <string name="activity_name">Activity name</string>
     <string name="available_memory">Available: %s</string>
     <string name="action_manual">Manual</string>
     <string name="vulkan_version">Vulkan version</string>
@@ -1500,7 +1500,7 @@
     <string name="title_confirm_execution">Confirm execution</string>
     <string name="clear_history">Clear history</string>
     <string name="favorites">Favorites</string>
-    <string name="add_to_favorites">Add to Favorites</string>
+    <string name="add_to_favorites">Add to favorites</string>
     <string name="item_remove">Remove</string>
     <string name="item_edit">Edit</string>
     <string name="remove_filename">Remove %s</string>
