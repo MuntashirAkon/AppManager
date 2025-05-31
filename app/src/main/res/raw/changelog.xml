@@ -2,6 +2,25 @@
 <changelog>
     <release
         type="stable release"
+        version="v4.0.4"
+        code="444"
+        date="30 May 2025">
+        <improve title="Main page">Optimize searching and filtering</improve>
+        <improve>Use sentence case for all strings</improve>
+
+        <fix title="Profile page">
+            Use the configured state to execute a profile for simple shortcuts
+        </fix>
+        <fix>Prevent crashing while searching</fix>
+        <fix>Fix integer overflow in tar compression</fix>
+
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v4.0.3...v4.0.4"]v4.0.3...v4.0.4[/a]
+        </note>
+    </release>
+    <release
+        type="stable release"
         version="v4.0.3"
         code="443"
         date="25 April 2025">
