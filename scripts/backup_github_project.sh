@@ -21,6 +21,7 @@ github-backup "$GITHUB_USERNAME" \
   --repository "$REPOSITORY_NAME" \
   --issues \
   --issue-comments \
+  --issue-events \
   --pulls \
   --pull-comments \
   --pull-commits \
