@@ -159,7 +159,7 @@
     <string name="installer_error_generic">Uzstādīšana neizdevās</string>
     <string name="usage_access_not_supported">Nevarēja pieprasīt atļauju piekļūt lietošanas vēsturei, jo attiecīgā iestatījumu sadaļa neeksistē.</string>
     <string name="installer">Uzstādīšana</string>
-    <string name="installer_app_message">Noklikšķiniet uz <b>Atlasīt</b>, lai izmantotu kādu no uzstādītajām lietotnēm, vai <b>Pielāgots</b>, lai ievadītu savu lietotnes unikālo nosaukumu.</string>
+    <string name="installer_app_message">Noklikšķiniet uz <b>Atlasīt</b>, lai iestatītu kādu no uzstādītajām lietotnēm, vai <b>Pielāgots</b>, lai ievadītu savu lietotnes unikālo nosaukumu.</string>
     <string name="pref_encryption_msg">Dublējumu šifrēšana.</string>
     <string name="downgrade">Pazemināt</string>
     <string name="ok">Labi</string>
@@ -260,7 +260,7 @@
     </plurals>
     <string name="running_apps">Palaistās lietotnes</string>
     <string name="unlock_app_manager">Atbloķēt App Manager</string>
-    <string name="minimum_version">Min. versija: %d</string>
+    <string name="minimum_version">Minim. versija: %d</string>
     <string name="pid">Procesa ID</string>
     <string name="process_id">Procesa ID</string>
     <string name="failed_to_disable_magisk_deny_list">Nevarēja atspējot Magisk DenyList</string>
@@ -270,7 +270,7 @@
     <string name="memory_chart_info">● %1$s Lietotnes ● %2$s Kešots ● %3$s Buferi ● %4$s Brīvs</string>
     <string name="swap_chart_info">● %1$s Izmantots ● %2$s Brīvs</string>
     <string name="changelog_type_fix">Labojums</string>
-    <string name="changelog_type_new">Jauns</string>
+    <string name="changelog_type_new">Jaunums</string>
     <string name="changelog_type_improve">Uzlabojums</string>
     <string name="file_owner_id">Īpašnieks (UID)</string>
     <string name="file_group_id">Grupa (GID)</string>
@@ -459,4 +459,15 @@
     <string name="pref_backup_volume_msg">Atlasiet krātuvi vai disku, kur saglabāt dublējumus.</string>
     <string name="install_app_message">Vai tiešām uzstādīt šo lietotni?</string>
     <string name="installer_error_blocked_device">ierīce</string>
+    <string name="choose_language">Mainīt valodu</string>
+    <string name="choose">Atlasīt</string>
+    <string name="initializing">Sagatavo palaišanai…</string>
+    <string name="choose_an_alias">Atlasiet aizstājvārdu</string>
+    <string name="background">Fonā</string>
+    <string name="pref_always_on_background">Uzstādīt fonā</string>
+    <string name="pref_always_on_background_msg">Vienmēr uzstādīt lietotnes fonā un, kad uzstādīšana pabeigta, parādīt paziņojumu.</string>
+    <string name="view_changelog">Uzziniet, kādas izmaiņas veiktas</string>
+    <string name="pref_version_changelog">Versija/Piesitiet, lai skatītu Izmaiņu žurnālu</string>
+    <string name="vulkan_version">Vulkan versija</string>
+    <string name="android_verified_bootloader_version">AVB versija</string>
 </resources>
