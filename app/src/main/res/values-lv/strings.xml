@@ -41,7 +41,7 @@
     <string name="native_library_dir">Dzimtā JNI bibliotēku mape</string>
     <string name="process_name">Procesa nosaukums</string>
     <string name="no_code">Nav koda</string>
-    <string name="requested_large_heap">Daudz (liela) kaudzes atmiņas</string>
+    <string name="requested_large_heap">Lielās kaudzes atmiņa</string>
     <string name="updated_app">Atjaunināta</string>
     <string name="debuggable">Atkļūdojama</string>
     <string name="test_only">Tikai pārbaudei</string>
@@ -470,4 +470,48 @@
     <string name="pref_version_changelog">Versija/Piesitiet, lai skatītu Izmaiņu žurnālu</string>
     <string name="vulkan_version">Vulkan versija</string>
     <string name="android_verified_bootloader_version">AVB versija</string>
+    <plurals name="libraries">
+        <item quantity="zero">%1$d bibliotēkas</item>
+        <item quantity="one">%1$d bibliotēka</item>
+        <item quantity="other">%1$d bibliotēkas</item>
+    </plurals>
+    <string name="disable_background_run">Liegt darboties fonā</string>
+    <string name="backup_restore">Dublēšana/atjaunošana</string>
+    <plurals name="toast_log_truncated">
+        <item quantity="zero">Žurnāls ir pārāk liels, rāda pēdējās %d rindas.</item>
+        <item quantity="one">Žurnāls ir pārāk liels, rāda pēdējo %d rindu.</item>
+        <item quantity="other">Žurnāls ir pārāk liels, rāda pēdējās %d rindas.</item>
+    </plurals>
+    <plurals name="alert_failed_to_unfreeze">
+        <item quantity="zero">Nevarēja atsaldēt %1$d lietotnes</item>
+        <item quantity="one">Nevarēja atsaldēt %1$d lietotni</item>
+        <item quantity="other">Nevarēja atsaldēt %1$d lietotnes</item>
+    </plurals>
+    <string name="failed_to_unfreeze">Nevarēja atsaldēt <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="freeze_unfreeze">Iesaldēšana/atsaldēšana</string>
+    <string name="profile_freeze_msg">Iesaldē vai atsaldē lietotnes atkarībā no stāvokļa</string>
+    <string name="pref_default_freezing_method_description">Metode, kas pēc noklusējuma tiks izmantota, kad nav iespējas atlasīt iesaldēšanas metodi.</string>
+    <string name="on_unfreeze_open_application">Atvērt lietotni pēc atsaldēšanas</string>
+    <string name="tap_to_freeze_app">Pieskarieties, lai iesaldētu</string>
+    <plurals name="app_signing_signature_schemes_pl">
+        <item quantity="zero">Parakstu shēmas</item>
+        <item quantity="one">Paraksta shēma</item>
+        <item quantity="other">Parakstu shēmas</item>
+    </plurals>
+    <plurals name="alert_failed_to_optimize_apps">
+        <item quantity="zero">Nevarēja optimizēt %1$d lietotnes</item>
+        <item quantity="one">Nevarēja optimizēt %1$d lietotni</item>
+        <item quantity="other">Nevarēja optimizēt %1$d lietotnes</item>
+    </plurals>
+    <string name="failed_to_freeze">Nevarēja iesaldēt <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="pref_default_freezing_method">Noklusējuma iesaldēšanas metode</string>
+    <plurals name="alert_failed_to_freeze">
+        <item quantity="zero">Nevarēja iesaldēt %1$d lietotnes</item>
+        <item quantity="one">Nevarēja iesaldēt %1$d lietotni</item>
+        <item quantity="other">Nevarēja iesaldēt %1$d lietotnes</item>
+    </plurals>
+    <string name="suspend_app_description">Šī ir visvājākā iesaldēšanas metode. Apturētā, iesaldētā lietotne joprojām var parādīties palaidējā. Taču tā būs iekrāsota pelēkā krāsā, un to nevarēs palaist.</string>
+    <string name="freeze_on_phone_locked">Automātiski iesaldēt lietotni, kad bloķēts tālrunis</string>
+    <string name="disable_app_description">Ieteicamā iesaldēšanas metode. Atspējo lietotni un visus tās komponentus. Visi lietotnes īsceļi būs nepieejami.</string>
+    <string name="message_shortcut_for_frozen_app">Izskatās, ka saīsnei atbilstošā lietotne ir iesaldēta. Vai vēlaties īslaicīgi atsaldēt un atvērt saīsni?</string>
 </resources>
