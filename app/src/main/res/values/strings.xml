@@ -364,7 +364,7 @@
     <string name="failed_to_deny_dangerous_app_ops">Could not revoke all dangerous app ops</string>
     <string name="launch_app">Launch</string>
     <string name="never_ask">Never ask</string>
-    <string name="one_click_ops">1-Click ops</string>
+    <string name="one_click_ops">1-click ops</string>
     <string name="changelog">Changelog</string>
     <string name="external_apk_no_app_op">External APK does not have any app operations</string>
     <string name="manifest_viewer">Manifest viewer</string>
@@ -813,7 +813,7 @@
     <string name="failed_to_enable_magisk_hide">Could not enable MagiskHide</string>
     <string name="disable_background_run_description">Sets <i>Ignore</i> mode for the following app ops: <tt>RUN_IN_BACKGROUND</tt> (from Android 7.0) and <tt>RUN_ANY_IN_BACKGROUND</tt> (from Android 9).</string>
     <string name="pref_backup_restore_msg">Customise backup/restore.</string>
-    <string name="backup_volume">Backup Volume</string>
+    <string name="backup_volume">Backup volume</string>
     <string name="pref_backup_volume_msg">Select the volume or disk where the backups will be stored.</string>
     <string name="no_volumes_found">Could not find any volumes with write permission.</string>
     <string name="unencrypted">Unencrypted</string>
