@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.4.1)
 set(CMAKE_CXX_STANDARD 17)
 
 set(C_FLAGS "-Werror=format -fdata-sections -ffunction-sections -fno-exceptions -fno-rtti -fno-threadsafe-statics")
-set(LINKER_FLAGS "-Wl,--hash-style=both")
+set(LINKER_FLAGS "-Wl,--hash-style=both -Wl,--build-id=none")
 
 if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     message("Builing Release...")
