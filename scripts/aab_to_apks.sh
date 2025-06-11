@@ -9,7 +9,7 @@ set -e
 }
 
 if [[ "$#" -lt 1 ]]; then
-  echo "USAGE: RELEASE_TYPE [BUILD_AAB]"
+  echo "USAGE: RELEASE_TYPE [INTERACTIVE]"
   exit 1
 fi
 
@@ -19,9 +19,9 @@ if ! which bundletool >/dev/null 2>&1; then
 fi
 
 RELEASE_TYPE=$1
-BUILD_AAB=true
+INTERACTIVE=true
 if [[ "$2" == "false" ]] || [[ "$2" == "0" ]]; then
-  BUILD_AAB=false
+  INTERACTIVE=false
 fi
 
 APP_VERSION="v$(grep -m1 versionName ./app/build.gradle | awk -F \" '{print $2}')"
@@ -39,32 +39,53 @@ SUPPORTED_LANGUAGES=(ar de en es fa fr hi id it ja ko nb pl pt ro ru tr uk vi zh
 SUPPORTED_DPIS=(ldpi mdpi tvdpi hdpi xhdpi xxhdpi xxxhdpi)
 SUPPORTED_ARCHS=(armeabi_v7a arm64_v8a x86 x86_64)
 
-#KEYSTORE=
-#KEY_ALIAS=
-#KEYSTORE_PASS=
-#KEY_ALIAS_PASS=
+if [[ -f $(which secret) ]]; then
+  echo "Using secret (https://github.com/angt/secret) for secrets...";
+  KEYSTORE_PASS=$(secret show android_keystore)
+  if [[ "$KEYSTORE_PASS" == "" ]]; then
+    echo "android_keystore does not exists."
+  else
+    KEY_ALIAS_PASS=$(secret show android_keystore_alias_key0)
+    if [[ "$KEY_ALIAS_PASS" == "" ]]; then
+      echo "android_keystore_alias_key0 does not exists."
+    else
+      KEYSTORE=~/keystores/android_keystore.jks
+      KEY_ALIAS=key0
+    fi
+  fi
+fi
 
 if [[ "${KEYSTORE}" == "" ]]; then
-  read -rp "KeyStore file: " KEYSTORE
-  echo
-  read -rsp "KeyStore pass: " KEYSTORE_PASS
-  echo
-  read -rp "Key alias: " KEY_ALIAS
-  echo
-  read -rsp "Key alias pass: " KEY_ALIAS_PASS
-  echo
+  if [[ "$INTERACTIVE" == true ]]; then
+    read -rp "KeyStore file: " KEYSTORE
+    echo
+    read -rsp "KeyStore pass: " KEYSTORE_PASS
+    echo
+    read -rp "Key alias: " KEY_ALIAS
+    echo
+    read -rsp "Key alias pass: " KEY_ALIAS_PASS
+    echo
+  else
+    echo "Building unsigned APK..."
+  fi
 fi
 
-if [[ "$BUILD_AAB" == true ]]; then
-  if [[ -f "${AAB_PATH}" ]]; then
-    rm "${AAB_PATH}"
-  fi
-  ./gradlew "bundle$(tr '[:lower:]' '[:upper:]' <<<"${RELEASE_TYPE:0:1}")${RELEASE_TYPE:1}"
+if [[ -f "${AAB_PATH}" ]]; then
+  rm "${AAB_PATH}"
 fi
+CAPITALIZED_RELEASE_TYPE=$(tr '[:lower:]' '[:upper:]' <<<"${RELEASE_TYPE:0:1}")${RELEASE_TYPE:1}
+./gradlew "bundle$CAPITALIZED_RELEASE_TYPE" --no-build-cache --no-configuration-cache --no-daemon
 
 if [[ -f ${AAB_PATH} ]]; then
-  bundletool build-apks --overwrite --mode=universal --bundle="${AAB_PATH}" --output="${APK_PATH}" --ks="${KEYSTORE}" --ks-pass=pass:"${KEYSTORE_PASS}" --ks-key-alias="${KEY_ALIAS}" --key-pass=pass:"${KEY_ALIAS_PASS}"
-  bundletool build-apks --overwrite --mode=default --bundle="${AAB_PATH}" --output="${APKS_PATH}" --ks="${KEYSTORE}" --ks-pass=pass:"${KEYSTORE_PASS}" --ks-key-alias="${KEY_ALIAS}" --key-pass=pass:"${KEY_ALIAS_PASS}"
+  if [[ "${KEYSTORE}" == "" ]]; then
+    KS_PARAMS="--ks=\"${KEYSTORE}\" --ks-pass=pass:\"${KEYSTORE_PASS}\" --ks-key-alias=\"${KEY_ALIAS}\" --key-pass=pass:\"${KEY_ALIAS_PASS}\""
+  else
+    KS_PARAMS=
+  fi
+  # shellcheck disable=SC2086
+  bundletool build-apks --overwrite --mode=universal --bundle="${AAB_PATH}" --output="${APK_PATH}" ${KS_PARAMS}
+  # shellcheck disable=SC2086
+  bundletool build-apks --overwrite --mode=default --bundle="${AAB_PATH}" --output="${APKS_PATH}" ${KS_PARAMS}
 else
   echo "$AAB_PATH doesn't exist"
   exit 1
