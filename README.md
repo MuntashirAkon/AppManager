@@ -112,6 +112,11 @@ you may still be able to send gifts (e.g., gift cards, subscriptions, food and d
 even cash). Please contact the maintainer at muntashirakon [at] riseup [dot] net for further
 assistance.
 
+In addition, the maintainers and contributors of this project DO NOT consent to the creation, sale,
+or promotion of tokens, cryptocurrencies, NFTs, or any other financial instruments that claim to
+represent this project, its code, or its community. Any such attempts are unauthorized and not
+affiliated with this project in any way.
+
 ## Credits and Libraries
 
 A list of credits and libraries are available in the **About** section of the app.
