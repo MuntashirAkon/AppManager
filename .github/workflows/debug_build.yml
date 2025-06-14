@@ -59,3 +59,29 @@ jobs:
 
             ${{ github.event.head_commit.message }}
         continue-on-error: true
+      - name: Checkout AMInsecureDebugBuilds
+        uses: actions/checkout@v4
+        with:
+          repository: MuntashirAkon/AMInsecureDebugBuilds
+          token: ${{ secrets.AMIDB_TOKEN }}
+          path: upload-repo
+      - name: Copy APK to AMInsecureDebugBuilds
+        run: cp ${{ env.APP_NAME }}.apk upload-repo/
+      - name: Commit to AMInsecureDebugBuilds
+        run: |
+          cd upload-repo
+          git config --local user.name "${{ github.actor }}"
+          git config --local user.email "${{ github.actor }}@users.noreply.github.com"
+          git add ${{ env.APP_NAME }}.apk
+          echo "${{ github.event.head_commit.message }}" > commit_msg.txt
+          git commit -F commit_msg.txt
+          rm commit_msg.txt
+          cd ..
+      - name: Push changes to GitHub
+        uses: ad-m/github-push-action@master
+        with:
+          repository: MuntashirAkon/AMInsecureDebugBuilds
+          github_token: ${{ secrets.AMIDB_TOKEN }}
+          branch: master
+          force: true
+          directory: upload-repo
