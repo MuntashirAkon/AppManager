@@ -66,14 +66,14 @@ jobs:
           token: ${{ secrets.AMIDB_TOKEN }}
           path: upload-repo
       - name: Copy APK to AMInsecureDebugBuilds
-        run: cp ${{ env.APP_NAME }}.apk upload-repo/
-      - name: Commit to AMInsecureDebugBuilds
         run: |
+          cp ${{ env.APP_NAME }}.apk upload-repo/
           cd upload-repo
+          bash ../scripts/keep-five.sh
           git config --local user.name "${{ github.actor }}"
           git config --local user.email "${{ github.actor }}@users.noreply.github.com"
           git add ${{ env.APP_NAME }}.apk
-          echo "${{ github.event.head_commit.message }}" > commit_msg.txt
+          echo "${{ github.run_number }}: ${{ github.event.head_commit.message }}" > commit_msg.txt
           git commit -F commit_msg.txt
           rm commit_msg.txt
           cd ..
