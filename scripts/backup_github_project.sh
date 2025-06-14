@@ -5,8 +5,13 @@ GITHUB_USERNAME="MuntashirAkon"
 REPOSITORY_NAME="AppManager"
 
 if [[ -z "$GITHUB_TOKEN" ]]; then
-  echo "Error: GITHUB_TOKEN environment variable is not set."
-  exit 1
+  if [[ -f $(which secret) ]]; then
+    echo "Using secret (https://github.com/angt/secret) for secrets...";
+    GITHUB_TOKEN=$(secret show app_manager_backup)
+  else
+    echo "Error: GITHUB_TOKEN environment variable is not set."
+    exit 1
+  fi
 fi
 
 if [[ $# -lt 1 ]]; then
