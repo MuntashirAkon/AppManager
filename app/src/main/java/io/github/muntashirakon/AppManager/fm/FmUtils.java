@@ -19,12 +19,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 public final class FmUtils {
+    public static final String TAG = FmUtils.class.getSimpleName();
+
     @NonNull
     public static String getDisplayablePath(@NonNull Path path) {
         return getDisplayablePath(path.getUri());
@@ -105,7 +108,13 @@ public final class FmUtils {
                 path = Paths.relativePath(path, File.separator);
                 return uri.buildUpon().path(path).build();
             }
+            case "package":
+                if (!uri.isHierarchical()) {
+                    // package:package-name is not a hierarchical format
+                    return uri;
+                }
             default:
+                Log.i(TAG, "Invalid/unsupported scheme: " + scheme);
                 // Invalid path
                 return null;
         }
