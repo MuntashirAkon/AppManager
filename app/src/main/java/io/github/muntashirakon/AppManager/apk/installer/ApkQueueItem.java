@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
-import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity.EXTRA_INSTALL_EXISTING;
-import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity.EXTRA_PACKAGE_NAME;
 import static io.github.muntashirakon.AppManager.apk.installer.SupportedAppStores.isAppStoreSupported;
 
 import android.content.ContentResolver;
@@ -38,11 +36,6 @@ public class ApkQueueItem implements Parcelable, IJsonSerializer {
     static List<ApkQueueItem> fromIntent(@NonNull Intent intent,
                                          @Nullable String originatingPackage) {
         List<ApkQueueItem> apkQueueItems = new ArrayList<>();
-        boolean installExisting = intent.getBooleanExtra(EXTRA_INSTALL_EXISTING, false);
-        String packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
-        if (installExisting && packageName != null) {
-            apkQueueItems.add(new ApkQueueItem(packageName, true));
-        }
         List<Uri> uris = IntentCompat.getDataUris(intent);
         if (uris == null) {
             return apkQueueItems;
@@ -52,13 +45,18 @@ public class ApkQueueItem implements Parcelable, IJsonSerializer {
         Uri originatingUri = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_ORIGINATING_URI, Uri.class);
         int takeFlags = intent.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         for (Uri uri : uris) {
-            ApkQueueItem item = new ApkQueueItem(ApkSource.getCachedApkSource(uri, mimeType));
-            item.mOriginatingUri = originatingUri;
-            item.mOriginatingPackage = originatingPackage;
-            apkQueueItems.add(item);
-            if (takeFlags > 0) {
-                ExUtils.exceptionAsIgnored(() -> cr.takePersistableUriPermission(uri, takeFlags));
+            ApkQueueItem item;
+            if ("package".equals(uri.getScheme())) {
+                item = new ApkQueueItem(uri.getSchemeSpecificPart(), true);
+            } else { // file, content
+                item = new ApkQueueItem(ApkSource.getCachedApkSource(uri, mimeType));
+                item.mOriginatingUri = originatingUri;
+                item.mOriginatingPackage = originatingPackage;
+                if (takeFlags > 0) {
+                    ExUtils.exceptionAsIgnored(() -> cr.takePersistableUriPermission(uri, takeFlags));
+                }
             }
+            apkQueueItems.add(item);
         }
         return apkQueueItems;
     }
