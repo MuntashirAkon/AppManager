@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.details;
 
+import static android.view.View.GONE;
 import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 
 import android.annotation.SuppressLint;
@@ -13,7 +14,9 @@ import android.content.pm.PackageInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
@@ -73,6 +76,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
     private boolean mIsExternalApk;
     @OtherProperty
     private int mNeededProperty;
+    private volatile String mSearchQuery;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,6 +95,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
         viewModel.get(mNeededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (appDetailsItems != null && mAdapter != null && viewModel.isPackageExist()) {
                 mIsExternalApk = viewModel.isExternalApk();
+                mSearchQuery = viewModel.getSearchQuery();
                 mAdapter.setDefaultList(appDetailsItems);
             } else ProgressIndicatorCompat.setVisibility(progressIndicator, false);
         });
@@ -118,10 +123,27 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if (viewModel != null) {
+            mSearchQuery = viewModel.getSearchQuery();
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (activity.searchView != null) {
-            activity.searchView.setVisibility(View.GONE);
+            if (!activity.searchView.isShown()) {
+                activity.searchView.setVisibility(View.VISIBLE);
+            }
+            activity.searchView.setOnQueryTextListener(this);
+            if (viewModel != null) {
+                String searchQuery = viewModel.getSearchQuery();
+                if (!Objects.equals(searchQuery, mSearchQuery)) {
+                    viewModel.filterAndSortItems(mNeededProperty);
+                }
+            }
         }
     }
 
@@ -163,6 +185,8 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
         private final List<AppDetailsItem<?>> mAdapterList;
         @OtherProperty
         private int mRequestedProperty;
+        @Nullable
+        private String mConstraint;
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
@@ -172,6 +196,11 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
         void setDefaultList(@NonNull List<AppDetailsItem<?>> list) {
             ThreadUtils.postOnBackgroundThread(() -> {
                 mRequestedProperty = mNeededProperty;
+                if (viewModel != null) {
+                    mConstraint = viewModel.getSearchQuery();
+                } else {
+                    mConstraint = null;
+                }
                 ThreadUtils.postOnMainThread(() -> {
                     if (isDetached()) return;
                     ProgressIndicatorCompat.setVisibility(progressIndicator, false);
@@ -270,6 +299,9 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                 default:
                     break;
             }
+            if (mConstraint !=null && holder.textView1.getText().toString().contains(mConstraint)) {
+                holder.textView1.setText(UIUtils.getHighlightedText(holder.textView1.getText(), mConstraint, colorQueryStringHighlight));
+            }
         }
 
         @Override
@@ -310,7 +342,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                             Intent intent = AppDetailsActivity.getIntent(context, Paths.get(item.path), false);
                             startActivity(intent);
                         });
-                    } else holder.launchBtn.setVisibility(View.GONE);
+                    } else holder.launchBtn.setVisibility(GONE);
                     holder.textView2.setText(sb);
                     break;
                 }
@@ -321,7 +353,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                     if (item.path == null) {
                         // Native lib
                         holder.textView2.setText(((LocalizedString) item.item).toLocalizedString(context));
-                        holder.launchBtn.setVisibility(View.GONE);
+                        holder.launchBtn.setVisibility(GONE);
                         break;
                     } // else shared lib, fallthrough
                 }
@@ -353,6 +385,8 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
             } else {
                 view.setStrokeColor(Color.TRANSPARENT);
             }
+
+
             // Set feature name
             if (featureInfo.name == null) {
                 // OpenGL ES
@@ -363,14 +397,15 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                     holder.textView1.setText(String.format(Locale.ROOT, "%s %s",
                             getString(R.string.gles_version), Utils.getGlEsVersion(featureInfo.reqGlEsVersion)));
                 }
-                holder.textView3.setVisibility(View.GONE);
+                holder.textView3.setVisibility(GONE);
                 return;
             } else holder.textView1.setText(item.name);
+
             // Feature version: 0 means any version
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && featureInfo.version != 0) {
                 holder.textView3.setVisibility(View.VISIBLE);
                 holder.textView3.setText(getString(R.string.minimum_version, featureInfo.version));
-            } else holder.textView3.setVisibility(View.GONE);
+            } else holder.textView3.setVisibility(GONE);
         }
 
         private void getConfigurationView(@NonNull ViewHolder holder, int index) {
@@ -379,6 +414,8 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 configurationInfo = (ConfigurationInfo) mAdapterList.get(index).item;
             }
+
+
             view.setStrokeColor(Color.TRANSPARENT);
             // GL ES version
             holder.textView1.setText(String.format(Locale.ROOT, "%s %s",
