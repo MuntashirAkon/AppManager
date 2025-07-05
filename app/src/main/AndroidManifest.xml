@@ -456,7 +456,7 @@
 
         <activity-alias
             android:name=".apk.installer.AppInfoActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/app_info"
             android:targetActivity=".details.AppDetailsActivity">
             <intent-filter>
