@@ -11,6 +11,9 @@ import static io.github.muntashirakon.AppManager.debloat.DebloaterListOptions.FI
 import static io.github.muntashirakon.AppManager.debloat.DebloaterListOptions.FILTER_LIST_MISC;
 import static io.github.muntashirakon.AppManager.debloat.DebloaterListOptions.FILTER_LIST_OEM;
 
+import android.content.Context;
+import android.text.SpannableStringBuilder;
+
 import androidx.annotation.NonNull;
 
 import java.util.LinkedHashMap;
@@ -18,6 +21,7 @@ import java.util.Map;
 
 import io.github.muntashirakon.AppManager.debloat.DebloatObject;
 import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public class BloatwareOption extends FilterOption {
     private final Map<String, Integer> mKeysWithType = new LinkedHashMap<String, Integer>() {{
@@ -65,15 +69,18 @@ public class BloatwareOption extends FilterOption {
     public TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result) {
         DebloatObject object = info.getBloatwareInfo();
         if (object == null) {
-            return result.setMatched(key.equals(KEY_ALL));
+            return result.setMatched(false);
         }
+        // Must be a bloatware
         switch (key) {
-            default:
-                return result.setMatched(false);
+            case KEY_ALL:
+                return result.setMatched(true);
             case "type":
                 return result.setMatched((typeToFlag(object.type) & intValue) != 0);
             case "removal":
                 return result.setMatched((object.getRemoval() & intValue) != 0);
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
         }
     }
 
@@ -91,6 +98,22 @@ public class BloatwareOption extends FilterOption {
                 return FILTER_LIST_OEM;
             default:
                 throw new IllegalArgumentException("Unknown type: " + type);
+        }
+    }
+
+    @NonNull
+    @Override
+    public CharSequence toLocalizedString(@NonNull Context context) {
+        SpannableStringBuilder sb = new SpannableStringBuilder("Bloatware");
+        switch (key) {
+            case KEY_ALL:
+                return sb.append(LangUtils.getSeparatorString()).append("any");
+            case "type":
+                return sb.append(" with type: ").append(flagsToString("type", intValue));
+            case "removal":
+                return sb.append(" with removal: ").append(flagsToString("removal", intValue));
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
         }
     }
 }
