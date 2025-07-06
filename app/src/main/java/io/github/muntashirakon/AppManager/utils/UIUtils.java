@@ -65,13 +65,13 @@ public class UIUtils {
     static final Spannable.Factory sSpannableFactory = Spannable.Factory.getInstance();
 
     @NonNull
-    public static Spannable getHighlightedText(@NonNull String text, @Nullable String constraint,
+    public static Spannable getHighlightedText(@NonNull CharSequence text, @Nullable String constraint,
                                                @ColorInt int color) {
         Spannable spannable = sSpannableFactory.newSpannable(text);
         if (TextUtils.isEmpty(constraint)) {
             return spannable;
         }
-        int start = text.toLowerCase(Locale.ROOT).indexOf(constraint);
+        int start = text.toString().toLowerCase(Locale.ROOT).indexOf(constraint);
         if (start == -1) return spannable;
         int end = start + constraint.length();
         if (end > text.length()) return spannable;
@@ -420,4 +420,5 @@ public class UIUtils {
         paint.setColorFilter(new ColorMatrixColorFilter(cm));
         canvas.drawBitmap(bmp, 0, 0, paint);
     }
+
 }
