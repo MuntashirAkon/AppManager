@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -21,8 +22,9 @@ import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
+import io.github.muntashirakon.util.LocalizedString;
 
-public abstract class FilterOption {
+public abstract class FilterOption implements LocalizedString {
     public static final int TYPE_NONE = 0;
     public static final int TYPE_STR_SINGLE = 1;
     public static final int TYPE_STR_MULTIPLE = 2;
@@ -85,6 +87,10 @@ public abstract class FilterOption {
         this.keyType = TYPE_NONE;
     }
 
+    public String getFullId() {
+        return type + "_" + id;
+    }
+
     @NonNull
     public String getKey() {
         return key;
@@ -139,6 +145,16 @@ public abstract class FilterOption {
     @NonNull
     public abstract TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result);
 
+    @NonNull
+    @Override
+    public String toString() {
+        return "FilterOption{" +
+                "type='" + type + '\'' +
+                ", key='" + key + '\'' +
+                ", value='" + value + '\'' +
+                '}';
+    }
+
     @Nullable
     public JSONObject toJson() throws JSONException {
         if (value == null) {
@@ -166,6 +182,18 @@ public abstract class FilterOption {
         }
         return option;
     }
+
+    protected String flagsToString(String key, int flags) {
+        List<CharSequence> result = new ArrayList<>();
+        for (Map.Entry<Integer, CharSequence> entry : getFlags(key).entrySet()) {
+            int flag = entry.getKey();
+            if ((flags & flag) != 0) {
+                result.add(entry.getValue());
+            }
+        }
+        return String.join(", ", result);
+    }
+
 
     public static class TestResult {
         private boolean mMatched = true;

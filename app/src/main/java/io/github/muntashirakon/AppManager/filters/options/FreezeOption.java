@@ -2,6 +2,9 @@
 
 package io.github.muntashirakon.AppManager.filters.options;
 
+import static io.github.muntashirakon.AppManager.utils.LangUtils.getSeparatorString;
+
+import android.content.Context;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
@@ -55,20 +58,37 @@ public class FreezeOption extends FilterOption {
     public TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result) {
         int freezeFlags = info.getFreezeFlags();
         switch (key) {
-            default:
+            case KEY_ALL:
                 return result.setMatched(true);
-            case "frozen": {
+            case "frozen":
                 return result.setMatched(freezeFlags != 0);
-            }
-            case "unfrozen": {
+            case "unfrozen":
                 return result.setMatched(freezeFlags == 0);
-            }
-            case "with_flags": {
+            case "with_flags":
                 return result.setMatched((freezeFlags & intValue) == intValue);
-            }
-            case "without_flags": {
+            case "without_flags":
                 return result.setMatched((freezeFlags & intValue) != intValue);
-            }
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
+        }
+    }
+
+    @NonNull
+    @Override
+    public CharSequence toLocalizedString(@NonNull Context context) {
+        switch (key) {
+            case KEY_ALL:
+                return "Frozen" + getSeparatorString() + " any";
+            case "frozen":
+                return "Frozen apps only";
+            case "unfrozen":
+                return "Unfrozen apps only";
+            case "with_flags":
+                return "Frozen apps with types " + flagsToString("with_flags", intValue);
+            case "without_flags":
+                return "Frozen apps without types " + flagsToString("without_flags", intValue);
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
         }
     }
 }

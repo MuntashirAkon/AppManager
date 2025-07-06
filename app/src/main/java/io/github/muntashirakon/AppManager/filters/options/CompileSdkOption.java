@@ -2,7 +2,10 @@
 
 package io.github.muntashirakon.AppManager.filters.options;
 
+import android.content.Context;
 import android.os.Build;
+import android.text.SpannableStringBuilder;
+import android.text.format.Formatter;
 
 import androidx.annotation.NonNull;
 
@@ -10,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public class CompileSdkOption extends FilterOption {
     private final Map<String, Integer> mKeysWithType = new LinkedHashMap<String, Integer>() {{
@@ -38,7 +42,7 @@ public class CompileSdkOption extends FilterOption {
             return result.setMatched(true);
         }
         switch (key) {
-            default:
+            case KEY_ALL:
                 return result.setMatched(true);
             case "eq":
                 return result.setMatched(info.getCompileSdk() == intValue);
@@ -46,6 +50,26 @@ public class CompileSdkOption extends FilterOption {
                 return result.setMatched(info.getCompileSdk() <= intValue);
             case "ge":
                 return result.setMatched(info.getCompileSdk() >= intValue);
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
+        }
+    }
+
+    @NonNull
+    @Override
+    public CharSequence toLocalizedString(@NonNull Context context) {
+        SpannableStringBuilder sb = new SpannableStringBuilder("Compile SDK");
+        switch (key) {
+            case KEY_ALL:
+                return sb.append(LangUtils.getSeparatorString()).append("any");
+            case "eq":
+                return sb.append(" = ").append(Integer.toString(intValue));
+            case "le":
+                return sb.append(" ≤ ").append(Integer.toString(intValue));
+            case "ge":
+                return sb.append(" ≥ ").append(Integer.toString(intValue));
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
         }
     }
 }
