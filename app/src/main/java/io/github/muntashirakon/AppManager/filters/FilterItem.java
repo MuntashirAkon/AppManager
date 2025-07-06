@@ -22,7 +22,7 @@ public class FilterItem {
     private static class ExprEvaluator extends AbsExpressionEvaluator {
         private final ArrayMap<Integer, FilterOption> mFilterOptions;
         @Nullable
-        private FilterableAppInfo mInfo;
+        private IFilterableAppInfo mInfo;
         @Nullable
         private FilterOption.TestResult mResult;
 
@@ -30,7 +30,7 @@ public class FilterItem {
             mFilterOptions = filterOptions;
         }
 
-        public void setInfo(@Nullable FilterableAppInfo info) {
+        public void setInfo(@Nullable IFilterableAppInfo info) {
             mInfo = info;
             mResult = new FilterOption.TestResult();
         }
@@ -148,11 +148,16 @@ public class FilterItem {
         return mFilterOptions.valueAt(i);
     }
 
-    public List<FilteredItemInfo> getFilteredList(@NonNull List<FilterableAppInfo> allFilterableAppInfo) {
+    @Nullable
+    public FilterOption getFilterOptionForId(int id) {
+        return mFilterOptions.get(id);
+    }
+
+    public List<FilteredItemInfo> getFilteredList(@NonNull List<IFilterableAppInfo> allFilterableAppInfo) {
         List<FilteredItemInfo> filteredFilterableAppInfo = new ArrayList<>();
         ExprEvaluator evaluator = new ExprEvaluator(mFilterOptions);
         String expr = TextUtils.isEmpty(mExpr) ? "true" : mExpr;
-        for (FilterableAppInfo info : allFilterableAppInfo) {
+        for (IFilterableAppInfo info : allFilterableAppInfo) {
             evaluator.setInfo(info);
             boolean eval = evaluator.evaluate(expr);
             FilterOption.TestResult result = Objects.requireNonNull(evaluator.getResult());
@@ -196,10 +201,10 @@ public class FilterItem {
     }
 
     public static class FilteredItemInfo {
-        public final FilterableAppInfo info;
+        public final IFilterableAppInfo info;
         public final FilterOption.TestResult result;
 
-        FilteredItemInfo(FilterableAppInfo info, FilterOption.TestResult result) {
+        FilteredItemInfo(IFilterableAppInfo info, FilterOption.TestResult result) {
             this.info = info;
             this.result = result;
         }

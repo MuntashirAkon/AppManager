@@ -201,7 +201,7 @@ public class EditFilterOptionFragment extends DialogFragment {
         }
         mPosition = args.getInt(ARG_POSITION, -1);
         boolean editMode = mFilterOption != null;
-        View view = View.inflate(activity, R.layout.dialog_edit_filter_item, null);
+        View view = View.inflate(activity, R.layout.dialog_edit_filter_option, null);
         MaterialSpinner filterSpinner = view.findViewById(R.id.filter_selector_spinner);
         ArrayAdapter<CharSequence> filters = SelectedArrayAdapter.createFromResource(activity, R.array.finder_filters, io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item);
         filterSpinner.setAdapter(filters);

@@ -46,7 +46,7 @@ public class FinderAdapter extends RecyclerView.Adapter<FinderAdapter.ViewHolder
         synchronized (mAdapterList) {
             itemInfo = mAdapterList.get(position);
         }
-        FilterableAppInfo appInfo = itemInfo.info;
+        FilterableAppInfo appInfo = (FilterableAppInfo) itemInfo.info;
         ImageLoader.getInstance().displayImage(appInfo.getPackageName(), appInfo.getApplicationInfo(), holder.icon);
         holder.label.setText(appInfo.getAppLabel());
         holder.pkg.setText(appInfo.getPackageName());
