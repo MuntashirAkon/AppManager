@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
+import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 
@@ -35,7 +35,7 @@ public class InstalledOption extends FilterOption {
 
     @NonNull
     @Override
-    public TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result) {
+    public TestResult test(@NonNull IFilterableAppInfo info, @NonNull TestResult result) {
         boolean installed = info.isInstalled();
         switch (key) {
             case KEY_ALL:

@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import io.github.muntashirakon.AppManager.debloat.DebloatObject;
-import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
+import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public class BloatwareOption extends FilterOption {
@@ -66,7 +66,7 @@ public class BloatwareOption extends FilterOption {
 
     @NonNull
     @Override
-    public TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result) {
+    public TestResult test(@NonNull IFilterableAppInfo info, @NonNull TestResult result) {
         DebloatObject object = info.getBloatwareInfo();
         if (object == null) {
             return result.setMatched(false);

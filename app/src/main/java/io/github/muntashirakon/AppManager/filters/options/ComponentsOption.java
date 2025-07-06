@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
+import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public class ComponentsOption extends FilterOption {
@@ -62,7 +62,7 @@ public class ComponentsOption extends FilterOption {
 
     @NonNull
     @Override
-    public TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result) {
+    public TestResult test(@NonNull IFilterableAppInfo info, @NonNull TestResult result) {
         Map<ComponentInfo, Integer> components = result.getMatchedComponents() != null
                 ? result.getMatchedComponents()
                 : info.getAllComponents();

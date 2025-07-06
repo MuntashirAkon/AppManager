@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.compat.InstallSourceInfoCompat;
-import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
+import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public class InstallerOption extends FilterOption {
@@ -36,7 +36,7 @@ public class InstallerOption extends FilterOption {
 
     @NonNull
     @Override
-    public TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result) {
+    public TestResult test(@NonNull IFilterableAppInfo info, @NonNull TestResult result) {
         InstallSourceInfoCompat installSourceInfo = info.getInstallerInfo();
         if (installSourceInfo == null) {
             return result.setMatched(key.equals(KEY_ALL));

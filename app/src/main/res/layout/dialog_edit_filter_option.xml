@@ -1,0 +1,76 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/padding_medium"
+        android:paddingVertical="@dimen/padding_small">
+
+        <io.github.muntashirakon.widget.MaterialSpinner
+            style="@style/Widget.AppTheme.MaterialSpinner"
+            android:id="@+id/filter_selector_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/select_filter" />
+
+        <io.github.muntashirakon.widget.MaterialSpinner
+            style="@style/Widget.AppTheme.MaterialSpinner"
+            android:id="@+id/type_selector_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/select_type" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/string_value"
+            app:hintAnimationEnabled="true"
+            app:hintEnabled="true"
+            tools:visibility="visible">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_string"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                tools:text="@tools:sample/full_names" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/string_value"
+            app:hintAnimationEnabled="true"
+            app:hintEnabled="true"
+            tools:visibility="visible">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@android:id/input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                tools:text="@tools:sample/full_names" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <io.github.muntashirakon.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</ScrollView>

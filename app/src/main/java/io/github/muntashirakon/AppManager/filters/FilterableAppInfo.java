@@ -58,7 +58,7 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
-public class FilterableAppInfo {
+public class FilterableAppInfo implements IFilterableAppInfo {
     private final PackageInfo mPackageInfo;
     @Nullable
     private final PackageUsageInfo mPackageUsageInfo;
@@ -104,11 +104,13 @@ public class FilterableAppInfo {
         return mApplicationInfo;
     }
 
+    @Override
     @NonNull
     public String getPackageName() {
         return mPackageInfo.packageName;
     }
 
+    @Override
     @NonNull
     public String getAppLabel() {
         if (mAppLabel == null) {
@@ -117,36 +119,46 @@ public class FilterableAppInfo {
         return mAppLabel;
     }
 
+    @Override
+    @Nullable
     public String getVersionName() {
         return mPackageInfo.versionName;
     }
 
+    @Override
     public long getVersionCode() {
         return PackageInfoCompat.getLongVersionCode(mPackageInfo);
     }
 
+    @Override
     public long getFirstInstallTime() {
         return mPackageInfo.firstInstallTime;
     }
 
+    @Override
     public long getLastUpdateTime() {
         return mPackageInfo.lastUpdateTime;
     }
 
+    @Override
     public int getTargetSdk() {
         return mApplicationInfo.targetSdkVersion;
     }
 
+    @Override
     @RequiresApi(Build.VERSION_CODES.S)
     public int getCompileSdk() {
         return mApplicationInfo.compileSdkVersion;
     }
 
+    @Override
     @RequiresApi(Build.VERSION_CODES.N)
     public int getMinSdk() {
         return mApplicationInfo.minSdkVersion;
     }
 
+    @Override
+    @NonNull
     public Backup[] getBackups() {
         if (mBackups == null) {
             mBackups = BackupUtils.getBackupMetadataFromDbNoLockValidate(getPackageName()).toArray(new Backup[0]);
@@ -154,6 +166,7 @@ public class FilterableAppInfo {
         return mBackups;
     }
 
+    @Override
     public boolean isRunning() {
         for (ActivityManager.RunningAppProcessInfo info : ActivityManagerCompat.getRunningAppProcesses()) {
             if (ArrayUtils.contains(info.pkgList, mPackageInfo.packageName)) {
@@ -163,6 +176,7 @@ public class FilterableAppInfo {
         return false;
     }
 
+    @Override
     @NonNull
     public Map<ComponentInfo, Integer> getTrackerComponents() {
         if (mTrackerComponents == null) {
@@ -178,6 +192,8 @@ public class FilterableAppInfo {
         return mTrackerComponents;
     }
 
+    @Override
+    @NonNull
     public List<AppOpsManagerCompat.OpEntry> getAppOps() {
         if (mAppOpEntries == null && isInstalled()) {
             List<AppOpsManagerCompat.PackageOps> packageOps = ExUtils.exceptionAsNull(() -> new AppOpsManagerCompat().getOpsForPackage(mApplicationInfo.uid, getPackageName(), null));
@@ -188,6 +204,8 @@ public class FilterableAppInfo {
         return mAppOpEntries;
     }
 
+    @Override
+    @NonNull
     public Map<ComponentInfo, Integer> getAllComponents() {
         if (mAllComponents == null) {
             Map<ComponentInfo, Integer> components = new LinkedHashMap<>();
@@ -216,6 +234,7 @@ public class FilterableAppInfo {
         return mAllComponents;
     }
 
+    @Override
     @NonNull
     public List<String> getAllPermissions() {
         if (mUsedPermissions == null) {
@@ -254,19 +273,23 @@ public class FilterableAppInfo {
         return mUsedPermissions;
     }
 
+    @Override
     @NonNull
     public FeatureInfo[] getAllRequestedFeatures() {
         return ArrayUtils.defeatNullable(FeatureInfo.class, mPackageInfo.reqFeatures);
     }
 
+    @Override
     public boolean isInstalled() {
         return ApplicationInfoCompat.isInstalled(mApplicationInfo);
     }
 
+    @Override
     public boolean isFrozen() {
         return !isEnabled() || isSuspended() || isHidden();
     }
 
+    @Override
     public int getFreezeFlags() {
         if (mFreezeFlags != null) {
             return mFreezeFlags;
@@ -284,18 +307,22 @@ public class FilterableAppInfo {
         return mFreezeFlags;
     }
 
+    @Override
     public boolean isStopped() {
         return ApplicationInfoCompat.isStopped(mApplicationInfo);
     }
 
+    @Override
     public boolean isTestOnly() {
         return ApplicationInfoCompat.isTestOnly(mApplicationInfo);
     }
 
+    @Override
     public boolean isDebuggable() {
         return (mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
     }
 
+    @Override
     public int getAppTypeFlags() {
         if (mAppTypeFlags != null) {
             return mAppTypeFlags;
@@ -350,51 +377,63 @@ public class FilterableAppInfo {
         return mAppTypeFlags;
     }
 
+    @Override
     public boolean isSystemApp() {
         return ApplicationInfoCompat.isSystemApp(mApplicationInfo);
     }
 
+    @Override
     public boolean hasCode() {
         return (mApplicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) != 0;
     }
 
+    @Override
     public boolean isPersistent() {
         return (mApplicationInfo.flags & ApplicationInfo.FLAG_PERSISTENT) != 0;
     }
 
+    @Override
     public boolean isUpdatedSystemApp() {
         return (mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0;
     }
 
+    @Override
     public boolean backupAllowed() {
         return (mApplicationInfo.flags & ApplicationInfo.FLAG_ALLOW_BACKUP) != 0;
     }
 
+    @Override
     public boolean installedInExternalStorage() {
         return (mApplicationInfo.flags & ApplicationInfo.FLAG_EXTERNAL_STORAGE) != 0;
     }
 
+    @Override
     public boolean requestedLargeHeap() {
         return (mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0;
     }
 
+    @Override
     public boolean supportsRTL() {
         return (mApplicationInfo.flags & ApplicationInfo.FLAG_SUPPORTS_RTL) != 0;
     }
 
+    @Override
     public boolean dataOnlyApp() {
         return (mApplicationInfo.flags & ApplicationInfo.FLAG_IS_DATA_ONLY) != 0;
     }
 
+    @Override
     @RequiresApi(Build.VERSION_CODES.M)
     public boolean usesHttp() {
         return (mApplicationInfo.flags & ApplicationInfo.FLAG_USES_CLEARTEXT_TRAFFIC) != 0;
     }
 
+    @Override
     public boolean isPrivileged() {
         return ApplicationInfoCompat.isPrivileged(mApplicationInfo);
     }
 
+    @Override
     @NonNull
     public String getSsaid() {
         if (mSsaid == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -409,26 +448,33 @@ public class FilterableAppInfo {
         return mSsaid;
     }
 
+    @Override
     public boolean hasDomainUrls() {
         return ApplicationInfoCompat.hasDomainUrls(mApplicationInfo);
     }
 
+    @Override
     public boolean hasStaticSharedLibrary() {
         return ApplicationInfoCompat.isStaticSharedLibrary(mApplicationInfo);
     }
 
+    @Override
     public boolean isHidden() {
         return ApplicationInfoCompat.isHidden(mApplicationInfo);
     }
 
+    @Override
     public boolean isSuspended() {
         return ApplicationInfoCompat.isSuspended(mApplicationInfo);
     }
 
+    @Override
     public boolean isEnabled() {
         return mApplicationInfo.enabled;
     }
 
+    @Override
+    @Nullable
     public String getSharedUserId() {
         return mPackageInfo.sharedUserId;
     }
@@ -439,26 +485,32 @@ public class FilterableAppInfo {
         }
     }
 
+    @Override
     public long getTotalSize() {
         fetchPackageSizeInfo();
         return mPackageSizeInfo != null ? mPackageSizeInfo.getTotalSize() : 0;
     }
 
+    @Override
     public long getApkSize() {
         fetchPackageSizeInfo();
         return mPackageSizeInfo != null ? (mPackageSizeInfo.codeSize + mPackageSizeInfo.obbSize) : 0;
     }
 
+    @Override
     public long getCacheSize() {
         fetchPackageSizeInfo();
         return mPackageSizeInfo != null ? mPackageSizeInfo.cacheSize : 0;
     }
 
+    @Override
     public long getDataSize() {
         fetchPackageSizeInfo();
         return mPackageSizeInfo != null ? (mPackageSizeInfo.dataSize + mPackageSizeInfo.mediaSize + mPackageSizeInfo.cacheSize) : 0;
     }
 
+    @Override
+    @NonNull
     public AppUsageStatsManager.DataUsage getDataUsage() {
         if (mDataUsage == null && isInstalled()) {
             if (mPackageUsageInfo != null) {
@@ -471,18 +523,22 @@ public class FilterableAppInfo {
         return mDataUsage;
     }
 
+    @Override
     public int getTimesOpened() {
         return mPackageUsageInfo != null ? mPackageUsageInfo.timesOpened : 0;
     }
 
+    @Override
     public long getTotalScreenTime() {
         return mPackageUsageInfo != null ? mPackageUsageInfo.screenTime : 0L;
     }
 
+    @Override
     public long getLastUsedTime() {
         return mPackageUsageInfo != null ? mPackageUsageInfo.lastUsageTime : 0L;
     }
 
+    @Override
     @Nullable
     public SignerInfo fetchSignerInfo() {
         if (mSignerInfo == null) {
@@ -491,6 +547,7 @@ public class FilterableAppInfo {
         return mSignerInfo;
     }
 
+    @Override
     @NonNull
     public String[] getSignatureSubjectLines() {
         fetchSignerInfo();
@@ -506,6 +563,7 @@ public class FilterableAppInfo {
         return mSignatureSubjectLines != null ? mSignatureSubjectLines : EmptyArray.STRING;
     }
 
+    @Override
     @NonNull
     public String[] getSignatureSha256Checksums() {
         fetchSignerInfo();
@@ -525,6 +583,7 @@ public class FilterableAppInfo {
         return mSignatureSha256Checksums != null ? mSignatureSha256Checksums : EmptyArray.STRING;
     }
 
+    @Override
     @Nullable
     public InstallSourceInfoCompat getInstallerInfo() {
         if (mInstallerInfo == null && isInstalled()) {
@@ -536,6 +595,7 @@ public class FilterableAppInfo {
         return mInstallerInfo;
     }
 
+    @Override
     @Nullable
     public DebloatObject getBloatwareInfo() {
         if (mBloatwareInfo == null) {

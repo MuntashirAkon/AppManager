@@ -41,7 +41,7 @@ public class FinderViewModel extends AndroidViewModel {
     private final MutableLiveData<List<FilterItem.FilteredItemInfo>> mFilteredAppListLiveData = new MutableLiveData<>();
     private Future<?> mAppListLoaderFuture;
     @Nullable
-    private List<FilterableAppInfo> mFilterableAppInfoList;
+    private List<IFilterableAppInfo> mFilterableAppInfoList;
     @NotNull
     private final FilterItem mFilterItem = new FilterItem();
 
@@ -86,7 +86,7 @@ public class FinderViewModel extends AndroidViewModel {
         // TODO: 8/2/24 Allow multiple users
         // TODO: 8/2/24 Include backups for uninstalled apps
         int[] userIds = new int[]{UserHandleHidden.myUserId()}; //Users.getUsersIds();
-        List<FilterableAppInfo> filterableAppInfoList = new ArrayList<>();
+        List<IFilterableAppInfo> filterableAppInfoList = new ArrayList<>();
         boolean hasUsageAccess = FeatureController.isUsageAccessEnabled() && SelfPermissions.checkUsageStatsPermission();
         for (int userId : userIds) {
             if (ThreadUtils.isInterrupted()) return;

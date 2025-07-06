@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.db.entity.Backup;
-import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
+import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
 import io.github.muntashirakon.util.LocalizedString;
 
 public abstract class FilterOption implements LocalizedString {
@@ -143,7 +143,7 @@ public abstract class FilterOption implements LocalizedString {
     }
 
     @NonNull
-    public abstract TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result);
+    public abstract TestResult test(@NonNull IFilterableAppInfo info, @NonNull TestResult result);
 
     @NonNull
     @Override

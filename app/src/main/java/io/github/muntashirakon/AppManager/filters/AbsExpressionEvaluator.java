@@ -3,15 +3,28 @@
 package io.github.muntashirakon.AppManager.filters;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public abstract class AbsExpressionEvaluator {
+    protected CharSequence lastError;
+
+    @Nullable
+    public CharSequence getLastError() {
+        return lastError;
+    }
+
     protected abstract boolean evalId(@NonNull String id);
 
     public boolean evaluate(@NonNull String expr) {
+        lastError = null;
         // Process parentheses first
         while (expr.contains("(")) {
             int start = expr.lastIndexOf('(');
             int end = expr.indexOf(')', start);
+            if (end == -1) {
+                lastError = "Expected ')'.";
+                return false;
+            }
             // Get expression without parenthesis
             String subExpr = expr.substring(start + 1, end);
             boolean subResult = evalOrExpr(subExpr);
