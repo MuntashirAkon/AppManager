@@ -111,6 +111,11 @@ public class FilterableAppInfo implements IFilterableAppInfo {
     }
 
     @Override
+    public int getUserId() {
+        return mUserId;
+    }
+
+    @Override
     @NonNull
     public String getAppLabel() {
         if (mAppLabel == null) {
