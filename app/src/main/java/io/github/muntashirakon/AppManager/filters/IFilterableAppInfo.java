@@ -24,6 +24,8 @@ public interface IFilterableAppInfo {
     @NonNull
     String getPackageName();
 
+    int getUserId();
+
     @NonNull
     String getAppLabel();
 
