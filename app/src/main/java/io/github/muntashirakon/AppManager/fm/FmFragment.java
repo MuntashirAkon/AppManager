@@ -87,7 +87,8 @@ import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
 public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener, SpeedDialView.OnActionSelectedListener,
-        MultiSelectionActionsView.OnItemSelectedListener {
+        MultiSelectionActionsView.OnItemSelectedListener,
+        MultiSelectionView.OnSelectionModeChangeListener {
     public static final String TAG = FmFragment.class.getSimpleName();
 
     private static final String ARG_URI = "uri";
@@ -142,19 +143,26 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
         }
     };
 
-    private final OnBackPressedCallback mBackPressedCallback = new OnBackPressedCallback(true) {
+    private final OnBackPressedCallback mExitSelectionBackPressedCallback = new OnBackPressedCallback(false) {
         @Override
         public void handleOnBackPressed() {
             if (mAdapter != null && mMultiSelectionView != null && mAdapter.isInSelectionMode()) {
                 mMultiSelectionView.cancel();
                 return;
             }
+            setEnabled(false);
+            requireActivity().getOnBackPressedDispatcher().onBackPressed();
+        }
+    };
+    private final OnBackPressedCallback mGoUpBackPressedCallback = new OnBackPressedCallback(false) {
+        @Override
+        public void handleOnBackPressed() {
             if (mPathListAdapter != null && mPathListAdapter.getCurrentPosition() > 0) {
                 mModel.loadFiles(mPathListAdapter.calculateUri(mPathListAdapter.getCurrentPosition() - 1));
                 return;
             }
             setEnabled(false);
-            requireActivity().onBackPressed();
+            requireActivity().getOnBackPressedDispatcher().onBackPressed();
         }
     };
 
@@ -269,6 +277,7 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
         });
         mMultiSelectionView = view.findViewById(R.id.selection_view);
         mMultiSelectionView.setOnItemSelectedListener(this);
+        mMultiSelectionView.setOnSelectionModeChangeListener(this);
         mMultiSelectionView.setAdapter(mAdapter);
         mMultiSelectionView.updateCounter(true);
         mMultiSelectionView.getViewTreeObserver().addOnGlobalLayoutListener(mMultiSelectionViewChangeListener);
@@ -328,6 +337,7 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
             }
             mPathListAdapter.setCurrentUri(uri1);
             mPathListAdapter.setAlternativeRootName(alternativeRootName);
+            mGoUpBackPressedCallback.setEnabled(mPathListAdapter.getCurrentPosition() > 0);
         });
         mModel.getFolderShortInfoLiveData().observe(getViewLifecycleOwner(), folderShortInfo -> {
             mFolderShortInfo = folderShortInfo;
@@ -431,8 +441,9 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        // Handle back press
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, mBackPressedCallback);
+        // Handle back press: The order MUST be kept same
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, mGoUpBackPressedCallback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, mExitSelectionBackPressedCallback);
     }
 
     @Override
@@ -517,6 +528,16 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
             dialog.show(getChildFragmentManager(), NewSymbolicLinkDialogFragment.TAG);
         }
         return false;
+    }
+
+    @Override
+    public void onSelectionModeEnabled() {
+        mExitSelectionBackPressedCallback.setEnabled(true);
+    }
+
+    @Override
+    public void onSelectionModeDisabled() {
+        mExitSelectionBackPressedCallback.setEnabled(false);
     }
 
     @Override

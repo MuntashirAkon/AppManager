@@ -15,6 +15,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
@@ -51,11 +52,37 @@ public class SharedPrefsActivity extends BaseActivity implements
     private LinearProgressIndicator mProgressIndicator;
     private SharedPrefsViewModel mViewModel;
     private boolean mWriteAndExit = false;
+    private final OnBackPressedCallback mOnBackPressedCallback = new OnBackPressedCallback(false) {
+        @Override
+        public void handleOnBackPressed() {
+            if (mViewModel.isModified()) {
+                new MaterialAlertDialogBuilder(SharedPrefsActivity.this)
+                        .setTitle(R.string.exit_confirmation)
+                        .setMessage(R.string.file_modified_are_you_sure)
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.no, null)
+                        .setNegativeButton(R.string.yes, (dialog, which) -> {
+                            setEnabled(false);
+                            getOnBackPressedDispatcher().onBackPressed();
+                        })
+                        .setNeutralButton(R.string.save_and_exit, (dialog, which) -> {
+                            mWriteAndExit = true;
+                            mViewModel.writeSharedPrefs();
+                            setEnabled(false);
+                        })
+                        .show();
+                return;
+            }
+            setEnabled(false);
+            getOnBackPressedDispatcher().onBackPressed();
+        }
+    };
 
     @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_shared_prefs);
         setSupportActionBar(findViewById(R.id.toolbar));
+        getOnBackPressedDispatcher().addCallback(this, mOnBackPressedCallback);
         Uri sharedPrefUri = IntentCompat.getParcelableExtra(getIntent(), EXTRA_PREF_LOCATION, Uri.class);
         String appLabel = getIntent().getStringExtra(EXTRA_PREF_LABEL);
         if (sharedPrefUri == null) {
@@ -96,7 +123,7 @@ public class SharedPrefsActivity extends BaseActivity implements
             if (saved) {
                 UIUtils.displayShortToast(R.string.saved_successfully);
                 if (mWriteAndExit) {
-                    finish();
+                    getOnBackPressedDispatcher().onBackPressed();
                     mWriteAndExit = false;
                 }
             } else {
@@ -112,6 +139,7 @@ public class SharedPrefsActivity extends BaseActivity implements
             }
         });
         mViewModel.getSharedPrefsModifiedLiveData().observe(this, modified -> {
+            mOnBackPressedCallback.setEnabled(modified);
             if (modified) {
                 if (actionBar != null) {
                     actionBar.setTitle("* " + mViewModel.getSharedPrefFilename());
@@ -123,15 +151,6 @@ public class SharedPrefsActivity extends BaseActivity implements
             }
         });
         mViewModel.loadSharedPrefs();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mViewModel.isModified()) {
-            displayExitPrompt();
-            return;
-        }
-        super.onBackPressed();
     }
 
     @Override
@@ -168,9 +187,7 @@ public class SharedPrefsActivity extends BaseActivity implements
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            if (mViewModel.isModified()) {
-                displayExitPrompt();
-            } else finish();
+            getOnBackPressedDispatcher().onBackPressed();
         } else if (id == R.id.action_discard) {
             finish();
         } else if (id == R.id.action_delete) {
@@ -206,20 +223,6 @@ public class SharedPrefsActivity extends BaseActivity implements
     public boolean onQueryTextChange(String newText) {
         if (mAdapter != null) mAdapter.getFilter().filter(newText.toLowerCase(Locale.ROOT));
         return true;
-    }
-
-    private void displayExitPrompt() {
-        new MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.exit_confirmation)
-                .setMessage(R.string.file_modified_are_you_sure)
-                .setCancelable(false)
-                .setNegativeButton(R.string.no, null)
-                .setPositiveButton(R.string.yes, (dialog, which) -> finish())
-                .setNeutralButton(R.string.save_and_exit, (dialog, which) -> {
-                    mWriteAndExit = true;
-                    mViewModel.writeSharedPrefs();
-                })
-                .show();
     }
 
     private void displayEditor(@NonNull String prefName) {
