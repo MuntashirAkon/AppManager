@@ -25,7 +25,7 @@ import java.util.Queue;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
+import io.github.muntashirakon.AppManager.profiles.struct.BaseProfile;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
@@ -100,7 +100,7 @@ public class ProfileApplierActivity extends BaseActivity {
     }
 
     public static class ProfileApplierInfo {
-        public AppsProfile profile;
+        public BaseProfile profile;
         public String profileId;
         @ShortcutType
         public String shortcutType;
@@ -179,7 +179,7 @@ public class ProfileApplierActivity extends BaseActivity {
                         getString(R.string.on),
                         getString(R.string.off)
                 };
-                @AppsProfile.ProfileState final List<String> states = Arrays.asList(AppsProfile.STATE_ON, AppsProfile.STATE_OFF);
+                @BaseProfile.ProfileState final List<String> states = Arrays.asList(BaseProfile.STATE_ON, BaseProfile.STATE_OFF);
                 DialogTitleBuilder titleBuilder = new DialogTitleBuilder(this)
                         .setTitle(getString(R.string.apply_profile, info.profile.name))
                         .setSubtitle(R.string.choose_a_profile_state);
@@ -212,7 +212,7 @@ public class ProfileApplierActivity extends BaseActivity {
             ThreadUtils.postOnBackgroundThread(() -> {
                 Path profilePath = ProfileManager.findProfilePathById(info.profileId);
                 try {
-                    info.profile = AppsProfile.fromPath(profilePath);
+                    info.profile = BaseProfile.fromPath(profilePath);
                     mProfileLiveData.postValue(info);
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
