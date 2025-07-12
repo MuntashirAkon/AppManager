@@ -58,15 +58,15 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
     }
 
-    private AppsProfileActivity mActivity;
+    private AppsBaseProfileActivity mActivity;
     private SwipeRefreshLayout mSwipeRefresh;
     private LinearProgressIndicator mProgressIndicator;
-    private ProfileViewModel mModel;
+    private AppsProfileViewModel mModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (AppsProfileActivity) requireActivity();
+        mActivity = (AppsBaseProfileActivity) requireActivity();
     }
 
     @Nullable

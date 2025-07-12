@@ -49,7 +49,7 @@ public class AddToProfileDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         String[] packages = requireArguments().getStringArray(ARG_PKGS);
         // TODO: 16/9/23 Migrate to bottom sheet dialog and use loader before retrieving the profiles
-        List<AppsProfile> profiles = ExUtils.requireNonNullElse(ProfileManager::getProfiles, Collections.emptyList());
+        List<AppsProfile> profiles = ExUtils.requireNonNullElse(() -> ProfileManager.getProfiles(AppsProfile.PROFILE_TYPE_APPS), Collections.emptyList());
         List<CharSequence> profileNames = new ArrayList<>(profiles.size());
         for (AppsProfile profile : profiles) {
             profileNames.add(new SpannableStringBuilder(profile.name).append("\n")

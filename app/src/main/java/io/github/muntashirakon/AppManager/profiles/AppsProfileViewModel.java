@@ -41,7 +41,10 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.profiles.struct.AppsBaseProfile;
+import io.github.muntashirakon.AppManager.profiles.struct.AppsFilterProfile;
 import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
+import io.github.muntashirakon.AppManager.profiles.struct.BaseProfile;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -49,7 +52,7 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Path;
 
-public class ProfileViewModel extends AndroidViewModel {
+public class AppsProfileViewModel extends AndroidViewModel {
     private final Object mProfileLock = new Object();
     private final MutableLiveData<Pair<Integer, Boolean>> mToast = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<Pair<CharSequence, ApplicationInfo>>> mInstalledApps = new MutableLiveData<>();
@@ -60,13 +63,13 @@ public class ProfileViewModel extends AndroidViewModel {
     private MutableLiveData<ArrayList<AppsFragment.AppsFragmentItem>> packagesLiveData;
     @GuardedBy("profileLock")
     @Nullable
-    private AppsProfile mProfile;
+    private AppsBaseProfile mProfile;
     private boolean mIsModified;
     @Nullable
     private Future<?> mLoadProfileResult;
     private Future<?> mLoadAppsResult;
 
-    public ProfileViewModel(@NonNull Application application) {
+    public AppsProfileViewModel(@NonNull Application application) {
         super(application);
     }
 
@@ -140,8 +143,8 @@ public class ProfileViewModel extends AndroidViewModel {
                         return;
                     }
                 }
-                List<String> selectedPackages = mProfile != null ?
-                        Arrays.asList(mProfile.packages) : Collections.emptyList();
+                List<String> selectedPackages = mProfile instanceof AppsProfile ?
+                        Arrays.asList(((AppsProfile) mProfile).packages) : Collections.emptyList();
                 Collator collator = Collator.getInstance();
                 Collections.sort(itemPairs, (o1, o2) -> collator.compare(o1.first.toString(), o2.first.toString()));
                 Collections.sort(itemPairs, (o1, o2) -> {
@@ -198,7 +201,7 @@ public class ProfileViewModel extends AndroidViewModel {
         synchronized (mProfileLock) {
             Path profilePath = ProfileManager.findProfilePathById(profileId);
             try {
-                mProfile = AppsProfile.fromPath(profilePath);
+                mProfile = (AppsBaseProfile) BaseProfile.fromPath(profilePath);
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
@@ -209,7 +212,7 @@ public class ProfileViewModel extends AndroidViewModel {
     @GuardedBy("profileLock")
     private void cloneProfileInternal(@NonNull String newProfileName) {
         synchronized (mProfileLock) {
-            mProfile = AppsProfile.newProfile(newProfileName, mProfile);
+            mProfile = (AppsBaseProfile) BaseProfile.newProfile(newProfileName, mProfile.type, mProfile);
         }
     }
 
@@ -230,17 +233,34 @@ public class ProfileViewModel extends AndroidViewModel {
         });
     }
 
+
     @AnyThread
-    public void loadNewProfile(@NonNull String newProfileName, @Nullable String[] initialPackages) {
+    public void loadNewAppsProfile(@NonNull String newProfileName, @Nullable String[] initialPackages) {
+        if (mLoadProfileResult != null) {
+            mLoadProfileResult.cancel(true);
+        }
+        mLoadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
+            AppsProfile appsProfile;
+            synchronized (mProfileLock) {
+                appsProfile = (AppsProfile) BaseProfile.newProfile(newProfileName, BaseProfile.PROFILE_TYPE_APPS, null);
+            }
+            if (initialPackages != null) {
+                appsProfile.packages = initialPackages;
+            }
+            mProfile = appsProfile;
+            setModified(true);
+            mProfileLoaded.postValue(mProfile != null ? mProfile.name : null);
+        });
+    }
+
+    @AnyThread
+    public void loadNewAppsFilterProfile(@NonNull String newProfileName) {
         if (mLoadProfileResult != null) {
             mLoadProfileResult.cancel(true);
         }
         mLoadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
             synchronized (mProfileLock) {
-                mProfile = AppsProfile.newProfile(newProfileName, null);
-            }
-            if (initialPackages != null) {
-                mProfile.packages = initialPackages;
+                mProfile = (AppsFilterProfile) BaseProfile.newProfile(newProfileName, BaseProfile.PROFILE_TYPE_APPS_FILTER, null);
             }
             setModified(true);
             mProfileLoaded.postValue(mProfile != null ? mProfile.name : null);
@@ -269,9 +289,10 @@ public class ProfileViewModel extends AndroidViewModel {
     @GuardedBy("profileLock")
     public void setPackages(@NonNull List<String> packages) {
         if (mProfile == null) return;
+        assert mProfile instanceof AppsProfile;
         setModified(true);
         synchronized (mProfileLock) {
-            mProfile.packages = packages.toArray(new String[0]);
+            ((AppsProfile) mProfile).packages = packages.toArray(new String[0]);
             Log.e("Packages", "%s", packages);
             loadPackages();
         }
@@ -280,8 +301,10 @@ public class ProfileViewModel extends AndroidViewModel {
     @GuardedBy("profileLock")
     public void deletePackage(@NonNull String packageName) {
         if (mProfile == null) return;
+        assert mProfile instanceof AppsProfile;
         synchronized (mProfileLock) {
-            mProfile.packages = Objects.requireNonNull(ArrayUtils.removeString(mProfile.packages, packageName));
+            AppsProfile profile = (AppsProfile) mProfile;
+            profile.packages = Objects.requireNonNull(ArrayUtils.removeString(profile.packages, packageName));
             loadPackages();
         }
     }
@@ -351,7 +374,8 @@ public class ProfileViewModel extends AndroidViewModel {
         if (mProfile == null) {
             return Collections.emptyList();
         }
-        return Arrays.asList(mProfile.packages);
+        assert mProfile instanceof AppsProfile;
+        return Arrays.asList(((AppsProfile) mProfile).packages);
     }
 
     @AnyThread
@@ -361,43 +385,51 @@ public class ProfileViewModel extends AndroidViewModel {
         }
         mLoadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
             synchronized (mProfileLock) {
-                if (mProfile == null) return; // Can happen
-                ArrayList<AppsFragment.AppsFragmentItem> oldItems = packagesLiveData.getValue();
-                ArrayList<AppsFragment.AppsFragmentItem> items = new ArrayList<>(mProfile.packages.length);
-                int userId = UserHandleHidden.myUserId();
-                PackageManager pm = getApplication().getPackageManager();
-                for (String packageName : mProfile.packages) {
-                    AppsFragment.AppsFragmentItem item = new AppsFragment.AppsFragmentItem(packageName);
-                    // Check for old item for faster loading in case there are hundreds of items
-                    if (oldItems != null) {
-                        int i = oldItems.indexOf(item);
-                        if (i != -1) {
-                            AppsFragment.AppsFragmentItem oldItem = oldItems.get(i);
-                            if (oldItem.applicationInfo != null) {
-                                item.applicationInfo = oldItem.applicationInfo;
-                                item.label = oldItem.label;
-                            }
-                        }
-                    }
-                    if (item.applicationInfo == null) {
-                        try {
-                            item.applicationInfo = PackageManagerCompat.getApplicationInfo(packageName,
-                                    MATCH_UNINSTALLED_PACKAGES | MATCH_DISABLED_COMPONENTS
-                                            | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
-                        } catch (RemoteException | PackageManager.NameNotFoundException ignore) {
-                        }
-                        if (item.applicationInfo != null) {
-                            item.label = item.applicationInfo.loadLabel(pm);
-                        }
-                        if (Objects.equals(item.label, packageName)) {
-                            item.label = null;
-                        }
-                    }
-                    items.add(item);
+                if (mProfile instanceof AppsProfile) {
+                    packagesLiveData.postValue(loadAppsPackages((AppsProfile) mProfile));
+                } else if (mProfile instanceof AppsFilterProfile) {
+                    // TODO: 7/11/25
                 }
-                packagesLiveData.postValue(items);
             }
         });
+    }
+
+    @NonNull
+    private ArrayList<AppsFragment.AppsFragmentItem> loadAppsPackages(@NonNull AppsProfile profile) {
+        ArrayList<AppsFragment.AppsFragmentItem> oldItems = packagesLiveData.getValue();
+        ArrayList<AppsFragment.AppsFragmentItem> items = new ArrayList<>(profile.packages.length);
+        int userId = UserHandleHidden.myUserId();
+        PackageManager pm = getApplication().getPackageManager();
+        for (String packageName : profile.packages) {
+            AppsFragment.AppsFragmentItem item = new AppsFragment.AppsFragmentItem(packageName);
+            // Check for old item for faster loading in case there are hundreds of items
+            if (oldItems != null) {
+                int i = oldItems.indexOf(item);
+                if (i != -1) {
+                    AppsFragment.AppsFragmentItem oldItem = oldItems.get(i);
+                    if (oldItem.applicationInfo != null) {
+                        item.applicationInfo = oldItem.applicationInfo;
+                        item.label = oldItem.label;
+                    }
+                }
+            }
+            if (item.applicationInfo == null) {
+                try {
+                    item.applicationInfo = PackageManagerCompat.getApplicationInfo(packageName,
+                            MATCH_UNINSTALLED_PACKAGES | MATCH_DISABLED_COMPONENTS
+                                    | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
+                } catch (RemoteException | PackageManager.NameNotFoundException ignore) {
+                }
+                if (item.applicationInfo != null) {
+                    item.label = item.applicationInfo.loadLabel(pm);
+                }
+                if (Objects.equals(item.label, packageName)) {
+                    item.label = null;
+                }
+            }
+            items.add(item);
+        }
+        return items;
     }
 
     public void putBoolean(@NonNull String key, boolean value) {
@@ -462,16 +494,16 @@ public class ProfileViewModel extends AndroidViewModel {
         mProfile.comment = comment;
     }
 
-    public void setState(@AppsProfile.ProfileState String state) {
+    public void setState(@BaseProfile.ProfileState String state) {
         if (mProfile == null) return;
         setModified(true);
         mProfile.state = state;
     }
 
     @NonNull
-    @AppsProfile.ProfileState
+    @BaseProfile.ProfileState
     public String getState() {
-        return mProfile == null || mProfile.state == null ? AppsProfile.STATE_OFF : mProfile.state;
+        return mProfile == null || mProfile.state == null ? BaseProfile.STATE_OFF : mProfile.state;
     }
 
     public void setUsers(@Nullable int[] users) {
@@ -567,14 +599,14 @@ public class ProfileViewModel extends AndroidViewModel {
         return appOpsStr;
     }
 
-    public void setBackupInfo(@Nullable AppsProfile.BackupInfo backupInfo) {
+    public void setBackupInfo(@Nullable AppsBaseProfile.BackupInfo backupInfo) {
         if (mProfile == null) return;
         setModified(true);
         mProfile.backupData = backupInfo;
     }
 
     @Nullable
-    public AppsProfile.BackupInfo getBackupInfo() {
+    public AppsBaseProfile.BackupInfo getBackupInfo() {
         if (mProfile == null) return null;
         return mProfile.backupData;
     }

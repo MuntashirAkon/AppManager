@@ -18,11 +18,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.Future;
 
-import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
+import io.github.muntashirakon.AppManager.profiles.struct.BaseProfile;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class ProfilesViewModel extends AndroidViewModel {
-    private final MutableLiveData<HashMap<AppsProfile, CharSequence>> mProfilesLiveData = new MutableLiveData<>();
+    private final MutableLiveData<HashMap<BaseProfile, CharSequence>> mProfilesLiveData = new MutableLiveData<>();
     private Future<?> mProfileResult;
     private FileObserver mFileObserver;
 
@@ -38,7 +38,7 @@ public class ProfilesViewModel extends AndroidViewModel {
         super.onCleared();
     }
 
-    public LiveData<HashMap<AppsProfile, CharSequence>> getProfilesLiveData() {
+    public LiveData<HashMap<BaseProfile, CharSequence>> getProfilesLiveData() {
         return mProfilesLiveData;
     }
 
@@ -49,7 +49,7 @@ public class ProfilesViewModel extends AndroidViewModel {
         mProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
             synchronized (mProfilesLiveData) {
                 try {
-                    HashMap<AppsProfile, CharSequence> profiles = ProfileManager.getProfileSummaries(getApplication());
+                    HashMap<BaseProfile, CharSequence> profiles = ProfileManager.getProfileSummaries(getApplication());
                     setUpObserverAndStart();
                     mProfilesLiveData.postValue(profiles);
                 } catch (IOException | JSONException e) {

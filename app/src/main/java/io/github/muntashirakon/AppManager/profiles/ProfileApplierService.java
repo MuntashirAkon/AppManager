@@ -123,7 +123,7 @@ public class ProfileApplierService extends ForegroundService {
     protected void onStartIntent(@Nullable Intent intent) {
         ProfileQueueItem item = getQueueItem(intent);
         if (item != null) {
-            Intent notificationIntent = AppsProfileActivity.getProfileIntent(this, item.getProfileId());
+            Intent notificationIntent = ProfileManager.getProfileIntent(this, item.getProfileType(), item.getProfileId());
             PendingIntent pendingIntent = PendingIntentCompat.getActivity(this, 0, notificationIntent,
                     0, false);
             mNotificationInfo.setDefaultAction(pendingIntent);

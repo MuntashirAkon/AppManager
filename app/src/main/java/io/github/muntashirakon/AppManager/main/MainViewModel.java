@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Handler;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
 import android.text.TextUtils;
@@ -57,6 +56,7 @@ import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
+import io.github.muntashirakon.AppManager.profiles.struct.BaseProfile;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -405,37 +405,43 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     private void filterItemsByFlags() {
         synchronized (mApplicationItems) {
             List<ApplicationItem> candidateApplicationItems = new ArrayList<>();
+            boolean profileApplied = false;
             if (mFilterProfileName != null) {
                 String profileId = ProfileManager.getProfileIdCompat(mFilterProfileName);
                 Path profilePath = ProfileManager.findProfilePathById(profileId);
                 try {
-                    AppsProfile profile = AppsProfile.fromPath(profilePath);
-                    List<Integer> indexes = new ArrayList<>();
-                    for (String packageName : profile.packages) {
-                        if (ThreadUtils.isInterrupted()) {
-                            return;
+                    BaseProfile profile = BaseProfile.fromPath(profilePath);
+                    if (profile instanceof AppsProfile) {
+                        AppsProfile appsProfile = (AppsProfile) profile;
+                        List<Integer> indexes = new ArrayList<>();
+                        for (String packageName : appsProfile.packages) {
+                            if (ThreadUtils.isInterrupted()) {
+                                return;
+                            }
+                            ApplicationItem item = new ApplicationItem();
+                            item.packageName = packageName;
+                            int index = mApplicationItems.indexOf(item);
+                            if (index != -1) {
+                                indexes.add(index);
+                            }
                         }
-                        ApplicationItem item = new ApplicationItem();
-                        item.packageName = packageName;
-                        int index = mApplicationItems.indexOf(item);
-                        if (index != -1) {
-                            indexes.add(index);
+                        Collections.sort(indexes);
+                        for (int index : indexes) {
+                            if (ThreadUtils.isInterrupted()) {
+                                return;
+                            }
+                            ApplicationItem item = mApplicationItems.get(index);
+                            if (isAmongSelectedUsers(item)) {
+                                candidateApplicationItems.add(item);
+                            }
                         }
-                    }
-                    Collections.sort(indexes);
-                    for (int index : indexes) {
-                        if (ThreadUtils.isInterrupted()) {
-                            return;
-                        }
-                        ApplicationItem item = mApplicationItems.get(index);
-                        if (isAmongSelectedUsers(item)) {
-                            candidateApplicationItems.add(item);
-                        }
+                        profileApplied = true;
                     }
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
-            } else {
+            }
+            if (!profileApplied) {
                 for (ApplicationItem item : mApplicationItems) {
                     if (ThreadUtils.isInterrupted()) {
                         return;

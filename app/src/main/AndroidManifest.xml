@@ -692,6 +692,11 @@
             android:label="@string/profiles" />
         <activity
             android:name=".profiles.AppsProfileActivity"
+            android:enableOnBackInvokedCallback="true"
+            android:exported="false" />
+        <activity
+            android:name=".profiles.AppsFilterProfileActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="false" />
         <activity
             android:name=".sysconfig.SysConfigActivity"
