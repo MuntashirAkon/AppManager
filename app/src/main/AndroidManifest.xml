@@ -170,18 +170,22 @@
         tools:ignore="UnusedAttribute">
         <activity
             android:name=".filters.FinderActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="false"
             android:label="@string/finder_title" />
         <activity
             android:name=".oneclickops.OneClickOpsActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="false"
             android:label="@string/one_click_ops" />
         <activity
             android:name=".runningapps.RunningAppsActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="true"
             android:label="@string/running_apps" />
         <activity
             android:name=".settings.SettingsActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="true"
             android:label="@string/app_settings"
             android:launchMode="singleTop">
@@ -202,14 +206,17 @@
         </activity>
         <activity
             android:name=".sharedpref.SharedPrefsActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="false"
             android:taskAffinity="" />
         <activity
             android:name=".usage.AppUsageActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="true" />
         <activity
             android:name=".editor.CodeEditorActivity"
             android:configChanges="keyboard|keyboardHidden|locale|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+            android:enableOnBackInvokedCallback="true"
             android:exported="false"
             android:label="@string/title_code_editor"
             android:taskAffinity=".editor.CodeEditorActivity"
@@ -366,6 +373,7 @@
 
         <activity
             android:name=".scanner.ScannerActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="true"
             android:label="@string/scanner">
             <intent-filter>
@@ -391,6 +399,7 @@
         </activity>
         <activity
             android:name=".viewer.ExplorerActivity"
+            android:enableOnBackInvokedCallback="false"
             android:enabled="true"
             android:exported="true"
             android:label="@string/explore"
@@ -425,6 +434,7 @@
         </activity>
         <activity
             android:name=".main.MainActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="true">
             <intent-filter android:label="@string/search">
                 <action android:name="android.intent.action.VIEW" />
@@ -439,18 +449,21 @@
         </activity>
         <activity
             android:name=".runner.TermActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="false"
             android:label="@string/title_terminal_emulator"
             android:taskAffinity=""
             android:windowSoftInputMode="stateUnchanged" />
         <activity
             android:name=".accessibility.activity.LeadingActivityTrackerActivity"
+            android:enableOnBackInvokedCallback="false"
             android:excludeFromRecents="true"
             android:exported="false"
             android:label="@string/title_ui_tracker"
             android:theme="@style/AppTheme.TransparentBackground" />
         <activity
             android:name=".misc.LabsActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="true"
             android:label="@string/title_labs_activity" />
 
@@ -541,13 +554,16 @@
 
         <activity
             android:name=".debloat.DebloaterActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="false"
             android:label="@string/debloater_title" />
         <activity
             android:name=".details.AppDetailsActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="false" />
         <activity
             android:name=".details.manifest.ManifestViewerActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="true"
             android:label="@string/manifest_viewer">
             <intent-filter>
@@ -573,6 +589,7 @@
         </activity>
         <activity
             android:name=".apk.installer.PackageInstallerActivity"
+            android:enableOnBackInvokedCallback="false"
             android:excludeFromRecents="true"
             android:exported="true"
             android:label="@string/install"
@@ -654,6 +671,7 @@
         </activity>
         <activity
             android:name=".crypto.OpenPGPCryptoActivity"
+            android:enableOnBackInvokedCallback="false"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="singleInstance"
@@ -661,6 +679,7 @@
             android:theme="@style/AppTheme.TransparentBackground" />
         <activity
             android:name=".crypto.ks.KeyStoreActivity"
+            android:enableOnBackInvokedCallback="false"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="singleInstance"
@@ -668,6 +687,7 @@
             android:theme="@style/AppTheme.TransparentBackground" />
         <activity
             android:name=".profiles.ProfilesActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="true"
             android:label="@string/profiles" />
         <activity
@@ -675,21 +695,25 @@
             android:exported="false" />
         <activity
             android:name=".sysconfig.SysConfigActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="false"
             android:label="@string/sys_config" />
         <activity
             android:name=".batchops.BatchOpsResultsActivity"
+            android:enableOnBackInvokedCallback="true"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="singleInstance"
             android:taskAffinity="" />
         <activity
             android:name=".history.ops.OpHistoryActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="true"
             android:icon="@drawable/ic_history"
             android:label="@string/op_history" />
         <activity
             android:name=".intercept.ActivityInterceptor"
+            android:enableOnBackInvokedCallback="true"
             android:enabled="true"
             android:exported="true"
             android:label="@string/interceptor"
@@ -1013,26 +1037,31 @@
         </activity>
         <activity
             android:name=".misc.HelpActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="true"
             android:launchMode="singleTop"
             android:taskAffinity="" />
         <activity
             android:name=".crypto.auth.AuthManagerActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="false"
             android:label="@string/auth_manager_title" />
         <activity
             android:name=".crypto.auth.AuthFeatureDemultiplexer"
+            android:enableOnBackInvokedCallback="false"
             android:exported="true" />
         <activity
             android:name=".details.ActivityLauncherShortcutActivity"
+            android:enableOnBackInvokedCallback="false"
             android:excludeFromRecents="true"
-            android:noHistory="true"
             android:exported="false"
             android:launchMode="singleTask"
+            android:noHistory="true"
             android:taskAffinity=".details.ActivityLauncherShortcutActivity"
             android:theme="@style/AppTheme.TransparentBackground" />
         <activity
             android:name=".apk.behavior.FreezeUnfreezeActivity"
+            android:enableOnBackInvokedCallback="false"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="singleInstance"
@@ -1040,6 +1069,7 @@
             android:theme="@style/AppTheme.TransparentBackground" />
         <activity
             android:name=".profiles.ProfileApplierActivity"
+            android:enableOnBackInvokedCallback="false"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="singleInstance"
@@ -1047,6 +1077,7 @@
             android:theme="@style/AppTheme.TransparentBackground" />
         <activity
             android:name=".main.SplashActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round"
@@ -1061,6 +1092,7 @@
         </activity>
         <activity
             android:name=".logcat.LogViewerActivity"
+            android:enableOnBackInvokedCallback="true"
             android:enabled="true"
             android:exported="true"
             android:label="@string/log_viewer"
@@ -1103,10 +1135,12 @@
         </activity>
         <activity
             android:name=".logcat.RecordLogDialogActivity"
+            android:enableOnBackInvokedCallback="false"
             android:exported="true"
             android:theme="@style/AppTheme.TransparentBackground" />
         <activity
             android:name=".fm.FmActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="true"
             android:icon="@mipmap/ic_launcher_fm"
             android:label="@string/files"
@@ -1153,11 +1187,13 @@
 
         <activity
             android:name=".fm.OpenWithActivity"
+            android:enableOnBackInvokedCallback="false"
             android:exported="false"
             android:label="@string/file_open_with"
             android:theme="@style/AppTheme.TransparentBackground" />
         <activity
             android:name=".viewer.audio.AudioPlayerActivity"
+            android:enableOnBackInvokedCallback="false"
             android:excludeFromRecents="true"
             android:exported="true"
             android:label="@string/title_audio_player"
@@ -1199,6 +1235,7 @@
             android:allowTaskReparenting="true"
             android:alwaysRetainTaskState="false"
             android:clearTaskOnLaunch="true"
+            android:enableOnBackInvokedCallback="false"
             android:enabled="true"
             android:excludeFromRecents="true"
             android:finishOnTaskLaunch="true"

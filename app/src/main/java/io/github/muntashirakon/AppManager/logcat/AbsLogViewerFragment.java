@@ -50,7 +50,8 @@ import io.github.muntashirakon.widget.MultiSelectionView;
 public abstract class AbsLogViewerFragment extends Fragment implements MenuProvider,
         LogViewerViewModel.LogLinesAvailableInterface,
         MultiSelectionActionsView.OnItemSelectedListener,
-        LogViewerActivity.SearchingInterface, Filter.FilterListener {
+        MultiSelectionView.OnSelectionModeChangeListener,
+        LogViewerActivity.SearchingInterface, Filter.FilterListener{
     public static final String TAG = AbsLogViewerFragment.class.getSimpleName();
 
     protected RecyclerView mRecyclerView;
@@ -82,14 +83,14 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
             }
         }
     };
-    private final OnBackPressedCallback mOnBackPressedCallback = new OnBackPressedCallback(true) {
+    private final OnBackPressedCallback mOnBackPressedCallback = new OnBackPressedCallback(false) {
         @Override
         public void handleOnBackPressed() {
             if (mLogListAdapter.isInSelectionMode()) {
                 mMultiSelectionView.cancel();
             } else {
                 setEnabled(false);
-                requireActivity().onBackPressed();
+                requireActivity().getOnBackPressedDispatcher().onBackPressed();
             }
         }
     };
@@ -119,6 +120,7 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
         mMultiSelectionView = view.findViewById(R.id.selection_view);
         mMultiSelectionView.setAdapter(mLogListAdapter);
         mMultiSelectionView.setOnItemSelectedListener(this);
+        mMultiSelectionView.setOnSelectionModeChangeListener(this);
         mMultiSelectionView.hide();
         mRecyclerView.setAdapter(mLogListAdapter);
         mRecyclerView.addOnScrollListener(mRecyclerViewScrollListener);
@@ -215,6 +217,16 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
             return true;
         } else return false;
         return true;
+    }
+
+    @Override
+    public void onSelectionModeEnabled() {
+        mOnBackPressedCallback.setEnabled(true);
+    }
+
+    @Override
+    public void onSelectionModeDisabled() {
+        mOnBackPressedCallback.setEnabled(false);
     }
 
     @CallSuper

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.widget.Button;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -37,6 +37,17 @@ public class HelpActivity extends BaseActivity implements SearchView.OnQueryText
     private WebView mWebView;
     private LinearLayoutCompat mSearchContainer;
     private SearchView mSearchView;
+    private final OnBackPressedCallback mOnBackPressedCallback = new OnBackPressedCallback(false) {
+        @Override
+        public void handleOnBackPressed() {
+            if (mWebView.canGoBack()) {
+                mWebView.goBack();
+                return;
+            }
+            setEnabled(false);
+            getOnBackPressedDispatcher().onBackPressed();
+        }
+    };
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
@@ -47,6 +58,7 @@ public class HelpActivity extends BaseActivity implements SearchView.OnQueryText
             return;
         }
         setSupportActionBar(findViewById(R.id.toolbar));
+        getOnBackPressedDispatcher().addCallback(this, mOnBackPressedCallback);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setTitle(R.string.user_manual);
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
@@ -100,18 +112,6 @@ public class HelpActivity extends BaseActivity implements SearchView.OnQueryText
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // Check if the key event was the Back button and if there's history
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
-            mWebView.goBack();
-            return true;
-        }
-        // If it wasn't the Back key or there's no web page history, bubble up to the default
-        // system behavior (probably exit the activity)
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
@@ -159,6 +159,11 @@ public class HelpActivity extends BaseActivity implements SearchView.OnQueryText
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
             return true;
+        }
+
+        @Override
+        public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
+            mOnBackPressedCallback.setEnabled(view.canGoBack());
         }
     }
 }

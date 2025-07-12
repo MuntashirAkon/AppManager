@@ -67,7 +67,7 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
         mAllClasses = mViewModel.getAllClasses();
         mTrackerClasses = mViewModel.getTrackerClasses();
         if (mAllClasses == null) {
-            mActivity.onBackPressed();
+            mActivity.getOnBackPressedDispatcher().onBackPressed();
             return;
         }
         if (mTrackerClasses == null) {

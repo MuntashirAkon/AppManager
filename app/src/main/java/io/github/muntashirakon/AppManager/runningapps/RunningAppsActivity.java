@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,7 +49,8 @@ import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class RunningAppsActivity extends BaseActivity implements MultiSelectionView.OnSelectionChangeListener,
-        MultiSelectionActionsView.OnItemSelectedListener, AdvancedSearchView.OnQueryTextListener {
+        MultiSelectionActionsView.OnItemSelectedListener, AdvancedSearchView.OnQueryTextListener,
+        MultiSelectionView.OnSelectionModeChangeListener {
 
     @IntDef(value = {
             SORT_BY_PID,
@@ -98,11 +100,23 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     @Nullable
     private Menu mSelectionMenu;
     private Timer mTimer;
+    private final OnBackPressedCallback mOnBackPressedCallback = new OnBackPressedCallback(false) {
+        @Override
+        public void handleOnBackPressed() {
+            if (mAdapter != null && mMultiSelectionView != null && mAdapter.isInSelectionMode()) {
+                mMultiSelectionView.cancel();
+                return;
+            }
+            setEnabled(false);
+            getOnBackPressedDispatcher().onBackPressed();
+        }
+    };
 
     @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_running_apps);
         setSupportActionBar(findViewById(R.id.toolbar));
+        getOnBackPressedDispatcher().addCallback(this, mOnBackPressedCallback);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
@@ -120,6 +134,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         recyclerView.requestFocus();
         mMultiSelectionView = findViewById(R.id.selection_view);
         mMultiSelectionView.setOnItemSelectedListener(this);
+        mMultiSelectionView.setOnSelectionModeChangeListener(this);
         mMultiSelectionView.setOnSelectionChangeListener(this);
         mMultiSelectionView.setAdapter(mAdapter);
         mMultiSelectionView.updateCounter(true);
@@ -209,15 +224,6 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
                 mAdapter.setDeviceMemoryInfo(deviceMemoryInfo);
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mAdapter != null && mMultiSelectionView != null && mAdapter.isInSelectionMode()) {
-            mMultiSelectionView.cancel();
-            return;
-        }
-        super.onBackPressed();
     }
 
     @Override
@@ -314,6 +320,16 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onSelectionModeEnabled() {
+        mOnBackPressedCallback.setEnabled(true);
+    }
+
+    @Override
+    public void onSelectionModeDisabled() {
+        mOnBackPressedCallback.setEnabled(false);
     }
 
     @Override

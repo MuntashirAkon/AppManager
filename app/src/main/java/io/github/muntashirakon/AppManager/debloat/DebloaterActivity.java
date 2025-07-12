@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -39,11 +40,13 @@ import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.RecyclerView;
 
 public class DebloaterActivity extends BaseActivity implements MultiSelectionView.OnSelectionChangeListener,
-        MultiSelectionActionsView.OnItemSelectedListener, AdvancedSearchView.OnQueryTextListener {
+        MultiSelectionActionsView.OnItemSelectedListener, AdvancedSearchView.OnQueryTextListener,
+        MultiSelectionView.OnSelectionModeChangeListener {
     DebloaterViewModel viewModel;
 
     private LinearProgressIndicator mProgressIndicator;
     private MultiSelectionView mMultiSelectionView;
+    private DebloaterRecyclerViewAdapter mAdapter;
 
     private final StoragePermission mStoragePermission = StoragePermission.init(this);
     private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
@@ -54,11 +57,23 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
             }
         }
     };
+    private final OnBackPressedCallback mOnBackPressedCallback = new OnBackPressedCallback(false) {
+        @Override
+        public void handleOnBackPressed() {
+            if (mAdapter != null && mMultiSelectionView != null && mAdapter.isInSelectionMode()) {
+                mMultiSelectionView.cancel();
+                return;
+            }
+            setEnabled(false);
+            getOnBackPressedDispatcher().onBackPressed();
+        }
+    };
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_debloater);
         setSupportActionBar(findViewById(R.id.toolbar));
+        getOnBackPressedDispatcher().addCallback(this, mOnBackPressedCallback);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -72,17 +87,18 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(this));
-        DebloaterRecyclerViewAdapter adapter = new DebloaterRecyclerViewAdapter(this);
-        recyclerView.setAdapter(adapter);
+        mAdapter = new DebloaterRecyclerViewAdapter(this);
+        recyclerView.setAdapter(mAdapter);
         mMultiSelectionView = findViewById(R.id.selection_view);
-        mMultiSelectionView.setAdapter(adapter);
+        mMultiSelectionView.setAdapter(mAdapter);
         mMultiSelectionView.hide();
         mMultiSelectionView.setOnItemSelectedListener(this);
+        mMultiSelectionView.setOnSelectionModeChangeListener(this);
         mMultiSelectionView.setOnSelectionChangeListener(this);
 
         viewModel.getDebloatObjectListLiveData().observe(this, debloatObjects -> {
             mProgressIndicator.hide();
-            adapter.setAdapterList(debloatObjects);
+            mAdapter.setAdapterList(debloatObjects);
         });
         viewModel.loadPackages();
     }
@@ -118,6 +134,16 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSelectionModeEnabled() {
+        mOnBackPressedCallback.setEnabled(true);
+    }
+
+    @Override
+    public void onSelectionModeDisabled() {
+        mOnBackPressedCallback.setEnabled(false);
     }
 
     @Override

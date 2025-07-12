@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -90,7 +91,8 @@ import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
 public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQueryTextListener,
-        SwipeRefreshLayout.OnRefreshListener, MultiSelectionActionsView.OnItemSelectedListener {
+        SwipeRefreshLayout.OnRefreshListener, MultiSelectionActionsView.OnItemSelectedListener,
+        MultiSelectionView.OnSelectionModeChangeListener {
     private static final String PACKAGE_NAME_APK_UPDATER = "com.apkupdater";
     private static final String ACTIVITY_NAME_APK_UPDATER = "com.apkupdater.activity.MainActivity";
 
@@ -177,11 +179,24 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         }
     };
 
+    private final OnBackPressedCallback mOnBackPressedCallback = new OnBackPressedCallback(false) {
+        @Override
+        public void handleOnBackPressed() {
+            if (mAdapter != null && mMultiSelectionView != null && mAdapter.isInSelectionMode()) {
+                mMultiSelectionView.cancel();
+                return;
+            }
+            setEnabled(false);
+            getOnBackPressedDispatcher().onBackPressed();
+        }
+    };
+
     @SuppressLint("RestrictedApi")
     @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.toolbar));
+        getOnBackPressedDispatcher().addCallback(this, mOnBackPressedCallback);
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -225,6 +240,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         recyclerView.setAdapter(mAdapter);
         mMultiSelectionView = findViewById(R.id.selection_view);
         mMultiSelectionView.setOnItemSelectedListener(this);
+        mMultiSelectionView.setOnSelectionModeChangeListener(this);
         mMultiSelectionView.setAdapter(mAdapter);
         mMultiSelectionView.updateCounter(true);
         mBatchOpsHandler = new MainBatchOpsHandler(mMultiSelectionView, viewModel);
@@ -262,15 +278,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                 UIUtils.displayLongToast(R.string.failed);
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mAdapter != null && mMultiSelectionView != null && mAdapter.isInSelectionMode()) {
-            mMultiSelectionView.cancel();
-            return;
-        }
-        super.onBackPressed();
     }
 
     @Override
@@ -351,6 +358,16 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
             startActivity(intent);
         } else return super.onOptionsItemSelected(item);
         return true;
+    }
+
+    @Override
+    public void onSelectionModeEnabled() {
+        mOnBackPressedCallback.setEnabled(true);
+    }
+
+    @Override
+    public void onSelectionModeDisabled() {
+        mOnBackPressedCallback.setEnabled(false);
     }
 
     @Override

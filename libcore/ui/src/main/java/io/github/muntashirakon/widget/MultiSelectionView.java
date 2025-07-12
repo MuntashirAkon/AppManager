@@ -59,6 +59,14 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         boolean onSelectionChange(int selectionCount);
     }
 
+    public interface OnSelectionModeChangeListener {
+        @UiThread
+        void onSelectionModeEnabled();
+
+        @UiThread
+        void onSelectionModeDisabled();
+    }
+
     private final MultiSelectionActionsView mSelectionActionsView;
     private final View mDivider;
     private final View mCancelSelectionView;
@@ -82,6 +90,8 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
     private Adapter<?> mAdapter;
     @Nullable
     private OnSelectionChangeListener mSelectionChangeListener;
+    @Nullable
+    private OnSelectionModeChangeListener mSelectionModeChangeListener;
     @Nullable
     private WindowInsetsCompat mLastInsets;
 
@@ -311,6 +321,9 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
 
     @UiThread
     public void show() {
+        if (mSelectionModeChangeListener != null) {
+            mSelectionModeChangeListener.onSelectionModeEnabled();
+        }
         Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, true);
         TransitionManager.beginDelayedTransition(this, sharedAxis);
         setVisibility(VISIBLE);
@@ -345,6 +358,9 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
             mAdapter.setInSelectionMode(false);
             mAdapter.setSelectionBottomPadding(mSelectionBottomPadding);
         }
+        if (mSelectionModeChangeListener != null) {
+            mSelectionModeChangeListener.onSelectionModeDisabled();
+        }
     }
 
     public void setOnItemSelectedListener(MultiSelectionActionsView.OnItemSelectedListener listener) {
@@ -353,6 +369,10 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
 
     public void setOnSelectionChangeListener(OnSelectionChangeListener selectionChangeListener) {
         mSelectionChangeListener = selectionChangeListener;
+    }
+
+    public void setOnSelectionModeChangeListener(OnSelectionModeChangeListener selectionModeChangeListener) {
+        mSelectionModeChangeListener = selectionModeChangeListener;
     }
 
     @SuppressLint("SetTextI18n")
