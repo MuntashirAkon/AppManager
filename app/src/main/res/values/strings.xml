@@ -1521,4 +1521,5 @@
     <string name="message_shortcut_for_frozen_app">The app corresponding to the shortcut appears to have been frozen. Unfreeze temporarily and open the shortcut?</string>
     <string name="filters">Filters</string>
     <string name="icon">icon</string>
+    <string name="preview">Preview</string>
 </resources>

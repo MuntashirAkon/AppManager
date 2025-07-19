@@ -69,7 +69,7 @@ public class AppsProfileActivity extends AppsBaseProfileActivity {
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         super.onAuthenticated(savedInstanceState);
-        bottomNavigationView.getMenu().removeItem(R.id.action_filters);
+        bottomNavigationView.getMenu().removeItem(R.id.action_preview);
         if (getIntent().hasExtra(EXTRA_SHORTCUT_TYPE)) {
             // Compatibility mode for shortcut
             @ProfileApplierActivity.ShortcutType String shortcutType = getIntent().getStringExtra(EXTRA_SHORTCUT_TYPE);

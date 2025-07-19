@@ -231,7 +231,7 @@ public abstract class AppsBaseProfileActivity extends BaseActivity implements Na
         int itemId = item.getItemId();
         if (itemId == R.id.action_apps) {
             mViewPager.setCurrentItem(0, true);
-        } else if (itemId == R.id.action_filters) {
+        } else if (itemId == R.id.action_preview) {
             mViewPager.setCurrentItem(0, true);
         } else if (itemId == R.id.action_conf) {
             mViewPager.setCurrentItem(1, true);

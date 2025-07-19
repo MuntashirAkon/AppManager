@@ -6,9 +6,9 @@
         android:title="@string/apps" />
 
     <item
-        android:id="@+id/action_filters"
-        android:icon="@drawable/ic_filter_menu"
-        android:title="@string/filters" />
+        android:id="@+id/action_preview"
+        android:icon="@drawable/ic_eye"
+        android:title="@string/preview" />
 
     <item
         android:id="@+id/action_conf"

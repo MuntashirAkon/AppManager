@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.filters;
 
 import android.content.pm.ComponentInfo;
 import android.content.pm.FeatureInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,9 @@ public interface IFilterableAppInfo {
 
     @NonNull
     String getAppLabel();
+
+    @NonNull
+    Drawable getAppIcon();
 
     @Nullable
     String getVersionName();
