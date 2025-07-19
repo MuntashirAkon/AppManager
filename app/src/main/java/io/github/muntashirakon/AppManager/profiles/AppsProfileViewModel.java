@@ -302,6 +302,7 @@ public class AppsProfileViewModel extends AndroidViewModel {
     public void deletePackage(@NonNull String packageName) {
         if (mProfile == null) return;
         assert mProfile instanceof AppsProfile;
+        setModified(true);
         synchronized (mProfileLock) {
             AppsProfile profile = (AppsProfile) mProfile;
             profile.packages = Objects.requireNonNull(ArrayUtils.removeString(profile.packages, packageName));
