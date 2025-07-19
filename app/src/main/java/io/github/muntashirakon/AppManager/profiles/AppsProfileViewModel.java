@@ -7,6 +7,7 @@ import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MAT
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -17,6 +18,7 @@ import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.annotation.WorkerThread;
 import androidx.core.util.Pair;
 import androidx.lifecycle.AndroidViewModel;
@@ -40,6 +42,9 @@ import java.util.concurrent.Future;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.filters.FilterItem;
+import io.github.muntashirakon.AppManager.filters.FilteringUtils;
+import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.profiles.struct.AppsBaseProfile;
 import io.github.muntashirakon.AppManager.profiles.struct.AppsFilterProfile;
@@ -88,6 +93,8 @@ public class AppsProfileViewModel extends AndroidViewModel {
         return mIsModified;
     }
 
+    @SuppressLint("WrongThread") // main thread check present
+    @AnyThread
     public void setModified(boolean modified) {
         if (mIsModified != modified) {
             mIsModified = modified;
@@ -379,6 +386,23 @@ public class AppsProfileViewModel extends AndroidViewModel {
         return Arrays.asList(((AppsProfile) mProfile).packages);
     }
 
+    public FilterItem getFilterItem() {
+        assert mProfile instanceof AppsFilterProfile;
+        return ((AppsFilterProfile) mProfile).getFilterItem();
+    }
+
+    @StringRes
+    public int getPreviewTitleString() {
+        if (mProfile instanceof AppsProfile) {
+            return R.string.apps;
+        } else if (mProfile instanceof AppsFilterProfile) {
+            return R.string.preview;
+        }
+        if (mProfile != null) {
+            throw new UnsupportedOperationException("Invalid profile type: " + mProfile.type);
+        } else throw new UnsupportedOperationException("Profile not initialized");
+    }
+
     @AnyThread
     public void loadPackages() {
         if (mLoadProfileResult != null) {
@@ -389,7 +413,7 @@ public class AppsProfileViewModel extends AndroidViewModel {
                 if (mProfile instanceof AppsProfile) {
                     packagesLiveData.postValue(loadAppsPackages((AppsProfile) mProfile));
                 } else if (mProfile instanceof AppsFilterProfile) {
-                    // TODO: 7/11/25
+                    packagesLiveData.postValue(loadAppsFilteredPackages((AppsFilterProfile) mProfile));
                 }
             }
         });
@@ -428,6 +452,25 @@ public class AppsProfileViewModel extends AndroidViewModel {
                     item.label = null;
                 }
             }
+            items.add(item);
+        }
+        return items;
+    }
+
+    List<IFilterableAppInfo> mFilterableAppInfoList;
+
+    @NonNull
+    private ArrayList<AppsFragment.AppsFragmentItem> loadAppsFilteredPackages(@NonNull AppsFilterProfile profile) {
+        int[] users = profile.users != null ? profile.users : Users.getUsersIds();
+        if (mFilterableAppInfoList == null) {
+            mFilterableAppInfoList = FilteringUtils.loadFilterableAppInfo(users);
+        }
+        List<FilterItem.FilteredItemInfo> filteredItems = profile.getFilterItem().getFilteredList(mFilterableAppInfoList);
+        ArrayList<AppsFragment.AppsFragmentItem> items = new ArrayList<>(filteredItems.size());
+        for (FilterItem.FilteredItemInfo itemInfo : filteredItems) {
+            AppsFragment.AppsFragmentItem item = new AppsFragment.AppsFragmentItem(itemInfo.info.getPackageName());
+            item.label = itemInfo.info.getAppLabel();
+            item.filterableAppInfo = itemInfo.info;
             items.add(item);
         }
         return items;

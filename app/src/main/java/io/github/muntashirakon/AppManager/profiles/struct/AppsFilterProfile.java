@@ -20,6 +20,7 @@ import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.users.Users;
 
 public class AppsFilterProfile extends AppsBaseProfile {
+    @NonNull
     private final FilterItem mFilterItem;
 
     protected AppsFilterProfile(@NonNull String profileId, @NonNull String profileName) {
@@ -37,6 +38,10 @@ public class AppsFilterProfile extends AppsBaseProfile {
         }
     }
 
+    public FilterItem getFilterItem() {
+        return mFilterItem;
+    }
+
     @Override
     public ProfileApplierResult apply(@NonNull String state, @Nullable ProfileLogger logger, @Nullable ProgressHandler progressHandler) {
         // Filter results
@@ -48,9 +53,18 @@ public class AppsFilterProfile extends AppsBaseProfile {
         }
         List<String> packages = new ArrayList<>(filteredList.size());
         List<Integer> assocUsers = new ArrayList<>(filteredList.size());
+        if (logger != null) {
+            logger.println("====> Filtered packages: " + filteredList.size());
+        }
+        StringBuilder sb = new StringBuilder();
         for (FilterItem.FilteredItemInfo info : filteredList) {
             packages.add(info.info.getPackageName());
             assocUsers.add(info.info.getUserId());
+            sb.append("(").append(info.info.getPackageName()).append(", ")
+                    .append(info.info.getUserId()).append("), ");
+        }
+        if (logger != null) {
+            logger.println(sb);
         }
         return apply(packages, assocUsers, state, logger, progressHandler);
     }

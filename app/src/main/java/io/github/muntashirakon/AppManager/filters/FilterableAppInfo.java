@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
@@ -122,6 +123,12 @@ public class FilterableAppInfo implements IFilterableAppInfo {
             mAppLabel = mApplicationInfo.loadLabel(mPm).toString();
         }
         return mAppLabel;
+    }
+
+    @NonNull
+    @Override
+    public Drawable getAppIcon() {
+        return mApplicationInfo.loadIcon(mPm);
     }
 
     @Override
