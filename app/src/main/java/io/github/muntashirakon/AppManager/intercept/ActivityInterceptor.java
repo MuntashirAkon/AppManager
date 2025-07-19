@@ -1164,6 +1164,7 @@ public class ActivityInterceptor extends BaseActivity {
                 super(itemView);
                 title = itemView.findViewById(R.id.item_title);
                 actionIcon = itemView.findViewById(R.id.item_action);
+                actionIcon.setContentDescription(itemView.getContext().getString(R.string.item_remove));
             }
         }
     }
@@ -1217,6 +1218,7 @@ public class ActivityInterceptor extends BaseActivity {
                 super(itemView);
                 title = itemView.findViewById(R.id.item_title);
                 actionIcon = itemView.findViewById(R.id.item_action);
+                actionIcon.setContentDescription(itemView.getContext().getString(R.string.item_remove));
             }
         }
     }
@@ -1280,6 +1282,7 @@ public class ActivityInterceptor extends BaseActivity {
                 subtitle = itemView.findViewById(R.id.item_subtitle);
                 actionIcon = itemView.findViewById(R.id.item_open);
                 actionIcon.setIconResource(R.drawable.ic_trash_can);
+                actionIcon.setContentDescription(itemView.getContext().getString(R.string.item_remove));
                 icon = itemView.findViewById(R.id.item_icon);
                 icon.setVisibility(View.GONE);
             }
@@ -1344,6 +1347,7 @@ public class ActivityInterceptor extends BaseActivity {
                 title = itemView.findViewById(R.id.item_title);
                 subtitle = itemView.findViewById(R.id.item_subtitle);
                 actionIcon = itemView.findViewById(R.id.item_open);
+                actionIcon.setContentDescription(itemView.getContext().getString(R.string.open));
                 icon = itemView.findViewById(R.id.item_icon);
             }
         }

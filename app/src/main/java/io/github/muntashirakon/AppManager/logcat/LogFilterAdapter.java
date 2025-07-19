@@ -83,6 +83,7 @@ public class LogFilterAdapter extends RecyclerView.Adapter<LogFilterAdapter.View
             super(itemView);
             textView = itemView.findViewById(R.id.item_title);
             actionButton = itemView.findViewById(R.id.item_action);
+            actionButton.setContentDescription(itemView.getContext().getString(R.string.item_remove));
         }
     }
 }
