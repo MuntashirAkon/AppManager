@@ -45,7 +45,7 @@ public abstract class AppsBaseProfileActivity extends BaseActivity implements Na
     protected static final String EXTRA_STATE = "state";
 
     private ViewPager2 mViewPager;
-    private NavigationBarView mBottomNavigationView;
+    NavigationBarView bottomNavigationView;
     private MenuItem mPrevMenuItem;
     private final Fragment[] mFragments = new Fragment[3];
     private final ViewPager2.OnPageChangeCallback mPageChangeCallback = new ViewPager2.OnPageChangeCallback() {
@@ -54,10 +54,10 @@ public abstract class AppsBaseProfileActivity extends BaseActivity implements Na
             if (mPrevMenuItem != null) {
                 mPrevMenuItem.setChecked(false);
             } else {
-                mBottomNavigationView.getMenu().getItem(0).setChecked(false);
+                bottomNavigationView.getMenu().getItem(0).setChecked(false);
             }
-            mBottomNavigationView.getMenu().getItem(position).setChecked(true);
-            mPrevMenuItem = mBottomNavigationView.getMenu().getItem(position);
+            bottomNavigationView.getMenu().getItem(position).setChecked(true);
+            mPrevMenuItem = bottomNavigationView.getMenu().getItem(position);
         }
     };
     private final OnBackPressedCallback mOnBackPressedCallback = new OnBackPressedCallback(false) {
@@ -132,8 +132,8 @@ public abstract class AppsBaseProfileActivity extends BaseActivity implements Na
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.registerOnPageChangeCallback(mPageChangeCallback);
         mViewPager.setAdapter(new ProfileFragmentPagerAdapter(this));
-        mBottomNavigationView = findViewById(R.id.bottom_navigation);
-        mBottomNavigationView.setOnItemSelectedListener(this);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(this);
         // Observers
         model.getProfileModifiedLiveData().observe(this, modified -> {
             mOnBackPressedCallback.setEnabled(modified);

@@ -371,6 +371,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                 super(itemView);
                 this.itemView = (MaterialCardView) itemView;
                 imageView = itemView.findViewById(R.id.icon);
+                imageView.setContentDescription(itemView.getContext().getString(R.string.icon));
                 labelView = itemView.findViewById(R.id.label);
                 nameView = itemView.findViewById(R.id.name);
                 processNameView = itemView.findViewById(R.id.process_name);

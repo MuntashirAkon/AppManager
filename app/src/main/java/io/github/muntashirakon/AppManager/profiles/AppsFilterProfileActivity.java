@@ -4,9 +4,13 @@ package io.github.muntashirakon.AppManager.profiles;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import io.github.muntashirakon.AppManager.R;
 
 public class AppsFilterProfileActivity extends AppsBaseProfileActivity {
     @NonNull
@@ -41,5 +45,13 @@ public class AppsFilterProfileActivity extends AppsBaseProfileActivity {
     @Override
     public void loadNewProfile(@NonNull String newProfileName, @NonNull Intent intent) {
         model.loadNewAppsFilterProfile(newProfileName);
+    }
+
+    @Override
+    protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
+        super.onAuthenticated(savedInstanceState);
+        bottomNavigationView.getMenu().removeItem(R.id.action_apps);
+        fab.setImageResource(R.drawable.ic_edit);
+        fab.setContentDescription(getString(R.string.item_edit));
     }
 }

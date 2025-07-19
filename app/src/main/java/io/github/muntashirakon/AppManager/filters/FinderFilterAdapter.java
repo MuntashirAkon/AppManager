@@ -96,6 +96,7 @@ public class FinderFilterAdapter extends RecyclerView.Adapter<FinderFilterAdapte
             subtitleView = itemView.findViewById(R.id.item_subtitle);
             actionButton = itemView.findViewById(R.id.item_open);
             actionButton.setIcon(ContextCompat.getDrawable(itemView.getContext(), io.github.muntashirakon.ui.R.drawable.ic_clear));
+            actionButton.setContentDescription(itemView.getContext().getString(R.string.item_remove));
         }
     }
 }

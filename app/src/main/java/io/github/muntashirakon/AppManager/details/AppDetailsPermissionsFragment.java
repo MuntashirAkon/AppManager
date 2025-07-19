@@ -426,6 +426,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                 switch (mRequestedProperty) {
                     case PERMISSIONS:
                         imageView = itemView.findViewById(R.id.icon);
+                        imageView.setContentDescription(itemView.getContext().getString(R.string.icon));
                         textView1 = itemView.findViewById(R.id.label);
                         textView2 = itemView.findViewById(R.id.name);
                         textView3 = itemView.findViewById(R.id.taskAffinity);

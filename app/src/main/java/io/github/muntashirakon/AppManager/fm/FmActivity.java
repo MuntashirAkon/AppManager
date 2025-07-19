@@ -431,6 +431,7 @@ public class FmActivity extends BaseActivity {
                 // Locations
                 holder.actionView.setVisibility(View.VISIBLE);
                 holder.actionView.setIconResource(R.drawable.ic_add);
+                holder.actionView.setContentDescription(holder.itemView.getContext().getString(R.string.add));
                 holder.actionView.setOnClickListener(v -> {
                     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
                             .putExtra("android.provider.extra.SHOW_ADVANCED", true);

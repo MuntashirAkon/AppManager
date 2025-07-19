@@ -69,6 +69,7 @@ public class AppsProfileActivity extends AppsBaseProfileActivity {
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         super.onAuthenticated(savedInstanceState);
+        bottomNavigationView.getMenu().removeItem(R.id.action_filters);
         if (getIntent().hasExtra(EXTRA_SHORTCUT_TYPE)) {
             // Compatibility mode for shortcut
             @ProfileApplierActivity.ShortcutType String shortcutType = getIntent().getStringExtra(EXTRA_SHORTCUT_TYPE);
@@ -80,6 +81,8 @@ public class AppsProfileActivity extends AppsBaseProfileActivity {
             finish();
             return;
         }
+        fab.setImageResource(R.drawable.ic_add);
+        fab.setContentDescription(getString(R.string.add_item));
         fab.setOnClickListener(v -> {
             progressIndicator.show();
             model.loadInstalledApps();

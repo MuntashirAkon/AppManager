@@ -175,6 +175,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 icon = itemView.findViewById(android.R.id.icon);
+                icon.setContentDescription(itemView.getContext().getString(R.string.icon));
                 title = itemView.findViewById(android.R.id.title);
                 subtitle = itemView.findViewById(android.R.id.summary);
             }
