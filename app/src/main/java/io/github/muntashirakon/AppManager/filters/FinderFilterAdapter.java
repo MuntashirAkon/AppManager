@@ -19,12 +19,12 @@ import io.github.muntashirakon.util.AdapterUtils;
 
 // Copyright 2012 Nolan Lawson
 public class FinderFilterAdapter extends RecyclerView.Adapter<FinderFilterAdapter.ViewHolder> {
-    private OnClickListener mListener;
+    private OnClickListener mClickListener;
     @NonNull
     private final FilterItem mFilterItem;
 
     public void setOnItemClickListener(OnClickListener listener) {
-        mListener = listener;
+        mClickListener = listener;
     }
 
     public FinderFilterAdapter(@NonNull FilterItem filterItem) {
@@ -32,8 +32,9 @@ public class FinderFilterAdapter extends RecyclerView.Adapter<FinderFilterAdapte
     }
 
     public void add(@NonNull FilterOption filter) {
-        if (mFilterItem.addFilterOption(filter)) {
-            notifyItemInserted(mFilterItem.getSize() - 1);
+        int position = mFilterItem.addFilterOption(filter);
+        if (position >= 0) {
+            notifyItemInserted(position);
         }
     }
 
@@ -42,8 +43,9 @@ public class FinderFilterAdapter extends RecyclerView.Adapter<FinderFilterAdapte
         notifyItemChanged(position, AdapterUtils.STUB);
     }
 
-    public void remove(int position) {
-        if (mFilterItem.removeFilterOptionAt(position)) {
+    public void remove(int position, int id) {
+        FilterOption filterOption = mFilterItem.getFilterOptionAt(position);
+        if (filterOption.id == id && mFilterItem.removeFilterOptionAt(position)) {
             notifyItemRemoved(position);
         }
     }
@@ -61,11 +63,15 @@ public class FinderFilterAdapter extends RecyclerView.Adapter<FinderFilterAdapte
         holder.titleView.setText(filterOption.getFullId());
         holder.subtitleView.setText(filterOption.toLocalizedString(holder.itemView.getContext()));
         holder.itemView.setOnClickListener(v -> {
-            if (mListener != null) {
-                mListener.onClick(holder.itemView, position, filterOption);
+            if (mClickListener != null) {
+                mClickListener.onEdit(holder.itemView, holder.getAbsoluteAdapterPosition(), filterOption);
             }
         });
-        holder.actionButton.setOnClickListener(v -> remove(position));
+        holder.actionButton.setOnClickListener(v -> {
+            if (mClickListener != null) {
+                mClickListener.onRemove(holder.itemView, holder.getAbsoluteAdapterPosition(), filterOption);
+            }
+        });
     }
 
     @Override
@@ -74,7 +80,8 @@ public class FinderFilterAdapter extends RecyclerView.Adapter<FinderFilterAdapte
     }
 
     public interface OnClickListener {
-        void onClick(View view, int position, FilterOption filterOption);
+        void onEdit(View view, int position, FilterOption filterOption);
+        void onRemove(View view, int position, FilterOption filterOption);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
