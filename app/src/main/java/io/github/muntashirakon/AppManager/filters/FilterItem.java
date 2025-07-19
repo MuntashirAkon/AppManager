@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.filters;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -19,8 +21,9 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.filters.options.FilterOption;
 import io.github.muntashirakon.AppManager.history.IJsonSerializer;
 import io.github.muntashirakon.AppManager.history.JsonDeserializer;
+import io.github.muntashirakon.util.ParcelUtils;
 
-public class FilterItem implements IJsonSerializer {
+public class FilterItem implements IJsonSerializer, Parcelable {
     private static class ExprEvaluator extends AbsExpressionEvaluator {
         private final ArrayMap<Integer, FilterOption> mFilterOptions;
         @Nullable
@@ -97,16 +100,19 @@ public class FilterItem implements IJsonSerializer {
         mCustomExpr = true;
     }
 
-    public boolean addFilterOption(@NonNull FilterOption filterOption) {
+    public int addFilterOption(@NonNull FilterOption filterOption) {
         filterOption.id = getNextId();
-        String id = filterOption.type + "_" + filterOption.id;
         if (!mCustomExpr) {
+            String id = filterOption.getFullId();
             // Add this to expr
             if (TextUtils.isEmpty(mExpr)) {
                 mExpr = id;
             } else mExpr += " & " + id;
         }
-        return mFilterOptions.put(filterOption.id, filterOption) == null;
+        if (mFilterOptions.put(filterOption.id, filterOption) == null) {
+            return mFilterOptions.indexOfKey(filterOption.id);
+        }
+        return -1;
     }
 
     public void updateFilterOptionAt(int i, @NonNull FilterOption filterOption) {
@@ -116,6 +122,21 @@ public class FilterItem implements IJsonSerializer {
         }
         filterOption.id = oldFilterOption.id;
         mFilterOptions.setValueAt(i, filterOption);
+        if (!mCustomExpr) {
+            String idStr = oldFilterOption.getFullId();
+            // Default expression is just all the filters &'ed together
+            String[] ops = mExpr.split(" & ");
+            StringBuilder sb = new StringBuilder();
+            for (String op : ops) {
+                if (sb.length() > 0) {
+                    sb.append(" & ");
+                }
+                if (idStr.equals(op)) {
+                    sb.append(filterOption.getFullId());
+                } else sb.append(op);
+            }
+            mExpr = sb.toString();
+        }
     }
 
     public boolean removeFilterOptionAt(int i) {
@@ -124,8 +145,8 @@ public class FilterItem implements IJsonSerializer {
             return false;
         }
         mNextId = filterOption.id;
-        String idStr = filterOption.type + "_" + filterOption.id;
         if (!mCustomExpr) {
+            String idStr = filterOption.getFullId();
             // Default expression is just all the filters &'ed together
             String[] ops = mExpr.split(" & ");
             StringBuilder sb = new StringBuilder();
@@ -169,6 +190,40 @@ public class FilterItem implements IJsonSerializer {
         }
         return filteredFilterableAppInfo;
     }
+
+    public FilterItem(@NonNull Parcel in) {
+        mName = Objects.requireNonNull(in.readString());
+        mExpr = Objects.requireNonNull(in.readString());
+        mCustomExpr = in.readBoolean();
+        mFilterOptions = ParcelUtils.readArrayMap(in, Integer.class.getClassLoader(), FilterOption.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(mName);
+        dest.writeString(mExpr);
+        dest.writeBoolean(mCustomExpr);
+        ParcelUtils.writeMap(mFilterOptions, dest);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<FilterItem> CREATOR = new Creator<FilterItem>() {
+        @Override
+        @NonNull
+        public FilterItem createFromParcel(@NonNull Parcel in) {
+            return new FilterItem(in);
+        }
+
+        @Override
+        @NonNull
+        public FilterItem[] newArray(int size) {
+            return new FilterItem[size];
+        }
+    };
 
     @NonNull
     @Override

@@ -16,8 +16,6 @@ import static io.github.muntashirakon.AppManager.filters.options.FilterOption.TY
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -72,50 +70,11 @@ public class EditFilterOptionFragment extends DialogFragment {
     public static final String ARG_POSITION = "pos";
 
     public interface OnClickDialogButtonInterface {
-        void onDeleteItem(int position);
+        void onDeleteItem(int position, int id);
 
-        void onUpdateItem(int position, @NonNull WrappedFilterOption item);
+        void onUpdateItem(int position, @NonNull FilterOption item);
 
-        void onAddItem(@NonNull WrappedFilterOption item);
-    }
-
-    public static class WrappedFilterOption implements Parcelable {
-        public char logic;
-        public FilterOption filterOption;
-
-        public WrappedFilterOption() {
-        }
-
-        protected WrappedFilterOption(@NonNull Parcel in) {
-            filterOption = FilterOptions.create(Objects.requireNonNull(in.readString()));
-            filterOption.id = in.readInt();
-            filterOption.setKeyValue(Objects.requireNonNull(in.readString()), in.readString());
-        }
-
-        @Override
-        public void writeToParcel(@NonNull Parcel dest, int flags) {
-            dest.writeString(filterOption.type);
-            dest.writeInt(filterOption.id);
-            dest.writeString(filterOption.getKey());
-            dest.writeString(filterOption.getValue());
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        public static final Creator<WrappedFilterOption> CREATOR = new Creator<WrappedFilterOption>() {
-            @Override
-            public WrappedFilterOption createFromParcel(Parcel in) {
-                return new WrappedFilterOption(in);
-            }
-
-            @Override
-            public WrappedFilterOption[] newArray(int size) {
-                return new WrappedFilterOption[size];
-            }
-        };
+        void onAddItem(@NonNull FilterOption item);
     }
 
     private MaterialSpinner mKeySpinner;
@@ -195,10 +154,7 @@ public class EditFilterOptionFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         FragmentActivity activity = requireActivity();
         Bundle args = requireArguments();
-        WrappedFilterOption wrappedFilterOption = BundleCompat.getParcelable(args, ARG_OPTION, WrappedFilterOption.class);
-        if (wrappedFilterOption != null) {
-            mFilterOption = wrappedFilterOption.filterOption;
-        }
+        mFilterOption = BundleCompat.getParcelable(args, ARG_OPTION, FilterOption.class);
         mPosition = args.getInt(ARG_POSITION, -1);
         boolean editMode = mFilterOption != null;
         View view = View.inflate(activity, R.layout.dialog_edit_filter_option, null);
@@ -255,12 +211,6 @@ public class EditFilterOptionFragment extends DialogFragment {
                         UIUtils.displayLongToast(R.string.key_name_cannot_be_null);
                         return;
                     }
-                    WrappedFilterOption newWrappedFilterOption;
-                    if (wrappedFilterOption != null) newWrappedFilterOption = wrappedFilterOption;
-                    else {
-                        newWrappedFilterOption = new WrappedFilterOption();
-                    }
-                    newWrappedFilterOption.filterOption = mCurrentFilterOption;
                     Editable editable = mGenericEditText.getText();
                     try {
                         Objects.requireNonNull(mCurrentKey);
@@ -271,16 +221,16 @@ public class EditFilterOptionFragment extends DialogFragment {
                         return;
                     }
                     if (editMode) {
-                        mOnClickDialogButtonInterface.onUpdateItem(mPosition, newWrappedFilterOption);
+                        mOnClickDialogButtonInterface.onUpdateItem(mPosition, mCurrentFilterOption);
                     } else {
-                        mOnClickDialogButtonInterface.onAddItem(newWrappedFilterOption);
+                        mOnClickDialogButtonInterface.onAddItem(mCurrentFilterOption);
                     }
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     if (getDialog() != null) getDialog().cancel();
                 });
         if (editMode) {
-            builder.setNeutralButton(R.string.delete, (dialog, which) -> mOnClickDialogButtonInterface.onDeleteItem(mPosition));
+            builder.setNeutralButton(R.string.delete, (dialog, which) -> mOnClickDialogButtonInterface.onDeleteItem(mPosition, mFilterOption.id));
         }
         return builder.create();
     }

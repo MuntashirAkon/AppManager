@@ -3,6 +3,8 @@
 package io.github.muntashirakon.AppManager.filters.options;
 
 import android.content.pm.ComponentInfo;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.IntDef;
@@ -24,7 +26,7 @@ import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
 import io.github.muntashirakon.util.LocalizedString;
 
-public abstract class FilterOption implements LocalizedString {
+public abstract class FilterOption implements LocalizedString, Parcelable {
     public static final int TYPE_NONE = 0;
     public static final int TYPE_STR_SINGLE = 1;
     public static final int TYPE_STR_MULTIPLE = 2;
@@ -150,10 +152,45 @@ public abstract class FilterOption implements LocalizedString {
     public String toString() {
         return "FilterOption{" +
                 "type='" + type + '\'' +
+                ", id=" + id +
                 ", key='" + key + '\'' +
+                ", keyType=" + keyType +
                 ", value='" + value + '\'' +
                 '}';
     }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(type);
+        dest.writeInt(id);
+        dest.writeString(key);
+        dest.writeString(value);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<FilterOption> CREATOR = new Creator<FilterOption>() {
+        @Override
+        @NonNull
+        public FilterOption createFromParcel(@NonNull Parcel in) {
+            String type = Objects.requireNonNull(in.readString());
+            FilterOption filterOption = FilterOptions.create(type);
+            filterOption.id = in.readInt();
+            String key = Objects.requireNonNull(in.readString());
+            String value = in.readString();
+            filterOption.setKeyValue(key, value);
+            return filterOption;
+        }
+
+        @Override
+        @NonNull
+        public FilterOption[] newArray(int size) {
+            return new FilterOption[size];
+        }
+    };
 
     @Nullable
     public JSONObject toJson() throws JSONException {
