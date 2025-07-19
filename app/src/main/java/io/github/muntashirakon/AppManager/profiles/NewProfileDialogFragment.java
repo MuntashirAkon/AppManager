@@ -42,12 +42,6 @@ public class NewProfileDialogFragment extends DialogFragment {
         return fragment;
     }
 
-    // TODO: 7/10/25 Localization
-    private static final String[] TYPE_LABELS = new String[]{
-            "Apps",                         // PROFILE_TYPE_APPS
-            "Filters",                      // PROFILE_TYPE_APPS_PROFILE
-    };
-
     @Nullable
     private OnCreateNewProfileInterface mOnCreateNewProfileInterface;
     private View mDialogView;
@@ -66,8 +60,8 @@ public class NewProfileDialogFragment extends DialogFragment {
         editTextLayout.setHelperText(requireContext().getText(R.string.input_profile_name_description));
         MaterialSpinner spinner = mDialogView.findViewById(R.id.type_selector_spinner);
         spinner.setVisibility(View.GONE);
-        ArrayAdapter<CharSequence> spinnerAdapter = new SelectedArrayAdapter<>(requireContext(),
-                io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item, TYPE_LABELS);
+        ArrayAdapter<CharSequence> spinnerAdapter = SelectedArrayAdapter.createFromResource(requireContext(),
+                R.array.profile_types, io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
         spinner.setSelection(BaseProfile.PROFILE_TYPE_APPS);
         spinner.setOnItemClickListener((parent, view, position, id) -> {

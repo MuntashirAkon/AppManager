@@ -2,8 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_apps"
-        android:icon="@drawable/ic_view_list"
+        android:icon="@drawable/ic_android"
         android:title="@string/apps" />
+
+    <item
+        android:id="@+id/action_filters"
+        android:icon="@drawable/ic_filter_menu"
+        android:title="@string/filters" />
 
     <item
         android:id="@+id/action_conf"
