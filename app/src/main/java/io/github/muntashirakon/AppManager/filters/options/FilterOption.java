@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
+import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.util.LocalizedString;
 
 public abstract class FilterOption implements LocalizedString, Parcelable {
@@ -211,12 +212,11 @@ public abstract class FilterOption implements LocalizedString, Parcelable {
     @NonNull
     public static FilterOption fromJson(@NonNull JSONObject object) throws JSONException {
         FilterOption option = FilterOptions.create(object.getString("type"));
-        option.key = object.getString("key");
         option.id = object.getInt("id");
-        option.keyType = object.getInt("key_type");
-        if (object.has("value")) {
-            option.value = object.getString("value");
-        }
+        // int keyType = object.getInt("key_type");
+        String key = object.getString("key");
+        String value = JSONUtils.optString(object, "value");
+        option.setKeyValue(key, value);
         return option;
     }
 
