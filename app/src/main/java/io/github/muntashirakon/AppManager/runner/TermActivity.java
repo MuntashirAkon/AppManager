@@ -39,10 +39,12 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.ProcessCompat;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.CpuUtils;
 
 // TODO: 11/9/23 Replace it with an actual terminal
 public class TermActivity extends BaseActivity {
+    public static final String TAG = TermActivity.class.getSimpleName();
     private final Object mLock = new Object();
     private AppCompatEditText mCommandInput;
     private AppCompatTextView mCommandOutput;
@@ -52,6 +54,7 @@ public class TermActivity extends BaseActivity {
     private final ExecutorService mExecutor = Executors.newFixedThreadPool(3);
     private int mDefaultForegroundColor;
     private int mDefaultBackgroundColor;
+    private final AnsiState mAnsiState = new AnsiState();
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
@@ -67,6 +70,7 @@ public class TermActivity extends BaseActivity {
                 String command = Objects.requireNonNull(mCommandInput.getText()).toString();
                 appendBoldOutput(command);
                 appendOutput("\n");
+                mAnsiState.homePosition = mCommandOutput.getEditableText().length();
                 if (mProcessOutputStream != null) {
                     if (!ProcessCompat.isAlive(mProc)) {
                         // Process is dead
@@ -112,13 +116,12 @@ public class TermActivity extends BaseActivity {
                 mProcessOutputStream = new BufferedOutputStream(mProc.getOutputStream());
                 mExecutor.submit(() -> {
                     try (InputStream in = mProc.getInputStream()) {
-                        AnsiState state = new AnsiState();
                         byte[] buffer = new byte[1024];
                         int len;
                         while ((len = in.read(buffer)) != -1) {
                             synchronized (mLock) {
                                 String chunk = new String(buffer, 0, len, StandardCharsets.UTF_8);
-                                runOnUiThread(() -> processChunk(chunk, state));
+                                runOnUiThread(() -> processChunk(chunk, mAnsiState));
                             }
                         }
                     } catch (Throwable e) {
@@ -132,7 +135,7 @@ public class TermActivity extends BaseActivity {
                         while ((len = in.read(buffer)) != -1) {
                             synchronized (mLock) {
                                 String chunk = new String(buffer, 0, len, StandardCharsets.UTF_8);
-                                runOnUiThread(() -> appendOutput(chunk));
+                                runOnUiThread(() -> processChunk(chunk, mAnsiState));
                             }
                         }
                     } catch (Throwable e) {
@@ -159,6 +162,9 @@ public class TermActivity extends BaseActivity {
         boolean strike = false;
         boolean reverse = false;
         boolean hide = false;
+        int savedPosition = -1;
+        boolean navigateToHome = false;
+        int homePosition = 0;
 
         void reset() {
             foreground = -1;
@@ -169,6 +175,8 @@ public class TermActivity extends BaseActivity {
             strike = false;
             reverse = false;
             hide = false;
+            savedPosition = -1;
+            navigateToHome = false;
         }
     }
 
@@ -199,7 +207,7 @@ public class TermActivity extends BaseActivity {
                         if (c >= '0' && c <= '9') {
                             // A number
                             numberBuilder.append(c);
-                        } else if (c == ';') {
+                        } else if (c == ';' || c == '?') {
                             // Separator
                             numberBuilder.append(c);
                         } else {
@@ -225,9 +233,35 @@ public class TermActivity extends BaseActivity {
 
     @MainThread
     void processAnsiSeq(@NonNull String seq, @NonNull AnsiState state) {
-        if (seq.equals("[2J")) {
-            resetOutput();
-            state.reset();
+        if (seq.matches("\\[[0-2]?J")) {
+            String code = seq.substring(1, seq.length() - 1);
+            switch (code) {
+                case "2": // Clear entire screen
+                    resetOutput(state);
+                    state.reset();
+                    break;
+                case "1": // Clear screen from cursor up
+                    Log.i(TAG, "Unhandled escape sequence: " + seq);
+                    break;
+                case "0": // Clear screen from cursor down
+                default:
+                    if (state.navigateToHome) {
+                        resetOutputToPosition(state.homePosition);
+                        state.reset();
+                    } // else Not handled
+            }
+        } else if (seq.equals("[H") || seq.equals("[;H") || seq.equals("[f")) {
+            state.navigateToHome = true;
+        } else if (seq.equals("[2K")) {
+            clearLastLine();
+        } else if (seq.equals("[s")) {
+            Editable editable = mCommandOutput.getEditableText();
+            state.savedPosition = editable.length();
+        } else if (seq.equals("[u")) {
+            Editable editable = mCommandOutput.getEditableText();
+            if (state.savedPosition >= 0 && state.savedPosition <= editable.length()) {
+                editable.delete(state.savedPosition, editable.length());
+            }
         } else if (seq.matches("\\[[0-9;]*m")) {
             // Parse the numbers
             String params = seq.substring(1, seq.length() - 1);
@@ -335,14 +369,43 @@ public class TermActivity extends BaseActivity {
                     case 47:
                         state.background = Color.WHITE;
                         break;
+                    default:
+                        Log.i(TAG, "Unhandled escape sequence: " + seq);
                 }
             }
+        } else {
+            Log.i(TAG, "Unhandled escape sequence: " + seq);
         }
     }
 
     @MainThread
-    private void resetOutput() {
-        mCommandOutput.setText("", TextView.BufferType.EDITABLE);
+    private void resetOutput(@NonNull AnsiState state) {
+        mCommandOutput.getEditableText().clear();
+        state.homePosition = 0;
+    }
+
+    @MainThread
+    private void resetOutputToPosition(int position) {
+        Editable editable = mCommandOutput.getEditableText();
+        if (position <= 0) {
+            editable.clear();
+        } else {
+            int length = editable.length();
+            if (position < length) {
+                editable.delete(position, length);
+            }
+        }
+    }
+
+    private void clearLastLine() {
+        Editable editable = mCommandOutput.getEditableText();
+        int length = editable.length();
+        if (length > 0) {
+            // Find the index of the last newline character
+            int lastNewline = editable.toString().lastIndexOf('\n', length - 2);
+            // If no newline found, delete everything
+            resetOutputToPosition(lastNewline + 1);
+        }
     }
 
     @MainThread
