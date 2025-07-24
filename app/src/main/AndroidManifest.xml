@@ -448,7 +448,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".runner.TermActivity"
+            android:name=".terminal.TermActivity"
             android:enableOnBackInvokedCallback="true"
             android:exported="false"
             android:label="@string/title_terminal_emulator"
