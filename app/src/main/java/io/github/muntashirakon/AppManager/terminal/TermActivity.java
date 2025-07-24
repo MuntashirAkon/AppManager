@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.runner;
+package io.github.muntashirakon.AppManager.terminal;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -13,6 +13,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
@@ -71,20 +72,42 @@ public class TermActivity extends BaseActivity {
                 appendBoldOutput(command);
                 appendOutput("\n");
                 mAnsiState.homePosition = mCommandOutput.getEditableText().length();
-                if (mProcessOutputStream != null) {
-                    if (!ProcessCompat.isAlive(mProc)) {
-                        // Process is dead
-                        return false;
-                    }
-                    try {
-                        mProcessOutputStream.write(command.getBytes(StandardCharsets.UTF_8));
-                        mProcessOutputStream.write("\n".getBytes(StandardCharsets.UTF_8));
-                        mProcessOutputStream.flush();
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                    }
-                }
-                return true;
+                return sendToStdin(command, true);
+            }
+            return false;
+        });
+        mCommandInput.setOnKeyListener((v, keyCode, event) -> {
+            if (event.getAction() != KeyEvent.ACTION_DOWN) {
+                // Only handle key down
+                return false;
+            }
+
+            // TAB
+            if (keyCode == KeyEvent.KEYCODE_TAB) {
+                // TODO: 7/21/25 Support minimal completion
+            }
+
+            // Arrow Keys (UP/DOWN/PGUP/PGDOWN)
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_DPAD_UP:
+                case KeyEvent.KEYCODE_DPAD_DOWN:
+                case KeyEvent.KEYCODE_PAGE_UP:
+                case KeyEvent.KEYCODE_PAGE_DOWN:
+                    // TODO: 7/21/25 Support history
+            }
+
+            // CTRL + KEY
+            if (event.isCtrlPressed()) {
+                int c = event.getUnicodeChar();
+                char ctrlChar;
+                if (c >= 'a' && c <= 'z') {
+                    ctrlChar = (char)(c - 'a' + 1);
+                } else if (c >= 'A' && c <= 'Z') {
+                    ctrlChar = (char)(c - 'A' + 1);
+                } else return false;
+                appendBoldOutput("^" + (char) (c + 'A'));
+                appendOutput("\n");
+                sendToStdin(String.valueOf(ctrlChar), true);
             }
             return false;
         });
@@ -142,6 +165,7 @@ public class TermActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                 });
+                // TODO: 7/21/25 Support init script
                 mProc.waitFor();
                 runOnUiThread(this::finishAndRemoveTask);
             } catch (Throwable e) {
@@ -238,7 +262,6 @@ public class TermActivity extends BaseActivity {
             switch (code) {
                 case "2": // Clear entire screen
                     resetOutput(state);
-                    state.reset();
                     break;
                 case "1": // Clear screen from cursor up
                     Log.i(TAG, "Unhandled escape sequence: " + seq);
@@ -247,7 +270,6 @@ public class TermActivity extends BaseActivity {
                 default:
                     if (state.navigateToHome) {
                         resetOutputToPosition(state.homePosition);
-                        state.reset();
                     } // else Not handled
             }
         } else if (seq.equals("[H") || seq.equals("[;H") || seq.equals("[f")) {
@@ -415,6 +437,7 @@ public class TermActivity extends BaseActivity {
 
     @MainThread
     private void appendOutput(@NonNull String text, @NonNull AnsiState state) {
+        state.navigateToHome = false;
         if (state.hide) {
             // Replace with spaces
             char[] blank = new char[text.length()];
@@ -454,5 +477,24 @@ public class TermActivity extends BaseActivity {
         int start = editable.length();
         editable.append(boldText);
         editable.setSpan(new StyleSpan(Typeface.BOLD), start, editable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    private boolean sendToStdin(@NonNull String command, boolean newLine) {
+        if (mProcessOutputStream != null) {
+            if (!ProcessCompat.isAlive(mProc)) {
+                // Process is dead
+                return false;
+            }
+            try {
+                mProcessOutputStream.write(command.getBytes(StandardCharsets.UTF_8));
+                if (newLine) {
+                    mProcessOutputStream.write("\n".getBytes(StandardCharsets.UTF_8));
+                }
+                mProcessOutputStream.flush();
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
     }
 }

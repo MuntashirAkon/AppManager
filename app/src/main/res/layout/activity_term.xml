@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".runner.TermActivity">
+    tools:context=".terminal.TermActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -30,12 +30,6 @@
         app:fastScrollerEnabled="true"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/padding_small">
-
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/command_output"
                 android:layout_width="match_parent"
@@ -46,8 +40,6 @@
                 android:fontFamily="monospace"
                 android:textSize="12sp"
                 tools:text="Command output" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </io.github.muntashirakon.widget.NestedScrollView>
 
@@ -68,12 +60,13 @@
             android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.AppTheme.TextInputLayout.Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:endIconMode="clear_text"
                 tools:ignore="RtlSymmetry">
 
-                <androidx.appcompat.widget.AppCompatEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/command_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
