@@ -156,6 +156,9 @@ public class DebloaterViewModel extends AndroidViewModel {
                     if ((mFilterFlags & DebloaterListOptions.FILTER_REMOVAL_CAUTION) == 0 && removalType == DebloatObject.REMOVAL_CAUTION) {
                         continue;
                     }
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_REMOVAL_UNSAFE) == 0 && removalType == DebloatObject.REMOVAL_UNSAFE) {
+                        continue;
+                    }
                     // Filter others
                     if ((mFilterFlags & DebloaterListOptions.FILTER_INSTALLED_APPS) != 0 && !debloatObject.isInstalled()) {
                         continue;

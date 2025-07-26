@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.filters.options;
 import static io.github.muntashirakon.AppManager.debloat.DebloatObject.REMOVAL_CAUTION;
 import static io.github.muntashirakon.AppManager.debloat.DebloatObject.REMOVAL_REPLACE;
 import static io.github.muntashirakon.AppManager.debloat.DebloatObject.REMOVAL_SAFE;
+import static io.github.muntashirakon.AppManager.debloat.DebloatObject.REMOVAL_UNSAFE;
 import static io.github.muntashirakon.AppManager.debloat.DebloaterListOptions.FILTER_LIST_AOSP;
 import static io.github.muntashirakon.AppManager.debloat.DebloaterListOptions.FILTER_LIST_CARRIER;
 import static io.github.muntashirakon.AppManager.debloat.DebloaterListOptions.FILTER_LIST_GOOGLE;
@@ -42,6 +43,7 @@ public class BloatwareOption extends FilterOption {
         put(REMOVAL_SAFE, "Safe");
         put(REMOVAL_REPLACE, "Replace");
         put(REMOVAL_CAUTION, "Caution");
+        put(REMOVAL_UNSAFE, "Unsafe");
     }};
 
     public BloatwareOption() {

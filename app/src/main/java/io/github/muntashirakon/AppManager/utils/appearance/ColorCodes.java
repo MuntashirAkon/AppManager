@@ -78,8 +78,10 @@ public final class ColorCodes {
             case DebloatObject.REMOVAL_SAFE:
                 return getRemovalSafeIndicatorColor(context);
             case DebloatObject.REMOVAL_CAUTION:
-            default:
                 return getRemovalCautionIndicatorColor(context);
+            case DebloatObject.REMOVAL_UNSAFE:
+            default:
+                return getRemovalUnsafeIndicatorColor(context);
         }
     }
 
@@ -145,6 +147,10 @@ public final class ColorCodes {
 
     public static int getRemovalCautionIndicatorColor(@NonNull Context context) {
         return ContextCompat.getColor(context, R.color.pumpkin_orange);
+    }
+
+    public static int getRemovalUnsafeIndicatorColor(@NonNull Context context) {
+        return getFailureColor(context);
     }
 
     public static int getScannerNoTrackerIndicatorColor(@NonNull Context context) {
