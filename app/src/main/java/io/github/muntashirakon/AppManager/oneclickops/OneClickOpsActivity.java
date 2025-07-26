@@ -42,7 +42,6 @@ import io.github.muntashirakon.AppManager.batchops.BatchQueueItem;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchAppOpsOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchComponentOptions;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
-import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.CpuUtils;
@@ -158,10 +157,6 @@ public class OneClickOpsActivity extends BaseActivity {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_data_from_uninstalled_apps),
                         getString(R.string.clear_data_from_uninstalled_apps_description))
                 .setOnClickListener(v -> {
-                    if (!SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)) {
-                        UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
-                        return;
-                    }
                     if (!wakeLock.isHeld()) {
                         wakeLock.acquire();
                     }
