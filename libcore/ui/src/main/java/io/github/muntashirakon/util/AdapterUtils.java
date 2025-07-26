@@ -4,6 +4,8 @@ package io.github.muntashirakon.util;
 
 import android.os.Looper;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
@@ -178,6 +180,25 @@ public final class AdapterUtils {
             v.setVisibility(View.VISIBLE);
         } else if (!visible && v.getVisibility() != View.GONE) {
             v.setVisibility(View.GONE);
+        }
+    }
+
+    public static <VH extends RecyclerView.ViewHolder> void fixTextSelectionInView(@NonNull VH holder) {
+        fixTextSelectionInView(holder.itemView);
+    }
+
+    private static void fixTextSelectionInView(@Nullable View view) {
+        if (view instanceof TextView) {
+            TextView tv = (TextView) view;
+            // Apply the enabled toggle workaround
+            tv.setEnabled(false);
+            tv.setEnabled(true);
+        } else if (view instanceof ViewGroup) {
+            // If it's a ViewGroup, recurse into children
+            ViewGroup vg = (ViewGroup) view;
+            for (int i = 0; i < vg.getChildCount(); i++) {
+                fixTextSelectionInView(vg.getChildAt(i));
+            }
         }
     }
 }
