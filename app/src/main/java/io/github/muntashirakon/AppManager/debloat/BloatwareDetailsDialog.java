@@ -135,8 +135,7 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
         } else {
             mOpenAppInfoButton.setVisibility(View.GONE);
         }
-        CharSequence label = debloatObject.getLabel();
-        mAppLabelView.setText(label != null ? label : debloatObject.packageName);
+        mAppLabelView.setText(debloatObject.getLabelOrPackageName());
         mPackageNameView.setText(debloatObject.packageName);
         String warning = debloatObject.getWarning();
         if (warning != null) {
