@@ -156,6 +156,7 @@ import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.IntentUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
@@ -898,11 +899,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                             ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed));
                                         }
                                     }));
-                        } else {
+                        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                             builder.setPositiveButton(R.string.app_settings, (dialog, which) -> {
                                 try {
-                                    startActivity(IntentUtils.getAppDetailsSettings(mPackageName));
-                                } catch (Throwable ignore) {
+                                    startActivity(IntentUtils.getSettings(Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS, mPackageName));
+                                } catch (Throwable th) {
+                                    ExUtils.exceptionAsIgnored(() -> startActivity(IntentUtils.getAppDetailsSettings(mPackageName)));
                                 }
                             });
                         }
