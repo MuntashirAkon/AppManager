@@ -200,5 +200,6 @@ public class DebloaterViewModel extends AndroidViewModel {
             return;
         }
         mDebloatObjects.addAll(StaticDataset.getDebloatObjectsWithInstalledInfo(getApplication()));
+        Collections.sort(mDebloatObjects, (o1, o2) -> CharSequence.compare(o1.getLabelOrPackageName(), o2.getLabelOrPackageName()));
     }
 }

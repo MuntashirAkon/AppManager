@@ -138,6 +138,11 @@ public class DebloatObject {
     public CharSequence getLabel() {
         return mLabel != null ? mLabel : mInternalLabel;
     }
+    @NonNull
+    public CharSequence getLabelOrPackageName() {
+        CharSequence label = mLabel != null ? mLabel : mInternalLabel;
+        return label != null ? label : packageName;
+    }
 
     @Nullable
     public Drawable getIcon() {
