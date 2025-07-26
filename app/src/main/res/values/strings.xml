@@ -1522,4 +1522,5 @@
     <string name="filters">Filters</string>
     <string name="icon">icon</string>
     <string name="preview">Preview</string>
+    <string name="debloat_removal_unsafe">Unsafe</string>
 </resources>

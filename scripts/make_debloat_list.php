@@ -22,10 +22,6 @@ foreach (list_files(REPO_DIR) as $filename) {
         continue;
     } else fprintf(STDERR, "Adding $filename\n");
     foreach ($list as $item) {
-        if ($item['removal'] == 'unsafe') {
-            fprintf(STDERR, "Removing unsafe item {$item['id']}\n");
-            continue;
-        }
         if (isset($item['suppress'])) {
             unset($item['suppress']);
         }
