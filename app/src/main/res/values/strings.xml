@@ -1523,4 +1523,5 @@
     <string name="icon">icon</string>
     <string name="preview">Preview</string>
     <string name="debloat_removal_unsafe">Unsafe</string>
+    <string name="sort_by_cpu_time">CPU time</string>
 </resources>
