@@ -20,7 +20,6 @@
     <string name="main_activity">Aktiviteti kryesor</string>
     <string name="empty_package_name">Emri bosh i paketës</string>
     <string name="declared_permission">Lejet</string>
-    <string name="require_no_permission">Nuk kerkohet leje</string>
     <string name="sort_by_target_sdk">SDK e synuar</string>
     <string name="providers">Ofruesit</string>
     <string name="sdk_min">Min</string>
