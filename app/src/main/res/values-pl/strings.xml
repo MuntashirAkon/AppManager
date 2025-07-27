@@ -385,7 +385,7 @@
     <string name="sort_by_last_used">Ostatnio używane</string>
     <string name="toggle_class_listing">Pokaż/ukryj listę klas</string>
     <string name="credits">Podziękowania</string>
-    <string name="third_party">Biblioteki i ikony osób trzecich</string>
+    <string name="third_party">Biblioteki i ikony firm trzecich</string>
     <string name="no_receivers">Brak odbiorników</string>
     <string name="no_activities">Brak działań</string>
     <string name="only_works_in_root_or_adb_mode">Działa tylko w trybie root lub ADB</string>
@@ -410,7 +410,7 @@
     </plurals>
     <string name="manifest_viewer">Przeglądarka manifestów</string>
     <string name="changelog">Lista zmian</string>
-    <string name="one_click_ops">Operacje 1-Click</string>
+    <string name="one_click_ops">Operacje 1-kliknięciem</string>
     <string name="never_ask">Nigdy nie pytaj</string>
     <string name="launch_app">Uruchom</string>
     <string name="auto">Auto</string>
@@ -466,20 +466,20 @@
     <string name="integer_value">Wartość liczby całkowitej</string>
     <string name="long_integer_value">Długa wartość liczby całkowitej</string>
     <string name="string_value">Wartość ciągu</string>
-    <string name="shared_prefs">Udostępnione Prefs</string>
+    <string name="shared_prefs">Udostępnione preferencje</string>
     <string name="test_only">Tylko test</string>
-    <string name="dev_protected_data_dir">Chroniony Katalog Danych</string>
+    <string name="dev_protected_data_dir">Chroniony katalog danych</string>
     <string name="grant_usage_acess_message">Służy do wyświetlania informacji o użyciu aplikacji.</string>
-    <string name="grant_usage_access">Przyznaj Dostęp do Użytkowania</string>
+    <string name="grant_usage_access">Przyznaj dostęp do użytkowania</string>
     <string name="go">Idź</string>
     <string name="tracker_classes">Klasy elementów śledzących</string>
     <string name="tracker_details">Szczegóły elementu śledzącego</string>
     <string name="found_trackers">Znaleziono elementów śledzących:</string>
-    <string name="package_name">Nazwa Pakietu</string>
+    <string name="package_name">Nazwa pakietu</string>
     <string name="error_verbose_pin_shortcut">Obecny launcher nie wspiera PinShortcut. Brak możliwości utworzenia skrótu.</string>
     <string name="empty_package_name">Pusta nazwa pakietu</string>
     <string name="main_activity">Aktywność główna</string>
-    <string name="installer_app">Instalator</string>
+    <string name="installer_app">Instalator aplikacji</string>
     <string name="user">Użytkownik</string>
     <string name="media_size">Media</string>
     <string name="sort_by_package_name">Nazwa pakietu</string>
@@ -539,7 +539,7 @@
     <string name="failed_to_enable_magisk_hide">Nie można włączyć MagiskHide</string>
     <string name="backup_cache_description">Utwórz kopię zapasową folderów <b>cache</b>, <b>no_cache</b> i <b>no_backup</b>.</string>
     <string name="backup_obb_media_description">Utwórz kopię zapasową folderów OBB i media.</string>
-    <string name="resend_intent">Wyślij intent ponownie</string>
+    <string name="resend_intent">Wyślij intencję ponownie</string>
     <string name="category">Kategorie</string>
     <string name="type_component_name">Nazwa komponentu</string>
     <string name="screen_lock_msg">Zablokuj App Manager za pomocą blokady ekranu systemu Android</string>
@@ -628,7 +628,7 @@
     <string name="keyboard_type">Typ klawiatury</string>
     <string name="export_failed">Eksportowanie nie powiodło się!</string>
     <string name="import_failed">Importowanie nie powiodło się!</string>
-    <string name="export_options">Opcje Eksportu</string>
+    <string name="export_options">Opcje eksportu</string>
     <string name="import_options">Opcje importu</string>
     <string name="pref_export">Eksportuj</string>
     <string name="pref_import">Importuj</string>
@@ -689,7 +689,7 @@
     <string name="exodus_link">Link εxodus</string>
     <string name="input_app_ops">Wprowadź operacje aplikacji</string>
     <string name="filtered_packages">Filtrowane pakiety</string>
-    <string name="input_signatures_description">Wprowadź sygnatury ze spacjami, np. <tt>com.facebook org.app2 com.app3</tt> itp.</string>
+    <string name="input_signatures_description">Wprowadź sygnatury ze spacjami, np.,<tt>com.facebook org.app2 com.app3</tt> itp.</string>
     <string name="input_signatures">Wprowadź sygnatury</string>
     <string name="lib_details">Szczegóły biblioteki</string>
     <string name="no_libs">Brak bibliotek</string>
@@ -746,7 +746,7 @@
     <string name="features">Funkcje</string>
     <string name="package_name_is_installed_successfully">Zainstalowano <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="termux">Termux</string>
-    <string name="deny_app_ops_description">Określ sposób działania aplikacji określony przez stałe wartości, np. <tt>63</tt> lub <tt>RUN_IN_BACKGROUND</tt></string>
+    <string name="deny_app_ops_description">Określ sposób działania aplikacji określony przez stałe wartości, np., <tt>63</tt> lub <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="external_apk_no_app_op">Zewnętrzny APK nie wykonuje żadnych operacji na aplikacjach</string>
     <string name="failed_to_deny_dangerous_app_ops">Nie udało się cofnąć wszystkich niebezpiecznych operacji tej aplikacji</string>
     <string name="failed_to_reset_app_ops">Nie udało się zresetować ustawień aplikacji</string>
@@ -808,8 +808,8 @@
     </plurals>
     <string name="internal_data">Dane wewnętrzne</string>
     <string name="failed_to_parse_some_numbers">Nie można przetworzyć niektórych liczb</string>
-    <string name="input_app_ops_description_profile">Wprowadź nazwy operacji aplikacji i/lub stałe ze spacjami, np. <tt>WAKE_LOCK 63 72 CAMERA</tt> itp. Użyj <tt>*</tt>, aby zastosować zmiany wszystkich skonfigurowanych operacji aplikacji.</string>
-    <string name="input_app_ops_description">Wprowadź nazwy operacji aplikacji i/lub stałe ze spacjami, np. <tt>WAKE_LOCK 63 72 CAMERA</tt> itp.</string>
+    <string name="input_app_ops_description_profile">Wprowadź nazwy operacji aplikacji i/lub stałe ze spacjami, np., <tt>WAKE_LOCK 63 72 CAMERA</tt> itp. Użyj <tt>*</tt>, aby zastosować zmiany wszystkich skonfigurowanych operacji aplikacji.</string>
+    <string name="input_app_ops_description">Wprowadź nazwy operacji aplikacji i/lub stałe ze spacjami, np., <tt>WAKE_LOCK 63 72 CAMERA</tt> itp.</string>
     <string name="battery_mode">Tryb wykorzystania baterii</string>
     <string name="app_signing_signatures">Sygnatury</string>
     <string name="soft_input">Tryb delikatnego wprowadzenia</string>
@@ -881,7 +881,7 @@
     <string name="dsa_affine_y">Współrzędna afiniczna y</string>
     <string name="dsa_affine_x">Współrzędna afiniczna x</string>
     <string name="rsa_modulus">Moduł</string>
-    <string name="systemless_app">Aplikacja bezsystemowa</string>
+    <string name="systemless_app">Aplikacja niesystemowa</string>
     <string name="state_waking">Wzbudzanie</string>
     <string name="state_wake_kill">Wzbudź zabij</string>
     <string name="state_session_leader">Lider sesji</string>
@@ -982,7 +982,7 @@
     <string name="omit_sensitive_info_summary">Pomiń poufne informacje, takie jak adresy URL, numery telefonów lub e-maile.</string>
     <string name="omit_sensitive_info">Pomiń poufne informacje</string>
     <string name="undo">Cofnij</string>
-    <string name="pause_unpause">Odtwórz/Wstrzymaj</string>
+    <string name="pause_unpause">Odtwórz/wstrzymaj</string>
     <string name="collapse_all">Zwiń wszystko</string>
     <string name="expand_all">Rozwiń wszystko</string>
     <string name="file">Plik</string>
@@ -1009,7 +1009,7 @@
     <string name="save_log">Zapisz dziennik</string>
     <string name="save_as">Zapisz jako…</string>
     <string name="record_log">Dziennik rekordów</string>
-    <string name="pref_show_timestamp_title">Pokaż Pid i sygnaturę czasu</string>
+    <string name="pref_show_timestamp_title">Pokaż PID i sygnaturę czasu</string>
     <string name="pref_show_timestamp_summary">Pokaż identyfikator procesu i sygnaturę czasową po rozwinięciu.</string>
     <string name="pref_log_write_period_title">Okres zapisu</string>
     <string name="pref_log_write_period_summary" tools:ignore="PluralsCandidate">Podczas rejestrowania zapisuj na karcie SD każdą %1$d linię.</string>
@@ -1250,7 +1250,7 @@
     <string name="disable_app_description">Zalecana metoda zamrażania. Wyłącza aplikację wraz ze wszystkimi jej składnikami, ale wszystkie skróty zostaną utracone.</string>
     <string name="hide_app_description">Ta metoda jest zalecana tylko do codziennego użytku. Ukryta aplikacja pojawia się tak, jakby była odinstalowana. Ale aplikacja może pojawić się ponownie, jeśli zostanie ponownie zainstalowana lub zaktualizowana.</string>
     <string name="pref_advanced_pref">Użytkownicy, format nazwy APK, równoległe wykonywanie itp.</string>
-    <string name="pref_version_changelog">Wersja/Lista zmian</string>
+    <string name="pref_version_changelog">Wersja/lista zmian</string>
     <string name="get_help">Uzyskaj pomoc</string>
     <string name="user_manual">Podręcznik użytkownika</string>
     <string name="failed_to_freeze">Nie można zamrozić <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
@@ -1498,7 +1498,7 @@
     <string name="adb_pairing_retry_pairing">Ponów</string>
     <string name="netpolicy_reject_metered_data">Odrzucaj dane w sieciach z pomiarem</string>
     <string name="netpolicy_allow_metered_background_data">Zezwalaj na transmisję danych w tle w sieciach z pomiarem, nawet gdy włączone jest oszczędzanie danych</string>
-    <string name="launch_activity_dialog_title">Uruchom aktywność: Wymagane działanie</string>
+    <string name="launch_activity_dialog_title">Uruchom aktywność: wymagane działanie</string>
     <string name="finder_title">Wyszukiwarka</string>
     <string name="select_filter">Wybierz filtr</string>
     <string name="size_in_bytes">Rozmiar (bajty)</string>
@@ -1562,4 +1562,8 @@
     <string name="title_shortcut_for_frozen_app">Zamrożona aplikacja</string>
     <string name="title_overlay">Nakładka</string>
     <string name="message_shortcut_for_frozen_app">Wygląda na to, że aplikacja odpowiadająca skrótowi została zamrożona. Odblokować tymczasowo i otworzyć skrót?</string>
+    <string name="filters">Filtry</string>
+    <string name="icon">ikona</string>
+    <string name="preview">Podgląd</string>
+    <string name="debloat_removal_unsafe">Niebezpieczne</string>
 </resources>
