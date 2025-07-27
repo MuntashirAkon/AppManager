@@ -208,7 +208,7 @@ public class AppOpsManagerCompat {
     public static boolean isMiuiOp(int op) {
         try {
             return MiuiUtils.isMiui() && op > AppOpsManagerHidden.MIUI_OP_START;
-        } catch (Exception e) {
+        } catch (Throwable e) {
             return false;
         }
     }
