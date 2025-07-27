@@ -38,7 +38,7 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
     private static final String SAVED_KEYS = "saved_keys";
 
     @NonNull
-    public static Intent getIntent(@NonNull Context context, @Nullable String... paths) {
+    public static Intent getSettingsIntent(@NonNull Context context, @Nullable String... paths) {
         Intent intent = new Intent(context, SettingsActivity.class);
         if (paths != null) {
             intent.setData(getSettingUri(paths));
