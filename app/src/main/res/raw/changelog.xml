@@ -2,17 +2,89 @@
 <changelog>
     <release
         type="stable release"
+        version="v4.0.5"
+        code="445"
+        date="28 July 2025">
+        <note>App Manager releases are now reproducible!</note>
+        <note subtext="true">
+            AM Debug builds are also available at
+            [a href="https://github.com/MuntashirAkon/AMInsecureDebugBuilds"]https://github.com/MuntashirAkon/AMInsecureDebugBuilds[/a]
+        </note>
+        <new title="Installer">Added option to allow installing the existing applications</new>
+        <note subtext="true">
+            Existing application is one whose APK files are still available in the system, either
+            because it's a system application or an user application installed for another user.
+            It can be installed for the current user by providing a URI to the installer that has
+            the following format:[br/]
+
+            [tt]package:package-name[/tt][br/]
+
+            App Manager inherently does not check for permissions when such requests are directly
+            made to its installer. Therefore, it will attempt to install the requested package
+            directly and fail if there are not enough permissions.[br/]
+
+            Install requests are also allowed to be mixed together. Therefore, a third-party
+            application can combine different URIs (e.g., file, content, package) with the
+            [tt]SEND_MULTIPLE[/tt] action.
+        </note>
+
+        <improve title="1-Click ops">
+            Enabled "Clear data from uninstalled apps" to no-root users
+        </improve>
+        <note subtext="true">
+            The option was altered to uninstall the apps a second time instead of attempting to
+            clear data which was faulty. Therefore, it should work with any modes of operation.
+        </note>
+        <improve title="App info">
+            Open "Open by default" setting in the "Open links" dialog
+        </improve>
+        <note subtext="true">
+            If App Manager does not have enough permission to manage domains or links, the
+            "Open links" dialog has a button that directs the user to Android Settings. If the
+            application has the "Open by default" page, clicking on the button will open that page
+            instead of the "App info" page (which is still used as a fallback method).
+        </note>
+        <improve title="Debloater">Display unsafe bloatware info</improve>
+        <improve title="Debloater">
+            Sort by app label (or app name) rather than package name
+        </improve>
+        <improve title="Log viewer">
+            Activated "Omit sensitive info" option by default for new users
+        </improve>
+        <improve title="Terminal">Handled common colors and cursor movements</improve>
+        <improve>Display vector icon on the splash screen in Android 7.1 and earlier</improve>
+        <improve>Enabled predictive back in Android 14 onwards</improve>
+        <improve>
+            Improved accessibility by updating the content description of the action items
+        </improve>
+
+        <fix title="App Info">Fixed freezing an app with "Remember for this app" turned on</fix>
+        <fix title="App Ops">
+            Fixed setting app ops in custom ROMs with MIUI properties injected
+        </fix>
+        <fix title="Profile">
+            Fixed updating profile modification status when an application is deleted from the list
+        </fix>
+        <fix>Fixed selecting texts in the list items due to framework bugs</fix>
+
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v4.0.4...v4.0.5"]v4.0.4...v4.0.5[/a]
+        </note>
+    </release>
+    <release
+        type="stable release"
         version="v4.0.4"
         code="444"
         date="30 May 2025">
-        <improve title="Main page">Optimize searching and filtering</improve>
-        <improve>Use sentence case for all strings</improve>
+        <improve title="Main page">Optimized searching and filtering</improve>
+        <improve>Adopted sentence case for the titles</improve>
 
         <fix title="Profile page">
             Use the configured state to execute a profile for simple shortcuts
         </fix>
-        <fix>Prevent crashing while searching</fix>
-        <fix>Fix integer overflow in tar compression</fix>
+        <fix>Prevented crashing while searching</fix>
+        <fix>Fixed integer overflow in tar compression</fix>
 
         <note>
             [br /][b]Full list of changes:[/b] [a
