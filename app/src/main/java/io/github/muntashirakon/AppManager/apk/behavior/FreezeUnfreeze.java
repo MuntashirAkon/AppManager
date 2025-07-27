@@ -109,7 +109,7 @@ public final class FreezeUnfreeze {
     @NonNull
     public static SearchableSingleChoiceDialogBuilder<Integer> getFreezeDialog(
             @NonNull Context context,
-            @FreezeUtils.FreezeType int selectedType) {
+            @FreezeUtils.FreezeMethod int selectedType) {
         CharSequence[] itemDescription = new CharSequence[FREEZING_METHODS.length];
         for (int i = 0; i < FREEZING_METHODS.length; ++i) {
             itemDescription[i] = new SpannableStringBuilder()

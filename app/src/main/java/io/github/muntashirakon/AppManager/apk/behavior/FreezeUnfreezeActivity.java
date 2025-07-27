@@ -163,7 +163,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
                             mOpenAppOrFreeze.postValue(shortcutInfo);
                             return;
                         }
-                        int freezeType = Optional.ofNullable(FreezeUtils.getFreezingMethod(shortcutInfo.packageName))
+                        int freezeType = Optional.ofNullable(FreezeUtils.loadFreezeMethod(shortcutInfo.packageName))
                                         .orElse(Prefs.Blocking.getDefaultFreezingMethod());
                         FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId, freezeType);
                     }
@@ -177,7 +177,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
         public void freezeFinal(FreezeUnfreezeShortcutInfo shortcutInfo) {
             ThreadUtils.postOnBackgroundThread(() -> {
                 try {
-                    int freezeType = Optional.ofNullable(FreezeUtils.getFreezingMethod(shortcutInfo.packageName))
+                    int freezeType = Optional.ofNullable(FreezeUtils.loadFreezeMethod(shortcutInfo.packageName))
                             .orElse(Prefs.Blocking.getDefaultFreezingMethod());
                     FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId, freezeType);
                     mIsFrozenLiveData.postValue(new Pair<>(shortcutInfo, true));

@@ -17,6 +17,13 @@ public class FreezeType {
     public String packageName;
 
     @ColumnInfo(name = "type")
-    @FreezeUtils.FreezeType
+    @FreezeUtils.FreezeMethod
     public int type;
+
+    public FreezeType() {}
+
+    public FreezeType(@NonNull String packageName, @FreezeUtils.FreezeMethod int type) {
+        this.packageName = packageName;
+        this.type = type;
+    }
 }
