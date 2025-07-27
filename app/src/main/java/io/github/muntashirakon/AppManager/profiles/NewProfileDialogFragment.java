@@ -21,6 +21,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.lang.ref.WeakReference;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.profiles.struct.BaseProfile;
 import io.github.muntashirakon.adapters.SelectedArrayAdapter;
@@ -61,6 +62,9 @@ public class NewProfileDialogFragment extends DialogFragment {
         MaterialSpinner spinner = mDialogView.findViewById(R.id.type_selector_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = SelectedArrayAdapter.createFromResource(requireContext(),
                 R.array.profile_types, io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item);
+        if (!BuildConfig.DEBUG) {
+            spinner.setVisibility(View.GONE);
+        }
         spinner.setAdapter(spinnerAdapter);
         spinner.setSelection(BaseProfile.PROFILE_TYPE_APPS);
         spinner.setOnItemClickListener((parent, view, position, id) -> {
