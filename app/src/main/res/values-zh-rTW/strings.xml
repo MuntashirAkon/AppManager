@@ -876,7 +876,7 @@
     <string name="send_log_title">傳送日誌</string>
     <string name="save_as">另存為…</string>
     <string name="record_log">記錄日誌</string>
-    <string name="pref_show_timestamp_title">顯示 PID 與時間戳</string>
+    <string name="pref_show_timestamp_title">顯示 PID 與時間戳</string>
     <string name="pref_show_timestamp_summary">展開時顯示處理程序 ID 和時間戳。</string>
     <string name="pref_log_write_period_title">寫入期間</string>
     <string name="pref_log_write_period_summary">記錄時，每 %1$d 行寫入 SD 卡。</string>
