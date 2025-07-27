@@ -498,7 +498,7 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
             }
             return true;
         } else if (id == R.id.action_settings) {
-            Intent intent = SettingsActivity.getIntent(requireContext(), "files_prefs");
+            Intent intent = SettingsActivity.getSettingsIntent(requireContext(), "files_prefs");
             startActivity(intent);
             return true;
         }

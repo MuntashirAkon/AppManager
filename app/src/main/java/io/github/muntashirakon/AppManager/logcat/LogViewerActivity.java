@@ -438,7 +438,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     }
 
     void displayLogViewerSettings() {
-        Intent intent = SettingsActivity.getIntent(this, "log_viewer_prefs");
+        Intent intent = SettingsActivity.getSettingsIntent(this, "log_viewer_prefs");
         mActivityLauncher.launch(intent, result -> {
             // Preferences may have changed
             mViewModel.setCollapsedMode(!Prefs.LogViewer.expandByDefault());
