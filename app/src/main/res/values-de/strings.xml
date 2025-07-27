@@ -308,7 +308,7 @@
     <string name="clear_cache">Cache leeren</string>
     <string name="block_unblock_trackers_description">Blockiere oder gebe Verfolger-Komponenten aller installierter Anwendungen frei</string>
     <string name="block_components_dots">Komponenten blockieren…</string>
-    <string name="deny_app_ops_description">Einstellen eines Modus für App-Operationen, die durch konstante Werte identifiziert werden (z. B. <tt>63</tt> oder <tt>RUN_IN_BACKGROUND</tt>)</string>
+    <string name="deny_app_ops_description">Einstellen eines Modus für App-Operationen, die durch konstante Werte identifiziert werden (z. B. <tt>63</tt> oder <tt>RUN_IN_BACKGROUND</tt>)</string>
     <string name="clear_data_from_uninstalled_apps">Daten deinstallierter Anwendungen löschen</string>
     <string name="clear_data_from_uninstalled_apps_description">Daten von Anwendungen, die mit der <tt>DONT_DELETE_DATA</tt>-Flagge deinstalliert wurden, löschen</string>
     <string name="clear_app_cache">Cache der Anwendung leeren</string>
@@ -316,7 +316,7 @@
     <string name="no_tracker_found">Keine Verfolger gefunden</string>
     <string name="failed_packages">Pakete mit Fehlern</string>
     <string name="input_signatures">Signatur(en)</string>
-    <string name="input_signatures_description">Bitte die gewünschten Signaturen mit einer Leerstelle getrennt angeben, z. B. <tt>com.facebook org.app2 com.app3</tt> usw.</string>
+    <string name="input_signatures_description">Bitte die gewünschten Signaturen mit einer Leerstelle getrennt angeben, z. B. <tt>com.facebook org.app2 com.app3</tt> usw.</string>
     <string name="filtered_packages">Gefilterte Pakete</string>
     <string name="input_app_ops">App Ops</string>
     <string name="input_app_ops_description">Geben Sie App-Op-Namen und/oder Konstanten mit Leerzeichen ein, z. B. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.</string>
