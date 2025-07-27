@@ -92,7 +92,7 @@ public final class OpHistoryManager {
         switch (item.getType()) {
             case HISTORY_TYPE_BATCH_OPS: {
                 BatchQueueItem batchQueueItem = BatchQueueItem.DESERIALIZER.deserialize(item.jsonData);
-                return BatchOpsService.getIntent(context, batchQueueItem);
+                return BatchOpsService.getServiceIntent(context, batchQueueItem);
             }
             case HISTORY_TYPE_INSTALLER: {
                 ApkQueueItem apkQueueItem = ApkQueueItem.DESERIALIZER.deserialize(item.jsonData);

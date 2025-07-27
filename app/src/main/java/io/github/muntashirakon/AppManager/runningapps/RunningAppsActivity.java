@@ -396,7 +396,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         }
         BatchOpsManager.Result input = new BatchOpsManager.Result(model.getSelectedPackagesWithUsers());
         BatchQueueItem item = BatchQueueItem.getBatchOpQueue(op, input.getFailedPackages(), input.getAssociatedUsers(), null);
-        Intent intent = BatchOpsService.getIntent(this, item);
+        Intent intent = BatchOpsService.getServiceIntent(this, item);
         ContextCompat.startForegroundService(this, intent);
     }
 

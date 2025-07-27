@@ -402,7 +402,7 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
         BatchBackupOptions options = new BatchBackupOptions(operationInfo.flags, operationInfo.backupNames);
         BatchQueueItem queueItem = BatchQueueItem.getBatchOpQueue(operationInfo.op,
                 operationInfo.packageList, operationInfo.userIdListMappedToPackageList, options);
-        Intent intent = BatchOpsService.getIntent(mActivity, queueItem);
+        Intent intent = BatchOpsService.getServiceIntent(mActivity, queueItem);
         ContextCompat.startForegroundService(mActivity, intent);
         dismiss();
     }

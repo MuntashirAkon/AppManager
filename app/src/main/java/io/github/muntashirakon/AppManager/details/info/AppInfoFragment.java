@@ -1127,7 +1127,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                                 }
                                                 BatchQueueItem item = BatchQueueItem.getBatchOpQueue(
                                                         BatchOpsManager.OP_UNINSTALL, selectedItems, userIds, null);
-                                                Intent intent = BatchOpsService.getIntent(mActivity, item);
+                                                Intent intent = BatchOpsService.getServiceIntent(mActivity, item);
                                                 ContextCompat.startForegroundService(mActivity, intent);
                                             }
                                         })

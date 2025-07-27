@@ -235,7 +235,7 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
         }
         BatchOpsManager.Result input = new BatchOpsManager.Result(viewModel.getSelectedPackagesWithUsers());
         BatchQueueItem item = BatchQueueItem.getBatchOpQueue(op, input.getFailedPackages(), input.getAssociatedUsers(), options);
-        ContextCompat.startForegroundService(this, BatchOpsService.getIntent(this, item));
+        ContextCompat.startForegroundService(this, BatchOpsService.getServiceIntent(this, item));
         mMultiSelectionView.cancel();
     }
 }

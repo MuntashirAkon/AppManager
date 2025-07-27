@@ -83,7 +83,7 @@ public class BatchOpsService extends ForegroundService {
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.BATCH_OPS";
 
     @NonNull
-    public static Intent getIntent(@NonNull Context context, @NonNull BatchQueueItem queueItem) {
+    public static Intent getServiceIntent(@NonNull Context context, @NonNull BatchQueueItem queueItem) {
         Intent intent = new Intent(context, BatchOpsService.class);
         IntentCompat.putWrappedParcelableExtra(intent, EXTRA_QUEUE_ITEM, queueItem);
         return intent;
