@@ -20,6 +20,7 @@ import android.content.pm.IPackageInstaller;
 import android.content.pm.IPackageInstallerSession;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
+import android.content.pm.PackageInstaller.SessionParams;
 import android.content.pm.PackageInstallerHidden;
 import android.content.pm.PackageManager;
 import android.content.pm.VersionedPackage;
@@ -399,14 +400,14 @@ public final class PackageInstallerCompat {
     public static final int INSTALL_BYPASS_LOW_TARGET_SDK_BLOCK = 0x01000000;
 
     /**
-     * Flag parameter for {@link PackageInstaller.SessionParams} to indicate that the
+     * Flag parameter for {@link SessionParams} to indicate that the
      * update ownership enforcement is requested.
      */
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     public static final int INSTALL_REQUEST_UPDATE_OWNERSHIP = 1 << 25;
 
     /**
-     * Flag parameter for {@link PackageInstaller.SessionParams} to indicate that this
+     * Flag parameter for {@link SessionParams} to indicate that this
      * session is from a managed user or profile.
      */
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
@@ -821,7 +822,7 @@ public final class PackageInstallerCompat {
         // Clean old sessions
         cleanOldSessions();
         // Create install session
-        PackageInstaller.SessionParams sessionParams = new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
+        SessionParams sessionParams = new SessionParams(SessionParams.MODE_FULL_INSTALL);
         Refine.<PackageInstallerHidden.SessionParams>unsafeCast(sessionParams).installFlags |= installFlags;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             Refine.<PackageInstallerHidden.SessionParams>unsafeCast(sessionParams).installerPackageName = requestedInstallerPackageName;
@@ -847,7 +848,7 @@ public final class PackageInstallerCompat {
         // Set install user action and install scenario
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             // We hope system will not prompt an install confirmation
-            sessionParams.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED);
+            sessionParams.setRequireUserAction(SessionParams.USER_ACTION_NOT_REQUIRED);
             sessionParams.setInstallScenario(installScenario);
         }
         // Set package source (shell uses PACKAGE_SOURCE_OTHER)
@@ -888,6 +889,9 @@ public final class PackageInstallerCompat {
     @InstallFlags
     private static int getInstallFlags(@UserIdInt int userId) {
         int flags = INSTALL_ALLOW_TEST | INSTALL_REPLACE_EXISTING;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            flags |= INSTALL_FULL_APP;
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             flags |= INSTALL_REQUEST_DOWNGRADE | INSTALL_ALLOW_DOWNGRADE_API29;
         } else flags |= INSTALL_ALLOW_DOWNGRADE;
