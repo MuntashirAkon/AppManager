@@ -413,7 +413,7 @@ public class OneClickOpsActivity extends BaseActivity {
     }
 
     private void launchService(@NonNull BatchQueueItem queueItem) {
-        Intent intent = BatchOpsService.getIntent(this, queueItem);
+        Intent intent = BatchOpsService.getServiceIntent(this, queueItem);
         ContextCompat.startForegroundService(this, intent);
     }
 
