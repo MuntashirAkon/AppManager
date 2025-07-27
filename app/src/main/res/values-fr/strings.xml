@@ -1462,7 +1462,7 @@
     <string name="apk_source">Source APK</string>
     <string name="mode_of_op_alternative_custom_command">Si vous obtenez une erreur \"Permission refusée\" avec la commande ci-dessus, lancez la commande suivante à la place :</string>
     <string name="scan_report_from_pithus">Rapport Pithus</string>
-    <string name="launch_activity_dialog_title">Lancement d\'activité : action requise</string>
+    <string name="launch_activity_dialog_title">Lancement d\'activité : action requise</string>
     <string name="select_filter">Sélectionner un filtre</string>
     <string name="failed_to_copy_specified_file">Impossible de copier \"%1$s\".</string>
     <string name="apply_recursively">Appliquer aux fichiers joints</string>
