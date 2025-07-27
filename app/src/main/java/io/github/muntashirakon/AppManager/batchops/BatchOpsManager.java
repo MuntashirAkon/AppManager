@@ -589,7 +589,7 @@ public class BatchOpsManager {
             pair = info.getPair(i);
             int type;
             if (options.isPreferCustom()) {
-                type = Optional.ofNullable(FreezeUtils.getFreezingMethod(pair.getPackageName()))
+                type = Optional.ofNullable(FreezeUtils.loadFreezeMethod(pair.getPackageName()))
                         .orElse(options.getType());
             } else type = options.getType();
             try {

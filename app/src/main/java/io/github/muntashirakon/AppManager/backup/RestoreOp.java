@@ -668,7 +668,7 @@ class RestoreOp implements Closeable {
                         break;
                     case FREEZE:
                         int freezeType = ((FreezeRule) entry).getFreezeType();
-                        FreezeUtils.setFreezeMethod(mPackageName, freezeType);
+                        FreezeUtils.storeFreezeMethod(mPackageName, freezeType);
                         break;
                 }
             } catch (Throwable e) {

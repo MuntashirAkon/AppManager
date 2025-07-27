@@ -2016,10 +2016,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @WorkerThread
-    private void doFreeze(@FreezeUtils.FreezeType int freezeType, boolean remember) {
+    private void doFreeze(@FreezeUtils.FreezeMethod int freezeType, boolean remember) {
         try {
             if (remember) {
-                FreezeUtils.setFreezeMethod(mPackageName, freezeType);
+                FreezeUtils.storeFreezeMethod(mPackageName, freezeType);
+            } else {
+                FreezeUtils.deleteFreezeMethod(mPackageName);
             }
             FreezeUtils.freeze(mPackageName, mUserId, freezeType);
         } catch (Throwable th) {

@@ -15,11 +15,11 @@ import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 public class BatchFreezeOptions implements IBatchOpOptions {
     public static final String TAG = BatchFreezeOptions.class.getSimpleName();
 
-    @FreezeUtils.FreezeType
+    @FreezeUtils.FreezeMethod
     private int mType;
     private boolean mPreferCustom;
 
-    public BatchFreezeOptions(@FreezeUtils.FreezeType int type, boolean preferCustom) {
+    public BatchFreezeOptions(@FreezeUtils.FreezeMethod int type, boolean preferCustom) {
         mType = type;
         mPreferCustom = preferCustom;
     }

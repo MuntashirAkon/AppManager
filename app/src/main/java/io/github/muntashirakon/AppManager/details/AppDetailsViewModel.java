@@ -192,7 +192,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     public void loadFreezeType() {
         mExecutor.submit(() -> {
-            Integer freezeType = FreezeUtils.getFreezingMethod(mPackageName);
+            Integer freezeType = FreezeUtils.loadFreezeMethod(mPackageName);
             mFreezeTypeLiveData.postValue(freezeType);
         });
     }

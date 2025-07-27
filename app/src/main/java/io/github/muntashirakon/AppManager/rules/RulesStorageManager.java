@@ -184,7 +184,7 @@ public class RulesStorageManager implements Closeable {
         addUniqueEntry(new SsaidRule(packageName, ssaid));
     }
 
-    public void setFreezeType(@FreezeUtils.FreezeType int freezeType) {
+    public void setFreezeType(@FreezeUtils.FreezeMethod int freezeType) {
         addUniqueEntry(new FreezeRule(packageName, freezeType));
     }
 

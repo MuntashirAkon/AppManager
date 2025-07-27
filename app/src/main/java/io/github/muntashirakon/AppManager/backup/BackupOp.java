@@ -479,7 +479,7 @@ class BackupOp implements Closeable {
             }
         }
         // Backup freezeType
-        Integer freezeType = FreezeUtils.getFreezingMethod(mPackageName);
+        Integer freezeType = FreezeUtils.loadFreezeMethod(mPackageName);
         if (freezeType != null) {
             rules.setFreezeType(freezeType);
         }

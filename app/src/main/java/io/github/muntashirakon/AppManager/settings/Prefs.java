@@ -232,7 +232,7 @@ public final class Prefs {
             AppPref.set(AppPref.PrefKey.PREF_DEFAULT_BLOCKING_METHOD_STR, blockingMethod);
         }
 
-        @FreezeUtils.FreezeType
+        @FreezeUtils.FreezeMethod
         public static int getDefaultFreezingMethod() {
             int freezeType = AppPref.getInt(AppPref.PrefKey.PREF_FREEZE_TYPE_INT);
             if (freezeType == FreezeUtils.FREEZE_HIDE) {
@@ -251,7 +251,7 @@ public final class Prefs {
             return freezeType;
         }
 
-        public static void setDefaultFreezingMethod(@FreezeUtils.FreezeType int freezeType) {
+        public static void setDefaultFreezingMethod(@FreezeUtils.FreezeMethod int freezeType) {
             AppPref.set(AppPref.PrefKey.PREF_FREEZE_TYPE_INT, freezeType);
         }
     }
