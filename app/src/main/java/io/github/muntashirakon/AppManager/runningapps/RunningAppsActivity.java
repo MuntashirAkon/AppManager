@@ -57,6 +57,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
             SORT_BY_PROCESS_NAME,
             SORT_BY_APPS_FIRST,
             SORT_BY_MEMORY_USAGE,
+            SORT_BY_CPU_TIME,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface SortOrder {
@@ -66,6 +67,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     public static final int SORT_BY_PROCESS_NAME = 1;
     public static final int SORT_BY_APPS_FIRST = 2;
     public static final int SORT_BY_MEMORY_USAGE = 3;
+    public static final int SORT_BY_CPU_TIME = 4;
 
     @IntDef(value = {
             FILTER_NONE,
@@ -85,6 +87,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
             R.id.action_sort_by_process_name,
             R.id.action_sort_by_apps_first,
             R.id.action_sort_by_memory_usage,
+            R.id.action_sort_by_cpu_time,
     };
 
     @Nullable
@@ -270,6 +273,9 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
             item.setChecked(true);
         } else if (id == R.id.action_sort_by_memory_usage) {
             model.setSortOrder(SORT_BY_MEMORY_USAGE);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_cpu_time) {
+            model.setSortOrder(SORT_BY_CPU_TIME);
             item.setChecked(true);
             // Filter
         } else if (id == R.id.action_filter_apps) {
