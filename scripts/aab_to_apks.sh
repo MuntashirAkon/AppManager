@@ -35,7 +35,7 @@ TMP_PATH="tmp"
 
 AAB_PATH="${RELEASE_PATH}/${DEFAULT_NAME}.aab"
 APKS_PATH="${RELEASE_PATH}/${DEFAULT_NAME}.apks"
-APK_PATH="${UNIVERSAL_APK_RELEASE_PATH}/app-${DEFAULT_NAME}-universal.apk"
+APK_PATH="${UNIVERSAL_APK_RELEASE_PATH}/${DEFAULT_NAME}-universal.apk"
 
 SUPPORTED_LANGUAGES=(ar de en es fa fr hi id it ja ko nb pl pt ro ru tr uk vi zh)
 SUPPORTED_DPIS=(ldpi mdpi tvdpi hdpi xhdpi xxhdpi xxxhdpi)
