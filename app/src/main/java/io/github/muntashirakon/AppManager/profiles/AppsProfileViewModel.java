@@ -43,8 +43,8 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.filters.FilterItem;
+import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
 import io.github.muntashirakon.AppManager.filters.FilteringUtils;
-import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.profiles.struct.AppsBaseProfile;
 import io.github.muntashirakon.AppManager.profiles.struct.AppsFilterProfile;
@@ -457,7 +457,7 @@ public class AppsProfileViewModel extends AndroidViewModel {
         return items;
     }
 
-    List<IFilterableAppInfo> mFilterableAppInfoList;
+    List<FilterableAppInfo> mFilterableAppInfoList;
 
     @NonNull
     private ArrayList<AppsFragment.AppsFragmentItem> loadAppsFilteredPackages(@NonNull AppsFilterProfile profile) {
@@ -465,9 +465,9 @@ public class AppsProfileViewModel extends AndroidViewModel {
         if (mFilterableAppInfoList == null) {
             mFilterableAppInfoList = FilteringUtils.loadFilterableAppInfo(users);
         }
-        List<FilterItem.FilteredItemInfo> filteredItems = profile.getFilterItem().getFilteredList(mFilterableAppInfoList);
+        List<FilterItem.FilteredItemInfo<FilterableAppInfo>> filteredItems = profile.getFilterItem().getFilteredList(mFilterableAppInfoList);
         ArrayList<AppsFragment.AppsFragmentItem> items = new ArrayList<>(filteredItems.size());
-        for (FilterItem.FilteredItemInfo itemInfo : filteredItems) {
+        for (FilterItem.FilteredItemInfo<FilterableAppInfo> itemInfo : filteredItems) {
             AppsFragment.AppsFragmentItem item = new AppsFragment.AppsFragmentItem(itemInfo.info.getPackageName());
             item.label = itemInfo.info.getAppLabel();
             item.filterableAppInfo = itemInfo.info;

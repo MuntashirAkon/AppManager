@@ -31,8 +31,8 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 public final class FilteringUtils {
     @NonNull
     @WorkerThread
-    public static List<IFilterableAppInfo> loadFilterableAppInfo(@NonNull int[] userIds) {
-        List<IFilterableAppInfo> filterableAppInfoList = new ArrayList<>();
+    public static List<FilterableAppInfo> loadFilterableAppInfo(@NonNull int[] userIds) {
+        List<FilterableAppInfo> filterableAppInfoList = new ArrayList<>();
         boolean hasUsageAccess = FeatureController.isUsageAccessEnabled() && SelfPermissions.checkUsageStatsPermission();
         for (int userId : userIds) {
             if (ThreadUtils.isInterrupted()) return Collections.emptyList();

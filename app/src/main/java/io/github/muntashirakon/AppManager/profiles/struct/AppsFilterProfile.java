@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.filters.FilterItem;
+import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
 import io.github.muntashirakon.AppManager.filters.FilteringUtils;
-import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
 import io.github.muntashirakon.AppManager.history.JsonDeserializer;
 import io.github.muntashirakon.AppManager.profiles.ProfileLogger;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
@@ -46,8 +46,8 @@ public class AppsFilterProfile extends AppsBaseProfile {
     public ProfileApplierResult apply(@NonNull String state, @Nullable ProfileLogger logger, @Nullable ProgressHandler progressHandler) {
         // Filter results
         int[] users = this.users == null ? Users.getUsersIds() : this.users;
-        List<IFilterableAppInfo> filterableAppInfoList = FilteringUtils.loadFilterableAppInfo(users);
-        List<FilterItem.FilteredItemInfo> filteredList = mFilterItem.getFilteredList(filterableAppInfoList);
+        List<FilterableAppInfo> filterableAppInfoList = FilteringUtils.loadFilterableAppInfo(users);
+        List<FilterItem.FilteredItemInfo<FilterableAppInfo>> filteredList = mFilterItem.getFilteredList(filterableAppInfoList);
         if (filteredList.isEmpty()) {
             return ProfileApplierResult.EMPTY_RESULT;
         }
@@ -57,7 +57,7 @@ public class AppsFilterProfile extends AppsBaseProfile {
             logger.println("====> Filtered packages: " + filteredList.size());
         }
         StringBuilder sb = new StringBuilder();
-        for (FilterItem.FilteredItemInfo info : filteredList) {
+        for (FilterItem.FilteredItemInfo<FilterableAppInfo> info : filteredList) {
             packages.add(info.info.getPackageName());
             assocUsers.add(info.info.getUserId());
             sb.append("(").append(info.info.getPackageName()).append(", ")

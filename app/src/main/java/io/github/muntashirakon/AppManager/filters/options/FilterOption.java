@@ -195,9 +195,6 @@ public abstract class FilterOption implements LocalizedString, Parcelable {
 
     @Nullable
     public JSONObject toJson() throws JSONException {
-        if (value == null) {
-            return null;
-        }
         JSONObject object = new JSONObject();
         object.put("type", type);
         object.put("id", id);

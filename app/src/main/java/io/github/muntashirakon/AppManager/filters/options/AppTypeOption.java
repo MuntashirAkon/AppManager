@@ -94,6 +94,7 @@ public class AppTypeOption extends FilterOption {
     @NonNull
     @Override
     public TestResult test(@NonNull IFilterableAppInfo info, @NonNull TestResult result) {
+        // TODO: 7/28/25 Make it more efficient by doing this on demand
         int appTypeFlags = info.getAppTypeFlags();
         switch (key) {
             case KEY_ALL:

@@ -21,10 +21,10 @@ public class FinderViewModel extends AndroidViewModel {
     public static final String TAG = FinderViewModel.class.getSimpleName();
 
     private final MutableLiveData<Long> mLastUpdateTimeLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<FilterItem.FilteredItemInfo>> mFilteredAppListLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<FilterItem.FilteredItemInfo<FilterableAppInfo>>> mFilteredAppListLiveData = new MutableLiveData<>();
     private Future<?> mAppListLoaderFuture;
     @Nullable
-    private List<IFilterableAppInfo> mFilterableAppInfoList;
+    private List<FilterableAppInfo> mFilterableAppInfoList;
     @NotNull
     private final FilterItem mFilterItem = new FilterItem();
 
@@ -41,7 +41,7 @@ public class FinderViewModel extends AndroidViewModel {
         return mLastUpdateTimeLiveData;
     }
 
-    public MutableLiveData<List<FilterItem.FilteredItemInfo>> getFilteredAppListLiveData() {
+    public MutableLiveData<List<FilterItem.FilteredItemInfo<FilterableAppInfo>>> getFilteredAppListLiveData() {
         return mFilteredAppListLiveData;
     }
 

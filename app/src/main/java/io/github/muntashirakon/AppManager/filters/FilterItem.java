@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.ArrayMap;
+import androidx.core.os.ParcelCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -176,16 +177,16 @@ public class FilterItem implements IJsonSerializer, Parcelable {
         return mFilterOptions.get(id);
     }
 
-    public List<FilteredItemInfo> getFilteredList(@NonNull List<IFilterableAppInfo> allFilterableAppInfo) {
-        List<FilteredItemInfo> filteredFilterableAppInfo = new ArrayList<>();
+    public <T extends IFilterableAppInfo> List<FilteredItemInfo<T>> getFilteredList(@NonNull List<T> allFilterableAppInfo) {
+        List<FilteredItemInfo<T>> filteredFilterableAppInfo = new ArrayList<>();
         ExprEvaluator evaluator = new ExprEvaluator(mFilterOptions);
         String expr = TextUtils.isEmpty(mExpr) ? "true" : mExpr;
-        for (IFilterableAppInfo info : allFilterableAppInfo) {
+        for (T info : allFilterableAppInfo) {
             evaluator.setInfo(info);
             boolean eval = evaluator.evaluate(expr);
             FilterOption.TestResult result = Objects.requireNonNull(evaluator.getResult());
             if (eval) {
-                filteredFilterableAppInfo.add(new FilteredItemInfo(info, result));
+                filteredFilterableAppInfo.add(new FilteredItemInfo<>(info, result));
             }
         }
         return filteredFilterableAppInfo;
@@ -194,7 +195,7 @@ public class FilterItem implements IJsonSerializer, Parcelable {
     public FilterItem(@NonNull Parcel in) {
         mName = Objects.requireNonNull(in.readString());
         mExpr = Objects.requireNonNull(in.readString());
-        mCustomExpr = in.readBoolean();
+        mCustomExpr = ParcelCompat.readBoolean(in);
         mFilterOptions = ParcelUtils.readArrayMap(in, Integer.class.getClassLoader(), FilterOption.class.getClassLoader());
     }
 
@@ -202,7 +203,7 @@ public class FilterItem implements IJsonSerializer, Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(mName);
         dest.writeString(mExpr);
-        dest.writeBoolean(mCustomExpr);
+        ParcelCompat.writeBoolean(dest, mCustomExpr);
         ParcelUtils.writeMap(mFilterOptions, dest);
     }
 
@@ -262,11 +263,11 @@ public class FilterItem implements IJsonSerializer, Parcelable {
         return mNextId;
     }
 
-    public static class FilteredItemInfo {
-        public final IFilterableAppInfo info;
+    public static class FilteredItemInfo<T extends IFilterableAppInfo> {
+        public final T info;
         public final FilterOption.TestResult result;
 
-        FilteredItemInfo(IFilterableAppInfo info, FilterOption.TestResult result) {
+        FilteredItemInfo(T info, FilterOption.TestResult result) {
             this.info = info;
             this.result = result;
         }

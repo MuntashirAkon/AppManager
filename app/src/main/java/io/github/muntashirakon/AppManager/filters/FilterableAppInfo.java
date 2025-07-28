@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import aosp.libcore.util.EmptyArray;
@@ -82,7 +83,9 @@ public class FilterableAppInfo implements IFilterableAppInfo {
     private List<AppOpsManagerCompat.OpEntry> mAppOpEntries;
     @Nullable
     private PackageSizeInfo mPackageSizeInfo;
+    @Nullable
     private AppUsageStatsManager.DataUsage mDataUsage;
+    @Nullable
     private DebloatObject mBloatwareInfo;
     private Integer mFreezeFlags = null;
     private Integer mAppTypeFlags = null;
@@ -90,7 +93,7 @@ public class FilterableAppInfo implements IFilterableAppInfo {
     public FilterableAppInfo(@NonNull PackageInfo packageInfo, @Nullable PackageUsageInfo packageUsageInfo) {
         mPackageInfo = packageInfo;
         mPackageUsageInfo = packageUsageInfo;
-        mApplicationInfo = packageInfo.applicationInfo;
+        mApplicationInfo = Objects.requireNonNull(packageInfo.applicationInfo);
         mUserId = UserHandleHidden.getUserId(mApplicationInfo.uid);
         mPm = ContextUtils.getContext().getPackageManager();
     }
