@@ -1522,4 +1522,8 @@
     <string name="overlay_sdk_version_too_low">Sovrapposizione non supportata.</string>
     <string name="no_overlays">Nessuna sovrapposizione</string>
     <string name="overlays">Sovrapposizioni</string>
+    <string name="filters">Filtri</string>
+    <string name="icon">icona</string>
+    <string name="preview">Anteprima</string>
+    <string name="debloat_removal_unsafe">Non sicuro</string>
 </resources>
