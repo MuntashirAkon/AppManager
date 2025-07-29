@@ -170,7 +170,7 @@
     <string name="deny_app_ops_description">Imposta una modalità per le operazioni dell\'app identificate dai valori costanti, ad esempio <tt>63</tt> o <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="block_components_dots">Blocca componenti…</string>
     <string name="block_unblock_trackers_description">Blocca o sblocca i componenti pubblicitari e di monitoraggio in tutte le app installate</string>
-    <string name="clear_cache">Svuota Cache</string>
+    <string name="clear_cache">Svuota cache</string>
     <string name="pref_import_existing_msg">Aggiungi componenti disabilitati da altre app ad App Manager. Fai attenzione quando usi questo strumento perché possono esserci molti falsi positivi. Scegli solo le app di cui sei certo.</string>
     <string name="pref_import_existing">Importa regole esistenti</string>
     <string name="source_code">Codice sorgente</string>
@@ -747,7 +747,7 @@
     <string name="backup_all_apps">Esegui il backup di tutte le app</string>
     <string name="downgrade">Downgrade</string>
     <string name="orientation_full_sensor">Sensore completo</string>
-    <string name="systemless_app">App senza sistema</string>
+    <string name="systemless_app">App Systemless</string>
     <string name="sort_by_app_ops_values">Valore operazioni app</string>
     <string name="input_signatures">Inserisci firme</string>
     <string name="input_signatures_description">Inserisci firme con spazi, per esempio <tt>com.facebook org.app2 com.app3</tt> etc.</string>
@@ -1029,23 +1029,23 @@
     <string name="tracker">Tracker</string>
     <string name="vt_confirm_uploading_file">Il file non è stato trovato nel database di VirusTotal. Vuoi caricarlo\?</string>
     <string name="alias_pass">Password alias</string>
-    <string name="pref_log_viewer_msg">Configura modalità di visualizzazione dei registri.</string>
+    <string name="pref_log_viewer_msg">Configura modalità di visualizzazione dei log.</string>
     <string name="log_level_verbose">Prolisso</string>
     <string name="log_level_warn">Avvisi</string>
-    <string name="delete_saved_log">Elimina registri salvati</string>
+    <string name="delete_saved_log">Elimina log salvati</string>
     <string name="log_cleared">Log cancellati</string>
     <string name="log_recording_started">Registrazione log iniziata.</string>
     <string name="log_saved">Log salvato.</string>
     <string name="no_saved_logs">Nessun log salvato.</string>
-    <string name="notification_subtext">Toccare per interrompere la registrazione</string>
+    <string name="notification_subtext">Tocca per interrompere la registrazione</string>
     <string name="notification_ticker">Registrazione log avviata</string>
     <string name="pref_filter_pattern_title">Filtra tag</string>
     <string name="pref_expanded_by_default_summary">Mostra testo completo del log per impostazione predefinita.</string>
     <string name="pref_log_write_period_summary" tools:ignore="PluralsCandidate">Durante la registrazione, scrivi sulla scheda SD ogni %1$d righe.</string>
-    <string name="expand_all">Espandi Tutti</string>
+    <string name="expand_all">Espandi tutto</string>
     <string name="background">Sfondo</string>
     <string name="smali">Smali</string>
-    <string name="uses_play_app_signing">Riproduci firma dell\'app</string>
+    <string name="uses_play_app_signing">Firma dell\'app Play</string>
     <string name="process_id">ID processo</string>
     <string name="pem_file">File PEM</string>
     <string name="import_key">Importa chiave</string>
@@ -1082,11 +1082,11 @@
     <string name="pref_log_line_period_error">Inserisci un numero intero compreso tra 1 e 1000.</string>
     <string name="pref_log_write_period_title">Scrivi periodo</string>
     <string name="pref_show_timestamp_summary">Mostra ID processo e timestamp quando espansa.</string>
-    <string name="pref_show_timestamp_title">Mostra Pid e timestamp</string>
+    <string name="pref_show_timestamp_title">Mostra PID e timestamp</string>
     <string name="record_log">Registra log</string>
     <string name="widget_start_recording">Registra
 \nLog</string>
-    <string name="pause_unpause">Play/Pausa</string>
+    <string name="pause_unpause">Play/pausa</string>
     <string name="undo">Annulla</string>
     <string name="file">File</string>
     <string name="collapse_all">Comprimi tutto</string>
@@ -1130,7 +1130,7 @@
     <string name="failed_to_read_keystore">Impossibile leggere il KeyStore.</string>
     <string name="signing_key">Chiave di firma</string>
     <string name="pref_import_backups">Importa backup</string>
-    <string name="log_viewer">Visualizzatore registro</string>
+    <string name="log_viewer">Visualizzatore log</string>
     <string name="filter_choice">Cerca per</string>
     <string name="filter_choice_pid">PID</string>
     <string name="pref_cat_advanced">Avanzate</string>
@@ -1156,7 +1156,7 @@
     <string name="toast_invalid_level">Nome livello non valido: %s</string>
     <string name="toast_invalid_selection">Selezione non valida. Per favore riprova.</string>
     <string name="unable_to_save_log">Impossibile salvare il log. Hai inserito un nome file valido\?</string>
-    <string name="widget_recording_in_progress">Registrando…</string>
+    <string name="widget_recording_in_progress">Registrazione…</string>
     <string name="omit_sensitive_info">Ometti informazioni sensibili</string>
     <string name="omit_sensitive_info_summary">Ometti informazioni sensibili come URL web, numeri di telefono o e-mail.</string>
     <string name="text_include_dmesg">Includi log del kernel</string>
@@ -1178,7 +1178,7 @@
     <string name="threads">Conteggio thread</string>
     <string name="so_type_shared_library">Libreria condivisa</string>
     <string name="scan_in_vt">Scansiona su VirusTotal</string>
-    <string name="app_explorer">Esplora app</string>
+    <string name="app_explorer">Esploratore di app</string>
     <string name="pem_and_pk8">PEM e PKCS #8 (PK8)</string>
     <string name="pk8_file">File PKCS #8 (PK8)</string>
     <string name="import_from_tb">Importa da Titanium Backup</string>
@@ -1243,7 +1243,7 @@
     <string name="user_manual">Manuale utente</string>
     <string name="get_help">Ottieni aiuto</string>
     <string name="pref_privacy_description">Blocco schermo, autorizzazione, ecc.</string>
-    <string name="pref_version_changelog">Versione/Registro delle modifiche</string>
+    <string name="pref_version_changelog">Versione/registro delle modifiche</string>
     <string name="file_creation_date">Creato</string>
     <string name="file_modification_date">Modificato</string>
     <string name="file_accessed_date">Accesso</string>
@@ -1283,7 +1283,7 @@
     <string name="grant_overlay_permission_message">Consenti a App Manager di visualizzare una finestra mobile sopra tutte le altre finestre</string>
     <string name="grant_accessibility_permission_for_tracking_window_contents">Consenti a App Manager di utilizzare la funzione di accessibilità per tenere traccia dei contenuti della finestra principale.</string>
     <string name="class_hierarchy">Gerarchia</string>
-    <string name="title_ui_tracker">Tracciamento UI</string>
+    <string name="title_ui_tracker">Tracker UI</string>
     <string name="title_terminal_emulator">Terminale</string>
     <string name="title_labs_activity">Laboratori</string>
     <string name="app_manager_build_expired">Aggiornamento richiesto</string>
@@ -1461,7 +1461,7 @@
     <string name="finder_title">Trovatore</string>
     <string name="launch_activity_dialog_title">Attività di lancio: azione richiesta</string>
     <string name="pref_use_vt_no_internet">VirusTotal richiede il funzionamento di Internet, che non è abilitato. Abilita prima <a href="app-manager://settings/privacy_prefs/toggle_internet">\"Usa Internet\"</a>.</string>
-    <string name="pref_use_log_viewer">Usa visualizzatore registro</string>
+    <string name="pref_use_log_viewer">Usa visualizzatore log</string>
     <string name="pref_installer">Usa programma di installazione</string>
     <string name="pref_cat_general">Generale</string>
     <string name="status_remote_server_active">Il server remoto è attivo</string>
@@ -1489,14 +1489,14 @@
     <string name="pref_use_system_font_msg">Usa il font predefinito del sistema invece del font material. <font fgcolor="#ff0000">Questa è una funzionalità sperimentale.</font></string>
     <string name="apk_source">Sorgente APK</string>
     <string name="backup_cache">Cache</string>
-    <string name="actual_installer">Installatore effettivo</string>
+    <string name="actual_installer">Installatore corrente</string>
     <string name="activity_name">Nome attività</string>
     <string name="title_shortcut_for_frozen_app">Congela app</string>
     <string name="battery_health">Salute</string>
     <string name="verified_boot">Avvio verificato</string>
     <string name="android_verified_bootloader_version">Versione AVB</string>
     <string name="favorites">Preferiti</string>
-    <string name="add_to_favorites">Aggiungi ai Preferiti</string>
+    <string name="add_to_favorites">Aggiungi ai preferiti</string>
     <string name="item_remove">Rimuovi</string>
     <string name="advanced_suspend_app_description">Arresta e sospende forzatamente l\'app per garantire che non sia in esecuzione in background. Questo metodo è preferibile al normale metodo di <b>sospensione</b>.</string>
     <string name="available_memory">Disponibile: %s</string>
