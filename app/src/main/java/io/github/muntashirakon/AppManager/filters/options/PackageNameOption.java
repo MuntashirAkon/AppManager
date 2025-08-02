@@ -18,6 +18,8 @@ public class PackageNameOption extends FilterOption {
     private final Map<String, Integer> mKeysWithType = new LinkedHashMap<String, Integer>() {{
         put(KEY_ALL, TYPE_NONE);
         put("eq", TYPE_STR_SINGLE);
+        put("eq_any", TYPE_STR_MULTIPLE);
+        put("eq_none", TYPE_STR_MULTIPLE);
         put("contains", TYPE_STR_SINGLE);
         put("starts_with", TYPE_STR_SINGLE);
         put("ends_with", TYPE_STR_SINGLE);
@@ -42,6 +44,20 @@ public class PackageNameOption extends FilterOption {
                 return result.setMatched(true);
             case "eq":
                 return result.setMatched(info.getPackageName().equals(Objects.requireNonNull(value)));
+            case "eq_any":
+                for (String packageName: stringValues) {
+                    if (info.getPackageName().equals(packageName)) {
+                        return result.setMatched(true);
+                    }
+                }
+                return result.setMatched(false);
+            case "eq_none":
+                for (String packageName: stringValues) {
+                    if (info.getPackageName().equals(packageName)) {
+                        return result.setMatched(false);
+                    }
+                }
+                return result.setMatched(true);
             case "contains":
                 return result.setMatched(info.getPackageName().contains(Objects.requireNonNull(value)));
             case "starts_with":
@@ -64,6 +80,10 @@ public class PackageNameOption extends FilterOption {
                 return sb.append(LangUtils.getSeparatorString()).append("any");
             case "eq":
                 return sb.append(" = '").append(value).append("'");
+            case "eq_any":
+                return sb.append(" matching any of ").append(String.join(", ", stringValues));
+            case "eq_none":
+                return sb.append(" matching none of ").append(String.join(", ", stringValues));
             case "contains":
                 return sb.append(" contains '").append(value).append("'");
             case "starts_with":
