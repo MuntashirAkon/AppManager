@@ -2,6 +2,9 @@
 
 package io.github.muntashirakon.AppManager.filters.options;
 
+import android.content.Context;
+import android.text.SpannableStringBuilder;
+
 import androidx.annotation.NonNull;
 
 import java.util.LinkedHashMap;
@@ -10,7 +13,8 @@ import java.util.Map;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.compat.InstallSourceInfoCompat;
-import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
+import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public class InstallerOption extends FilterOption {
     private final Map<String, Integer> mKeysWithType = new LinkedHashMap<String, Integer>() {{
@@ -32,7 +36,7 @@ public class InstallerOption extends FilterOption {
 
     @NonNull
     @Override
-    public TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result) {
+    public TestResult test(@NonNull IFilterableAppInfo info, @NonNull TestResult result) {
         InstallSourceInfoCompat installSourceInfo = info.getInstallerInfo();
         if (installSourceInfo == null) {
             return result.setMatched(key.equals(KEY_ALL));
@@ -40,7 +44,7 @@ public class InstallerOption extends FilterOption {
         // There's at least one installer at this point
         Set<String> installers = getInstallers(installSourceInfo);
         switch (key) {
-            default:
+            case KEY_ALL:
                 return result.setMatched(false);
             case "installer":
                 return result.setMatched(installers.contains(value));
@@ -58,6 +62,8 @@ public class InstallerOption extends FilterOption {
                     }
                 }
                 return result.setMatched(false);
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
         }
     }
 
@@ -74,5 +80,23 @@ public class InstallerOption extends FilterOption {
             installers.add(installSourceInfo.getOriginatingPackageName());
         }
         return installers;
+    }
+
+    @NonNull
+    @Override
+    public CharSequence toLocalizedString(@NonNull Context context) {
+        SpannableStringBuilder sb = new SpannableStringBuilder("Only the apps with installer");
+        switch (key) {
+            case KEY_ALL:
+                return sb.append(LangUtils.getSeparatorString()).append("any");
+            case "installer":
+                return sb.append(" ").append(value);
+            case "installers":
+                return sb.append(" (exclusive) ").append(String.join(", ", stringValues));
+            case "regex":
+                return sb.append(" that matches '").append(value).append("'");
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
+        }
     }
 }

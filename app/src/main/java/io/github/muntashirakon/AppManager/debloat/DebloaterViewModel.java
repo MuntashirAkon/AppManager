@@ -145,9 +145,6 @@ public class DebloaterViewModel extends AndroidViewModel {
                     if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_OEM) == 0 && debloatObject.type.equals("oem")) {
                         continue;
                     }
-                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_PENDING) == 0 && debloatObject.type.equals("pending")) {
-                        continue;
-                    }
                     // Removal
                     int removalType = debloatObject.getRemoval();
                     if ((mFilterFlags & DebloaterListOptions.FILTER_REMOVAL_SAFE) == 0 && removalType == DebloatObject.REMOVAL_SAFE) {
@@ -157,6 +154,9 @@ public class DebloaterViewModel extends AndroidViewModel {
                         continue;
                     }
                     if ((mFilterFlags & DebloaterListOptions.FILTER_REMOVAL_CAUTION) == 0 && removalType == DebloatObject.REMOVAL_CAUTION) {
+                        continue;
+                    }
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_REMOVAL_UNSAFE) == 0 && removalType == DebloatObject.REMOVAL_UNSAFE) {
                         continue;
                     }
                     // Filter others
@@ -200,5 +200,6 @@ public class DebloaterViewModel extends AndroidViewModel {
             return;
         }
         mDebloatObjects.addAll(StaticDataset.getDebloatObjectsWithInstalledInfo(getApplication()));
+        Collections.sort(mDebloatObjects, (o1, o2) -> CharSequence.compare(o1.getLabelOrPackageName(), o2.getLabelOrPackageName()));
     }
 }

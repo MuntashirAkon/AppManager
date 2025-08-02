@@ -1,2 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <plurals name="usage_seconds">
+        <item quantity="zero">%1$d sekundes</item>
+        <item quantity="one">%1$d sekundi</item>
+        <item quantity="other">%1$d sekundes</item>
+    </plurals>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="zero">Nevarēja noņemt %1$d lietotnes</item>
+        <item quantity="one">Nevarēja noņemt %1$d lietotni</item>
+        <item quantity="other">Nevarēja noņemt %1$d lietotnes</item>
+    </plurals>
+    <string name="permissions">Izmantotās atļaujas</string>
+    <string name="require_no_permission">Nepieprasa atļauju</string>
+    <string name="activities">Darbības</string>
+    <string name="uninstall">Noņemt</string>
+    <string name="launch">Palaist</string>
+    <string name="found_trackers">Atrastie izsekotāji:</string>
+    <string name="no_tracker_class">Nav izsekotāja klases</string>
+    <string name="tracker_details">Informācija par izsekotāju</string>
+    <string name="tracker_classes">Izsekotāja klases</string>
+    <string name="all_classes">Visas klases</string>
+    <plurals name="main_list_date_days">
+        <item quantity="zero"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dienas</item>
+        <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> diena</item>
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dienas</item>
+    </plurals>
+    <string name="app_usage">Lietotņu lietojums</string>
+    <string name="usage_today">Šodienas</string>
+    <string name="usage_7_days">Pēdējās 7 dienās</string>
+    <string name="usage_less_than_a_minute">Mazāk par minūti</string>
+    <string name="go_back">Iet atpakaļ</string>
+    <string name="go">Atļaut (Aiziet)</string>
+    <string name="grant_usage_access">Piešķiriet lietošanas vēstures piekļuvi</string>
+    <string name="grant_usage_acess_message">Izmanto, lai parādītu informāciju par lietotņu lietojumu.</string>
+    <string name="share_apk">Kopīgot APK</string>
+    <string name="failed_to_extract_apk_file">Neizdevās iegūt APK failu</string>
+    <string name="menu_remove_rules">Noņemt noteikumus</string>
+    <string name="menu_apply_rules">Piemērot (izmantot) noteikumus</string>
+    <string name="search">Meklēt</string>
+    <string name="native_library_dir">Dzimtā JNI bibliotēku mape</string>
+    <string name="process_name">Procesa nosaukums</string>
+    <string name="no_code">Nav koda</string>
+    <string name="requested_large_heap">Daudz (liela) kaudzes atmiņas</string>
+    <string name="updated_app">Atjaunināta</string>
+    <string name="debuggable">Atkļūdojama</string>
+    <string name="test_only">Tikai pārbaudei</string>
+    <string name="shared_prefs">Kopīgie iestatījumi</string>
+    <string name="databases">Datubāzes</string>
+    <string name="save">Saglabāt</string>
+    <string name="discard">Atcelt</string>
+    <string name="delete">Dzēst</string>
+    <string name="uninstall_app_message">Vai vēlaties noņemt šo lietotni?</string>
+    <string name="failed_to_uninstall">Nevarēja noņemt <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> lietotni.</string>
+    <string name="failed_to_uninstall_app">Nevarēja noņemt</string>
+    <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> lietotne veiksmīgi noņemta.</string>
+    <string name="uninstall_system_app_message">Šī ir sistēmas lietotne. Vai tiešām vēlaties noņemt šo lietotni?</string>
+    <string name="clear_data_from_uninstalled_apps">Dzēst noņemto lietotņu datus</string>
+    <string name="clear_data_from_uninstalled_apps_description">Dzēš lietotņu datus, kas noņemtas ar <tt>DONT_DELETE_DATA</tt> atzīmi</string>
+    <string name="uninstall_updates">Noņemt atjauninājumus</string>
+    <string name="update_uninstalled_successfully">Lietotnes <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> atjauninājumi veiksmīgi noņemti.</string>
+    <string name="failed_to_uninstall_updates">Nevarēja noņemt lietotnes <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> atjauninājumus.</string>
+    <string name="do_you_want_to_uninstall_and_install">Vai vēlaties noņemt un atkal uzstādīt lietotni?</string>
+    <string name="uninstalled_apps">Noņemtās lietotnes</string>
+    <string name="confirm_uninstallation">Apstiprinu noņemšanu</string>
+    <string name="uninstall_app_again_message">Lietotne tika noņemta bez datu un paraksta dzēšanas. Vai vēlaties to pilnībā noņemt?</string>
+    <string name="uninstall_app">Noņemt %1$s</string>
+    <string name="refresh">Atsvaidzināt</string>
+    <string name="sort_by_last_update">Pēdējo reizi atjaunināta</string>
+    <string name="signatures">Paraksti</string>
+    <string name="sort_by_sha">Paraksta</string>
+    <string name="app_signing_signatures">Paraksti</string>
+    <string name="app_signing_no_signatures">Nav derīgu parakstu</string>
+    <string name="error">Kļūda</string>
+    <string name="sort_by_app_label">Lietotnes nosaukuma</string>
+    <string name="sort_by_target_sdk">Mērķa SDK versijas</string>
+    <string name="about">Par lietotni</string>
+    <string name="app_not_installed">Lietotne nav uzstādīta</string>
+    <string name="sort">Kārtot pēc</string>
+    <string name="system_app">Sistēmas lietotne</string>
+    <string name="user_app">Lietotāja lietotne</string>
+    <string name="shared_libs">Koplietotās bibliotēkas</string>
+    <string name="group">Grupa</string>
+    <string name="declared_permission">Atļaujas</string>
+    <string name="loading">Ielādē…</string>
+    <string name="sort_by_shared_user_id">Vispārīgā (koplietotā) lietotāja identifikatora</string>
+    <string name="sort_by_last_used">Pēdējo reizi lietota</string>
+    <string name="sort_by_installation_date">Uzstādīšanas datuma</string>
+    <string name="sort_by_package_name">Lietotnes unikālā nosaukuma</string>
+    <string name="sort_by_domain">Lietotāja lietotnes augšgalā</string>
+    <string name="sort_by_memory_usage">Izmantotās atmiņas apjoma</string>
+    <string name="sort_by_apps_first">Lietotnes augšgalā</string>
+    <string name="sort_by_process_name">Procesa nosaukuma</string>
+    <string name="sort_by_process_id">Procesa ID</string>
+    <string name="sort_by_backup">Dublētās augšgalā</string>
+    <string name="sort_by_total_size">Kopējā izmēra</string>
+    <string name="sort_by_frozen_app">Iesaldētās augšgalā</string>
+    <string name="sort_by_data_usage">Izmantotā datu apjoma</string>
+    <string name="sort_by_overlay_names">Pārklājuma nosaukuma</string>
+    <string name="sort_by_priority">Prioritātes</string>
+    <string name="sort_by_blocked_components">Bloķētās augšgalā</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a>﻿</string>
+    <string name="sort_by_screen_time">Lietošanas ilguma</string>
+    <string name="sort_by_times_opened">Atvēršanas skaita</string>
+    <string name="sort_by_mobile_data">Izmantotā mobilo datu apjoma</string>
+    <string name="sort_by_wifi_data">Izmantotā Wi-Fi datu apjoma</string>
+    <string name="pref_about_msg">App Manager versija, licence, pateicības, saites utt.</string>
+    <string name="sort_by_component_name">Komponenta nosaukuma</string>
+    <string name="sort_by_app_ops_names">Lietotnes darbību nosaukuma</string>
+    <string name="sort_by_app_ops_values">Lietotnes darbību vērtības</string>
+    <string name="sort_by_permission_names">Atļaujas nosaukuma</string>
+    <string name="sort_by_dangerous_permissions">Bīstamās augšgalā</string>
+    <string name="sort_by_tracker_components">Izsekotājus augšgalā</string>
+    <string name="sort_by_denied_app_ops">Liegtās darbības augšgalā</string>
+    <string name="sort_by_denied_permissions">Liegtajām atļaujām augšgalā</string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://x.com/AppManagerNews">Twitter/X</a> • <a href="https://floss.social/@appmanager">Mastodon</a>﻿</string>
+    <string name="about_device">Par ierīci</string>
+    <string name="pref_about_device_msg">Pamatinformācija par ierīci - Android versija, CPU, GPU, RAM, baterija utt.</string>
+    <string name="last_actions">Nesenās darbības</string>
+    <string name="sort_by_filename">Nosaukuma</string>
+    <string name="sort_by_last_modified">Pēdējo reizi modificēts</string>
+    <string name="sort_by_file_size">Faila izmēra</string>
+    <string name="sort_by_file_type">Faila tipa</string>
+    <string name="credits_message">Pateicība izstrādātājiem:\n- The Android Open Source Project \n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a> \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a> \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a> \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a> \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a> \n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a> \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a> \n- <a href="https://github.com/billthefarmer/editor">Editor</a> \n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a> \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a> \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a> \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> \n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a> \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a> \n- <a href="https://github.com/pluscubed/matlog">MatLog</a> \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a> \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a> \n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a> \n- <a href="https://github.com/Aefyr/SAI">SAI</a> \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a> \n- <a href="https://github.com/eclipse/tm4e">tm4e</a> \n- <a href="https://github.com/tuyafeng/Watt">Watt</a></string>
+    <plurals name="usage_hours">
+        <item quantity="zero">%1$d stundas</item>
+        <item quantity="one">%1$d stundu</item>
+        <item quantity="other">%1$d stundas</item>
+    </plurals>
+    <plurals name="usage_days">
+        <item quantity="zero">%1$d dienas</item>
+        <item quantity="one">%1$d dienu</item>
+        <item quantity="other">%1$d dienas</item>
+    </plurals>
+    <plurals name="usage_months">
+        <item quantity="zero">%1$d mēnešus</item>
+        <item quantity="one">%1$d mēnesi</item>
+        <item quantity="other">%1$d mēnešus</item>
+    </plurals>
+    <plurals name="usage_minutes">
+        <item quantity="zero">%1$d minūtes</item>
+        <item quantity="one">%1$d minūti</item>
+        <item quantity="other">%1$d minūtes</item>
+    </plurals>
+    <string name="data_usage_msg">Izmantotais datu apjoms</string>
+    <string name="package_name">Lietotnes unikālais nosaukums</string>
+    <string name="license">Licence</string>
+    <string name="usage_weekly">Nedēļas</string>
+    <string name="usage_access">Piekļuve lietojumu datiem</string>
+    <string name="usage_yesterday">Vakardienas</string>
+    <string name="usage_times_opened">Atvēršanas skaita</string>
+    <string name="usage_last_used">Pēdējo reizi lietota</string>
+    <string name="usage_mobile_data">Izmantotā mobilo datu apjoma</string>
+    <string name="usage_wifi_data">Izmantotā Wi-Fi datu apjoma</string>
+    <string name="installer_app">Uzstādīšanas lietotne</string>
+    <string name="empty_package_name">Tuksš lietotnes unikālais nosaukums</string>
+    <string name="no_usage_in_this_time_range">Šajā laika diapazonā nav lietojumu datu</string>
+    <string name="installer_error_storage">Nav pietiekami daudz krātuves vietas, lai uzstādītu lietotni</string>
+    <string name="installer_error_generic">Uzstādīšana neizdevās</string>
+    <string name="usage_access_not_supported">Nevarēja pieprasīt atļauju piekļūt lietošanas vēsturei, jo attiecīgā iestatījumu sadaļa neeksistē.</string>
+    <string name="installer">Uzstādīšana</string>
+    <string name="installer_app_message">Noklikšķiniet uz <b>Atlasīt</b>, lai izmantotu kādu no uzstādītajām lietotnēm, vai <b>Pielāgots</b>, lai ievadītu savu lietotnes unikālo nosaukumu.</string>
+</resources>

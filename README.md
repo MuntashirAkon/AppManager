@@ -19,8 +19,8 @@
 ### General features
 - Fully reproducible, copylefted libre software (GPLv3+)
 - Material 3 with dynamic colours
-- Displays as much information as possible in the main page
-- Lists activities, broadcast receivers, services, providers, app ops, permissions, signatures, shared libraries, etc. of an application
+- Display as much information as possible in the main page
+- List activities, broadcast receivers, services, providers, app ops, permissions, signatures, shared libraries, etc. of an application
 - Launch activities and services
 - Create shortcuts of activities
 - [Intercept activities](https://muntashirakon.github.io/AppManager/#sec:interceptor-page)
@@ -37,7 +37,8 @@
 - Debloater
 - Code editor
 - File manager
-- Open an app in Aurora Store or in your favourite F-Droid client directly from App Manager
+- Simple terminal emulator
+- Open an app in Aurora Store or in your favourite F-Droid client
 - Sign APK files with custom signatures before installing
 - Backup encryption: OpenPGP via OpenKeychain, RSA, ECC (hybrid encryption with AES) and AES.
 - Track foreground UI components
@@ -63,11 +64,10 @@
 …and many more! This single app combines the features of 5 or 6 apps any tech-savvy person needs!
 
 ### Upcoming features
-- APK editing
-- Routine operations
 - Finder: Find app components, permissions etc. in all apps
+- Basic APK editing
+- Routine operations
 - Enable/disable app actions such as launch on boot
-- Panic responder for Ripple
 - Crash monitor
 - Systemless disabling/uninstalling of the system apps
 - Import app list exported by App Manager
@@ -89,8 +89,10 @@ Help translate [the app strings](https://hosted.weblate.org/engage/app-manager/)
 
 ## Mirrors
 
-[GitLab](https://gitlab.com/muntashir/AppManager) · [Riseup](https://0xacab.org/muntashir/AppManager) ·
-[Codeberg](https://codeberg.org/muntashir/AppManager)
+[Codeberg](https://codeberg.org/muntashir/AppManager) ·
+[GitLab](https://gitlab.com/muntashir/AppManager) ·
+[Riseup](https://0xacab.org/muntashir/AppManager) ·
+[sourcehut](https://git.sr.ht/~muntashir/AppManager)
 
 ## Screenshots
 
@@ -109,6 +111,11 @@ As of September 2024, App Manager is not accepting any financial support until f
 you may still be able to send gifts (e.g., gift cards, subscriptions, food and drink, flowers, or
 even cash). Please contact the maintainer at muntashirakon [at] riseup [dot] net for further
 assistance.
+
+In addition, the maintainers and contributors of this project DO NOT consent to the creation, sale,
+or promotion of tokens, cryptocurrencies, NFTs, or any other financial instruments that claim to
+represent this project, its code, or its community. Any such attempts are unauthorized and not
+affiliated with this project in any way.
 
 ## Credits and Libraries
 

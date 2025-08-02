@@ -1,0 +1,5 @@
+- [Main page] Optimize searching and filtering
+- [Profile page] Use the configured state to execute a profile for simple shortcuts
+- Use sentence case for all strings
+- Prevent crashing while searching
+- Fix integer overflow in tar compression

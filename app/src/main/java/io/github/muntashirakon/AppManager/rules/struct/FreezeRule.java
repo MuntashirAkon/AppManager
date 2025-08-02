@@ -11,10 +11,10 @@ import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 
 public class FreezeRule extends RuleEntry {
-    @FreezeUtils.FreezeType
+    @FreezeUtils.FreezeMethod
     private int mFreezeType;
 
-    public FreezeRule(@NonNull String packageName, @FreezeUtils.FreezeType int freezeType) {
+    public FreezeRule(@NonNull String packageName, @FreezeUtils.FreezeMethod int freezeType) {
         super(packageName, STUB, RuleType.FREEZE);
         mFreezeType = freezeType;
     }
@@ -30,7 +30,7 @@ public class FreezeRule extends RuleEntry {
         return mFreezeType;
     }
 
-    public void setFreezeType(@FreezeUtils.FreezeType int freezeType) {
+    public void setFreezeType(@FreezeUtils.FreezeMethod int freezeType) {
         mFreezeType = freezeType;
     }
 

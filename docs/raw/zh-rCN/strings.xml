@@ -4,23 +4,23 @@
     <string name="intro$main$$supported-versions-title">受支持的版本</string>
     <string name="intro$main$$source-code-links-title">源码链接</string>
     <string name="intro$main$$contributing-title">贡献</string>
-    <string name="intro$main$buiding">在位于源码根目录下的BUILDING文件中可以获得编译指导。</string>
+    <string name="intro$main$buiding">在位于源码根目录下的BUILDING文件中可以获得编译教程。</string>
     <string name="titlepage$user_manual">{\\huge\\bfseries 用户手册\\par}</string>
-    <string name="intro$main$translations">App Manager 不接受直接通过pull/merge进行的翻译。翻译通过Hosted Weblate进行管理。
-\n要翻译App Manager，请访问 \\url{https://hosted.weblate.org/engage/app-manager/}。</string>
-    <string name="intro$main$supported-versions">当前，支持的版本是 v3.0.0 -- v3.0.3（稳定版），v3.1.0（alpha 和 debug 版）。先前版本的 App
-\nManager 可能包含安全漏洞，不应继续使用。</string>
+    <string name="intro$main$translations">App Manager 不接受通过 pull/merge 请求进行的翻译。\n翻译通过 Hosted Weblate 管理。
+\n要翻译App Manager，请访问 \\url{https://hosted.weblate.org/engage/app-manager/}。开始前请阅读 \\textbf{信息} 部分。</string>
+    <string name="intro$main$supported-versions">当前，支持的版本是 v4.0.1。\n先前版本的 App
+Manager 可能包含安全漏洞，不应继续使用。</string>
     <string name="intro$main$intro">App Manager 是一个高级的 Android 包管理器。
-\n它提供了不计其数的功能，因此需要用户手册来帮助用户。本文档作为 App Manager 的用户手册，旨在描述 App Manager 提供的每一个功能。
+\n它提供了许多功能，因此需要用户手册来帮助用户。本文档作为 App Manager 的用户手册，旨在描述 App Manager 提供的每一个功能。
 \n本文档也可以被认为是 App Manager 的“官方”指南，
 \n并代表了 App Manager 的预期行为。翻译对文档理解可能有误（原文是用英语写的）。
-\n因此，每个有能力的用户都应该阅读英文版本的文档，以充分发挥 App Manager 的作用。
-\n可能还有其他非官方或第三方资源，如博客文章、视频、聊天、群组等。
+\n因此，有能力的用户应该阅读英文文档，以充分发挥文档 的作用。
+\n可能还有其他非官方或第三方资源，如博客文章、视频、论坛、聊天、群组等。
 \n虽然这些资源可能对很多人有用，但它们的内容可能跟不上最新的 App Manager 版本。
 \n如果在 App Manager 中发现任何偏离本文档的情况，应在
 \n\\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager 问题追踪}进行报告。</string>
     <string name="intro$main$bin-sources">App Manager 通过以下渠道发布。
-\n非官方来源可能分发 App Manager 的修改版本，后果自负。
+\n非官方来源可能分发 App Manager 的修改版本，使用这样版本的后果由你自己单独承担。
 \n\\begin{enumerate}
 \n \\item F-Droid \\footnote{For distributing normal releases only}\\\\
 \n \\textit{Link:} \\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}
@@ -31,8 +31,8 @@
 \n \\textit{Normal releases:} \\url{https://t.me/AppManagerChannel}\\\\
 \n \\textit{Debug releases:} \\url{https://t.me/AppManagerDebug}
 \n\\end{enumerate}</string>
-    <string name="intro$main$source-code-links">除了GitHub外其他都是镜像链接。tags 应当始终是最新的，但 master 分支不保证是
-\n最新的。如果计划 clone master 分支，请使用 GitHub 链接而不是其他链接。</string>
+    <string name="intro$main$source-code-links">除了GitHub外其他都是镜像链接。tags 应当始终是最新的，但 master 分支也许不是
+。 \n如果计划克隆 master 分支，请使用 GitHub 链接而不是其他链接。</string>
     <string name="intro$main$terminologies">\\begin{itemize}
 \n \\item \\textbf{AM} --- App Manager 应用
 \n \\item \\textbf{Block/Unblock} --- 用于拦截组件或解除组件拦截。 如何拦截取决于
@@ -41,7 +41,7 @@
 \n \\item \\textbf{Ops} --- operations (操作), e.g.\\ app ops, batch ops, 1-click ops
 \n \\item \\textbf{SAF} --- 存储访问框架（SAF）的缩写形式，Android 系统所用的抽象概念，允许应用无需担忧底层文件系统便能
 \n 使用或提供文件。
-\n \\item \\textbf{SSAID} --- \\texttt{Settings.Secure.ANDROID\\_ID} - 分配给每个应用的设备标识符 (Android Oreo及以上版本)，
+\n \\item \\textbf{SSAID} --- \\texttt{Settings.Secure.ANDROID\\_ID} - 分配给每个应用的设备标识符 (Android Oreo以上版本)，
 \n 由应用签名与包\\texttt{android}的SSAID组合生成。
 \n 因此，除非用户选择格式化设备，否则它保证对每个应用来说都是独一无二的。
 \n 它被普遍用于跟踪用户。
@@ -58,8 +58,8 @@
     <string name="intro$main$$official-sources-title">官方来源</string>
     <string name="intro$main$$donation-title">捐赠 \\&amp; 资助</string>
     <string name="intro$main$$contact-title">联系我们</string>
-    <string name="intro$main$contributing">用户可有通过多种方式做出贡献，如创建有用 issues 、参加讨论、
-\n改进文档和翻译，添加未被认可的库或跟踪器，
+    <string name="intro$main$contributing">用户可有通过多种方式作贡献，如创建有用 issues 、参加讨论、
+\n改进文档和翻译、报告未知的库或跟踪器、
 \n审查源代码以及报告安全漏洞。</string>
     <string name="pages$main$$pages-chapter-title">页面</string>
     <string name="pages$main-page$$section-title">主页</string>
@@ -75,8 +75,7 @@
     <string name="pages$main-page$$profiles-title">配置文件</string>
     <string name="pages$main-page$$termux-title">Termux 终端模拟器</string>
     <string name="pages$main-page$$settings-title">设置</string>
-    <string name="pages$main-page$options-menu">选项菜单提供了几个选项，可用以对列出的应用程序进行排序和过滤，
-\n以及转到 App Manager 内或外的不同页面。</string>
+    <string name="pages$main-page$options-menu">选项菜单提供了若干个选项，以用于对列出的应用程序进行排序和过滤， \n以及转到 App Manager 内或外的不同页面。</string>
     <string name="pages$main-page$settings">此菜单项将打开本应用的 \\hyperref[sec:settings-page]{设置}.</string>
     <string name="pages$app-details-page$$section-title">应用程序详情页</string>
     <string name="pages$app-details-page$$colour-codes-title">颜色代码含义</string>
@@ -89,151 +88,36 @@
     <string name="pages$app-details-page$$receivers-title">(广播)接收器 ((Broadcast)Receiver)</string>
     <string name="pages$app-details-page$$providers-title">(内容)提供者 ((Content)Providers)</string>
     <string name="pages$app-details-page$$blocking-components-title">拦截组件。</string>
-    <string name="pages$app-details-page$intro">\\textbf{应用详情} 页面由 11 个标签页组成。它描述了一个应用程序所能有的几乎所有信息, 
-\n包括其清单中的所有属性、\\hyperref[ch:app-ops]{应用操作}、签名
-\n信息、库等等。</string>
+    <string name="pages$app-details-page$intro">\\textbf{应用详情} 页面由 11 个标签页组成。它描述了一个应用程序持有的几乎所有信息, \n包括其清单中的所有属性、\\hyperref[ch:app-ops]{应用操作（App Ops）}、签名 \n信息、库等等。</string>
     <string name="pages$app-details-page$app-info-tab">\\textbf{应用信息} 选项卡包含关于一个应用程序的基本信息,
 \n许多操作可以在此标签中执行.</string>
     <string name="pages$one-click-ops-page$$section-title">一键操作页</string>
     <string name="pages$main-page$$colour-codes-title">颜色代码含义</string>
     <string name="intro$main$submit-patches">除GitHub之外的仓库目前被视为镜像，在这些网站提交的 PR/MR 将不被接受.
 \n\\footnote{GitHub 的 PR 将使用 git patch 进行手动合并, 因此, GitHub 可能会错误地将它们标记为closed而不是merged.}
-\n相反，patches (\\texttt{.patch} 文件) 可以通过电子邮件附件提交。\\textit{请务必对Commits签名(Signing-off)} 
+\n相反，patches (\\texttt{.patch} 文件) 可以通过电子邮件附件提交。\\textit{请务必对Commits签名(Signing-off)}
 \n更多信息请参见位于源码根目录下的CONTRIBUTING文件.
 \n
 \n\\begin{warning}{注意}
-\n在通过电子邮件提交补丁是，整个邮件对话在将来可能会被公开访问.
-\n所以，请不要除了您的姓名和电子邮件地址之外，不要包含任何个人身份信息（PII）.
+\n至于通过电子邮件提交补丁，完整邮件对话在将来可能可以公开访问.
+\n所以，请不要包含除了您的姓名和电子邮件地址之外的任何个人身份信息（PII）.
 \n\\end{warning}</string>
-    <string name="pages$main-page$colour-codes">\\begin{itemize}
-\n \\item \\colorbox{AMLightGreyishOrange}{\\textcolor{black}{浅灰橙(日间模式下)}} / \\colorbox{AMDarkBlue}{
-\n \\textcolor{white}{深蓝(夜间模式下)}} -- 多选模式下被选中的应用
-\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{浅红(日间模式下)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}
-\n {深红 (夜间模式下)}} -- 停用的应用
-\n \\item \\colorbox{AMYellow}{\\textcolor{black}{黄色星标}} -- 可调试的应用
-\n \\item \\textcolor{AMOrange}{橙色 \\textit{日期}} -- 应用可读取日志
-\n \\item \\textcolor{AMOrange}{橙色 \\textit{UID}} -- 用户 ID 在应用间被共享
-\n \\item \\textcolor{AMOrange}{橙色 \\textit{SDK}} -- 使用明文网络通信(即 HTTP)
-\n \\item \\textcolor{red}{红色 \\textit{包名}} -- 应用禁止清除数据
-\n \\item \\textcolor{red}{红色\\textit{备份标识}} -- 已卸载的应用存在一个或多个备份
-\n 在App Manager中
-\n \\item \\textcolor{AMOrange}{橙色\\textit{备份标识}} -- 备份过期,
-\n 即基本备份中包含已安装的应用的旧版本
-\n \\item \\textcolor{AMDarkCyan}{深蓝绿色 \\textit{备份标识}} -- 备份在期,
-\n 即基本备份中包含已安装应用的相同或更高版本
-\n \\item \\textcolor{AMDarkCyan}{深蓝绿色 \\textit{包名}} -- 已强行停止运行的应用
-\n \\item \\textcolor{AMDarkCyan}{深蓝绿色 \\textit{版本}} -- 不活跃的应用
-\n \\item \\textcolor{magenta}{紫红} -- 常驻应用(即一直运行的应用)
-\n\\end{itemize}</string>
-    <string name="pages$main-page$instructions">点击 \\textbf{指南} 打开离线版的App Manager用户手册. 
-\n它也可能打开在线版本如果如果相应的功能拆分\\texttt{feat\\_docs}未安装, 
-\n或系统 WebView不存在.</string>
+    <string name="pages$main-page$colour-codes">\\begin{itemize}\n \\item \\colorbox{uninstalled-day}{\\textcolor{black}{红色 (日间模式下)}} / \\colorbox{uninstalled-night}{\\textcolor{white}\n {深红色 (夜间模式下)}} --已卸载的应用程序\n \\item \\colorbox{disabled-day}{\\textcolor{black}{浅红色 (日间模式下)}} / \\colorbox{disabled-night}{\\textcolor{white}\n {暗红色 (夜间模式下)}} -- 已停用的应用程序\n \\item \\colorbox{force-stopped}{\\textcolor{white}{暗青色}} -- 已强行停止的应用程序\n \\item \\colorbox{AMYellow}{\\textcolor{black}{黄色星标}} -- 可调试的应用程序\n\n \\item \\textcolor{AMOrange}{橙色 \\textit{日期}} -- 可读取日志的应用程序\n \\item \\textcolor{AMOrange}{橙色 \\textit{UID}} -- UID在多个应用程序中被共享\n \\item \\textcolor{AMOrange}{橙色 \\textit{SDK}} -- 使用明文网络通信(即 HTTP)\n \\item \\textcolor{tracker-day}{亮橙色 \\textit{包名}} -- 有一个或多个跟踪器的应用程序\n \\item \\textcolor{red}{红色 \\textit{应用标签}} -- 不允许清空数据的应用程序\n \\item \\textcolor{AMDarkCyan}{暗青色 \\textit{版本}} -- 未运行的应用程序\n \\item \\textcolor{magenta}{紫红色} -- 常驻应用(即一直运行的应用程序)\n\n \\item \\textcolor{red}{红色 \\textit{备份标识}} -- 已卸载的应用程序存在一个或多个备份 \n 在App Manager中\n \\item \\textcolor{AMOrange}{橙色 \\textit{备份标识}} -- 存在的备份已过期，\n 即基本备份中包含已安装应用程序的旧版本\n \\item \\textcolor{AMDarkCyan}{暗青色 \\textit{备份标识}} -- 存在的备份已更新，\n 即基本备份中包含已安装应用程序的相同版本或更高版本\n\\end{itemize}</string>
+    <string name="pages$main-page$instructions">单击 \\textbf{用户手册} 打开离线版本的 App Manager 用户手册。\n如果单独拆分出来的相应功能（即\\ \\texttt{feat\\_docs} ）未安装, 或系统里不存在加载手册的 WebView\n也可以打开用户手册的在线版本。</string>
     <string name="pages$main-page$$list-options-title">列表选项</string>
     <string name="pages$main-page$$apk-updater-title">APK更新器</string>
-    <string name="intro$main$donation">\\emph{捐赠或购买并不是使用App Manager的必要条件.} 虽然 App Manager 不支持任何任何内购,
-\n但可以通过 Open Source Collective 向 App Manager 的所有者发送捐赠.
-\n
-\nOpen Source Collective 是 Open Collective 平台上的一个财政托管机构，以帮助开源项目管理他们的财务状况。
-\n目前，它支持通过银行账户、PayPal、信用卡或借记卡
-\n和加密货币发起捐赠.
-\n
-\n\\textit{Link:} \\url{https://opencollective.com/muntashir}.
-\n
-\n通过发送捐款，发送者同意他们不应使用捐款作为筹码来使作者优先考虑其所请求的功能.
-\n请求新功能不需要任何捐赠，
-\n且它们的优先级是按作者倾向排序.
-\n
-\n\\emph{App Manager 接受任何资助的提议}
-\n有兴趣的组织的代表可以通过以下方式直接联系联系所有者: \\Sref{sec:contact}.</string>
-    <string name="intro$main$contact">Muntashir Al-Islam\\footnote{可称``Muntashir Akon\'\'}\\\\
-\n邮箱: \\href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\\\
-\nKey Fingerprint: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
-\nGitHub: \\url{https://github.com/MuntashirAkon}\\\\
-\nTwitter: \\url{https://twitter.com/Muntashir}</string>
+    <string name="intro$main$donation">% \\emph{捐赠或购买并不是使用App Manager的必要条件。} 虽然 App Manager 不支持任何内购，\n% 但可以通过 Open Source Collective 向 App Manager 的所有者进行捐赠。 \n%\n% Open Source Collective 是 Open Collective 平台上的一个财政托管机构，\n% 帮助开源项目管理他们的财务状况。 \n% 目前支持通过银行账户、PayPal、信用卡或借记卡以及加密货币发起捐赠。\n%\n% \\textit{链接：} \\url{https://opencollective.com/muntashir} 。\n%\n% 向开发者捐赠意味着捐赠者同意\n% “不应将捐款当作使作者优先考虑其所请求的功能的筹码” 。 \n% 新功能的优先级根据开发者的偏好决定，并不需要任何报酬或捐赠。\n%\n% \\emph{App Manager 接受任何主动提供的资助或赠款} \n% 有兴趣组织的代表可以通过 \\Sref{sec:contact} 中给出的选项联系所有者。\n\n截至2024年9月，\n在另行通知前 App Manager 不接受经济支持。\n但你仍可以向开发者赠送礼物（例如礼品卡、订阅、食物和饮料、鲜花甚至是现金）。\n请用 \\Sref{sec:contact} 中给出的选项联系维护者以获得进一步帮助。</string>
+    <string name="intro$main$contact">App Manager 社区\\\\\n邮箱: \\href{mailto:am4android@riseup.net}{am4android [at] riseup [dot] net}\\\\\nGitHub 账户: \\url{https://github.com/AMCommunity}\\\\\nTwitter/X 账户: \\url{https://x.com/AppManagerNews}\\\\\nMastodon 账户: \\href{https://floss.social/@appmanager}{@appmanager@floss.social}\\\\\n\\\\\n\nMuntashir Al-Islam\\footnote{你也可以叫我``Muntashir Akon\'\'}\\\\ \n邮箱: \\href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\\\ \n密钥指纹: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\ \nGitHub 账户: \\url{https://github.com/MuntashirAkon}\\\\ \nTwitter 账户: \\url{https://twitter.com/Muntashir}</string>
     <string name="pages$main-page$$batch-operations-title">批处理</string>
     <string name="pages$main-page$$version-info-title">版本信息</string>
     <string name="pages$main-page$$options-menu-title">选项菜单</string>
-    <string name="pages$main-page$intro">主页面列出所有已安装、已卸载和已备份的应用。
-\n单独点击任何已安装的应用项目可打开相应的 \\hyperref[sec:app-details-page]{应用详情页}。
-\n对于未安装的系统应用，它会显示一个 对话框提示，可以用来重新安装该应用。
-\n使用列表选项中的 \\hyperlink{par:main-page-sort}{排序} ，可以选择应用列表的排序方式，退出应用后仍会保留排序方式。
-\n使用列表选项中的 \\hyperlink{par:main-page-filter}{过滤}，可以过滤列表选项。
-\n筛选也可以通过搜索栏进行过滤，并支持正则表达式。</string>
-    <string name="pages$main-page$batch-operations">批处理或者多应用处理也可以在这个页面内进行。
-\n多选模式可以由点击任何应用图标或长按列表中的任何一项进入。
-\n进入后，仅需单击列表中的任何一项便可选中，而不是打开应用程序详情页。
-\n该模式下，批处理操作位于页面底部的多选菜单。操作包括：
-\n\\begin{itemize}
-\n \\item 将选中应用添加到 \\hyperref[sec:profiles-page]{配置}
-\n \\item \\hyperref[sec:backup-restore]{备份、恢复或删除}应用程序
-\n \\item 阻止应用中的追踪器
-\n \\item 清除应用数据或缓存
-\n \\item 导出App Manager中的屏蔽规则
-\n \\item 以MarkDown或XML格式导出应用列表
-\n \\item 启用/停用/强制停止/卸载应用程序
-\n \\item 阻止应用的后台操作 (Android 7 及更高版本)
-\n \\item 导出APK文件到 \\texttt{AppManager/apks}
-\n \\item 设置\\hyperref[sec:net-policy]{联网规则}
-\n\\end{itemize}
-\n
-\n\\begin{tip}{无障碍}
-\n 进入多选模式后。
-\n 可以使用键盘或遥控器的左右键呼出多选菜单。
-\n\\end{tip}</string>
-    <string name="pages$main-page$application-types">一个应用程序可以是 \\textbf{用户} 或 \\textbf{系统} 应用，同时存在以下后缀:
-\n\\begin{itemize}
-\n \\item \\texttt{X} -- 支持多种架构
-\n \\item \\texttt{0} -- 不含dex文件
-\n \\item \\texttt{°} -- 已暂停应用
-\n \\item \\texttt{\\#} -- 应用程序请求系统分配一个大堆，即\\ 大运行时内存
-\n \\item \\texttt{\?} -- 应用程序请求虚拟机处于安全模式。
-\n\\end{itemize}</string>
-    <string name="pages$main-page$version-info">版本名称有以下前缀:
-\n\\begin{itemize}
-\n \\item \\texttt{\\_} -- 没有硬件加速（减慢应用中的过渡动画）
-\n \\item \\texttt{\\textasciitilde} -- 仅测试模式
-\n \\item \\texttt{debug} -- 可调试应用
-\n\\end{itemize}</string>
+    <string name="pages$main-page$intro">主页面列出所有已安装、已卸载和已备份的应用。 \n单独点击任何已安装的应用项目可打开相应的 \\hyperref[sec:app-details-page]{应用详情页}。 \n对于未安装的系统应用，会显示一个对话框提示，可以用来重新安装该应用。 \n使用列表选项中的 \\hyperlink{par:main-page-sort}{排序} ，可以选择应用列表的排序方式，退出应用后仍会保留排序方式。 \n使用列表选项中的 \\hyperlink{par:main-page-filter}{过滤}，可以过滤列表选项。 \n筛选也可以通过搜索栏进行过滤，并支持正则表达式。</string>
+    <string name="pages$main-page$batch-operations">批处理或者多应用处理也可以在这个页面内进行。 \n多选模式可以由点击任何应用图标或长按列表中的任意一项进入。 \n进入多选模式后，仅需单击列表中的任意一项便可选中，而不是打开应用程序详情页。 \n该模式下，批处理操作位于页面底部的多选菜单。操作包括： \n\\begin{itemize} \n \\item 将选中应用添加到 \\hyperref[sec:profiles-page]{配置} \n \\item \\hyperref[sec:backup-restore]{备份、恢复或删除}应用程序 \n \\item 阻止应用中的追踪器 \n \\item 清除应用数据或缓存 \n \\item 导出App Manager中的屏蔽规则 \n \\item 以MarkDown，CSV，JSON或XML格式导出应用列表 \n \\item 启用/停用/强制停止/卸载应用程序 \n \\item 对应用执行运行时优化 (Android 7 及更高版本) \n \\item 阻止应用的后台操作 (Android 7 及更高版本) \n \\item 导出APK文件到 \\texttt{AppManager/apks} \n \\item 设置\\hyperref[sec:net-policy]{联网规则} \n\\end{itemize} \n \n\\begin{tip}{无障碍} \n 进入多选模式后， \n 可以使用键盘或遥控器的左右键呼出多选菜单。 \n\\end{tip}</string>
+    <string name="pages$main-page$application-types">一个应用程序可以是 \\textbf{用户} 或 \\textbf{系统} 应用，同时存在以下后缀: \n\\begin{itemize} \n \\item \\texttt{X} -- 支持多种架构 \n \\item \\texttt{0} -- 应用程序中不存在dex文件 \n \\item \\texttt{°} -- 已暂停的应用程序\n \\item \\texttt{\\#} -- 应用程序请求系统分配一个大堆，即大运行时内存 \n \\item \\texttt{?} -- 应用程序请求虚拟机处于安全模式。 \n\\end{itemize}</string>
+    <string name="pages$main-page$version-info">版本名称有以下前缀: \n\\begin{itemize} \n \\item \\texttt{\\_} -- 无硬件加速（减缓应用程序中的过渡动画或透明效果） \n \\item \\texttt{\\textasciitilde} -- 仅用于测试的应用程序 \n \\item \\texttt{debug} -- 可调试的应用程序 \n\\end{itemize}</string>
     <string name="pages$main-page$list-options">\\textbf{列表选项} 包含了对主页面中的列表进行排序和过滤的选项。</string>
-    <string name="pages$main-page$sort">主页面中列出的应用程序可以按照以下方式进行排序:
-\n\\begin{itemize}
-\n \\item \\textbf{用户应用优先} 用户应用将优先展示
-\n \\item \\textbf{应用标签} 根据应用标签（也称为 \\textit{应用程序名称}）升序排序。(默认选项)
-\n \\item \\textbf{包名} 根据包名升序排序
-\n \\item \\textbf{最后更新} 根据更新时间降序排序
-\n \\item \\textbf{共享 user ID} 根据共享 user ID升序排序
-\n \\item \\textbf{目标 SDK} 根据目标SDK升序排序
-\n \\item \\textbf{签名} 根据签名信息升序排序
-\n \\item \\textbf{已停用优先} 已停用将优先展示
-\n \\item \\textbf{已阻止优先} 根据已阻止的应用组件数目降序排序
-\n \\item \\textbf{已备份优先} 已备份将优先展示
-\n \\item \\textbf{追踪器} 根据追踪器数目降序排序S
-\n \\item \\textbf{最后操作} 根据被App Manager操作的应用时间降序排序
-\n\\end{itemize}
-\n
-\n此外，还有 \\textit{反转} 选项，可以用来对列表进行反向排序。
-\n无论怎样排序偏好，应用程序都是先按字母顺序排序，以防止产生任何随机排序结果.</string>
-    <string name="pages$main-page$filter">主页面中列出的应用可以通过以下方式进行过滤:
-\n\\begin{itemize}
-\n \\item \\textbf{用户} 仅用户应用
-\n \\item \\textbf{系统} 仅系统应用
-\n \\item \\textbf{停用} 仅停用应用
-\n \\item \\textbf{被阻止} 仅被阻止组件的应用
-\n \\item \\textbf{可打开} 仅至少有一个Aactivity的应用
-\n \\item \\textbf{有备份} 仅有备份的应用
-\n \\item \\textbf{无备份} 仅没有备份的应用
-\n \\item \\textbf{运行中} 仅正在运行的应用
-\n \\item \\textbf{有分包} 仅有分包(多Apk)应用
-\n \\item \\textbf{已安装} 仅已安装应用
-\n \\item \\textbf{已卸载} 仅已卸载应用
-\n\\end{itemize}
-\n
-\n与排序不同，它可以同时应用多个过滤选项，
-\n如，停用的用户应用可以通过选择 \\textit{用户}和 \\textit{停用}列出，这对\\hyperref[subsec:batch-operations]{批处理}特别有用，在这种情况下过滤用户应用可能是必要的，以便安全地进行某些操作。
-\nUnlike sorting, it is possible to apply more than one filtering options at the same time. For example, the disabled user
-\napplications can be listed by selecting both \\textit{User apps} and \\textit{Disabled apps}. This can be particularly
-\nuseful for \\hyperref[subsec:batch-operations]{batch operations} where filtering the user applications may be necessary
-\nto carry out certain operations safely.</string>
+    <string name="pages$main-page$sort">主页面中列出的应用程序可以按照以下方式进行排序: \n\\begin{itemize} \n \\item \\textbf{用户应用优先} 用户应用将优先展示 \n \\item \\textbf{应用标签} 根据应用标签（也称为 \\textit{应用程序名称}）升序排序。(默认选项) \n \\item \\textbf{包名} 根据包名升序排序 \n \\item \\textbf{最后更新} 根据更新时间降序排序 \n \\item \\textbf{共享 user ID} 根据共享 user ID升序排序 \n \\item \\textbf{目标 SDK} 根据目标SDK升序排序 \n \\item \\textbf{签名} 根据签名信息升序排序 \n \\item \\textbf{已停用优先} 已停用将优先展示 \n \\item \\textbf{已阻止优先} 根据已阻止的应用组件数目降序排序 \n \\item \\textbf{已备份优先} 已备份将优先展示 \n \\item \\textbf{追踪器} 根据追踪器数目降序排序S \n \\item \\textbf{最后操作} 根据被App Manager操作的应用时间降序排序 \n\\end{itemize} \n \n此外，还有 \\textit{反转} 选项，可以用来对列表进行反向排序。 \n无论怎样的排序偏好，应用程序都会先按字母顺序排序，以防止产生任何随机排序结果。</string>
+    <string name="pages$main-page$filter">主页面中列出的应用可以通过以下方式进行过滤:\n\\begin{itemize}\n \\item \\textbf{用户应用} 仅列出用户应用程序\n \\item \\textbf{系统应用} 仅列出系统应用程序\n \\item \\textbf{已停用应用} 仅列出已停用的应用程序\n \\item \\textbf{已停止应用} 仅列出已停止运行的应用程序\n \\item \\textbf{已安装应用} 仅列出已安装的应用程序\n \\item \\textbf{已卸载应用} 仅列出已卸载的应用程序\n \\item \\textbf{存在规则} 列出存在被一个或多个规则限制的应用程序\n \\item \\textbf{有活动} 列出存在一个或多个活动的应用程序\n \\item \\textbf{有备份} 列出存在一个或多个备份的应用程序\n \\item \\textbf{无备份} 列出不存在备份的应用程序\n \\item \\textbf{运行中应用} 列出当前正在运行的应用程序\n \\item \\textbf{有分包} 列出存在一个或多个拆分APK的应用程序\n \\item \\textbf{KeyStore} 仅列出存在Android 密钥库(KeyStore)的应用程序\n \\item \\textbf{SAF} 仅列出使用存储访问框架(SAF)的应用程序\n \\item \\textbf{SSAID} 仅列出存在可用的Settings.Secure.ANDROID_ID(即SSAID)的应用程序\n\\end{itemize}\n\n与排序不同，筛选过程中可同时应用多个筛选选项。\n比如被停用的用户应用程序可通过同时选择 \\textit{用户应用} and \\textit{已停用应用} 列出。 \n对于需要筛选出用户应用以确保安全地执行某种操作的 \\hyperref[subsec:batch-operations]{批处理操作} 而言，\n这很有帮助。\n\n\\begin{warning}{状态不一致}\n App Manager 通过大量缓存相应的查询结果显示页面（并非实时更新）。\n所以，某些状态（比如说停用和已停止运行状态）并不总是最新的。\n\\end{warning}</string>
     <string name="pages$app-details-page$$activities-title">活动 (Activity)</string>
     <string name="pages$app-details-page$$servcies-title">服务 (Services)</string>
     <string name="pages$app-details-page$$additional-features-for-rooted-phones-title">针对已root的手机的额外功能</string>
@@ -243,23 +127,7 @@
     <string name="pages$app-details-page$$signatures-tab-title">签名选项卡</string>
     <string name="pages$app-details-page$$blocking-trackers-title">拦截跟踪器。</string>
     <string name="pages$app-details-page$$app-ops-title">App Ops</string>
-    <string name="pages$app-details-page$colour-codes">本页中使用的颜色列表及它们的含义：
-\n\\begin{itemize}
-\n \\item \\colorbox{AMRed}{\\textcolor{black}{正红 (日间)}} / \\colorbox{AMDarkRed}{\\textcolor{white}{深红 (夜间)}}
-\n -- 危险权限或, 被阻止的组件(使用App Manager操作)
-\n
-\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{亮红 (日间)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}{绯红 (夜间)}} -- 被阻止的组件(其他应用操作)
-\n
-\n \\begin{tip}{注意}
-\n表示在 App Manager 之外禁用(阻止)的组件, 标记为禁用(阻止)的组件并不意味着它被用户禁用,它也可能是被系统禁用的, 或者在其清单(Android-Manifest.xml)中被标记为禁用(阻止)。被停用的应用程序也会被系统（和App Manager）视为禁用(阻止)。
-\n \\end{tip}
-\n
-\n \\item \\colorbox{AMVividOrange}{\\textcolor{black}{鲜橙 (日间)}} / \\colorbox{AMVeryDarkOrange}{
-\n \\textcolor{white}{深橙 (夜间)}} -- 追踪器组件
-\n
-\n \\item \\colorbox{AMSoftMagenta}{\\textcolor{black}{亮紫 (日间)}} / \\colorbox{AMVeryDarkViolet}{
-\n \\textcolor{white}{深紫 (夜间)}} -- 正在运行的组件
-\n\\end{itemize}</string>
+    <string name="pages$app-details-page$colour-codes">本页中使用的颜色列表，以及对应的含义:\n\\begin{itemize}\n \\item \\colorbox{uninstalled-day}{\\textcolor{black}{红色 (日间模式)}} / \\colorbox{uninstalled-night}{\\textcolor{white}{深红色 (夜间模式)}}\n -- 表示任何应用操作(App ops)或权限存在危险的标志(flag)，或者任何组件在 App Manager 中被阻止，\n 又或者是任何需要却又不受支持的功能特性。\n\n \\item \\colorbox{disabled-day}{\\textcolor{black}{亮红色 (日间模式)}} / \\colorbox{disabled-night}{\\textcolor{white}{暗红色 (夜间模式)}}\n-- 表示组件在 App Manager 外被禁用，或任何不受支持的\n可选功能特性。 \n\n \\begin{tip}{注意}\n 标记为禁用（停用/阻止）的组件并不意味着它被用户禁用，它也可能被系统禁用，\n或者在其清单(Android-Manifest.xml)中被标记为禁用（停用/阻止）。\n被禁用（停用/阻止）的应用程序也会被系统（和App Manager）视为禁用（停用/阻止）。 \n \\end{tip}\n\n \\item \\colorbox{tracker-day}{\\textcolor{black}{鲜橙色 (日间模式)}} / \\colorbox{tracker-night}{\n \\textcolor{white}{暗橙色 (夜间模式)}} -- 表示存在跟踪器组件\n\n \\item \\colorbox{AMSoftMagenta}{\\textcolor{black}{紫色 (日间模式)}} / \\colorbox{AMVeryDarkViolet}{\n \\textcolor{white}{深紫色 (夜间模式)}} -- 表示存在正在运行的服务。\n\n \\item \\colorbox{AMGreen}{\\textcolor{白色}{绿色}} -- 表示当前应用程序中的所有跟踪器\n 已在 跟踪器指示器 标签页内被阻止。\n\\end{itemize}</string>
     <string name="pages$app-details-page$$shared-libs-tab-title">共享库选项卡</string>
     <string name="pages$one-click-ops-page$$1-click-back-up-title">备份</string>
     <string name="pages$one-click-ops-page$$1-click-restore-title">恢复</string>
@@ -282,127 +150,9 @@
     <string name="faq$misc$$shizuku-title">对于 Shizuku 有何计划？</string>
     <string name="faq$misc$$bloatware-title">什么是预装(bloatware)软件以及如何删除？</string>
     <string name="appendices$specifications$$rules-specification-title">规则语法</string>
-    <string name="pages$app-details-page$app-info-general-information">以下的列表与“应用信息”选项卡中列出的顺序相同.
-\n\\begin{itemize}
-\n \\item \\textbf{应用图标}: 应用图标，若应用没有图标，则显示系统默认图标.
-\n可以点击图标，进行与剪贴板中的 SHA 或 MD5 进行 APK 签名验证.
-\n \\item \\textbf{应用标签}: 应用程序名.
-\n \\item \\textbf{包名}: 应用程序包名，点击复制.
-\n \\item \\textbf{版本}: 版本分为两部分:
-\n第一部分称 \\textit{版本名(Version Name)}. 格式各不相同，但常由多个以点分隔的整数组成.
-\n第二部分称 \\textit{版本号}. 其被第一个括号括起来. 版本代码是一个整数，用于 区分应用程序版本 (因为机器无法读取版本名). 简言之, 新版本的应用程序具有比旧版本更高的版本代码. 如，如果 \\texttt{123} 和 \\texttt{125} 是一个应用程序的两个版本代码，我们可以说后者比前者更新(后者的版本代码更高).
-\n在不同平台（移动、平板、桌面等）或架构（32/64 位、ARM 或 Intel）上为同一版本提供不同 APK 文件的应用程序，版本号可能会产生误导，因为它们通常会为每个平台添加前缀 .
-\n
-\n \\item \\textbf{标签}: (也称标签云) 标签包括应用程序最基本、最简洁、有用的信息。参阅 \\Sref{subsubsec:tags} 查看显示在此处的完整标签列表。
-\n
-\n\\item \\textbf{水平滚动操作面板} 一个操作面板，由可以对应用执行的各种操作组成, 有关可用操作的完整列表，请参阅§\\ref{subsubsec:horizontal-action-panel}.
-\n
-\n \\item \\textbf{路径与目录}: 应用有关路径的各种信息，包括 \\textit{应用目录} (where the APK files reside), \\textit{数据目录} (internal, device protected and externals), \\textit{应用分包目录} (along with the split names), and \\textit{本机原生 JNI 库} (如果有). JNI 库用于调用通常用 C/C++ 编写的本机原生代码, 使用本机原生库可以使应用程序运行得更快或帮助应用程序使用使用非 Java 语言编写的第三方库，同大多数游戏中一样.
-\n通过单击每个目录项右侧的启动按钮, 可以通过第三方文件管理器打开目录，前提是它们支持并获得必要的权限.
-\n
-\n \\item \\textbf{数据使用}: 操作系统报告的应用程序使用的数据量.
-\n 根据 Android 版本，这可能需要广泛的权限，包括 \\textit{访问应用使用情况} 和 \\textit{电话} 权限.
-\n
-\n \\item \\textbf{存储与缓存}: 显示有关应用程序大小（APK 文件、优化文件）、数据和缓存的信息。 在旧设备中，还会显示外部数据、缓存、媒体和 OBB 文件夹的大小. 如果在较新的设备中未授予 \\textit{访问应用使用情况s} 权限，此部分将隐藏.
-\n
-\n \\item \\textbf{更多信息} 例如--
-\n \\begin{itemize}
-\n \\item \\textbf{SDK} 显示与 Android SDK 相关的信息. 存在两个（旧设备只有一个）值:
-\n \\textit{最高} 目标 SDK 与\\textit{最低} 最低SDK (后者不适用于旧设备).
-\n最佳实践是使用平台当前支持的最大 SDK 的应用程序，以确保应用程序未在兼容模式下运行(以便使用隐私规避功能).
-\n SDK 也称为 \\textbf{等级(API Level)}\\\\
-\n \\同样参阅在线资料{\\href{https://en.wikipedia.org/wiki/Android_version_history\\#Overview}{Android Version History}}
-\n
-\n \\item \\textbf{标志位(Flags)}: 构建应用程序时使用的应用标志, 有关标志的完整列表及其作用, 请见\\href{https://developer.android.com/reference/android/content/pm/ApplicationInfo\\#flags}{official documentation}.
-\n
-\n \\item \\textbf{安装日期}: 首次安装应用的日期.
-\n
-\n \\item \\textbf{更新日期}: 上次更新应用程序的日期. 如果应用程序尚未更新，这与 \\textit{安装日期} 相同.
-\n
-\n \\item \\textbf{安装器}: 安装此应用的应用.
-\n并非所有应用程序都提供包管理器用来注册安装程序应用程序的信息. 因此，这个值不应被视为理所当然。
-\n
-\n \\item \\textbf{User ID}: Android系统给应用设置的唯一用户ID.
-\n 对于共享应用，相同的用户 ID 被分配给具有相同 \\textit{Shared User ID} 的多个应用程序.
-\n
-\n \\item \\textbf{Shared User ID}: 适用于一起共享ID的应用. 共享应用必须具有相同的 \\hyperref[subsec:signatures-tab]{签名}.
-\n
-\n \\item \\textbf{首选ABI}: 此平台为此应用程序支持的架构。
-\n
-\n \\item \\textbf{Zygote preload name}: 负责预加载应用程序代码和在所有使用应用程序 zygote 的隔离服务之间共享的数据.
-\n
-\n \\item \\textbf{隐藏 API 使用策略}: 从 Android 9 开始，Android Framework 中的许多方法和类第三方应用程序无法通过隐藏 API 强制访问.
-\n存在以下选项:
-\n \\begin{itemize}
-\n \\item \\textit{默认(Default}: 基于应用的类型。 对于系统应用程序，它应该被禁用，而对于其他应用，它应该被强制执行.
-\n \\item \\textit{无或关闭(None/disabled)}: 该应用可以完全访问隐藏的 API，就像在 Android 9 之前一样.
-\n \\item \\textit{警告(Warn)}: 与上面相同，除了每次应用程序访问隐藏 API 时都会记录警告. 这一般未使用的.
-\n \\item \\textit{强制(Enforce)}: 应用无法访问隐藏的 API，无论是深灰名单还是黑名单，或者两者都无法访问.
-\n这是 Android 9 及更高版本中第三方应用程序的默认选项，除非该应用程序被 OEM 或供应商列入白名单.
-\n \\begin{warning}{Warning}
-\n 隐藏 API 访问限制策略在 Android 中没有正确实现，应用程序可以绕过它.
-\n 因此，不应信任此值.
-\n \\end{warning}
-\n \\end{itemize}
-\n
-\n \\item \\textbf{SELinux}: 操作系统通过 SELinux 设置的强制访问控制 (MAC) 策略.
-\n
-\n \\item \\textbf{主活动}: 应用的主要入口点.
-\n这仅在应用程序具有 \\hyperref[subsubsec:activities]{活动} 并且其中任何一个都可以从启动器中打开时显示. 右侧还有一个启动按钮，可用于启动此活动.
-\n \\end{itemize}
-\n\\end{itemize}</string>
-    <string name="pages$app-details-page$app-info-options-menu">选项菜单位于页面的右上角, 下面给出了对现有选项的完整描述:
-\n\\begin{itemize}
-\n \\item \\textbf{分享}: 共享按钮可用于共享 APK 或(如果应用程序有多个拆分) \\textit{APKS}.
-\n
-\n \\item \\textbf{刷新}: 刷新应用信息选项卡.
-\n
-\n \\item \\textbf{在设置中查看}: 在 Android 设置中打开应用.
-\n
-\n \\item \\textbf{备份/恢复}: 打开备份/恢复对话框.
-\n
-\n \\item \\textbf{导出屏蔽规则}: 导出应用配置规则.
-\n
-\n \\item \\textbf{在 Termux 中打开}: 在 Termux 中打开应用. 实际以 \\texttt{su - user\\_id} 命令运行且该 \\texttt{用户ID} 为应用的(内核)用户 ID (参见 §\\Sref{subsubsec:app-info-general-information} 描述).
-\n 此选项仅适用于 Root 用户.
-\n 请参阅 §\\Sref{subsubsec:config-termux} 以了解如何配置 Termux 以运行来自第三方应用的命令.
-\n
-\n \\item \\textbf{在 Termux 中运行}: 在Termux中通过 \\texttt{run-as package\\_name} 打开应用.
-\n 此选项仅对可调式应用有效并适用于 Root 与 Adb 用户.
-\n 请参阅 §\\Sref{subsubsec:config-termux} 以了解如何配置 Termux 以运行来自第三方应用的命令.
-\n
-\n \\item \\textbf{MagiskHide}: 打开一个对话框，其中包含应用程序中可以从 MagiskHide 列表中添加或删除的进程列表.
-\n
-\n \\item \\textbf{MagiskDenyList}: 打开一个对话框，其中包含应用程序中可以从 MagiskDenyList 添加或删除的进程列表.
-\n
-\n \\item \\textbf{电池优化}: 启用/禁用电池优化.
-\n
-\n \\item \\hyperref[sec:net-policy]{\\textbf{联网策略}}: 配置应用的联网策略（如后台数据使用） .
-\n
-\n \\item \\textbf{导出图标}: 提取应用图标并将其保存至共享存储.
-\n
-\n \\item \\textbf{添加配置}: 应用程序添加到已配置的 \\hyperref[sec:profile-page]{配置文件}.
-\n\\end{itemize}</string>
-    <string name="pages$app-details-page$activities">\\textbf{Activity} 是可以由 Android 唯一标识的窗口或页面(如\\textit{主页} 和 \\textit{应用详情页} 是两个活动).
-\n每个活动可以有多个 UI 组件，称为 \\textit{部件(widgets)} 或 \\textit{碎片(fragments)}，每个组件都可以嵌套或放置在彼此之上.
-\n开发人员还可以选择使用名为\\textit{意图过滤器(intent filters)}选择打开外部文件、链接等.
-\n如当使用文件管理器打开文件时，文件管理器或操作系统通过 PackageManager 扫描意图过滤器以查找能够打开文件的活动，并用其打开文件.
-\n
-\n标记\\textit{exportable} 的活动通常可以由任何第三方应用程序打开.
-\n有些活动需要权限，如果是这种情况，只有具有这些权限的应用程序才能打开.
-\n在 \\textit{活动} 选项卡中，可以通过 \\textbf{启动} 按钮启动， 若有必要可提供额外信息，如意图(Intent)的 extras、data或Action.
-\n长按 \\textbf{启动} 按钮会打开提供此类功能的 \\hyperref[sec:interceptor-page]{Activity Interceptor} 页面.
-\n
-\n\\begin{tip}{Notice}
-\n 如果您无法打开任何活动，则很可能它具有某些未满足的依赖项目，例如\\您无法打开 \\textit{应用详情页} ，由于其至少需要提供一包名.
-\n 由于无法机械式推断这些依赖关系，因此默认情况下可能无法通过 App Manager 打开这些活动.
-\n\\end{tip}
-\n
-\n也可以通过 \\textbf{创建快捷方式} 按钮来创建活动的快捷方式
-\n
-\n\\begin{danger}{Caution}
-\n 如果您卸载App Manager，应用管理器创建的所有快捷方式都将丢失.
-\n\\end{danger}</string>
+    <string name="pages$app-details-page$app-info-general-information">以下的列表与“应用信息”选项卡中列出的顺序相同。 \n\\begin{itemize} \n \\item \\textbf{应用图标}: 应用程序的图标，若该应用程序没有图标，则显示系统默认图标。 \n可以轻轻点击图标，通过对比剪贴板中存储的 SHA 或 MD5 总和的方式进行 APK 签名验证。 \n \\item \\textbf{应用标签}: 应用程序的标签或名称。 \n \\item \\textbf{包名}: 应用程序包名，点击该包名可将其复制到剪切板。 \n \\item \\textbf{版本}: 版本分为两部分： \n 第一部分称 \\textit{版本名(Version Name)}。 格式各不相同，但常由多个以点分隔的整数组成。 \n 第二部分称 \\textit{版本代号}。 其被第一个括号括起来。版本代号是一个整数，用于区分应用程序版本 (因为机器可能无法正确读取版本名)。简言之，新版本的应用程序具有比旧版本更高的版本代号。 例如，如果 \\texttt{123} 和 \\texttt{125} 是同一个应用程序的两个版本代号，我们可以说后者比前者更新（后者的版本代号更高）。 \n 当为同一版本的应用程序提供不同的 APK 文件，并在不同平台（移动端、平板、桌面等）或架构（32/64 位、ARM 或 Intel）上运行时，版本号可能会产生误导，因为通常应用程序提供商会为每个平台添加前缀以作区分。\n \n \\item \\textbf{标签}:(也称作标签云) 标签包含应用程序最基本、最简洁、有用的信息。参阅 \\Sref{subsubsec:tags}{标签} 内的完整标签列表。 \n \n \\item \\textbf{水平操作面板} 一个操作面板，由可以对应用程序执行的各种操作组成，参阅 \\Sref{subsubsec:horizontal-action-panel}{水平操作面板} 内的完整可用操作列表。 \n 对于可用的其它操作列表，参阅 \\hyperref[subsubsec:app-info-options-menu]{选项菜单}。\n \n \\item \\textbf{路径与目录}: 包含应用程序相关路径的各种信息，包括 \\textit{应用目录} (存储 APK 文件的路径), \\textit{数据目录} (内部存储, 设备保护区以及外部存储) 和 \\textit{JNI 库目录} (如果有). JNI (Java Native Interface，Java本机接口) 库用于调用通常用 C/C++ 编写的本机原生代码。使用本机原生库可以使应用程序运行得更快，或帮助应用程序使用非 Java 语言编写的第三方库，同大多数游戏中所做的一样。 \n通过单击每个目录项右侧的启动按钮，可以通过文件管理器打开目录，前提是它们提供相应的支持并被授予必要的权限。 \n \n \\item \\textbf{数据使用}: 操作系统报告的应用程序使用的数据量。 \n 取决于 Android 版本，该项可能需要广泛的权限，包括 \\textit{使用情况访问} 权限和 \\textit{电话} 权限。 \n \n \\item \\textbf{存储与缓存}: 显示有关应用程序的大小（APK 文件、优化文件、数据和缓存）。 在旧设备中，还会显示外部数据、缓存、媒体和 OBB 文件夹的大小。如果在较新的设备中未授予 \\textit{使用情况访问} 权限，此部分将被隐藏。 \n \n \\item \\textbf{更多信息} 显示其他信息，例如-- \n \\begin{itemize} \n \\item \\textbf{SDK} 显示与 Android SDK 相关的信息: \\textit{Max} 表示目标SDK\n 而 \\textit{Min} 表示最小SDK（后者在 Android 5及更低版本中不可用）\n 如果目标SDK的值低于平台SDK的值（即当前操作系统支持的最大SDK的值），该应用程序会在兼容模式下运行。\n 这意味着应用程序可能有权访问某些不可用或者被较新版本的 Android 限制的功能，\n 这将导致安全和隐私问题。\n SDK也被称作 \\textbf{API 级别 (API Level)}，\\\\\n \\seealsoinline{\\href{https://en.wikipedia.org/wiki/Android_version_history\\#Overview}{Android 版本历史}}\n \n \\item \\textbf{标志位(Flags)}: 构建应用程序时使用的应用标志，关于完整的标志列表及其作用，参阅\\href{https://developer.android.com/reference/android/content/pm/ApplicationInfo\\#flags}{官方文档}。 \n \n \\item \\textbf{安装日期}: 首次安装应用程序的日期。 \n \n \\item \\textbf{更新日期}: 上次更新应用程序的日期。 如果应用程序尚未更新，该项与 \\textit{安装日期} 相同。 \n\n \\item \\textbf{进程名} 如果与包名不同的情况下，进程的名称。\n 进程名在应用程序被系统启动时被设置，而通常情况下\n 进程名与包名相同。\n \n \\item \\textbf{安装器应用} 安装该应用程序的应用程序。\n 当安装该应用时，每次的安装器应用不总是会保持相同。\n 因为 Android 允许对此字段设置任意值。\n 在 Android 11及更高版本中，实际安装器应用会存储在系统，并可以通过点击\n 项目右侧的“信息”按钮访问。即使系统并未报告安装器应用（比如说，安装器应用被卸载或隐藏），\n 该字段也不会不可见。安装器应用可被系统授予额外的特殊权限\n 以控制它安装的应用程序的某种行为。\n \n \\item \\textbf{User ID}: Android系统给应用设置的唯一用户ID. \n 对于共享应用，相同的用户 ID 被分配给具有相同 \\textit{Shared User ID} 的多个应用程序. \n\n \\item \\textbf{User ID} 系统设置的唯一的用户ID（User ID，也被称作UID）并赋予应用程序。 \n 对于共享的应用程序，多个持有相同的 \\textit{Shared User ID} 的应用程序\n 会被赋予同样的用户ID。 .\n \n \\item \\textbf{Shared User ID} 适用于共享同一个ID的应用程序们（它们之间的数据也是共享的）。\n共享的应用程序们必须持有同样的 \\hyperref[subsec:signatures-tab]{签名}。\n \n \\item \\textbf{首选ABI}: 此平台为此应用程序提供支持的架构。 \n \n \\item \\textbf{Zygote 预加载名称}: 负责预加载应用程序代码\n和在所有使用应用 zygote 的隔离服务之间共享的数据。\n \n \\item \\textbf{隐藏 API 执行策略}: 从 Android 9 开始，第三方应用程序无法通过隐藏 API 执行策略访问 Android 框架中的许多方法和类。 \n存在以下选项： \n \\begin{itemize} \n \\item \\textit{默认}: 基于应用程序的类型。 对于系统应用程序，隐藏API执行策略应该被禁用；而对于其他应用，则应该被强制执行。 \n \\item \\textit{无或已禁用}: 该应用可以像在 Android 9 之前一样完全访问隐藏的 API。\n \\item \\textit{警告}: 同上，只是每次应用程序访问隐藏 API 时都会记录警告。绝大多数情况下不使用。 \n \\item \\textit{强制执行}: 无论是深灰名单还是黑名单，或者两者都是的应用程序无法访问隐藏的 API。 \n这是 Android 9 及更高版本中第三方应用程序的默认选项，除非该应用程序被 OEM 或供应商列入白名单。 \n \\begin{warning}{警告} \n 隐藏 API 执行策略在 Android 中并没有被正确实现，\n应用程序可以绕过它。因此，不应该信任此值。 \n \\end{warning} \n \\end{itemize} \n \n \\item \\textbf{SELinux}: 操作系统通过 SELinux 设置的强制访问控制 (MAC) 策略。 \n \n \\item \\textbf{主活动}: 应用的主要入口点。 \n 仅在应用程序具有 \\hyperref[subsubsec:activities]{活动} 并且其中任何一个都可以从启动器中打开时显示。\n 右侧也有一个启动按钮，可用于启动此活动。 \n \\end{itemize} \n\\end{itemize}</string>
+    <string name="pages$app-details-page$app-info-options-menu">选项菜单位于页面的右上角, 下面给出了对现有选项的完整描述: \n\\begin{itemize} \n \\item \\textbf{分享}: 分享按钮可用于分享 APK 或 (如果该应用程序有多个拆分、OBB 文件或任意依赖项) 提取自应用程序的 \\textit{APKS}。\n \n \\item \\textbf{刷新}: 刷新应用信息选项卡。\n \n \\item \\textbf{在设置中查看}: 在 Android 设置中打开该应用程序。 \n \n \\item \\textbf{备份/恢复}: 打开备份/恢复对话框。 \n \n \\item \\textbf{导出屏蔽规则}: 导出在 App Manager 中为该应用配置的规则。 \n \n \\item \\textbf{在 Termux 中打开}: 在 Termux 中打开应用。 实际是在表明 \\texttt{user\\_id} 应用程序的内核用户ID的前提下运行 \\texttt{su - user\\_id} 命令 (参阅 §\\Sref{subsubsec:app-info-general-information} 中的描述)。该选项仅对 Root 用户显示。 \n 请参阅 §\\Sref{subsubsec:config-termux} 以了解如何配置 Termux 以运行来自第三方应用的命令。 \n \n \\item \\textbf{在 Termux 中运行}: 在Termux中通过 \\texttt{run-as package\\_name} 打开应用。 \n 此选项仅对可调试应用有效，并同时适用于 Root 与 ADB 用户。 \n 请参阅 §\\Sref{subsubsec:config-termux} 以了解如何配置 Termux 以运行来自第三方应用的命令。 \n \n \\item \\textbf{MagiskHide}: 打开一个包含该应用程序所有进程名的列表的对话框，这些进程可以添加到 MagiskHide 列表或从MagiskHide 列表中移除。\n \n \\item \\textbf{Magisk 排除列表(DenyList)}: 打开一个包含该应用程序所有进程名的列表的对话框，这些进程可以添加到 Magisk 排除列表或从Magisk 排除列表中移除。\n \n \\item \\textbf{电池优化}: 为该应用程序启用/禁用电池优化。 \n \n \\item \\textbf{传感器} 为该应用程序启用/禁用传感器。\n\n \\item \\hyperref[sec:net-policy]{\\textbf{联网策略}}: 为该应用程序配置联网策略（如后台数据使用）。\n \n \\item \\textbf{导出图标}: 提取应用图标并将其保存至共享存储。 \n \n \\item \\textbf{添加到配置文件}: 将应用程序添加到已配置的 \\hyperref[sec:profile-page]{配置文件}。\n\n \\item \\textbf{安装到……} 将该应用程序安装到其他用户和/或已配置文件（如果有）。\n\\end{itemize}</string>
+    <string name="pages$app-details-page$activities">\\textbf{活动 (Activity)} 是可被 Android 系统唯一标识的窗口或页面 (如\\textit{主页} 和 \\textit{应用详情页} 是两个活动)。\n每个活动可以有多个 UI 组件，称为 \\textit{部件(widgets)} 或 \\textit{碎片(fragments)}，\n每个组件都可以嵌套或放置在彼此之上。\n开发者还可以选择使用名为\\textit{意图过滤器(intent filters)} 的方法在活动 (Activity)中打开外部文件、链接等。\n例如，当你使用文件管理器打开文件时，\n文件管理器或操作系统通过应用包管理器 (PackageManager) 扫描意图过滤器\n以查找能够打开文件的活动，并列出它们，你可以选择打开该文件的方式 (活动)。\n \n标记为 \\textit{exportable (可导出)} 的活动通常可被任意第三方应用程序打开。\n然而，有些活动可能需要权限，只有拥有这些权限的应用程序才能打开这些活动。\n在 \\textit{活动} 选项卡中，可通过 \\textbf{启动} 按钮启动某些活动。\n若有必要可提供诸如意图 (Intent)的附加功能 (extras)、数据 (data)或 Action (动作)等额外信息 (参数)，\n则可通过长按 \\textbf{启动} 按钮以打开提供该功能的 \\hyperref[sec:interceptor-page]{活动拦截器} 页面。\n \n\\begin{tip}{提示}\n 无 Root 用户可通过 ADB 授予 \\texttt{android.permission.WRITE\\_SECURE\\_SETTINGS} 权限\n 以打开 \\textit{不可导出的} 活动。\n\\end{tip}\n\n\\begin{tip}{注意} \n 若启动活动时抛出错误 (异常)，很可能是它具有某些未满足的依赖项目\n (例如无法通过启动按钮打开 App Manager 的 \\textit{应用详情页} ，\n 因为该活动需要提供一个包名 (在缺少包名的情况下打开 App Manager 的应用详情页没有意义)。 \n 由于无法有章法的推断这些依赖关系，默认情况下可能无法通过 App Manager 打开这些活动。 \n\\end{tip} \n\n也可通过 \\textbf{创建快捷方式} 按钮创建活动的快捷方式。\n如果你需要提供额外信息 (参数)，\n那么可通过活动拦截器页面创建快捷方式。 \n \n\\begin{danger}{警告} \n 如果你卸载了 App Manager，那么所有由 App Manager 创建的快捷方式都将被移除。\n\\end{danger}</string>
     <string name="pages$profiles-page$$section-title">配置文件页面</string>
     <string name="pages$profiles-page$$options-menu-title">选项菜单</string>
     <string name="pages$profile-page$$configurations-tab-title">配置选项卡</string>
@@ -439,19 +189,7 @@
     <string name="pages$settings-page$install-location">定义 APK 安装位置，可以是 \\textit{自动}、\\textit{仅内部存储} 和\\textit{偏好外部存储}。
 \n在较新的 Android 版本中，选择最后一个选项
 \n并不保证应用将被安装在外部存储中。</string>
-    <string name="pages$settings-page$enable-disable-features">启用或禁用应用 App Manager 中的某些功能，如
-\n\\begin{itemize}
-\n \\item \\textbf{拦截器}
-\n \\item \\textbf{Manifest 查看器}
-\n \\item \\textbf{扫描器}
-\n \\item \\textbf{包安装器}
-\n \\item \\textbf{使用情况.} 如关闭此功能，App Manager 永远不会请求 \\textit{使用情况} 权限.
-\n \\item \\textbf{日志查看器}
-\n\\item \\textbf{App Eexplorer.} ``探索\'\' 选择在尝试打开 APK 文件时不可用。
-\n \\item \\textbf{App info.} 尝试打开 APK 文件时会显示 ``应用信息\'\'选项
-\n \\item \\textbf{使用互联网.}如果关闭此功能，则所有互联网功能都将被禁用。
-\n 目前，唯一的互联网功能是通过 VirusTotal 获取扫描报告。
-\n\\end{itemize}</string>
+    <string name="pages$settings-page$enable-disable-features">启用或禁用 App Manager 中的某些功能，如 \n\\begin{itemize} \n \\item \\textbf{拦截器} \n \\item \\textbf{Manifest 查看器} \n \\item \\textbf{扫描器} \n \\item \\textbf{包安装器} \n \\item \\textbf{使用情况.} 如关闭此功能，App Manager 永远不会请求 \\textit{使用情况} 权限. \n \\item \\textbf{日志查看器} \n\\item \\textbf{App Explorer.} ``探索\'\' 选项在尝试打开 APK 文件时不可用。 \n \\item \\textbf{App info.} 尝试打开 APK 文件时会显示 ``应用信息\'\'选项 \n \\item \\textbf{代码编辑器}\n \\item \\textbf{VirusTotal}\n\\end{itemize}</string>
     <string name="pages$settings-page$backup-restore">与 \\hyperref[sec:backup-restore]{备份恢复} 相关的设置.</string>
     <string name="pages$interceptor-page$$data-title">数据(Data)</string>
     <string name="pages$interceptor-page$$mime-type-title">MIME 类型</string>
@@ -480,7 +218,6 @@
     <string name="guide$aot$$enable-aot-via-pc-title">在 PC 或 Mac 上启用 经由TCP的ADB</string>
     <string name="guide$aot$$adb-mode-am-title">在 App Manager 中启用 ADB 模式</string>
     <string name="guide$aot$$setup-adb-mac-title">macOS</string>
-    <string name="guide$aot$$references-title">参考</string>
     <string name="guide$backup-restore$$section-title">备份/恢复</string>
     <string name="guide$backup-restore$$backup-title">备份</string>
     <string name="guide$net-policy$$section-title">连网策略</string>
@@ -500,64 +237,9 @@
     <string name="pages$main-page$termux">如果系统中已安装\\href{https://github.com/termux/termux-app}{Termux} ，则可直接从此菜单项运行会话（或
 \n新会话）.
 \n如果应用不存在，则此选项将被隐藏.</string>
-    <string name="pages$app-details-page$config-termux">默认情况下，Termux 不允许运行来自第三方应用的命令。要使用此选项，请使用 Termux v0.96 以上版本，并且必须在 \\texttt{\\textasciitilde/.termux/termux.properties} 中添加 \\texttt{allow-external-apps=true}。
-\n
-\n\\begin{tip}{Info}
-\n 启用此选项不会削弱Termux的安全性。第三方应用仍然需要取得用户允许才能在Termux中运行任意命令。
-\n\\end{tip}</string>
-    <string name="pages$app-details-page$horizontal-action-panel">如上节所述,水平滚动操作面板由各种与应用相关的操作组成, 如 -
-\n\\begin{itemize}
-\n \\item \\textbf{启动}: 启动应用. 前提是要有一个可启动\\hyperref[subsubsec:activities]{活动}.
-\n
-\n \\item \\textbf{禁用}: 停用应用. 若应用已被禁用或用户没有足够的权限，则不会显示该按钮.
-\n禁用应用后，将从应用程序列表中隐藏，应用的快捷方式也可能被删除.
-\n只能通过App Manager或任何其他支工具重新启用该应用.
-\nAndroid设置中没有任何选项可以启用禁用的用户应用.
-\n
-\n \\item \\textbf{卸载}: 卸载应用
-\n
-\n \\item \\textbf{启用}: 启用应用. 若应用已启用或用户没有足够的权限，则不会显示该按钮.
-\n
-\n \\item \\textbf{强制停止}: 强制停止应用.
-\n
-\n \\item \\textbf{清除数据}: 清除应用数据. 清除包括存储在应用内部和（仅Android 10 以上）外部目录中的任何应用数据，包括帐户（如果由应用设置）、缓存等. 
-\n例如，清除 App Manager 数据将会删除所有保存的规则（但不会清除已阻止组件），因此你应该检查备份你的规则文件。若用户没有足够的权限，则不会显示此按钮.
-\n
-\n \\item \\textbf{清除缓存}: 清除应用缓存. 没有任何原生方法可以清除特定应用程序的缓存，因此，需要root权限才能清除应用程序内部存储中的缓存.
-\n
-\n \\item \\textbf{安装}: 通过第三方应用安装应用. 此按钮仅在应用尚未安装时显示.
-\n
-\n \\item \\textbf{What\'s New}: 若外部应用已安装，则会显示此按钮. 单击此按钮将显示一个对话框，将以版本控制方式，显示打开的版本和安装的版本之间的差异. 
-\n包括: \\textit{版本}, \\textit{追踪器}, \\textit{权限}, \\textit{组件}, \\textit{签名} (校验值改变
-\n), \\textit{特性}, \\textit{共享库} 与 \\textit{SDK}.
-\n
-\n \\item \\textbf{更新}: 若应用的版本号高于已安装的应用，则会显示.
-\n
-\n \\item \\textbf{重装}: 若应用与已安装的应用具有相同的版本号，则会显示.
-\n
-\n \\item \\textbf{降级}: 若应用的版本号低于已安装的应用，则会显示.
-\n
-\n \\item \\textbf{应用清单(Manifest)}: 单击将在单独的页面中显示应用清单文件. 
-\n可以使用对应切换按钮（位于右上方）开启自动换行，也可以使用保存按钮保存到存储器.
-\n
-\n \\item \\textbf{扫描器}: 扫描应用以列出潜在的跟踪器和库.
-\n若可用，它还会使用VirusTotal扫描文件.\\\\
-\n \\seealsoinline{\\hyperref[sec:scanner-page]{扫描器页面}}
-\n
-\n \\item \\textbf{共享首选项}: 显示应用程序使用的共享首选项(Shared-Preferences)列表.
-\n 单击列表中的首选项将打开\\hyperref[sec:shared-preferences-editor-page]{共享首选项编辑器}. 若用户没有足够的权限，则不会显示此按钮.
-\n
-\n \\item \\textbf{数据库}: 将显示应用程序使用的数据库列表. 若用户没有足够的权限，则不会显示此按钮.
-\n
-\n \\item \\textbf{F-Droid}: 在你常用的\\textit{F-Droid} 客户端中打开该应用.
-\n
-\n \\item \\textbf{Store}: 在 \\textit{Aurora Store}打开该应用. 仅在\\textit{Aurora Store}后显示.
-\n\\end{itemize}</string>
-    <string name="pages$app-details-page$component-tabs">\\textbf{活动(Activities)}、\\textbf{服务(Services)}、\\textbf{广播接收器(Receivers)}和 \\textbf{内容提供者(Providers)} 统称为应用程序组件. 它们共享在许多相似特征，如，它们都有一个 \\textit{名称}、一个 \\textit{标签}、一个 \\textit{图标} 并且通过 \\textit{意图(Intent)} 执行.
-\n应用程序组件是应用的本构造，必须在应用程序清单中声明.
-\n应用程序清单是存储应用程序特定元数据的文件，Android 通过读取元数据来处理应用。
-\n
-\n这些选项卡中使用的颜色在 \\Sref{subsec:app-details-colour-codes} 中进行了解释。也可以在弹出菜单对列表进行排序.</string>
+    <string name="pages$app-details-page$config-termux">默认情况下，Termux 不允许运行来自第三方应用的命令。要使用此选项，请使用 Termux v0.96 以上版本，并且必须在 \\texttt{\\textasciitilde/.termux/termux.properties} 中添加 \\texttt{allow-external-apps=true}。 \n \n\\begin{tip}{Info} \n 启用此选项不会削弱Termux的安全性。\n 第三方应用仍然需要取得用户允许才能在Termux中运行任意命令。 \n\\end{tip}</string>
+    <string name="pages$app-details-page$horizontal-action-panel">如上节所述，水平滚动操作面板由各种与应用程序相关的操作组成，比如 -- \n\\begin{itemize} \n \\item \\textbf{启动}: 启动该应用程序。 前提是要有一个可启动（打开）的 \\hyperref[subsubsec:activities]{活动}。 \n \n \\item \\textbf{冻结}: 冻结/禁用该应用程序。 若应用程序已被冻结/禁用或用户没有足够的权限，则不会显示该按钮。 \n 冻结/禁用该应用程序后，其图标可能会从（启动器的）应用抽屉中被隐藏，这取决于其配置，该应用程序创建的快捷方式也可能被删除。 \n 该应用程序可能只能通过 App Manager 、\\texttt{pm} 命令或其他任意提供此功能的工具解冻/重新启用。 \n 长按该按钮以打开一个可创建用于快速冻结/禁用或解冻/重新启用该应用程序的快捷方式的对话框。\n \n \\item \\textbf{卸载} 根据提示卸载该应用程序。\n 在对话框提示中可以卸载系统应用程序的更新，\n 或者当 App Manager 被授予足够高的权限，抑或操作系统支持，\n 也可以选择仅卸载应用程序而不清除其数据和签名。\n 对于后者，如果再度安装该应用程序，安装的应用程序必须与之前已安装的应用程序的签名匹配。\n \\begin{tip}{提示}\n 对于重新安装具有不同签名的应用程序，\n 更好的方法是使用 App Manager 备份该应用程序的数据，然后在安装该应用程序后再还原数据，\n 而不是在卸载该应用程序的过程中选择保留该应用程序的数据和签名，\n 因为该操作在将来可能会导致未定义的行为的问题。\n \\end{tip}\n\n \\item \\textbf{解冻} 解除冻结/重新启用该应用程序。\n 若应用程序已被解冻/启用或用户没有足够的权限，则不会显示该按钮。\n 与 \\textit{冻结} 按钮类似，长按该按钮以打开一个可创建用于快速冻结/禁用或解冻/重新启用该应用程序的快捷方式的对话框。\n \n \\item \\textbf{强行停止}: 强行停止该应用程序。 \n \n \\item \\textbf{清除数据}: 清除应用程序的数据，清除包括存储在应用内部和（仅 Android 10 以上）外部目录中的任何应用数据，包括帐户（如果由应用设置）、缓存等。 \n例如，清除 App Manager 的数据将会删除所有保存在 App Manager 内的规则（但不会清除或重置在 App Manager 内设置的已阻止组件的状态），因此你需要随时备份你在 App Manager 内设置的规则。若用户没有足够的权限，则不会显示该按钮。 \n \n \\item \\textbf{清除缓存}: 清除应用程序的缓存。若该应用程序在操作过程中处于正在运行的状态，则缓存可能无法如预期般被清除。\n\n \\item \\textbf{安装}: 安装该应用程序。此按钮仅在该应用程序尚未安装时显示。 \n \n \\item \\textbf{新版变化 (What\'s New)}: 若当前已安装的是该外部应用程序的旧版本，则会显示该按钮。\n 点击该按钮以打开一个包含该版本和已安装版本在版本控制行为上的变化（差异）对比的对话框。\n 变化包括：\\textit{版本}，\\textit{跟踪器}, \\textit{权限}, \\textit{组件}, \\textit{签名} (当校验值改变时显示)，\n \\textit{功能特性}, \\textit{共享库} 与 \\textit{SDK}。\n \n \\item \\textbf{更新}: 若该应用程序的版本代号高于已安装的应用程序，则会显示该按钮。 \n \n \\item \\textbf{重装}: 若该应用程序与已安装的应用程序具有相同的版本代号，则会显示该按钮。 \n \n \\item \\textbf{降级}: 若该应用程序的版本代号低于已安装的应用程序，则会显示该按钮。 \n \n \\item \\textbf{应用清单(Manifest)}: 点击该按钮以在单独的页面中显示该应用程序的清单文件。\n 若该应用程序存在一个或多个拆分，则会显示拆分的 APK 文件列表。\n 点击其中任意一项以打开相应的清单文件。\n \n \\item \\textbf{扫描器}: 扫描该应用程序以列出潜在的跟踪器和库。\n 若已配置并处于可用状态，它还会使用VirusTotal扫描文件，并从Pithus中获得结果，\\\\ \n \\seealsoinline{\\hyperref[sec:scanner-page]{扫描器页面}} 。\n \n \\item \\textbf{共享首选项}: 显示该应用程序使用的共享首选项(Shared-Preferences)列表。 \n 点击列表中的首选项将打开\\hyperref[sec:shared-preferences-editor-page]{共享首选项编辑器}。该按钮仅在用户拥有足够的权限时才会显示。\n \n \\item \\textbf{数据库}: 显示该应用程序使用的数据库列表。\n 点击其中任意一项将打开可用于打开数据库的活动列表。\n 该按钮仅在用户拥有足够的权限时才会显示。\n \n \\item \\textbf{F-Droid}: 在你常用的\\textit{F-Droid} 客户端中打开该应用程序。 \n \n \\item \\textbf{Store}: 在 \\textit{Aurora Store}打开该应用程序。该按钮仅在已安装 \\textit{Aurora Store} 时显示。\n\\end{itemize}</string>
+    <string name="pages$app-details-page$component-tabs">\\textbf{活动(Activities)}、\\textbf{服务(Services)}、\\textbf{接收器} (即广播接收器)\n和 \\textbf{提供者} (例如内容提供者) 统称为应用程序组件，\n因为它们提供类似的功能并共享类似的属性，\n例如它们都有一个 \\textit{名称}、 \\textit{标签}、 \\textit{图标}、\n可被启用或禁用、并且通过 \\textit{意图(Intent)} 执行。\n应用程序组件是应用的组成部分，\n必须在应用程序清单中声明 (也有一些例外情况)。 \n应用程序清单是存储应用程序特定元数据的文件，Android 通过读取元数据来处理应用。 \n \n这些选项卡中使用的颜色在 \\Sref{subsec:app-details-colour-codes}{应用详情颜色代码} 中进行了解释。\n也可以通过位于三点菜单的 \\textbf{排序} 选项，对组件列表进行排序，\n以在列表顶部显示已阻止组件或者跟踪器组件。</string>
     <string name="pages$settings-page$installer-app">选择安装程序。这对于明确检查安装程序以验证应用程序是否合法安装的应用程序很有用。
 \n这只适用于 root 或 ADB 用户。
 \n
@@ -584,18 +266,7 @@
     <string name="faq$app-components$$what-is-component-blocking-title">什么是即时组件禁用？</string>
     <string name="faq$app-components$$tracker-classes-versus-tracker-components-title">跟踪器类与跟踪器组件</string>
     <string name="appendices$changelogs$$chapter-title">更新日志</string>
-    <string name="pages$app-details-page$uses-permissions">\\textbf{系统预定义权限}(\\textit{Uses Permissions}) 是应用(申请)所使用的权限，其在应用程序清单中使用 \\texttt{uses-permission} 标签声明。
-\n其 \"标志位 (\\textit{flags})\"、\"权限名 (\\textit{permission name})\"、\"权限描述 (\\textit{permission description})\"、\"包名 ( \\textit{package name})\"、\"群组 (\\textit{group})\" 取自相关\\hyperref[subsubsec:permissions]{权限}。
-\n
-\n
-\n特权用户可通过切换按钮授予或撤销 危险 (\\textit{dangerous}) 和 开发 (\\textit{development}) 权限，也可以使用菜单中的相应选项。
-\n只能撤销以上两种权限，因为Android不允许修改 普通 (\\textit{normal}) 权限（其中大多数是）。但仍有可能撤销它们通过编辑 \\texttt{runtime-permissions.xml} 本身，但是否可能仍不明确。
-\n
-\n\\begin{tip}{提示}
-\n 由于系统默认会撤销危险权限，因此撤销所有危险权限与重置所有权限是一样的。
-\n\\end{tip}
-\n
-\n可以以升序方式按权限名称对列表排序，也可以优先显示拒绝的权限。</string>
+    <string name="pages$app-details-page$uses-permissions">\\textbf{预定义权限}(\\textit{Uses Permissions}) 是应用(申请)所使用的权限。\n这些权限在应用程序清单中通过使用 \\texttt{uses-permission} 标签声明。\n诸如 \"标志位 (\\textit{flags})\"、\"权限名 (\\textit{permission name})\"、\"权限描述 (\\textit{permission description})\"、\n\"包名 ( \\textit{package name})\"、\"群组 (\\textit{group})\" 此类的信息也取自其相关\\hyperref[subsubsec:permissions]{权限}。\n\n特权用户可通过点击每个权限右侧的切换按钮授予或撤销 危险 (\\textit{dangerous}) 和 开发 (\\textit{development}) 权限，\n也可以使用菜单中的相应选项撤销危险权限。\n因为 Android 不允许修改 普通 (\\textit{normal}) 权限（其中大多数是该类权限），只能撤销以上两种类别的权限。\n也可尝试编辑 \\texttt{runtime-permissions.xml} 以撤销这些权限，\n但是否可行尚不明确。 \n\n\\begin{tip}{提示} \n 由于系统默认撤销危险权限，\n 因此撤销所有危险权限与重置所有权限一致。\n\\end{tip} \n\n可以以升序方式按权限名称对列表进行排序，\n也可通过菜单中相应的选项优先显示拒绝的权限。</string>
     <string name="pages$app-details-page$permissions">(自定义)\\textbf{权限} 通常是应用自身定义的自定义权限，包括该应用声明的、标记为\"内部( \\textit{Internal})\" 权限，其他应用声明、标记为\"外部( \\textit{External})\"的权限。外部权限在应用程序组件中指定为依赖项，即应用只有在拥有指定的权限时才能调用该组件：
 \n\\begin{itemize}
 \n \\item \\textbf{名称} 每个权限都有的唯一的名称，如 \\texttt{android.permission.INTERNET} ，但多个应用可以请求同一个权限。
@@ -615,38 +286,7 @@
 \n安卓中，在不具有相同身份（称为 \\textit{shared ID}）的应用或进程之间进行通信常常需要权限，其由权限控制器管理。
 \n一些被视为\\textit{普通} 的权限，若它们出现在应用程序清单中，则会自动授予，但\\textit{危险}权限 和 \\textit{开发} 权限需要用户确认。
 \n选项卡中使用的颜色在 \\Sref{subsec:app-details-color-codes} 中有解释。</string>
-    <string name="pages$app-details-page$app-ops">\\textbf{App Ops} 代表\"应用操作 \\textbf{ (Application Operations)} \". 
-\n自 Android 4.3 开始，Android 使用 \\textit{App Ops} 控制大多系统权限，每个 App Op 都有一个与之关联的唯一编号，该编号与其私有名称将一同显示在“App Ops”选项卡中，一些 App Ops 也有一个公共名称。
-\n大量的应用操作是也与权限相关，在此选项卡中，若 App Ops 相关的权限被视为危险则被标记为危险。其他信息如 标志位(\\textit{flags}), 权限名称 (\\textit{permission name}), 权限描述(\\textit{permission description}),包名 (\\textit{package name}),群组 ( \\textit{group}) 也取自相关的 \\hyperref[subsubsec:permissions]{权限}。
-\n
-\n其他可能包括以下内容:
-\n\\begin{itemize}
-\n \\item \\textbf{模式(Mode)}: 描述了当前授权状态，可以是\"允许 (\\textit{allow})\"、\"拒绝(\\textit{deny})\"（实际为错误）、\"忽略(\\textit{ignore})\"（实际为拒绝）、\"默认(\\textit{default})\"（从手机供应商或 AOSP 内部设置的默认列表推断）、\"前台(\\textit{foreground})\" （在新的Android版本中，应用只能在前台运行时获取该权限），以及一些供应商自定义的模式，如MIUI使用询问(\\textit{ask})。
-\n
-\n \\item \\textbf{时长(Duration)}: 此 App Ops 现已使用的时间（可能为负原因未知）。
-\n
-\n \\item \\textbf{允许时刻(Accept Time)}: 上一次 App Op 被许可。
-\n
-\n \\item \\textbf{拒绝时刻(Reject Time)}: 上一次 App Op 被拒绝。
-\n\\end{itemize}
-\n
-\n
-\n\\begin{tip}{提示}
-\n若 \\texttt{android.permission.GET\\_APP\\_OPS\\_STATS} 由 ADB 授予，则此选项卡的内容对非 root 用户可见\\@.
-\n\\end{tip}
-\n
-\n每个 App Op 项都有切换按钮，可用于允许或拒绝（忽略）它，其他受支持的模式也可以通过长按来设置。
-\n如果选项卡中未列出所需的 App Op，可使用菜单中的\\textbf{设置自定义 App Op }。
-\n菜单中的\\textbf{重置为默认} 可重置App Ops， 或使用拒绝危险权限的相关操作。
-\n受 App Ops 本身工作方式所限，系统可能需要不少时间来更改它们。
-\n
-\n\\begin{tip}{Tip}
-\n拒绝某些 App Ops 可能会导致应用行为异常，若所有修复手段都失败，可尝试使用 \\textit{重置为默认} 选项。
-\n\\end{tip}
-\n
-\n可以以升序方式按 App Ops 名称和其编号对列表排序，也可以优先显示拒绝的 App Ops。
-\n
-\n\\seealsoinline{\\hyperref[ch:app-ops]{附录: App Ops}}</string>
+    <string name="pages$app-details-page$app-ops">\\textbf{App Ops} 代表\"应用操作 \\textbf{ (Application Operations)} \"。 \n自 Android 4.3 起，Android 通过使用 \\textit{App Ops} 控制诸多系统权限，\n每个 App Op 都有一个与之关联的唯一编号，该编号与其私有名称一同显示在“App Ops”选项卡中，\n一些 App Ops 也有一个公共名称。\n许多 App Ops 与 \\textit{权限} 相关。\n在此选项卡中，若 App Ops 相关的权限被视为危险，则该 App Ops 会被标记为危险。\n其他信息如 \\textit{标志位 (flags)} 、 \\textit{权限名称} 、 \\textit{权限描述} 、\n\\textit{包名} 、 \\textit{群组} 也取自相关的 \\hyperref[subsubsec:permissions]{权限}。\n其他信息可能包含以下内容：\n\\begin{itemize} \n \\item \\textbf{模式(Mode)}：描述了当前授权状态，可以是“\\textit{允许 (allow)}”、“\\textit{拒绝 (deny)}” (实际为错误)、\n“\\textit{忽略 (ignore)}” (实际为拒绝) 、\n“\\textit{默认 (default)}” (从手机供应商或 AOSP 内部设置的默认列表推断) 、\n“\\textit{前台 (foreground)}” (在较新的 Android 版本中，应用只能在前台运行时才能使用该 App Op) ，\n以及一些由供应商设定的模式 (例如 MIUI 使用 \\textit{询问 (ask)})。 \n\n \\item \\textbf{时长 (Duration)}：该 App Op 现已使用的时间\n (可能为负，原因未知)。\n\n \\item \\textbf{允许时刻 (Accept Time)}: 上一次该 App Op 被允许的时刻。 \n\n \\item \\textbf{拒绝时刻 (Reject Time)}: 上一次该 App Op 被拒绝的时刻。 \n\\end{itemize} \n\n\\begin{tip}{提示} \n若 \\texttt{android.permission.GET\\_APP\\_OPS\\_STATS} 由 ADB\\@ 授予，则该选项卡的内容对非 Root 用户可见。\n\\end{tip}\n\n每个 App Op 项都有切换按钮，可用于允许或拒绝 (忽略) 该App Op。\n其他受支持的模式也可以通过长按切换按钮进行设置。\n若选项卡中未列出所需的 App Op，则可使用菜单中的 \\textbf{设置自定义 App Op}。\n菜单中的\\textbf{重置为默认} 选项可用于重置对 App Ops 的更改， 或使用菜单中相关选项拒绝所有危险的 App Ops。\n受限于 App Ops 的工作方式，系统可能需要一段时间应用它们 (让这些更改生效)。\n\n\\begin{tip}{注意} \n拒绝某些 App Ops 可能会导致应用程序行为异常。\n若所有方式都失败，万不得已时可尝试使用 \\textit{重置为默认} 选项。\n\\end{tip} \n\n可以以升序方式按 App Ops 名称和其相关编号 (或值)对列表排序，\n也可通过相应的排序选项优先显示拒绝的 App Ops。\n\n\\seealsoinline{\\hyperref[ch:app-ops]{附录: App Ops}}</string>
     <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Chapter}</string>
     <string name="pages$main-page$1-click-ops">\\textbf{1-Click Ops}代表单击操作。
 \n这将在新活动中打开\\hyperref[sec:1-click-ops-page]{相应页面}。</string>
@@ -657,4 +297,189 @@
 \n %\\sourceatright
 \n {---劳伦斯修士，\\textit{罗密欧与朱丽叶}}
 \n \\end{quotation}</string>
+    <string name="pages$main-page$$labs-title">标签</string>
+    <string name="pages$main-page$profile_name">也可以列出那些只存在于某个 \\hyperref[sec:profiles-page]{配置文件} 下的应用。\n当执行某些无法通过 \\hyperref[sec:profiles-page]{配置文件} 完成的操作时（比如说卸载同配置文件下的所有应用程序)，\n这会很有用。</string>
+    <string name="pages$main-page$profiles">该菜单项会打开 \\hyperref[sec:profiles-page]{配置文件页面}. 配置文件是一种保存了频繁使用的任务的方式。\n这些配置文件也可以通过快捷方式调用。</string>
+    <string name="pages$main-page$app-usage">应用程序使用情况统计，比如说 \\textit{屏幕时间}、\\textit{数据流量使用情况} (包括移动数据和无线网络)、\\textit{打开某应用的次数统计}，\n可通过单击菜单中的 \\textbf{应用程序使用情况} 选项进行访问.。\n但是该功能需要 \\textit{使用情况统计信息访问} 权限。 \n如使用情况统计信息访问功能在 \\hyperref[subsubsec:enable/disable-features]{设置}中被禁用，该菜单项在设置中不会被列出。</string>
+    <string name="pages$main-page$running-apps">该菜单项打开一个新页面，显示正在运行的应用程序或进程列表。它也会显示\n当前内存和缓存（如果可用）使用情况。如果 App Manager 在非root或ADB访问下运行，它只会显示自身使用情况\n在近期的安卓版本。正在运行的应用或进程也可以在结果显示页面里被强行停止或杀掉。\n每个进程标识符(PID)的日志也可以在 \\hyperref[subsubsec:main:labs]{log viewer} 里查阅。\n此外，也可以通过点击图标或长按某一项进行批量处理操作。\n通常情况下点击任意项目会打开一个显示更多详细信息的对话框。</string>
+    <string name="pages$main-page$debloater">该菜单项会打开预装应用卸载页面，列出在设备和 App Manager 里可用的所有预装应用。\n该页面也会推荐可替代的应用程序，这些预装应用以 \\href{https://github.com/MuntashirAkon/android-debloat-list}{Android Debloat List}\n项目为判断基准。</string>
+    <string name="pages$main-page$labs">该菜单项会打开一个标签页以列举所有附加功能。包括日志查看器、\n系统配置、终端、文件管理器（类似 文件）、UI追踪器、意图拦截器，以及代码编辑器。</string>
+    <string name="pages$main-page$$debloater-title">预装应用卸载器</string>
+    <string name="pages$app-details-page$$uses-features-tab-title">使用特性选项卡</string>
+    <string name="pages$app-details-page$$configurations-tab-title">配置选项卡</string>
+    <string name="pages$app-details-page$$tags-title">Tags (标签)</string>
+    <string name="pages$app-details-page$tags-list">\\begin{itemize}\n \\item \\textbf{跟踪器信息} 应用程序里存在的跟踪器组件数量 (比如说 \\textit{5个跟踪器}) 。\n 若追踪器未被阻止 (禁用)，则标签颜色会被显示为橙色；若追踪器在 App Manager 内被阻止，则标签颜色会被显示为暗青色。\n 点击该标签以打开一个包含跟踪器组件的列表的对话框。\n 这些组件可以通过授予 App Manager 足够高的权限阻止 (禁用)或解除阻止 (启用)。\n\n \\item \\textbf{应用程序类别} 用户应用程序或者系统应用程序。\n 对于系统应用程序，会显示该应用程序是否被更新，\n 或者该系统应用程序是否通过 Magisk 以 systemless (不直接修改系统的) 方式安装。\n\n \\item \\textbf{拆分 APK 信息} 排除基础 APK 的前提下，一个 APK 的拆分数量 (比如 \\textit{5个拆分}).\n 点击该标签以打开一个包含若干附加信息（比如说名称、类型和大小）的对话框。\n\n \\item \\textbf{可调试} 该应用程序可以通过 ADB\\@ (Android Debug Bridge，Android 调试桥) 进行调试。\n 可调试的应用程序可以使用某些不会提供给普通应用程序的功能。\n 应用程序的数据可能会通过ADB (比如使用 \\texttt{run-as} 命令) 访问而无需额外的权限。\n\n \\item \\textbf{仅用于测试} 该应用程序是仅用于测试用途的应用程序。\n 仅用于测试的应用程序可以使用某些不会提供给普通应用程序的功能。\n 应用程序的数据可能会通过ADB (比如使用 \\texttt{run-as} 命令) 访问而无需额外的权限。\n\n \\item \\textbf{无代码} 该应用程序并没有任何代码（即DEX文件不存在）。\n 对于某些系统应用程序，其实际代码可能被存放于别的地方。\n\n \\item \\textbf{大堆内存 (Large heap)} 应用程序请求大堆内存占用（即在动态分配中请求更多的 RAM 内存占用）\n 这仍然取决于系统，由系统决定是否给该应用程序分配较大的内存。\n 例如 App Manager 会请求大堆内存占用，因为当扫描 APK\\@ 时，\n 它需要加载整个 APK 到内存中。\n\n \\item \\textbf{打开链接} 该应用程序可能通过任意的应用程序打开某种链接。\n 若该应用程序默认情况下能打开任何链接，则标签颜色会被显示为红色，否则会被显示为暗青色。\n 点击该标签以打开一个包含受支持的hosts或域名的列表的对话框。\n 在 Android 12 及更高版本，当授予 App Manager 足够高的权限时，\n 会显示一个选项以启用或禁用打开默认链接。\n 否则，会显示一个选项以打开该应用程序的系统设置页面。\n\n \\item \\textbf{正在运行} 应用程序中的一个或多个服务当前正在后台运行。\n 点击该标签以打开一个包含正在运行的服务列表的对话框。\n 当日志浏览器功能被启用时，点击任意服务会打开日志浏览器，\n 该日志浏览器会启用默认的筛选器合集，筛选出与UID关联的服务（若运行于独立进程或隔离进程，\n 则服务关联的UID可能与应用程序自身的UID不同）\n 除此以外还会提供一个选项以强行停止该应用程序。\n\n \\item \\textbf{已停止} 已经被强行停止的应用程序。若该应用程序稍后自动运行，则可能不会被停止。\n\n \\item \\textbf{已禁用} 表示该应用程序已经被禁用 (启动器里该应用程序的图标被隐藏)。\n\n \\item \\textbf{已暂停} 表示该应用程序已经被暂停 (启动器里该应用程序的图标变成灰色)。\n\n \\item \\textbf{已隐藏} 表示该应用程序已经被隐藏 (启动器里该应用程序的图标被隐藏)。\n\n \\item \\textbf{MagiskHide} 对该应用程序启用了 MagiskHide。\n 点击该标签以打开一个包含该应用程序所有进程名的列表的对话框，\n 该对话框内的进程列表可以被添加到 MagiskHide 或从 MagiskHide 中移除。\n\n \\item \\textbf{Magisk 排除列表} 该应用程序在 Magisk 的排除列表中。\n 点击该标签以打开一个包含该应用程序所有进程名的列表的对话框，\n 该对话框内的进程列表可以被添加到 Magisk 的排除列表或从 Magisk 的排除列表中移除。\n\n \\item \\textbf{WX} 应用程序违反了“W\\textasciicircum{}X 策略”（Write xor Execute，写异或执行），\n 允许应用程序在同一目录或内存的同一部分中写入和执行。 而这将允许执行任意可执行代码，\n 无论是修改可执行代码并将其嵌入到应用程序中，\n 还是执行从 Internet 下载的可执行代码。\\\\\n \\seealsoinline{\\href{https://en.wikipedia.org/wiki/W\\%5EX}{W\\textasciicircum{}X in Wikipedia}}\n\n \\item \\textbf{Bloatware} 该应用程序可能是已知的预装软件（Bloatware）。\n 它们预装在用户的设备上并占用大量的空间，哪怕用户并不需要它们。\n 点击该标签以打开一个包含详细信息和额外建议（若可用）的对话框。\n\n \\item \\textbf{密钥库} 该应用程序有条目存储在 Android 密钥库 中。\n 点击该标签以打开一个包含所有属于该应用程序的密钥（KeyStore）文件的列表的对话框。\n\n \\item \\textbf{已备份} 该应用程序使用 App Manager 进行过至少一次备份。\n 点击该标签以打开一个包含所有可用备份和 metadata 的对话框。\n\n \\item \\textbf{无电池优化} 该应用程序的电池优化被禁用。\n 通过点击该标签，可以尝试重新启用该应用程序的电池优化。\n\n \\item \\textbf{传感器已禁用} 该应用程序的传感器已被禁用。\n 对绝大多数应用程序而言，传感器默认情况下是被禁用的。\n\n \\item \\hyperref[sec:net-policy]{\\textbf{网络策略}} 对该应用程序配置了网络策略 (例如后台数据流量使用)\n 点击该标签以打开一个包含受支持的策略的对话框。\n 这些策略视平台而定，并存在附加选项以配置它们。\n\n \\item \\hyperref[sec:terminologies]{\\textbf{SSAID}} 点击该标签以打开一个包含\n 当前被分配给该应用程序的 SSAID (Settings.Secure.ANDROID_ID) 的对话框。SSAID可按需重置或重新生成。\n\n \\item \\textbf{SAF} 表示该应用程序已通过存储访问框架（Storage Access Framework，即SAF）\n 被授予访问一个或多个存储位置或文件（即URIs）权限。\n 点击该标签以打开一个包含已授权的URIs的列表的对话框。\n\n \\item \\textbf{Play 应用签名} 表示该应用程序可能由谷歌进行签名。\n\n \\item \\textbf{Xposed} 表示该应用程序可能是一个Xposed模块。\n 点击该标签以打开一个包含附加信息的对话框。\n\n \\item \\textbf{静态共享库} 表示该应用程序充当一个或多个应用程序的静态共享库。\n 点击该标签以打开一个包含已安装库的版本的列表的对话框，\n 并提供附加选项以卸载它们。\n \\begin{tip}{注意}\n Trichrome 库 (由Google Chrome，Vanadium或类似的项目提供)\n 是目前已知的唯一一个 Android 静态共享库。\n \\end{tip}\n\\end{itemize}</string>
+    <string name="pages$app-details-page$servcies">不同于用户能看见的 \\hyperref[subsubsec:activities]{活动}，\\textbf{服务} 处理后台任务。\n比如当你正在使用手机 Internet 浏览器从 Internet 下载视频时，\n该Internet 浏览器会使用 \\textit{前台服务} 下载内容。\n\n当一个活动被关闭或从 \\textit{最近任务} 页面被移除，它可能会被立刻销毁。\n这取决于手机可用的内存、电池统计或者该活动的配置情况。\n但是如果你想，服务可以一直运行下去。\n如果有多个在后台运行的服务，由于内存减少或者处理能力下降，\n手机会变得很卡很慢，\n与此同时手机电量会被消耗得更快。较新版本的 Android 推出了电池优化功能，并对所有应用默认开启。\n当该功能被启用时，系统能够根据系统拥有的资源量或服务请求，随机终止任意服务。\n但是，前台服务（即发送固定通知的服务，比如说音乐播放器、下载器）在通常情况下不会被终止，\n除非系统资源（内存，电量等）严重不足。\n某些原厂系统能提供更为强势激进的优化，\n比如说MIUI 有一个非常有名又强势的优化功能，即 \\textit{MIUI 优化}。\n\n活动和服务都运行在同一套 \\href{https://stackoverflow.com/questions/7597742}{looper} ，称之为主looper，\n意味着服务并非真正在后台运行，而是需要开发者确认的任务。\n至于应用程序是如何通过服务进行交流的？\n是通过 \\hyperref[subsubsec:app-details-receivers]{广播接收器} 或者 Binder 进行通信的。</string>
+    <string name="pages$app-details-page$additional-features-for-rooted-phones">与在这些标签面前只能当个看客的无 Root 用户不同，Root 用户可以执行各种操作。</string>
+    <string name="pages$app-details-page$receivers">\\textbf{接收器} (也被称作 \\textit{广播接收器}) 可以用于在某些事件发生时触发某些任务的执行。\n由于这些组件在接收到广播信息时被执行，故被称作广播接收器。\n这些广播消息通过名为 \\textit{意图 (Intent)} 的方法发送。\n意图 (Intent) 是 Android 的特殊功能，可用于打开应用程序（即活动）、运行服务和发送广播消息。\n因此，像 \\hyperref[subsubsec:activities]{活动}和广播接收器会使用 \\textit{意图过滤器} 接收需要的广播消息。\n广播消息可以被系统或应用程序自身发送。当广播消息被发送时，\n相应的接收器会被系统激活，这样它们就能执行任务。\n举个例子，如果你的手机资源不足，在你启用数据流量或连接至Wi-Fi时，\n手机可能会有片刻无响应或变得很卡。\n这是因为一旦数据连接被启用，可以接收\\texttt{android.net.conn.CONNECTIVITY\\_CHANGE}的广播接收器将被系统激活。\n由于很多应用程序通常情况下都会使用该意图过滤器，这些应用几乎都会立刻被系统激活，这就导致了手机的无响应或卡顿。\n\n接收器也可被用于 IPC (Inter-Process Communication，进程间通信)，即\n用于多个应用程序间交流（通信），甚至用于同一应用程序下不同组件的通信。</string>
+    <string name="pages$app-details-page$blocking-components">在每个组件项目的最右侧，都有一个开关，可用于切换该组件的阻止状态。\n若 \\hyperref[subsubsec:instant-component-blocking]{即时组件阻止} 未启用\n或者之前从未对此应用程序应用阻止规则，\n则需要通过三点菜单中的 \\textbf{应用规则} 选项应用这些更改。\n也可通过同样的选项 (这次会显示为 \\textbf{移除规则} )移除已经应用的规则。\n\n也可长按按钮，以阻止使用一个或多个方法的组件。\n\n\\seealsoinline{\\hyperref[sec:faq:app-components]{FAQ: 应用组件}}</string>
+    <string name="pages$app-details-page$blocking-trackers">可通过使用三点菜单中的 \\textbf{阻止跟踪器} 选项，对跟踪器组件进行阻止。\n无论当前你在哪个标签页中，所有的跟踪器组件都会被阻止。\n\n\\begin{tip}{Info}\n 跟踪器组件是应用组件的一个子集。\n 因此，阻止跟踪器组件与阻止其他任意组件使用的方法相同。\n\\end{tip}\n\n\\begin{amseealso}{另请参阅}\n \\item \\hyperref[subsec:tracker-classes-versus-tracker-components]{FAQ: 跟踪器类与跟踪器组件}\n \\item \\hyperref[sec:scanner-page]{扫描器页面}\n \\item \\hyperref[subsec:block-unblock-trackers]{一键操作页面：阻止/解除阻止跟踪器}\n\\end{amseealso}</string>
+    <string name="pages$app-details-page$configurations-tab">\\textbf{配置} 标签页列出了应用程序需要的配置，\n比如输入法类型 (qwerty、12键)，触屏方式 (手指、触摸笔等等)，以及导航方式 (拨号盘、跟踪球、滚轮)\n对绝大多数应用程序而言，该标签页将会是空页面。</string>
+    <string name="pages$one-click-ops-page$$trim-caches-in-all-apps-title">清理所有应用的缓存</string>
+    <string name="pages$profile-page$$profile-id-title">配置文件ID</string>
+    <string name="pages$profile-page$$freeze-title">冻结</string>
+    <string name="pages$profile-page$configurations-tab">配置标签可用于配置选中的包。</string>
+    <string name="pages$profile-page$profile-id">该配置文件的唯一ID，目前是基于配置文件名设置。\n该配置文件ID可被第三方应用程序用于 \\hyperref[subsec:triggering-a-profile]{触发配置文件} 。</string>
+    <string name="pages$profile-page$comment">这是会显示在 \\hyperref[sec:profiles-page]{配置文件页面} 的文本。\n若并未设置，则会显示当前配置信息。</string>
+    <string name="pages$profile-page$freeze">允许根据 \\hyperref[subsubsec:profile-state]{状态} 的值冻结或解冻选中的包。\n若状态为 \\textit{开}，则包会被冻结。若状态为 \\textit{关}，则包会被解冻。</string>
+    <string name="pages$one-click-ops-page$$block-unblock-trackers-title">阻止/取消阻止跟踪器</string>
+    <string name="pages$one-click-ops-page$$block-components-dots-title">阻止组件\\dots</string>
+    <string name="pages$one-click-ops-page$$set-mode-for-app-ops-dots-title">设置 App Ops 模式 \\dots</string>
+    <string name="pages$profile-page$intro">配置文件页面显示配置文件的配置信息。也提供相应的选项以编辑它们。</string>
+    <string name="pages$profile-page$$block-trackers-title">阻止跟踪器</string>
+    <string name="pages$profile-page$export-blocking-rules">\\begin{danger}{危险}\n 此选项尚未实现。\n\\end{danger}</string>
+    <string name="pages$app-details-page$signatures-tab_2">在此标签页中，使用了几种哈希算法以生成校验和，\n包括 \\textit{MD5} 、 \\textit{SHA1} 、 \\textit{SHA256} 和 \\textit{SHA512}。\n\n\\begin{danger}{小心}\n 签名信息应当通过可靠的散列算法进行验证，例如 \\textit{SHA256}。\n 请勿依靠 \\textit{MD5} 或 \\textit{SHA1} 校验和，因为它们可以为多个证书\n 生成相同的校验和。\n\\end{danger}</string>
+    <string name="pages$profile-page$users">选择需要应用配置文件的用户。默认情况下会选择所有用户。</string>
+    <string name="pages$app-details-page$signatures-tab_1">\\textbf{签名} 实际上被称作签名信息。\n一个应用程序在发布前，会被开发者用一个或多个签名密钥对该应用程序进行签名。\n一个应用程序的完整性，即该应用程序是否来自实际开发者且未被其他人改动，\n可通过使用内置在 APK 文件中的签名证书进行校验。\n这是因为当一个应用程序被未经授权的实体改动时，由于签名密钥对该实体而言是未知的，\n该应用程序就已经无法使用源签名密钥进行签名了。\n一种验证应用程序完整性的方式就是验证证书生成的检验和 (checksums)。\n若开发者提供签名证书的检验和，则它们可以\n通过 \\textbf{签名} 标签页生成的检验和进行比较的方式校验该应用程序。 \n举个例子，如果你从 GitHub 或 Telegram 频道中下载了 App Manager，\n你可以通过简单匹配 \\textit{SHA256} 检验和与显示在此标签的这一个作比较，\n以验证该应用程序是否真是由我发布：</string>
+    <string name="pages$one-click-ops-page$set-mode-for-app-ops-dots">该选项用于对所有或者已选中的应用程序配置某些 \\hyperref[ch:app-ops]{应用操作 (App Ops)}。\n存在两个字段，第一个字段用于插入多个被空格隔开的应用操作常量 (名称或值)。\n由于可用的应用操作因设备和操作系统而异，并非所有的应用操作常量都能被事先了解。\\@.\n需要的应用操作常量可在位于 \\hyperref[sec:app-details-page]{应用详情页} 中的 \\textit{App Ops} 标签页内查阅。\n第二个字段可用于插入或根据特定的应用操作选择 \\hyperref[subsec:mode-constants]{模式}。\n\n\\begin{danger}{小心}\n 除非你熟悉 App Ops (应用操作) 和阻止它们的后果，你应该避免使用该选项。\n\\end{danger}</string>
+    <string name="pages$one-click-ops-page$back-up">一键备份操作。以防万一，在执行任何操作前会列出所有受影响的备份。\n\n\\paragraph{备份所有应用} 备份所有的已安装的应用程序。\n\n\\paragraph{重新备份现有备份} 重新备份所有已安装且之前备份过的应用程序。\n\n\\paragraph{备份无备份应用} 备份所有已安装但尚未备份的应用程序。\n\n\\paragraph{验证和重新备份} 验证已安装的应用程序的近期备份，并在必要时重新备份。\n\n\\paragraph{备份发生变化的应用} 若某应用在上次备份后有所变化，则重新备份该应用。\n通过检查一系列指标判断该应用是否发生变化，包括应用程序版本、最后更新日期、最后启动日期、完整性和文件哈希值。\n目录哈希值会在备份过程中被计算并存储在数据库中。\n在执行此操作时，会计算新的哈希值，并比较存储在数据库中的该项。</string>
+    <string name="pages$one-click-ops-page$restore">一键还原。以防万一，在执行任何操作前会列出所有受影响的备份。\n\n\\paragraph{还原所有应用} 还原 \\textit{基本备份} 中所有已备份的应用程序。\n\n\\paragraph{还原未安装应用} 还原 \\textit{基本备份} 中所有已备份的应用程序中尚未安装的应用程序。\n\n\\paragraph{还原最新备份} 还原 \\textit{基本备份} 中版本代号比已安装应用程序的版本代号高的应用程序。</string>
+    <string name="pages$app-details-page$providers">\\textbf{提供者}主要用于数据管理。\n比如，当你使用 App Manager 保存 APK 文件或导出规则时会使用名为 \\texttt{.fm.FmProvider} 的内容提供者以保存 APK 或导出规则。\nAndroid 中存在很多的提供者，包括这个由系统提供的\n可被用于管理多个内容相关的任务，比如说数据库管理、跟踪、搜索等。\n每个提供者有一个名为 \\textit{Authority (授权)} 的字段，\n该字段对于整个 Android 生态系统中的应用程序来说是唯一的，就像包名一样。</string>
+    <string name="pages$app-details-page$uses-features-tab">\\textbf{使用功能} 该标签页列出了由该应用程序声称的功能列表，比如 OpenGL ES、电话和 leanback。\n应用程序可能需要某些功能，而有些功能对应用程序而言则是可选的。\n所需功能必须与所需版本一起存在于系统中。\n否则，任何安装应用程序的尝试会被系统拒绝。\n用于此标签的颜色在 \\Sref{subsec:app-details-colour-codes} 有详细解释。</string>
+    <string name="pages$one-click-ops-page$intro">该页面在选择 \\hyperref[subsec:main-page-options-menu]{主菜单} 中的 \\hyperref[subsubsec:main:1-click-ops]{一键操作选项} 时显示。</string>
+    <string name="pages$app-details-page$shared-libs-tab">\\textbf{共享库} 该标签页列出了传统 JAR 依赖、\n任意静态共享库依赖 (目前唯一一个已知的实例是基于Chromium的浏览器和WebViews )\n以及 JNI (Java 本地接口) 库。对于JNI 库，有明确规定特定的平台 (x86/x86\\_64/ARM/AArch64)、\n架构 (32/64 bit)、对象 (共享对象或可执行代码) 等。</string>
+    <string name="pages$one-click-ops-page$trim-caches-in-all-apps">清除所有应用程序的缓存，包括 Android 系统。在执行此操作期间，\n所有正在运行的应用程序的缓存可能不会如预期般被清除。</string>
+    <string name="pages$one-click-ops-page$block-unblock-trackers">该选项可被用于阻止或解除阻止已安装应用程序的广告/跟踪器组件。\n选择此项时，App Manager 会询问是否需要列出所有应用程序的跟踪器，或者仅列出用户应用程序的跟踪器。\n新手用户应避免阻止系统应用程序的跟踪器以避免产生不良后果。\n之后会弹出多选对话框，以将排除一个或多个应用程序从该操作中排除。\n当按下 \\textit{阻止} 或 \\textit{解除阻止} 按钮时，这些变更会立刻生效。\n\n\\begin{warning}{注意}\n 某些应用程序在禁用它们的跟踪器以后，可能无法如预期般运行。 若出现这种情况， 请移除所有阻止规则，\n 或者打开对应应用的 \\hyperref[sec:app-details-page]{应用详情页} ，将组件标签页中被阻止的规则逐个移除。\n\\end{warning}\n\n\\seealsoinline{\\hyperref[par:appdetails:blocking-trackers]{应用详情页：阻止跟踪器}}</string>
+    <string name="pages$one-click-ops-page$block-components-dots">该选项用于阻止某些应用程序的组件，而判断依据是它们的签名。\n一个组件的签名是组件的全称或部分名称。\n安全起见，推荐在每一部分的签名结尾添加 \\texttt{.} (点)，\n因为底层算法以贪婪的方式搜索和匹配组件。\n也可以插入多个签名，在这种情况下，所有签名都要被空格隔开。\n类似于上面的选项，此处也会提供对系统应用程序应用阻止的选项。\n\n\\begin{danger}{小心}\n 如果你并不知道通过签名阻止应用程序组件的后果是什么，你应当避免使用该功能。\n因为该功能使用不当可能会导致手机 bootloop (引导循环，具体现象就是手机不断重启并卡在开机第一屏或开机动画，但就是无法进入系统) 或者变砖 (除了通过特殊按键组合进入某些特殊模式外，手机保持黑屏状态)，最终你可能要执行恢复出厂设置。\n\\end{danger}</string>
+    <string name="pages$profiles-page$intro">配置文件页面可通过主菜单的 \\hyperref[subsec:main-page-options-menu]{选项菜单} 访问。\n页面主要展示了已配置的文件列表以及对其进行操作的常规选项。\n新配置文件也可通过位于底部右下角的 \\textit{加号} 按钮进行添加。\n配置文件可以被导入、复制或删除。\n单击配置文件项目以打开其 \\hyperref[sec:profile-page]{配置文件页面}。</string>
+    <string name="pages$profile-page$options-menu">顶部右上角的三点菜单会打开选项菜单。其中包含若干个选项，例如--\n\\begin{itemize}\n \\item \\textbf{应用} 该选项用于直接应用配置文件。\n 点击时，会显示一个可以选择 \\hyperref[subsubsec:profile-state]{配置文件状态} 的对话框。\n 在选择其中一个状态后，配置文件会立即生效。\n \\begin{tip}{注意}\n 当你应用配置文件时，如果存在某些不符合标准的应用，它们会被直接忽略。\n \\end{tip}\n\n \\item \\textbf{保存} 保存对配置文件的更改。\n\n \\item \\textbf{丢弃} 丢弃自上次保存后产生的全部更改。\n\n \\item \\textbf{删除} 点击此选项将将在无警告的情况下直接移除配置文件。\n\n \\item \\textbf{复制} 该选项用于复制配置文件。\n 点击时会显示一个对话框，在对话框内可为新的配置文件命名。\n 单击“OK”后，会复制当前配置文件存储的配置信息\n 并加载到新的 \\hyperref[sec:profile-page]{配置文件页面} 。\n 尽管如此，复制的配置文件在手动保存之前都不会被保存。\n\n \\item \\textbf{创建快捷方式} 该选项用于创建该配置文件的快捷方式。\n 该功能提供两个选项： \\textit{简单} 和 \\textit{高级} 。\n 选择 \\textit{高级} 进行配置时，会提示用户选择快捷方式被调用时的配置文件状态。\n 选择 \\textit{简单} 进行配置时，则总是使用上一次保存的配置文件设置的默认状态。\n\\end{itemize}</string>
+    <string name="pages$profiles-page$options-menu">通过 App Manager 顶部右上角的三点菜单打开全局选项菜单。\n其中有一个选项，用于导入先前从 App Manager 导出的已有配置文件。\n\n长按任意配置文件项目会弹出另一个选项菜单。该选项菜单提供以下选项：\n\\begin{itemize}\n \\item \\textbf{立即应用\\dots.} 该选项用于直接应用配置文件。\n 点击时会显示一个对话框，在对话框内可选择 \\hyperref[subsubsec:profile-state]{配置文件状态}。\n 选择其中一个状态后，配置文件会被立即应用。\n\n \\item \\textbf{删除} 点击该选项会在无警告的情况下直接移除配置文件。\n\n \\item \\textbf{复制} 该选项用于复制配置文件。\n 点击时会显示一个对话框，在对话框内可为新的配置文件命名。\n 单击“OK”后，会复制当前配置文件的所有配置信息并加载到\n 新的 \\hyperref[sec:profile-page]{配置文件页面} 。\n 尽管如此，复制的配置文件在手动保存之前都不会被保存。\n\n \\item \\textbf{复制配置文件ID} 该选项用于复制配置文件的唯一配置ID。\n 该配置ID可用于\n从第三方应用程序 \\hyperref[subsec:triggering-a-profile]{触发配置文件} 。\n\n \\item \\textbf{导出} 导出配置文件到外部存储。\n 通过该方式导出的配置文件可以通过之前提到的 \\textit{导入} 选项导入。\n\n \\item \\textbf{创建快捷方式} 该选项用于\n 创建该配置文件的快捷方式。\n 该功能提供两个选项： \\textit{简单} 和 \\textit{高级} 。\n 选择 \\textit{高级} 时，会提示用户选择快捷方式被调用时的配置文件状态。\n 选择 \\textit{简单} 时，则总是使用配置文件上一次保存时设置的默认状态。\n\\end{itemize}</string>
+    <string name="pages$profile-page$apps-tab">应用标签页会列出所有为该配置文件配置的包。\n包可以通过位于屏幕底部附近的 \\textit{添加} 按钮添加或移除。\n一个包可以通过长按该按钮的方式移除 (以防万一，会弹出一个仅显示 \\textit{删除} 选项的对话框)。</string>
+    <string name="pages$profile-page$state">表示默认情况下某些配置文件选项的行为方式。\n例如，若 \\textit{禁用} 选项被打开，则状态为 \\textit{开} 的应用程序会被禁用，状态为 \\textit{关} 的会被启用。\n目前此项仅支持取值 \\textit{开} 和 \\textit{关} 。</string>
+    <string name="pages$profile-page$app-ops">该行为与位于一键操作页面中的 \\hyperref[subsec:set-mode-for-app-ops-dots]{设置 App Ops(应用操作) 模式\\dots} 选项的行为相同。\n然而，此处的操作仅对选中的包生效。\n若 \\hyperref[subsubsec:profile-state]{状态} 为 \\textit{开}，则应用操作(App Ops)会被拒绝 (即忽略)。\n若其状态为 \\textit{关}，则应用操作(App Ops)会被允许。\n该选项可通过单击输入对话框中的 \\textit{禁用} 按钮禁用 (无论被插入何值)。</string>
+    <string name="pages$profile-page$components">该行为与位于一键操作页面中的 \\hyperref[subsec:block-components-dots]{阻止组件\\dots} 选项的行为相同。\n然而，此处的阻止操作仅对选中的包生效。\n若 \\hyperref[subsubsec:profile-state]{状态} 为 \\textit{开}，则组件会被阻止。\n若其状态为 \\textit{关}，则组件会被解除阻止。\n该选项可通过单击输入对话框中的 \\textit{禁用} 按钮禁用 (无论被插入何值)。\n\n\\seealsoinline{\\hyperref[subsec:faq:what-are-app-components]{什么是应用组件？}}</string>
+    <string name="pages$profile-page$permissions">该选项用于对被选中的包授予或撤销某些权限。与其他选项类似，权限必须用空格隔开。\n若 \\hyperref[subsubsec:profile-state]{状态} 为 \\textit{开}，则权限会被撤销。\n若其状态为 \\textit{关}，则权限会被允许。\n该选项可通过单击输入对话框中的 \\textit{禁用} 按钮禁用 (无论被插入何值)。</string>
+    <string name="pages$profile-page$backup-restore">该选项用于对被选中的应用程序和其数据进行备份或还原。\n提供两个选项： \\textit{备份选项} 和 \\textit{备份名称} 。\n\\begin{itemize}\n \\item \\textbf{备份选项} 与备份/还原功能中的 \\hyperref[subsec:backup-restore-backup-options]{备份选项} 相同。\n 若没有设置，则使用默认选项。\n \\item \\textbf{备份名称} 为备份设置自定义名称。若已经设置了备份名称，则每次备份都会沿用该名称。\n 每个备份名称后都会被赋予唯一的名称作为后缀。该行为将在未来的正式版被修复。\n 对于通常的“基本”备份，此区域会留空\n (也请确保不要在备份选项中开启 \\textit{多个备份} )。\n\\end{itemize}\n\n若 \\hyperref[subsubsec:profile-state]{状态} 为 \\textit{开}，则包会被备份。\n若其状态为 \\textit{关}，则包会被还原。\n该选项可通过单击输入对话框中的 \\textit{禁用} 按钮禁用 (无论被插入何值)。</string>
+    <string name="pages$settings-page$$pure-black-theme-title">纯黑色主题</string>
+    <string name="pages$settings-page$$layout-direction-title">布局方向</string>
+    <string name="pages$settings-page$$privacy-settings-title">隐私</string>
+    <string name="pages$settings-page$$run-am-in-background-title">在后台运行 App Manager</string>
+    <string name="pages$settings-page$$use-the-internet-title">使用网络</string>
+    <string name="pages$settings-page$$auth-manager-title">授权管理器</string>
+    <string name="pages$settings-page$$align-apk-files-title">对齐 APK 文件</string>
+    <string name="pages$settings-page$$display-changes-title">显示变化</string>
+    <string name="pages$settings-page$$immediately-perform-dex-opt-title">立即执行DEX优化</string>
+    <string name="pages$settings-page$$import-backups-title">导入备份</string>
+    <string name="pages$settings-page$$advanced-settings-title">高级</string>
+    <string name="pages$settings-page$pure-black-theme">使用纯黑色的背景，而不是Material 主题背景。</string>
+    <string name="pages$settings-page$layout-direction">更改布局方向，从左到右或者从右到左。\n通常情况下由选择的语言决定，但不是每个人都有相同的方向习惯。</string>
+    <string name="pages$settings-page$screen-lock">当设置了屏幕锁定时，使用 Android 屏幕锁定的设置锁定 App Manager。\n\n\\begin{warning}{警告}\n 若启用该设置后，屏幕锁定在 Android 中被禁用/移除，则直到再度启用屏幕锁定前 App Manager 将无法被打开。\n\\end{warning}</string>
+    <string name="pages$settings-page$use-the-internet">在 App Manager 中激活网络功能。\n目前包括在 \\hyperref[sec:scanner-page]{扫描器页面}中进行扫描的 VirusTotal 和 Pithus。</string>
+    <string name="pages$settings-page$auth-manager">该设置允许第三方应用程序获得某些功能的访问权限，比如说配置文件。</string>
+    <string name="pages$settings-page$installer-subtitle">配置安装器的默认行为。在应用程序安装时，\n你也可以通过点击 \\textit{齿轮} 图标并找到绝大多数设置。</string>
+    <string name="pages$settings-page$immediately-perform-dex-op">在安装应用程序后立即执行DEX优化。\n对于大型应用程序（比如说游戏类应用程序）而言，这很有用。</string>
+    <string name="pages$settings-page$install-in-the-background">总是在后台安装应用程序。当安装完成时，会发出一条通知。</string>
+    <string name="pages$settings-page$backup-volume">选择存放备份的存储路径。这也将存放日志以及导出的 APK 文件。\n\n\\begin{tip}{注意}\n 备份卷仅可指定存储空间而不是路径。一般情况下备份会被存放在位于存储路径内部的 \\texttt{AppManager} 文件夹内。\n 但当通过存储访问框架 (Storage Access Framework，即 SAF ) 选择路径时，会直接选择路径或目录。\n\\end{tip}</string>
+    <string name="pages$settings-page$import-backups">从旧版本和已停止更新的项目（比如说钛备份、OAndBackup 和 Swift Backup (从3.0到3.2的版本) 中导入备份。\n备份在导入后不会被删除，以防止在无法正确还原导入的备份时丢失数据。</string>
+    <string name="pages$profile-page$block-trackers">根据 \\hyperref[subsubsec:profile-state]{状态} 的值对选中的包的跟踪器组件启用阻止或解除阻止。\n若状态为 \\textit{开} ，则跟踪器会被阻止；若状态为 \\textit{关} ，则跟踪器会被解除阻止。</string>
+    <string name="pages$profile-page$save-apk">对在 \\texttt{AppManager/apks} (或在设置页面中被选中的目录) 中被选中的包启用导出 APK 文件。</string>
+    <string name="pages$settings-page$intro">设置页面可被用于个性化 App Manager 的行为。</string>
+    <string name="pages$profile-page$clear-cache">为被选中的包启用清除缓存。</string>
+    <string name="pages$settings-page$$selected-users-title">选中的用户</string>
+    <string name="pages$profile-page$clear-data">为选中的包启用清除数据。</string>
+    <string name="pages$settings-page$$block-trackers-title">阻止跟踪器</string>
+    <string name="pages$settings-page$signature-schemes">配置\\href{https://source.android.com/security/apksigning}{签名方案} 以用于启用 APK 签名的情况。\n默认启用 v1 和 v2 签名方案，但应该也启用 v3 以确保在 Android 9 及更高版本的安全性。</string>
+    <string name="pages$settings-page$block-trackers">在安装应用程序后立刻阻止跟踪器组件。</string>
+    <string name="pages$settings-page$display-changes">在安装应用程序前，若该应用程序已经被安装，\n则会在版本控制样式中显示版本、跟踪器、组件、权限、签名、SDK等信息的变更。</string>
+    <string name="pages$settings-page$compression-method">设置在备份时使用的压缩方式。\nApp Manager 支持 GZip、BZip2 和 Zstandard 压缩方式，且默认的压缩方式为 GZip。\n这不会影响到已有备份的还原。</string>
+    <string name="pages$profile-page$force-stop">允许被选中的包被强行停止。</string>
+    <string name="pages$settings-page$signing-key">为签名 APK 文件配置签名密钥。\n已存在密钥库中的密钥可以被导入到 App Manager，或者可以生成新的密钥。\n\n\\begin{tip}{提示}\n 如果你需要在将来使用密钥，推荐你自行创建密钥库并在此处导入密钥。\n 在没有正确备份的情况下，在 App Manager 生成的密钥有被删除的风险。\n\\end{tip}</string>
+    <string name="pages$settings-page$$appearance-title">外观</string>
+    <string name="pages$settings-page$$install-in-the-background-title">后台安装</string>
+    <string name="pages$settings-page$$saved-apk-name-format-title">保存的 APK 名称格式</string>
+    <string name="pages$settings-page$run-am-in-background">App Manager 在后台运行时会减少初始化延迟。\n对缓解某些设备频繁断开 ADB\\@ 连接的问题而言，这也很有用。</string>
+    <string name="pages$settings-page$mode-of-operation">操作模式定义了 App Manager 整体的工作模式，其有以下选项：\n\\begin{itemize}\n \\item \\textbf{自动} 让 App Manager 决定最佳选项。\n 尽管这是默认选项，对于无 Root 用户而言应该使用 \\textit{无 Root} 模式。\n\n \\item \\textbf{Root} 以 Root 模式运行 App Manager。若未检测到 Root 权限，App Manager 会回退至 \\textit{无 Root} 模式。在极少数个例中，当通过 Root 发起的 Binder 通信被禁用时\n (例如 \\href{https://github.com/MuntashirAkon/AppManager/issues/606}{Phh SuperUser})，App Manager 也会回退至 \\textit{无 Root} 模式。\n\n \\item \\textbf{TCP 启动 ADB} 通过 \\hyperref[sec:adb-over-tcp]{TCP 启动 ADB} 的方式，在 ADB 模式下运行 App Manager。\n 若未通过 TCP 启动 ADB ，App Manager 会回退至 \\textit{无 Root} 模式。\n\n \\item \\textbf{无线调试} 通过无线调试启用 ADB 。首先会自动尝试连接之前配置的端口，\n 如失败会提示用户手动配对，或者手动连接到 ADB daemon。\n 若通过该方式无法成功连接到 ADB daemon，App Manager会回退至 \\textit{无 Root} 模式。\n \\begin{tip}{信息}\n 由于无线调试在 Android 11 才被引入，该选项仅在运行 Android 11 及更高版本的设备上显示。\n \\end{tip}\n\n \\item \\textbf{无 Root} 以无 Root 模式运行 App Manager。虽然 App Manager 在此模式中表现更佳，\n 但所有 Root 或 ADB 相关的功能会被禁用。\n\\end{itemize}\n\n也会在顶部显示实际操作模式。\n实际操作模式是指 \\textit{Root}、\\textit{ADB} 和 \\textit{无 Root} 。\n\n\\begin{tip}{注意}\n只有两种情况 \"远程服务“才是必需的。一是 ADB 用户，二是使用自定义命令。\n\\end{tip}</string>
+    <string name="pages$settings-page$backup-options">自定义备份时 \\textit{备份/还原对话框} 的显示。\n\n\\seealsoinline{\\hyperref[subsec:backup-restore-backup-options]{备份选项}}</string>
+    <string name="pages$settings-page$backup-apps-with-keystore">允许备份在 Android 密钥库中有条目的应用程序。\n由于一些应用 (比如说 Signal 和 Element ) 在还原后会崩溃闪退，该选项会默认显示。</string>
+    <string name="pages$settings-page$align-apk-files">在 App Manager 对一个 APK 文件签名时执行 ZIP 对齐。 ZIP对齐在 APK 文件 (实际也是一种 ZIP 文件) 中\nZIP 文件浏览器可通过随机访问非常轻易地访问文件而不是将整个 APK 文件加载到内存，\n进而导致 Android 可用内存的减少。\n记住一点：该步骤需要该应用程序的清单 (manifest) 中\n存在 \\texttt{解压本地库 (extractNativeLibs)} 并被设定为 \\texttt{真 (true)}。</string>
+    <string name="pages$settings-page$encryption">为备份设置加密方式。App Manager 当前支持 OpenPGP\n(源自 \\href{https://f-droid.org/packages/org.sufficientlysecure.keychain/}{OpenKeyChain} )、\nAES、RSA和ECC\\@ 。与 \\hyperref[subsec:apk-signing]{APK 签名}类似，AES、RSA和ECC密钥被存储在\n密钥库中，可从其它密钥库中导入。\n\n\\begin{danger}{危险}\n 为了确保自身安全，推荐在 App Manager 内部生成 RSA 和 ECC 密钥。\n 或者应该从存储在安全地方的密钥库中导入。\\\\\n 在 AES 的情况下，生成的密钥应存储在安全的地方，例如密码管理器中。\n\\end{danger}</string>
+    <string name="pages$interceptor-page$reset-to-default">重置意图至其初始化状态。</string>
+    <string name="guide$aot$$oneplus-usb-debug-title">一加 (Oxygen OS)</string>
+    <string name="guide$aot$miui-usb-debug">同时启用 \\textbf{USB 调试 (安全设置)} 。</string>
+    <string name="pages$settings-page$selected-users">该选项允许你控制 App Manager 应作用的用户。默认情况下，在 Root 模式或 ADB 模式下 App Manager 对所有用户起作用。</string>
+    <string name="pages$settings-page$device-info">显示 Android 版本、安全、CPU、GPU、电池、内存、屏幕、语言、用户信息等。</string>
+    <string name="guide$aot$$realme-usb-debug-title">真我 (Realme)</string>
+    <string name="pages$settings-page$instant-component-blocking">默认情况下，阻止规则不会生效，直到它们在任意应用程序的 \\hyperref[sec:app-details-page]{应用详情页} 中被显式应用。\n在启用该选项后，所有应用程序的所有规则 (无论新旧) 即刻生效，无需显式启用应用程序的阻止。\n\n\\seealsoinline{\\hyperref[subsec:faq:what-is-instant-component-blocking]{FAQ: 什么是即时阻止组件？}}</string>
+    <string name="pages$settings-page$import-export-blocking-rules">可以在 App Manager 内为所有应用程序导入或导出阻止规则。可选择应被导入或导出的规则类型 (组件、应用操作或权限)。\n也可从 \\href{https://github.com/lihenggui/blocker}{Blocker} 和 \\href{https://github.com/tuyafeng/Watt}{Watt} 导入阻止规则。\n若要为单个应用程序导出阻止规则，则可使用相应的 \\hyperref[sec:app-details-page]{应用详情页} 导出规则。若要为多个应用程序导出规则，则可使用 \\hyperref[subsec:batch-operations]{批处理操作} 。\n\n\\seealsoinline{\\hyperref[sec:rules-specification]{规则说明}}\n\n\\paragraph{导出} 为所有应用程序导出在 App Manager 配置的阻止规则。\n可包含 \\hyperref[subsec:faq:what-are-app-components]{应用组件} 、应用操作 (App Ops) 和权限，基于多选操作中选择的选项导出规则。\n\n\\paragraph{导入} 导入之前从 App Manager 导出的阻止规则。\n类似于导出，可包含 \\hyperref[subsec:faq:what-are-app-components]{应用组件}、应用操作 (App Ops) 和权限，基于多选操作中选择的选项导入规则。\n\n\\paragraph{导入已有规则}\\label{par:import-existing-rules}\n\\phantomsection\n将被其他应用程序阻止的组件添加到 App Manager 中。App Manager 仅跟踪被 App Manager 禁用的组件。\n若应用程序的组件时被其他工具或应用程序阻止，则该选项可被用于导入它们。\n点击该选项， App Manager 会查找潜在的被其他应用程序或工具阻止的组件，并仅列出应用程序的名称以及匹配的组件数量。\n安全起见，所有的应用程序默认情况下不会被选中。它们需要被手动选择，并在 App Manager 中重新应用阻止规则。\n\n\\begin{danger}{小心}\n 谨慎使用可能存在错误结果的工具。\n 仅选择你十分确信的应用程序。\n\\end{danger}\n\n\\paragraph{从 Watt 中导入} 从 \\href{https://github.com/tuyafeng/Watt}{Watt} 中导入配置文件，\n每个文件包含单个包的规则，文件名为包的名称跟着 \\texttt{.xml} 的扩展名。\n\n\\begin{tip}{提示}\n Watt 的配置文件存放位置为： \\texttt{/sdcard/Android/data/com.tuyafeng.watt/files/ifw}\n\\end{tip}\n\n\\paragraph{从 Blocker 中导入} 从 \\href{https://github.com/lihenggui/blocker}{Blocker} 中导入阻止规则，每个文件包含单个包的规则。\n这些文件的扩展名为 \\texttt{.json} 。</string>
+    <string name="pages$settings-page$remove-all-rules">点击选项以移除App Manager 内配置的所有规则。\n这将启用所有已被阻止的组件，应用操作会被设置为默认值以及权限会被授予。</string>
+    <string name="pages$settings-page$saved-apk-name-format">定义用于批处理操作或通过配置文件导出的 APK 格式的文件名。\nApp Manager 提供一些特殊的关键词，这些关键词包含在 \\texttt{\\%} (百分号) 符号内，并在输入框下方可用。\n这些关键词为：\n\\begin{itemize}\n \\item \\textbf{\\texttt{标签}。} 表示该应用程序的名称或标签。可根据该应用程序设置的语言进行本地化。\n \\item \\textbf{\\texttt{包名}。} 表示包名称或该应用程序ID，是每个应用程序拥有的唯一标识符。\n \\item \\textbf{\\texttt{版本}。} 表示从该应用程序清单里提取出的当前版本。\n \\item \\textbf{\\texttt{版本代号}。} 表示该应用程序的当前版本代号，可用于区分同一个应用程序的两个版本。\n \\item \\textbf{\\texttt{最小SDK}。} 表示该应用程序可运行的最小的SDK (即 Android 框架版本)。该数据仅在 Android 7 (Nougat) 及更高版本可用。\n \\item \\textbf{\\texttt{目标SDK}。} 表示该应用程序的目标SDK。该应用程序可在更高的 SDK 版本以兼容模式运行。\n \\item \\textbf{\\texttt{日期时间}。} 表示 APK 导出的时间和日期。\n\\end{itemize}</string>
+    <string name="pages$settings-page$import-export-keystore">导入或导出用于 App Manager 的密钥库。该密钥库是 Bouncy Castle KeyStore 并以 \\texttt{bks} 作为扩展名。\n因此不支持其他诸如 Java KeyStore (JKS) 或 PKCS \\#12 的密钥库。\n若要从这类密钥库中导入密钥，则应使用如上所述的相关选项。</string>
+    <string name="pages$interceptor-page$mime-type">\\hyperref[subsubsec:data]{数据} 的 MIME类型。 举个例子，若数据字段被设定为 \\texttt{file:///sdcard/AppManager.apk}，\n则相关联的MIME类型为 \\texttt{application/vnd.android.package-archive}。</string>
+    <string name="guide$aot$emui-usb-debug">也启用 \\textbf{允许在仅充电模式下进行 ADB 调试} 。\n当连接到你的 PC 或 Mac 设备时，你可能会看到 \\textbf{是否允许访问设备数据？} 的提示。\n无论哪种情况，请点击 \\textbf{是，允许访问}。\n\n\\begin{tip}{注意}\n \\textbf{USB 调试} 模式经常会被系统自动禁止。遇到此情况时，请重复上述步骤。\n\\end{tip}</string>
+    <string name="pages$interceptor-page$categories">类别 (Category) 与 \\hyperref[subsubsec:action]{动作 (Action)} 类似。某种意义上来说，它也被系统用于过滤应用程序组件。\n它并没有更多优势。不同于 \\textit{动作 (Action)}，可以拥有多个类别。点击标题旁边的 \\textit{添加} 按钮以允许添加更多类别。</string>
+    <string name="pages$interceptor-page$uri">将整个意图表示为 URI (例如 \\texttt{intent://\\dots})。\n一些数据无法被转换为字符串，结果可能无法在此显示。</string>
+    <string name="pages$interceptor-page$flags">标志 (Flags) 有助于确定活动 (Activity) 启动期间或活动 (Activity) 启动后的系统行为。\n因为它需要一些技术背景，不应该被随意触及。标题旁边的 \\textit{添加} 按钮可用于添加一或多个标志 (Flags)。</string>
+    <string name="pages$interceptor-page$extras">额外数据 (Extras) 是用于向目标组件提供附加信息的键值对。可以使用标题旁边的 \\textit{添加} 按钮添加更多额外数据 (Extras)。</string>
+    <string name="pages$scanner-page$intro">在 \\hyperref[subsec:app-info-tab]{应用详情页} 中点击 \\emph{扫描器} 按钮后，会出现 \\textbf{扫描器页面} 。\n外部 APK 文件也可从文件管理器、网页浏览器等用 App Manager 的扫描器打开以扫描 APK 文件。\n\n扫描器会扫描跟踪器和库，显示跟踪器和库的总数。\n它也会显示 APK 文件的检验和并进行签名验证。\n若设置里配置了 VirusTotal ，则也可尝试从 VirusTotal 中检索报告，\n若该 APK 文件不在数据库时，则可以选择上传该 APK 文件。\n当启用网络功能时，还会显示前往 \\href{https://beta.pithus.org}{Pithus}的链接，并提供报告功能。\n\n\\begin{danger}{免责声明}\n App Manager 仅静态扫描应用程序，并不带任何偏见。应用程序可能会提供退出跟踪的选项。\n 在某些情况下，某些跟踪器的功能并不会被应用程序使用 (比如 F-Droid)。\n 某些应用程序可能只是单纯将它们当作占位符使用，\n 以防止某些功能被破坏 (比如Fennec F-Droid)。\n \\textbf{扫描器的目的是让你知道该 APK 可能包含的内容。\n 应该把扫描结果当作进一步调查之前的第一步。}\n\\end{danger}\n\n点击第一项 (即类的数量) 以打开一个新页面，该页面包含该应用程序的跟踪器类的列表。\n所有类可以通过点击 \\textit{切换类列表} 目录查阅。\n只需点击其中任意一项即可查看该类的 SMALI 或 Java 版本。\n\n\\begin{tip}{注意}\n 由于诸多限制，不可能扫描一个 APK 文件里的所有组件。\n 若一个 APK 文件被高度混淆或包装则更是如此。\n 扫描器也不会检查字符串 (或网站签名)。\n\\end{tip}\n\n第二项列出了跟踪器数量以及它们的名称。\n点击其中一项以显示包含跟踪器名称、匹配签名和每个签名对应的类的数量的对话框。\n某些跟踪器名称可能包含 $^2$ 前缀，\n表示这些跟踪器在 \\href{https://etip.exodus-privacy.eu.org}{ETIP} 备选列表内，\n即它们是否确实是跟踪器还在调查中。\n\n第三项列出了库的数量以及它们的名称。\n这些信息大多叔来自 \\href{https://gitlab.com/IzzyOnDroid/repo}{IzzyOnDroid repo}。\n\n\\seealsoinline{\\hyperref[subsec:tracker-classes-versus-tracker-components]{FAQ: 跟踪器类与跟踪器组件}}</string>
+    <string name="pages$scanner-page$missing-signatures">%在页面底部有一个特殊的项目，表明缺少签名的数量 (即缺少的类) 。\n%缺少的签名是那些 App Manager 无法将其与任何已知的库相匹配的签名。\n%由于许多库包含数百个类，数量本身并不具备特别的意义，因为许多库包含数百个类\n%但单击项目会弹出包含签名的对话框，有助于检查缺失的签名。\n%\\textbf{该功能仅为那些知道缺少签名的含义以及该怎么办的人而备，\n%其他用户应该忽略此项。}</string>
+    <string name="pages$interceptor-page$intro">拦截器可被用于拦截应用间通过 \\texttt{意图 (Intent) } 进行的通信。\n作为源应用程序与目标应用程序之间的中间人工作。\n并提供编辑 \\texttt{意图} 的界面给功能完整的用户。\n\n\\begin{warning}{警告}\n 拦截器仅作用于未被指定 \\hyperref[subsec:faq:what-are-app-components]{应用组件} 的 \\textit{隐式} 意图。\n\\end{warning}\n\n\\begin{amseealso}\n \\item \\href{https://developer.android.com/guide/components/intents-common}{常见 Intent}\n \\item \\href{https://developer.android.com/guide/components/intents-filters}{Intent 与 Intent 过滤器}\n\\end{amseealso}</string>
+    <string name="pages$interceptor-page$intent-filters">应用程序使用意图过滤器来指定它们能够执行的任务或者它们将使用其他应用程序执行的任务。\n举个例子，当你使用文件管理器打开一个 PDF 文件时，文件管理器会尝试寻找能够打开 PDF 的应用程序。\n为了找到正确的应用程序，文件管理器会创建一个带有MIME类型等过滤器的意图 (Intent)，并要求系统检索能够打开该过滤器的应用程序。\n系统会通过检索已安装应用程序的清单 (Manifest)匹配过滤器，并列出能够打开该过滤器 (该例子中是PDF)的应用程序组件。\n此时，文件管理器将自行打开所需的应用程序组件或者使用系统提供的选项打开它。\n若多个应用程序组件能打开它并且没有设置默认的打开方式，则你可能会看到一个选择正确的应用程序组件打开的提示。</string>
+    <string name="pages$interceptor-page$action">动作 (Action) 指定要执行的通用动作，例如 \\texttt{android.intent.action.VIEW}。\n应用程序通常在清单文件中声明相关的动作以抓取所需的意图。\n该动作对广播意图非常有用，起到了至关重要的作用。在其他情况下，其作为过滤相关应用程序组件的初始方法。\n诸如 \\texttt{android.intent.action.VIEW} 和 \\texttt{android.intent.action.SEND} 的通用动作被应用程序广泛使用。\n因此，单独设置它可能会匹配到很多应用程序组件。</string>
+    <string name="pages$interceptor-page$data">数据最初被称为 URI(Uniform Resource Identifier，统一资源标识符)，在 \\href{http://www.faqs.org/rfcs/rfc2396.html}{RFC 2396} 中被定义。\n它可以是网络链接、文件位置，或者名为 \\textit{内容 (content)} 的特殊功能。内容是由 \\hyperref[subsubsec:providers]{内容提供者} 管理的一个 Android 功能。\n数据经常被一种 \\hyperref[subsubsec:mime-type]{MIME 类型} 关联。\n\n例如：</string>
+    <string name="pages$interceptor-page$matching-activities">列出匹配意图的所有活动组件。这是由系统内部决定的 (而不是 App Manager) 。\n每个组件旁边的启动按钮可用于从 App Manager 直接启动它们。</string>
+    <string name="pages$interceptor-page$send-edited-intent">将编辑过的意图重新发送到目标应用程序。这可能会打开需要选择所需应用程序的应用程序列表。\n从目标应用程序接收的结果会被发送到源应用程序。因此，源应用程序将不会知道是否存在中间人。</string>
+    <string name="guide$aot$oneplus-usb-debug">基于设备和操作系统版本，你需要启用 \\textbf{禁用权限监视}。</string>
+    <string name="guide$aot$enable-aot-via-pc">对于其他ROM，你可以通过在前面章节中的步骤3打开的命令提示符/PowerShell/终端模拟器进行操作。\n在此节中，我将使用 \\texttt{adb} 表示 \\texttt{./adb}，\n\\texttt{adb} 或其他你需要使用的任何命令基于前面的章节中你使用的平台和软件。\n\\begin{enumerate}\n \\item 使用数据线连接你的设备到你的 PC 或 Mac。For some devices, it is necessary to turn on\n 对某些设备而言，有必要同时启用 \\textit{文件传输模式 (MTP)}。\n \\item 确认一切都按预期运行，在你的终端输入 \\texttt{adb devices} 。\n 若你的设备已成功连接，则你会看到像这样的内容：\n \\begin{Verbatim}\nList of devices attached\nxxxxxxxx device\n \\end{Verbatim}\n \\begin{tip}{注意}\n 在某些 Android 手机中，会出现这样的提示信息：\\textbf{允许 USB 调试吗？}\n 无论什么情况，勾选 \\textit{始终允许此计算机进行调试} 然后点击 \\textbf{允许}。\n \\end{tip}\n \\item 最终，运行下面的命令以启用通过 TCP 启用 ADB 功能。:\n \\begin{minted}[frame=lines,autogobble]{bash}\nadb tcpip 5555\n \\end{minted}\n\\end{enumerate}\n\n\\begin{danger}{危险}\n 在启用通过 TCP 启用 ADB 功能后，你不能禁用开发者选项或者 USB 调试。\n\\end{danger}</string>
+    <string name="guide$aot$adb-mode-am">在启用通过 TCP 启动 ADB后，重新启动 App Manager。App Manager 应该会自动检测到 ADB 模式。\n若不能，你可以在 \\hyperref[subsec:mode-of-operation]{设置页面} 更换操作模式为通过 TCP 启动 ADB 模式。\n你也可以在此处验证 App Manager 是否与 \\textit{推断模式} 显示的一样正确检测到 ADB。\n\n\\begin{tip}{注意}\n 在某些 Android 设备中，在连接到 App Manager 前，可能需要将 USB 数据线从 PC 断开。\n\\end{tip}\n\n\\begin{warning}{警告}\n 通过 TCP 启动 ADB 在重启时会被禁用。对于这种情况，你需要按照 \\Sref{subsubsec:enable-adb-over-tcp-via-pc-or-mac}{在 PC 或 Mac 上启用通过 TCP 启动 ADB 模式} 的步骤再度操作。\n\\end{warning}</string>
+    <string name="guide$wireless_debugging$$enable-developer-options-and-usb-debugging-title">启用开发者选项和 USB 调试</string>
+    <string name="guide$wireless_debugging$$enable-wireless-debugging-title">启用无线调试</string>
+    <string name="guide$wireless_debugging$$pair-adb-with-appmanager-title">用 App Manager 匹配 ADB</string>
+    <string name="guide$wireless_debugging$$connect-am-to-adb-title">连接 App Manager 到 ADB</string>
+    <string name="guide$aot$lg-usb-debug">确认你已启用 \\textbf{USB 网络共享}。</string>
+    <string name="guide$aot$realme-usb-debug">基于设备和操作系统版本，你需要启用 \\textbf{禁用权限监视}\n或 \\textbf{USB 调试 (安全设置)} 以及 \\textbf{从 USB 安装} 选项。</string>
+    <string name="guide$aot$setup-adb-on-pc">为了使用通过 TCP 启动 ADB 功能，你需要在你的 PC 或 Mac 设备上安装并设置 ADB。\n\\textbf{\\textit{Lineage OS 用户可参考 \\Sref{subsubsec:lineage-os}。}}</string>
+    <string name="guide$wireless_debugging$$section-title">无线调试</string>
+    <string name="guide$wireless_debugging$enable-developer-options-and-usb-debugging">参阅 \\Sref{subsec:enable-developer-options}{启用开发者选项} 和 \\Sref{subsec:enable-usb-debugging}{启用 USB 调试}。</string>
+    <string name="guide$backup-restore$options">你可以通过备份选项 (内部称为备份标志) 自定义云端备份。\n然而，在将来的备份中不会记得这些自定义设置。\n如果你想定制此对话框，在 \\hyperref[sec:settings-page]{设置页面} 中使用 \\hyperref[subsubsec:settings-backup-options]{备份选项}。 \n\n下面给出了备份选项的完整描述：\n\\begin{itemize}\n \\item \\textbf{APK 文件} 是否备份 APK 文件。\n 这包括 \\textit{Base APK} 文件以及 \\texttt{APK 分包} 文件 (如果有)。\n\n \\item \\textbf{内部数据} 是否备份内部数据目录。\n 这些目录位于 \\texttt{/data/user/&lt;用户ID&gt;} 以及 (对 Android 7 及更高版本) \\texttt{/data/user\\_de/&lt;用户ID&gt;}.\n\n \\item \\textbf{外部数据} 是否备份位于内部存储和SD 卡 (如果有) 的数据目录。\n 外部数据目录通常包括非必要的应用数据或媒体文件 (而不是使用专用的媒体文件夹)，若选择备份则可能增加备份文件的大小。\n 然而，对一些应用来说可能是有必要的。\n 尽管默认情况下不会选中该项 (因为它可能会显著增加备份文件的大小)，你可能需要检查此项以确保能够顺利还原你的备份。\n \\begin{warning}{小心}\n 若你要备份外部数据文件夹，则应该总是备份内部数据文件夹。\n 然而，如果所讨论的应用会从网络下载大量资源，那么仅备份外部文件夹也会很有用。\n \\end{warning}\n\n \\item \\textbf{OBB 和媒体} 是否备份或还原 OBB 和位于\n 外部存储或 SD 卡的媒体。\n 这对实际使用这些文件夹的游戏和图形软件而言很有用。\n\n \\item \\textbf{缓存} Android 应用在每个数据目录 (内部和外部) 中都有多个缓存目录。\n 有两种类型的缓存： \\textbf{缓存 (Cache)} 和 \\textbf{代码缓存 (Code Cache)}。\n 禁用此选项会将这两个缓存目录从所有数据目录中排除。\n 一般情况下建议排除缓存目录，因为大多数应用程序并不会定期清除缓存，缓存通常是由操作系统自身处理。\n 像 Telegram 之类的应用可能会使用非常大的缓存(由存储空间决定)，这显著增加了备份文件大小。\n 当该项被禁用时，App Manager 也会忽略 \\textbf{no\\_backup} (无备份)目录。\n\n \\item \\textbf{额外信息} 备份/还原应用权限、网络规则、电池优化、SSAID，等等，默认启用。\n 注意：阻止规则在还原应用的额外信息 \\textit{后} 应用。\n 所以，如果某个条目在两个地方(阻止规则和额外信息备份)同时存在，那么它将会被覆盖。(即会使用源自阻止规则的条目)。\n\n \\item \\textbf{规则} 你可以通过该选项备份在 App Manager 内配置的阻止规则。\n 若你通过 App Manager 配置了权限或阻止了一些组件，则当你启用该选项时，\n 这些规则也会被备份或还原。\n\n \\item \\textbf{多重备份} 这是否为多重备份。\n 默认情况下，备份使用其用户 ID 保存。\n 启用该选项将允许你创建多个备份。\n 这些备份使用当前的时间日期作为默认备份名称，但你也可以指定自定义备份名称。\n 当你点击 \\textbf{备份} 按钮时，使用输入框以自定义备份名称。\n\n \\item \\textbf{自定义用户} 为所选的用户进行备份或还原，而不仅仅是当前用户。\n 该选项仅在系统有多个用户的情况下显示。\n\n \\item \\textbf{跳过签名检查} 当进行备份时，会生成每个文件的检验和 (以及基础 APK 文件的签名证书)\n 并保存在 \\texttt{checksums.txt} 文件中。\n 当你还原备份时，会再度生成检验和，并用于匹配保存在先前提及的文件内的检验和。\n 启用此选项以禁用签名检查。\n 该选项仅在你恢复备份时被应用 (即启用该选项仅禁用恢复时的签名检查)。\n 无论此处如何设置，备份时始终会生成用于签名检查的检验和。\n \\begin{warning}{小心}\n 你应该总是禁用此选项，以确保你的备份不被任何第三方应用程序修改。\n 然而仅在你启用了加密才起作用。\n \\end{warning}\n\\end{itemize}\n\n\\seealsoinline{\\hyperref[subsubsec:settings-encryption]{设置：加密}}</string>
+    <string name="pages$shared-prefs-editor-page$intro">可以在此页面中编辑共享首选项。点击列表中的任意一项以打开可编辑该项目的编辑对话框。\n右下角的浮动操作按钮可用于添加新项目。\n若要保存或删除文件，或放弃当前更改，可使用菜单中的相应选项。</string>
+    <string name="guide$aot$intro">许多仅 Root 功能在通过 TCP 启动的 ADB 下依然可用。为此需要一台已安装 Android 平台工具的 PC 或者 Mac 设备，\n以及一部启用开发者选项和 USB 调试的 Android 手机。\n\n\\begin{tip}{Root 用户}\n 若 App Manager 已被授予超级用户权限，则已经能够毫无问题地执行特权代码。\n \\textbf{因此，Root 用户无需启用通过 TCP 启用的 ADB。} 如果你仍想使用通过 TCP 启动的 ADB，\n 你必须撤销对 App Manager 的超级用户权限的授予\n\\end{tip}\n\n\\seealsoinline{\\hyperref[sec:faq:adb-over-tcp]{FAQ: 通过 TCP 启动的 ADB}}</string>
+    <string name="guide$aot$location-dev-options">\\textbf{开发者选项} 位于 Android \\textbf{设置}，要么直接\n靠近设置页底部 （多数ROMs），要么在其他一些设置下面，比如 \\textbf{系统} （Google Pixel、\nLineage OS、 Asus Zenfone 8.0+）, \\textbf{附加设置} （Xiaomi MIUI、Oppo ColorOS），\n\\textbf{更多设置} （Vivo FuntouchOS）, \\textbf{更多} （ZTE Nubia）。 不像其他设置，开发者选项\n在用户明确启用前不可见。如果已经启用开发者选项，你也可以使用\nAndroid \\textbf{设置} 中的搜索框来定位它。</string>
+    <string name="guide$aot$how-to-enable-dev-options">该选项在 Android \\textbf{设置} 也可用，但是类似于开发者选项的位置，其位置也因设备而异。\n但总体来说，你需要找到 \\textbf{Build number (内部版本号)} (或者 MIUI ROM的 \\textbf{MIUI 版本} 、\nVivo FuntouchOS的 \\textbf{软件版本} 、OPPO ColorOS 的 \\textbf{版本} for ) 然后连续点击至少7次，\n直到你最终看到一条写着 \\textit{你已经启用了开发者选项！}的消息。\n（这一步你可能会看到需要输入PIN/密码/解锁图案或验证码的提示。）\n对绝大多数设备而言，其位于设置页面底部的 \\textbf{关于手机} 内。不过找到它的最佳方法是使用搜索框。</string>
+    <string name="guide$aot$enable-usb-debug">在 \\hyperref[subsubsec:location-of-developer-options]{定位开发者选项} 后，\n启用 \\textbf{开发者选项} (如果尚未启用)。然后一点点往下划，\n直到你看见 \\textbf{USB 调试} 选项。点击右侧的切换按钮启用它。\n此时你可能会看见一个需要点击 \\textit{OK} 按钮才能实际启用 USB 调试的警示信息。\n基于设备供应商和ROM，你可能还需要启用一些其他的选项。以下是一些例子：</string>
+    <string name="guide$aot$troubleshooting-usb-debug">当 \\textbf{USB 调试} 为灰色时，你可以执行以下步骤：\n\\begin{enumerate}\n \\item 在通过 USB 数据线连接你的手机到 PC 或者 Mac 前，确认你已开启 USB 调试；\n \\item 在通过 USB 数据线连接到 PC 或 Mac 后启用 USB 网络共享；\n \\item (对三星设备而言) 若你的设备正在运行KNOX，你可能需要执行一些额外步骤。\n 参考官方文档或咨询官方客服以获得更多支持。\n\\end{enumerate}</string>
+    <string name="guide$aot$setup-adb-win">\\begin{enumerate}\n \\item 下载最新的\n \\href{https://dl.google.com/android/repository/platform-tools-latest-windows.zip}{Android SDK 平台工具}\n的 Windows 版本。\n \\item 解压 ZIP 文件的内容到任意目录 (例如 \\texttt{C:\\textbackslash{adb}})，然后用 \\textit{文件资源管理器}\n 导航到 (转到/打开) 该目录。\n \\item 在此目录中打开 \\textbf{命令提示符}、 \\textbf{PowerShell} 或 \\textbf{终端}。\n你可以手动从开始菜单打开，\n 或者按住 \\texttt{Shift} 键，打开目录，在目录内用 \\textit{文件资源管理器} 右键单击，然后单击 \\textit{在此处打开命令窗口}\n 或者 \\textit{在此处打开 PowerShell 窗口} (取决于你安装的软件)。\n 现在你可以通过输入 \\texttt{adb} (在命令提示符中) 或者是 \\texttt{./adb} (在PowerShell中) 的方式访问 ADB。\n 请不要关闭此窗口。\n\\end{enumerate}\n\n \\begin{tip}{Tip}\n 如果你已经安装了 \\href{https://learn.microsoft.com/en-us/windows/package-manager/winget/}{WinGet}\n ，你可以使用以下命令安装 ADB：\n \\begin{minted}[frame=lines]{bash}\n winget install --id Google.PlatformTools\n \\end{minted}\n 完毕后，你只需输入 \\texttt{adb} 就可访问 ADB\\@。\n \\end{tip}</string>
+    <string name="guide$aot$setup-adb-mac">\\begin{enumerate}\n \\item 下载最新版本的\n \\href{https://dl.google.com/android/repository/platform-tools-latest-darwin.zip}{Android SDK 平台工具}\n 的 macOS 版本。\n \\item 点击它以解压 ZIP 文件的内容到目录。然后用 \\textit{Finder} 导航到该目录并定位 \\texttt{adb}。\n \\item 使用 \\textit{Launchpad} 或 \\textit{Spotlight} 打开 \\textbf{终端}，\n 然后将 \\texttt{adb} 从 \\textit{Finder} 窗口拖到 \\texttt{adb} 到 \\textit{终端} 窗口并松开。\n 请不要关闭 \\textit{终端} 窗口。\n\\end{enumerate}\n\n\\begin{tip}{Tip}\n如果你已经安装了 \\href{https://brew.sh}{Homebrew}，你可以用下列命令安装\nADB:\n\\begin{minted}[frame=lines]{bash}\nbrew install --cask android-platform-tools\n\\end{minted}\n完毕后，你只需在任意 \\textit{终端} 窗口中输入 \\texttt{adb} 即可访问 access ADB\\@。\n\\end{tip}</string>
+    <string name="guide$aot$setup-adb-linux">\\begin{enumerate}\n \\item 在你喜欢的终端模拟器中，运行如下命令\n \\begin{minted}[frame=lines,autogobble]{bash}\ncd ~/Downloads &amp;&amp; curl -o platform-tools.zip -L \\\nhttps://dl.google.com/android/repository/platform-tools-latest-linux.zip &amp;&amp; \\\nunzip platform-tools.zip &amp;&amp; rm platform-tools.zip &amp;&amp; cd platform-tools\n \\end{minted}\n \\item 若成功，你只需在 \\textit{同一个} 终端模拟器窗口内输入 \\texttt{./adb} \n 或者在任意的模拟器输入 \\texttt{\\textasciitilde/Downloads/platform-tools/adb} 就可以访问 ADB\\@。\n\\end{enumerate}</string>
+    <string name="guide$aot$aot-lineage-os">Lineage OS (或其衍生ROM) 用户可直接通过开发者选项启用通过 TCP 启动 ADB 功能。\n若要启用，请前往 \\textbf{开发者选项}，下划，直到你找到 \\textbf{通过网络启动 ADB}。\n现在，点击右侧的切换按钮以启用它并跳转至 \\Sref{subsubsec:adb-mode-in-app-manager}{在 App Manager 内的 ADB 模式}。\n\n\\begin{warning}{Warning}\n你可以在开发者选项中关闭 \\textbf{ADB over Network}，但关闭该选项也会停止 App\nManager 的服务器。因此，请只在你不打算在 ADB over TCP 模式下使用 App Manager 时关闭它。\n\\end{warning}</string>
+    <string name="guide$wireless_debugging$intro">若你的设备运行 Android 11 及更高版本，或稍后能够连接到 Wi-Fi 网络至少几分钟，\n则推荐使用无线调试方法，因为比起 \\hyperref[sec:adb-over-tcp]{提供 TCP 启动 ADB} 它提供更多保护。\n它需要两个步骤：\n\\begin{enumerate}\n \\item \\textbf{ADB 匹配} 对新手用户而言有一点复杂的初始步骤\n幸运的是，该步骤并不总是每次都需要进行。\n \\item \\textbf.{连接到 ADB} 每次你重启手机后都需要进行该操作。App Manager\n 在多数设备上也可以自动完成此步骤。\n\\end{enumerate}</string>
+    <string name="guide$backup-restore$delete">删除备份仅遵守 \\textbf{所有用户} 选项。当被选中时，仅会提示后删除所有用户的基础备份。\n当为单个应用删除备份时，会显示另外一个可供你选择要删除的备份的对话框。</string>
+    <string name="guide$automation$$general-configuration-title">配置任务</string>
+    <string name="guide$automation$$required-extras-title">需求的附加选项</string>
+    <string name="guide$automation$$features-title">功能特性</string>
+    <string name="guide$automation$$triggering-a-profile-title">触发配置文件</string>
+    <string name="guide$automation$intro">可以通过诸如 \\textbf{Automation} 或 \\textbf{Tasker} 之类的第三方应用程序触发在 App Manager 设置的配置文件。\n通常情况下用 \\texttt{意图} 触发这类操作。</string>
+    <string name="guide$automation$general-configuration">活动 \\texttt{io.github.muntashirakon.AppManager.crypto.auth.AuthFeatureDemultiplexer} 负责处理所有的自动化意图。\n发送意图到该活动，让 App Manager 通过重定向 \\texttt{意图} 到指定活动或服务的方式执行指定操作。</string>
+    <string name="guide$automation$required-extras">所有条件都需要两种主要的附加功能：密钥名称和数据类型。如下所示：\n\\begin{enumerate}\n \\item \\textbf{\\texttt{auth}.} (字符串值) 前一节所述的授权密钥。\n \\item \\textbf{\\texttt{feature}.} (字符串值) 功能名称。下一节将介绍受支持的功能。\n\\end{enumerate}</string>
+    <string name="guide$net-policy$intro">网络策略 (Network policies)，简写 \\textbf{Network policy}。\n网络策略通常位于 Android 设置的应用详情页面中的 \\textbf{移动数据和 WLAN} 这一节的下面。\n该页面中并非所有策略会被授权使用 (比如三星)，以及由于缺少文档，并非所有设置都能被很好地理解。\nApp Manager 可以显示所有在 \\href{https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/net/NetworkPolicyManager.java}{网络策略管理器} 声明的网络策略。\n对 App Manager 而言位置的策略会被加上 \\textit{Unknown} 前缀以及十六进制格式的策略常量名称和编号。\n未知策略应报告给 App Manager 以供纳入。\n\n网络策略允许用户配置应用的某些网络行为，而不是直接修改 IP 地址表和/或者使用防火墙应用。\n然而，其提供的功能很大程度上依赖于 Android 版本和 ROM。已知网络规则列表如下所示：\n\n\\begin{enumerate}\n \\item \\textbf{无} 或 \\textbf{\\texttt{POLICY\\_NONE}}: (AOSP) 并未设置特定的网络策略。\n系统仍可通过应用程序的性质分配规则。\n\n \\item \\textbf{禁止在后台使用移动数据 (流量计费的网络)} 或 \\textbf{\\texttt{POLICY\\_REJECT\\_METERED\\_BACKGROUND}}: (AOSP) 当应用在后台运行时，禁止使用移动数据 (流量计费的网络)。\n\n \\item \\textbf{允许后台使用移动数据 (流量计费的网络)，甚至在流量节省程序开启时} 或 \\textbf{\\texttt{POLICY\\_ALLOW\\_METERED\\_BACKGROUND}}: (AOSP) 允许后台使用移动数据 (流量计费的网络)，甚至是启用流量节省模式的情况下。\n\n \\item \\textbf{禁止移动数据 (蜂窝数据)} 或 \\textbf{\\texttt{POLICY\\_REJECT\\_CELLULAR}} (Android 11+) 或 \\textbf{\\texttt{POLICY\\_REJECT\\_ON\\_DATA}} (直到 Android 10): (Lineage OS) 禁止使用移动/蜂窝数据。\n 向配置的应用程序发出网络不可用的信号，就像未激活移动数据 (蜂窝数据)一样。\n\n \\item \\textbf{禁止 VPN 数据} 或 \\textbf{\\texttt{POLICY\\_REJECT\\_VPN}} (Android 11+) 或 \\textbf{\\texttt{POLICY\\_REJECT\\_ON\\_VPN}} (直到 Android 10): (Lineage OS) 禁止使用 VPN 数据。\n 向配置的应用程序发出网络不可用的信号，就像未激活 VPN 一样。\n\n \\item \\textbf{禁止 Wi-Fi 数据} 或 \\textbf{\\texttt{POLICY\\_REJECT\\_WIFI}} (Android 11+) 或 \\textbf{\\texttt{POLICY\\_REJECT\\_ON\\_WLAN}} (直到 Android 10): (Lineage OS) 禁止使用 Wi-Fi 数据。\n 向配置的应用程序发出网络不可用的信号，就像该设备未连接到 Wi-Fi 网络一样。\n\n \\item \\textbf{禁用网络访问} 或 \\textbf{\\texttt{POLICY\\_REJECT\\_ALL}} (Android 11+) 或 \\textbf{\\texttt{POLICY\\_NETWORK\\_ISOLATED}} (直到 Android 10): (Lineage OS) 禁止所有情况下的网络访问。\n 这与执行上述其他三项策略不同，推荐对可疑/狡诈的应用而言使用该策略。.\n 若该策略被执行，则没有必要执行其他策略。\n\n \\item \\textbf{\\texttt{POLICY\\_ALLOW\\_METERED\\_IN\\_ROAMING}}: (三星) 可能是在漫游时允许使用移动数据 (流量计费的网络)。\n 目前不知道其确切含义。\n\n \\item \\textbf{\\texttt{POLICY\\_ALLOW\\_WHITELIST\\_IN\\_ROAMING}}: (三星) 可能是在漫游时允许使用网络。\n 目前不知道其确切含义。\n\n \\item \\textbf{禁止使用移动数据 (流量计费的网络)} 或 \\textbf{\\texttt{POLICY\\_REJECT\\_METERED}}: (摩托罗拉) 若是移动数据 (流量计费的网络) 则禁止使用网络。\n\n \\item \\textbf{禁止使用后台数据} 或 \\textbf{\\texttt{POLICY\\_REJECT\\_BACKGROUND}}: (摩托罗拉) 禁止后台使用数据。\n\n \\item \\textbf{禁用网络访问} or \\textbf{\\texttt{POLICY\\_REJECT\\_ALL}}: (摩托罗拉) 禁止所有的网络访问。\n 与 Lineage OS 类似，会通过 iptables (防火墙) 阻止网络连接。但不知道它是否向配置的应用程序发出网络不可用的信号。\n\\end{enumerate}\n\n\\begin{tip}{注释}\n 相应的 Lineage OS 补丁如下：\n \\begin{enumerate}\n \\item \\href{https://github.com/LineageOS/android\\_frameworks\\_base/commit/a04932bafbbf7d99efd18276152cc2c9c9b2073e}{fw/b: Squash of app fw restriction commits}\n \\item \\href{https://github.com/LineageOS/android\\_frameworks\\_base/commit/02c8c82854348f52afe2199f310f44b5f578b5b8}{fw/b: Add support for per app network isolation}\n \\end{enumerate}\n\\end{tip}</string>
+    <string name="guide$automation$$section-title">自动任务</string>
+    <string name="guide$automation$features">目前 App Manager 支持的一个功能，即 \\texttt{配置文件}。</string>
+    <string name="guide$automation$$generating-authorization-key-title">生成授权密钥</string>
+    <string name="guide$wireless_debugging$enable-wireless-debugging">在 \\textbf{开发者选项} 页面，找到 \\textbf{无线调试} 并单击以打开它。\n在新打开的页面中，打开 \\textit{使用无线调试} 。取决于你的操作系统，你可能会看到一个提示对话框，要求你验证你的决定。\n若遇到此情况，请单击 \\textit{允许} 。\n\n\\begin{tip}{提示}\n 为了更便于访问，你可能想将 \\textbf{无线调试} 添加到通知块部件 (快速设置磁贴)。\n 要做到这一点，请找到 \\textbf{开发者选项} 页面的 \\textbf{快速设置开发者磁贴} ，单击以打开它。\n 在新窗口中，启用 \\textit{无线调试}。然而该选项在大多数操作系统中不可用。\n 如果你没看到这个设置，你可以在磁贴自定义面板中找到 \\textbf{无线调试}\n 磁贴。\n\\end{tip}</string>
+    <string name="guide$wireless_debugging$pair-adb-with-app-manager">在 App Manager 中，转到 \\textbf{设置} &gt; \\hyperref[subsec:mode-of-operation]{操作模式}\n，接着开启 \\textit{无线调试}。启用后，App Manager 会试着自动建立\n无线调试连接，如果先前未配对，那么该尝试会失败。尝试失败后，\n应用会请你连接或配对 ADB\\@。选择\\textit{配对} 会出现新的对话框。\n对话框会让你转到 \\textbf{无线调试} 页面。\n\n\\begin{tip}{注}\n 截至 v4.0.0 版， App Manger 使用通知提示进行配对。因而，如果你停用了\n App Manager 的通知权限，你必须先启用它。.\n\\end{tip}\n\n在\\textbf{无线调试} 页面， 选择 \\textbf{用配对码配对设备}. 之后会展示\n一个包含配对码的对话框。一个请求配对码的通知也会几乎立马变得可见。\n将配对码输入通知中的输入框，\n单击 \\textit{配对}。如配对成功，App Manager 会显示\n``已配对\'\' 的消息通知， \\textbf{无线调试} 页中的对话框将被自动\n忽略。你也可以在相同页面中看到 App Manager 被列为 ADB 客户端。\n\n\\begin{tip}{注意}\n 如果你有一段时间不在 ADB 模式下使用 App Manager，那么 App Manager 可能会从\n Adb 客户端列表中被删除。如果出现这种情况，你必须重复以上步骤。\n\\end{tip}</string>
+    <string name="guide$wireless_debugging$connect-am-to-adb">若运行模式设置为 \\textit{自动}, \\textit{通过 TCP 启动的 ADB} 或 \\textit{无线调试}，\nApp Manager 应该能够自动连接到 ADB。\n若并非如此，则在\\textbf{设置} &gt; \\hyperref[subsec:mode-of-operation]{操作模式} 中选择 \\textit{无线调试} 。\n若 App Manager 无法检测或连接到 ADB ，\n则会显示一个提示对话框以用于连接或配对 ADB 。 选择 \\textit{连接} 。\n\n现在，从 Android 设置中转到 \\textbf{无线调试} 页面，记下页面显示的端口号。\n在 App Manager 的提示对话框中，\n用你记下的端口号替换当前端口号，然后点击 \\textit{连接} 。\n\n一旦成功建立连接，你就能够禁用 Android 设置的 \\textbf{无线调试}。\n\n\\begin{danger}{小心}\n 不要禁用 \\textbf{USB 调试} 或 \\Sref{subsec:enable-developer-options-and-usb-debugging}{启用开发者选项和 USB 调试} 提及的任何附加选项。\n 一旦禁用，App Manager 使用的远程服务器会被终止，你可能不得不重新开始。\n\\end{danger}</string>
+    <string name="guide$backup-restore$intro">App Manager 具有从零开始的现代、高级和易于使用的备份/还原系统实现。\n可能仅本应用有能力\n同时还原应用程序和数据以及你在 App Manager 内配置的权限和规则。\n你还可以选择多次备份应用程序 (使用自定义名称) 或为所有用户进行备份。\n\n\\begin{amseealso}{另请参阅}\n \\item \\hyperref[subsec:1-click-back-up]{一键操作：备份}\n \\item \\hyperref[subsec:1-click-restore]{一键操作：还原}\n\\end{amseealso}</string>
+    <string name="guide$backup-restore$location">备份/还原是 \\hyperref[subsec:batch-operations]{批处理操作} 的一部分。\n它也位于 \\hyperref[subsec:app-info-tab]{应用信息标签页} 的\n\\hyperref[subsubsec:app-info-options-menu]{选项菜单} 中。\nClicking on \\textbf{Backup/Restore} opens the \\textbf{Backup Options}.\n默认情况下，备份存放在 \\texttt{/storage/emulated/0/AppManager} 。\n你可以在 \\hyperref[subsubsec:backup-volume]{设置页面} 配置自定义的备份位置。\n无论如何配置，备份都会存放在所选卷的 \\texttt{AppManager} 文件夹。\n\n\\begin{tip}{注意}\n 若一个或多个应用程序并没有任何备份，\n 则不会显示 \\textbf{还原} 和 \\textbf{删除备份} 选项。\n\\end{tip}</string>
+    <string name="guide$automation$generating-authorization-key">为了确保适当的安全性，需要授权密钥。前往 \\textbf{设置} 页面，接着是 \\textbf{隐私} &gt; \\textbf{授权管理器} 以生成授权密钥。\n若并未生成过授权密钥，则会自动生成。该密钥可根据需求重新生成。\n\n\\begin{danger}{小心}\n 重新生成授权密钥可能会产生一些副作用，比如说令所有先前配置的意图失效。\n\\end{danger}</string>
+    <string name="guide$backup-restore$backup">备份功能会遵守除了 \\textbf{跳过签名检查} 以外的所有备份选项。\n若基本备份 (即并未选择\\textbf{多重备份} 选项) 已存在，由于备份会被覆盖，你会看到一条警告信息。\n若设置了 \\textbf{多重备份} ，你需要在选项中输入(指定)备份名称，或者你也可以留空以使用当前日期时间作为备份名称。</string>
+    <string name="guide$backup-restore$restore">还原会遵守全部备份选项，并在出现以下情况时失败：若设置了 \\textbf{APK 文件} 选项，\n备份内容却不包括 APK 文件选项设定的内容，或者其他情况下，未安装该应用程序。\n当为多个应用还原备份时，你只能选择还原基础备份 (参阅 \\hyperref[subsec:backup-restore-backup]{备份} 章节以了解更多)。\n然而，当为单个应用程序还原备份时，你需要通过选项选择还原哪个备份。\n若设定了 \\textbf{所有用户} 选项，则 App Manager 将在后一种情况为所有用户还原所选备份。但是在前一种情况中，将会为各个用户还原基础备份。\n\n\\begin{tip}{注意}\n 使用存储访问框架 (Storage Access Framework 即 SAF)、SSAID 或 Android 密钥库只有在还原并立即重新启动后正常工作。\n\\end{tip}</string>
+    <string name="guide$automation$triggering-a-profile">为了触发配置文件， \\texttt{feature} (功能) 字段必须具有 \\texttt{profile} (配置文件) 值。 此外，接下来的 extras (额外选项) 可包括：\n\\begin{enumerate}\n \\item \\textbf{\\texttt{prof}.} (字符串值 -- 必须) 显示在 \\hyperref[sec:profiles-page]{配置页面} 的配置名称。\n \\item \\textbf{\\texttt{state}.} (字符串值 -- 可选) 配置文件的状态 -- 目前 \\texttt{on} (启用) 或者 \\texttt{off} (禁用) -- 如文档所述。.\n 若此时未设置额外选项，则 App Manager 会提示需要选择的状态。\n因此，为了完全自动化，应该设置该选项。\n\\end{enumerate}</string>
+    <string name="faq$app-components$what-are-app-components">活动、服务、广播接收器 (或者仅接收器) 和内容提供者 (或仅提供者) 统称为应用程序组件。\n技术上来说，它们都继承了\n\\href{https://developer.android.com/reference/android/content/pm/ComponentInfo}{ComponentInfo} 类\n并可以通过意图被启动。</string>
+    <string name="faq$app-components$limitations">App Manager 通常使用一个称作\n\\href{https://carteryagemann.com/pages/android-intent-firewall.html}{Intent Firewall (IFW)，意图防火墙} 的方法阻止应用程序组件 (或跟踪器组件)，\n它比其他诸如 \\textit{pm} (PackageManager，包管理器)、 \\href{https://github.com/RikkaApps/Shizuku}{Shizuku} \n或其他任何使用包管理器启用或禁用组件的办法更优秀。\n若组件被后者的办法禁用，应用程序自身可以检测到组件被阻止并能重新启用，因为应用程序有自身组件的完整访问权限。\n(许多欺骗性应用程序这样做，实际上是为了让跟踪器组件保持不被阻止的状态。)\n另一方面，意图防火墙 (IFW) 是一个真正的防火墙，应用程序无法检测自身组件是否被阻止。\n这也是 App Manager 使用术语 \\textit{阻止} 而非 \\textit{禁用} 的原因。\n\n就算是意图防火墙也有一些局限性，主要适用于系统应用程序：\n\\begin{itemize}\n \\item 相关应用程序被系统加入白名单。 即没有这些应用程序，系统将无法正常运行，并可能导致随机崩溃。\n 这些应用程序包括但不限于 Android 系统、系统界面、电话服务。\n 即使禁用或阻止，它们仍然会运行。\n\n \\item 另外一部分系统应用程序或系统进程通过进程间通信 (Interprocess Communication，IPC)\n 激活了被加入白名单的系统应用程序的应用程序组件。\n 此情况下组件会被激活，并无视组件的阻止状态甚至是整个应用程序被禁用。\n 若有不需要的系统应用程序，阻止其运行的唯一办法就是摆脱 (卸载/移除)它。\n\\end{itemize}</string>
+    <string name="faq$app-components$other-tools-retained-in-am">\\textbf{不。} 但是被系统或任何其他工具阻止的应用程序组件会在\\hyperref[subsec:component-tabs]{组件标签页} 显示。\n这些规则可从 \\hyperref[par:import-existing-rules]{设置} 导入。\n然而，App Manager 无法区分组件是被第三方工具阻止还是被系统阻止。\n因此，在导入页面中显示的应用程序列表应谨慎选择。</string>
+    <string name="faq$app-components$also-blocked-by-other-tools">\\textit{如果请求，App Manager 会再次阻止组件。} 解除阻止的情况下，它们将恢复到应用程序清单中指定的默认状态。\n但是如果组件是被 \\href{https://www.myandroidtools.com}{MyAndroidTools (MAT)} 使用意图防火墙 (IFW) 阻止，\n由于 MAT 使用不同的格式，它们不会被 App Manager 解除阻止。\n为了修复这个问题，首先需要从 \\hyperref[par:import-existing-rules]{设置} 导入规则\n这种情况下，MAT 的配置文件会被永久移除。</string>
+    <string name="faq$misc$i-dont-use-root-adb">是的，App Manager 不能在无 Root 或 ADB\\@ 时修改任何系统设置。</string>
+    <string name="faq$misc$apks-deleted-after-installed">不会，在安装后，APK 不会被 App Manager 删除。</string>
+    <string name="faq$misc$$apks-deleted-after-installed">APK 安装后是否被删除？</string>
+    <string name="faq$misc$bloatware">臃肿软件（Bloatware）为不必要的预装应用，通常是系统应用。\n一些臃肿软件通常用来跟踪用户并收集它们可能为了获利而出售的用户数据。\n许多系统应用无需请求任何权限便可访问设备信息、联系人和消息数据，以及其他使用信息，\n比如手机使用习惯和存储在共享存储空间中的一切。\n\n臃肿软件同样包括 Google 地图、Meta 出品的应用，以及Twitter/X，\n这些应用也可以在没有用户同意情况下跟踪和/或收集用户数据。\n你可以在 Andeoid 系统设置那里禁用这些应用的一些权限，\n但请知晓，系统设置藏有很多权限被安全研究者认为具潜在\\emph{危险性} （比如联网、传感器等）。\n\n如果臃肿软件是用户应用，可以轻易从系统设置或AM\\@ 进行卸载。\n而属于系统应用的臃肿应用没有特权是不可能卸载的。\n即使有特权也无法完全\\emph{卸载} 这样的系统应用，\n因为它们位于 \\emph{system} 分区，这是一个只读分区。\n如果你有 root 权限，你可以重新挂载这个分区来手动 \\emph{清除} 这些应用，但这样做会破化系统的 OTA 更新，\n因为系统分区中的数据已经被修改。\n有两种更新，一种是 delta 更新（仅由两个系统版本间的差异构成，下载东西少）和完整更新。\n你仍能使用完整更新，但更新后臃肿软件又会出现，你不得不再次彻底清理它们。\n\n另一个解决方案是通过系统设置或 AM 停用这些应用，\n但某些服务仍能在后台运行，\n因为它们可以被其他系统应用使用进程间通信（IPC）方式启动。\n一个可能的解决方案是停用所有臃肿软件，直到服务最终停止（在重启后）。\n不过，由于厂商对 ANdroid 框架所做的巨大改动，\n删除或停用某些臃肿软件可能导致系统 UI 崩溃甚至造成启动循环。\n从 v4.0.0 版本起，AM 有了一个新功能，叫做 \\textbf{Debloater}，\n可以用作从专有权利的 Android 操作系统中监控、停用，及删除臃肿软件的基础。\n\n\\begin{warning}{注意}\n多数情况下，你无法完全 debloat 设备。\n因此，建议你使用没有臃肿软件的定制 ROM，如 Graphene OS、Lineage OS 或它们的衍生品。\n\\end{warning}</string>
+    <string name="faq$aot$restart">很不幸的是，是的。这是因为响应 ADB 连接的 ADB daemon (ADB 守护进程) 也会在重新启动后重新开始。\n 而这并不会重新启用通过 TCP\\@ 运行的 ADB。</string>
+    <string name="faq$aot$usb-debugging">参阅位于 \\Cref{ch:guides}{指引} 的 \\Sref{subsec:enable-usb-debugging}{启用 USB 调试} 。</string>
+    <string name="faq$misc$how-tracker-updated">在新版本发布前，会手动更新跟踪器和库。</string>
+    <string name="faq$misc$shizuku">现在 App Manager 使用隐藏 API 和执行特权代码变得更加复杂，\n无法和 \\href{https://shizuku.rikka.app}{Shizuku} 之类的其他第三方应用程序集成。\n不考虑在 App Manager 中集成 Shizuku (现在具有 Apache 2.0 协议) 的理由如下：\n\\begin{enumerate}\n \\item 最初 Shizuku 是不自由软件，这也导致我\n 在 App Manager 中使用了类似的方法来支持 Root 和 ADB。\n \\item App Manager 已经支持 Root 和 ADB，并且在某些情况下比 Shizuku 更优秀。\n \\item 主要功能依赖于第三方应用并不是一个好的设计理念选择。\n \\item 集成 Shizuku 会增加 App Manager 的复杂性。\n\\end{enumerate}</string>
+    <string name="faq$aot$feature-adb">在 ADB 模式下，受支持的功能会自动启用。\n受支持的功能包括禁用、强制停止、清除应用程序数据、授予或撤销应用操作 (App Ops) 和权限等。\n也可在无系统提示的情况下安装或卸载应用程序。</string>
+    <string name="faq$app-components$what-is-component-blocking">当你在 \\hyperref[sec:app-details-page]{应用详情页} 中阻止组件时，默认情况下阻止规则不会立刻生效。\n仅在你使用顶部右侧菜单的 \\textit{应用规则} 选项时，阻止规则才会生效。\n若你启用 \\hyperref[subsubsec:instant-component-blocking]{即时阻止组件} 选项，则当你阻止组件时，阻止规则会立刻生效。\n若你选择阻止跟踪器组件，阻止规则会自动生效，该选项设置会被忽略。\n你也可以通过在应用详情页内同一菜单简单点击 \\textit{移除规则} 为该应用程序移除阻止规则。\n由于默认行为使你更好地控制应用程序，保持选项 \\textit{即时阻止组件} 选项为禁用状态更好。</string>
+    <string name="faq$app-components$tracker-classes-versus-tracker-components">所有应用程序组件都是类，但并非所有类都是组件。事实上，只有少数类是组件。\n话虽如此， \\hyperref[sec:scanner-page]{扫描页面} 展示的是跟踪器列表以及类的数量，而并非只是组件数。\n在所有其他页面，跟踪器和跟踪器组件是同一个意思，都用于表示跟踪器。\n即：阻止 tracker 是指阻止跟踪器组件，而不是跟踪器类。\n\n\\begin{tip}{信息}\n 无法阻止并非组件的跟踪器类。它们仅能在编辑应用程序自身时被移除。\n\\end{tip}</string>
+    <string name="faq$aot$block-tracker">ADB 具有数量限制 \\href{https://github.com/aosp-mirror/platform_frameworks_base/blob/master/packages/Shell/AndroidManifest.xml}{权限}\n而并非它们其中一个控制应用程序组件。 然而，\\textit{仅用于测试} 的应用程序的组件可以通过 ADB\\@ 进行控制。\n若 App Manager 检测到此类应用程序，则会自动启用阻止选项。</string>
+    <string name="appendices$specifications$background">App Manager 目前支持阻止活动、广播接收器、内容提供者、服务、应用操作 (App Ops) 和权限，\n并且在将来可能会添加更多阻止选项。\n为了增加更多便携性，导入/导出所有的这些数据是有必要的。\n\n由于数据库专门用于存储数据，维护数据库是最佳选择。\n目前为止有多个 \\texttt{tsv} 文件，每个文件都有包名和 \\texttt{.tsv} 扩展名。\n\\texttt{RulesStorageManager} (规则存储管理器) 类负责查询/处理相应的文件/数据库。\n由于这种抽象概念，将来在不更改整个项目设计的情况下切换到数据库或加密数据库系统会更加容易。\n目前所有的配置文件存储在 \\texttt{/data/data/io.github.muntashirakon.AppManager/Files/conf}。</string>
+    <string name="appendices$specifications$internal">下述格式在 App Manager 内部使用，且 \\textit{与外部格式不兼容。}\n\\begin{Verbatim}\n &lt;name&gt; &lt;type&gt; &lt;mode&gt;|&lt;component_status&gt;|&lt;is_granted&gt;\n\\end{Verbatim}\n此处：\n\\begin{itemize}\n \\item \\texttt{&lt;name&gt;} -- 组件/权限/应用操作 (App Ops) 名 (对于 App Ops，值可能为字符串或整数)\n \\item \\texttt{&lt;type&gt;} -- \\texttt{ACTIVITY}、 \\texttt{RECEIVER}、 \\texttt{PROVIDER}、 \\texttt{SERVICE}、\n \\texttt{APP\\_OP}、 \\texttt{PERMISSION}的其中一个\n \\item \\texttt{&lt;mode&gt;} -- (用于App Ops) 相关的 \\hyperref[subsec:mode-constants]{模式常量}\n \\item \\texttt{&lt;component\\_status&gt;} -- (用于组件) 组件状态\n \\begin{itemize}\n \\item \\texttt{true} -- 已应用组件 (\\texttt{true} 值因为兼容性被保留)\n \\item \\texttt{false} -- 尚未应用组件，但将来会生效 (\\texttt{false} 值因为兼容性被保留)\n \\item \\texttt{unblocked} -- 计划解除阻止的组件\n \\end{itemize}\n \\item \\texttt{&lt;is\\_granted&gt;} -- (用于权限) 是否授予或撤销权限\n\\end{itemize}</string>
+    <string name="appendices$specifications$external">外部格式用于 App Manager 导入或导出规则。\n\\begin{Verbatim}\n &lt;package_name&gt; &lt;component_name&gt; &lt;type&gt; &lt;mode&gt;|&lt;component_status&gt;|&lt;is_granted&gt;\n\\end{Verbatim}\n除了第一项是包的名称外，其格式与上述 (内部格式) 基本相同。\n\n\\begin{danger}{小心}\n 导出的规则具有与内部格式不同的格式，\n 不应该被直接复制到 \\textbf{conf} 文件夹。\n\\end{danger}</string>
 </resources>

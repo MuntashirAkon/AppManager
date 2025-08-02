@@ -6,6 +6,7 @@ import android.os.Parcel;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.collection.ArrayMap;
 import androidx.collection.ArraySet;
 
 import java.util.ArrayList;
@@ -58,6 +59,17 @@ public class ParcelUtils {
     public static <K, V> Map<K, V> readMap(@NonNull Parcel parcel, @Nullable ClassLoader keyCl, @Nullable ClassLoader valCl) {
         int size = parcel.readInt();
         Map<K, V> map = new HashMap<>(size);
+        for (int i = 0; i < size; i++) {
+            map.put((K) parcel.readValue(keyCl), (V) parcel.readValue(valCl));
+        }
+        return map;
+    }
+
+    @SuppressWarnings("unchecked")
+    @NonNull
+    public static <K, V> ArrayMap<K, V> readArrayMap(@NonNull Parcel parcel, @Nullable ClassLoader keyCl, @Nullable ClassLoader valCl) {
+        int size = parcel.readInt();
+        ArrayMap<K, V> map = new ArrayMap<>(size);
         for (int i = 0; i < size; i++) {
             map.put((K) parcel.readValue(keyCl), (V) parcel.readValue(valCl));
         }

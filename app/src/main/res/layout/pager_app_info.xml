@@ -40,6 +40,7 @@
                     android:layout_marginTop="@dimen/padding_medium"
                     android:layout_marginBottom="@dimen/padding_small"
                     android:background="@drawable/item_transparent"
+                    android:contentDescription="@string/str_logo"
                     android:nextFocusDown="@id/label"
                     tools:ignore="contentDescription"
                     tools:srcCompat="@mipmap/ic_launcher" />

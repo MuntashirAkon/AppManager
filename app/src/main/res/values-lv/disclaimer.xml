@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="disclaimer_header">Brīdinājums</string>
+    <string name="disclaimer_footer">© 2020–2025 Muntashir Al-Islam</string>
+    <string name="disclaimer_agree_forever">Nekad vairs nerādīt</string>
+    <string name="disclaimer_agree">Piekrītu</string>
+    <string name="disclaimer_exit">Iziet</string>
+    <string name="disclaimer_body">App Manager piedāvā funkcijas ar root tiesībām, kas varētu kaitēt jūsu ierīcei, ja tās izmanto nepareizi. App Manager nav atbildīgs par jebkādiem nodarītiem kaitējumiem, izmantojot šo lietotni. Ja jūs neesiet pilnībā informēti kādus potenciālus riskus un draudus nes root tiesības, jums vajadzētu izvairīties izmantot funkcijas ar root tiesībām līdz brīdim, kamēr esiet pilnībā izpratuši un apzinājušies tā riskus.\n\nJebkuru saiti, ko piedāvāju uz kādu lietotni un tīmekļa vietni, ir priekš lietotāja papildus zināšanas ieguvums. Es nenesu nekādu atbildību par jebkādu saturu, ko šīs ārējās saites iekļauj, apmeklējot tās.\n\nIzmantojot App Manager, jūs uzņematies pilnu atbildību par tā lietošanu un nepieprasīsiet nekādu zaudējumu vai naudas kompensāciju un neveiksiet pretenzijas prasību nepareizas izmantošanas rezultātā.\n\nIzmantojot šo lietotni, jūs uzņematies visu atbildību par tās lietošanu un piekrītat, ka lietotnes izstrādātājs nav atbildīgs par jebkādu jūsu darbību, kas var nelabvēlīgi ietekmēt jūsu ierīci.</string>
+</resources>

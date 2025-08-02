@@ -609,7 +609,7 @@
     <string name="share">اشتراک</string>
     <string name="set_custom_app_op">تنظیمات برنامه سفارشی</string>
     <string name="about_device">درباره دستگاه</string>
-    <string name="pref_about_device_msg">اطلاعات پایه مانند نسخه سیستم اندروید، پردازنده، گرافیک، حافظه رم، باتری و ...</string>
+    <string name="pref_about_device_msg">اطلاعات پایه مانند نسخه سیستم اندروید، پردازنده، گرافیک، حافظه رم، باتری و …</string>
     <string name="board_name">مادربورد</string>
     <string name="manufacturer">سازنده</string>
     <string name="gles_version">OpenGL ES نسخه</string>
@@ -997,7 +997,7 @@
     <string name="v3_scheme">طرح نسخه 3 (از اندروید 9)</string>
     <string name="uri">لینک</string>
     <string name="on">روشن</string>
-    <string name="backup_extras_description">از مجوزهای برنامه، گزینه های ذخیره باتری و مصرف داده، وضعیت مخفی بودن مجیسک، تنظیمات امن اندروید و غیره نسخه پشتیبان تهیه کنید.</string>
+    <string name="backup_extras_description">از مجوزهای برنامه گزینه‌ های صرفه‌ جویی در باتری و وضعیت استفاده از داده و پنهان کردن magisk و SSAID و ... نسخه پشتیبان تهیه کنید <font fgcolor="#ff0000">بسته به مجوز ها همه موارد اضافی قابل بازیابی نیستند</font></string>
     <string name="backup_skip_signature_checks_description">پشتیبان‌گیری‌هایی را بازیابی کنید که یا در تأیید جمع‌بندی ناموفق هستند یا دارای امضاهای برنامه متفاوتی نسبت به نسخه‌های پشتیبان قبلی هستند.</string>
     <string name="verify_and_redo_backups_msg">یکپارچگی پشتیبان‌گیری‌های قبلی را بررسی کنید و پشتیبان‌گیری‌هایی را که بررسی یکپارچگی انجام نداده‌اند، دوباره انجام دهید.</string>
     <string name="restore_not_installed_msg">پشتیبان‌گیری پایه را برای برنامه‌هایی که در حال حاضر نصب نشده‌اند بازیابی کنید.</string>
@@ -1074,7 +1074,7 @@
     <string name="vt_permalink">لینک دائمی به VirusTotal</string>
     <string name="vt_slowness_warning">با توجه به سرعت اینترنت و ترافیک سرور ممکن است کمی طول بکشد.</string>
     <string name="search_type_suffix">پسوند</string>
-    <string name="pref_default_blocking_method_description">روشی که به صورت پیش فرض زمانی که امکان انتخاب روش مسدودسازی وجود ندارد استفاده می شود.</string>
+    <string name="pref_default_blocking_method_description">روشی برای استفاده پیش فرض در مکان هایی که گزینه ای برای انتخاب روش مسدود کردن وجود ندارد\n<b>توجه :</b> \"IFW\" با ارائه دهندگان کار نمی کند به جای آن از \"غیرفعال\" استفاده می شود</string>
     <string name="toggle_internet">استفاده از اینترنت</string>
     <string name="vt_failed">VirusTotal: ناموفق بود</string>
     <string name="vt_checking">VirusTotal: در حال بررسی…</string>
@@ -1189,8 +1189,8 @@
     <string name="change_group_gid">تنظیم گروه (GID)</string>
     <string name="change_mode">تنظیم حالت</string>
     <plurals name="file_count">
-        <item quantity="one">پرونده</item>
-        <item quantity="other">پرونده</item>
+        <item quantity="one"/>
+        <item quantity="other"/>
     </plurals>
     <string name="shortcut_icon">نماد میانبر</string>
     <string name="sort_by_data_usage">مصرف داده</string>
@@ -1215,15 +1215,15 @@
     <string name="renamed_successfully">تغییر نام یافت</string>
     <string name="confirm_uninstallation">تایید پاک‌کردن</string>
     <plurals name="search_results">
-        <item quantity="one">نتیجه</item>
-        <item quantity="other">نتیجه</item>
+        <item quantity="one"/>
+        <item quantity="other"/>
     </plurals>
     <string name="debloat_list_type">فهرست</string>
     <string name="empty_folder">خالی</string>
     <string name="go_to_path">برو به…</string>
     <string name="uninstall_app">پاک‌کردن %1$s</string>
     <string name="copy_this_path">رونوشت مسیر</string>
-    <string name="backing_up_app">پشتیبان گیری…</string>
+    <string name="backing_up_app"/>
     <string name="create_new_folder">پوشه جدید</string>
     <string name="create_new_file">پرونده جدید</string>
     <string name="installer_options">گزینه های نصب کننده</string>
@@ -1275,14 +1275,13 @@
     <string name="debloat_list_oem">OEM</string>
     <string name="debloat_list_google">گوگل</string>
     <string name="debloat_list_misc">متفرقه</string>
-    <string name="debloat_list_pending">در انتظار</string>
     <string name="debloat_removal_caution">باند</string>
     <string name="finder_title">جستجوگر</string>
     <string name="action_replace_all">جایگزینی همه</string>
     <string name="system_app_put_back">بازگشت به عقب</string>
     <string name="title_audio_player">پخش کننده صدا</string>
     <string name="filter_force_stopped_apps">برنامه های ایستاده</string>
-    <string name="installing_package">نصب</string>
+    <string name="installing_package"/>
     <string name="enter_target_path">مسیر هدف</string>
     <string name="invalid_target_path">مسیر نامعتبر</string>
     <string name="copy_these_paths">رونوشت مسیر ها</string>
@@ -1308,7 +1307,20 @@
     <string name="value_cannot_be_empty">مقدار نمیتواند خالی باشد!</string>
     <string name="invalid_regex">عبارات منظم نامعتبر!</string>
     <plurals name="folder_count">
-        <item quantity="one">پوشه</item>
-        <item quantity="other">پوشه</item>
+        <item quantity="one"/>
+        <item quantity="other"/>
     </plurals>
+    <string name="netpolicy_allow_metered_background_data">حتی زمانی که صرفه جویی داده روشن است به داده‌ های پس‌ زمینه در شبکه‌ های اندازه‌گیری شده اجازه دهید</string>
+    <string name="netpolicy_reject_metered_data">رد داده ها در شبکه های اندازه گیری شده</string>
+    <string name="vt_disclaimer">VirusTotal و نماد های آن علامت تجاری Chronicle LLC هستند نه مدیر برنامه - کلاینت API - و نه نویسندگان آن در قبال داده‌ هایی که ممکن است به VirusTotal ارسال کنید مسئولیتی ندارند</string>
+    <string name="uses_play_app_signing_description">این برنامه دارای نشانگر های خاصی است که نشان می دهد &lt;i&gt;ممکن است&lt;/i&gt; از &lt;a href=\"https://support.google.com/googleplay/android-developer/answer/9842756\"&gt;امضای برنامه Play&lt;/i&gt; استفاده کند a&gt; با این طرح کلید های امضا در سرور های گوگل ذخیره می شوند و گوگل مسئولیت امضای برنامه را بر عهده دارد توجه داشته باشید که تطبیق اطلاعات امضا تنها راه برای تایید این است که برنامه توسط شخص دیگری غیر از توسعه‌دهنده (و در این مورد گوگل) تغییر داده نشده</string>
+    <string name="pref_vt_apikey_description">یک کلید API به مدیر برنامه امکان می‌دهد فایل‌ های APK را به VirusTotal آپلود کند و همچنین گزارش‌ ها را واکشی کند برای دریافت رایگان کلید API در https://virustotal.com ثبت نام کنید</string>
+    <string name="warning_working_on_root_mode">هشدار : کار کردن با روت به جای حالت ADB</string>
+    <string name="failed_to_enable_magisk_deny_list">لیست رد Magisk فعال نشده</string>
+    <string name="mode_of_op_with_inferred_mode_of_op">%1$s (حالت استنباط شده : %2$s)</string>
+    <string name="failed_to_disable_magisk_deny_list">لیست رد Magisk غیرفعال نشد</string>
+    <string name="warning_working_on_system_mode">هشدار : کارکردن سیستم به جای حالت ADB</string>
+    <string name="zygote_preload_name">نام پیش بارگذاری Zygote</string>
+    <string name="netpolicy_reject_metered_background_data">داده های پس زمینه را در شبکه های اندازه گیری رد کنید</string>
+    <string name="pref_toggle_internet_msg">ویژگی های اینترنت را در مدیر برنامه فعال کنید</string>
 </resources>

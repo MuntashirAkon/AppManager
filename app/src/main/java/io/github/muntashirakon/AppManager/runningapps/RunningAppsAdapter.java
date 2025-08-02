@@ -58,7 +58,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
     private final int mQueryStringHighlightColor;
     private final Object mLock = new Object();
     @NonNull
-    private List<ProcessItem> mProcessItems = Collections.emptyList();
+    private final List<ProcessItem> mProcessItems = new ArrayList<>();
     private ProcMemoryInfo mProcMemoryInfo;
 
     RunningAppsAdapter(@NonNull RunningAppsActivity activity) {
@@ -70,16 +70,14 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
 
     void setDefaultList(@NonNull List<ProcessItem> processItems) {
         synchronized (mLock) {
-            int previousCount = mProcessItems.size() + 1;
-            mProcessItems = processItems;
-            AdapterUtils.notifyDataSetChanged(this, previousCount, mProcessItems.size() + 1);
+            AdapterUtils.notifyDataSetChanged(this, 1, mProcessItems, processItems);
         }
         notifySelectionChange();
     }
 
     public void setDeviceMemoryInfo(ProcMemoryInfo procMemoryInfo) {
         mProcMemoryInfo = procMemoryInfo;
-        notifyItemChanged(0);
+        notifyItemChanged(0, AdapterUtils.STUB);
     }
 
     @Override
@@ -170,7 +168,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
     private void onBindViewHolder(@NonNull BodyViewHolder holder, int position) {
         ProcessItem processItem;
         synchronized (mLock) {
-            processItem = mProcessItems.get(position - 1);
+            processItem = mProcessItems.get(position);
         }
         ApplicationInfo applicationInfo;
         if (processItem instanceof AppProcessItem) {
@@ -296,27 +294,29 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
             return mProcMemoryInfo != null ? mProcMemoryInfo.hashCode() : View.NO_ID;
         }
         synchronized (mLock) {
-            return mProcessItems.get(position - 1).hashCode();
+            return mProcessItems.get(position).hashCode();
         }
     }
 
     @Override
-    protected void select(int position) {
+    protected boolean select(int position) {
         if (position == 0) {
-            return;
+            return false;
         }
         synchronized (mLock) {
-            mModel.select(mProcessItems.get(position - 1));
+            mModel.select(mProcessItems.get(position));
+            return true;
         }
     }
 
     @Override
-    protected void deselect(int position) {
+    protected boolean deselect(int position) {
         if (position == 0) {
-            return;
+            return false;
         }
         synchronized (mLock) {
-            mModel.deselect(mProcessItems.get(position - 1));
+            mModel.deselect(mProcessItems.get(position));
+            return true;
         }
     }
 
@@ -326,8 +326,13 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
             return false;
         }
         synchronized (mLock) {
-            return mModel.isSelected(mProcessItems.get(position - 1));
+            return mModel.isSelected(mProcessItems.get(position));
         }
+    }
+
+    @Override
+    protected boolean isSelectable(int position) {
+        return position > 0;
     }
 
     @Override
@@ -354,7 +359,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
     @Override
     public int getItemCount() {
         synchronized (mLock) {
-            return mProcessItems.size() + 1;
+            return mProcessItems.size();
         }
     }
 

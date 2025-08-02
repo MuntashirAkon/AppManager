@@ -25,7 +25,7 @@ import io.github.muntashirakon.AppManager.fm.FmActivity;
 import io.github.muntashirakon.AppManager.history.ops.OpHistoryActivity;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
-import io.github.muntashirakon.AppManager.runner.TermActivity;
+import io.github.muntashirakon.AppManager.terminal.TermActivity;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;

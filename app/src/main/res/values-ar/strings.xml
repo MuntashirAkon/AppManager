@@ -146,7 +146,7 @@
     <string name="no_receivers">لا يوجد مستقبلات</string>
     <string name="receivers">المستقبلات</string>
     <string name="no_activities">لا توجد أنشطة</string>
-    <string name="refresh">انعاش</string>
+    <string name="refresh">تحديث</string>
     <string name="no_app_ops">لا توجد عمليات تطبيق</string>
     <string name="app_size">التطبيق</string>
     <string name="storage_and_cache">التخزين وذاكرة التخزين المؤقت</string>
@@ -306,7 +306,7 @@
     <string name="pref_import_existing">استيراد القواعد الموجودة</string>
     <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">جيتهب</a> • <a href="https://gitlab.com/muntashir/AppManager">جيتلاب</a> • <a href="https://0xacab.org/muntashir/AppManager">ارتق</a> • <a href="https://codeberg.org/muntashir/AppManager">كودبيرق</a></string>
     <string name="source_code">الشفرة المصدرية</string>
-    <string name="update">تحديث</string>
+    <string name="update">إنعاش</string>
     <string name="install">تثبيت</string>
     <string name="manifest_viewer">عارض البيان</string>
     <string name="external_apk_no_app_op">لا يحتوي ملف APK الخارجي على أي عمليات تطبيق</string>
@@ -1114,7 +1114,7 @@
     <string name="wireless_debugging">التصحيح اللاسلكي</string>
     <string name="unknown_net_policy">سياسة شبكة غير معروفة (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">تعذر منع %1$s من العمل في الخلفية</string>
-    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">ماتريكس</a> • <a href="https://t.me/AppManagerChannel">تيلجرام</a> • <a href="https://twitter.com/AppManagerNews">تويتر</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">المصفوفة</a> • <a href="https://t.me/AppManagerChannel">تيليقرام</a> • <a href="https://x.com/AppManagerNews">تويتر/X</a> • <a href="https://floss.social/@appmanager">ماستودون</a></string>
     <string name="community">المجتمع</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="zero">تعذر استيراد %1$d نسخة احتياطية</item>
@@ -1471,7 +1471,6 @@
     <string name="debloat_list_carrier">الناقل / مزود خدمة الإنترنت</string>
     <string name="debloat_list_google">جوجل</string>
     <string name="debloat_list_misc">المنوعات</string>
-    <string name="debloat_list_pending">معلَّقة</string>
     <string name="debloat_removal_safe">آمن</string>
     <string name="debloat_removal_replace">تبديل</string>
     <string name="debloat_removal_caution">الحذر</string>
@@ -1601,7 +1600,7 @@
     <string name="status_connecting_via_mode">الاتصال عبر %s</string>
     <string name="status_connected_via_mode">متصل عبر %s</string>
     <string name="status_not_connected_via_mode">تعذر الاتصال عبر %s</string>
-    <string name="adb_pairing_instruction">يرجى الانتقال إلى خيارات المطور لتمكين تصحيح الأخطاء اللاسلكية وإنشاء رمز الاقتران.</string>
+    <string name="adb_pairing_instruction">يرجى الانتقال إلى خيارات مطور البرامج لتمكين التصحيح اللاسلكي وإنشاء رمز إقران. انقر على <b>يدوي</b> إذا كنت قد فتحت بالفعل خيارات مطور البرامج.</string>
     <string name="adb_pairing_searching_for_port">جار البحث…</string>
     <string name="adb_pairing_stop_searching">توقَّف</string>
     <string name="adb_pairing_input_pairing_code">رمز الاقتران</string>
@@ -1612,4 +1611,43 @@
     <string name="mode_of_op_custom_command">إذا لم تتمكن من استخدام أي من الأوضاع، فيمكنك تشغيل الأمر التالي باستخدام أي طرفية مدعومة لتشغيل App Manager في الوضع المصرح:</string>
     <string name="adb_pairing_retry_pairing">حاول مرَّةً أخرى</string>
     <string name="mode_of_op_alternative_custom_command">إذا تلقيت خطأ \"تم رفض الإذن\" في الأمر أعلاه، فقم بتشغيل الأمر التالي بدلاً من ذلك:</string>
+    <string name="sensors">المستشعرات</string>
+    <string name="tag_sensors_disabled">المستشعرات معطلة</string>
+    <string name="backup_cache">الملفات المؤقتة</string>
+    <string name="pref_use_system_font">استخدم خط النظام</string>
+    <string name="pref_use_system_font_msg">استخدم الخط الافتراضي للنظام بدلاً من الخط المادي. <font fgcolor="#ff0000">هذه ميزة تجريبية.</font></string>
+    <string name="actual_installer">المثبت الفعلي</string>
+    <string name="apk_source">مصدر التطبيق</string>
+    <string name="activity_name">اسم النشاط</string>
+    <string name="vulkan_version">نسخة فولكان</string>
+    <string name="battery_health">الصحة</string>
+    <string name="verified_boot">تم التحقق من التمهيد</string>
+    <string name="android_verified_bootloader_version">إصدار AVB</string>
+    <string name="op_history">السجل</string>
+    <string name="no_history">لايوجد سجل</string>
+    <string name="title_confirm_execution">تأكيد التنفيذ</string>
+    <string name="add_to_favorites">أضف إلى المفضلة</string>
+    <string name="item_remove">حذف</string>
+    <string name="freeze_prefer_per_app_option">تفضيل خيار لكل تطبيق</string>
+    <string name="remember_option_for_this_app">تذكر لهذا التطبيق</string>
+    <string name="remove_filename">إزالة %s</string>
+    <string name="action_manual">يدوي</string>
+    <string name="item_edit">تعديل</string>
+    <string name="battery_technology">تكنولوجيا</string>
+    <string name="advanced_suspend_app">تعليق متقدم</string>
+    <string name="clear_history">مسح السجل</string>
+    <string name="available_memory">متاح: %s</string>
+    <string name="advanced_suspend_app_description">إنه يفرض إيقاف التطبيق وتعليقه للتأكد من أن التطبيق لا يعمل في الخلفية. يجب تفضيل هذه الطريقة على طريقة <b>التعليق</b> العادية.</string>
+    <string name="favorites">المفضلات</string>
+    <string name="no_overlay_permission">لا تصريح للعرض فوق التطبيقات الأخرى</string>
+    <string name="overlay_category">الفئة</string>
+    <string name="overlay_target">الهدف</string>
+    <string name="overlay_sdk_version_too_low">التراكبات غير مدعومة.</string>
+    <string name="no_overlays">لا توجد تراكبات</string>
+    <string name="sort_by_overlay_names">اسم التراكبات</string>
+    <string name="sort_by_priority">الأولوية</string>
+    <string name="overlays">التراكبات</string>
+    <string name="message_shortcut_for_frozen_app">يبدو أن التطبيق التابع للاختصار قد تم تجميده. هل تريد إلغاء التجميد مؤقتًا وفتح الاختصار ؟</string>
+    <string name="title_shortcut_for_frozen_app">تطبيق مجمد</string>
+    <string name="title_overlay">التراكب</string>
 </resources>

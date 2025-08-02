@@ -2,6 +2,9 @@
 
 package io.github.muntashirakon.AppManager.filters.options;
 
+import android.content.Context;
+import android.text.SpannableStringBuilder;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -10,7 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
+import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public class PermissionsOption extends FilterOption {
     private final Map<String, Integer> mKeysWithType = new LinkedHashMap<String, Integer>() {{
@@ -35,12 +39,12 @@ public class PermissionsOption extends FilterOption {
 
     @NonNull
     @Override
-    public TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result) {
+    public TestResult test(@NonNull IFilterableAppInfo info, @NonNull TestResult result) {
         List<String> permissions = result.getMatchedPermissions() != null
                 ? result.getMatchedPermissions()
                 : info.getAllPermissions();
         switch (key) {
-            default:
+            case KEY_ALL:
                 return result.setMatched(true).setMatchedPermissions(permissions);
             case "eq": {
                 List<String> filteredPermissions = new ArrayList<>();
@@ -96,6 +100,30 @@ public class PermissionsOption extends FilterOption {
                 return result.setMatched(!filteredPermissions.isEmpty())
                         .setMatchedPermissions(filteredPermissions);
             }
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
+        }
+    }
+
+    @NonNull
+    @Override
+    public CharSequence toLocalizedString(@NonNull Context context) {
+        SpannableStringBuilder sb = new SpannableStringBuilder("Permissions");
+        switch (key) {
+            case KEY_ALL:
+                return sb.append(LangUtils.getSeparatorString()).append("any");
+            case "eq":
+                return sb.append(" = '").append(value).append("'");
+            case "contains":
+                return sb.append(" contains '").append(value).append("'");
+            case "starts_with":
+                return sb.append(" starts with '").append(value).append("'");
+            case "ends_with":
+                return sb.append(" ends with '").append(value).append("'");
+            case "regex":
+                return sb.append(" matches '").append(value).append("'");
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
         }
     }
 }

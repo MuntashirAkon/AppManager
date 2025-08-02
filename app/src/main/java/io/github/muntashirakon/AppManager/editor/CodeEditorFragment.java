@@ -239,13 +239,20 @@ public class CodeEditorFragment extends AndroidFragment implements MenuProvider 
                     unlockEditor();
                 }
             });
-    private final OnBackPressedCallback mBackPressedCallback = new OnBackPressedCallback(true) {
+    private final OnBackPressedCallback mExitSearchBackPressedCallback = new OnBackPressedCallback(false) {
         @Override
         public void handleOnBackPressed() {
             if (mSearchWidget != null && mSearchWidget.getVisibility() == View.VISIBLE) {
                 hideSearchWidget();
                 return;
             }
+            setEnabled(false);
+            requireActivity().getOnBackPressedDispatcher().onBackPressed();
+        }
+    };
+    private final OnBackPressedCallback mTextModifiedBackPressedCallback = new OnBackPressedCallback(false) {
+        @Override
+        public void handleOnBackPressed() {
             if (mTextModified) {
                 new MaterialAlertDialogBuilder(requireContext())
                         .setTitle(R.string.exit_confirmation)
@@ -253,18 +260,18 @@ public class CodeEditorFragment extends AndroidFragment implements MenuProvider 
                         .setPositiveButton(R.string.no, null)
                         .setNegativeButton(R.string.yes, (dialog, which) -> {
                             setEnabled(false);
-                            requireActivity().onBackPressed();
+                            requireActivity().getOnBackPressedDispatcher().onBackPressed();
                         })
                         .setNeutralButton(R.string.save_and_exit, (dialog, which) -> {
                             saveFile();
                             setEnabled(false);
-                            requireActivity().onBackPressed();
+                            requireActivity().getOnBackPressedDispatcher().onBackPressed();
                         })
                         .show();
                 return;
             }
             setEnabled(false);
-            requireActivity().onBackPressed();
+            requireActivity().getOnBackPressedDispatcher().onBackPressed();
         }
     };
 
@@ -288,6 +295,7 @@ public class CodeEditorFragment extends AndroidFragment implements MenuProvider 
         mEditor.subscribeEvent(ContentChangeEvent.class, (event, unsubscribe) -> {
             if (!mTextModified && event.getAction() != ContentChangeEvent.ACTION_SET_NEW_TEXT) {
                 mTextModified = true;
+                mTextModifiedBackPressedCallback.setEnabled(true);
                 getActionBar().ifPresent(actionBar -> actionBar.setSubtitle("* " + mOptions.subtitle));
             }
             mEditor.postDelayed(this::updateLiveButtons, 50);
@@ -497,6 +505,7 @@ public class CodeEditorFragment extends AndroidFragment implements MenuProvider 
             if (successful) {
                 UIUtils.displayShortToast(R.string.saved_successfully);
                 mTextModified = false;
+                mTextModifiedBackPressedCallback.setEnabled(false);
                 getActionBar().ifPresent(actionBar -> actionBar.setSubtitle(mOptions.subtitle));
             } else {
                 UIUtils.displayLongToast(R.string.saving_failed);
@@ -528,8 +537,9 @@ public class CodeEditorFragment extends AndroidFragment implements MenuProvider 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        // Handle back press
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, mBackPressedCallback);
+        // Handle back press: The order MUST be kept same
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, mTextModifiedBackPressedCallback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, mExitSearchBackPressedCallback);
     }
 
     @Override
@@ -696,6 +706,7 @@ public class CodeEditorFragment extends AndroidFragment implements MenuProvider 
 
     public void showSearchWidget() {
         if (mSearchWidget != null) {
+            mExitSearchBackPressedCallback.setEnabled(true);
             Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, true);
             TransitionManager.beginDelayedTransition(mSearchWidget, sharedAxis);
             mSearchWidget.setVisibility(View.VISIBLE);
@@ -709,6 +720,7 @@ public class CodeEditorFragment extends AndroidFragment implements MenuProvider 
             TransitionManager.beginDelayedTransition(mSearchWidget, sharedAxis);
             mSearchWidget.setVisibility(View.GONE);
             mEditor.getSearcher().stopSearch();
+            mExitSearchBackPressedCallback.setEnabled(false);
         }
     }
 

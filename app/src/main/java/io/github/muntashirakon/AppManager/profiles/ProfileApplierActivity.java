@@ -21,12 +21,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Queue;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
+import io.github.muntashirakon.AppManager.profiles.struct.BaseProfile;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
@@ -66,9 +65,6 @@ public class ProfileApplierActivity extends BaseActivity {
             intent.putExtra(EXTRA_SHORTCUT_TYPE, shortcutType);
             if (state != null) {
                 intent.putExtra(EXTRA_STATE, state);
-            } else if (shortcutType.equals(ST_SIMPLE)) {
-                // Shortcut is set to simple but no state set
-                intent.putExtra(EXTRA_STATE, AppsProfile.STATE_ON);
             }
         }
         return intent;
@@ -104,7 +100,7 @@ public class ProfileApplierActivity extends BaseActivity {
     }
 
     public static class ProfileApplierInfo {
-        public AppsProfile profile;
+        public BaseProfile profile;
         public String profileId;
         @ShortcutType
         public String shortcutType;
@@ -173,8 +169,6 @@ public class ProfileApplierActivity extends BaseActivity {
         info.state = info.state != null ? info.state : info.profile.state;
         switch (info.shortcutType) {
             case ST_SIMPLE:
-                // There must be a state
-                Objects.requireNonNull(info.state);
                 Intent intent = ProfileApplierService.getIntent(this,
                         ProfileQueueItem.fromProfiledApplierInfo(info), info.notify);
                 ContextCompat.startForegroundService(this, intent);
@@ -185,7 +179,7 @@ public class ProfileApplierActivity extends BaseActivity {
                         getString(R.string.on),
                         getString(R.string.off)
                 };
-                @AppsProfile.ProfileState final List<String> states = Arrays.asList(AppsProfile.STATE_ON, AppsProfile.STATE_OFF);
+                @BaseProfile.ProfileState final List<String> states = Arrays.asList(BaseProfile.STATE_ON, BaseProfile.STATE_OFF);
                 DialogTitleBuilder titleBuilder = new DialogTitleBuilder(this)
                         .setTitle(getString(R.string.apply_profile, info.profile.name))
                         .setSubtitle(R.string.choose_a_profile_state);
@@ -218,7 +212,7 @@ public class ProfileApplierActivity extends BaseActivity {
             ThreadUtils.postOnBackgroundThread(() -> {
                 Path profilePath = ProfileManager.findProfilePathById(info.profileId);
                 try {
-                    info.profile = AppsProfile.fromPath(profilePath);
+                    info.profile = BaseProfile.fromPath(profilePath);
                     mProfileLiveData.postValue(info);
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();

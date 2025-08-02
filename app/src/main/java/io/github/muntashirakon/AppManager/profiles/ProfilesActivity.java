@@ -43,7 +43,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
+import io.github.muntashirakon.AppManager.profiles.struct.BaseProfile;
 import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -56,7 +56,7 @@ import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 
-public class ProfilesActivity extends BaseActivity {
+public class ProfilesActivity extends BaseActivity implements NewProfileDialogFragment.OnCreateNewProfileInterface {
     private static final String TAG = "ProfilesActivity";
 
     private ProfilesAdapter mAdapter;
@@ -75,8 +75,11 @@ public class ProfilesActivity extends BaseActivity {
                 if (mProfileId != null) {
                     // Export profile
                     try (OutputStream os = getContentResolver().openOutputStream(uri)) {
+                        if (os == null) {
+                            return;
+                        }
                         Path profilePath = ProfileManager.findProfilePathById(mProfileId);
-                        AppsProfile profile = AppsProfile.fromPath(profilePath);
+                        BaseProfile profile = BaseProfile.fromPath(profilePath);
                         profile.write(os);
                         UIUtils.displayShortToast(R.string.the_export_was_successful);
                     } catch (IOException | JSONException e) {
@@ -95,8 +98,8 @@ public class ProfilesActivity extends BaseActivity {
                 try {
                     // Verify
                     Path profilePath = Paths.get(uri);
-                    AppsProfile profile = AppsProfile.fromPath(profilePath);
-                    AppsProfile newProfile = AppsProfile.newProfile(profile.name, profile);
+                    BaseProfile profile = BaseProfile.fromPath(profilePath);
+                    BaseProfile newProfile = BaseProfile.newProfile(profile.name, profile.type, profile);
                     Path innerProfilePath = ProfileManager.requireProfilePathById(newProfile.profileId);
                     // Save
                     try (OutputStream os = innerProfilePath.openOutputStream()) {
@@ -104,7 +107,7 @@ public class ProfilesActivity extends BaseActivity {
                     }
                     UIUtils.displayShortToast(R.string.the_import_was_successful);
                     // Load imported profile
-                    startActivity(AppsProfileActivity.getProfileIntent(this, newProfile.profileId));
+                    startActivity(ProfileManager.getProfileIntent(this, newProfile.type, newProfile.profileId));
                 } catch (IOException | JSONException e) {
                     Log.e(TAG, "Error: ", e);
                     UIUtils.displayShortToast(R.string.import_failed);
@@ -126,17 +129,10 @@ public class ProfilesActivity extends BaseActivity {
         listView.setAdapter(mAdapter);
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
         UiUtils.applyWindowInsetsAsMargin(fab);
-        fab.setOnClickListener(v -> new TextInputDialogBuilder(this, R.string.input_profile_name)
-                .setTitle(R.string.new_profile)
-                .setHelperText(R.string.input_profile_name_description)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.go, (dialog, which, profName, isChecked) -> {
-                    if (!TextUtils.isEmpty(profName)) {
-                        //noinspection ConstantConditions
-                        startActivity(AppsProfileActivity.getNewProfileIntent(this, profName.toString()));
-                    }
-                })
-                .show());
+        fab.setOnClickListener(v -> {
+            NewProfileDialogFragment dialog = NewProfileDialogFragment.getInstance(this);
+            dialog.show(getSupportFragmentManager(), NewProfileDialogFragment.TAG);
+        });
         mModel.getProfilesLiveData().observe(this, profiles -> {
             mProgressIndicator.hide();
             mAdapter.setDefaultList(profiles);
@@ -165,12 +161,18 @@ public class ProfilesActivity extends BaseActivity {
         return true;
     }
 
+    @Override
+    public void onCreateNewProfile(@NonNull String newProfileName, int type) {
+        Intent intent = ProfileManager.getNewProfileIntent(this, type, newProfileName);
+        startActivity(intent);
+    }
+
     static class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapter.ViewHolder> implements Filterable {
         private Filter mFilter;
         private String mConstraint;
-        private AppsProfile[] mDefaultList;
-        private AppsProfile[] mAdapterList;
-        private HashMap<AppsProfile, CharSequence> mAdapterMap;
+        private BaseProfile[] mDefaultList;
+        private BaseProfile[] mAdapterList;
+        private HashMap<BaseProfile, CharSequence> mAdapterMap;
         private final ProfilesActivity mActivity;
         private final int mQueryStringHighlightColor;
 
@@ -191,8 +193,8 @@ public class ProfilesActivity extends BaseActivity {
             mQueryStringHighlightColor = ColorCodes.getQueryStringHighlightColor(activity);
         }
 
-        void setDefaultList(@NonNull HashMap<AppsProfile, CharSequence> list) {
-            mDefaultList = list.keySet().toArray(new AppsProfile[0]);
+        void setDefaultList(@NonNull HashMap<BaseProfile, CharSequence> list) {
+            mDefaultList = list.keySet().toArray(new BaseProfile[0]);
             int previousCount = getItemCount();
             mAdapterList = mDefaultList;
             mAdapterMap = list;
@@ -218,7 +220,7 @@ public class ProfilesActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            AppsProfile profile = mAdapterList[position];
+            BaseProfile profile = mAdapterList[position];
             if (mConstraint != null && profile.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 holder.title.setText(UIUtils.getHighlightedText(profile.name, mConstraint, mQueryStringHighlightColor));
@@ -227,8 +229,10 @@ public class ProfilesActivity extends BaseActivity {
             }
             CharSequence value = mAdapterMap.get(profile);
             holder.summary.setText(value != null ? value : "");
-            holder.itemView.setOnClickListener(v ->
-                    mActivity.startActivity(AppsProfileActivity.getProfileIntent(mActivity, profile.profileId)));
+            holder.itemView.setOnClickListener(v -> {
+                Intent intent = ProfileManager.getProfileIntent(mActivity, profile.type, profile.profileId);
+                mActivity.startActivity(intent);
+            });
             holder.itemView.setOnLongClickListener(v -> {
                 PopupMenu popupMenu = new PopupMenu(mActivity, v);
                 popupMenu.setForceShowIcon(true);
@@ -261,16 +265,17 @@ public class ProfilesActivity extends BaseActivity {
                                 .setNegativeButton(R.string.cancel, null)
                                 .setPositiveButton(R.string.go, (dialog, which, newProfName, isChecked) -> {
                                     if (!TextUtils.isEmpty(newProfName)) {
-                                        //noinspection ConstantConditions
-                                        mActivity.startActivity(AppsProfileActivity.getCloneProfileIntent(mActivity,
-                                                profile.profileId, newProfName.toString()));
+                                        Intent intent = ProfileManager.getCloneProfileIntent(
+                                                mActivity, profile.type, profile.profileId,
+                                                newProfName.toString());
+                                        mActivity.startActivity(intent);
                                     }
                                 })
                                 .show();
                     } else if (id == R.id.action_export) {
                         mActivity.mProfileId = profile.profileId;
                         mActivity.mExportProfile.launch(profile.name + ".am.json");
-                    }  else if (id == R.id.action_copy) {
+                    } else if (id == R.id.action_copy) {
                         Utils.copyToClipboard(mActivity, profile.name, profile.profileId);
                     } else if (id == R.id.action_shortcut) {
                         final String[] shortcutTypesL = new String[]{
@@ -316,14 +321,14 @@ public class ProfilesActivity extends BaseActivity {
                             return filterResults;
                         }
 
-                        List<AppsProfile> list = new ArrayList<>(mDefaultList.length);
-                        for (AppsProfile item : mDefaultList) {
+                        List<BaseProfile> list = new ArrayList<>(mDefaultList.length);
+                        for (BaseProfile item : mDefaultList) {
                             if (item.name.toLowerCase(Locale.ROOT).contains(constraint))
                                 list.add(item);
                         }
 
                         filterResults.count = list.size();
-                        filterResults.values = list.toArray(new AppsProfile[0]);
+                        filterResults.values = list.toArray(new BaseProfile[0]);
                         return filterResults;
                     }
 
@@ -333,7 +338,7 @@ public class ProfilesActivity extends BaseActivity {
                         if (filterResults.values == null) {
                             mAdapterList = mDefaultList;
                         } else {
-                            mAdapterList = (AppsProfile[]) filterResults.values;
+                            mAdapterList = (BaseProfile[]) filterResults.values;
                         }
                         AdapterUtils.notifyDataSetChanged(ProfilesAdapter.this, previousCount, mAdapterList.length);
                     }

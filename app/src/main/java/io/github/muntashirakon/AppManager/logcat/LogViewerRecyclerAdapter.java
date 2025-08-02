@@ -192,7 +192,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
                 mOriginalValues.add(index, object);
             } else {
                 mObjects.add(index, object);
-                notifyItemChanged(index);
+                notifyItemChanged(index, AdapterUtils.STUB);
             }
         }
     }
@@ -295,22 +295,24 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
     }
 
     @Override
-    protected void select(int position) {
+    protected boolean select(int position) {
         synchronized (mSelectedLogLines) {
             LogLine logLine = getItemSafe(position);
             if (logLine != null) {
                 mSelectedLogLines.add(logLine);
             }
+            return logLine != null;
         }
     }
 
     @Override
-    protected void deselect(int position) {
+    protected boolean deselect(int position) {
         synchronized (mSelectedLogLines) {
             LogLine logLine = getItemSafe(position);
             if (logLine != null) {
-                mSelectedLogLines.remove(logLine);
+                return mSelectedLogLines.remove(logLine);
             }
+            return false;
         }
     }
 
@@ -410,7 +412,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
             } else {
                 LogLine line = holder.logLine;
                 line.setExpanded(!line.isExpanded());
-                notifyItemChanged(position);
+                notifyItemChanged(position, AdapterUtils.STUB);
             }
         });
         // Long click on the item:

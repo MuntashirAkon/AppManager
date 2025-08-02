@@ -109,7 +109,7 @@ public final class FreezeUnfreeze {
     @NonNull
     public static SearchableSingleChoiceDialogBuilder<Integer> getFreezeDialog(
             @NonNull Context context,
-            @FreezeUtils.FreezeType int selectedType) {
+            @FreezeUtils.FreezeMethod int selectedType) {
         CharSequence[] itemDescription = new CharSequence[FREEZING_METHODS.length];
         for (int i = 0; i < FREEZING_METHODS.length; ++i) {
             itemDescription[i] = new SpannableStringBuilder()
@@ -135,12 +135,13 @@ public final class FreezeUnfreeze {
             activity.startActivity(launchIntent);
             Intent intent = getShortcutIntent(activity, shortcutInfo);
             intent.putExtra(EXTRA_FORCE_FREEZE, true);
-            PendingIntent pendingIntent = PendingIntentCompat.getActivity(activity, 0, intent,
-                    PendingIntent.FLAG_ONE_SHOT, false);
+            int requestCode = shortcutInfo.hashCode();
+            PendingIntent pendingIntent = PendingIntentCompat.getActivity(activity, requestCode,
+                    intent, PendingIntent.FLAG_ONE_SHOT, false);
             // There's a small chance that the notification by shortcutInfo.hasCode() already exists, in that case,
             // find the next one. This will cause trouble with dismissing the notification, but this is a viable
             // trade-off.
-            String notificationTag = String.valueOf(shortcutInfo.hashCode());
+            String notificationTag = String.valueOf(requestCode);
             NotificationUtils.displayFreezeUnfreezeNotification(activity, notificationTag, builder -> builder
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setWhen(System.currentTimeMillis())

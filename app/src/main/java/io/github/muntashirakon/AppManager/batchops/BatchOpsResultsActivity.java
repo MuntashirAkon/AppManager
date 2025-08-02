@@ -117,7 +117,7 @@ public class BatchOpsResultsActivity extends BaseActivity {
             return true;
         } else if (id == R.id.action_retry) {
             if (mBatchQueueItem != null) {
-                Intent BatchOpsIntent = BatchOpsService.getIntent(this, mBatchQueueItem);
+                Intent BatchOpsIntent = BatchOpsService.getServiceIntent(this, mBatchQueueItem);
                 ContextCompat.startForegroundService(this, BatchOpsIntent);
             }
         }

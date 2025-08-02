@@ -1356,7 +1356,6 @@
     <string name="debloat_list_oem">OEM</string>
     <string name="debloat_list_carrier">Operatore/ISP</string>
     <string name="debloat_list_google">Google</string>
-    <string name="debloat_list_pending">In attesa</string>
     <string name="debloat_removal_replace">Sostituisci</string>
     <string name="debloat_removal_caution">Attenzione</string>
     <string name="static_shared_library">Libreria condivisa statica</string>
@@ -1473,7 +1472,7 @@
     <string name="status_connecting_via_mode">Connessione tramite %s</string>
     <string name="status_connected_via_mode">Connesso tramite %s</string>
     <string name="status_not_connected_via_mode">Impossibile connettersi tramite %s</string>
-    <string name="adb_pairing_instruction">Vai alle opzioni sviluppatore per abilitare il debug wireless e generare un codice di accoppiamento.</string>
+    <string name="adb_pairing_instruction">Vai alle opzioni sviluppatore per abilitare il debug wireless e generare un codice di accoppiamento. Fai clic su <b>Manuale</b> se hai già aperto le opzioni sviluppatore.</string>
     <string name="adb_pairing_searching_for_port">Ricerca…</string>
     <string name="adb_pairing_stop_searching">Ferma</string>
     <string name="adb_pairing_input_pairing_code">Codice abbinamento</string>
@@ -1491,4 +1490,5 @@
     <string name="apk_source">Sorgente APK</string>
     <string name="backup_cache">Cache</string>
     <string name="actual_installer">Installatore effettivo</string>
+    <string name="activity_name">Nome attività</string>
 </resources>

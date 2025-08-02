@@ -1,0 +1,6 @@
+[book]
+authors = ["Muntashir Al-Islam"]
+language = "en"
+multilingual = false
+src = "src"
+title = "App Manager"

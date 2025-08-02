@@ -174,7 +174,7 @@ public class FreezeUnfreezeService extends Service {
                                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, shortcutInfo.userId);
                     Bitmap icon = getBitmapFromDrawable(applicationInfo.loadIcon(getApplication().getPackageManager()));
                     shortcutInfo.setName(applicationInfo.loadLabel(getApplication().getPackageManager()));
-                    int freezeType = Optional.ofNullable(FreezeUtils.getFreezingMethod(shortcutInfo.packageName))
+                    int freezeType = Optional.ofNullable(FreezeUtils.loadFreezeMethod(shortcutInfo.packageName))
                             .orElse(Prefs.Blocking.getDefaultFreezingMethod());
                     FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId, freezeType);
                     shortcutInfo.setIcon(getDimmedBitmap(icon));

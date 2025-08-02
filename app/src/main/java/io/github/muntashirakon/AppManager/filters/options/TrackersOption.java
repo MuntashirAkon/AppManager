@@ -2,12 +2,16 @@
 
 package io.github.muntashirakon.AppManager.filters.options;
 
+import android.content.Context;
+import android.text.SpannableStringBuilder;
+
 import androidx.annotation.NonNull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
+import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public class TrackersOption extends FilterOption {
     private final Map<String, Integer> mKeysWithType = new LinkedHashMap<String, Integer>() {{
@@ -30,9 +34,9 @@ public class TrackersOption extends FilterOption {
 
     @NonNull
     @Override
-    public TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result) {
+    public TestResult test(@NonNull IFilterableAppInfo info, @NonNull TestResult result) {
         switch (key) {
-            default:
+            case KEY_ALL:
                 return result.setMatched(true);
             case "eq":
                 return result.setMatched(info.getTrackerComponents().size() == intValue);
@@ -40,6 +44,26 @@ public class TrackersOption extends FilterOption {
                 return result.setMatched(info.getTrackerComponents().size() <= intValue);
             case "ge":
                 return result.setMatched(info.getTrackerComponents().size() >= intValue);
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
+        }
+    }
+
+    @NonNull
+    @Override
+    public CharSequence toLocalizedString(@NonNull Context context) {
+        SpannableStringBuilder sb = new SpannableStringBuilder("Trackers");
+        switch (key) {
+            case KEY_ALL:
+                return sb.append(LangUtils.getSeparatorString()).append("any");
+            case "eq":
+                return sb.append(" = ").append(Integer.toString(intValue));
+            case "le":
+                return sb.append(" ≤ ").append(Integer.toString(intValue));
+            case "ge":
+                return sb.append(" ≥ ").append(Integer.toString(intValue));
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
         }
     }
 }

@@ -29,6 +29,7 @@ import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.adapters.SelectedArrayAdapter;
+import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialSpinner;
 import io.github.muntashirakon.widget.RecyclerView;
@@ -68,6 +69,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
 
         // Interval
         MaterialSpinner spinner = findViewById(R.id.spinner);
+        UiUtils.applyWindowInsetsAsMargin(spinner, false, false);
         spinner.requestFocus();
         ArrayAdapter<CharSequence> intervalSpinnerAdapter = SelectedArrayAdapter.createFromResource(this,
                 R.array.usage_interval_dropdown_list, io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item_small);

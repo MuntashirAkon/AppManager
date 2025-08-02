@@ -1393,7 +1393,6 @@
     <string name="debloat_removal_type">Тип</string>
     <string name="system_app_put_back">Вернуть</string>
     <string name="debloat_list_misc">Разное</string>
-    <string name="debloat_list_pending">На рассмотрении</string>
     <string name="debloat_removal_replace">Замена</string>
     <string name="debloat_removal_caution">Осторожно</string>
     <string name="debloat_removal_safe">Безопасно</string>
@@ -1524,4 +1523,15 @@
     <string name="adb_pairing_pairing_in_progress">Сопряжение…</string>
     <string name="adb_pairing_retry_pairing">Повтор</string>
     <string name="mode_of_op_custom_command_title">Пользовательская команда</string>
+    <string name="virus_total">VirusTotal</string>
+    <string name="sensors">Датчики</string>
+    <string name="tag_sensors_disabled">Датчики отключены</string>
+    <string name="apk_source">Источник APK</string>
+    <string name="actual_installer">Фактический установщик</string>
+    <string name="pref_use_system_font">Использовать системный шрифт</string>
+    <string name="mode_of_op_alternative_custom_command">Если при выполнении вышеуказанной команды вы получите ошибку «разрешение отклонено», выполните следующую команду:</string>
+    <string name="activity_name">Имя активити</string>
+    <string name="pref_use_system_font_msg">Использовать системный шрифт по умолчанию вместо material шрифта. <font fgcolor="#ff0000">Это экспериментальная функция.</font></string>
+    <string name="backup_cache">Кэш</string>
+    <string name="launch_activity_dialog_message">App Manager пытается запустить активити через <b>Поисковый помощник</b> (обычно Google Assistant), но не может этого сделать из-за недостаточного разрешения. Для запуска активити, включите <b>Поисковый помощник</b> вручную (обычно это делается долгим нажатием на кнопку Домой). Нажмите на кнопку <b>Закрыть</b> после завершения запуска активити, чтобы вернуться к исходному помощнику.</string>
 </resources>

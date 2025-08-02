@@ -87,7 +87,7 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     void setDefaultList(List<PackageUsageInfo> list) {
         synchronized (mAdapterList) {
-            notifyItemChanged(0);
+            notifyItemChanged(0, AdapterUtils.STUB);
             AdapterUtils.notifyDataSetChanged(this, 1, mAdapterList, list);
         }
     }
@@ -103,7 +103,7 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemCount() {
         synchronized (mAdapterList) {
-            return mAdapterList.size() + 1;
+            return mAdapterList.size();
         }
     }
 
@@ -113,7 +113,7 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return 0;
         }
         synchronized (mAdapterList) {
-            return Objects.hashCode(mAdapterList.get(position - 1));
+            return Objects.hashCode(mAdapterList.get(position));
         }
     }
 
@@ -136,7 +136,7 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (position == 0) {
             onBindViewHolder((ListHeaderViewHolder) holder);
-        } else onBindViewHolder((ListItemViewHolder) holder, position - 1);
+        } else onBindViewHolder((ListItemViewHolder) holder, position);
     }
 
     public void onBindViewHolder(@NonNull ListHeaderViewHolder holder) {

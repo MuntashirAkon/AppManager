@@ -814,7 +814,7 @@
     <string name="app_signing_signatures">Sygnatury</string>
     <string name="soft_input">Tryb delikatnego wprowadzenia</string>
     <string name="authority">Autorytet</string>
-    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://x.com/AppManagerNews">Twitter/X</a> • <a href="https://floss.social/@appmanager">Mastodon</a></string>
     <string name="community">Społeczność</string>
     <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="subject">Temat</string>
@@ -835,10 +835,10 @@
     <string name="paired_successfully">Sparowany.</string>
     <string name="pid">Identyfikator procesu</string>
     <plurals name="pref_thread_count_msg">
-        <item quantity="one">Wykonaj co najwyżej %1$d operacje równolegle</item>
-        <item quantity="few">Wykonaj co najwyżej %1$d operacji równolegle</item>
-        <item quantity="many"/>
-        <item quantity="other"/>
+        <item quantity="one">Wykonuj co najwyżej %1$d operację równolegle</item>
+        <item quantity="few">Wykonuj co najwyżej %1$d operacje równolegle</item>
+        <item quantity="many">Wykonuj co najwyżej %1$d operacji równolegle</item>
+        <item quantity="other">Wykonuj co najwyżej %1$d operacji równolegle</item>
     </plurals>
     <string name="pref_thread_count_hint">Wartość musi być pomiędzy 0 a %1$d gdzie 0 znaczy <i> maksymalnej liczby operacji w danym czasie</i>.</string>
     <string name="pref_thread_count">Wykonanie równoległe</string>
@@ -1393,7 +1393,6 @@
     <string name="debloat_list_carrier">Operator/dostawca usług internetowych</string>
     <string name="debloat_list_google">Google</string>
     <string name="debloat_list_misc">Składanka</string>
-    <string name="debloat_list_pending">Trwające</string>
     <string name="debloat_removal_safe">Bezpieczny</string>
     <string name="debloat_removal_replace">Zastąp</string>
     <string name="debloat_removal_caution">Uwaga</string>
@@ -1494,7 +1493,7 @@
     <string name="status_remote_services_inactive">Usługi zdalne są nieaktywne</string>
     <string name="status_connecting">Łączenie…</string>
     <string name="status_not_connected_via_mode">Nie udało się połączyć przez %s</string>
-    <string name="adb_pairing_instruction">Przejdź do opcji programisty, aby włączyć debugowanie bezprzewodowe i wygenerować kod parowania.</string>
+    <string name="adb_pairing_instruction">Przejdź do opcji programisty, aby włączyć debugowanie bezprzewodowe i wygenerować kod parowania.Kliknij <b>Ręcznie</b>, jeśli masz otwarte już opcje programisty.</string>
     <string name="adb_pairing_pairing_in_progress">Parowanie…</string>
     <string name="adb_pairing_retry_pairing">Ponów</string>
     <string name="netpolicy_reject_metered_data">Odrzucaj dane w sieciach z pomiarem</string>
@@ -1531,4 +1530,36 @@
     <string name="actual_installer">Obecny instalator</string>
     <string name="apk_source">Źródło APK</string>
     <string name="backup_cache">Pamięć podręczna</string>
+    <string name="activity_name">Nazwa aktywności</string>
+    <string name="available_memory">Dostępne: %s</string>
+    <string name="action_manual">Ręcznie</string>
+    <string name="vulkan_version">Wersja Vulkan</string>
+    <string name="battery_technology">Technologia</string>
+    <string name="battery_health">Zdrowie</string>
+    <string name="verified_boot">Zweryfikowany rozruch</string>
+    <string name="android_verified_bootloader_version">Wersja AVB</string>
+    <string name="op_history">Historia</string>
+    <string name="no_history">Brak historii</string>
+    <string name="title_confirm_execution">Potwierdź wykonanie</string>
+    <string name="clear_history">Wyczyść historię</string>
+    <string name="favorites">Ulubione</string>
+    <string name="add_to_favorites">Dodaj do ulubionych</string>
+    <string name="item_remove">Usuń</string>
+    <string name="item_edit">Edytuj</string>
+    <string name="remove_filename">Usuń %s</string>
+    <string name="advanced_suspend_app">Zaawansowane wstrzymanie</string>
+    <string name="advanced_suspend_app_description">Wymusza ona zatrzymanie i zawieszenie aplikacji, aby upewnić się, że nie działa ona w tle. Ta metoda powinna być preferowana w stosunku do zwykłej metody <b>wstrzymania</b>.</string>
+    <string name="freeze_prefer_per_app_option">Preferowana opcja dla każdej aplikacji</string>
+    <string name="remember_option_for_this_app">Zapamiętaj dla tej aplikacji</string>
+    <string name="no_overlay_permission">Brak uprawnień do wyświetlania nakładek</string>
+    <string name="overlay_category">Kategoria</string>
+    <string name="overlay_target">Cel</string>
+    <string name="overlay_sdk_version_too_low">Nakładki nie są obsługiwane.</string>
+    <string name="no_overlays">Brak nakładek</string>
+    <string name="sort_by_overlay_names">Nazwa nakładki</string>
+    <string name="sort_by_priority">Priorytet</string>
+    <string name="overlays">Nakładki</string>
+    <string name="title_shortcut_for_frozen_app">Zamrożona aplikacja</string>
+    <string name="title_overlay">Nakładka</string>
+    <string name="message_shortcut_for_frozen_app">Wygląda na to, że aplikacja odpowiadająca skrótowi została zamrożona. Odblokować tymczasowo i otworzyć skrót?</string>
 </resources>

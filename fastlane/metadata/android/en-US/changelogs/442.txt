@@ -1,0 +1,5 @@
+- Updated bloatware
+- Fixed fetching applications in multi-user environment in no-root mode
+- Fixed opening "app-manager" URLs from the web browsers
+- Fixed updating SSAID
+- Prevented a crash in Android < 9.0 that occurs due to invalid app ops.

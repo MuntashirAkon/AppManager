@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.logcat;
 
-import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +35,6 @@ public class LogFilterAdapter extends RecyclerView.Adapter<LogFilterAdapter.View
         mItems = items;
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     public void add(@NonNull LogFilter filter) {
         int previousSize = mItems.size();
         mItems.add(filter);
@@ -85,6 +83,7 @@ public class LogFilterAdapter extends RecyclerView.Adapter<LogFilterAdapter.View
             super(itemView);
             textView = itemView.findViewById(R.id.item_title);
             actionButton = itemView.findViewById(R.id.item_action);
+            actionButton.setContentDescription(itemView.getContext().getString(R.string.item_remove));
         }
     }
 }

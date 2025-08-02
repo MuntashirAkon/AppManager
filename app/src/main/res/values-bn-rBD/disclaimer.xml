@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
     <string name="disclaimer_header">অস্বীকৃতি</string>
     <string name="disclaimer_body">অ্যাপ ম্যানেজার যে রুট ফাংশন গুলো সরবাহ করে তা যদি সঠিকভাবে ব্যবহৃত না হয় তাহলে 
 	আপনার ডিভাইসটির ক্ষতি হতে পারে, অ্যপ ম্যানেজার এ ক্ষতির জন্য দায়ী থাকবে না। রুট কীভাবে কাজ করে সে সম্পর্কে আপনি যদি 
@@ -17,7 +16,7 @@
 	ক্রিয়াকলাপের জন্য আমি দায়বদ্ধ না যা আপনার ডিভাইসে বিরূপ প্রভাব ফেলে।
 
     </string>
-    <string name="disclaimer_footer">© ২০২০ মুনতাশির আল-ইসলাম</string>
+    <string name="disclaimer_footer">© ২০২০–২০২৪ মুনতাশির আল-ইসলাম</string>
     <string name="disclaimer_agree_forever">আর প্রদর্শন করবেন না</string>
     <string name="disclaimer_agree">আমি সম্মতি দিচ্ছি</string>
     <string name="disclaimer_exit">প্রস্থান</string>

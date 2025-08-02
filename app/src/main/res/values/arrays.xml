@@ -126,6 +126,10 @@
         <item>@string/bouncy_castle_keystore</item>
         <item>@string/pem_and_pk8</item>
     </string-array>
+    <string-array name="profile_types">
+        <item>@string/apps</item>
+        <item>@string/filters</item>
+    </string-array>
     <integer-array name="random_colors">
         <item>@color/original_orange</item>
         <item>@color/dark_orange</item>

@@ -3,6 +3,8 @@
 package io.github.muntashirakon.AppManager.filters.options;
 
 import android.content.pm.ComponentInfo;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.IntDef;
@@ -14,15 +16,18 @@ import org.json.JSONObject;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.db.entity.Backup;
-import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
+import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
+import io.github.muntashirakon.AppManager.utils.JSONUtils;
+import io.github.muntashirakon.util.LocalizedString;
 
-public abstract class FilterOption {
+public abstract class FilterOption implements LocalizedString, Parcelable {
     public static final int TYPE_NONE = 0;
     public static final int TYPE_STR_SINGLE = 1;
     public static final int TYPE_STR_MULTIPLE = 2;
@@ -85,6 +90,10 @@ public abstract class FilterOption {
         this.keyType = TYPE_NONE;
     }
 
+    public String getFullId() {
+        return type + "_" + id;
+    }
+
     @NonNull
     public String getKey() {
         return key;
@@ -137,7 +146,52 @@ public abstract class FilterOption {
     }
 
     @NonNull
-    public abstract TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result);
+    public abstract TestResult test(@NonNull IFilterableAppInfo info, @NonNull TestResult result);
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "FilterOption{" +
+                "type='" + type + '\'' +
+                ", id=" + id +
+                ", key='" + key + '\'' +
+                ", keyType=" + keyType +
+                ", value='" + value + '\'' +
+                '}';
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(type);
+        dest.writeInt(id);
+        dest.writeString(key);
+        dest.writeString(value);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<FilterOption> CREATOR = new Creator<FilterOption>() {
+        @Override
+        @NonNull
+        public FilterOption createFromParcel(@NonNull Parcel in) {
+            String type = Objects.requireNonNull(in.readString());
+            FilterOption filterOption = FilterOptions.create(type);
+            filterOption.id = in.readInt();
+            String key = Objects.requireNonNull(in.readString());
+            String value = in.readString();
+            filterOption.setKeyValue(key, value);
+            return filterOption;
+        }
+
+        @Override
+        @NonNull
+        public FilterOption[] newArray(int size) {
+            return new FilterOption[size];
+        }
+    };
 
     @Nullable
     public JSONObject toJson() throws JSONException {
@@ -158,14 +212,25 @@ public abstract class FilterOption {
     @NonNull
     public static FilterOption fromJson(@NonNull JSONObject object) throws JSONException {
         FilterOption option = FilterOptions.create(object.getString("type"));
-        option.key = object.getString("key");
         option.id = object.getInt("id");
-        option.keyType = object.getInt("key_type");
-        if (object.has("value")) {
-            option.value = object.getString("value");
-        }
+        // int keyType = object.getInt("key_type");
+        String key = object.getString("key");
+        String value = JSONUtils.optString(object, "value");
+        option.setKeyValue(key, value);
         return option;
     }
+
+    protected String flagsToString(String key, int flags) {
+        List<CharSequence> result = new ArrayList<>();
+        for (Map.Entry<Integer, CharSequence> entry : getFlags(key).entrySet()) {
+            int flag = entry.getKey();
+            if ((flags & flag) != 0) {
+                result.add(entry.getValue());
+            }
+        }
+        return String.join(", ", result);
+    }
+
 
     public static class TestResult {
         private boolean mMatched = true;

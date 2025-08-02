@@ -2,6 +2,9 @@
 
 package io.github.muntashirakon.AppManager.filters.options;
 
+import android.content.Context;
+import android.text.SpannableStringBuilder;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -13,7 +16,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
-import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
+import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public class SignatureOption extends FilterOption {
     private final Map<String, Integer> mKeysWithType = new LinkedHashMap<String, Integer>() {{
@@ -43,7 +47,7 @@ public class SignatureOption extends FilterOption {
 
     @NonNull
     @Override
-    public TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result) {
+    public TestResult test(@NonNull IFilterableAppInfo info, @NonNull TestResult result) {
         SignerInfo signerInfo = info.fetchSignerInfo();
         if (signerInfo == null || signerInfo.getCurrentSignerCerts() == null) {
             // No singer
@@ -52,7 +56,7 @@ public class SignatureOption extends FilterOption {
         List<String> subjectLines = result.getMatchedSubjectLines() != null
                 ? result.getMatchedSubjectLines() : Arrays.asList(info.getSignatureSubjectLines());
         switch (key) {
-            default:
+            case KEY_ALL:
                 return result.setMatched(true).setMatchedSubjectLines(subjectLines);
             case "no_signer":
                 // Signer exists at this point
@@ -127,9 +131,44 @@ public class SignatureOption extends FilterOption {
                                 .setMatchedSubjectLines(Collections.singletonList(info.getSignatureSubjectLines()[i]));
                     }
                 }
+                return result.setMatched(false).setMatchedSubjectLines(Collections.emptyList());
             }
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
         }
-        return result.setMatched(false)
-                .setMatchedSubjectLines(Collections.emptyList());
+    }
+
+    @NonNull
+    @Override
+    public CharSequence toLocalizedString(@NonNull Context context) {
+        SpannableStringBuilder sb = new SpannableStringBuilder("Signatures");
+        switch (key) {
+            case KEY_ALL:
+                return sb.append(LangUtils.getSeparatorString()).append("any");
+            case "no_signer":
+                return sb.append(LangUtils.getSeparatorString()).append("none");
+            case "with_lineage":
+                return sb.append(" with lineages");
+            case "without_lineage":
+                return sb.append(" without lineages");
+            case "with_source_stamp":
+                return sb.append(" with source stamps");
+            case "without_source_stamp":
+                return sb.append(" without source stamps");
+            case "sub_eq":
+                return sb.append("' subject = '").append(value).append("'");
+            case "sub_contains":
+                return sb.append("' subject contains '").append(value).append("'");
+            case "sub_starts_with":
+                return sb.append("' subject starts with '").append(value).append("'");
+            case "sub_ends_with":
+                return sb.append("' subject ends with '").append(value).append("'");
+            case "sub_regex":
+                return sb.append("' subject matches '").append(value).append("'");
+            case "sha256":
+                return sb.append("' SHA-256 = '").append(value).append("'");
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
+        }
     }
 }

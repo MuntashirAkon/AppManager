@@ -224,8 +224,8 @@
     <string name="update">Frissítés</string>
     <string name="source_code">Forráskód</string>
     <plurals name="usage_days">
-        <item quantity="one">nap</item>
-        <item quantity="other">nap</item>
+        <item quantity="one"></item>
+        <item quantity="other"></item>
     </plurals>
     <string name="export_blocking_rules">Blokkoló szabályok exportálása</string>
     <string name="reject_time">Idő elutasítása</string>
@@ -265,7 +265,7 @@
     <string name="string_value">String érték</string>
     <string name="select_type">Válasszon ki egy típust</string>
     <string name="type_int">Egész</string>
-    <string name="failed_to_uninstall">Nem sikerült letörölni</string>
+    <string name="failed_to_uninstall"></string>
     <string name="no_content">Nincs tartalom</string>
     <string name="sort_by_last_used">Legutóbb használva</string>
     <string name="app_ops">App oppok</string>
@@ -285,8 +285,8 @@
     </plurals>
     <string name="disable_background">Háttérbeli művelet megakadályozása</string>
     <plurals name="usage_months">
-        <item quantity="one">hónap</item>
-        <item quantity="other">hónap</item>
+        <item quantity="one"></item>
+        <item quantity="other"></item>
     </plurals>
     <string name="grant_usage_access">Használati engedély megadása</string>
 </resources>

@@ -20,8 +20,8 @@
     <string name="no_service">无服务</string>
     <string name="orientation">屏幕旋转</string>
     <string name="soft_input">软键盘输入模式</string>
-    <string name="flags">标志位(Flags)</string>
-    <string name="grant_uri_permission">授权 URI 权限</string>
+    <string name="flags">标志(Flags)</string>
+    <string name="grant_uri_permission">授予 URI 权限</string>
     <string name="path_permissions">路径授权</string>
     <string name="read">读取</string>
     <string name="write">写入</string>
@@ -31,8 +31,8 @@
     <string name="group">群组</string>
     <string name="uses_feature">功能声明</string>
     <string name="no_feature">无</string>
-    <string name="sort_by_shared_user_id">共享的用户ID</string>
-    <string name="shared_user_id">共享的用户ID</string>
+    <string name="sort_by_shared_user_id">共享用户ID</string>
+    <string name="shared_user_id">共享用户ID</string>
     <string name="sort_by_sha">签名</string>
     <string name="signatures">签名</string>
     <string name="app_signing_no_signatures">无有效签名</string>
@@ -114,15 +114,15 @@
     <string name="word_wrap">自动换行</string>
     <string name="class_viewer">类查看器</string>
     <string name="toggle_class_listing">切换类列表</string>
-    <string name="found_trackers">已找到追踪器:</string>
-    <string name="tracker_details">追踪器详细信息</string>
-    <string name="tracker_classes">追踪器类</string>
+    <string name="found_trackers">已找到跟踪器:</string>
+    <string name="tracker_details">跟踪器详细信息</string>
+    <string name="tracker_classes">跟踪器类</string>
     <string name="all_classes">全部类型</string>
     <plurals name="main_list_date_days">
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> 天</item>
     </plurals>
     <string name="no_shared_libs">无共享库</string>
-    <string name="no_tracker_class">无追踪器类</string>
+    <string name="no_tracker_class">无跟踪器类</string>
     <string name="app_usage">应用使用情况</string>
     <string name="usage_weekly">每周</string>
     <string name="usage_today">今天</string>
@@ -281,7 +281,7 @@
     <string name="pref_about_msg">应用程序管理器版本、许可、致谢等。</string>
     <string name="version">版本</string>
     <string name="sort_by_wifi_data">Wi-Fi 数据</string>
-    <string name="block_trackers">屏蔽所有追踪器</string>
+    <string name="block_trackers">屏蔽所有跟踪器</string>
     <string name="sort_by_component_name">组件名称</string>
     <string name="reset_to_default">重置为默认值</string>
     <string name="deny_dangerous_app_ops">拒绝危险的AppOps权限</string>
@@ -324,7 +324,7 @@
     <string name="clear_data_from_uninstalled_apps_description">清除使用 <tt> DONT_DELETE_DATA </tt>标志卸载的应用中的数据</string>
     <string name="clear_app_cache">清除缓存</string>
     <string name="clear_app_cache_description">清除所有应用程序的缓存</string>
-    <string name="no_tracker_found">没有发现追踪器</string>
+    <string name="no_tracker_found">没有发现跟踪器</string>
     <string name="failed_packages">错误的软件包</string>
     <string name="input_signatures">输入签名</string>
     <string name="input_signatures_description">用空格隔开输入的签名，如<tt>com.facebook org.app2 com.app3</tt>等。</string>
@@ -344,7 +344,7 @@
     <string name="filter_apps_with_rules">被阻止</string>
     <string name="select_all">全选</string>
     <string name="installed_version">已安装版本</string>
-    <string name="trackers">追踪器</string>
+    <string name="trackers">跟踪器</string>
     <string name="components">组件</string>
     <string name="features">特性</string>
     <string name="whats_new">更新内容</string>
@@ -525,7 +525,7 @@
     <string name="issuer">发行商</string>
     <string name="subject">名称</string>
     <string name="filter_apps_with_backups">有备份</string>
-    <string name="sort_by_backup">先备份</string>
+    <string name="sort_by_backup">已备份应用优先</string>
     <string name="failed_to_uninstall_updates">无法卸载更新,它属于 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="update_uninstalled_successfully">用于 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>更新已被卸载.</string>
     <string name="uninstall_updates">卸载更新</string>
@@ -955,7 +955,7 @@
     <string name="wireless_debugging">无线调试</string>
     <string name="unknown_net_policy">未知的 netpolicy (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">无法防止 %1$s 在后台运行</string>
-    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://x.com/AppManagerNews">Twitter/X</a>• <a href="https://floss.social/@appmanager">Mastodon</a></string>
     <string name="community">社区</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="other">无法导入 %1$d 个备份</item>
@@ -1006,7 +1006,7 @@
     <string name="set_package_name_first">先设置包名称！</string>
     <string name="identifier">标识符</string>
     <string name="backup_volume_dialog_description">带<tt>tree</tt>前缀的卷是使用存储访问框架 (SAF）选中的文件夹。除了这些文件夹外，App Manager 的默认目录是一个子文件夹，名为 <tt>AppMangaer</tt>。</string>
-    <string name="second_degree_tracker_note">² 前缀表明追踪器位于 <a href="https://etip.exodus-privacy.eu.org/">ETIP 备用名单</a> 中。即它们是否真是追踪器仍在调查中。</string>
+    <string name="second_degree_tracker_note">² 前缀表明跟踪器位于 <a href="https://etip.exodus-privacy.eu.org/">ETIP 备用名单</a> 中。即它们是否真是跟踪器仍在调查中。</string>
     <string name="failed_to_uninstall_app">卸载失败</string>
     <string name="pref_import_backups_hint">选择备份文件所在路径 (Swift Backup/Titanium backup) 或路径 (OAndBackup)</string>
     <string name="java">Java</string>
@@ -1160,8 +1160,8 @@
     </plurals>
     <string name="suspend_app_description">这是最弱的冻结方式。被暂停的应用仍可出现在启动器中，但图标会变灰且无法被启动。</string>
     <string name="disable_app_description">推荐的冻结方式。它会禁用应用及其所有部件，但所有快捷方式会丢失。</string>
-    <string name="sort_by_frozen_app">先冻结</string>
-    <string name="filter_frozen_apps">冻结应用</string>
+    <string name="sort_by_frozen_app">已冻结应用优先</string>
+    <string name="filter_frozen_apps">已冻结应用</string>
     <string name="pref_appearance_description">主题、方向、功能等。</string>
     <string name="pref_privacy">隐私</string>
     <string name="pref_privacy_description">屏幕锁、授权等。</string>
@@ -1283,12 +1283,11 @@
     <string name="debloat_list_google">Google(谷歌)</string>
     <string name="debloat_list_aosp">AOSP(Android原生)</string>
     <string name="debloat_list_misc">杂项</string>
-    <string name="debloat_list_pending">待定</string>
     <string name="debloat_removal_safe">安全</string>
     <string name="debloat_removal_replace">替换</string>
     <string name="debloat_removal_caution">留意</string>
     <string name="static_shared_library">静态共享库</string>
-    <string name="filter_force_stopped_apps">停止了的应用</string>
+    <string name="filter_force_stopped_apps">已停止运行的应用</string>
     <plurals name="folder_count">
         <item quantity="other">%d 个文件夹</item>
     </plurals>
@@ -1386,7 +1385,7 @@
     <string name="status_connecting_via_mode">正在通过%s连接</string>
     <string name="status_connected_via_mode">已通过%s连接</string>
     <string name="status_not_connected_via_mode">无法通过%s连接</string>
-    <string name="adb_pairing_instruction">请转向开发人员选项以启用无线调试并生成配对码。</string>
+    <string name="adb_pairing_instruction">请转到开发者选项以启用无线调试并生成配对码。如果已经打开了开发者选项，请单击 <b>手册</b>。</string>
     <string name="adb_pairing_searching_for_port">搜索中…</string>
     <string name="adb_pairing_stop_searching">停止</string>
     <string name="adb_pairing_input_pairing_code">配对码</string>
@@ -1398,11 +1397,43 @@
     <string name="mode_of_op_custom_command">如果您无法使用任何模式，您可以在任何受支持的 shell 中运行以下命令，以在特权模式下运行App Manager：</string>
     <string name="finder_title">访达</string>
     <string name="mode_of_op_alternative_custom_command">如果运行以上命令遇到“permission denied”错误，请运行下列命令：</string>
-    <string name="actual_installer">实际安装包</string>
+    <string name="actual_installer">实际安装者</string>
     <string name="apk_source">APK 源</string>
     <string name="backup_cache">缓存</string>
     <string name="pref_use_system_font">使用系统字体</string>
     <string name="sensors">传感器</string>
-    <string name="tag_sensors_disabled">停用了传感器</string>
+    <string name="tag_sensors_disabled">已禁用传感器</string>
     <string name="pref_use_system_font_msg">使用系统默认字体而非 material 字体。<font fgcolor="#ff0000">这是实验性功能。</font></string>
+    <string name="activity_name">Activity 名称</string>
+    <string name="available_memory">可用内存：%s</string>
+    <string name="action_manual">手动</string>
+    <string name="vulkan_version">Vulkan 版本</string>
+    <string name="battery_technology">技术</string>
+    <string name="battery_health">健康度</string>
+    <string name="verified_boot">已验证的启动</string>
+    <string name="android_verified_bootloader_version">AVB 版本</string>
+    <string name="op_history">历史记录</string>
+    <string name="no_history">无记录</string>
+    <string name="title_confirm_execution">确认执行</string>
+    <string name="clear_history">清除记录</string>
+    <string name="favorites">收藏</string>
+    <string name="add_to_favorites">添加到收藏</string>
+    <string name="item_remove">删除</string>
+    <string name="item_edit">编辑</string>
+    <string name="remove_filename">删除 %s</string>
+    <string name="advanced_suspend_app">高级暂停</string>
+    <string name="advanced_suspend_app_description">它强制停止并暂停应用确保应用不在后台运行。此方法的优先程度应高于常规的 <b>暂停</b>方法。</string>
+    <string name="freeze_prefer_per_app_option">优先考虑不同应用不同选项</string>
+    <string name="remember_option_for_this_app">记住此应用的选项</string>
+    <string name="overlay_category">类别</string>
+    <string name="overlay_sdk_version_too_low">遮盖层不被支持。</string>
+    <string name="no_overlays">无遮盖层</string>
+    <string name="overlays">遮盖层</string>
+    <string name="no_overlay_permission">没有展示遮盖层的权限</string>
+    <string name="sort_by_overlay_names">遮盖层名称</string>
+    <string name="sort_by_priority">优先级</string>
+    <string name="overlay_target">目标</string>
+    <string name="title_shortcut_for_frozen_app">冻结的应用</string>
+    <string name="title_overlay">遮罩</string>
+    <string name="message_shortcut_for_frozen_app">对应于该快捷方式的应用似乎已被冻结。临时解冻并打开该快捷方式？</string>
 </resources>

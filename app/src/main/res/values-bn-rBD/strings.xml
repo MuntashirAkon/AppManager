@@ -415,8 +415,8 @@
     <string name="size">আকার</string>
     <string name="app_signing_signatures">স্বাক্ষর</string>
     <plurals name="usage_minutes">
-        <item quantity="one">একক</item>
-        <item quantity="other">গুলো</item>
+        <item quantity="one">%1$d মিঃ</item>
+        <item quantity="other">%1$d মিঃ</item>
     </plurals>
     <string name="type_string">অক্ষর</string>
     <string name="pref_global_blocking_enabled_msg">এরি মাধ্যমে আপনি যেকোনো অ্যাপের যেকোনো অংশ ব্লক করতে পারবে, তা করতে নির্দিষ্টভাবে অ্যাপটির জন্য ব্লকিং চালু করতে হবে না।</string>

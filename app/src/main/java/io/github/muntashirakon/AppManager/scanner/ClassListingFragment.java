@@ -67,7 +67,7 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
         mAllClasses = mViewModel.getAllClasses();
         mTrackerClasses = mViewModel.getTrackerClasses();
         if (mAllClasses == null) {
-            mActivity.onBackPressed();
+            mActivity.getOnBackPressedDispatcher().onBackPressed();
             return;
         }
         if (mTrackerClasses == null) {
@@ -263,7 +263,6 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
                     @Override
                     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                         synchronized (mAdapterList) {
-                            mAdapterList.clear();
                             if (filterResults.values == null) {
                                 AdapterUtils.notifyDataSetChanged(ClassListingAdapter.this, mAdapterList, mDefaultList);
                             } else {

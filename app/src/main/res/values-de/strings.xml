@@ -87,29 +87,7 @@
     <string name="license">Lizenz</string>
     <string name="third_party">Drittanbieter-Lizenzen und -Icons</string>
     <string name="credits">Danksagungen</string>
-    <string name="credits_message">An die Autoren von:
-\n- The Android Open Source Project
-\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
-\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
-\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
-\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
-\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
-\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
-\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
-\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
-\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
-\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
-\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nAnerkennung für das ursprüngliche Logo: <a href="https://github.com/Atrate">Atrate</a>. </string>
+    <string name="credits_message">An die Autoren von \n- The Android Open Source Project \n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a> \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a> \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a> \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a> \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a> \n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a> \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a> \n- <a href="https://github.com/billthefarmer/editor">Editor</a> \n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a> \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a> \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a> \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> \n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a> \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a> \n- <a href="https://github.com/pluscubed/matlog">MatLog</a> \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a> \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a> \n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a> \n- <a href="https://github.com/Aefyr/SAI">SAI</a> \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a> \n- <a href="https://github.com/eclipse/tm4e">tm4e</a> \n- <a href="https://github.com/tuyafeng/Watt">Watt</a></string>
     <string name="word_wrap">Zeilenumbruch ein-/ausschalten</string>
     <string name="class_viewer">Klassen-Betrachter</string>
     <string name="toggle_class_listing">Auflisten von Klassen ein-/ausschalten</string>
@@ -1311,7 +1289,6 @@
     <string name="debloat_removal_safe">Sicher</string>
     <string name="debloat_removal_type">Typ</string>
     <string name="debloat_list_oem">OEM</string>
-    <string name="debloat_list_pending">Ausstehend</string>
     <string name="debloat_removal_replace">Ersetzen</string>
     <string name="debloat_removal_caution">Vorsicht</string>
     <string name="static_shared_library">Statische gemeinsame Bibliothek</string>
@@ -1393,4 +1370,28 @@
         <item quantity="one">%d Ergebnis</item>
         <item quantity="other">%d Ergebnisse</item>
     </plurals>
+    <string name="pref_enable_persistent_session">Starte App Manager im Hintergrund</string>
+    <string name="pref_enable_persistent_session_msg">App Manager im Hintergrund auszuführen reduziert die Verzögerung bei der Initialisierung. Nützlich, wenn App Manager häufig verwendet wird.</string>
+    <string name="pref_enable_auto_lock">Automatische Sperrung</string>
+    <string name="pref_enable_auto_lock_msg">Sperre App Manager, wenn das Gerät gesperrt wird.</string>
+    <string name="optimize_option_compile_layouts">Kompiliere Layout ressourcen</string>
+    <string name="select_a_dex2oat_compiler_filter"><tt>dex2oat</tt> compiler Filter</string>
+    <string name="summary_perform_runtime_optimization_to_apps">Optimiere DEX und Layouts (in Android 10 oder später) um die Anwendungsperformance zu verbessern.</string>
+    <string name="pref_zip_align_msg">Die Ausrichtung einer APK Datei reduziert ihren Speicherverbrauch, da dies direkten Zugriff auf ihre Dateien erlaubt, ohne diese in den Arbeitsspeicher kopieren zu müssen. Dies ist nötig, wenn <tt>extractNativeLibs</tt> <tt>true</tt> ist.</string>
+    <string name="read_only_file_warning">Die Änderungen können nicht in die Datei geschrieben werden, möglicherweise da App Manager nicht über die nötigen Berechtigungen verfügt. Soll die Datei woanders gespeichert werden?</string>
+    <string name="system_app_put_back">Zurücklegen</string>
+    <string name="debloater_title">Debloater</string>
+    <string name="debloat_list_misc">Verschiedenes</string>
+    <string name="empty_folder">Leer</string>
+    <string name="tap_to_open_notification_settings">Tippe zum verstecken</string>
+    <string name="app_manager_is_unlocked">App Manager ist entsperrt</string>
+    <string name="app_manager_is_running">App Manager läuft</string>
+    <string name="launch_activity_dialog_title">Starte Aktivität: Aktion benötigt</string>
+    <string name="scan_report_from_pithus">Pithus Bericht</string>
+    <string name="profile_modified_are_you_sure">Das Profil wurde verändert. Möchtest du wirklich deine Änderungen zu verwerfen und verlassen?</string>
+    <string name="choose_a_profile_state">Wähle einen Profilzustand</string>
+    <string name="profile_id">Profil ID</string>
+    <string name="copy_profile_id">Kopiere Profil ID</string>
+    <string name="remember_option_for_this_app">Speichere für die App</string>
+    <string name="app_can_write_and_execute_in_same_place">Die App verstösst gegen die <a href="https://en.wikipedia.org/wiki/W%5EX">W^X Regel</a> und kann im selben Ordner oder Speicher schreiben und ausführen. Dadurch kann Fremdcode aus der App oder dem Internet ausgeführt werden. Für Apps die für Android SDK 29 (Android 10) oder höher konzipiert sind wird empfohlen eine Alternative zu finden, sofern es sich nicht um notwendiges App verhalten handelt (z.B. ein einem Terminal Emulator).</string>
 </resources>

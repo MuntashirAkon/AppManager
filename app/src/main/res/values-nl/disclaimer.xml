@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="disclaimer_body">App Manager biedt rootfuncties die mogelijk schadelijk kunnen zijn voor uw apparaat bij onjuist gebruik. App Manager is niet verantwoordelijk voor eventuele schade die wordt veroorzaakt door het gebruik van deze applicatie. Als u niet volledig op de hoogte bent van hoe root werkt, dient u het gebruik van rootopties te vermijden totdat u volledig op de hoogte bent van de risico\'s.\n\nElke link die ik naar andere apps en websites verstrek, is voor het gemak van de gebruiker. Ik ben niet verantwoordelijk voor de content die u via externe links kunt vinden.\n\nDoor App Manager te gebruiken aanvaardt u de volledige verantwoordelijkheid voor uw eigen gebruik en aanvaardt u dat er geen schade, claims of geldelijke waarde wordt gegeven als gevolg van misbruik.\n\nDoor deze applicatie te gebruiken, aanvaardt u alle verantwoordelijkheid voor het gebruik ervan en gaat u ermee akkoord dat ik niet verantwoordelijk ben voor eventuele acties die u onderneemt en die een nadelig effect hebben op uw apparaat.</string>
+    <string name="disclaimer_header">Disclaimer</string>
+    <string name="disclaimer_footer">© 2020–2024 Muntashir Al-Islam</string>
+    <string name="disclaimer_agree_forever">Laat dit nooit meer zien</string>
+    <string name="disclaimer_agree">Ik ga akkoord</string>
+    <string name="disclaimer_exit">Afsluiten</string>
+</resources>

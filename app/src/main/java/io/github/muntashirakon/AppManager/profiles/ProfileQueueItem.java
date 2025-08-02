@@ -23,7 +23,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.history.IJsonSerializer;
 import io.github.muntashirakon.AppManager.history.JsonDeserializer;
 import io.github.muntashirakon.AppManager.profiles.ProfileApplierActivity.ProfileApplierInfo;
-import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
+import io.github.muntashirakon.AppManager.profiles.struct.BaseProfile;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.io.Path;
@@ -37,6 +37,8 @@ public class ProfileQueueItem implements Parcelable, IJsonSerializer {
 
     @NonNull
     private final String mProfileId;
+    @BaseProfile.ProfileType
+    private final int mProfileType;
     @NonNull
     private final String mProfileName;
     @Nullable
@@ -44,8 +46,9 @@ public class ProfileQueueItem implements Parcelable, IJsonSerializer {
     @Nullable
     private final Path mTempProfilePath;
 
-    private ProfileQueueItem(@NonNull AppsProfile profile, @Nullable String state) {
+    private ProfileQueueItem(@NonNull BaseProfile profile, @Nullable String state) {
         mProfileId = profile.profileId;
+        mProfileType = profile.type;
         mProfileName = profile.name;
         mState = state;
         mTempProfilePath = null;
@@ -53,6 +56,7 @@ public class ProfileQueueItem implements Parcelable, IJsonSerializer {
 
     protected ProfileQueueItem(@NonNull Parcel in) {
         mProfileId = Objects.requireNonNull(in.readString());
+        mProfileType = in.readInt();
         mProfileName = Objects.requireNonNull(in.readString());
         mState = in.readString();
         Uri uri = ParcelCompat.readParcelable(in, Uri.class.getClassLoader(), Uri.class);
@@ -62,6 +66,11 @@ public class ProfileQueueItem implements Parcelable, IJsonSerializer {
     @NonNull
     public String getProfileId() {
         return mProfileId;
+    }
+
+    @BaseProfile.ProfileType
+    public int getProfileType() {
+        return mProfileType;
     }
 
     @NonNull
@@ -87,6 +96,7 @@ public class ProfileQueueItem implements Parcelable, IJsonSerializer {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(mProfileId);
+        dest.writeInt(mProfileType);
         dest.writeString(mProfileName);
         dest.writeString(mState);
         dest.writeParcelable(mTempProfilePath != null ? mTempProfilePath.getUri() : null, flags);
@@ -94,6 +104,7 @@ public class ProfileQueueItem implements Parcelable, IJsonSerializer {
 
     protected ProfileQueueItem(@NonNull JSONObject jsonObject) throws JSONException {
         mProfileId = jsonObject.getString("profile_id");
+        mProfileType = jsonObject.optInt("profile_type", BaseProfile.PROFILE_TYPE_APPS);
         mProfileName = jsonObject.getString("profile_name");
         mState = JSONUtils.getString(jsonObject, "state");
         JSONObject profile = jsonObject.optJSONObject("profile");
@@ -114,11 +125,12 @@ public class ProfileQueueItem implements Parcelable, IJsonSerializer {
     public JSONObject serializeToJson() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("profile_id", mProfileId);
+        jsonObject.put("profile_type", mProfileType);
         jsonObject.put("profile_name", mProfileName);
         jsonObject.put("state", mState);
         // A profile can be altered any time. So, we need to store a snapshot of the profile
         try {
-            AppsProfile profile = AppsProfile.fromPath(ProfileManager.findProfilePathById(mProfileId));
+            BaseProfile profile = BaseProfile.fromPath(ProfileManager.findProfilePathById(mProfileId));
             jsonObject.put("profile", profile.serializeToJson());
         } catch (IOException e) {
             //noinspection UnnecessaryInitCause

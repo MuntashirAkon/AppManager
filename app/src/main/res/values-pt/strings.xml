@@ -443,7 +443,7 @@
     <string name="launch_mode">Modo de inicialização</string>
     <string name="no_providers">Nenhum fornecedor</string>
     <string name="providers">Fornecedores</string>
-    <string name="no_receivers">Nenhum receptor</string>
+    <string name="no_receivers">Nenhum recetor</string>
     <string name="receivers">Recetores</string>
     <string name="no_activities">Nenhuma atividade</string>
     <string name="refresh">Atualizar</string>
@@ -811,8 +811,8 @@
     <string name="patch_level">Nível do Patch</string>
     <string name="backup_skip_signature_checks_description">Restaure backups que falham na verificação do checksum ou têm assinaturas de APK diferentes dos backups anteriores deles.</string>
     <string name="backup_multiple_description">Crie um backup <i>nomeado</i> ao invés do backup base.</string>
-    <string name="backup_rules_description">Faça o backup de regras configuradas dentro do App Manager.</string>
-    <string name="backup_extras_description">Faça o backup das permissões da app, opções de economia de bateria e uso de dados, estado do MagiskHide, SSAID, etc.</string>
+    <string name="backup_rules_description">Faça o backup de regras configuradas dentro do App Manager. <font fgcolor="#ff0000">A depender das permissões, nem todas as regras podem ser reaplicadas durante a restauração.</font></string>
+    <string name="backup_extras_description">Faça o backup das permissões da app, opções de economia de bateria e uso de dados, estado do MagiskHide, SSAID, etc. <font fgcolor="#ff0000">A depender das permissões, nem todos os extras podem ser restaurados.</font></string>
     <string name="backup_extras">Extras</string>
     <string name="backup_cache_description">Faz o backup das pastas <b>cache</b>, <b>no_cache</b> e <b>no_backup</b>.</string>
     <string name="backup_obb_media_description">Faça o backup das pastas OBB e de mídia.</string>
@@ -1027,7 +1027,7 @@
     <string name="import_from_oab">Importar de OAndBackup</string>
     <string name="pref_import_backups_msg">Importar cópias de segurança de OAndBackup, Swift Backup (3.0–3.2) ou Titanium Backup.</string>
     <string name="pref_import_backups">Importar cópias de segurança</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">Canal do Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Comunidade</string>
     <string name="added_to_queue">Adicionado à fila</string>
     <string name="minimum_version">Versão mínima: %d</string>
@@ -1089,7 +1089,7 @@
     <string name="intent_firewall_and_disable">IFW + desativar</string>
     <string name="intent_firewall">IFW</string>
     <string name="pref_default_blocking_method">Método de bloqueio padrão</string>
-    <string name="pref_default_blocking_method_description">Método a ser usado por padrão em locais onde não há opção de selecionar um método de bloqueio.</string>
+    <string name="pref_default_blocking_method_description">Método a ser usado por padrão em locais onde não há opção de selecionar um método de bloqueio.\n<b>Nota:</b> \"IFW\" não funciona com provedores, \"desabilitar\" é usado no lugar.</string>
     <string name="pref_intent_firewall_and_disable_description">Bloquear componentes usando o Firewall Intent, assim como desativá-os. Método recomendado para utilizadores root.</string>
     <string name="pref_intent_firewall_description">Bloquear componentes usando apenas Firewall Intent. Não recomendado, pois, algumas apps do sistema podem contornar firewalls.</string>
     <string name="authenticating">A autenticar…</string>
@@ -1336,7 +1336,6 @@
     <string name="debloat_list_oem">OEM</string>
     <string name="debloat_list_carrier">Operadora/ISP</string>
     <string name="debloat_list_google">Google</string>
-    <string name="debloat_list_pending">Pendente</string>
     <string name="debloat_list_misc">Miscelânea</string>
     <string name="debloat_removal_safe">Seguro</string>
     <string name="debloat_removal_replace">Repor</string>
@@ -1345,7 +1344,7 @@
     <string name="empty_folder">Vazio</string>
     <string name="go_to_path">Ir para…</string>
     <string name="copy_this_path">Copiar caminho</string>
-    <string name="title_audio_player">Audio Player</string>
+    <string name="title_audio_player">Tocador de Áudio</string>
     <plurals name="file_count">
         <item quantity="one">%d ficheiro</item>
         <item quantity="many">%d ficheiros</item>
@@ -1386,7 +1385,7 @@
     <string name="enter_target_path">Caminho de destino</string>
     <string name="copy_these_paths">Copiar caminhos</string>
     <string name="moved_successfully">Movido</string>
-    <string name="copied_successfully">Copiado</string>
+    <string name="copied_successfully">Copiado.</string>
     <plurals name="alert_failed_to_unblock_components">
         <item quantity="one">Não foi possível desbloquear componentes para %1$d app</item>
         <item quantity="many">Não foi possível desbloquear componentes para %1$d apps</item>
@@ -1405,4 +1404,89 @@
     <string name="replacement_text">Substituição</string>
     <string name="action_replace_all">Substituir Todos</string>
     <string name="conflict_detected_while_copying_message">Um item chamado \"%1$s\" já existe nesse local. Deseja substituí-lo?</string>
+    <string name="pref_installer_force_dexopt_description">Realizar a otimização DEX imediatamente após a instalação do aplicativo, sem esperar que o sistema o faça quando estiver ocioso.</string>
+    <string name="symbolic_link_not_supported">Esta pasta não suporta a criação de um link simbólico.</string>
+    <string name="failed_to_copy_specified_file">Não foi possível copiar “%1$s”.</string>
+    <string name="pref_toggle_internet_msg">Ativar os recursos de Internet no App Manager</string>
+    <string name="netpolicy_allow_metered_background_data">Permitir dados em segundo plano em redes tarifadas, mesmo com o Economizador de Dados ativado</string>
+    <string name="netpolicy_reject_metered_background_data">Rejeitar dados em segundo plano em redes tarifadas</string>
+    <string name="pref_send_notifications_to_connected_devices">Enviar notificações para os dispositivos conectados</string>
+    <string name="pref_send_notification_to_connected_devices_msg">Definir se notificações serão enviadas aos dispositivos conectados, como vestíveis.</string>
+    <string name="debloat_removal_replace_short_description">Substituir por alternativa</string>
+    <string name="pref_files_msg">Configurar o gestor de ficheiros.</string>
+    <string name="xposed_module_info">Informações do Módulo XPosed</string>
+    <string name="module_name">Nome do módulo</string>
+    <string name="app_manager_is_running">O App Manager está em execução</string>
+    <string name="status_remote_services_inactive">Os serviços remotos estão inativos</string>
+    <string name="status_connecting">A conectar…</string>
+    <string name="adb_pairing_instruction">Por favor navegue às opções de desenvolvedor para habilitar a depuração sem fio e gerar um código de pareamento.</string>
+    <string name="sensors">Sensores</string>
+    <string name="tag_sensors_disabled">Sensores desabilitados</string>
+    <string name="pref_use_system_font">Usar fonte do sistema</string>
+    <string name="pref_use_system_font_msg">Usar a fonte padrão do sistema ao invés da fonte material. <font fgcolor="#ff0000">Este é um recurso experimental.</font></string>
+    <string name="mode_of_op_alternative_custom_command">Se receber um erro de \"permissão negada\" com o comando acima, execute o seguinte comando no lugar:</string>
+    <string name="activity_name">Nome da Atividade</string>
+    <string name="path_not_a_folder">“%1$s” não é uma pasta</string>
+    <string name="profile_id">ID do perfil</string>
+    <string name="launch_activity_dialog_title">Atividade de Execução: Ação Requerida</string>
+    <string name="virus_total">VirusTotal</string>
+    <string name="pref_use_log_viewer">Usar o Leitor de Registo</string>
+    <string name="pref_installer">Usar o instalador</string>
+    <string name="pref_cat_general">Geral</string>
+    <string name="status_remote_server_active">O servidor remoto está ativo</string>
+    <string name="status_remote_server_inactive">O servidor remoto está inativo</string>
+    <string name="status_remote_services_active">Os serviços remotos estão ativos</string>
+    <string name="status_connecting_via_mode">A conectar via %s</string>
+    <string name="status_connected_via_mode">Conectado via %s</string>
+    <string name="status_not_connected_via_mode">Não foi possível conectar via %s</string>
+    <string name="adb_pairing_searching_for_port">A buscar…</string>
+    <string name="adb_pairing_pairing_code">Código de pareamento</string>
+    <string name="adb_pairing_pairing_in_progress">A parear…</string>
+    <string name="mode_of_op_custom_command_title">Comando Personalizado</string>
+    <string name="title_change_selinux_context">Mudar contexto do SELinux</string>
+    <string name="apply_recursively">Aplicar aos ficheiros contidos</string>
+    <string name="change_owner_uid">Mudar proprietário (UID)</string>
+    <string name="pref_files_display_in_launcher">Exibir \"Ficheiros\" no lançador de apps</string>
+    <string name="pref_files_remember_last_path">Lembrar o último caminho aberto e a sua posição</string>
+    <string name="tap_to_open_notification_settings">Toque para ocultar</string>
+    <string name="action_lock_app">Bloquear</string>
+    <string name="pref_enable_persistent_session">Executar o App Manager em segundo plano</string>
+    <string name="pref_enable_auto_lock_msg">Bloquear o App Manager quando o dispositivo estiver bloqueado.</string>
+    <string name="apply_profile">Aplicar perfil “%1$s”</string>
+    <string name="pref_use_vt">Usar VirusTotal</string>
+    <string name="pref_set_home">Definir início</string>
+    <string name="title_description">Descrição</string>
+    <string name="backup_cache">Cache</string>
+    <string name="scan_report_from_pithus">Relatório Pithus</string>
+    <string name="path_does_not_exist">“%1$s” não existe</string>
+    <string name="adb_pairing_stop_searching">Parar</string>
+    <string name="choose_a_profile_state">Selecionar um estado de perfil</string>
+    <string name="pref_enable_auto_lock">Bloqueio automático</string>
+    <string name="title_alternatives_to_bloatware">Alternativas</string>
+    <string name="pref_zip_align_msg">Alinhar um ficheiro APK reduz seu uso de memória já que os dados dentro do APK podem ser acessados diretamente sem copiar-se para a RAM. Esse passo é necessário se <tt>extractNativeLibs</tt> estiver ajustado como <tt>true</tt>.</string>
+    <string name="action_checking">A verificar…</string>
+    <string name="app_manager_is_unlocked">O App Manager está desbloqueado</string>
+    <string name="report_not_available">Não disponível</string>
+    <string name="apk_source">Origem do APK</string>
+    <string name="launch_activity_dialog_message">O App Manager está a tentar executar a atividade através do <b>assistente de busca</b> (como o Google Assistant), mas é incapaz de o fazer por permissão insuficiente. Para abrir a atividade, por favor ative o <b>assistente de busca</b> manualmente (geralmente ao fazer um clique longo no botão Home). Clique no botão <b>Fechar</b> depois de terminar a execução da atividade para retornar ao assistente original.</string>
+    <string name="mode_of_op_custom_command">Se não conseguir usar nenhum dos modos, pode executar o seguinte comando em qualquer shell compatível para abrir o App Manager em modo privilefiado:</string>
+    <string name="actual_installer">Instalador Real</string>
+    <string name="profile_modified_are_you_sure">O perfil foi modificado. Descartar todas as mudanças e sair?</string>
+    <string name="finder_title">Localizador</string>
+    <string name="select_filter">Selecione um filtro</string>
+    <string name="size_in_bytes">Tamanho (bytes)</string>
+    <string name="invalid_regex">Expressão regular inválida!</string>
+    <string name="value_cannot_be_empty">O valor não pode ser vazio!</string>
+    <string name="date">Data</string>
+    <string name="browse_files">Navegar</string>
+    <string name="change_group_gid">Mudar grupo (GID)</string>
+    <string name="failed_to_delete_specified_file_after_copying">Não foi possível eliminar “%1$s” depois de copiado, possivelmente devido à falta de permissões suficientes.</string>
+    <string name="pref_files_remember_last_path_msg">Quando esta opção estiver habilitada, abrir uma nova janela abre a última pasta aberta ao invés da pasta inicial.</string>
+    <string name="adb_pairing_found_pairing_service_with_port">Encontrado um serviço com a porta %d</string>
+    <string name="pref_enable_persistent_session_msg">Executar o App Manager em segundo plano reduz o tempo de inicialização. É útil se usa o App Manager frequentemente.</string>
+    <string name="copy_profile_id">Copiar ID do perfil</string>
+    <string name="netpolicy_reject_metered_data">Rejeitar dados em redes mensuradas</string>
+    <string name="pref_use_vt_no_internet">VirusTotal requer conexão à Internet, atualmente indisponível. Por favor habilite <a href="app-manager://settings/privacy_prefs/toggle_internet">“Usar a Internet”</a> primeiro.</string>
+    <string name="adb_pairing_retry_pairing">Tentar novamente</string>
+    <string name="adb_pairing_input_pairing_code">Código de pareamento</string>
 </resources>

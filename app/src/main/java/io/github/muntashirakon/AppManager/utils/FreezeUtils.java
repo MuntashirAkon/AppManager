@@ -20,13 +20,14 @@ import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.AppsDb;
+import io.github.muntashirakon.AppManager.db.entity.FreezeType;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 
 public final class FreezeUtils {
     @IntDef({FREEZE_DISABLE, FREEZE_SUSPEND, FREEZE_HIDE, FREEZE_ADV_SUSPEND})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface FreezeType {
+    public @interface FreezeMethod {
     }
 
     public static final int FREEZE_DISABLE = 1;
@@ -35,16 +36,21 @@ public final class FreezeUtils {
     public static final int FREEZE_ADV_SUSPEND = 1 << 3;
 
     @WorkerThread
-    public static void setFreezeMethod(@NonNull String packageName, @FreezeType int freezeType) {
-        AppsDb.getInstance().freezeTypeDao().insert(packageName, freezeType);
+    public static void storeFreezeMethod(@NonNull String packageName, @FreezeMethod int freezeType) {
+        AppsDb.getInstance().freezeTypeDao().insert(new FreezeType(packageName, freezeType));
     }
 
     @WorkerThread
-    @FreezeType
+    public static void deleteFreezeMethod(@NonNull String packageName) {
+        AppsDb.getInstance().freezeTypeDao().delete(packageName);
+    }
+
+    @WorkerThread
+    @FreezeMethod
     @Nullable
-    public static Integer getFreezingMethod(@Nullable String packageName) {
+    public static Integer loadFreezeMethod(@Nullable String packageName) {
         if (packageName != null) {
-            io.github.muntashirakon.AppManager.db.entity.FreezeType freezeType;
+            FreezeType freezeType;
             freezeType = AppsDb.getInstance().freezeTypeDao().get(packageName);
             if (freezeType != null) {
                 return freezeType.type;
@@ -70,7 +76,7 @@ public final class FreezeUtils {
         freeze(packageName, userId, Prefs.Blocking.getDefaultFreezingMethod());
     }
 
-    public static void freeze(@NonNull String packageName, @UserIdInt int userId, @FreezeType int freezeType)
+    public static void freeze(@NonNull String packageName, @UserIdInt int userId, @FreezeMethod int freezeType)
             throws RemoteException {
         if (freezeType == FREEZE_HIDE) {
             if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS)) {

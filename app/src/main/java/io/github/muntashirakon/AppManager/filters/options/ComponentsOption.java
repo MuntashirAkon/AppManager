@@ -2,7 +2,9 @@
 
 package io.github.muntashirakon.AppManager.filters.options;
 
+import android.content.Context;
 import android.content.pm.ComponentInfo;
+import android.text.SpannableStringBuilder;
 
 import androidx.annotation.NonNull;
 
@@ -10,7 +12,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
+import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public class ComponentsOption extends FilterOption {
     public static final int COMPONENT_TYPE_ACTIVITY = 1 << 0;
@@ -59,12 +62,12 @@ public class ComponentsOption extends FilterOption {
 
     @NonNull
     @Override
-    public TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result) {
+    public TestResult test(@NonNull IFilterableAppInfo info, @NonNull TestResult result) {
         Map<ComponentInfo, Integer> components = result.getMatchedComponents() != null
                 ? result.getMatchedComponents()
                 : info.getAllComponents();
         switch (key) {
-            default:
+            case KEY_ALL:
                 return result.setMatched(true).setMatchedComponents(components);
             case "with_type": {
                 Map<ComponentInfo, Integer> filteredComponents = new LinkedHashMap<>();
@@ -154,6 +157,40 @@ public class ComponentsOption extends FilterOption {
                 return result.setMatched(components.size() >= intValue)
                         .setMatchedComponents(components);
             }
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
+        }
+    }
+
+    @NonNull
+    @Override
+    public CharSequence toLocalizedString(@NonNull Context context) {
+        SpannableStringBuilder sb = new SpannableStringBuilder("App components");
+        switch (key) {
+            case KEY_ALL:
+                return sb.append(LangUtils.getSeparatorString()).append("any");
+            case "with_type":
+                return sb.append(" with types ").append(flagsToString("with_type", intValue));
+            case "without_type":
+                return sb.append(" without types ").append(flagsToString("without_type", intValue));
+            case "eq":
+                return sb.append(" = '").append(value).append("'");
+            case "contains":
+                return sb.append(" contains '").append(value).append("'");
+            case "starts_with":
+                return sb.append(" starts with '").append(value).append("'");
+            case "ends_with":
+                return sb.append(" ends with '").append(value).append("'");
+            case "regex":
+                return sb.append(" matches '").append(value).append("'");
+            case "count_eq":
+                return sb.append(" count = ").append(Integer.toString(intValue));
+            case "count_le":
+                return sb.append(" count ≤ ").append(Integer.toString(intValue));
+            case "count_ge":
+                return sb.append(" count ≥ ").append(Integer.toString(intValue));
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
         }
     }
 }

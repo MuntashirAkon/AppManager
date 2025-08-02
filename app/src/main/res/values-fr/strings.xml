@@ -34,7 +34,7 @@
     <string name="path_permissions">Autorisations de chemin d\'accès</string>
     <string name="grant_uri_permission">Autoriser l\'accès aux URI</string>
     <string name="flags">Drapeaux</string>
-    <string name="soft_input">Mode saisie douce</string>
+    <string name="soft_input">Mode de saisie logicielle</string>
     <string name="orientation">Orientation</string>
     <string name="no_service">Aucun service</string>
     <string name="service">Services</string>
@@ -95,7 +95,7 @@
     <string name="select_apk">Sélectionner le fichier APK</string>
     <string name="send_crash_report">Envoyer le rapport de plantage</string>
     <string name="tap_to_submit_crash_report">Appuyez pour envoyer le rapport de plantage.</string>
-    <string name="am_crashed">App Manager vient de planté</string>
+    <string name="am_crashed">App Manager vient de planter</string>
     <string name="filter_running_apps">Applications en cours d\'exécution</string>
     <string name="copy">Copier</string>
     <string name="view_missing_signatures">Appuyez pour visualiser ou envoyer des signatures pas encore présantes dans la base de données ou les bibliothèques de App Manager.</string>
@@ -104,7 +104,7 @@
     <string name="no_libs">Aucune bibliothèque</string>
     <string name="sys_config">Configuration du système</string>
     <string name="only_install">Installation seule</string>
-    <string name="app_signing_install_without_data_loss">Si vous avez désactivé la vérification des signaturs, vous pouvez utiliser l\'option <b>Installation seule</b> pour installer l\'application sans perdre de données.</string>
+    <string name="app_signing_install_without_data_loss">Si vous avez désactivé la vérification des signatures, vous pouvez utiliser l\'option <b>Installation seule</b> pour installer l\'application sans perdre de données.</string>
     <string name="app_data_will_be_lost">Les données existantes seront perdues.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Impossible d\'installer l\'application car une application système avec une signature différente possède déjà ce nom de paquet.</string>
     <string name="do_you_want_to_uninstall_and_install">Voulez-vous désinstaller et installer à nouveau l\'application \?</string>
@@ -522,8 +522,8 @@
         <item quantity="other">%1$d mois</item>
     </plurals>
     <string name="usage_7_days">Les 7 derniers jours</string>
-    <string name="usage_today">Aujourdh\'ui</string>
-    <string name="usage_weekly">Chaque semaine</string>
+    <string name="usage_today">Aujourd\'hui</string>
+    <string name="usage_weekly">Semaine dernière</string>
     <string name="app_usage">Utilisation de l\'application</string>
     <string name="no_tracker_class">Aucune classe de traqueur</string>
     <string name="no_shared_libs">Aucune bibliothèque partagée</string>
@@ -650,7 +650,7 @@
     <string name="restore_latest_msg">Restaurer les applications déjà installées dont les codes de version sont supérieurs au code de version installée.</string>
     <string name="extras">Extras</string>
     <string name="category">Catégories</string>
-    <string name="board_name">Tableau</string>
+    <string name="board_name">Carte mère</string>
     <string name="model">Modèle</string>
     <string name="brand_name">Marque</string>
     <string name="vendor">Vendeur</string>
@@ -708,7 +708,7 @@
     <string name="text_include_device_info">Inclure les informations de l\'appareil</string>
     <string name="record_log">Journaux d\'enregistrement</string>
     <string name="disable_background_run_description">Défini le mode <i>Ignore</i> pour les opérations d\'application suivantes : <tt>RUN_IN_BACKGROUND</tt> (depuis Android 7.0) et <tt>RUN_ANY_IN_BACKGROUND</tt> (depuis Android 9).</string>
-    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://x.com/AppManagerNews">Twitter/X</a> • <a href="https://floss.social/@appmanager">Mastodon</a></string>
     <string name="community">Communauté</string>
     <string name="pref_selected_users_msg">Restreindre l\'utilisation d\'App Manager aux seuls utilisateurs sélectionnés.</string>
     <string name="backup_extras_description">Sauvegardez les autorisations de l\'application, les options d\'économie de batterie et d\'utilisation des données, le statut MagiskHide, SSAID, etc. <font fgcolor="#ff0000">En fonction des autorisations, tous les extras ne peuvent pas être restaurés.</font></string>
@@ -1060,7 +1060,7 @@
     <string name="added_to_queue">Ajouté à la file d\'attente</string>
     <string name="help_uses_permissions_tab">Cliquez sur un élément pour <b>l\'accorder</b> ou <b>le révoquer</b>. Seules les permissions <b>dangereuses</b> et <b>développement</b> peuvent être accordées ou révoquées.</string>
     <string name="notice_saf">Contrairement aux volumes, le répertoire sélectionné sera utilisé pour stocker tous les fichiers en relation avec App Manager, y compris les APK enregistrés et les sauvegardes. Le Storage Access Framework (SAF) étant très lent, ne l\'utilisez qu\'en dernier recours.</string>
-    <string name="backup_volume_dialog_description">Les volumes avec le préfixe <tt>/tree</tt> sont des dossiers sélectionnés à l\'aide de Storage Access Framework (SAF). À l\'exception de ces dossiers, le répertoire par défaut du gestionnaire d\'applications est un sous-dossier nommé <tt>AppManager</tt>.</string>
+    <string name="backup_volume_dialog_description">Les volumes avec le préfixe <tt>/tree</tt> sont des dossiers sélectionnés à l\'aide de Storage Access Framework (SAF). À l\'exception de ces dossiers, le répertoire par défaut d\'App Manager est un sous-dossier nommé <tt>AppManager</tt>.</string>
     <string name="keystore_password_info">Ceci est le mot de passe du KeyStore. Veillez à le stocker dans un endroit sûr si vous souhaitez sauvegarder/restaurer le KeyStore depuis App Manager. <b>Ce message ne s\'affichera plus.</b></string>
     <string name="adb_pair">Appairer</string>
     <string name="identifier">Identifiant</string>
@@ -1092,7 +1092,7 @@
     <string name="search_type_suffix">Suffixe</string>
     <string name="search_type_prefix">Préfixe</string>
     <string name="authenticating">Authentification…</string>
-    <string name="pref_default_blocking_method_description">Méthode à utiliser par défaut dans les endroits où il n\'y a pas d\'option pour sélectionner une méthode de blocage.</string>
+    <string name="pref_default_blocking_method_description">Méthode à utiliser par défaut dans les endroits où il n\'y a pas d\'option pour sélectionner une méthode de blocage.\n<b>Note :</b> \"IFW\" ne fonctionne pas avec les fournisseurs, \"désactiver\" est utilisé à la place.</string>
     <string name="toggle_internet">Utiliser Internet</string>
     <string name="vt_checking">VirusTotal : Vérification…</string>
     <string name="vt_uploading">VirusTotal : Envoi en cours…</string>
@@ -1140,7 +1140,7 @@
     <string name="failed_to_change_app_op_mode">Impossible de changer le mode de fonctionnement de l\'application.</string>
     <string name="pref_intent_firewall_description">Bloquer les composants en utilisant uniquement le pare-feu Intent. Non recommandé car certaines applications système peuvent contourner les pare-feu.</string>
     <string name="pref_disable_description">Désactivez uniquement les composants. Non recommandé pour les utilisateurs root car les applications peuvent contourner cette méthode. Dans les modes ADB, les applications de test uniquement peuvent être désactivées avec cette méthode.</string>
-    <string name="tracker">Suiveur</string>
+    <string name="tracker">Traqueur</string>
     <string name="shortcut_icon">Icône du raccourci</string>
     <string name="sort_by_installation_date">Date d\'installation</string>
     <string name="vt_confirm_upload_and_scan">Oui, envoyer et scanner</string>
@@ -1171,7 +1171,7 @@
     <string name="open_developer_options_page">Ouvrir la page des options de développeur dans les préférences Android</string>
     <string name="vt_confirm_uploading_file">Ce fichier n\'a pas été trouvé dans la base VirusTotal. Voulez-vous l\'envoyer \?</string>
     <string name="pref_vt_prompt_before_uploading">Afficher une confirmation avec l\'envoyer un fichier.</string>
-    <string name="pref_pure_black_theme_msg">Utilise un arrière-plan complètement noir quand le mode nuit est actif.</string>
+    <string name="pref_pure_black_theme_msg">Utilise un arrière-plan complètement noir quand le thème sombre est actif.</string>
     <string name="pref_pure_black_theme">Thème noir pur</string>
     <string name="apk_checksums">Checksums de l\'APK</string>
     <string name="regenerate_auth_key">Regénérer la clé d\'autorisation</string>
@@ -1202,10 +1202,10 @@
     <string name="usage_times_opened">Nombre d\'ouvertures</string>
     <string name="pref_reload_apps">Recharger les applications</string>
     <string name="troubleshooting">Problèmes</string>
-    <string name="changelog_type_improve">Améliorer</string>
+    <string name="changelog_type_improve">Amélioré</string>
     <string name="pref_reload_apps_msg">Recharge la liste des applications enregistrées dans la base du Gestionnaire d\'Applications en cas de comportement inattendu.</string>
     <string name="changelog_type_new">Nouveau</string>
-    <string name="changelog_type_fix">Corriger</string>
+    <string name="changelog_type_fix">Corrigé</string>
     <string name="unsupported_split_apk">Non pris en charge</string>
     <string name="view_changelog">Découvrez les nouveautés</string>
     <string name="sort_by_total_size">Taille totale</string>
@@ -1233,7 +1233,7 @@
     <string name="suspend_app_description">C\'est la méthode de congélation la plus faible. Une application suspendue peut toujours apparaître dans le lanceur mais sera grisée et ne pourra pas être lancée.</string>
     <string name="disable_app_description">Méthode de congélation recommandée. Il désactive l\'application et ainsi que tous ses composants, mais tous les raccourcis seront perdus.</string>
     <string name="hide_app_description">Cette méthode n\'est recommandée que pour une utilisation quotidienne. Une application masquée apparaît comme si elle était désinstallée. Mais l\'application peut réapparaître si elle est réinstallée ou mise à jour.</string>
-    <string name="sort_by_frozen_app">Congelé d\'abord</string>
+    <string name="sort_by_frozen_app">Gelé en premier</string>
     <string name="filter_frozen_apps">Applications gelées</string>
     <string name="pref_appearance_description">Thème, orientation, fonctionnalités, etc.</string>
     <string name="pref_privacy_description">Verrouillage de l\'écran, autorisation, etc.</string>
@@ -1285,7 +1285,6 @@
     <string name="debloat_list_carrier">Opérateur/FAI</string>
     <string name="debloat_list_google">Google</string>
     <string name="debloat_list_misc">Recueil</string>
-    <string name="debloat_list_pending">En attente</string>
     <string name="debloat_removal_safe">Sécurisé</string>
     <string name="debloat_removal_replace">Remplacer</string>
     <string name="debloat_removal_caution">Attention</string>
@@ -1372,7 +1371,7 @@
     <string name="path_not_a_folder">“%1$s” n\'est pas un dossier</string>
     <string name="pref_enable_auto_lock_msg">Verrouiller le gestionnaire d\'application lorsque l\'appareil est verrouillé.</string>
     <string name="optimize_option_compile_layouts">Compiler les ressources de mise en page</string>
-    <string name="sort_by_data_usage">L\'utilisation de données</string>
+    <string name="sort_by_data_usage">Utilisation des données</string>
     <string name="grant_overlay_permission_message">Autoriser App Manager à afficher une fenêtre flottante au-dessus de toutes les autres fenêtres</string>
     <string name="select_a_dex2oat_compiler_filter">Filtre du compilateur <tt>dex2oat</tt></string>
     <string name="optimize_option_force_compilation">­Forcer la compilation même si cela n\'est pas nécessaire</string>
@@ -1436,7 +1435,7 @@
     <string name="app_manager_is_running">Le gestionnaire d\'applications est en cours d\'exécution</string>
     <string name="app_manager_is_unlocked">Le gestionnaire d\'applications est déverrouillé</string>
     <string name="action_lock_app">Verrouiller</string>
-    <string name="pref_enable_persistent_session">Exécutez le gestionnaire d\'applications en arrière-plan</string>
+    <string name="pref_enable_persistent_session">Exécuter App Manager en arrière-plan</string>
     <string name="profile_modified_are_you_sure">Le profil a été modifié. Annuler toutes vos modifications et quitter ?</string>
     <string name="apply_profile">Appliquer le profil \"%1$s\"</string>
     <string name="choose_a_profile_state">Sélectionnez un état de profil</string>
@@ -1449,7 +1448,7 @@
     <string name="date">Date</string>
     <string name="pref_use_vt">Utiliser VirusTotal</string>
     <string name="pref_use_log_viewer">Utiliser le Visualiseur de journaux</string>
-    <string name="pref_installer">Utiliser l\'Installeur</string>
+    <string name="pref_installer">Utiliser l\'installeur</string>
     <string name="pref_cat_general">Général</string>
     <string name="status_remote_server_active">Le serveur distant est actif</string>
     <string name="status_remote_services_inactive">Les services distants sont inactifs</string>
@@ -1483,4 +1482,23 @@
     <string name="adb_pairing_retry_pairing">Réessayer</string>
     <string name="pref_use_system_font">Utiliser la police système</string>
     <string name="pref_use_system_font_msg">Utiliser la police Material système par défaut. <font fgcolor="#ff0000">Ceci est une fonctionnalité expérimentale.</font></string>
+    <string name="backup_cache">Cache</string>
+    <string name="add_to_favorites">Ajouter aux favoris</string>
+    <string name="advanced_suspend_app_description">Cela force l\'arrêt et suspend l\'application pour s\'assurer qu\'elle ne tourne pas en arrière-plan. Cette méthode devrait être préférée par rapport à la méthode normale <b>suspendre</b>.</string>
+    <string name="no_history">Historique vide</string>
+    <string name="battery_technology">Technologie</string>
+    <string name="battery_health">Santé</string>
+    <string name="virus_total">VirusTotal</string>
+    <string name="available_memory">Disponible : %s</string>
+    <string name="op_history">Historique</string>
+    <string name="title_confirm_execution">Confirmer l\'exécution</string>
+    <string name="clear_history">Effacer l\'historique</string>
+    <string name="favorites">Favoris</string>
+    <string name="item_remove">Retirer</string>
+    <string name="item_edit">Éditer</string>
+    <string name="remove_filename">Retirer %s</string>
+    <string name="advanced_suspend_app">Suspension avancée</string>
+    <string name="vulkan_version">Version de Vulkan</string>
+    <string name="pref_files_remember_last_path_msg">Lorsque cette option est activée, ouvrir une nouvelle fenêtre ouvre la dernière page ouverte à la place de la page d\'accueil.</string>
+    <string name="title_shortcut_for_frozen_app">Application gelée</string>
 </resources>

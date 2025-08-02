@@ -60,12 +60,8 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
             setCurrentPosition(paths.size() - 1);
         } else {
             // Case 2
-            int previousCount = mPathParts.size();
-            mPathParts.clear();
-            mPathParts.addAll(paths);
-            int currentCount = mPathParts.size();
-            mCurrentPosition = currentCount - 1;
-            AdapterUtils.notifyDataSetChanged(this, previousCount, currentCount);
+            mCurrentPosition = paths.size() - 1;
+            AdapterUtils.notifyDataSetChanged(this, mPathParts, paths);
         }
     }
 
@@ -90,9 +86,9 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
         int lastPosition = mCurrentPosition;
         mCurrentPosition = currentPosition;
         if (lastPosition >= 0) {
-            notifyItemChanged(lastPosition);
+            notifyItemChanged(lastPosition, AdapterUtils.STUB);
         }
-        notifyItemChanged(currentPosition);
+        notifyItemChanged(currentPosition, AdapterUtils.STUB);
     }
 
     @NonNull

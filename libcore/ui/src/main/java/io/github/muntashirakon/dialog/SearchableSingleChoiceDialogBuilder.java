@@ -146,7 +146,7 @@ public class SearchableSingleChoiceDialogBuilder<T> {
     }
 
     public SearchableSingleChoiceDialogBuilder<T> reloadListUi() {
-        mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount());
+        mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount(), AdapterUtils.STUB);
         return this;
     }
 
@@ -380,7 +380,7 @@ public class SearchableSingleChoiceDialogBuilder<T> {
                 position = mFilteredItems.indexOf(mSelectedItem);
             }
             if (position >= 0) {
-                notifyItemChanged(position);
+                notifyItemChanged(position, AdapterUtils.STUB);
             }
             triggerSingleChoiceClickListener(mSelectedItem, selected);
         }

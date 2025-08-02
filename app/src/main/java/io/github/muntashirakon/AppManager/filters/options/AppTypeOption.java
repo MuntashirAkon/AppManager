@@ -2,14 +2,17 @@
 
 package io.github.muntashirakon.AppManager.filters.options;
 
+import android.content.Context;
 import android.os.Build;
+import android.text.SpannableStringBuilder;
 
 import androidx.annotation.NonNull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import io.github.muntashirakon.AppManager.filters.FilterableAppInfo;
+import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public class AppTypeOption extends FilterOption {
     public static final int APP_TYPE_USER = 1 << 0;
@@ -43,31 +46,31 @@ public class AppTypeOption extends FilterOption {
     }};
 
     private final Map<Integer, CharSequence> mFrozenFlags = new LinkedHashMap<Integer, CharSequence>() {{
-        put(APP_TYPE_USER, "User App");
-        put(APP_TYPE_SYSTEM, "System App");
-        put(APP_TYPE_UPDATED_SYSTEM, "Updated System App");
-        put(APP_TYPE_PRIVILEGED, "Privileged App");
-        put(APP_TYPE_DATA_ONLY, "Data-only App");
-        put(APP_TYPE_STOPPED, "Force-stopped App");
-//        put(APP_TYPE_SENSORS, "Uses Sensors"); // TODO: 11/21/24 (dynamic)
-        put(APP_TYPE_LARGE_HEAP, "Requests Large Heap");
-        put(APP_TYPE_DEBUGGABLE, "Debuggable App");
-        put(APP_TYPE_TEST_ONLY, "Test-only App");
-        put(APP_TYPE_HAS_CODE, "Has Code");
-        put(APP_TYPE_PERSISTENT, "Persistent App");
-        put(APP_TYPE_ALLOW_BACKUP, "Backup Allowed");
-        put(APP_TYPE_INSTALLED_IN_EXTERNAL, "Installed in External Storage");
+        put(APP_TYPE_USER, "User app");
+        put(APP_TYPE_SYSTEM, "System app");
+        put(APP_TYPE_UPDATED_SYSTEM, "Updated system app");
+        put(APP_TYPE_PRIVILEGED, "Privileged app");
+        put(APP_TYPE_DATA_ONLY, "Data-only app");
+        put(APP_TYPE_STOPPED, "Force-stopped app");
+//        put(APP_TYPE_SENSORS, "Uses sensors"); // TODO: 11/21/24 (dynamic)
+        put(APP_TYPE_LARGE_HEAP, "Requests large heap");
+        put(APP_TYPE_DEBUGGABLE, "Debuggable app");
+        put(APP_TYPE_TEST_ONLY, "Test-only app");
+        put(APP_TYPE_HAS_CODE, "Has code");
+        put(APP_TYPE_PERSISTENT, "Persistent app");
+        put(APP_TYPE_ALLOW_BACKUP, "Backup allowed");
+        put(APP_TYPE_INSTALLED_IN_EXTERNAL, "Installed in external storage");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            put(APP_TYPE_HTTP_ONLY, "Uses Cleartext (HTTP) Traffic");
+            put(APP_TYPE_HTTP_ONLY, "Uses cleartext (HTTP) traffic");
         }
-//        put(APP_TYPE_BATTERY_OPT_ENABLED, "Battery Optimized"); // TODO: 11/21/24 (dynamic)
+//        put(APP_TYPE_BATTERY_OPT_ENABLED, "Battery optimized"); // TODO: 11/21/24 (dynamic)
 //        put(APP_TYPE_PLAY_APP_SIGNING, "Uses Play App Signing"); // TODO: 11/21/24
         put(APP_TYPE_SSAID, "Has SSAID");
 //        put(APP_TYPE_KEYSTORE, "Uses Android KeyStore"); // TODO: 11/21/24
-//        put(APP_TYPE_WITH_RULES, "Has Rules"); // TODO: 11/21/24
-//        put(APP_TYPE_PWA, "Progressive Web App (PWA)"); // TODO: 11/21/24
-//        put(APP_TYPE_SHORT_CODE, "Uses Short Code"); // TODO: 11/21/24
-//        put(APP_TYPE_OVERLAY, "Overlay App"); // TODO: 11/21/24
+//        put(APP_TYPE_WITH_RULES, "Has rules"); // TODO: 11/21/24
+//        put(APP_TYPE_PWA, "Progressive web app (PWA)"); // TODO: 11/21/24
+//        put(APP_TYPE_SHORT_CODE, "Uses short code"); // TODO: 11/21/24
+//        put(APP_TYPE_OVERLAY, "Overlay app"); // TODO: 11/21/24
     }};
 
     public AppTypeOption() {
@@ -90,17 +93,33 @@ public class AppTypeOption extends FilterOption {
 
     @NonNull
     @Override
-    public TestResult test(@NonNull FilterableAppInfo info, @NonNull TestResult result) {
+    public TestResult test(@NonNull IFilterableAppInfo info, @NonNull TestResult result) {
         int appTypeFlags = info.getAppTypeFlags();
         switch (key) {
-            default:
+            case KEY_ALL:
                 return result.setMatched(true);
-            case "with_flags": {
+            case "with_flags":
                 return result.setMatched((appTypeFlags & intValue) == intValue);
-            }
-            case "without_flags": {
+            case "without_flags":
                 return result.setMatched((appTypeFlags & intValue) != intValue);
-            }
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
+        }
+    }
+
+    @NonNull
+    @Override
+    public CharSequence toLocalizedString(@NonNull Context context) {
+        SpannableStringBuilder sb = new SpannableStringBuilder("Apps");
+        switch (key) {
+            case KEY_ALL:
+                return sb.append(LangUtils.getSeparatorString()).append("any");
+            case "with_flags":
+                return sb.append(" with flags: ").append(flagsToString("with_flags", intValue));
+            case "without_flags":
+                return sb.append(" without flags: ").append(flagsToString("without_flags", intValue));
+            default:
+                throw new UnsupportedOperationException("Invalid key " + key);
         }
     }
 }

@@ -224,14 +224,6 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
         startLogging();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (!mSearchView.isIconified()) {
-            mSearchView.setIconified(true);
-        }
-        super.onBackPressed();
-    }
-
     public void loadNewFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
@@ -375,7 +367,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         }
         return false;
@@ -446,7 +438,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     }
 
     void displayLogViewerSettings() {
-        Intent intent = SettingsActivity.getIntent(this, "log_viewer_prefs");
+        Intent intent = SettingsActivity.getSettingsIntent(this, "log_viewer_prefs");
         mActivityLauncher.launch(intent, result -> {
             // Preferences may have changed
             mViewModel.setCollapsedMode(!Prefs.LogViewer.expandByDefault());

@@ -49,7 +49,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -388,7 +387,7 @@ public class FmActivity extends BaseActivity {
     }
 
     public static class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecyclerViewAdapter.ViewHolder> {
-        private List<FmDrawerItem> mAdapterItems = Collections.emptyList();
+        private final List<FmDrawerItem> mAdapterItems = new ArrayList<>();
         private final FmActivity mFmActivity;
 
         public DrawerRecyclerViewAdapter(@NonNull FmActivity activity) {
@@ -396,9 +395,7 @@ public class FmActivity extends BaseActivity {
         }
 
         public void setAdapterItems(@NonNull List<FmDrawerItem> adapterItems) {
-            int previousCount = mAdapterItems.size();
-            mAdapterItems = adapterItems;
-            AdapterUtils.notifyDataSetChanged(this, previousCount, mAdapterItems.size());
+            AdapterUtils.notifyDataSetChanged(this, mAdapterItems, adapterItems);
         }
 
         @NonNull
@@ -434,6 +431,7 @@ public class FmActivity extends BaseActivity {
                 // Locations
                 holder.actionView.setVisibility(View.VISIBLE);
                 holder.actionView.setIconResource(R.drawable.ic_add);
+                holder.actionView.setContentDescription(holder.itemView.getContext().getString(R.string.add));
                 holder.actionView.setOnClickListener(v -> {
                     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
                             .putExtra("android.provider.extra.SHOW_ADVANCED", true);

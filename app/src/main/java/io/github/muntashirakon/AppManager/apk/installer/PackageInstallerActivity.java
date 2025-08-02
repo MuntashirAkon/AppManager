@@ -109,14 +109,11 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     @NonNull
     public static Intent getLaunchableInstance(@NonNull Context context, @NonNull String packageName) {
         Intent intent = new Intent(context, PackageInstallerActivity.class);
-        intent.putExtra(EXTRA_INSTALL_EXISTING, true);
-        intent.putExtra(EXTRA_PACKAGE_NAME, packageName);
+        intent.setData(Uri.parse("package:" + packageName));
         return intent;
     }
 
     private static final String EXTRA_APK_FILE_LINK = "link";
-    public static final String EXTRA_INSTALL_EXISTING = "install_existing";
-    public static final String EXTRA_PACKAGE_NAME = "pkg";
     public static final String ACTION_PACKAGE_INSTALLED = BuildConfig.APPLICATION_ID + ".action.PACKAGE_INSTALLED";
 
     private int mSessionId = -1;

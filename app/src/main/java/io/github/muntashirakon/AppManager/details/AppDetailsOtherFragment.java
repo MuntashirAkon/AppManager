@@ -306,6 +306,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                         sb.append("\n").append(item.path);
                         holder.launchBtn.setVisibility(View.VISIBLE);
                         holder.launchBtn.setIconResource(io.github.muntashirakon.ui.R.drawable.ic_information);
+                        holder.launchBtn.setContentDescription(holder.itemView.getContext().getString(R.string.app_info));
                         holder.launchBtn.setOnClickListener(v -> {
                             Intent intent = AppDetailsActivity.getIntent(context, Paths.get(item.path), false);
                             startActivity(intent);
@@ -331,6 +332,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                     holder.textView2.setText(sb);
                     holder.launchBtn.setVisibility(View.VISIBLE);
                     holder.launchBtn.setIconResource(R.drawable.ic_open_in_new);
+                    holder.launchBtn.setContentDescription(holder.itemView.getContext().getString(R.string.open));
                     holder.launchBtn.setOnClickListener(openAsFolderInFM(context, item.path.getParent()));
                     break;
                 }

@@ -1272,7 +1272,6 @@
     <string name="system_app_put_back">Để lại chỗ cũ</string>
     <string name="debloat_list_carrier">Nhà cung cấp dịch vụ/ISP</string>
     <string name="debloat_list_misc">Linh tinh</string>
-    <string name="debloat_list_pending">Đang chờ</string>
     <string name="debloat_removal_safe">An toàn</string>
     <string name="debloat_removal_replace">Thay thế</string>
     <string name="debloat_removal_caution">Cẩn trọng</string>
@@ -1397,4 +1396,11 @@
     <string name="status_not_connected_via_mode">Không thể kết nối qua %s</string>
     <string name="adb_pairing_instruction">Vui lòng điều hướng đến tùy chọn nhà phát triển để bật gỡ lỗi không dây và tạo mã ghép nối.</string>
     <string name="mode_of_op_alternative_custom_command">Nếu bạn gặp lỗi “quyền bị từ chối” với lệnh trên, thay vào đó hãy chạy lệnh sau:</string>
+    <string name="sensors">Cảm biến</string>
+    <string name="tag_sensors_disabled">Cảm biến bị vô hiệu hóa</string>
+    <string name="pref_use_system_font">Sử dụng phông chữ hệ thống</string>
+    <string name="actual_installer">Trình cài đặt thực tế</string>
+    <string name="apk_source">Nguồn APK</string>
+    <string name="backup_cache">Bộ nhớ đệm</string>
+    <string name="activity_name">Tên hoạt động</string>
 </resources>

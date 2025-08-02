@@ -213,7 +213,6 @@
 \nEl resultado recibido de la aplicación de destino se enviará a la aplicación de origen. Como resultado, la aplicación de origen no sabrá si hubo un man-in-the-middle.</string>
     <string name="pages$shared-prefs-editor-page$$section_title">Página del editor de preferencias compartidas</string>
     <string name="guide$aot$$enable-aot-via-pc-title">Habilitar ADB sobre TCP a través de PC o Mac</string>
-    <string name="guide$aot$$references-title">Referencias</string>
     <string name="pages$interceptor-page$$matching-activities-title">Actividades de emparejamiento</string>
     <string name="pages$shared-prefs-editor-page$intro">Las preferencias compartidas pueden editarse en esta página. Al hacer clic en cualquier elemento de la lista se abre el cuadro de diálogo de edición donde se puede
 \neditar. El botón de acción flotante en la esquina inferior derecha puede utilizarse para añadir un nuevo elemento. Para guardar o eliminar el archivo

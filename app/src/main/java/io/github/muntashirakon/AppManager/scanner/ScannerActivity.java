@@ -91,14 +91,16 @@ public class ScannerActivity extends BaseActivity {
         model.setApkFile(apkFile);
         model.setApkUri(mApkUri);
 
-        loadNewFragment(new ScannerFragment());
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            super.onBackPressed();
-        } else finish();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(
+                        R.animator.enter_from_left,
+                        R.animator.enter_from_right,
+                        R.animator.exit_from_right,
+                        R.animator.exit_from_left
+                )
+                .replace(R.id.main_layout, new ScannerFragment())
+                .commit();
     }
 
     @Override
@@ -117,7 +119,7 @@ public class ScannerActivity extends BaseActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         } else if (id == R.id.action_install) {
             if (mApkUri != null) {

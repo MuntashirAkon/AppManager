@@ -195,22 +195,7 @@
     <string name="toggle_class_listing">Alihkan Pendaftar Class</string>
     <string name="class_viewer">Peninjau Class</string>
     <string name="word_wrap">alihkan word wrap</string>
-    <string name="credits_message">Kepada pembuat/pemilik dari
-\n- Proyek Android Sumber Terbuka
-\n- <a href="https://github.com/butzist/ActivityLauncher">Peluncur Aktivfitas</a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Informasi Apps_packages</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
-\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\n- <a href="https://github.com/matrix-org/matrix-android-sdk">SDK Android Matrix</a>
-\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
-\n- <a href="https://github.com/open-keychain/open-keychain">Keychain Sumber Terbuka</a>
-\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nKarya Logo Asli: <a href="https://github.com/Atrate">Atrate</a>. </string>
+    <string name="credits_message">Kepada pembuat/pemilik dari \n- The Android Open Source Project \n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a> \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a> \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a> \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a> \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a> \n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a> \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a> \n- <a href="https://github.com/billthefarmer/editor">Editor</a> \n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a> \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a> \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a> \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> \n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a> \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a> \n- <a href="https://github.com/pluscubed/matlog">MatLog</a> \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a> \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a> \n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a> \n- <a href="https://github.com/Aefyr/SAI">SAI</a> \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a> \n- <a href="https://github.com/eclipse/tm4e">tm4e</a> \n- <a href="https://github.com/tuyafeng/Watt">Watt</a></string>
     <string name="credits">Pembuat</string>
     <string name="third_party">Pustakaan dan Ikon Pihak-Ketiga</string>
     <string name="license">Lisensi</string>
@@ -357,8 +342,8 @@
         <item quantity="other">Tidak dapat mencadangkan %1$d aplikasi</item>
     </plurals>
     <string name="input_signatures_description">Masukkan tanda tangan dengan spasi, mis. <tt>com.facebook org.app2 com.app3</tt> dll.</string>
-    <string name="clear_data_from_uninstalled_apps_description">Kosongkan data dari aplikasi yang dicopot dengan flag <tt>DONT_DELETE_DATA</tt></string>
-    <string name="deny_app_ops_description">Tetapkan mode untuk operasi aplikasi yang diidentifikasi oleh nilai konstan, cont. <tt>63</tt> atau <tt>RUN_IN_BACKGROUND</tt></string>
+    <string name="clear_data_from_uninstalled_apps_description">Hapus data dari aplikasi yang dicopot pemasangannya dengan tanda <tt>DONT_DELETE_DATA</tt></string>
+    <string name="deny_app_ops_description">Tetapkan mode untuk operasi aplikasi yang diidentifikasi oleh nilai konstan, seperti <tt>63</tt> atau <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="block_components_dots">Blok komponen…</string>
     <string name="filter_apps_without_backups">Tanpa cadangan</string>
     <string name="uninstalled_apps">Aplikasi yang dihapus</string>
@@ -448,8 +433,8 @@
     <string name="patch_level">Tingkat tambalan</string>
     <string name="backup_skip_signature_checks_description">Pulihkan cadangan yang gagal dikarenakan kegagalan verifikasi checksum atau memiliki tanda tangan APK yang berbeda dari apa yang telah dicadangkan sebelumnya.</string>
     <string name="backup_multiple_description">Buat sebuah cadangan terpisah <i>dinamai</i> cadangan daripada cadangan basis.</string>
-    <string name="backup_rules_description">Aturan cadangan dikonfigurasi dalam manajer aplikasi.</string>
-    <string name="backup_extras_description">Cadangkan izin aplikasi, penghemat baterai dan opsi penggunaan data, status MagiskHide, SSAID, dll.</string>
+    <string name="backup_rules_description">Aturan cadangan dikonfigurasi dalam manajer aplikasi. <font fgcolor="#ff0000">Tergantung pada perizinan, tidak semua aturan dapat di aplikasikan kembali setelah di pulihkan.</font></string>
+    <string name="backup_extras_description">Cadangkan izin aplikasi, penghemat baterai dan opsi penggunaan data, status MagiskHide, SSAID, dll. <font fgcolor="#ff0000">Tergantung pada perizinan, Tidak semua pilihan dapat di pulihkan.</font></string>
     <string name="backup_extras">Ekstra</string>
     <string name="backup_cache_description">Cadangkan folder <b>cache</b>, <b>no_cache</b> dan <b>no_backup</b>.</string>
     <string name="backup_obb_media_description">Cadangkan Folder OBB dan Media.</string>
@@ -758,7 +743,7 @@
     <string name="no_tracker_found">Tidak ada pelacak yang ditemukan</string>
     <string name="clear_app_cache_description">Kosongkan cache dari semua aplikasi</string>
     <string name="clear_app_cache">Kosongkan Cache App</string>
-    <string name="clear_data_from_uninstalled_apps">Kosongkan data dari aplikasi yang dicopot</string>
+    <string name="clear_data_from_uninstalled_apps">Hapus data dari aplikasi yang telah dicopot pemasangannya</string>
     <string name="block_unblock_trackers_description">Blokir atau buka blokir iklan dan komponen pelacakan di semua aplikasi yang dipasang</string>
     <string name="clear_cache">Kosongkan Cache</string>
     <string name="pref_import_existing_msg">Tambahkan komponen yang dinonaktifkan oleh aplikasi lain ke App Manager. Hati-hati saat menggunakan alat ini karena ada banyak false-positif. Pilih hanya aplikasi yang Anda pasti.</string>
@@ -823,7 +808,7 @@
     <string name="generate_key">Hasilkan</string>
     <string name="input_key">Kunci input (dalam heksadesimal)</string>
     <string name="input_keystore_alias_pass_msg">Ketuk disini untuk menyediakan kata sandi untuk %1$s</string>
-    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
+    <string name="source_code_links"></string>
     <string name="trackers_unblocked_successfully">Pelacak sekarang dibatalkan diblokir</string>
     <string name="trackers_blocked_successfully">Pelacak sekarang diblokir</string>
     <string name="failed_to_unblock_trackers">Tidak dapat batal memblokir pelacak</string>
@@ -946,7 +931,7 @@
     <string name="adb_connect">Hbungkan</string>
     <string name="unknown_net_policy">Netpolicy yang tidak dikenal (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">Tidak dapat mencegah %1$s untuk berjalan di latar belakang</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">Saluran Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"></string>
     <string name="community">Komunitas</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="other">Tidak dapat mengimpor %1$d cadangan</item>
@@ -1143,4 +1128,18 @@
     <string name="sort_by_total_size">Ukuran keseluruhan</string>
     <string name="am_command"><tt>am</tt> perintah</string>
     <string name="changelog_type_improve">Memperbaiki</string>
+    <string name="open_as_archive">Arsip</string>
+    <string name="open_as_folder">Folder</string>
+    <string name="block_unblock_components_dots">Blokir/Buka Blokir Komponen…</string>
+    <string name="unblock_components_dots">Buka blokir komponen…</string>
+    <string name="warning_working_on_system_mode">Peringatan: Bekerja pada sistem alih-alih mode ADB.</string>
+    <plurals name="alert_failed_to_freeze">
+        <item quantity="other">Gagal membekukan aplikasi %1$d</item>
+    </plurals>
+    <string name="optimize_option_clear_profile_data">Hapus data profil sebelumnya</string>
+    <string name="open_as_image">Gambar</string>
+    <string name="confirm_file_deletion">Iya, hapus</string>
+    <string name="on_unfreeze_open_application">Buka aplikasi setelah pencairan</string>
+    <string name="block_unblock_components_description">Blokir atau buka blokir seluruh komponen yang diidentifikasi berdasarkan tanda tangan yang diberikan</string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp telah diverifikasi dan diidentifikasi berasal dari <xliff:g id="source" example="Google Play">%1$s</xliff:g>.</string>
 </resources>

@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,13 +49,15 @@ import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class RunningAppsActivity extends BaseActivity implements MultiSelectionView.OnSelectionChangeListener,
-        MultiSelectionActionsView.OnItemSelectedListener, AdvancedSearchView.OnQueryTextListener {
+        MultiSelectionActionsView.OnItemSelectedListener, AdvancedSearchView.OnQueryTextListener,
+        MultiSelectionView.OnSelectionModeChangeListener {
 
     @IntDef(value = {
             SORT_BY_PID,
             SORT_BY_PROCESS_NAME,
             SORT_BY_APPS_FIRST,
             SORT_BY_MEMORY_USAGE,
+            SORT_BY_CPU_TIME,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface SortOrder {
@@ -64,6 +67,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     public static final int SORT_BY_PROCESS_NAME = 1;
     public static final int SORT_BY_APPS_FIRST = 2;
     public static final int SORT_BY_MEMORY_USAGE = 3;
+    public static final int SORT_BY_CPU_TIME = 4;
 
     @IntDef(value = {
             FILTER_NONE,
@@ -83,6 +87,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
             R.id.action_sort_by_process_name,
             R.id.action_sort_by_apps_first,
             R.id.action_sort_by_memory_usage,
+            R.id.action_sort_by_cpu_time,
     };
 
     @Nullable
@@ -98,11 +103,23 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     @Nullable
     private Menu mSelectionMenu;
     private Timer mTimer;
+    private final OnBackPressedCallback mOnBackPressedCallback = new OnBackPressedCallback(false) {
+        @Override
+        public void handleOnBackPressed() {
+            if (mAdapter != null && mMultiSelectionView != null && mAdapter.isInSelectionMode()) {
+                mMultiSelectionView.cancel();
+                return;
+            }
+            setEnabled(false);
+            getOnBackPressedDispatcher().onBackPressed();
+        }
+    };
 
     @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_running_apps);
         setSupportActionBar(findViewById(R.id.toolbar));
+        getOnBackPressedDispatcher().addCallback(this, mOnBackPressedCallback);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
@@ -120,6 +137,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         recyclerView.requestFocus();
         mMultiSelectionView = findViewById(R.id.selection_view);
         mMultiSelectionView.setOnItemSelectedListener(this);
+        mMultiSelectionView.setOnSelectionModeChangeListener(this);
         mMultiSelectionView.setOnSelectionChangeListener(this);
         mMultiSelectionView.setAdapter(mAdapter);
         mMultiSelectionView.updateCounter(true);
@@ -212,15 +230,6 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     }
 
     @Override
-    public void onBackPressed() {
-        if (mAdapter != null && mMultiSelectionView != null && mAdapter.isInSelectionMode()) {
-            mMultiSelectionView.cancel();
-            return;
-        }
-        super.onBackPressed();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_running_apps_actions, menu);
         return super.onCreateOptionsMenu(menu);
@@ -264,6 +273,9 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
             item.setChecked(true);
         } else if (id == R.id.action_sort_by_memory_usage) {
             model.setSortOrder(SORT_BY_MEMORY_USAGE);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_cpu_time) {
+            model.setSortOrder(SORT_BY_CPU_TIME);
             item.setChecked(true);
             // Filter
         } else if (id == R.id.action_filter_apps) {
@@ -314,6 +326,16 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onSelectionModeEnabled() {
+        mOnBackPressedCallback.setEnabled(true);
+    }
+
+    @Override
+    public void onSelectionModeDisabled() {
+        mOnBackPressedCallback.setEnabled(false);
     }
 
     @Override
@@ -380,7 +402,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         }
         BatchOpsManager.Result input = new BatchOpsManager.Result(model.getSelectedPackagesWithUsers());
         BatchQueueItem item = BatchQueueItem.getBatchOpQueue(op, input.getFailedPackages(), input.getAssociatedUsers(), null);
-        Intent intent = BatchOpsService.getIntent(this, item);
+        Intent intent = BatchOpsService.getServiceIntent(this, item);
         ContextCompat.startForegroundService(this, intent);
     }
 

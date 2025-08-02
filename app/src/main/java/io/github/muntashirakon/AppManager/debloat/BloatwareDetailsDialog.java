@@ -135,14 +135,13 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
         } else {
             mOpenAppInfoButton.setVisibility(View.GONE);
         }
-        CharSequence label = debloatObject.getLabel();
-        mAppLabelView.setText(label != null ? label : debloatObject.packageName);
+        mAppLabelView.setText(debloatObject.getLabelOrPackageName());
         mPackageNameView.setText(debloatObject.packageName);
         String warning = debloatObject.getWarning();
         if (warning != null) {
             mWarningView.setVisibility(View.VISIBLE);
             mWarningView.setText(warning);
-            if (debloatObject.getRemoval() != DebloatObject.REMOVAL_CAUTION) {
+            if (debloatObject.getRemoval() >= DebloatObject.REMOVAL_CAUTION) {
                 mWarningView.setAlertType(MaterialAlertView.ALERT_TYPE_INFO);
             } else mWarningView.setAlertType(MaterialAlertView.ALERT_TYPE_WARN);
         } else mWarningView.setVisibility(View.GONE);
@@ -164,6 +163,10 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
             case DebloatObject.REMOVAL_REPLACE:
                 removalColor = ColorCodes.getRemovalReplaceIndicatorColor(requireContext());
                 removalRes = R.string.debloat_removal_replace_short_description;
+                break;
+            case DebloatObject.REMOVAL_UNSAFE:
+                removalColor = ColorCodes.getRemovalUnsafeIndicatorColor(requireContext());
+                removalRes = R.string.debloat_removal_unsafe;
                 break;
         }
         mFlowLayout.removeAllViews();
