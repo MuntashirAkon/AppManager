@@ -20,7 +20,8 @@ public class InstallerOption extends FilterOption {
     private final Map<String, Integer> mKeysWithType = new LinkedHashMap<String, Integer>() {{
         put(KEY_ALL, TYPE_NONE);
         put("installer", TYPE_STR_SINGLE);
-        put("installers", TYPE_STR_MULTIPLE);
+        put("installer_any", TYPE_STR_MULTIPLE);
+        put("installer_none", TYPE_STR_MULTIPLE);
         put("regex", TYPE_REGEX);
     }};
 
@@ -48,13 +49,20 @@ public class InstallerOption extends FilterOption {
                 return result.setMatched(false);
             case "installer":
                 return result.setMatched(installers.contains(value));
-            case "installers":
+            case "installer_any":
                 for (String installer: stringValues) {
                     if (installers.contains(installer)) {
                         return result.setMatched(true);
                     }
                 }
                 return result.setMatched(false);
+            case "installer_none":
+                for (String installer: stringValues) {
+                    if (installers.contains(installer)) {
+                        return result.setMatched(false);
+                    }
+                }
+                return result.setMatched(true);
             case "regex":
                 for (String installer : installers) {
                     if (regexValue.matcher(installer).matches()) {
@@ -91,8 +99,10 @@ public class InstallerOption extends FilterOption {
                 return sb.append(LangUtils.getSeparatorString()).append("any");
             case "installer":
                 return sb.append(" ").append(value);
-            case "installers":
-                return sb.append(" (exclusive) ").append(String.join(", ", stringValues));
+            case "installer_any":
+                return sb.append(" matching any of ").append(String.join(", ", stringValues));
+            case "installer_none":
+                return sb.append(" matching none of ").append(String.join(", ", stringValues));
             case "regex":
                 return sb.append(" that matches '").append(value).append("'");
             default:
