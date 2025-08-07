@@ -123,9 +123,11 @@ public class StaticDataset {
         String jsonContent = FileUtils.getContentFromAssets(context, "debloat.json");
         try {
             List<DebloatObject> debloatObjects = Arrays.asList(gson.fromJson(jsonContent, DebloatObject[].class));
+            int id = 0;
             for (DebloatObject debloatObject : debloatObjects) {
                 List<SuggestionObject> suggestionObjects = idSuggestionObjectsMap.get(debloatObject.getSuggestionId());
                 debloatObject.setSuggestions(suggestionObjects);
+                debloatObject.setId(id++);
             }
             return debloatObjects;
         } catch (Throwable e) {

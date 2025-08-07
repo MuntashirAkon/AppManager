@@ -69,6 +69,8 @@ public class DebloatObject {
     @Nullable
     private String mSuggestionId;
 
+    private int mId;
+
     @Nullable
     private Drawable mIcon;
     @Nullable
@@ -80,6 +82,14 @@ public class DebloatObject {
     private Boolean mSystemApp = null;
     @Nullable
     private List<SuggestionObject> mSuggestions;
+
+    public void setId(int id) {
+        mId = id;
+    }
+
+    public int getId() {
+        return mId;
+    }
 
     @NonNull
     public String[] getDependencies() {

@@ -137,7 +137,7 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
     @Override
     public long getItemId(int position) {
         synchronized (mLock) {
-            return mAdapterList.get(position).packageName.hashCode();
+            return mAdapterList.get(position).getId();
         }
     }
 
