@@ -82,8 +82,6 @@ public interface IFilterableAppInfo {
 
     boolean isDebuggable();
 
-    int getAppTypeFlags();
-
     boolean isSystemApp();
 
     boolean hasCode();
@@ -106,6 +104,16 @@ public interface IFilterableAppInfo {
     boolean usesHttp();
 
     boolean isPrivileged();
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    boolean usesSensors();
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    boolean isBatteryOptEnabled();
+
+    boolean hasKeyStoreItems();
+
+    int getRuleCount();
 
     @Nullable
     String getSsaid();

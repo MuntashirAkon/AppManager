@@ -16,7 +16,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,14 +41,18 @@ import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
+import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
 import io.github.muntashirakon.AppManager.compat.InstallSourceInfoCompat;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.compat.SensorServiceCompat;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.debloat.DebloatObject;
-import io.github.muntashirakon.AppManager.filters.options.AppTypeOption;
 import io.github.muntashirakon.AppManager.filters.options.ComponentsOption;
 import io.github.muntashirakon.AppManager.filters.options.FreezeOption;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
@@ -58,6 +61,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
+import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class FilterableAppInfo implements IFilterableAppInfo {
@@ -88,7 +92,10 @@ public class FilterableAppInfo implements IFilterableAppInfo {
     @Nullable
     private DebloatObject mBloatwareInfo;
     private Integer mFreezeFlags = null;
-    private Integer mAppTypeFlags = null;
+    private Boolean mUsesSensors = null;
+    private Boolean mBatteryOptEnabled = null;
+    private Boolean mHasKeystoreItems = null;
+    private Integer mRulesCount = null;
 
     public FilterableAppInfo(@NonNull PackageInfo packageInfo, @Nullable PackageUsageInfo packageUsageInfo) {
         mPackageInfo = packageInfo;
@@ -338,61 +345,6 @@ public class FilterableAppInfo implements IFilterableAppInfo {
     }
 
     @Override
-    public int getAppTypeFlags() {
-        if (mAppTypeFlags != null) {
-            return mAppTypeFlags;
-        }
-        mAppTypeFlags = 0;
-        if (isSystemApp()) {
-            mAppTypeFlags |= AppTypeOption.APP_TYPE_SYSTEM;
-        } else {
-            mAppTypeFlags |= AppTypeOption.APP_TYPE_USER;
-        }
-        if (isUpdatedSystemApp()) {
-            mAppTypeFlags |= AppTypeOption.APP_TYPE_UPDATED_SYSTEM;
-        }
-        if (isPrivileged()) {
-            mAppTypeFlags |= AppTypeOption.APP_TYPE_PRIVILEGED;
-        }
-        if (dataOnlyApp()) {
-            mAppTypeFlags |= AppTypeOption.APP_TYPE_DATA_ONLY;
-        }
-        if (isStopped()) {
-            mAppTypeFlags |= AppTypeOption.APP_TYPE_STOPPED;
-        }
-        if (requestedLargeHeap()) {
-            mAppTypeFlags |= AppTypeOption.APP_TYPE_LARGE_HEAP;
-        }
-        if (isDebuggable()) {
-            mAppTypeFlags |= AppTypeOption.APP_TYPE_DEBUGGABLE;
-        }
-        if (isTestOnly()) {
-            mAppTypeFlags |= AppTypeOption.APP_TYPE_TEST_ONLY;
-        }
-        if (hasCode()) {
-            mAppTypeFlags |= AppTypeOption.APP_TYPE_HAS_CODE;
-        }
-        if (isPersistent()) {
-            mAppTypeFlags |= AppTypeOption.APP_TYPE_PERSISTENT;
-        }
-        if (backupAllowed()) {
-            mAppTypeFlags |= AppTypeOption.APP_TYPE_ALLOW_BACKUP;
-        }
-        if (installedInExternalStorage()) {
-            mAppTypeFlags |= AppTypeOption.APP_TYPE_INSTALLED_IN_EXTERNAL;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (usesHttp()) {
-                mAppTypeFlags |= AppTypeOption.APP_TYPE_HTTP_ONLY;
-            }
-        }
-        if (!TextUtils.isEmpty(getSsaid())) {
-            mAppTypeFlags |= AppTypeOption.APP_TYPE_SSAID;
-        }
-        return mAppTypeFlags;
-    }
-
-    @Override
     public boolean isSystemApp() {
         return ApplicationInfoCompat.isSystemApp(mApplicationInfo);
     }
@@ -446,6 +398,51 @@ public class FilterableAppInfo implements IFilterableAppInfo {
     @Override
     public boolean isPrivileged() {
         return ApplicationInfoCompat.isPrivileged(mApplicationInfo);
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    public boolean usesSensors() {
+        if (!isInstalled()) {
+            return false;
+        }
+        if (mUsesSensors == null) {
+            if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_SENSORS)) {
+                mUsesSensors = SensorServiceCompat.isSensorEnabled(getPackageName(), getUserId());
+            } else mUsesSensors = true; // Worse case: always true
+        }
+        return mUsesSensors;
+    }
+
+    @Override
+    public boolean isBatteryOptEnabled() {
+        if (!isInstalled()) {
+            return true;
+        }
+        if (mBatteryOptEnabled == null) {
+            mBatteryOptEnabled = DeviceIdleManagerCompat.isBatteryOptimizedApp(getPackageName());
+        }
+        return mBatteryOptEnabled;
+    }
+
+    @Override
+    public boolean hasKeyStoreItems() {
+        if (!isInstalled()) {
+            return false;
+        }
+        if (mHasKeystoreItems == null) {
+            mHasKeystoreItems = KeyStoreUtils.hasKeyStore(mApplicationInfo.uid);
+        }
+        return mHasKeystoreItems;
+    }
+
+    @Override
+    public int getRuleCount() {
+        if (mRulesCount == null) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(getPackageName(), getUserId(), false)) {
+                mRulesCount = cb.entryCount();
+            }
+        }
+        return mRulesCount;
     }
 
     @Override
