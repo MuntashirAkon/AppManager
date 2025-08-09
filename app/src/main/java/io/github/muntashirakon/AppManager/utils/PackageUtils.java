@@ -207,7 +207,7 @@ public final class PackageUtils {
             item.isUser = !app.isSystemApp();
             item.isDisabled = !app.isEnabled;
             item.label = app.packageLabel;
-            item.sdk = app.sdk;
+            item.targetSdk = app.sdk;
             item.versionName = app.versionName;
             item.versionCode = app.versionCode;
             item.sharedUserId = app.sharedUserId;

@@ -19,6 +19,13 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.filters.FilterItem;
+import io.github.muntashirakon.AppManager.filters.options.AppTypeOption;
+import io.github.muntashirakon.AppManager.filters.options.BackupOption;
+import io.github.muntashirakon.AppManager.filters.options.ComponentsOption;
+import io.github.muntashirakon.AppManager.filters.options.FreezeOption;
+import io.github.muntashirakon.AppManager.filters.options.InstalledOption;
+import io.github.muntashirakon.AppManager.filters.options.RunningAppsOption;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -114,6 +121,79 @@ public class MainListOptions extends ListOptions {
     public static final int FILTER_APPS_WITH_SAF = 1 << 12;
     public static final int FILTER_APPS_WITH_SSAID = 1 << 13;
     public static final int FILTER_STOPPED_APPS = 1 << 14;
+
+    // For now, just generate FilterItem
+    @NonNull
+    public static FilterItem getFilterItemFromFlags(int flags) {
+        FilterItem filterItem = new FilterItem();
+        // Flags
+        int appTypeWithFlags = 0;
+        if ((flags & FILTER_USER_APPS) != 0) {
+            appTypeWithFlags |= AppTypeOption.APP_TYPE_USER;
+        }
+        if ((flags & FILTER_SYSTEM_APPS) != 0) {
+            appTypeWithFlags |= AppTypeOption.APP_TYPE_SYSTEM;
+        }
+        if ((flags & FILTER_FROZEN_APPS) != 0) {
+            FreezeOption option = new FreezeOption();
+            option.setKeyValue("frozen", null);
+            filterItem.addFilterOption(option);
+        }
+        if ((flags & FILTER_APPS_WITH_RULES) != 0) {
+            appTypeWithFlags |= AppTypeOption.APP_TYPE_WITH_RULES;
+        }
+        if ((flags & FILTER_APPS_WITH_ACTIVITIES) != 0) {
+            ComponentsOption option = new ComponentsOption();
+            option.setKeyValue("with_type", String.valueOf(ComponentsOption.COMPONENT_TYPE_ACTIVITY));
+            filterItem.addFilterOption(option);
+        }
+        if ((flags & FILTER_APPS_WITH_BACKUPS) != 0) {
+            BackupOption option = new BackupOption();
+            option.setKeyValue("backups", null);
+            filterItem.addFilterOption(option);
+        }
+        if ((flags & FILTER_RUNNING_APPS) != 0) {
+            RunningAppsOption option = new RunningAppsOption();
+            option.setKeyValue("running", null);
+            filterItem.addFilterOption(option);
+        }
+        if ((flags & FILTER_APPS_WITH_SPLITS) != 0) {
+            // TODO: 7/28/25
+        }
+        if ((flags & FILTER_INSTALLED_APPS) != 0) {
+            InstalledOption option = new InstalledOption();
+            option.setKeyValue("installed", null);
+            filterItem.addFilterOption(option);
+        }
+        if ((flags & FILTER_UNINSTALLED_APPS) != 0) {
+            InstalledOption option = new InstalledOption();
+            option.setKeyValue("uninstalled", null);
+            filterItem.addFilterOption(option);
+        }
+        if ((flags & FILTER_APPS_WITHOUT_BACKUPS) != 0) {
+            BackupOption option = new BackupOption();
+            option.setKeyValue("no_backups", null);
+            filterItem.addFilterOption(option);
+        }
+        if ((flags & FILTER_APPS_WITH_KEYSTORE) != 0) {
+            appTypeWithFlags |= AppTypeOption.APP_TYPE_KEYSTORE;
+        }
+        if ((flags & FILTER_APPS_WITH_SAF) != 0) {
+            // TODO: 7/28/25
+        }
+        if ((flags & FILTER_APPS_WITH_SSAID) != 0) {
+            appTypeWithFlags |= AppTypeOption.APP_TYPE_SSAID;
+        }
+        if ((flags & FILTER_STOPPED_APPS) != 0) {
+            appTypeWithFlags |= AppTypeOption.APP_TYPE_STOPPED;
+        }
+        if (appTypeWithFlags > 0) {
+            AppTypeOption appTypeWithFlagsOption = new AppTypeOption();
+            appTypeWithFlagsOption.setKeyValue("with_flags", String.valueOf(appTypeWithFlags));
+            filterItem.addFilterOption(appTypeWithFlagsOption);
+        }
+        return filterItem;
+    }
 
     private final List<String> mProfileNames = new ArrayList<>();
     private final TextWatcher mProfileInputWatcher = new TextWatcher() {

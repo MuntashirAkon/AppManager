@@ -51,6 +51,7 @@ import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
+import io.github.muntashirakon.AppManager.filters.FilterItem;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
@@ -463,49 +464,16 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 if ((mFilterFlags & MainListOptions.FILTER_RUNNING_APPS) != 0) {
                     loadRunningApps();
                 }
-                for (ApplicationItem item : candidateApplicationItems) {
-                    if (ThreadUtils.isInterrupted()) {
-                        return;
-                    }
-                    // Filter user and system apps first (if requested)
-                    if ((mFilterFlags & MainListOptions.FILTER_USER_APPS) != 0 && !item.isUser) {
-                        continue;
-                    } else if ((mFilterFlags & MainListOptions.FILTER_SYSTEM_APPS) != 0 && item.isUser) {
+                FilterItem filterItem = MainListOptions.getFilterItemFromFlags(mFilterFlags);
+                List<FilterItem.FilteredItemInfo<ApplicationItem>> result = filterItem.getFilteredList(candidateApplicationItems);
+                for (FilterItem.FilteredItemInfo<ApplicationItem> item : result) {
+                    if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_SPLITS) != 0 && !item.info.hasSplits) {
                         continue;
                     }
-                    // Filter installed/uninstalled
-                    if ((mFilterFlags & MainListOptions.FILTER_INSTALLED_APPS) != 0 && !item.isInstalled) {
-                        continue;
-                    } else if ((mFilterFlags & MainListOptions.FILTER_UNINSTALLED_APPS) != 0 && item.isInstalled) {
+                    if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_SAF) != 0 && !item.info.usesSaf) {
                         continue;
                     }
-                    // Filter backups
-                    if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_BACKUPS) != 0 && item.backup == null) {
-                        continue;
-                    } else if ((mFilterFlags & MainListOptions.FILTER_APPS_WITHOUT_BACKUPS) != 0 && item.backup != null) {
-                        continue;
-                    }
-                    // Filter rests
-                    if ((mFilterFlags & MainListOptions.FILTER_FROZEN_APPS) != 0 && !item.isDisabled) {
-                        continue;
-                    } else if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_RULES) != 0 && item.blockedCount <= 0) {
-                        continue;
-                    } else if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_ACTIVITIES) != 0 && !item.hasActivities) {
-                        continue;
-                    } else if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_SPLITS) != 0 && !item.hasSplits) {
-                        continue;
-                    } else if ((mFilterFlags & MainListOptions.FILTER_RUNNING_APPS) != 0 && !item.isRunning) {
-                        continue;
-                    } else if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_KEYSTORE) != 0 && !item.hasKeystore) {
-                        continue;
-                    } else if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_SAF) != 0 && !item.usesSaf) {
-                        continue;
-                    } else if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_SSAID) != 0 && item.ssaid == null) {
-                        continue;
-                    } else if ((mFilterFlags & MainListOptions.FILTER_STOPPED_APPS) != 0 && (item.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
-                        continue;
-                    }
-                    filteredApplicationItems.add(item);
+                    filteredApplicationItems.add(item.info);
                 }
                 if (!TextUtils.isEmpty(mSearchQuery)) {
                     filterItemsByQuery(filteredApplicationItems);
@@ -598,9 +566,9 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                         return -mode * Long.compare(o1.lastUsageTime, o2.lastUsageTime);
                     case MainListOptions.SORT_BY_TARGET_SDK:
                         // null on top
-                        if (o1.sdk == null) return -mode;
-                        else if (o2.sdk == null) return +mode;
-                        return mode * o1.sdk.compareTo(o2.sdk);
+                        if (o1.targetSdk == null) return -mode;
+                        else if (o2.targetSdk == null) return +mode;
+                        return mode * o1.targetSdk.compareTo(o2.targetSdk);
                     case MainListOptions.SORT_BY_SHARED_ID:
                         return mode * Integer.compare(o1.uid, o2.uid);
                     case MainListOptions.SORT_BY_SHA:
@@ -778,7 +746,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
             item.isUser = !app.isSystemApp();
             item.isDisabled = !app.isEnabled;
             item.label = app.packageLabel;
-            item.sdk = app.sdk;
+            item.targetSdk = app.sdk;
             item.versionName = app.versionName;
             item.versionCode = app.versionCode;
             item.sharedUserId = app.sharedUserId;
