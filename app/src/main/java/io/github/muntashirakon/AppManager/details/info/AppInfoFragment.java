@@ -406,14 +406,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             runInTermuxMenu.setVisible(isDebuggable);
         }
         if (batteryOptMenu != null) {
-            batteryOptMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.DEVICE_POWER));
+            batteryOptMenu.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
         }
         if (sensorsMenu != null) {
             sensorsMenu.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
                     && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_SENSORS));
         }
         if (netPolicyMenu != null) {
-            netPolicyMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY));
+            netPolicyMenu.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N);
         }
         if (installMenu != null) {
             installMenu.setVisible(Users.getUsersIds().length > 1 && SelfPermissions.canInstallExistingPackages());
@@ -525,8 +525,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             }
                         })
                         .show();
-            } else {
-                Log.e(TAG, "No DUMP permission.");
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                try {
+                    startActivity(IntentUtils.getBatteryOptSettings(mPackageName));
+                } catch (Throwable th) {
+                    UIUtils.displayShortToast("No DEVICE_POWER permission.");
+                }
             }
         } else if (itemId == R.id.action_sensor) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_SENSORS)) {
@@ -566,6 +570,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         } else if (itemId == R.id.action_net_policy) {
             if (!UserHandleHidden.isApp(mApplicationInfo.uid)) {
                 UIUtils.displayLongToast(R.string.netpolicy_cannot_be_modified_for_core_apps);
+                return true;
+            }
+            if (!SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    try {
+                        startActivity(IntentUtils.getNetPolicySettings(mPackageName));
+                    } catch (Throwable th) {
+                        UIUtils.displayShortToast("No MANAGE_NETWORK_POLICY permission.");
+                    }
+                }
                 return true;
             }
             ArrayMap<Integer, String> netPolicyMap = NetworkPolicyManagerCompat.getAllReadablePolicies(ContextUtils.getContext());
@@ -1019,6 +1033,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             }
                         })
                         .show());
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                batteryOptTag.setOnClickListener(v -> ExUtils.exceptionAsIgnored(() ->
+                        startActivity(IntentUtils.getBatteryOptSettings(mPackageName))));
             }
         }
         if (!tagCloud.sensorsEnabled) {

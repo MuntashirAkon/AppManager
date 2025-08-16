@@ -10,18 +10,24 @@ import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PE
 import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_USER_FIXED;
 import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_USER_SET;
 
+import android.Manifest;
 import android.annotation.UserIdInt;
 import android.app.AppOpsManager;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
+import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
 import androidx.annotation.WorkerThread;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
@@ -31,9 +37,70 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.IntentUtils;
 
 public class PermUtils {
     private static final String KILL_REASON_APP_OP_CHANGE = "Permission related app op changed";
+
+    public static class SettingItem {
+        public final String action;
+        public final boolean supportPkg;
+
+        public SettingItem(String action, boolean supportPkg) {
+            this.action = action;
+            this.supportPkg = supportPkg;
+        }
+
+        public SettingItem(String action) {
+            this(action, true);
+        }
+
+        public Intent toIntent(String packageName) {
+            return IntentUtils.getSettings(action, supportPkg ? packageName : null);
+        }
+    }
+
+    public static final Map<String, SettingItem> permissionNameToSettingItem = new HashMap<String, SettingItem>() {{
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            put(Manifest.permission.ACCESS_NOTIFICATION_POLICY, new SettingItem(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS, false));
+            put(Manifest.permission.PACKAGE_USAGE_STATS, new SettingItem(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+            put(Manifest.permission.SYSTEM_ALERT_WINDOW, new SettingItem(Settings.ACTION_MANAGE_OVERLAY_PERMISSION));
+            put(Manifest.permission.WRITE_SETTINGS, new SettingItem(Settings.ACTION_MANAGE_WRITE_SETTINGS));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            put(Manifest.permission.REQUEST_INSTALL_PACKAGES, new SettingItem(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            put(Manifest.permission.MANAGE_EXTERNAL_STORAGE, new SettingItem(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION));
+            // put(Manifest.permission.SYSTEM_ALERT_WINDOW, new SettingItem("android.settings.MANAGE_APP_OVERLAY_PERMISSION"));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            put(Manifest.permission.MANAGE_MEDIA, new SettingItem(Settings.ACTION_REQUEST_MANAGE_MEDIA));
+            put(Manifest.permission.SCHEDULE_EXACT_ALARM, new SettingItem(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            put(Manifest.permission.POST_NOTIFICATIONS, new SettingItem(Settings.ACTION_APP_NOTIFICATION_SETTINGS)); // android.provider.extra.APP_PACKAGE
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            put(Manifest.permission.RUN_USER_INITIATED_JOBS, new SettingItem("android.settings.MANAGE_APP_LONG_RUNNING_JOBS"));
+            put(Manifest.permission.USE_FULL_SCREEN_INTENT, new SettingItem(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            put(Manifest.permission.MEDIA_ROUTING_CONTROL, new SettingItem(Settings.ACTION_REQUEST_MEDIA_ROUTING_CONTROL));
+        }
+        // Bound permissions
+        put(Manifest.permission.BIND_ACCESSIBILITY_SERVICE, new SettingItem(Settings.ACTION_ACCESSIBILITY_SETTINGS, false));
+        put(Manifest.permission.BIND_INPUT_METHOD, new SettingItem(Settings.ACTION_INPUT_METHOD_SETTINGS, false));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            put(Manifest.permission.BIND_AUTOFILL_SERVICE, new SettingItem(Settings.ACTION_REQUEST_SET_AUTOFILL_SERVICE));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            put(Manifest.permission.BIND_CREDENTIAL_PROVIDER_SERVICE, new SettingItem(Settings.ACTION_CREDENTIAL_PROVIDER));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            put(Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE, new SettingItem(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS, false));
+        }
+    }};
 
     /**
      * Grant the permission.
