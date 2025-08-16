@@ -1237,7 +1237,7 @@
     <string name="disable_app_description">Metodo di congelamento consigliato. Disabilita l\'app e insieme a tutti i suoi componenti, ma tutte le scorciatoie andranno perse.</string>
     <string name="hide_app_description">Questo metodo è consigliato solo per l\'uso quotidiano. Un\'app nascosta appare come se fosse disinstallata. Ma l\'app potrebbe riapparire se viene reinstallata o aggiornata.</string>
     <string name="filter_frozen_apps">App congelate</string>
-    <string name="sort_by_frozen_app">Prima congelata</string>
+    <string name="sort_by_frozen_app">Prima le congelate</string>
     <string name="pref_appearance_description">Tema, orientamento, caratteristiche, ecc.</string>
     <string name="pref_privacy">Privacy</string>
     <string name="user_manual">Manuale utente</string>
@@ -1491,7 +1491,7 @@
     <string name="backup_cache">Cache</string>
     <string name="actual_installer">Installatore corrente</string>
     <string name="activity_name">Nome attività</string>
-    <string name="title_shortcut_for_frozen_app">Congela app</string>
+    <string name="title_shortcut_for_frozen_app">Applicazione congelata</string>
     <string name="battery_health">Salute</string>
     <string name="verified_boot">Avvio verificato</string>
     <string name="android_verified_bootloader_version">Versione AVB</string>
