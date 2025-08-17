@@ -187,6 +187,13 @@ public class AppInfoViewModel extends AndroidViewModel {
             if (ThreadUtils.isInterrupted()) {
                 return;
             }
+            tagCloud.isRunning = false;
+            for (ActivityManager.RunningAppProcessInfo info : ActivityManagerCompat.getRunningAppProcesses()) {
+                if (ArrayUtils.contains(info.pkgList, packageName)) {
+                    tagCloud.isRunning = true;
+                    break;
+                }
+            }
             tagCloud.runningServices = ActivityManagerCompat.getRunningServices(packageName, userId);
             tagCloud.isForceStopped = ApplicationInfoCompat.isStopped(applicationInfo);
             tagCloud.isAppEnabled = applicationInfo.enabled;
@@ -457,6 +464,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean hasCode;
         public boolean isOverlay;
         public boolean hasRequestedLargeHeap;
+        public boolean isRunning;
         public List<ActivityManager.RunningServiceInfo> runningServices;
         public List<MagiskProcess> magiskHiddenProcesses;
         public List<MagiskProcess> magiskDeniedProcesses;

@@ -932,6 +932,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .setColor(ColorCodes.getComponentRunningIndicatorColor(context))
                     .setOnClickListener(v ->
                             displayRunningServices(tagCloud.runningServices, v.getContext()));
+        } else if (tagCloud.isRunning) {
+            TagItem runningTag = new TagItem();
+            tagItems.add(runningTag);
+            runningTag.setTextRes(R.string.running)
+                    .setColor(ColorCodes.getComponentRunningIndicatorColor(context));
         }
         if (tagCloud.isForceStopped) {
             tagItems.add(new TagItem()
