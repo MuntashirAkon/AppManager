@@ -8,7 +8,6 @@ import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MAT
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 
 import android.Manifest;
-import android.app.ActivityManager;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
@@ -49,7 +48,6 @@ import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
-import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
@@ -74,6 +72,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
+import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.Path;
@@ -156,10 +155,6 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
      */
     public boolean isDisabled;
     /**
-     * Whether the app is currently running
-     */
-    public boolean isRunning = false;
-    /**
      * Whether the app is installed
      */
     public boolean isInstalled = true;
@@ -228,6 +223,7 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
     private Boolean mBatteryOptEnabled = null;
     private Boolean mHasKeystoreItems = null;
     private Integer mRulesCount = null;
+    private boolean mIsRunning = false;
 
     public ApplicationItem() {
         super();
@@ -369,20 +365,27 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
     }
 
     private void fetchPackageInfo() {
+        if (mPackageInfo != null) {
+            return;
+        }
         int userId = getUserId();
-        if (userId >= 0 && mPackageInfo == null) {
-            try {
-                mPackageInfo = PackageManagerCompat.getPackageInfo(packageName,
-                        PackageManager.GET_META_DATA | GET_SIGNING_CERTIFICATES
-                                | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
-                                | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
-                                | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_PERMISSIONS
-                                | PackageManager.GET_URI_PERMISSION_PATTERNS
-                                | MATCH_DISABLED_COMPONENTS | MATCH_UNINSTALLED_PACKAGES
-                                | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
-                mApplicationInfo = Objects.requireNonNull(mPackageInfo.applicationInfo);
-            } catch (RemoteException | PackageManager.NameNotFoundException ignore) {
-            }
+        if (userId < 0) {
+            return;
+        }
+        try {
+            mPackageInfo = PackageManagerCompat.getPackageInfo(packageName,
+                    PackageManager.GET_META_DATA | GET_SIGNING_CERTIFICATES
+                            | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
+                            | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
+                            | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_PERMISSIONS
+                            | PackageManager.GET_URI_PERMISSION_PATTERNS
+                            | MATCH_DISABLED_COMPONENTS | MATCH_UNINSTALLED_PACKAGES
+                            | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
+            mApplicationInfo = Objects.requireNonNull(mPackageInfo.applicationInfo);
+            // Update dynamic info
+            isStopped = (mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0;
+            isDisabled = FreezeUtils.isFrozen(mApplicationInfo);
+        } catch (RemoteException | PackageManager.NameNotFoundException ignore) {
         }
     }
 
@@ -453,14 +456,13 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
         return mBackups;
     }
 
+    public void setRunning(boolean running) {
+        mIsRunning = running;
+    }
+
     @Override
     public boolean isRunning() {
-        for (ActivityManager.RunningAppProcessInfo info : ActivityManagerCompat.getRunningAppProcesses()) {
-            if (ArrayUtils.contains(info.pkgList, getPackageName())) {
-                return true;
-            }
-        }
-        return false;
+        return mIsRunning;
     }
 
     @NonNull

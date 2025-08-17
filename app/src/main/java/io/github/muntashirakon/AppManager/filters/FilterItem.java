@@ -19,7 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.filters.options.DataUsageOption;
 import io.github.muntashirakon.AppManager.filters.options.FilterOption;
+import io.github.muntashirakon.AppManager.filters.options.RunningAppsOption;
+import io.github.muntashirakon.AppManager.filters.options.ScreenTimeOption;
+import io.github.muntashirakon.AppManager.filters.options.TimesOpenedOption;
 import io.github.muntashirakon.AppManager.history.IJsonSerializer;
 import io.github.muntashirakon.AppManager.history.JsonDeserializer;
 import io.github.muntashirakon.util.ParcelUtils;
@@ -72,6 +76,9 @@ public class FilterItem implements IJsonSerializer, Parcelable {
     private boolean mCustomExpr = false;
     // Assign this id to the next filter option (starts with 1)
     private int mNextId = 1;
+    // Counters for special cases
+    private int mTimesUsageInfoUsed = 0;
+    private int mTimesRunningOptionUsed = 0;
 
     public FilterItem() {
         this("Untitled");
@@ -110,6 +117,7 @@ public class FilterItem implements IJsonSerializer, Parcelable {
                 mExpr = id;
             } else mExpr += " & " + id;
         }
+        incrementUsage(filterOption, true);
         if (mFilterOptions.put(filterOption.id, filterOption) == null) {
             return mFilterOptions.indexOfKey(filterOption.id);
         }
@@ -138,6 +146,8 @@ public class FilterItem implements IJsonSerializer, Parcelable {
             }
             mExpr = sb.toString();
         }
+        incrementUsage(oldFilterOption, false);
+        incrementUsage(filterOption, true);
     }
 
     public boolean removeFilterOptionAt(int i) {
@@ -161,6 +171,7 @@ public class FilterItem implements IJsonSerializer, Parcelable {
             }
             mExpr = sb.toString();
         }
+        incrementUsage(filterOption, false);
         return true;
     }
 
@@ -177,6 +188,14 @@ public class FilterItem implements IJsonSerializer, Parcelable {
         return mFilterOptions.get(id);
     }
 
+    public int getTimesUsageInfoUsed() {
+        return mTimesUsageInfoUsed;
+    }
+
+    public int getTimesRunningOptionUsed() {
+        return mTimesRunningOptionUsed;
+    }
+
     public <T extends IFilterableAppInfo> List<FilteredItemInfo<T>> getFilteredList(@NonNull List<T> allFilterableAppInfo) {
         List<FilteredItemInfo<T>> filteredFilterableAppInfo = new ArrayList<>();
         ExprEvaluator evaluator = new ExprEvaluator(mFilterOptions);
@@ -190,6 +209,26 @@ public class FilterItem implements IJsonSerializer, Parcelable {
             }
         }
         return filteredFilterableAppInfo;
+    }
+
+    private void incrementUsage(FilterOption filterOption, boolean increment) {
+        boolean requireCountUpdate;
+        if (filterOption instanceof DataUsageOption) {
+            requireCountUpdate = true;
+        } else if (filterOption instanceof TimesOpenedOption) {
+            requireCountUpdate = true;
+        } else if (filterOption instanceof ScreenTimeOption) {
+            requireCountUpdate = true;
+        } else requireCountUpdate = false;
+        if (requireCountUpdate) {
+            if (increment) ++mTimesUsageInfoUsed;
+            else --mTimesUsageInfoUsed;
+            return;
+        }
+        if (filterOption instanceof RunningAppsOption) {
+            if (increment) ++mTimesRunningOptionUsed;
+            else --mTimesRunningOptionUsed;
+        }
     }
 
     public FilterItem(@NonNull Parcel in) {

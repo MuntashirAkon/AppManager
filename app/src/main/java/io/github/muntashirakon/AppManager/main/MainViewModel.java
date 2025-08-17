@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -42,7 +43,6 @@ import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.apk.list.ListExporter;
@@ -58,11 +58,17 @@ import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
 import io.github.muntashirakon.AppManager.profiles.struct.BaseProfile;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
+import io.github.muntashirakon.AppManager.usage.PackageUsageInfo;
+import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -461,10 +467,47 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 }
             } else {
                 List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
-                if ((mFilterFlags & MainListOptions.FILTER_RUNNING_APPS) != 0) {
-                    loadRunningApps();
-                }
                 FilterItem filterItem = MainListOptions.getFilterItemFromFlags(mFilterFlags);
+                Map<String, PackageUsageInfo> packageUsageInfoList = new HashMap<>();
+                if (filterItem.getTimesUsageInfoUsed() > 0) {
+                    boolean hasUsageAccess = FeatureController.isUsageAccessEnabled() && SelfPermissions.checkUsageStatsPermission();
+                    if (hasUsageAccess) {
+                        for (int userId : Users.getUsersIds()) {
+                            List<PackageUsageInfo> usageInfoList = ExUtils.exceptionAsNull(() -> AppUsageStatsManager.getInstance()
+                                    .getUsageStats(UsageUtils.USAGE_WEEKLY, userId));
+                            if (usageInfoList != null) {
+                                for (PackageUsageInfo info : usageInfoList) {
+                                    if (ThreadUtils.isInterrupted()) return;
+                                    PackageUsageInfo oldInfo = packageUsageInfoList.get(info.packageName);
+                                    if (oldInfo != null) {
+                                        oldInfo.screenTime += info.screenTime;
+                                        oldInfo.lastUsageTime += info.lastUsageTime;
+                                        oldInfo.timesOpened += info.timesOpened;
+                                        oldInfo.mobileData = AppUsageStatsManager.DataUsage.fromDataUsage(oldInfo.mobileData, info.mobileData);
+                                        oldInfo.wifiData = AppUsageStatsManager.DataUsage.fromDataUsage(oldInfo.wifiData, info.wifiData);
+                                        if (info.entries != null) {
+                                            if (oldInfo.entries == null) {
+                                                oldInfo.entries = info.entries;
+                                            } else oldInfo.entries.addAll(info.entries);
+                                        }
+                                    } else packageUsageInfoList.put(info.packageName, info);
+                                }
+                            }
+                        }
+                    }
+                }
+                HashSet<String> runningPackages = new HashSet<>();
+                if (filterItem.getTimesRunningOptionUsed() > 0) {
+                    for (ActivityManager.RunningAppProcessInfo info : ActivityManagerCompat.getRunningAppProcesses()) {
+                        if (info.pkgList != null) {
+                            runningPackages.addAll(Arrays.asList(info.pkgList));
+                        }
+                    }
+                }
+                for (ApplicationItem item : candidateApplicationItems) {
+                    item.setPackageUsageInfo(packageUsageInfoList.get(item.packageName));
+                    item.setRunning(runningPackages.contains(item.packageName));
+                }
                 List<FilterItem.FilteredItemInfo<ApplicationItem>> result = filterItem.getFilteredList(candidateApplicationItems);
                 for (FilterItem.FilteredItemInfo<ApplicationItem> item : result) {
                     if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_SPLITS) != 0 && !item.info.hasSplits) {
@@ -495,34 +538,6 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
             }
         }
         return false;
-    }
-
-    @GuardedBy("applicationItems")
-    private void loadRunningApps() {
-        synchronized (mApplicationItems) {
-            try {
-                List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfoList;
-                runningAppProcessInfoList = ActivityManagerCompat.getRunningAppProcesses();
-                Set<String> runningPackages = new HashSet<>();
-                for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : runningAppProcessInfoList) {
-                    if (ThreadUtils.isInterrupted()) {
-                        return;
-                    }
-                    Collections.addAll(runningPackages, runningAppProcessInfo.pkgList);
-                }
-                for (int i = 0; i < mApplicationItems.size(); ++i) {
-                    if (ThreadUtils.isInterrupted()) {
-                        return;
-                    }
-                    ApplicationItem applicationItem = mApplicationItems.get(i);
-                    applicationItem.isRunning = applicationItem.isInstalled
-                            && runningPackages.contains(applicationItem.packageName);
-                    mApplicationItems.set(i, applicationItem);
-                }
-            } catch (Throwable th) {
-                Log.e("MVM", th);
-            }
-        }
     }
 
     @GuardedBy("applicationItems")
@@ -627,7 +642,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
             case PackageChangeReceiver.ACTION_PACKAGE_REMOVED:
             case PackageChangeReceiver.ACTION_PACKAGE_ALTERED:
             case PackageChangeReceiver.ACTION_PACKAGE_ADDED:
-            // case BatchOpsService.ACTION_BATCH_OPS_COMPLETED:
+                // case BatchOpsService.ACTION_BATCH_OPS_COMPLETED:
             case Intent.ACTION_PACKAGE_REMOVED:
             case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE:
             case Intent.ACTION_PACKAGE_ADDED:

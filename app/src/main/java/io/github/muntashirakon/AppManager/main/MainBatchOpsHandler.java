@@ -70,7 +70,7 @@ public class MainBatchOpsHandler implements MultiSelectionView.OnSelectionChange
     @Override
     public boolean onSelectionChange(int selectionCount) {
         Collection<ApplicationItem> selectedItems = mViewModel.getSelectedApplicationItems();
-        boolean nonZeroSelection = selectedItems.size() > 0;
+        boolean nonZeroSelection = !selectedItems.isEmpty();
         // It was ensured that the algorithm is greedy
         // Best case: O(1)
         // Worst case: O(n)
@@ -84,8 +84,12 @@ public class MainBatchOpsHandler implements MultiSelectionView.OnSelectionChange
                 // No need to check further
                 break;
             }
-            if (areAllUninstalledSystem && item.isUser) areAllUninstalledSystem = false;
-            if (doAllUninstalledhaveBackup && item.backup == null) doAllUninstalledhaveBackup = false;
+            if (areAllUninstalledSystem && item.isUser) {
+                areAllUninstalledSystem = false;
+            }
+            if (doAllUninstalledhaveBackup && item.backup == null) {
+                doAllUninstalledhaveBackup = false;
+            }
         }
         /* === Enable/Disable === */
         // Enable “Uninstall” action iff all selections are installed
