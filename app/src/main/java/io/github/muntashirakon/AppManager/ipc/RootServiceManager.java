@@ -167,15 +167,16 @@ public class RootServiceManager implements Handler.Callback {
                 Log.e(TAG, JVMTI_ERROR);
             }
 
+            String mainJarName = "main.jar";
             Context ctx = ContextUtils.getContext();
             Context de = ContextUtils.getDeContext(ctx);
             File mainJar;
             try {
-                mainJar = new File(FileUtils.getExternalCachePath(de), "main.jar");
+                mainJar = new File(FileUtils.getExternalCachePath(de), mainJarName);
             } catch (IOException e) {
                 throw new IllegalStateException("External directory unavailable.", e);
             }
-            File stagingMainJar = new File(PACKAGE_STAGING_DIRECTORY, "main.jar");
+            File stagingMainJar = new File(PACKAGE_STAGING_DIRECTORY, mainJarName);
             // Dump main.jar as trampoline
             try (InputStream in = context.getResources().getAssets().open("main.jar");
                  OutputStream out = new FileOutputStream(mainJar)) {
@@ -186,10 +187,7 @@ public class RootServiceManager implements Handler.Callback {
             StringBuilder env = new StringBuilder();
             String params = getParams(env);
 
-            // Classpath
-            env.append(CLASSPATH_ENV + "=").append(Ops.isSystem() ? mainJar : stagingMainJar).append(" ");
-
-            String cmd = getRunnerScript(env.toString(), mainJar, stagingMainJar, name, action, params);
+            String cmd = getRunnerScript(env, mainJar, stagingMainJar, name, action, params);
             Log.d(TAG, cmd);
             // Write command to stdin
             byte[] bytes = cmd.getBytes(StandardCharsets.UTF_8);
@@ -228,7 +226,7 @@ public class RootServiceManager implements Handler.Callback {
     }
 
     @NonNull
-    private String getRunnerScript(@NonNull String env,
+    private String getRunnerScript(@NonNull StringBuilder env,
                                    @NonNull File mainJar,
                                    @NonNull File stagingMainJar,
                                    @NonNull ComponentName serviceName,
@@ -238,8 +236,14 @@ public class RootServiceManager implements Handler.Callback {
         @SuppressLint("RestrictedApi")
         String execFile = "/system/bin/app_process" + (Utils.isProcess64Bit() ? "64" : "32");
         String packageStagingCommand;
-        if (!Ops.isSystem()) {
+        env.append(CLASSPATH_ENV).append("=");
+        if (Ops.hasRoot()) {
+            // Avoid using the package staging directory
+            env.append(mainJar);
+            packageStagingCommand = "";
+        } else if (!Ops.isSystem()) {
             // Use package staging directory
+            env.append(stagingMainJar);
             packageStagingCommand = PackageUtils.ensurePackageStagingDirectoryCommand() +
                     // Copy to main.jar to package staging directory
                     String.format(Locale.ROOT, " && cp %s %s && ", mainJar, PACKAGE_STAGING_DIRECTORY) +
@@ -247,8 +251,10 @@ public class RootServiceManager implements Handler.Callback {
                     String.format(Locale.ROOT, "chmod 755 %s && chown shell:shell %s && ", stagingMainJar, stagingMainJar);
         } else {
             // System can't use package staging directory
+            env.append(mainJar);
             packageStagingCommand = "";
         }
+        env.append(" ");
         return (packageStagingCommand +
                 String.format(Locale.ROOT, "(%s %s %s /system/bin %s %s '%s' %d %s 2>&1)&",
                         env,                            // Environments
