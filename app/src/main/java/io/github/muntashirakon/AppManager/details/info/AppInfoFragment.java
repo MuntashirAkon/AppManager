@@ -20,8 +20,6 @@ import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 
 import android.Manifest;
 import android.app.ActivityManager;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -313,35 +311,29 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             showFreezeDialog(freezeTypeN, freezeType != null);
         });
         mIconView.setOnClickListener(v -> {
-            ClipboardManager clipboard = (ClipboardManager) ContextUtils.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
             ThreadUtils.postOnBackgroundThread(() -> {
-                ClipData clipData = clipboard.getPrimaryClip();
-                if (clipData != null && clipData.getItemCount() > 0) {
-                    String data = clipData.getItemAt(0).coerceToText(ContextUtils.getContext()).toString().trim()
-                            .toLowerCase(Locale.ROOT);
-                    if (data.matches("[0-9a-f: \n]+")) {
-                        data = data.replaceAll("[: \n]+", "");
-                        SignerInfo signerInfo = PackageUtils.getSignerInfo(mPackageInfo, mIsExternalApk);
-                        if (signerInfo != null) {
-                            X509Certificate[] certs = signerInfo.getCurrentSignerCerts();
-                            if (certs != null && certs.length == 1) {
-                                try {
-                                    Pair<String, String>[] digests = DigestUtils.getDigests(certs[0].getEncoded());
-                                    for (Pair<String, String> digest : digests) {
-                                        if (digest.second.equals(data)) {
-                                            if (digest.first.equals(DigestUtils.MD5) || digest.first.equals(DigestUtils.SHA_1)) {
-                                                ThreadUtils.postOnMainThread(() -> displayLongToast(R.string.verified_using_unreliable_hash));
-                                            } else
-                                                ThreadUtils.postOnMainThread(() -> displayLongToast(R.string.verified));
-                                            return;
-                                        }
+                String data = Utils.readHashValueFromClipboard(ContextUtils.getContext());
+                if (data != null) {
+                    SignerInfo signerInfo = PackageUtils.getSignerInfo(mPackageInfo, mIsExternalApk);
+                    if (signerInfo != null) {
+                        X509Certificate[] certs = signerInfo.getCurrentSignerCerts();
+                        if (certs != null && certs.length == 1) {
+                            try {
+                                Pair<String, String>[] digests = DigestUtils.getDigests(certs[0].getEncoded());
+                                for (Pair<String, String> digest : digests) {
+                                    if (digest.second.equals(data)) {
+                                        if (digest.first.equals(DigestUtils.MD5) || digest.first.equals(DigestUtils.SHA_1)) {
+                                            ThreadUtils.postOnMainThread(() -> displayLongToast(R.string.verified_using_unreliable_hash));
+                                        } else
+                                            ThreadUtils.postOnMainThread(() -> displayLongToast(R.string.verified));
+                                        return;
                                     }
-                                } catch (CertificateEncodingException ignore) {
                                 }
+                            } catch (CertificateEncodingException ignore) {
                             }
                         }
-                        ThreadUtils.postOnMainThread(() -> displayLongToast(R.string.not_verified));
                     }
+                    ThreadUtils.postOnMainThread(() -> displayLongToast(R.string.not_verified));
                 }
             });
         });

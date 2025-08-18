@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -15,15 +15,15 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="@dimen/padding_small">
+            android:layout_marginBottom="@dimen/padding_small"
+            android:orientation="horizontal">
 
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/padding_small">
+                android:layout_marginEnd="@dimen/padding_small"
+                android:layout_weight="0">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@android:id/icon"
@@ -40,8 +40,8 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="start|bottom"
-                    android:visibility="gone"
                     android:tint="@color/fm_symbolic_link"
+                    android:visibility="gone"
                     app:srcCompat="@drawable/ic_arrow_outward"
                     tools:visibility="visible" />
 
@@ -66,17 +66,34 @@
                     android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textIsSelectable="true"
                     android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textIsSelectable="true"
                     tools:text="AppManager_v3.0.3.apk" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/summary"
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textIsSelectable="true"
-                    android:textAppearance="?attr/textAppearanceBodySmall"
-                    tools:text="4/11/22 15:28 ● 14.1 MB" />
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/summary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
+                        android:textIsSelectable="true"
+                        tools:text="4/11/22 15:28 ● 14.1 MB" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/checksums"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:paddingHorizontal="@dimen/padding_small"
+                        android:text="@string/checksums"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
+                        android:textColor="?android:textColorLink" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -85,11 +102,11 @@
                 style="@style/Widget.AppTheme.Button.IconButton.InverseColor"
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
-                android:layout_weight="0"
-                android:layout_marginStart="@dimen/padding_small"
                 android:layout_gravity="center"
-                app:iconSize="30dp"
-                app:icon="@drawable/ic_more_vert" />
+                android:layout_marginStart="@dimen/padding_small"
+                android:layout_weight="0"
+                app:icon="@drawable/ic_more_vert"
+                app:iconSize="30dp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -153,20 +170,20 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/padding_small"
             android:hint="@string/file_open_with"
-            app:startIconDrawable="@null"
-            app:startIconContentDescription="@string/str_logo"
-            app:endIconMode="custom"
-            app:endIconDrawable="@drawable/ic_file_replace"
             app:endIconContentDescription="@string/file_change_open_with"
-            app:hintEnabled="true">
+            app:endIconDrawable="@drawable/ic_file_replace"
+            app:endIconMode="custom"
+            app:hintEnabled="true"
+            app:startIconContentDescription="@string/str_logo"
+            app:startIconDrawable="@null">
 
             <io.github.muntashirakon.widget.TextInputTextView
                 android:id="@+id/open_with"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"
-                android:textIsSelectable="true"
                 android:text="@string/_undefined"
+                android:textIsSelectable="true"
                 tools:text="App Manager - installer" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -180,9 +197,9 @@
                 style="@style/Widget.AppTheme.TextInputLayout.Small"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="@dimen/padding_small"
+                android:layout_weight="1"
                 android:hint="@string/size"
                 app:hintEnabled="true">
 
@@ -191,9 +208,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
-                    android:textIsSelectable="true"
                     android:maxLines="2"
                     android:text="@string/calculating_file_size"
+                    android:textIsSelectable="true"
                     tools:text="14.1 MB (13,831,425 bytes)" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -202,9 +219,9 @@
                 style="@style/Widget.AppTheme.TextInputLayout.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:layout_marginStart="4dp"
                 android:layout_marginBottom="@dimen/padding_small"
+                android:layout_weight="0"
                 android:hint="@string/file_creation_date"
                 app:hintEnabled="true">
 
@@ -213,8 +230,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
-                    android:textIsSelectable="true"
                     android:maxLines="2"
+                    android:textIsSelectable="true"
                     tools:text="4/11/22 15:24" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -230,12 +247,12 @@
                 style="@style/Widget.AppTheme.TextInputLayout.Small"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="@dimen/padding_small"
+                android:layout_weight="1"
                 android:hint="@string/file_modification_date"
-                app:endIconMode="custom"
                 app:endIconDrawable="@drawable/ic_touch_app"
+                app:endIconMode="custom"
                 app:hintEnabled="true">
 
                 <io.github.muntashirakon.widget.TextInputTextView
@@ -243,8 +260,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
-                    android:textIsSelectable="true"
                     android:maxLines="2"
+                    android:textIsSelectable="true"
                     tools:text="4/11/22 15:28" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -253,12 +270,12 @@
                 style="@style/Widget.AppTheme.TextInputLayout.Small"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginStart="4dp"
                 android:layout_marginBottom="@dimen/padding_small"
+                android:layout_weight="1"
                 android:hint="@string/file_accessed_date"
-                app:endIconMode="custom"
                 app:endIconDrawable="@drawable/ic_touch_app"
+                app:endIconMode="custom"
                 app:hintEnabled="true">
 
                 <io.github.muntashirakon.widget.TextInputTextView
@@ -266,8 +283,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
-                    android:textIsSelectable="true"
                     android:maxLines="2"
+                    android:textIsSelectable="true"
                     tools:text="16/11/22 12:53" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -287,8 +304,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"
-                android:textIsSelectable="true"
                 android:maxLines="2"
+                android:textIsSelectable="true"
                 tools:text="@tools:sample/lorem/random" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -302,12 +319,12 @@
                 style="@style/Widget.AppTheme.TextInputLayout.Small"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="@dimen/padding_small"
+                android:layout_weight="1"
                 android:hint="@string/file_owner_id"
-                app:endIconMode="custom"
                 app:endIconDrawable="@drawable/ic_edit"
+                app:endIconMode="custom"
                 app:hintEnabled="true">
 
                 <io.github.muntashirakon.widget.TextInputTextView
@@ -315,8 +332,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
-                    android:textIsSelectable="true"
                     android:maxLines="2"
+                    android:textIsSelectable="true"
                     tools:text="root (0)" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -325,12 +342,12 @@
                 style="@style/Widget.AppTheme.TextInputLayout.Small"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginStart="4dp"
                 android:layout_marginBottom="@dimen/padding_small"
+                android:layout_weight="1"
                 android:hint="@string/file_group_id"
-                app:endIconMode="custom"
                 app:endIconDrawable="@drawable/ic_edit"
+                app:endIconMode="custom"
                 app:hintEnabled="true">
 
                 <io.github.muntashirakon.widget.TextInputTextView
@@ -338,8 +355,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
-                    android:textIsSelectable="true"
                     android:maxLines="2"
+                    android:textIsSelectable="true"
                     tools:text="everybody (9997)" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -355,12 +372,12 @@
                 style="@style/Widget.AppTheme.TextInputLayout.Small"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="@dimen/padding_small"
+                android:layout_weight="1"
                 android:hint="@string/unix_file_permissions"
-                app:endIconMode="custom"
                 app:endIconDrawable="@drawable/ic_edit"
+                app:endIconMode="custom"
                 app:hintEnabled="true">
 
                 <io.github.muntashirakon.widget.TextInputTextView
@@ -368,8 +385,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
-                    android:textIsSelectable="true"
                     android:maxLines="2"
+                    android:textIsSelectable="true"
                     tools:text="rw-rw---- (660)" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -378,12 +395,12 @@
                 style="@style/Widget.AppTheme.TextInputLayout.Small"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginStart="4dp"
                 android:layout_marginBottom="@dimen/padding_small"
+                android:layout_weight="1"
                 android:hint="@string/selinux_context"
-                app:endIconMode="custom"
                 app:endIconDrawable="@drawable/ic_edit"
+                app:endIconMode="custom"
                 app:hintEnabled="true">
 
                 <io.github.muntashirakon.widget.TextInputTextView
@@ -391,8 +408,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
-                    android:textIsSelectable="true"
                     android:maxLines="2"
+                    android:textIsSelectable="true"
                     tools:text="u:object_r:fuse:s0" />
 
             </com.google.android.material.textfield.TextInputLayout>

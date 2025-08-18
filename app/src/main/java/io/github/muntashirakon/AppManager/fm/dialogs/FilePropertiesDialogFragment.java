@@ -85,6 +85,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
     private ImageView mSymlinkIconView;
     private TextView mNameView;
     private TextView mSummaryView;
+    private TextView mChecksumsView;
     private MaterialButton mMoreButton;
     private TextInputTextView mPathView;
     private TextInputTextView mTypeView;
@@ -126,6 +127,11 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         mSymlinkIconView = bodyView.findViewById(R.id.symolic_link_icon);
         mNameView = bodyView.findViewById(R.id.name);
         mSummaryView = bodyView.findViewById(R.id.summary);
+        mChecksumsView = bodyView.findViewById(R.id.checksums);
+        mChecksumsView.setOnClickListener(v -> {
+            ChecksumsDialogFragment fragment = ChecksumsDialogFragment.getInstance(path);
+            fragment.show(getChildFragmentManager(), ChecksumsDialogFragment.TAG);
+        });
         mMoreButton = bodyView.findViewById(R.id.more);
         mMoreButton.setVisibility(View.GONE);
         mPathView = bodyView.findViewById(R.id.path);
@@ -229,6 +235,9 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
 
     private void updateProperties(@NonNull FileProperties fileProperties) {
         boolean noInit = mFileProperties == null;
+        if (noInit && fileProperties.isDirectory) {
+            mChecksumsView.setVisibility(View.GONE);
+        }
         boolean uidGidChanged = noInit || mFileProperties.uidGidPair != fileProperties.uidGidPair;
         if (noInit || mFileProperties.isDirectory != fileProperties.isDirectory) {
             if (fileProperties.isDirectory) {
@@ -847,7 +856,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         }
     }
 
-    private static class AndroidId implements LocalizedString {
+    public static class AndroidId implements LocalizedString {
         public int id;
         public String name;
         public CharSequence description;
@@ -873,7 +882,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         }
     }
 
-    private static class FileProperties {
+    public static class FileProperties {
         public Path path;
         public boolean isPhysicalFs;
         public String name;

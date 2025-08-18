@@ -11,6 +11,7 @@ import androidx.annotation.Keep;
 
 import com.topjohnwu.superuser.Shell;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.lsposed.hiddenapibypass.HiddenApiBypass;
 
 import java.security.Security;
@@ -40,7 +41,9 @@ public class AppManager extends Application {
         Thread.setDefaultUncaughtExceptionHandler(new AMExceptionHandler(this));
         AppearanceUtils.init(this);
         TypefaceUtil.replaceFontsWithSystem(this);
+        Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
         Security.addProvider(new JavaKeyStoreProvider());
+        Security.addProvider(new BouncyCastleProvider());
     }
 
     @Keep
