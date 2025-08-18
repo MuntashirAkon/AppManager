@@ -52,10 +52,13 @@ import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.filters.FilterItem;
+import io.github.muntashirakon.AppManager.filters.options.FilterOption;
+import io.github.muntashirakon.AppManager.filters.options.PackageNameOption;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
+import io.github.muntashirakon.AppManager.profiles.struct.AppsFilterProfile;
 import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
 import io.github.muntashirakon.AppManager.profiles.struct.BaseProfile;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
@@ -412,7 +415,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     private void filterItemsByFlags() {
         synchronized (mApplicationItems) {
             List<ApplicationItem> candidateApplicationItems = new ArrayList<>();
-            boolean profileApplied = false;
+            List<FilterOption> profileFilterOptions = new ArrayList<>();
             if (mFilterProfileName != null) {
                 String profileId = ProfileManager.getProfileIdCompat(mFilterProfileName);
                 Path profilePath = ProfileManager.findProfilePathById(profileId);
@@ -420,46 +423,30 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                     BaseProfile profile = BaseProfile.fromPath(profilePath);
                     if (profile instanceof AppsProfile) {
                         AppsProfile appsProfile = (AppsProfile) profile;
-                        List<Integer> indexes = new ArrayList<>();
-                        for (String packageName : appsProfile.packages) {
-                            if (ThreadUtils.isInterrupted()) {
-                                return;
-                            }
-                            ApplicationItem item = new ApplicationItem();
-                            item.packageName = packageName;
-                            int index = mApplicationItems.indexOf(item);
-                            if (index != -1) {
-                                indexes.add(index);
-                            }
+                        PackageNameOption option = new PackageNameOption();
+                        option.setKeyValue("eq_any", TextUtils.join("\n", appsProfile.packages));
+                        profileFilterOptions.add(option);
+                    } else if (profile instanceof AppsFilterProfile) {
+                        AppsFilterProfile filterProfile = (AppsFilterProfile) profile;
+                        FilterItem filterItem = filterProfile.getFilterItem();
+                        for (int i = 0; i < filterItem.getSize(); ++i) {
+                            profileFilterOptions.add(filterItem.getFilterOptionAt(i));
                         }
-                        Collections.sort(indexes);
-                        for (int index : indexes) {
-                            if (ThreadUtils.isInterrupted()) {
-                                return;
-                            }
-                            ApplicationItem item = mApplicationItems.get(index);
-                            if (isAmongSelectedUsers(item)) {
-                                candidateApplicationItems.add(item);
-                            }
-                        }
-                        profileApplied = true;
                     }
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
             }
-            if (!profileApplied) {
-                for (ApplicationItem item : mApplicationItems) {
-                    if (ThreadUtils.isInterrupted()) {
-                        return;
-                    }
-                    if (isAmongSelectedUsers(item)) {
-                        candidateApplicationItems.add(item);
-                    }
+            for (ApplicationItem item : mApplicationItems) {
+                if (ThreadUtils.isInterrupted()) {
+                    return;
+                }
+                if (isAmongSelectedUsers(item)) {
+                    candidateApplicationItems.add(item);
                 }
             }
             // Other filters
-            if (mFilterFlags == MainListOptions.FILTER_NO_FILTER) {
+            if (profileFilterOptions.isEmpty() && mFilterFlags == MainListOptions.FILTER_NO_FILTER) {
                 if (!TextUtils.isEmpty(mSearchQuery)) {
                     filterItemsByQuery(candidateApplicationItems);
                 } else {
@@ -468,6 +455,9 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
             } else {
                 List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
                 FilterItem filterItem = MainListOptions.getFilterItemFromFlags(mFilterFlags);
+                for (FilterOption filterOption : profileFilterOptions) {
+                    filterItem.addFilterOption(filterOption);
+                }
                 Map<String, PackageUsageInfo> packageUsageInfoList = new HashMap<>();
                 if (filterItem.getTimesUsageInfoUsed() > 0) {
                     boolean hasUsageAccess = FeatureController.isUsageAccessEnabled() && SelfPermissions.checkUsageStatsPermission();
