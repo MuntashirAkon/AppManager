@@ -887,6 +887,10 @@ public class BatchOpsManager {
         int i = 0;
         for (String packageName : options.packages) {
             updateProgress(lastProgress, ++i);
+            if (packageName.equals(BuildConfig.APPLICATION_ID)) {
+                // Ignore App Manager
+                continue;
+            }
             DexOptimizer dexOptimizer = new DexOptimizer(pm, packageName);
             if (options.compilerFiler != null) {
                 boolean result = true;
