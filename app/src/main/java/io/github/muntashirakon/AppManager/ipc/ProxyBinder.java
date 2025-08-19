@@ -41,7 +41,7 @@ public class ProxyBinder implements IBinder {
             = Collections.synchronizedMap(new ArrayMap<>());
 
     @NonNull
-    public static IBinder getService(String serviceName) {
+    public static IBinder getService(String serviceName) throws ServiceNotFoundException {
         IBinder binder = sServiceCache.get(serviceName);
         if (binder == null) {
             binder = getServiceInternal(serviceName);
@@ -59,28 +59,31 @@ public class ProxyBinder implements IBinder {
      * @return binder to that service
      */
     @NotNull
-    private static IBinder getServiceInternal(String serviceName) {
+    private static IBinder getServiceInternal(String serviceName) throws ServiceNotFoundException {
         IBinder binder = ServiceManager.getService(serviceName);
         if (LocalServices.alive() && binder == null) {
             try {
                 binder = LocalServices.getAmService().getService(serviceName);
             } catch (RemoteException e) {
                 Log.e(TAG, e);
-                throw new RuntimeException("Service couldn't be loaded: " + serviceName, e);
+                throw new ServiceNotFoundException("Service couldn't be loaded: " + serviceName, e);
             }
         }
         if (binder == null) {
-            throw new RuntimeException("Service couldn't be found");
+            throw new ServiceNotFoundException("Service couldn't be found: " + serviceName);
         }
         return binder;
     }
 
     @NonNull
-    public static IBinder getUnprivilegedService(String serviceName) {
+    public static IBinder getUnprivilegedService(String serviceName) throws ServiceNotFoundException {
         IBinder binder = sServiceCache.get(serviceName);
         if (binder == null) {
             binder = ServiceManager.getService(serviceName);
             sServiceCache.put(serviceName, binder);
+        }
+        if (binder == null) {
+            throw new ServiceNotFoundException("Service couldn't be found: " + serviceName);
         }
         return binder;
     }
