@@ -50,6 +50,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.proc.ProcFs;
 import io.github.muntashirakon.proc.ProcUidNetStat;
 
@@ -319,6 +320,10 @@ public class AppUsageStatsManager {
         for (UsageEvents.Event event : events) {
             int eventType = event.getEventType();
             String packageName = event.getPackageName();
+            if (packageName == null) {
+                Log.i(TAG, "Ignored event with empty package name: " + Utils.prettyPrintObject(event));
+                continue;
+            }
             // Queries are sorted in descending order, so a not-running activity should be paused or
             // stopped first and then resumed (i.e., reversed logic).
             if (eventType == UsageEvents.Event.DEVICE_SHUTDOWN) {

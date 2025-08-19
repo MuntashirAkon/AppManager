@@ -39,6 +39,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import org.jetbrains.annotations.Contract;
 
+import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
@@ -672,6 +673,34 @@ public class Utils {
         NetworkInfo info = cm.getActiveNetworkInfo();
         return info != null && info.getType() == ConnectivityManager.TYPE_WIFI;
     }
+
+    @NonNull
+    public static <T> String prettyPrintObject(@Nullable T obj) {
+        if (obj == null) {
+            return "null";
+        }
+        StringBuilder sb = new StringBuilder();
+        Class<?> clazz = obj.getClass();
+        sb.append(clazz.getSimpleName()).append("{");
+        Field[] fields = clazz.getDeclaredFields();
+        for (int i = 0; i < fields.length; i++) {
+            Field field = fields[i];
+            field.setAccessible(true);
+            sb.append(field.getName()).append("=");
+            try {
+                Object value = field.get(obj);
+                sb.append(value);
+            } catch (IllegalAccessException e) {
+                sb.append("N/A");
+            }
+            if (i < fields.length - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append("}");
+        return sb.toString();
+    }
+
 
     public static boolean isRoboUnitTest() {
         return "robolectric".equals(Build.FINGERPRINT);
