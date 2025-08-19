@@ -21,6 +21,7 @@ import android.os.Parcelable;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
 import android.telephony.SubscriptionInfo;
+import android.telephony.TelephonyManager;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -494,13 +495,19 @@ public class AppUsageStatsManager {
             // Unsupported API
             return Collections.singletonList(null);
         }
-        PackageManager pm = ContextUtils.getContext().getPackageManager();
+        Context ctx = ContextUtils.getContext();
+        PackageManager pm = ctx.getPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
                 && !pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY_SUBSCRIPTION)) {
             Log.i(TAG, "No such feature: %s", PackageManager.FEATURE_TELEPHONY_SUBSCRIPTION);
             return Collections.emptyList();
         } else if (!pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
             Log.i(TAG, "No such feature: %s", PackageManager.FEATURE_TELEPHONY);
+            return Collections.emptyList();
+        }
+        TelephonyManager telephonyManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
+        if (telephonyManager.getPhoneType() == TelephonyManager.PHONE_TYPE_NONE) {
+            Log.i(TAG, "Device does not have a phone radio.");
             return Collections.emptyList();
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.READ_PHONE_STATE)) {
