@@ -718,6 +718,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 }
                 item.userIds = ArrayUtils.appendInt(item.userIds, app.userId);
                 item.isInstalled = true;
+                item.isOnlyDataInstalled = false;
                 item.openCount += app.openCount;
                 item.screenTime += app.screenTime;
                 if (item.lastUsageTime == 0L || item.lastUsageTime < app.lastUsageTime) {
@@ -742,6 +743,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 } else {
                     item.packageName = app.packageName;
                     item.isInstalled = false;
+                    item.isOnlyDataInstalled = app.isOnlyDataInstalled;
                     item.hasKeystore |= app.hasKeystore;
                 }
             }

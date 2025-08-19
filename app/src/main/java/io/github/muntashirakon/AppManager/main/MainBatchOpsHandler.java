@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.main;
 
 import android.Manifest;
+import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -75,11 +76,15 @@ public class MainBatchOpsHandler implements MultiSelectionView.OnSelectionChange
         // Best case: O(1)
         // Worst case: O(n)
         boolean areAllInstalled = true;
+        boolean areAllUninstalledWithoutData = true;
         boolean areAllUninstalledSystem = true;
         boolean doAllUninstalledhaveBackup = true;
         for (ApplicationItem item : selectedItems) {
             if (item.isInstalled) continue;
             areAllInstalled = false;
+            if (areAllUninstalledWithoutData) {
+                areAllUninstalledWithoutData = item.isOnlyDataInstalled;
+            }
             if (!doAllUninstalledhaveBackup && !areAllUninstalledSystem) {
                 // No need to check further
                 break;
@@ -93,7 +98,7 @@ public class MainBatchOpsHandler implements MultiSelectionView.OnSelectionChange
         }
         /* === Enable/Disable === */
         // Enable “Uninstall” action iff all selections are installed
-        mUninstallMenu.setEnabled(nonZeroSelection && areAllInstalled);
+        mUninstallMenu.setEnabled(nonZeroSelection && (areAllInstalled || areAllUninstalledWithoutData));
         mFreezeUnfreezeMenu.setEnabled(nonZeroSelection && areAllInstalled);
         mForceStopMenu.setEnabled(nonZeroSelection && areAllInstalled);
         mClearDataCacheMenu.setEnabled(nonZeroSelection && areAllInstalled);

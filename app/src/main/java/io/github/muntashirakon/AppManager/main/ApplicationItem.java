@@ -158,6 +158,7 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
      * Whether the app is installed
      */
     public boolean isInstalled = true;
+    public boolean isOnlyDataInstalled = true;
     /**
      * Whether the app has any activities
      */

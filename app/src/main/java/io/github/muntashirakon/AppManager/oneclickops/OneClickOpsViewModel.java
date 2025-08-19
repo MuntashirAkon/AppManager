@@ -39,7 +39,6 @@ import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
-import io.github.muntashirakon.io.Paths;
 
 public class OneClickOpsViewModel extends AndroidViewModel {
     public static final String TAG = OneClickOpsViewModel.class.getSimpleName();
@@ -236,10 +235,12 @@ public class OneClickOpsViewModel extends AndroidViewModel {
             HashSet<String> packageNames = new HashSet<>();
             for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(MATCH_UNINSTALLED_PACKAGES
                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES)) {
-                if (packageNames.contains(applicationInfo.packageName) || isInstalled(applicationInfo)) {
+                if (packageNames.contains(applicationInfo.packageName)) {
                     continue;
                 }
-                packageNames.add(applicationInfo.packageName);
+                if (ApplicationInfoCompat.isOnlyDataInstalled(applicationInfo)) {
+                    packageNames.add(applicationInfo.packageName);
+                }
                 if (ThreadUtils.isInterrupted()) {
                     return;
                 }
@@ -286,9 +287,5 @@ public class OneClickOpsViewModel extends AndroidViewModel {
         trackerCount.packageLabel = packageInfo.applicationInfo.loadLabel(mPm).toString();
         trackerCount.count = ComponentUtils.getTrackerComponentsForPackage(packageInfo).size();
         return trackerCount;
-    }
-
-    private boolean isInstalled(@NonNull ApplicationInfo info) {
-        return info.processName != null && Paths.exists(info.publicSourceDir);
     }
 }

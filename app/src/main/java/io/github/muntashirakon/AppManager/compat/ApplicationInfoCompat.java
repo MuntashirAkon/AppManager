@@ -336,6 +336,12 @@ public final class ApplicationInfoCompat {
                 && Paths.exists(info.publicSourceDir);
     }
 
+    public static boolean isOnlyDataInstalled(@NonNull ApplicationInfo info) {
+        return (info.flags & ApplicationInfo.FLAG_INSTALLED) == 0
+                && !(info.processName != null
+                && Paths.exists(info.publicSourceDir));
+    }
+
     public static boolean isTestOnly(@NonNull ApplicationInfo info) {
         return (info.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0;
     }

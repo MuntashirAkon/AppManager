@@ -69,6 +69,9 @@ public class App implements Serializable {
     @ColumnInfo(name = "is_installed", defaultValue = "true")
     public boolean isInstalled;
 
+    @ColumnInfo(name = "is_only_data_installed", defaultValue = "0")
+    public boolean isOnlyDataInstalled;
+
     @ColumnInfo(name = "is_enabled", defaultValue = "false")
     public boolean isEnabled;
 
@@ -133,6 +136,7 @@ public class App implements Serializable {
         app.uid = applicationInfo.uid;
         app.userId = UserHandleHidden.getUserId(app.uid);
         app.isInstalled = ApplicationInfoCompat.isInstalled(applicationInfo);
+        app.isOnlyDataInstalled = ApplicationInfoCompat.isOnlyDataInstalled(applicationInfo);
         app.flags = applicationInfo.flags;
         app.isEnabled = !FreezeUtils.isFrozen(applicationInfo);
         app.packageLabel = ApplicationInfoCompat.loadLabelSafe(applicationInfo, context.getPackageManager()).toString();
@@ -160,6 +164,7 @@ public class App implements Serializable {
         app.uid = 0;
         app.userId = backup.userId;
         app.isInstalled = false;
+        app.isOnlyDataInstalled = false;
         if (backup.isSystem) {
             app.flags |= ApplicationInfo.FLAG_SYSTEM;
         }

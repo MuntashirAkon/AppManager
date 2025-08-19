@@ -23,9 +23,10 @@ import io.github.muntashirakon.AppManager.db.entity.FmFavorite;
 import io.github.muntashirakon.AppManager.db.entity.FreezeType;
 import io.github.muntashirakon.AppManager.db.entity.LogFilter;
 import io.github.muntashirakon.AppManager.db.entity.OpHistory;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
-@Database(entities = {App.class, LogFilter.class, FileHash.class, Backup.class, OpHistory.class, FmFavorite.class, FreezeType.class}, version = 5)
+@Database(entities = {App.class, LogFilter.class, FileHash.class, Backup.class, OpHistory.class, FmFavorite.class, FreezeType.class}, version = 6)
 public abstract class AppsDb extends RoomDatabase {
     private static AppsDb sAppsDb;
 
@@ -47,13 +48,24 @@ public abstract class AppsDb extends RoomDatabase {
             db.execSQL("CREATE TABLE IF NOT EXISTS `freeze_type` (`package_name` TEXT NOT NULL, `type` INTEGER NOT NULL, PRIMARY KEY(`package_name`))");
         }
     };
+    public static final Migration M_5_6 = new Migration(5, 6) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+            db.execSQL("ALTER TABLE `app` ADD COLUMN `is_only_data_installed` INTEGER NOT NULL DEFAULT 0");
+        }
+    };
 
     public static AppsDb getInstance() {
         if (sAppsDb == null) {
             sAppsDb = Room.databaseBuilder(ContextUtils.getContext(), AppsDb.class, "apps.db")
-                    .addMigrations(M_2_3, M_3_4, M_4_5)
+                    .addMigrations(M_2_3, M_3_4, M_4_5, M_5_6)
                     .fallbackToDestructiveMigrationOnDowngrade()
                     .build();
+            try {
+                sAppsDb.appDao().getAll();
+            } catch (Throwable th) {
+                th.printStackTrace();
+            }
         }
         return sAppsDb;
     }

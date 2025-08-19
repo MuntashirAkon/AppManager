@@ -170,6 +170,7 @@ public final class PackageUtils {
                 }
                 item.userIds = ArrayUtils.appendInt(item.userIds, app.userId);
                 item.isInstalled = true;
+                item.isOnlyDataInstalled = false;
                 item.openCount += app.openCount;
                 item.screenTime += app.screenTime;
                 if (item.lastUsageTime == 0L || item.lastUsageTime < app.lastUsageTime) {
@@ -197,6 +198,7 @@ public final class PackageUtils {
                     item.packageName = app.packageName;
                     applicationItems.put(app.packageName, item);
                     item.isInstalled = false;
+                    item.isOnlyDataInstalled = app.isOnlyDataInstalled;
                     item.hasKeystore |= app.hasKeystore;
                 }
             }
@@ -237,6 +239,7 @@ public final class PackageUtils {
             item.isUser = !backup.isSystem;
             item.isDisabled = false;
             item.isInstalled = false;
+            item.isOnlyDataInstalled = false;
             item.hasSplits = backup.hasSplits;
             item.hasKeystore = backup.hasKeyStore;
             item.generateOtherInfo();

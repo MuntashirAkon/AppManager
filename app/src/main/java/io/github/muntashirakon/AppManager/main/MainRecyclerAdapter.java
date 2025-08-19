@@ -391,6 +391,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                 // The app is already installed, and we were wrong to assume that it was installed.
                 // Update data before opening it.
                 item.isInstalled = true;
+                item.isOnlyDataInstalled = false;
                 item.userIds = new int[]{UserHandleHidden.myUserId()};
                 Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, UserHandleHidden.myUserId());
                 mActivity.startActivity(intent);
