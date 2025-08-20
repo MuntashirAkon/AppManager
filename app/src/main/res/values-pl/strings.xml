@@ -1566,4 +1566,5 @@
     <string name="icon">ikona</string>
     <string name="preview">Podgląd</string>
     <string name="debloat_removal_unsafe">Niebezpieczne</string>
+    <string name="sort_by_cpu_time">Czas CPU</string>
 </resources>
