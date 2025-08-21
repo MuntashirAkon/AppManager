@@ -44,9 +44,9 @@ import java.util.zip.CRC32;
 
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.ClipboardUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.adapters.SelectedArrayAdapter;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.io.IoUtils;
@@ -104,7 +104,7 @@ public class ChecksumsDialogFragment extends DialogFragment {
                 .setTitle(R.string.checksums)
                 .setSubtitle(mPath.getName())
                 .setEndIcon(R.drawable.ic_content_paste, v -> {
-                    String data = Utils.readHashValueFromClipboard(v.getContext());
+                    String data = ClipboardUtils.readHashValueFromClipboard(v.getContext());
                     if (data != null) {
                         for (Map.Entry<String, String> digest : mAdapter.mNameChecksumMap) {
                             if (digest.getValue().equals(data)) {

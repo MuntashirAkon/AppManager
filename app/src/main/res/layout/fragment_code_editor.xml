@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <io.github.rosemoe.sora.widget.CodeEditor
+    <io.github.muntashirakon.AppManager.editor.CodeEditorWidget
         android:id="@+id/editor"
         android:layout_width="match_parent"
         android:layout_height="0dp"

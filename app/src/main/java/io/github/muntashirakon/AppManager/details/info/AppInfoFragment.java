@@ -151,6 +151,7 @@ import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
+import io.github.muntashirakon.AppManager.utils.ClipboardUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -312,7 +313,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
         mIconView.setOnClickListener(v -> {
             ThreadUtils.postOnBackgroundThread(() -> {
-                String data = Utils.readHashValueFromClipboard(ContextUtils.getContext());
+                String data = ClipboardUtils.readHashValueFromClipboard(ContextUtils.getContext());
                 if (data != null) {
                     SignerInfo signerInfo = PackageUtils.getSignerInfo(mPackageInfo, mIsExternalApk);
                     if (signerInfo != null) {

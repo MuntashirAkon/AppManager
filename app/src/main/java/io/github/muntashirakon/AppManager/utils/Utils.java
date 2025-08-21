@@ -7,8 +7,6 @@ import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIB
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -596,31 +594,8 @@ public class Utils {
     }
 
     public static void copyToClipboard(@NonNull Context context, @Nullable CharSequence label, @NonNull CharSequence text) {
-        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        clipboard.setPrimaryClip(ClipData.newPlainText(label, text));
+        ClipboardUtils.copyToClipboard(context, label, text.toString());
         UIUtils.displayShortToast(R.string.copied_to_clipboard);
-    }
-
-    @Nullable
-    public static CharSequence readClipboard(@NonNull Context context) {
-        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clipData = clipboard.getPrimaryClip();
-        if (clipData != null && clipData.getItemCount() > 0) {
-            return clipData.getItemAt(0).coerceToText(context);
-        }
-        return null;
-    }
-
-    @Nullable
-    public static String readHashValueFromClipboard(@NonNull Context context) {
-        CharSequence clipData = readClipboard(context);
-        if (clipData != null) {
-            String data = clipData.toString().trim().toLowerCase(Locale.ROOT);
-            if (data.matches("[0-9a-f: \n]+")) {
-                return data.replaceAll("[: \n]+", "");
-            }
-        }
-        return null;
     }
 
     @Nullable

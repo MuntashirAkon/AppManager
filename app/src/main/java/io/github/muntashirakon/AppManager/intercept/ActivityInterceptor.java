@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.AppManager.intercept;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -68,6 +66,7 @@ import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
+import io.github.muntashirakon.AppManager.utils.ClipboardUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -830,47 +829,41 @@ public class ActivityInterceptor extends BaseActivity {
     }
 
     private void pasteIntentDetails() {
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        ClipData clipData = clipboard.getPrimaryClip();
+        CharSequence clipData = ClipboardUtils.readClipboard(this);
         if (clipData == null) return;
-        for (int i = 0; i < clipData.getItemCount(); ++i) {
-            // Iterate over all ClipData to find if there is any saved Intent
-            ClipData.Item item = clipData.getItemAt(i);
-            String text = item.coerceToText(this).toString();
-            // Get ROOT <bool> and USER <id> since they aren't part of IntentCompat.unflattenFromString()
-            String[] lines = text.split("\n");
-            mUseRoot = false;
-            mUserHandle = UserHandleHidden.myUserId();
-            int parseCount = 0;
-            for (String line : lines) {
-                if (TextUtils.isEmpty(line)) continue;
-                StringTokenizer tokenizer = new StringTokenizer(line, "\t");
-                switch (tokenizer.nextToken()) {
-                    case "ROOT":
-                        mUseRoot = Ops.isWorkingUidRoot() && Boolean.parseBoolean(tokenizer.nextToken());
-                        ++parseCount;
-                        break;
-                    case "USER":
-                        int userId = Integer.decode(tokenizer.nextToken());
-                        if (SelfPermissions.checkCrossUserPermission(userId, false)) {
-                            mUserHandle = userId;
-                        }
-                        ++parseCount;
-                        break;
-                }
-                if (parseCount == 2) {
-                    // Got both ROOT and USER, no need to continue the loop
+        String text = clipData.toString();
+        // Get ROOT <bool> and USER <id> since they aren't part of IntentCompat.unflattenFromString()
+        String[] lines = text.split("\n");
+        mUseRoot = false;
+        mUserHandle = UserHandleHidden.myUserId();
+        int parseCount = 0;
+        for (String line : lines) {
+            if (TextUtils.isEmpty(line)) continue;
+            StringTokenizer tokenizer = new StringTokenizer(line, "\t");
+            switch (tokenizer.nextToken()) {
+                case "ROOT":
+                    mUseRoot = Ops.isWorkingUidRoot() && Boolean.parseBoolean(tokenizer.nextToken());
+                    ++parseCount;
                     break;
-                }
+                case "USER":
+                    int userId = Integer.decode(tokenizer.nextToken());
+                    if (SelfPermissions.checkCrossUserPermission(userId, false)) {
+                        mUserHandle = userId;
+                    }
+                    ++parseCount;
+                    break;
             }
-            // Rebuild Intent
-            Intent intent = IntentCompat.unflattenFromString(text);
-            if (intent != null) {
-                // Requested component set to NULL in case it was set previously
-                mRequestedComponent = null;
-                init(intent, false);
+            if (parseCount == 2) {
+                // Got both ROOT and USER, no need to continue the loop
                 break;
             }
+        }
+        // Rebuild Intent
+        Intent intent = IntentCompat.unflattenFromString(text);
+        if (intent != null) {
+            // Requested component set to NULL in case it was set previously
+            mRequestedComponent = null;
+            init(intent, false);
         }
     }
 
