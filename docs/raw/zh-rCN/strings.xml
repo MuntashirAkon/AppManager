@@ -307,7 +307,7 @@ Manager 可能包含安全漏洞，不应继续使用。</string>
     <string name="pages$one-click-ops-page$$trim-caches-in-all-apps-title">清理所有应用的缓存</string>
     <string name="pages$profile-page$$profile-id-title">配置文件ID</string>
     <string name="pages$profile-page$$freeze-title">冻结</string>
-    <string name="pages$profile-page$configurations-tab">配置标签可用于配置选中的包。</string>
+    <string name="pages$profile-page$configurations-tab">可用配置标签页来配置选中的包。\n\n\\begin{tip}{卸载多个应用}\n 由于卸载是一次性事件，它并非配置的一部分。不过，仍\n 然可以卸载属于同一配置文件的多个应用。要实现这一点，可以用\n 配置文件筛选主页面中的应用，选中所有筛选的应用，卸载\n 它们。\n\\end{tip}</string>
     <string name="pages$profile-page$profile-id">该配置文件的唯一ID，目前是基于配置文件名设置。\n该配置文件ID可被第三方应用程序用于 \\hyperref[subsec:triggering-a-profile]{触发配置文件} 。</string>
     <string name="pages$profile-page$comment">这是会显示在 \\hyperref[sec:profiles-page]{配置文件页面} 的文本。\n若并未设置，则会显示当前配置信息。</string>
     <string name="pages$profile-page$freeze">允许根据 \\hyperref[subsubsec:profile-state]{状态} 的值冻结或解冻选中的包。\n若状态为 \\textit{开}，则包会被冻结。若状态为 \\textit{关}，则包会被解冻。</string>
