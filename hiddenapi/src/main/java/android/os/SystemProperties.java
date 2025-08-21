@@ -74,4 +74,16 @@ public class SystemProperties {
     public static boolean getBoolean(String key, boolean def) {
         return HiddenUtil.throwUOE(key, def);
     }
+
+    /**
+     * Set the value for the given {@code key} to {@code val}.
+     *
+     * @throws IllegalArgumentException for non read-only properties if the {@code val} exceeds
+     * 91 characters
+     * @throws RuntimeException if the property cannot be set, for example, if it was blocked by
+     * SELinux. libc will log the underlying reason.
+     */
+    public static void set(@NonNull String key, @Nullable String val) {
+        HiddenUtil.throwUOE(key, val);
+    }
 }
