@@ -1440,4 +1440,5 @@
     <string name="icon">图标</string>
     <string name="preview">预览</string>
     <string name="debloat_removal_unsafe">不安全</string>
+    <string name="sort_by_cpu_time">CPU 时间</string>
 </resources>
