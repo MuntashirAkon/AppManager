@@ -7,43 +7,43 @@ ext {
     build_tools = '35.0.0'
 
     // Gradle plugins
-    agp_version = '8.8.0'
+    agp_version = '8.9.2'
 
     // Library dependencies
-    activity_version = "1.10.0" // Draw around the display cutouts
-    androidx_core_version = "1.15.0" // Added temporarily until appcompat migrates to it
+    activity_version = "1.10.1" // Draw around the display cutouts
+    androidx_core_version = "1.16.0" // Added temporarily until appcompat migrates to it
     annotation_version = "1.9.1"
-    apksig_version = "4.4.0"
-    appcompat_version = "1.7.0"
-    arsclib_version = "cb342c16ad"
-    baksmali_version = "3.0.9"
-    biometric_version = "1.4.0-alpha02"
-    bouncycastle_version = "1.80"
-    desugar_jdk_version = "2.1.4"
-    documentfile_version = "1.1.0-alpha01" // AppCompat still includes the buggy implementation of documentfile library (1.0.0)
-    duration_picker = "c3c89adf3d"
-    fastscroll_version = "1.3.0"
-    gson_version = "2.11.0"
-    hiddenapibypass_version = "6.1"
-    jadx_version = "1.4.7"
-    jb_annotation_version = "26.0.2" // Compile-only
-    libadb_version = "3.0.0"
-    libsu_version = "6.0.0"
-    material_version = "1.12.0"
+    apksig_version = "4.4.0" // https://github.com/MuntashirAkon/apksig-android
+    appcompat_version = "1.7.1" // https://developer.android.com/jetpack/androidx/releases/appcompat
+    arsclib_version = "66051037ef" // https://github.com/MuntashirAkon/ARSCLib
+    baksmali_version = "3.0.9" // https://github.com/google/smali/tags
+    biometric_version = "1.4.0-alpha04"
+    bouncycastle_version = "1.81" // https://www.bouncycastle.org/download/bouncy-castle-java
+    desugar_jdk_version = "2.1.5" // https://github.com/google/desugar_jdk_libs
+    documentfile_version = "1.1.0" // AppCompat still includes the buggy implementation of documentfile library (1.0.0)
+    duration_picker = "c3c89adf3d" // https://github.com/MuntashirAkon/time-duration-picker
+    fastscroll_version = "1.3.0" // https://github.com/zhanghai/AndroidFastScroll
+    gson_version = "2.13.1" // https://github.com/google/gson
+    hiddenapibypass_version = "6.1" // https://github.com/LSPosed/AndroidHiddenApiBypass
+    jadx_version = "1.4.7" // https://github.com/MuntashirAkon/jadx-android
+    jb_annotation_version = "26.0.2" // https://github.com/JetBrains/java-annotations (Compile-only)
+    libadb_version = "3.1.0" // https://github.com/MuntashirAkon/libadb-android
+    libsu_version = "6.0.0" // https://github.com/topjohnwu/libsu
+    material_version = "1.12.0" // https://github.com/material-components/material-components-android
     preferences_version = "1.2.1"
-    refine_version = "4.0.0"
-    room_version = "2.6.1"
-    simplemagic_version = "1.17"
-    sora_editor_version = "0.22.2"
-    speed_dial_version = "3.3.0"
-    splashscreen_version = "1.2.0-alpha02"
-    sun_security_version = "1.1"
+    refine_version = "4.0.0" // https://github.com/RikkaApps/HiddenApiRefinePlugin
+    room_version = "2.7.2"
+    simplemagic_version = "1.17" // https://github.com/j256/simplemagic
+    sora_editor_version = "0.22.2" // https://github.com/MuntashirAkon/sora-editor
+    speed_dial_version = "3.3.0" // https://github.com/leinardi/FloatingActionButtonSpeedDial
+    splashscreen_version = "1.2.0-rc01"
+    sun_security_version = "1.1" // https://github.com/MuntashirAkon/sun-security-android
     swipe_refresh_version = "1.2.0-beta01"
-    unapkm_version = "1.2"
-    webkit_version = "1.12.1"
-    zstd_version = "1.5.6-10"
+    unapkm_version = "v1.4" // https://github.com/MuntashirAkon/unapkm-android
+    webkit_version = "1.14.0"
+    zstd_version = "1.5.7-4" // https://github.com/luben/zstd-jni
 
     // Test dependencies
-    junit_version = "4.13.2"
-    robolectric_version = "4.14.1"
+    junit_version = "4.13.2" // https://github.com/junit-team/junit4
+    robolectric_version = "4.15.1" // https://github.com/robolectric/robolectric
 }
