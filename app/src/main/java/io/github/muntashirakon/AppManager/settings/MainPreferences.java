@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.collection.ArrayMap;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
@@ -16,6 +15,7 @@ import androidx.preference.Preference;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.DeviceInfo2;
@@ -66,15 +66,17 @@ public class MainPreferences extends PreferenceFragment {
         fundingCampaignNotice.setVisible(FundingCampaignChecker.campaignRunning());
         // Custom locale
         mCurrentLang = Prefs.Appearance.getLanguage();
-        ArrayMap<String, Locale> locales = LangUtils.getAppLanguages(mActivity);
+        Map<String, Locale> locales = LangUtils.getAppLanguages(mActivity);
         final CharSequence[] languageNames = getLanguagesL(locales);
         final String[] languages = new String[languageNames.length];
-        for (int i = 0; i < locales.size(); ++i) {
-            languages[i] = locales.keyAt(i);
-        }
-        int localeIndex = locales.indexOfKey(mCurrentLang);
-        if (localeIndex < 0) {
-            localeIndex = locales.indexOfKey(LangUtils.LANG_AUTO);
+        int i = 0;
+        int localeIndex = 0;
+        for (Map.Entry<String, Locale> localeEntry : locales.entrySet()) {
+            languages[i] = localeEntry.getKey();
+            if (languages[i].equals(mCurrentLang)) {
+                localeIndex = i;
+            }
+            ++i;
         }
         Preference locale = requirePreference("custom_locale");
         locale.setSummary(languageNames[localeIndex]);
@@ -139,14 +141,16 @@ public class MainPreferences extends PreferenceFragment {
     }
 
     @NonNull
-    private CharSequence[] getLanguagesL(@NonNull ArrayMap<String, Locale> locales) {
+    private CharSequence[] getLanguagesL(@NonNull Map<String, Locale> locales) {
         CharSequence[] localesL = new CharSequence[locales.size()];
         Locale locale;
-        for (int i = 0; i < locales.size(); ++i) {
-            locale = locales.valueAt(i);
-            if (LangUtils.LANG_AUTO.equals(locales.keyAt(i))) {
+        int i = 0;
+        for (Map.Entry<String, Locale> localeEntry : locales.entrySet()) {
+            locale = localeEntry.getValue();
+            if (LangUtils.LANG_AUTO.equals(localeEntry.getKey())) {
                 localesL[i] = mActivity.getString(R.string.auto);
             } else localesL[i] = locale.getDisplayName(locale);
+            ++i;
         }
         return localesL;
     }

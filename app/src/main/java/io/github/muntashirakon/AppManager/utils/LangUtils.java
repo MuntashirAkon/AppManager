@@ -6,47 +6,46 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
-import androidx.collection.ArrayMap;
 import androidx.core.os.ConfigurationCompat;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.IllformedLocaleException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 
 public final class LangUtils {
     public static final String LANG_AUTO = "auto";
-    public static final String LANG_DEFAULT = "en";
 
-    private static ArrayMap<String, Locale> sLocaleMap;
+    private static Map<String, Locale> sLocaleMap;
 
     @SuppressLint("AppBundleLocaleChanges") // We don't use Play Store
     private static void loadAppLanguages(@NonNull Context context) {
-        if (sLocaleMap == null) sLocaleMap = new ArrayMap<>();
+        if (sLocaleMap == null) sLocaleMap = new LinkedHashMap<>();
         Resources res = context.getResources();
         Configuration conf = res.getConfiguration();
-        String[] locales = context.getResources().getStringArray(R.array.languages_key);
-        Locale appDefaultLocale = Locale.forLanguageTag(LANG_DEFAULT);
 
-        for (String locale : locales) {
+        sLocaleMap.put(LANG_AUTO, null);
+        for (String locale : parseLocalesConfig(context)) {
             conf.setLocale(Locale.forLanguageTag(locale));
-            Context ctx = context.createConfigurationContext(conf);
-            String langTag = ctx.getString(R.string._lang_tag);
-
-            if (LANG_AUTO.equals(locale)) {
-                sLocaleMap.put(LANG_AUTO, null);
-            } else if (LANG_DEFAULT.equals(langTag)) {
-                sLocaleMap.put(LANG_DEFAULT, appDefaultLocale);
-            } else sLocaleMap.put(locale, ConfigurationCompat.getLocales(conf).get(0));
+            sLocaleMap.put(locale, ConfigurationCompat.getLocales(conf).get(0));
         }
     }
 
     @NonNull
-    public static ArrayMap<String, Locale> getAppLanguages(@NonNull Context context) {
+    public static Map<String, Locale> getAppLanguages(@NonNull Context context) {
         if (sLocaleMap == null) loadAppLanguages(context);
         return sLocaleMap;
     }
@@ -83,5 +82,25 @@ public final class LangUtils {
             return " : ";
         }
         return ": ";
+    }
+
+    @NonNull
+    public static List<String> parseLocalesConfig(@NonNull Context context) {
+        List<String> localeNames = new ArrayList<>();
+
+        try (XmlResourceParser parser = context.getResources().getXml(R.xml.locales_config)) {
+            int eventType = parser.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if (eventType == XmlPullParser.START_TAG && "locale".equals(parser.getName())) {
+                    String localeName = parser.getAttributeValue("http://schemas.android.com/apk/res/android", "name");
+                    if (localeName != null) {
+                        localeNames.add(localeName);
+                    }
+                }
+                eventType = parser.next();
+            }
+        } catch (XmlPullParserException | IOException ignore) {
+        }
+        return localeNames;
     }
 }
