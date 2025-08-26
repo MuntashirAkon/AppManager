@@ -684,7 +684,7 @@
     <string name="share">Partager</string>
     <string name="about_device">À propos de l\'appareil</string>
     <string name="toggle_kill_for_system_apps">Activer/désactiver l\'arrêt forcé des applications système</string>
-    <string name="app_ops">Opérations de l\'appli</string>
+    <string name="app_ops">Opérations de l\'application</string>
     <string name="internal_data">Données internes</string>
     <string name="requested_large_heap">Grand tas</string>
     <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
@@ -754,7 +754,7 @@
     <string name="import_key">Importer la clé</string>
     <string name="pem_file">Fichier PEM</string>
     <string name="pk8_file">Fichier PKCS #8 (PK8)</string>
-    <string name="pem_and_pk8">PEM and PKCS #8 (PK8)</string>
+    <string name="pem_and_pk8">PEM et PKCS #8 (PK8)</string>
     <string name="pkcs12_keystore">Magasin de clefs PKCS #12 (P12)</string>
     <string name="type_long_array">Tableau d\'entiers longs</string>
     <string name="type_int_array_list">Liste d\'entiers</string>
@@ -948,7 +948,7 @@
     <string name="orientation_user_landscape">Mode paysage</string>
     <string name="orientation_sensor_portrait">Capteur mode portrait</string>
     <string name="state_wake_kill">Désactiver le réveil</string>
-    <string name="systemless_app">Appli sans système</string>
+    <string name="systemless_app">appli sans système</string>
     <string name="source_stamp_verified">Timbre source vérifié.</string>
     <string name="no_app_ops_permission">Pas de permission pour afficher les opérations d\'application</string>
     <string name="app_signing_signature_schemes">Schémas de signature</string>
@@ -962,7 +962,7 @@
     <string name="backup_multiple_description">Créer une sauvegarde séparée <i>nommée</i> à la place de la sauvegarde de base.</string>
     <string name="backup_skip_signature_checks_description">Restaurer les sauvegardes qui ont échoué au test de somme de contrôle ou qui ont des signatures d\'APK différentes par rapport à leur précédente sauvegarde.</string>
     <string name="patch_level">Niveau de correctif</string>
-    <string name="scaling_factor">Facteur d\'échelonnage</string>
+    <string name="scaling_factor">Facteur de mise à l\'échelle</string>
     <string name="set_custom_app_op">Définir une opération d\'application personnalisée</string>
     <string name="set_mode_for_app_ops_dots">Définir le mode pour les opérations d\'application…</string>
     <string name="permissive">Facultatif</string>
@@ -1279,7 +1279,7 @@
     <string name="debloat_list_type">Liste</string>
     <string name="debloat_removal_type">Type</string>
     <string name="system_app_put_back">Remettre</string>
-    <string name="debloater_title">Débloqueur</string>
+    <string name="debloater_title">Débloateur</string>
     <string name="debloat_list_aosp">AOSP</string>
     <string name="debloat_list_oem">Fabricant</string>
     <string name="debloat_list_carrier">Opérateur/FAI</string>
@@ -1389,7 +1389,7 @@
     <string name="calculating_file_size">Calcul en cours…</string>
     <string name="grant_required_permission">Accorder l\'autorisation requise</string>
     <string name="netpolicy_reject_metered_background_data">Rejeter les données d\'arrière-plan sur les réseaux mesurés</string>
-    <string name="netpolicy_reject_metered_data">Rejeter les données sur les réseaux payants</string>
+    <string name="netpolicy_reject_metered_data">Rejeter les données sur les réseaux équipés de compteurs</string>
     <string name="netpolicy_allow_metered_background_data">Autoriser les données en arrière-plan sur les réseaux limités même lorsque l\'économiseur de données est activé</string>
     <string name="pref_toggle_internet_msg">Activer les fonctionnalités Internet dans App Manager</string>
     <string name="create_new_file">Nouveau fichier</string>
@@ -1420,7 +1420,7 @@
     <string name="folder">Dossier</string>
     <string name="create_new_folder">Nouveau dossier</string>
     <string name="enter_symbolic_link_name">Nom du lien</string>
-    <string name="enter_target_path">Chemin cible</string>
+    <string name="enter_target_path">Chemin d’accès cible</string>
     <string name="conflict_detected_while_copying_message">Un élément nommé «%1$s» existe déjà à cet emplacement. Voulez-vous le remplacer ?</string>
     <string name="change_owner_uid">Changer de propriétaire (UID)</string>
     <string name="change_mode">Changer le mode</string>
@@ -1473,7 +1473,7 @@
     <string name="status_remote_services_active">Les services distants sont actifs</string>
     <string name="status_connected_via_mode">Connecté via %s</string>
     <string name="adb_pairing_pairing_code">Code de couplage</string>
-    <string name="adb_pairing_instruction">Merci d\'accéder aux options développeurs pour activer le débogage sans fil et générer un code de couplage.</string>
+    <string name="adb_pairing_instruction">Accédez aux options développeur pour activer le débogage sans fil et générer un code d\'appairage. Cliquez sur <b>Manuel</b> si vous avez déjà ouvert les options développeur.</string>
     <string name="adb_pairing_input_pairing_code">Code de couplage</string>
     <string name="adb_pairing_found_pairing_service_with_port">Service trouvé avec le port %d</string>
     <string name="adb_pairing_pairing_in_progress">Couplage…</string>
@@ -1508,4 +1508,21 @@
     <string name="verified_boot">Démarrage Vérifié</string>
     <string name="android_verified_bootloader_version">Version AVB</string>
     <string name="actual_installer">Installateur réel</string>
+    <string name="freeze_prefer_per_app_option">Préférer l\'option par application</string>
+    <string name="remember_option_for_this_app">Se souvenir de cette application</string>
+    <string name="no_overlay_permission">Pas d\'autorisation d\'afficher des superpositions</string>
+    <string name="overlay_category">Catégorie</string>
+    <string name="overlay_target">Cible</string>
+    <string name="overlay_sdk_version_too_low">Les superpositions ne sont pas prises en charge.</string>
+    <string name="no_overlays">Pas de superposition</string>
+    <string name="sort_by_overlay_names">Nom de la superposition</string>
+    <string name="sort_by_priority">Priorité</string>
+    <string name="overlays">Superpositions</string>
+    <string name="title_overlay">Superposition</string>
+    <string name="message_shortcut_for_frozen_app">L\'application correspondant au raccourci semble avoir été gelée. Dégeler temporairement et ouvrir le raccourci ?</string>
+    <string name="filters">Filtres</string>
+    <string name="icon">icône</string>
+    <string name="preview">Prévisualisation</string>
+    <string name="debloat_removal_unsafe">Peu sûr</string>
+    <string name="sort_by_cpu_time">Temps CPU</string>
 </resources>
