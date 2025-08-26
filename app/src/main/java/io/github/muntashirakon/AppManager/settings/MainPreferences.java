@@ -3,8 +3,6 @@
 package io.github.muntashirakon.AppManager.settings;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,13 +16,11 @@ import java.util.Locale;
 import java.util.Map;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.misc.DeviceInfo2;
 import io.github.muntashirakon.AppManager.self.life.BuildExpiryChecker;
 import io.github.muntashirakon.AppManager.self.life.FundingCampaignChecker;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
-import io.github.muntashirakon.dialog.AlertDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.preference.InfoAlertPreference;
 import io.github.muntashirakon.preference.WarningAlertPreference;
@@ -99,30 +95,12 @@ public class MainPreferences extends PreferenceFragment {
         // Mode of operation
         mModePref = requirePreference("mode_of_operations");
         mModes = getResources().getStringArray(R.array.modes);
-        // About device
-        requirePreference("about_device").setOnPreferenceClickListener(preference -> {
-            mModel.loadDeviceInfo(new DeviceInfo2(mActivity));
-            return true;
-        });
 
         mModel.getOperationCompletedLiveData().observe(requireActivity(), completed -> {
             if (requireActivity() instanceof SettingsActivity) {
                 ((SettingsActivity) requireActivity()).progressIndicator.hide();
             }
             UIUtils.displayShortToast(R.string.the_operation_was_successful);
-        });
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        // Preference loaders
-        // Device info
-        mModel.getDeviceInfo().observe(getViewLifecycleOwner(), deviceInfo -> {
-            View v = View.inflate(mActivity, io.github.muntashirakon.ui.R.layout.dialog_scrollable_text_view, null);
-            ((TextView) v.findViewById(android.R.id.content)).setText(deviceInfo.toLocalizedString(mActivity));
-            v.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
-            new AlertDialogBuilder(mActivity, true).setTitle(R.string.about_device).setView(v).show();
         });
     }
 

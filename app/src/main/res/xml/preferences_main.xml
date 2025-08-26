@@ -102,7 +102,8 @@
         app:key="about_device"
         app:icon="@drawable/ic_phone_android"
         app:title="@string/about_device"
-        app:summary="@string/pref_about_device_msg" />
+        app:summary="@string/pref_about_device_msg"
+        android:fragment="io.github.muntashirakon.AppManager.settings.AboutDeviceFragment" />
 
     <Preference
         app:key="about"
