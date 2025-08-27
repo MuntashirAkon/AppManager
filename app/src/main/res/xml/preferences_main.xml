@@ -1,121 +1,122 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <io.github.muntashirakon.preference.WarningAlertPreference
-        app:key="app_manager_expiring_notice"
         app:icon="@drawable/ic_caution"
+        app:key="app_manager_expiring_notice"
         app:selectable="false"
         app:summary="@string/app_manager_build_expiring_soon_warning" />
 
     <io.github.muntashirakon.preference.InfoAlertPreference
-        app:key="funding_campaign_notice"
         app:icon="@drawable/ic_charity"
+        app:key="funding_campaign_notice"
         app:selectable="false"
         app:summary="@string/funding_campaign_text" />
 
     <Preference
-        app:key="custom_locale"
+        android:fragment="io.github.muntashirakon.AppManager.settings.ChangeLanguageFragment"
         app:icon="@drawable/ic_translate"
+        app:key="custom_locale"
         app:title="@string/pref_app_language"
         tools:summary="Auto" />
 
     <Preference
-        app:key="appearance_prefs"
+        android:fragment="io.github.muntashirakon.AppManager.settings.AppearancePreferences"
         app:icon="@drawable/ic_palette_swatch"
-        app:title="@string/pref_cat_appearance"
+        app:key="appearance_prefs"
         app:summary="@string/pref_appearance_description"
-        android:fragment="io.github.muntashirakon.AppManager.settings.AppearancePreferences" />
+        app:title="@string/pref_cat_appearance" />
 
     <Preference
-        app:key="privacy_prefs"
+        android:fragment="io.github.muntashirakon.AppManager.settings.PrivacyPreferences"
         app:icon="@drawable/ic_security"
-        app:title="@string/pref_privacy"
+        app:key="privacy_prefs"
         app:summary="@string/pref_privacy_description"
-        android:fragment="io.github.muntashirakon.AppManager.settings.PrivacyPreferences" />
+        app:title="@string/pref_privacy" />
 
     <Preference
-        app:key="mode_of_operations"
-        app:icon="@drawable/ic_run_fast"
-        app:title="@string/pref_mode_of_operations"
         android:fragment="io.github.muntashirakon.AppManager.settings.ModeOfOpsPreference"
+        app:icon="@drawable/ic_run_fast"
+        app:key="mode_of_operations"
+        app:title="@string/pref_mode_of_operations"
         tools:summary="Auto" />
 
     <Preference
-        app:key="apk_signing_prefs"
+        android:fragment="io.github.muntashirakon.AppManager.settings.ApkSigningPreferences"
         app:icon="@drawable/ic_shield_key"
-        app:title="@string/apk_signing"
+        app:key="apk_signing_prefs"
         app:summary="@string/pref_apk_signing_msg"
-        android:fragment="io.github.muntashirakon.AppManager.settings.ApkSigningPreferences" />
+        app:title="@string/apk_signing" />
 
     <Preference
-        app:key="installer"
+        android:fragment="io.github.muntashirakon.AppManager.settings.InstallerPreferences"
         app:icon="@drawable/ic_get_app"
-        app:title="@string/installer"
+        app:key="installer"
         app:summary="@string/pref_installer_msg"
-        android:fragment="io.github.muntashirakon.AppManager.settings.InstallerPreferences" />
+        app:title="@string/installer" />
 
     <Preference
-        app:key="backup_restore_prefs"
+        android:fragment="io.github.muntashirakon.AppManager.settings.BackupRestorePreferences"
         app:icon="@drawable/ic_backup_restore"
-        app:title="@string/backup_restore"
+        app:key="backup_restore_prefs"
         app:summary="@string/pref_backup_restore_msg"
-        android:fragment="io.github.muntashirakon.AppManager.settings.BackupRestorePreferences" />
+        app:title="@string/backup_restore" />
 
     <Preference
-        app:key="log_viewer_prefs"
+        android:fragment="io.github.muntashirakon.AppManager.settings.LogViewerPreferences"
         app:icon="@drawable/ic_view_list"
-        app:title="@string/log_viewer"
+        app:key="log_viewer_prefs"
         app:summary="@string/pref_log_viewer_msg"
-        android:fragment="io.github.muntashirakon.AppManager.settings.LogViewerPreferences" />
+        app:title="@string/log_viewer" />
 
     <Preference
-        app:key="files_prefs"
+        android:fragment="io.github.muntashirakon.AppManager.settings.FileManagerPreferences"
         app:icon="@drawable/ic_file_document_multiple"
-        app:title="@string/files"
+        app:key="files_prefs"
         app:summary="@string/pref_files_msg"
-        android:fragment="io.github.muntashirakon.AppManager.settings.FileManagerPreferences" />
+        app:title="@string/files" />
 
     <Preference
-        app:key="rules_prefs"
+        android:fragment="io.github.muntashirakon.AppManager.settings.RulesPreferences"
         app:icon="@drawable/ic_list_status"
-        app:title="@string/rules"
+        app:key="rules_prefs"
         app:summary="@string/pref_rules_msg"
-        android:fragment="io.github.muntashirakon.AppManager.settings.RulesPreferences" />
+        app:title="@string/rules" />
 
     <Preference
-        app:key="vt"
+        android:fragment="io.github.muntashirakon.AppManager.settings.VirusTotalPreferences"
         app:icon="@drawable/ic_vt"
-        app:title="@string/virus_total"
+        app:key="vt"
         app:summary="@string/pref_vt_apikey_summary"
-        android:fragment="io.github.muntashirakon.AppManager.settings.VirusTotalPreferences" />
+        app:title="@string/virus_total" />
 
     <Preference
-        app:key="advanced_prefs"
+        android:fragment="io.github.muntashirakon.AppManager.settings.AdvancedPreferences"
         app:icon="@drawable/ic_tune"
-        app:title="@string/pref_cat_advanced"
+        app:key="advanced_prefs"
         app:summary="@string/pref_advanced_pref"
-        android:fragment="io.github.muntashirakon.AppManager.settings.AdvancedPreferences" />
+        app:title="@string/pref_cat_advanced" />
 
     <Preference
-        app:key="about_device"
+        android:fragment="io.github.muntashirakon.AppManager.settings.AboutDeviceFragment"
         app:icon="@drawable/ic_phone_android"
-        app:title="@string/about_device"
+        app:key="about_device"
         app:summary="@string/pref_about_device_msg"
-        android:fragment="io.github.muntashirakon.AppManager.settings.AboutDeviceFragment" />
+        app:title="@string/about_device" />
 
     <Preference
-        app:key="about"
+        android:fragment="io.github.muntashirakon.AppManager.settings.AboutPreferences"
         app:icon="@drawable/ic_information"
-        app:title="@string/about"
+        app:key="about"
         app:summary="@string/pref_about_msg"
-        android:fragment="io.github.muntashirakon.AppManager.settings.AboutPreferences" />
+        app:title="@string/about" />
 
     <Preference
-        app:key="troubleshooting_prefs"
+        android:fragment="io.github.muntashirakon.AppManager.settings.TroubleshootingPreferences"
         app:icon="@drawable/ic_hammer_wrench"
-        app:title="@string/troubleshooting"
-        android:fragment="io.github.muntashirakon.AppManager.settings.TroubleshootingPreferences" />
+        app:key="troubleshooting_prefs"
+        app:title="@string/troubleshooting" />
 
 </PreferenceScreen>

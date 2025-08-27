@@ -36,6 +36,7 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
+import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.view.TextInputLayoutCompat;
 import io.github.muntashirakon.widget.TextInputTextView;
 
@@ -79,7 +80,17 @@ public class ModeOfOpsPreference extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_mode_of_ops, container, false);
+        View view = inflater.inflate(R.layout.fragment_mode_of_ops, container, false);
+        boolean secondary = false;
+        if (getArguments() != null) {
+            secondary = requireArguments().getBoolean(PreferenceFragment.PREF_SECONDARY);
+            requireArguments().remove(PreferenceFragment.PREF_KEY);
+            requireArguments().remove(PreferenceFragment.PREF_SECONDARY);
+        }
+        if (secondary) {
+            UiUtils.applyWindowInsetsAsPadding(view, false, true, false, true);
+        } else UiUtils.applyWindowInsetsAsPaddingNoTop(view);
+        return view;
     }
 
     @Override

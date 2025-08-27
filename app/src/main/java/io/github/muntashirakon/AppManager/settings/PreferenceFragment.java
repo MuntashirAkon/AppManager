@@ -42,7 +42,11 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat {
         recyclerView.setFitsSystemWindows(true);
         recyclerView.setClipToPadding(false);
         if (secondary) {
-            UiUtils.applyWindowInsetsAsPadding(recyclerView, false, true, false, true);
+            if (this instanceof MainPreferences) {
+                UiUtils.applyWindowInsetsAsPadding(recyclerView, false, true, true, false);
+            } else {
+                UiUtils.applyWindowInsetsAsPadding(recyclerView, false, true, false, true);
+            }
         } else UiUtils.applyWindowInsetsAsPaddingNoTop(recyclerView);
     }
 

@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.DeviceInfo2;
+import io.github.muntashirakon.util.UiUtils;
 
 public class AboutDeviceFragment extends Fragment {
     private MainPreferencesViewModel mModel;
@@ -47,7 +48,15 @@ public class AboutDeviceFragment extends Fragment {
             mlp.topMargin = 0;
             view.setLayoutParams(mlp);
         }
-        view.setFitsSystemWindows(false);
+        boolean secondary = false;
+        if (getArguments() != null) {
+            secondary = requireArguments().getBoolean(PreferenceFragment.PREF_SECONDARY);
+            requireArguments().remove(PreferenceFragment.PREF_KEY);
+            requireArguments().remove(PreferenceFragment.PREF_SECONDARY);
+        }
+        if (secondary) {
+            UiUtils.applyWindowInsetsAsPadding(view, false, true, false, true);
+        } else UiUtils.applyWindowInsetsAsPaddingNoTop(view);
         return view;
     }
 

@@ -113,7 +113,7 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
 
         String defaultPref = getKey(mLevel);
         if (defaultPref == null && mDualPaneMode) {
-            defaultPref = "appearance_prefs";
+            defaultPref = "custom_locale";
         }
         getSupportFragmentManager()
                 .beginTransaction()
@@ -123,7 +123,7 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
                         R.animator.exit_from_right,
                         R.animator.exit_from_left
                 )
-                .replace(R.id.main_layout, MainPreferences.getInstance(defaultPref))
+                .replace(R.id.main_layout, MainPreferences.getInstance(defaultPref, mDualPaneMode))
                 .commit();
     }
 
