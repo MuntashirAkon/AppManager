@@ -187,7 +187,7 @@
     <string name="usage_access">Zugriff auf Nutzungsdaten</string>
     <string name="app_settings">Einstellungen</string>
     <string name="usage_yesterday">Gestern</string>
-    <string name="exodus_link">\u03b5xodus-Link</string>
+    <string name="exodus_link">εxodus-Link</string>
     <string name="sort_by_blocked_components">Blockierte zuerst</string>
     <string name="external_data_dir">Externes Daten-Verzeichnis</string>
     <string name="external_multiple_data_dir">Externes Daten-Verzeichnis <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
@@ -546,7 +546,7 @@
     <string name="usage_access_not_supported">Konnte keinen Nutzungszugriff anfordern, da die entsprechende Einstellungsseite nicht existiert.</string>
     <string name="sys_config">Systemkonfiguration</string>
     <string name="tap_to_see_details">Tippen Sie zum Anzeigen der Details</string>
-    <string name="lib_details">Einzelheiten zur Bibliothek</string>
+    <string name="lib_details">Bibliotheksdetails</string>
     <string name="no_libs">Keine Bibliotheken</string>
     <string name="scanner">Scanner</string>
     <plurals name="libraries">
@@ -768,7 +768,7 @@
     <string name="battery_optimization">Akku-Optimierung</string>
     <string name="no_battery_optimization">Keine Akku-Optimierung</string>
     <string name="screen_lock_msg">App Manager mit Android-Bildschirmsperre sperren</string>
-    <string name="screen_lock">Bildschirm sperren</string>
+    <string name="screen_lock">Bildschirmsperre</string>
     <string name="unlock_app_manager">App-Manager freischalten</string>
     <string name="sd_card">SD-Karte</string>
     <string name="external_storage">Externer Speicher</string>
@@ -847,7 +847,7 @@
     <string name="log_level_debug">Fehlersuche</string>
     <string name="filename">Dateiname</string>
     <string name="restart_log_viewer_to_see_changes">Starten Sie das Fenster des Log-Betrachters neu, um die Änderungen zu sehen.</string>
-    <string name="log_viewer">Log-Betrachter</string>
+    <string name="log_viewer">Protokollbetrachter</string>
     <string name="pref_log_viewer_msg">Konfigurieren Sie, wie Protokolle angezeigt werden.</string>
     <string name="pref_installer_msg">Konfigurieren Sie die Einstellungen für das App-Installationsprogramms.</string>
     <string name="expiry_date_cannot_be_empty">Das Verfallsdatum kann nicht leer sein.</string>
@@ -907,14 +907,14 @@
     <string name="failed_to_block_trackers">Konnte Tracker nicht blockieren</string>
     <string name="profile_save_apk_msg">Speichert APK-Dateien in <tt>AppManager/apks</tt></string>
     <string name="save_apk">APK-Datei speichern</string>
-    <string name="running_services">Aktive Dienste</string>
+    <string name="running_services">Laufende Dienste</string>
     <string name="view_logs">Protokolle anzeigen</string>
     <string name="share_log">Teilen</string>
     <string name="text_include_dmesg">Kernel-Log mit einschließen</string>
     <string name="omit_sensitive_info_summary">Sensible Informationen wie Web-URLs, Telefonnummern oder E-Mails auslassen.</string>
     <string name="omit_sensitive_info">Sensible Informationen auslassen</string>
     <string name="undo">Rückgängig machen</string>
-    <string name="pause_unpause">Abspielen/Pause</string>
+    <string name="pause_unpause">Wiedergabe/Pause</string>
     <string name="collapse_all">Alles einklappen</string>
     <string name="expand_all">Alles aufklappen</string>
     <string name="file">Datei</string>
@@ -942,7 +942,7 @@
     <string name="save_log">Protokoll speichern</string>
     <string name="save_as">Speichern als…</string>
     <string name="record_log">Protokoll aufzeichnen</string>
-    <string name="pref_show_timestamp_title">Zeige Pid &amp; Zeitstempel</string>
+    <string name="pref_show_timestamp_title">PID &amp; Zeitstempel anzeigen</string>
     <string name="pref_show_timestamp_summary">Zeige Prozess-ID und Zeitstempel wenn aufgeklappt.</string>
     <string name="pref_log_line_period_error">Bitte geben Sie eine ganze Zahl zwischen 1 und 1000 ein.</string>
     <string name="pref_expanded_by_default_title">Standardmäßig aufklappen</string>
@@ -1058,7 +1058,7 @@
     <string name="parent_process_id">Übergeordnete Prozess ID</string>
     <string name="priority">Priorität</string>
     <string name="threads">Thread Zähler</string>
-    <string name="state">Prozess-Status</string>
+    <string name="state">Prozessstatus</string>
     <string name="swap_chart_info">● %1$s benutzt ● %2$s frei</string>
     <string name="memory_chart_info">● %1$s Anwendungen ● %2$s Cached ● %3$s Puffer ● %4$s frei</string>
     <string name="magisk_denylist">Magisk DenyList</string>
@@ -1394,4 +1394,12 @@
     <string name="copy_profile_id">Kopiere Profil ID</string>
     <string name="remember_option_for_this_app">Speichere für die App</string>
     <string name="app_can_write_and_execute_in_same_place">Die App verstösst gegen die <a href="https://en.wikipedia.org/wiki/W%5EX">W^X Regel</a> und kann im selben Ordner oder Speicher schreiben und ausführen. Dadurch kann Fremdcode aus der App oder dem Internet ausgeführt werden. Für Apps die für Android SDK 29 (Android 10) oder höher konzipiert sind wird empfohlen eine Alternative zu finden, sofern es sich nicht um notwendiges App verhalten handelt (z.B. ein einem Terminal Emulator).</string>
+    <string name="change_mode">Modus wechseln</string>
+    <string name="pref_send_notification_to_connected_devices_msg">Legen Sie fest, ob Benachrichtigungen an verbundene Geräte wie Smartwatches gesendet werden sollen.</string>
+    <string name="finder_title">Suche</string>
+    <string name="pref_installer_force_dexopt_description">Führen Sie die DEX-Optimierung sofort nach der Installation der Anwendung durch, ohne darauf zu warten, dass das System die Optimierung im Leerlauf vornimmt.</string>
+    <string name="select_filter">Filter auswählen</string>
+    <string name="adb_pairing_found_pairing_service_with_port">Dienst mit dem Port %d gefunden</string>
+    <string name="conflict_detected_while_copying_message">Der Gegenstand %1$s existiert bereits an dieser Stelle. Möchtest du ihn ersetzen?</string>
+    <string name="sort_by_cpu_time">CPU-Zeit</string>
 </resources>
