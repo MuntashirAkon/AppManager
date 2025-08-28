@@ -163,6 +163,7 @@ public class InstallerPreferences extends PreferenceFragment {
         updateOwnership.setChecked(Prefs.Installer.requestUpdateOwnership());
         // Package source
         Preference pkgSource = Objects.requireNonNull(findPreference("installer_default_pkg_source"));
+        pkgSource.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU);
         pkgSource.setSummary(PKG_SOURCES_NAMES[Prefs.Installer.getPackageSource()]);
         pkgSource.setOnPreferenceClickListener(preference -> {
             CharSequence[] pkgSourceTexts = new CharSequence[PKG_SOURCES_NAMES.length];

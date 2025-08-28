@@ -4,6 +4,8 @@ package io.github.muntashirakon.AppManager.apk.installer;
 
 import static io.github.muntashirakon.AppManager.settings.InstallerPreferences.INSTALL_LOCATIONS;
 import static io.github.muntashirakon.AppManager.settings.InstallerPreferences.INSTALL_LOCATION_NAMES;
+import static io.github.muntashirakon.AppManager.settings.InstallerPreferences.PKG_SOURCES;
+import static io.github.muntashirakon.AppManager.settings.InstallerPreferences.PKG_SOURCES_NAMES;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
@@ -95,6 +97,7 @@ public class InstallerOptionsFragment extends DialogFragment {
     private View mDialogView;
     private MaterialSpinner mUserSelectionSpinner;
     private MaterialSpinner mInstallLocationSpinner;
+    private MaterialSpinner mPackageSourceSpinner;
     private TextInputLayout mInstallerAppLayout;
     private EditText mInstallerAppField;
     private MaterialSwitch mBlockTrackersSwitch;
@@ -124,8 +127,11 @@ public class InstallerOptionsFragment extends DialogFragment {
         mDialogView = View.inflate(requireActivity(), R.layout.dialog_installer_options, null);
         mUserSelectionSpinner = mDialogView.findViewById(R.id.user);
         mInstallLocationSpinner = mDialogView.findViewById(R.id.install_location);
+        mPackageSourceSpinner = mDialogView.findViewById(R.id.package_source);
         mInstallerAppLayout = mDialogView.findViewById(R.id.installer);
         mInstallerAppField = Objects.requireNonNull(mInstallerAppLayout.getEditText());
+        MaterialSwitch setOriginSwitch = mDialogView.findViewById(R.id.action_set_origin);
+        MaterialSwitch reqUpdateOwnershipSwitch = mDialogView.findViewById(R.id.action_update_ownership);
         MaterialSwitch signApkSwitch = mDialogView.findViewById(R.id.action_sign_apk);
         MaterialSwitch forceDexOptSwitch = mDialogView.findViewById(R.id.action_optimize);
         mBlockTrackersSwitch = mDialogView.findViewById(R.id.action_block_trackers);
@@ -136,7 +142,13 @@ public class InstallerOptionsFragment extends DialogFragment {
         boolean canBlockTrackers = SelfPermissions.canModifyAppComponentStates(selectedUser, mPackageName, mIsTestOnly);
         initUserSpinner(canInstallForOtherUsers);
         initInstallLocationSpinner();
+        initPackageSourceSpinner();
         initInstallerAppSpinner();
+        setOriginSwitch.setChecked(mOptions.isSetOriginatingPackage());
+        setOriginSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> mOptions.setSetOriginatingPackage(isChecked));
+        reqUpdateOwnershipSwitch.setVisibility(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE ? View.VISIBLE : View.GONE);
+        reqUpdateOwnershipSwitch.setChecked(mOptions.requestUpdateOwnership());
+        reqUpdateOwnershipSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> mOptions.requestUpdateOwnership(isChecked));
         signApkSwitch.setChecked(mOptions.isSignApkFiles());
         signApkSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> mOptions.setSignApkFiles(isChecked));
         forceDexOptSwitch.setVisibility(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? View.VISIBLE : View.GONE);
@@ -225,6 +237,24 @@ public class InstallerOptionsFragment extends DialogFragment {
         mInstallLocationSpinner.setSelection(installLocationPosition);
         mInstallLocationSpinner.setOnItemClickListener((parent, view, position, id) ->
                 mOptions.setInstallLocation(INSTALL_LOCATIONS[position]));
+    }
+
+    private void initPackageSourceSpinner() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            mPackageSourceSpinner.setVisibility(View.GONE);
+            return;
+        }
+        int pkgSource = mOptions.getPackageSource();
+        CharSequence[] pkgSourceTexts = new CharSequence[PKG_SOURCES_NAMES.length];
+        for (int i = 0; i < PKG_SOURCES_NAMES.length; ++i) {
+            pkgSourceTexts[i] = getString(PKG_SOURCES_NAMES[i]);
+        }
+        ArrayAdapter<CharSequence> pkgSourceAdapter = new SelectedArrayAdapter<>(requireContext(),
+                io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item_small, pkgSourceTexts);
+        mPackageSourceSpinner.setAdapter(pkgSourceAdapter);
+        mPackageSourceSpinner.setSelection(pkgSource);
+        mPackageSourceSpinner.setOnItemClickListener((parent, view, position, id) ->
+                mOptions.setInstallLocation(PKG_SOURCES[position]));
     }
 
     private void initInstallerAppSpinner() {
