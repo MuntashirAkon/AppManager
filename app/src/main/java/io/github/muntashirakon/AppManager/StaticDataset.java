@@ -28,9 +28,10 @@ import io.github.muntashirakon.AppManager.debloat.SuggestionObject;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.algo.AhoCorasick;
 
 public class StaticDataset {
-    private static String[] sTrackerCodeSignatures;
+    private static AhoCorasick sAhoCorasickTrackerCache;
     private static String[] sTrackerNames;
     private static List<DebloatObject> sDebloatObjects;
 
@@ -83,10 +84,20 @@ public class StaticDataset {
     }
 
     public static String[] getTrackerCodeSignatures() {
-        if (sTrackerCodeSignatures == null) {
-            sTrackerCodeSignatures = ContextUtils.getContext().getResources().getStringArray(R.array.tracker_signatures);
+        return ContextUtils.getContext().getResources().getStringArray(R.array.tracker_signatures);
+    }
+
+    public static AhoCorasick getSearchableTrackerSignatures() {
+        if (sAhoCorasickTrackerCache == null) {
+            sAhoCorasickTrackerCache = new AhoCorasick(getTrackerCodeSignatures());
         }
-        return sTrackerCodeSignatures;
+        return sAhoCorasickTrackerCache;
+    }
+
+    public static void cleanup() {
+        if (sAhoCorasickTrackerCache != null) {
+            sAhoCorasickTrackerCache.close();
+        }
     }
 
     public static String[] getTrackerNames() {

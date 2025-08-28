@@ -29,8 +29,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -45,6 +47,7 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
+import io.github.muntashirakon.algo.AhoCorasick;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -65,7 +68,6 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
 
     private List<String> mAllClasses;
     private List<String> mTrackerClasses;
-    private List<String> mLibraryClasses;
     private Collection<String> mNativeLibraries;
 
     private CountDownLatch mWaitForFile;
@@ -298,8 +300,8 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         }
         mAllClassesLiveData.postValue(mAllClasses);
         // Load tracker and library info
-        mExecutor.submit(this::loadTrackers);
-        mExecutor.submit(this::loadLibraries);
+        loadTrackers();
+        loadLibraries();
     }
 
     @WorkerThread
@@ -308,27 +310,30 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         List<SignatureInfo> trackerInfoList = new ArrayList<>();
         String[] trackerNames = StaticDataset.getTrackerNames();
         String[] trackerSignatures = StaticDataset.getTrackerCodeSignatures();
-        int[] signatureCount = new int[trackerSignatures.length];
-        // Iterate over all classes
+        AtomicIntegerArray signatureCount = new AtomicIntegerArray(trackerSignatures.length);
         mTrackerClasses = new ArrayList<>();
-        for (String className : mAllClasses) {
-            if (className.length() > 8 && className.contains(".")) {
-                // Iterate over all signatures to match the class name
-                // This is a greedy algorithm, only matches the first item
-                for (int i = 0; i < trackerSignatures.length; i++) {
-                    if (className.contains(trackerSignatures[i])) {
-                        mTrackerClasses.add(className);
-                        signatureCount[i]++;
-                        break;
-                    }
-                }
-            }
+        AhoCorasick aho = StaticDataset.getSearchableTrackerSignatures();
+        {
+            // Iterate over all classes
+            ConcurrentLinkedQueue<String> matchedClasses = new ConcurrentLinkedQueue<>();
+            mAllClasses.parallelStream()
+                    .filter(className -> className.length() > 8 && className.contains("."))
+                    .forEach(className -> {
+                        int[] matches = aho.search(className);
+                        if (matches.length > 0) {
+                            matchedClasses.add(className);
+                            for (int idx : matches) {
+                                signatureCount.incrementAndGet(idx);
+                            }
+                        }
+                    });
+            mTrackerClasses.addAll(matchedClasses);
         }
         // Iterate over signatures again but this time list only the found ones.
         for (int i = 0; i < trackerSignatures.length; i++) {
-            if (signatureCount[i] == 0) continue;
+            if (signatureCount.get(i) == 0) continue;
             SignatureInfo signatureInfo = new SignatureInfo(trackerSignatures[i], trackerNames[i]);
-            signatureInfo.setCount(signatureCount[i]);
+            signatureInfo.setCount(signatureCount.get(i));
             trackerInfoList.add(signatureInfo);
         }
         mTrackerClassesLiveData.postValue(trackerInfoList);
@@ -342,37 +347,31 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         String[] libSignatures = getApplication().getResources().getStringArray(R.array.lib_signatures);
         String[] libTypes = getApplication().getResources().getStringArray(R.array.lib_types);
         // The following array is directly mapped to the arrays above
-        int[] signatureCount = new int[libSignatures.length];
-        // Iterate over all classes
-        mLibraryClasses = new ArrayList<>();
-        for (String className : mAllClasses) {
-            if (className.length() > 8 && className.contains(".")) {
-                boolean matched = false;
-                // Iterate over all signatures to match the class name
-                // This is a greedy algorithm, only matches the first item
-                for (int i = 0; i < libSignatures.length; i++) {
-                    if (className.contains(libSignatures[i])) {
-                        matched = true;
-                        // Add to found classes
-                        mLibraryClasses.add(className);
-                        // Increment this signature match count
-                        signatureCount[i]++;
-                        break;
-                    }
-                }
-                // Add the class to the missing libs list if it doesn't match the filters
-                if (!matched
-                        && (mPackageName != null && !className.startsWith(mPackageName))
-                        && !SIG_TO_IGNORE.matcher(className).matches()) {
-                    missingLibs.add(className);
-                }
-            }
+        AtomicIntegerArray signatureCount = new AtomicIntegerArray(libSignatures.length);
+        try (AhoCorasick aho = new AhoCorasick(libSignatures)) {
+            // Iterate over all classes
+            ConcurrentLinkedQueue<String> missingClasses = new ConcurrentLinkedQueue<>();
+            mAllClasses.parallelStream()
+                    .filter(className -> className.length() > 8 && className.contains("."))
+                    .forEach(className -> {
+                        int[] matches = aho.search(className);
+                        if (matches.length > 0) {
+                            for (int idx : matches) {
+                                signatureCount.incrementAndGet(idx);
+                            }
+                        } else if ((mPackageName != null
+                                && !className.startsWith(mPackageName))
+                                && !SIG_TO_IGNORE.matcher(className).matches()) {
+                            missingClasses.add(className);
+                        }
+                    });
+            missingLibs.addAll(missingClasses);
         }
         // Iterate over signatures again but this time list only the found ones.
         for (int i = 0; i < libSignatures.length; i++) {
-            if (signatureCount[i] == 0) continue;
+            if (signatureCount.get(i) == 0) continue;
             SignatureInfo signatureInfo = new SignatureInfo(libSignatures[i], libNames[i], libTypes[i]);
-            signatureInfo.setCount(signatureCount[i]);
+            signatureInfo.setCount(signatureCount.get(i));
             libraryInfoList.add(signatureInfo);
         }
         mLibraryClassesLiveData.postValue(libraryInfoList);

@@ -54,4 +54,24 @@ public class AppManager extends Application {
             HiddenApiBypass.addHiddenApiExemptions("L");
         }
     }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        if (level >= TRIM_MEMORY_RUNNING_CRITICAL) {
+            StaticDataset.cleanup();
+        }
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        StaticDataset.cleanup();
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        StaticDataset.cleanup();
+    }
 }

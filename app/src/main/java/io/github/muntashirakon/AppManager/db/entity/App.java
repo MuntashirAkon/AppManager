@@ -152,7 +152,7 @@ public class App implements Serializable {
         app.hasActivities = packageInfo.activities != null;
         app.hasSplits = applicationInfo.splitSourceDirs != null;
         app.rulesCount = 0;
-        app.trackerCount = ComponentUtils.getTrackerComponentsForPackage(packageInfo).size();
+        app.trackerCount = ComponentUtils.getTrackerComponentsCountForPackage(packageInfo);
         app.lastActionTime = System.currentTimeMillis();
         return app;
     }

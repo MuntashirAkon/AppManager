@@ -285,7 +285,7 @@ public class OneClickOpsViewModel extends AndroidViewModel {
         ItemCount trackerCount = new ItemCount();
         trackerCount.packageName = packageInfo.packageName;
         trackerCount.packageLabel = packageInfo.applicationInfo.loadLabel(mPm).toString();
-        trackerCount.count = ComponentUtils.getTrackerComponentsForPackage(packageInfo).size();
+        trackerCount.count = ComponentUtils.getTrackerComponentsCountForPackage(packageInfo);
         return trackerCount;
     }
 }

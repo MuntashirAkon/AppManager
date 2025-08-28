@@ -182,7 +182,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         }
         mAppLabel = mPm.getApplicationLabel(mNewPackageInfo.applicationInfo).toString();
         mAppIcon = mPm.getApplicationIcon(mNewPackageInfo.applicationInfo);
-        mTrackerCount = ComponentUtils.getTrackerComponentsForPackage(mNewPackageInfo).size();
+        mTrackerCount = ComponentUtils.getTrackerComponentsCountForPackage(mNewPackageInfo);
         if (ThreadUtils.isInterrupted()) {
             return;
         }
@@ -200,7 +200,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         mNewPackageInfo = loadNewPackageInfo();
         mAppLabel = mPm.getApplicationLabel(mNewPackageInfo.applicationInfo).toString();
         mAppIcon = mPm.getApplicationIcon(mNewPackageInfo.applicationInfo);
-        mTrackerCount = ComponentUtils.getTrackerComponentsForPackage(mNewPackageInfo).size();
+        mTrackerCount = ComponentUtils.getTrackerComponentsCountForPackage(mNewPackageInfo);
         if (mNewPackageInfo != null && mInstalledPackageInfo != null) {
             mIsSignatureDifferent = PackageUtils.isSignatureDifferent(mNewPackageInfo, mInstalledPackageInfo);
         }
