@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.collection.ArrayMap;
 import androidx.core.os.ConfigurationCompat;
@@ -31,6 +32,7 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.algo.AhoCorasick;
 
 public class StaticDataset {
+    @Nullable
     private static AhoCorasick sAhoCorasickTrackerCache;
     private static String[] sTrackerNames;
     private static List<DebloatObject> sDebloatObjects;
@@ -97,6 +99,7 @@ public class StaticDataset {
     public static void cleanup() {
         if (sAhoCorasickTrackerCache != null) {
             sAhoCorasickTrackerCache.close();
+            sAhoCorasickTrackerCache = null;
         }
     }
 
