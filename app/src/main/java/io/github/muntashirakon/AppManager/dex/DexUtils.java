@@ -46,7 +46,7 @@ import jadx.core.utils.files.FileUtils;
 public final class DexUtils {
     @NonNull
     public static String getClassNameWithoutInnerClasses(@NonNull String className) {
-        int idxOfDollar = DexUtils.findFirstInnerClassIndex(className);
+        int idxOfDollar = findFirstInnerClassIndex(className);
         return idxOfDollar >= 0 ? className.substring(0, idxOfDollar) : className;
     }
 
