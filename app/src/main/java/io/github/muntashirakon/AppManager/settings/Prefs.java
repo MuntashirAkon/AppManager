@@ -8,7 +8,6 @@ import android.Manifest;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -425,22 +424,21 @@ public final class Prefs {
             AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR, packageName);
         }
 
-        @Nullable
-        public static String getOriginatingPackage() {
-            return null;
+        public static boolean isSetOriginatingPackage() {
+            return AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_SET_ORIGIN_BOOL);
         }
 
         public static int getPackageSource() {
-            // Shell default
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                return PackageInstaller.PACKAGE_SOURCE_OTHER;
-            }
-            return 0;
+            return AppPref.getInt(AppPref.PrefKey.PREF_INSTALLER_DEFAULT_PKG_SOURCE_INT);
+        }
+
+        public static void setPackageSource(int source) {
+            AppPref.set(AppPref.PrefKey.PREF_INSTALLER_DEFAULT_PKG_SOURCE_INT, source);
         }
 
         public static boolean requestUpdateOwnership() {
-            // Shell default
-            return false;
+            // Shell default is false
+            return AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_UPDATE_OWNERSHIP_BOOL);
         }
     }
 

@@ -6,8 +6,10 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -55,6 +57,23 @@ public class InstallerPreferences extends PreferenceFragment {
             R.string.auto,  // PackageInfo.INSTALL_LOCATION_AUTO
             R.string.install_location_internal_only,  // PackageInfo.INSTALL_LOCATION_INTERNAL_ONLY
             R.string.install_location_prefer_external,  // PackageInfo.INSTALL_LOCATION_PREFER_EXTERNAL
+    };
+
+    @SuppressLint("InlinedApi")
+    public static final Integer[] PKG_SOURCES = new Integer[] {
+            PackageInstaller.PACKAGE_SOURCE_UNSPECIFIED,
+            PackageInstaller.PACKAGE_SOURCE_OTHER,
+            PackageInstaller.PACKAGE_SOURCE_STORE,
+            PackageInstaller.PACKAGE_SOURCE_LOCAL_FILE,
+            PackageInstaller.PACKAGE_SOURCE_DOWNLOADED_FILE,
+    };
+
+    public static final int[] PKG_SOURCES_NAMES = new int[]{
+            R.string._undefined,  // PackageInstaller.PACKAGE_SOURCE_UNSPECIFIED
+            R.string.package_source_other,  // PackageInstaller.PACKAGE_SOURCE_OTHER
+            R.string.package_source_store,  // PackageInstaller.PACKAGE_SOURCE_STORE
+            R.string.package_source_local_file,  // PackageInstaller.PACKAGE_SOURCE_LOCAL_FILE
+            R.string.package_source_downloaded_file,  // PackageInstaller.PACKAGE_SOURCE_DOWNLOADED_FILE
     };
 
     private SettingsActivity mActivity;
@@ -138,6 +157,34 @@ public class InstallerPreferences extends PreferenceFragment {
                     .show();
             return true;
         });
+        // Update ownership
+        SwitchPreferenceCompat updateOwnership = Objects.requireNonNull(findPreference("installer_update_ownership"));
+        updateOwnership.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE);
+        updateOwnership.setChecked(Prefs.Installer.requestUpdateOwnership());
+        // Package source
+        Preference pkgSource = Objects.requireNonNull(findPreference("installer_default_pkg_source"));
+        pkgSource.setSummary(PKG_SOURCES_NAMES[Prefs.Installer.getPackageSource()]);
+        pkgSource.setOnPreferenceClickListener(preference -> {
+            CharSequence[] pkgSourceTexts = new CharSequence[PKG_SOURCES_NAMES.length];
+            for (int i = 0; i < PKG_SOURCES_NAMES.length; ++i) {
+                pkgSourceTexts[i] = getString(PKG_SOURCES_NAMES[i]);
+            }
+            int defaultChoice = Prefs.Installer.getPackageSource();
+            new SearchableSingleChoiceDialogBuilder<>(requireActivity(), PKG_SOURCES, pkgSourceTexts)
+                    .setTitle(R.string.pref_default_package_source)
+                    .setSelection(defaultChoice)
+                    .setPositiveButton(R.string.save, (dialog, which, newPkgSource) -> {
+                        Objects.requireNonNull(newPkgSource);
+                        Prefs.Installer.setPackageSource(newPkgSource);
+                        pkgSource.setSummary(PKG_SOURCES_NAMES[newPkgSource]);
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+            return true;
+        });
+        // Set origin
+        SwitchPreferenceCompat setOrigin = Objects.requireNonNull(findPreference("installer_set_origin"));
+        setOrigin.setChecked(Prefs.Installer.isSetOriginatingPackage());
         // Sign apk before installing
         SwitchPreferenceCompat signApk = Objects.requireNonNull(findPreference("installer_sign_apk"));
         signApk.setChecked(Prefs.Installer.canSignApk());

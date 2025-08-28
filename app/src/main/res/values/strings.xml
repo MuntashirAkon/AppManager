@@ -1524,4 +1524,13 @@
     <string name="preview">Preview</string>
     <string name="debloat_removal_unsafe">Unsafe</string>
     <string name="sort_by_cpu_time">CPU time</string>
+    <string name="pref_request_update_ownership">Request \"update ownership\"</string>
+    <string name="pref_default_package_source">Default package source</string>
+    <string name="pref_set_origin">Set package origin and URI</string>
+    <string name="pref_request_update_ownership_description">Set the installer app as the \"update owner\" during the initial installation to prevent other installers from installing the app without user interaction.</string>
+    <string name="pref_set_origin_description">Record the origin or source of the app to be installed, reported by \"APK source\" in the App Info tab</string>
+    <string name="package_source_store">App store</string>
+    <string name="package_source_local_file">Local file</string>
+    <string name="package_source_downloaded_file">Downloaded file</string>
+    <string name="package_source_other">Other</string>
 </resources>

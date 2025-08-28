@@ -635,11 +635,13 @@ public final class PackageInstallerCompat {
                 }
             });
             userId = allRequestedUsers[0];
+            String originatingPackage = options.isSetOriginatingPackage() ? options.getOriginatingPackage() : null;
+            Uri originatingUri = options.isSetOriginatingPackage() ? options.getOriginatingUri() : null;
             Log.d(TAG, "Install: opening session...");
             if (!openSession(userId, installFlags, options.getInstallerName(),
-                    options.getInstallLocation(), options.getOriginatingPackage(),
-                    options.getOriginatingUri(), options.getInstallScenario(),
-                    options.getPackageSource(), options.requestUpdateOwnership())) {
+                    options.getInstallLocation(), originatingPackage, originatingUri,
+                    options.getInstallScenario(), options.getPackageSource(),
+                    options.requestUpdateOwnership())) {
                 return false;
             }
             List<ApkFile.Entry> selectedEntries = new ArrayList<>();
@@ -711,10 +713,12 @@ public final class PackageInstallerCompat {
                 }
             }
             userId = allRequestedUsers[0];
+            String originatingPackage = options.isSetOriginatingPackage() ? options.getOriginatingPackage() : null;
+            Uri originatingUri = options.isSetOriginatingPackage() ? options.getOriginatingUri() : null;
             if (!openSession(userId, installFlags, options.getInstallerName(),
-                    options.getInstallLocation(), options.getOriginatingPackage(),
-                    options.getOriginatingUri(), options.getInstallScenario(),
-                    options.getPackageSource(), options.requestUpdateOwnership())) {
+                    options.getInstallLocation(), originatingPackage, originatingUri,
+                    options.getInstallScenario(), options.getPackageSource(),
+                    options.requestUpdateOwnership())) {
                 return false;
             }
             long totalSize = 0;

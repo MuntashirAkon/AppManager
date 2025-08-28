@@ -6,7 +6,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageInstaller;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
@@ -96,11 +98,14 @@ public class AppPref {
 
         PREF_INSTALLER_BLOCK_TRACKERS_BOOL,
         PREF_INSTALLER_ALWAYS_ON_BACKGROUND_BOOL,
+        PREF_INSTALLER_DEFAULT_PKG_SOURCE_INT,
         PREF_INSTALLER_DISPLAY_CHANGES_BOOL,
         PREF_INSTALLER_FORCE_DEX_OPT_BOOL,
         PREF_INSTALLER_INSTALL_LOCATION_INT,
         PREF_INSTALLER_INSTALLER_APP_STR,
+        PREF_INSTALLER_SET_ORIGIN_BOOL,
         PREF_INSTALLER_SIGN_APK_BOOL,
+        PREF_INSTALLER_UPDATE_OWNERSHIP_BOOL,
 
         PREF_LAST_VERSION_CODE_LONG,
         PREF_LAYOUT_ORIENTATION_INT,
@@ -395,6 +400,8 @@ public class AppPref {
             case PREF_LOG_VIEWER_SHOW_PID_TID_TIMESTAMP_BOOL:
             case PREF_LOG_VIEWER_OMIT_SENSITIVE_INFO_BOOL:
             case PREF_INSTALLER_DISPLAY_CHANGES_BOOL:
+            case PREF_INSTALLER_SET_ORIGIN_BOOL:
+            case PREF_INSTALLER_UPDATE_OWNERSHIP_BOOL:
             case PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL:
             case PREF_ZIP_ALIGN_BOOL:
             case PREF_SEND_NOTIFICATIONS_TO_CONNECTED_DEVICES_BOOL:
@@ -437,6 +444,11 @@ public class AppPref {
                 return "";
             case PREF_MODE_OF_OPS_STR:
                 return Ops.MODE_AUTO;
+            case PREF_INSTALLER_DEFAULT_PKG_SOURCE_INT:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    // Shell default
+                    return PackageInstaller.PACKAGE_SOURCE_OTHER;
+                } else return 0;
             case PREF_INSTALLER_INSTALL_LOCATION_INT:
                 return PackageInfo.INSTALL_LOCATION_AUTO;
             case PREF_INSTALLER_INSTALLER_APP_STR:
