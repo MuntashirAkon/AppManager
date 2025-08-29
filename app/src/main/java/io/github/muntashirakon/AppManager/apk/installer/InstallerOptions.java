@@ -43,6 +43,7 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
     private int mPackageSource;
     private int mInstallScenario;
     private boolean mRequestUpdateOwnership;
+    private boolean mDisableApkVerification;
     private boolean mSignApkFiles;
     private boolean mForceDexOpt;
     private boolean mBlockTrackers;
@@ -63,6 +64,7 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
                     : PackageManager.INSTALL_SCENARIO_FAST;
         }
         mRequestUpdateOwnership = Prefs.Installer.requestUpdateOwnership();
+        mDisableApkVerification = Prefs.Installer.isDisableApkVerification();
         mSignApkFiles = Prefs.Installer.canSignApk();
         mForceDexOpt = Prefs.Installer.forceDexOpt();
         mBlockTrackers = Prefs.Installer.blockTrackers();
@@ -78,6 +80,7 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
         mPackageSource = in.readInt();
         mInstallScenario = in.readInt();
         mRequestUpdateOwnership = ParcelCompat.readBoolean(in);
+        mDisableApkVerification = ParcelCompat.readBoolean(in);
         mSignApkFiles = ParcelCompat.readBoolean(in);
         mForceDexOpt = ParcelCompat.readBoolean(in);
         mBlockTrackers = ParcelCompat.readBoolean(in);
@@ -93,6 +96,7 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
         mPackageSource = options.mPackageSource;
         mInstallScenario = options.mInstallScenario;
         mRequestUpdateOwnership = options.mRequestUpdateOwnership;
+        mDisableApkVerification = options.mDisableApkVerification;
         mSignApkFiles = options.mSignApkFiles;
         mForceDexOpt = options.mForceDexOpt;
         mBlockTrackers = options.mBlockTrackers;
@@ -109,6 +113,7 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
         dest.writeInt(mPackageSource);
         dest.writeInt(mInstallScenario);
         ParcelCompat.writeBoolean(dest, mRequestUpdateOwnership);
+        ParcelCompat.writeBoolean(dest, mDisableApkVerification);
         ParcelCompat.writeBoolean(dest, mSignApkFiles);
         ParcelCompat.writeBoolean(dest, mForceDexOpt);
         ParcelCompat.writeBoolean(dest, mBlockTrackers);
@@ -125,6 +130,7 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
         mPackageSource = jsonObject.getInt("package_source");
         mInstallScenario = jsonObject.getInt("install_scenario");
         mRequestUpdateOwnership = jsonObject.getBoolean("request_update_ownership");
+        mDisableApkVerification = jsonObject.getBoolean("disable_apk_verification");
         mSignApkFiles = jsonObject.getBoolean("sign_apk_files");
         mForceDexOpt = jsonObject.getBoolean("force_dex_opt");
         mBlockTrackers = jsonObject.getBoolean("block_trackers");
@@ -143,6 +149,7 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
         jsonObject.put("package_source", mPackageSource);
         jsonObject.put("install_scenario", mInstallScenario);
         jsonObject.put("request_update_ownership", mRequestUpdateOwnership);
+        jsonObject.put("disable_apk_verification", mDisableApkVerification);
         jsonObject.put("sign_apk_files", mSignApkFiles);
         jsonObject.put("force_dex_opt", mForceDexOpt);
         jsonObject.put("block_trackers", mBlockTrackers);
@@ -243,6 +250,14 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
 
     public void requestUpdateOwnership(boolean update) {
         mRequestUpdateOwnership = update;
+    }
+
+    public boolean isDisableApkVerification() {
+        return mDisableApkVerification;
+    }
+
+    public void setDisableApkVerification(boolean disableApkVerification) {
+        mDisableApkVerification = disableApkVerification;
     }
 
     public boolean isSignApkFiles() {

@@ -58,6 +58,13 @@
             android:hint="@string/pref_default_package_source" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/action_disable_verification"
+            style="@style/Widget.AppTheme.MaterialSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pref_disable_apk_verification" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/action_update_ownership"
             style="@style/Widget.AppTheme.MaterialSwitch"
             android:layout_width="match_parent"

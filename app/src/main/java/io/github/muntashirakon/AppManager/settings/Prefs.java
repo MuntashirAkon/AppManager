@@ -440,6 +440,10 @@ public final class Prefs {
             // Shell default is false
             return AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_UPDATE_OWNERSHIP_BOOL);
         }
+
+        public static boolean isDisableApkVerification() {
+            return AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_DISABLE_VERIFICATION_BOOL);
+        }
     }
 
     public static final class LogViewer {

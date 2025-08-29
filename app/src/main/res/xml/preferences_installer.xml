@@ -47,6 +47,12 @@
 
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
+            app:key="installer_disable_verification"
+            app:summary="@string/pref_disable_apk_verification_description"
+            app:title="@string/pref_disable_apk_verification" />
+
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
             app:key="installer_update_ownership"
             app:summary="@string/pref_request_update_ownership_description"
             app:title="@string/pref_request_update_ownership" />

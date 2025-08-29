@@ -1533,4 +1533,6 @@
     <string name="package_source_local_file">Local file</string>
     <string name="package_source_downloaded_file">Downloaded file</string>
     <string name="package_source_other">Other</string>
+    <string name="pref_disable_apk_verification">Disable package verification</string>
+    <string name="pref_disable_apk_verification_description">Ask the installer to skip running the package verifier (e.g., Play Protect) during the installation.</string>
 </resources>

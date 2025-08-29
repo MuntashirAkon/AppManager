@@ -157,6 +157,10 @@ public class InstallerPreferences extends PreferenceFragment {
                     .show();
             return true;
         });
+        // Disable verification
+        SwitchPreferenceCompat disableVerification = Objects.requireNonNull(findPreference("installer_disable_verification"));
+        disableVerification.setEnabled(SelfPermissions.isSystemOrRootOrShell());
+        disableVerification.setChecked(Prefs.Installer.isDisableApkVerification());
         // Update ownership
         SwitchPreferenceCompat updateOwnership = Objects.requireNonNull(findPreference("installer_update_ownership"));
         updateOwnership.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE);

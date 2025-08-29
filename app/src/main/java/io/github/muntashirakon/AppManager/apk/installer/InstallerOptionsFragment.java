@@ -130,6 +130,7 @@ public class InstallerOptionsFragment extends DialogFragment {
         mPackageSourceSpinner = mDialogView.findViewById(R.id.package_source);
         mInstallerAppLayout = mDialogView.findViewById(R.id.installer);
         mInstallerAppField = Objects.requireNonNull(mInstallerAppLayout.getEditText());
+        MaterialSwitch disableVerificationSwitch = mDialogView.findViewById(R.id.action_disable_verification);
         MaterialSwitch setOriginSwitch = mDialogView.findViewById(R.id.action_set_origin);
         MaterialSwitch reqUpdateOwnershipSwitch = mDialogView.findViewById(R.id.action_update_ownership);
         MaterialSwitch signApkSwitch = mDialogView.findViewById(R.id.action_sign_apk);
@@ -144,6 +145,9 @@ public class InstallerOptionsFragment extends DialogFragment {
         initInstallLocationSpinner();
         initPackageSourceSpinner();
         initInstallerAppSpinner();
+        disableVerificationSwitch.setEnabled(SelfPermissions.isSystemOrRootOrShell());
+        disableVerificationSwitch.setChecked(mOptions.isDisableApkVerification());
+        disableVerificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> mOptions.setDisableApkVerification(isChecked));
         setOriginSwitch.setChecked(mOptions.isSetOriginatingPackage());
         setOriginSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> mOptions.setSetOriginatingPackage(isChecked));
         reqUpdateOwnershipSwitch.setVisibility(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE ? View.VISIBLE : View.GONE);
