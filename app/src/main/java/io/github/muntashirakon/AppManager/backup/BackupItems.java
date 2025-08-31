@@ -93,14 +93,14 @@ public class BackupItems {
         private final Path mBackupPath;
         @NonNull
         private final Path mTempBackupPath;
-        private final boolean mBackupMode;
         private final Object mCryptoGuard = new Object();
         @Nullable
         private Crypto mCrypto;
         @CryptoUtils.Mode
         private String mCryptoMode = CryptoUtils.MODE_NO_ENCRYPTION;
+        private boolean mBackupMode;
         private boolean mBackupSuccess = false;
-        private List<Path> mTemporaryFiles = new ArrayList<>();
+        private final List<Path> mTemporaryFiles = new ArrayList<>();
 
         public BackupItem(@NonNull Path backupPath, boolean backupMode) throws IOException {
             // For now, backup name is the same as the first path segment
@@ -283,6 +283,8 @@ public class BackupItems {
                     throw new IOException("Could not move " + mTempBackupPath + " to " + mBackupPath);
                 }
                 mBackupSuccess = true;
+                // Set backup mode to false to make it read-only
+                mBackupMode = false;
             }
         }
 

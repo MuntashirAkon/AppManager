@@ -170,7 +170,9 @@ class BackupOp implements Closeable {
             if (mBackupFlags.backupData()) {
                 backupData();
                 // Backup KeyStore
-                if (mMetadata.keyStore) backupKeyStore();
+                if (mMetadata.keyStore) {
+                    backupKeyStore();
+                }
                 incrementProgress(progressHandler);
             }
             // Backup extras
@@ -305,6 +307,11 @@ class BackupOp implements Closeable {
     }
 
     private void backupKeyStore() throws BackupException {  // Called only when the app has an keystore item
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // keystore v2 is not supported.
+            Log.w(TAG, "Ignoring KeyStore backups for %s", mPackageName);
+            return;
+        }
         Path keyStorePath = KeyStoreUtils.getKeyStorePath(mUserId);
         try {
             Path masterKeyFile = KeyStoreUtils.getMasterKey(mUserId);

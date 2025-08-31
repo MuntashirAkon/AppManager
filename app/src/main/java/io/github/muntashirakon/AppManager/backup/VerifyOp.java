@@ -133,7 +133,8 @@ class VerifyOp implements Closeable {
     private void verifyKeyStore() throws BackupException {
         Path[] keyStoreFiles = BackupUtils.getKeyStoreFiles(mBackupPath, mExtension);
         if (keyStoreFiles.length == 0) {
-            throw new BackupException("KeyStore files do not exist.");
+            // Not having KeyStore backups is fine.
+            return;
         }
         String checksum;
         for (Path file : keyStoreFiles) {

@@ -193,7 +193,9 @@ class RestoreOp implements Closeable {
             }
             if (mRequestedFlags.backupData()) {
                 restoreData();
-                if (mMetadata.keyStore) restoreKeyStore();
+                if (mMetadata.keyStore) {
+                    restoreKeyStore();
+                }
                 incrementProgress(progressHandler);
             }
             if (mRequestedFlags.backupExtras()) {
@@ -398,6 +400,11 @@ class RestoreOp implements Closeable {
     }
 
     private void restoreKeyStore() throws BackupException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // keystore v2 is not supported.
+            Log.w(TAG, "Ignoring KeyStore backups for %s", mPackageName);
+            return;
+        }
         if (mPackageInfo == null) {
             throw new BackupException("KeyStore restore is requested but the app isn't installed.");
         }
