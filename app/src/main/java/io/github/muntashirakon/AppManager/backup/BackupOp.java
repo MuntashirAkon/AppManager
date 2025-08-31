@@ -45,8 +45,6 @@ import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
-import io.github.muntashirakon.AppManager.db.AppsDb;
-import io.github.muntashirakon.AppManager.db.entity.FileHash;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
@@ -276,15 +274,6 @@ class BackupOp implements Closeable {
     private void backupData() throws BackupException {
         String sourceBackupFilePrefix;
         Path[] dataFiles;
-        // Store file hash in a separate thread
-        new Thread(() -> {
-            for (String dir : mMetadata.dataDirs) {
-                FileHash fileHash = new FileHash();
-                fileHash.path = dir;
-                fileHash.hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, Paths.get(dir));
-                AppsDb.getInstance().fileHashDao().insert(fileHash);
-            }
-        }).start();
         for (int i = 0; i < mMetadata.dataDirs.length; ++i) {
             sourceBackupFilePrefix = DATA_PREFIX + i + getExt(mMetadata.tarType);
             try {

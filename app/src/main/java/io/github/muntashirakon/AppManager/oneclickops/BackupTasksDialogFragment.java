@@ -2,12 +2,10 @@
 
 package io.github.muntashirakon.AppManager.oneclickops;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.text.SpannableStringBuilder;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -20,13 +18,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
-import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
@@ -35,12 +34,12 @@ import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.CpuUtils;
-import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
+import io.github.muntashirakon.io.DirectoryUtils;
 import io.github.muntashirakon.io.Paths;
 
 public class BackupTasksDialogFragment extends DialogFragment {
@@ -196,6 +195,10 @@ public class BackupTasksDialogFragment extends DialogFragment {
                 try {
                     List<ApplicationItem> applicationItems = new ArrayList<>();
                     List<CharSequence> applicationLabels = new ArrayList<>();
+                    Set<String> ignoredDirs = new HashSet<>();
+                    ignoredDirs.add("cache");
+                    ignoredDirs.add("code_cache");
+                    ignoredDirs.add("no_backup");
                     boolean hasUsageAccess = FeatureController.isUsageAccessEnabled() && SelfPermissions.checkUsageStatsPermission();
                     Backup backup;
                     for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), false, true)) {
@@ -212,23 +215,10 @@ public class BackupTasksDialogFragment extends DialogFragment {
                                 // 3. Last activity date
                                 || (hasUsageAccess && AppUsageStatsManager.getLastActivityTime(item.packageName,
                                 new UsageUtils.TimeInterval(backup.backupTime, System.currentTimeMillis())) > backup.backupTime)
-                                // 4. Check integrity
+                                // 4. Check directory change
+                                || isDataDirectoryChanged(backup, ignoredDirs)
+                                // 5. Check integrity
                                 || !isVerified(item, backup)) {
-                            // 5. Check hash
-                            try {
-                                List<String> changedDirs = new ArrayList<>();
-                                for (String dir : backup.getMetadata().dataDirs) {
-                                    String hash = AppsDb.getInstance().fileHashDao().getHash(dir);
-                                    // For now, if hash is null, don't proceed to backup
-                                    if (hash == null) {
-                                        break;
-                                    }
-                                    String newHash = DigestUtils.getHexDigest(DigestUtils.SHA_256, Paths.get(dir));
-                                    if (!hash.equals(newHash)) changedDirs.add(dir);
-                                }
-                                // TODO: 23/4/21 Support delta backup
-                            } catch (IOException ignore) {
-                            }
                             applicationItems.add(item);
                             applicationLabels.add(new SpannableStringBuilder().append(backup.label)
                                     .append(LangUtils.getSeparatorString())
@@ -279,7 +269,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
         super.onDestroy();
     }
 
-    private boolean isVerified(ApplicationItem item, Backup backup) {
+    private boolean isVerified(@NonNull ApplicationItem item, @NonNull Backup backup) {
         try {
             BackupManager.getNewInstance(new UserPackagePair(item.packageName, backup.userId),
                     0).verify(backup.backupName);
@@ -287,5 +277,17 @@ public class BackupTasksDialogFragment extends DialogFragment {
         } catch (Throwable ignore) {
             return false;
         }
+    }
+
+    private static boolean isDataDirectoryChanged(@NonNull Backup backup, Set<String> ignoredDirs) {
+        try {
+            for (String dir : backup.getMetadata().dataDirs) {
+                if (DirectoryUtils.isDirectoryChanged(Paths.get(dir), backup.backupTime, 3, ignoredDirs)) {
+                    return true;
+                }
+            }
+        } catch (IOException ignore) {
+        }
+        return false;
     }
 }

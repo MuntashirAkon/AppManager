@@ -11,22 +11,19 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import io.github.muntashirakon.AppManager.db.dao.AppDao;
 import io.github.muntashirakon.AppManager.db.dao.BackupDao;
-import io.github.muntashirakon.AppManager.db.dao.FileHashDao;
 import io.github.muntashirakon.AppManager.db.dao.FmFavoriteDao;
 import io.github.muntashirakon.AppManager.db.dao.FreezeTypeDao;
 import io.github.muntashirakon.AppManager.db.dao.LogFilterDao;
 import io.github.muntashirakon.AppManager.db.dao.OpHistoryDao;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
-import io.github.muntashirakon.AppManager.db.entity.FileHash;
 import io.github.muntashirakon.AppManager.db.entity.FmFavorite;
 import io.github.muntashirakon.AppManager.db.entity.FreezeType;
 import io.github.muntashirakon.AppManager.db.entity.LogFilter;
 import io.github.muntashirakon.AppManager.db.entity.OpHistory;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
-@Database(entities = {App.class, LogFilter.class, FileHash.class, Backup.class, OpHistory.class, FmFavorite.class, FreezeType.class}, version = 6)
+@Database(entities = {App.class, LogFilter.class, Backup.class, OpHistory.class, FmFavorite.class, FreezeType.class}, version = 7)
 public abstract class AppsDb extends RoomDatabase {
     private static AppsDb sAppsDb;
 
@@ -54,11 +51,17 @@ public abstract class AppsDb extends RoomDatabase {
             db.execSQL("ALTER TABLE `app` ADD COLUMN `is_only_data_installed` INTEGER NOT NULL DEFAULT 0");
         }
     };
+    public static final Migration M_6_7 = new Migration(6, 7) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+            db.execSQL("DROP TABLE IF EXISTS `file_hash`");
+        }
+    };
 
     public static AppsDb getInstance() {
         if (sAppsDb == null) {
             sAppsDb = Room.databaseBuilder(ContextUtils.getContext(), AppsDb.class, "apps.db")
-                    .addMigrations(M_2_3, M_3_4, M_4_5, M_5_6)
+                    .addMigrations(M_2_3, M_3_4, M_4_5, M_5_6, M_6_7)
                     .fallbackToDestructiveMigrationOnDowngrade()
                     .build();
             try {
@@ -75,8 +78,6 @@ public abstract class AppsDb extends RoomDatabase {
     public abstract BackupDao backupDao();
 
     public abstract LogFilterDao logFilterDao();
-
-    public abstract FileHashDao fileHashDao();
 
     public abstract OpHistoryDao opHistoryDao();
 
