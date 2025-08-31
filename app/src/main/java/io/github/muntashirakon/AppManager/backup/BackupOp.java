@@ -60,6 +60,7 @@ import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.BitmapRandomizer;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
@@ -232,9 +233,9 @@ class BackupOp implements Closeable {
         try {
             Path iconFile = mBackupItem.getIconFile();
             try (OutputStream outputStream = iconFile.openOutputStream()) {
-                Bitmap bitmap = UIUtils.getBitmapFromDrawable(mApplicationInfo.loadIcon(mPm));
+                Bitmap bitmap = UIUtils.getMutableBitmapFromDrawable(mApplicationInfo.loadIcon(mPm));
+                BitmapRandomizer.randomizePixel(bitmap);
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-                outputStream.flush();
             }
         } catch (IOException e) {
             Log.w(TAG, "Could not back up icon.");

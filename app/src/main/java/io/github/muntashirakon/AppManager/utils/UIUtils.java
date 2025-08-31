@@ -354,6 +354,20 @@ public class UIUtils {
 
     @AnyThread
     @NonNull
+    public static Bitmap getMutableBitmapFromDrawable(@NonNull Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            return bitmap.copy(Bitmap.Config.ARGB_8888, true);
+        }
+        final Bitmap bmp = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(bmp);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bmp;
+    }
+
+    @AnyThread
+    @NonNull
     public static Bitmap getBitmapFromDrawable(@NonNull Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable) drawable).getBitmap();
