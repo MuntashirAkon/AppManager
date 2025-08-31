@@ -7,11 +7,7 @@ import androidx.annotation.WorkerThread;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -28,67 +24,54 @@ class VerifyOp implements Closeable {
     @NonNull
     private final Path mBackupPath;
     @NonNull
-    private final BackupFiles.BackupFile mBackupFile;
-    @NonNull
-    private final Crypto mCrypto;
+    private final BackupItems.BackupItem mBackupItem;
     @NonNull
     private final String mExtension;
     @NonNull
-    private final BackupFiles.Checksum mChecksum;
-    private final List<Path> mDecryptedFiles = new ArrayList<>();
+    private final BackupItems.Checksum mChecksum;
 
-    VerifyOp(@NonNull MetadataManager metadataManager, @NonNull BackupFiles.BackupFile backupFile)
+    VerifyOp(@NonNull MetadataManager metadataManager, @NonNull BackupItems.BackupItem backupItem)
             throws BackupException {
-        mBackupFile = backupFile;
-        mBackupPath = mBackupFile.getBackupPath();
+        mBackupItem = backupItem;
+        mBackupPath = mBackupItem.getBackupPath();
         try {
-            metadataManager.readMetadata(mBackupFile);
+            metadataManager.readMetadata(mBackupItem);
             mMetadata = metadataManager.getMetadata();
             mBackupFlags = mMetadata.flags;
         } catch (IOException e) {
+            mBackupItem.cleanup();
             throw new BackupException("Could not read metadata. Possibly due to a malformed json file.", e);
         }
         // Setup crypto
         mExtension = CryptoUtils.getExtension(mMetadata.crypto);
         if (!CryptoUtils.isAvailable(mMetadata.crypto)) {
+            mBackupItem.cleanup();
             throw new BackupException("Mode " + mMetadata.crypto + " is currently unavailable.");
         }
         try {
-            mCrypto = CryptoUtils.getCrypto(mMetadata);
+            mBackupItem.setCrypto(CryptoUtils.getCrypto(mMetadata));
         } catch (CryptoException e) {
+            mBackupItem.cleanup();
             throw new BackupException("Could not get crypto " + mMetadata.crypto, e);
-        }
-        Path checksumFile;
-        try {
-            checksumFile = mBackupFile.getChecksumFile(mMetadata.crypto);
-        } catch (IOException e) {
-            throw new BackupException("Could not get encrypted checksum.txt file.", e);
-        }
-        // Decrypt checksum
-        try {
-            synchronized (Crypto.class) {
-                mCrypto.decrypt(new Path[]{checksumFile});
-                mDecryptedFiles.addAll(Arrays.asList(mCrypto.getNewFiles()));
-            }
-        } catch (IOException e) {
-            throw new BackupException("Could not decrypt " + checksumFile.getName(), e);
         }
         // Get checksums
         try {
-            mChecksum = mBackupFile.getChecksum(CryptoUtils.MODE_NO_ENCRYPTION);
+            mChecksum = mBackupItem.getChecksum();
         } catch (Throwable e) {
-            mBackupFile.cleanup();
+            mBackupItem.cleanup();
             throw new BackupException("Could not get checksums.", e);
         }
         // Verify metadata
         Path metadataFile;
         try {
-            metadataFile = mBackupFile.getMetadataFile();
+            metadataFile = mBackupItem.getMetadataFile();
         } catch (IOException e) {
+            mBackupItem.cleanup();
             throw new BackupException("Could not get metadata file.", e);
         }
         String checksum = DigestUtils.getHexDigest(mMetadata.checksumAlgo, metadataFile);
         if (!checksum.equals(mChecksum.get(metadataFile.getName()))) {
+            mBackupItem.cleanup();
             throw new BackupException("Could not verify metadata." +
                     "\nFile: " + metadataFile.getName() +
                     "\nFound: " + checksum +
@@ -99,11 +82,8 @@ class VerifyOp implements Closeable {
     @Override
     public void close() {
         Log.d(TAG, "Close called");
-        mCrypto.close();
-        for (Path file : mDecryptedFiles) {
-            Log.d(TAG, "Deleting %s", file);
-            file.delete();
-        }
+        mChecksum.close();
+        mBackupItem.cleanup();
     }
 
     void verify() throws BackupException {
@@ -190,7 +170,7 @@ class VerifyOp implements Closeable {
     private void verifyExtras() throws BackupException {
         Path miscFile;
         try {
-            miscFile = mBackupFile.getMiscFile(mMetadata.crypto);
+            miscFile = mBackupItem.getMiscFile();
         } catch (IOException ignore) {
             // There are no permissions, just skip
             return;
@@ -207,7 +187,7 @@ class VerifyOp implements Closeable {
     private void verifyRules() throws BackupException {
         Path rulesFile;
         try {
-            rulesFile = mBackupFile.getRulesFile(mMetadata.crypto);
+            rulesFile = mBackupItem.getRulesFile(mMetadata.crypto);
         } catch (IOException e) {
             if (mMetadata.hasRules) {
                 throw new BackupException("Rules file is missing.", e);

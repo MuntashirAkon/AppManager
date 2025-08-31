@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.backup.convert;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.ICON_FILE;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
 import static io.github.muntashirakon.AppManager.utils.TarUtils.DEFAULT_SPLIT_SIZE;
@@ -45,12 +44,11 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.backup.BackupException;
-import io.github.muntashirakon.AppManager.backup.BackupFiles;
+import io.github.muntashirakon.AppManager.backup.BackupItems;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
-import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -79,11 +77,10 @@ public class TBConverter extends Converter {
     private final long mBackupTime;
     private final List<Path> mFilesToBeDeleted = new ArrayList<>();
 
-    private Crypto mCrypto;
-    private BackupFiles.Checksum mChecksum;
+    private BackupItems.Checksum mChecksum;
     private MetadataManager.Metadata mSourceMetadata;
     private MetadataManager.Metadata mDestMetadata;
-    private Path mTempBackupPath;
+    private BackupItems.BackupItem mBackupItem;
     @Nullable
     private Bitmap mIcon;
 
@@ -124,23 +121,23 @@ public class TBConverter extends Converter {
         MetadataManager metadataManager = MetadataManager.getNewInstance();
         metadataManager.setMetadata(mDestMetadata);
         // Simulate a backup creation
-        BackupFiles backupFiles;
-        BackupFiles.BackupFile[] backupFileList;
+        BackupItems backupItems;
+        BackupItems.BackupItem[] backupItemList;
         try {
-            backupFiles = new BackupFiles(mPackageName, mUserId, new String[]{"TB"});
-            backupFileList = backupFiles.getBackupPaths(true);
+            backupItems = new BackupItems(mPackageName, mUserId, new String[]{"TB"});
+            backupItemList = backupItems.getBackupPaths(true);
         } catch (IOException e) {
             throw new BackupException("Could not get backup files", e);
         }
-        for (BackupFiles.BackupFile backupFile : backupFileList) {
+        for (BackupItems.BackupItem backupItem : backupItemList) {
             // We're iterating over a singleton list
             boolean backupSuccess = false;
             try {
-                mTempBackupPath = backupFile.getBackupPath();
-                mCrypto = ConvertUtils.setupCrypto(mDestMetadata);
-                mDestMetadata.backupName = backupFile.backupName;
+                mBackupItem = backupItem;
+                mBackupItem.setCrypto(ConvertUtils.setupCrypto(mDestMetadata));
+                mDestMetadata.backupName = backupItem.backupName;
                 try {
-                    mChecksum = backupFile.getChecksum(CryptoUtils.MODE_NO_ENCRYPTION);
+                    mChecksum = backupItem.getChecksum();
                 } catch (IOException e) {
                     throw new BackupException("Failed to create checksum file.", e);
                 }
@@ -155,29 +152,29 @@ public class TBConverter extends Converter {
                 // Write modified metadata
                 metadataManager.setMetadata(mDestMetadata);
                 try {
-                    metadataManager.writeMetadata(backupFile);
+                    metadataManager.writeMetadata(backupItem);
                 } catch (IOException e) {
                     throw new BackupException("Failed to write metadata.", e);
                 }
                 // Store checksum for metadata
                 try {
                     mChecksum.add(MetadataManager.META_FILE, DigestUtils.getHexDigest(mDestMetadata.checksumAlgo,
-                            backupFile.getMetadataFile()));
+                            backupItem.getMetadataFile()));
                 } catch (IOException e) {
                     throw new BackupException("Failed to generate checksum for meta.json", e);
+                } finally {
+                    mChecksum.close();
                 }
-                mChecksum.close();
                 // Encrypt checksum
                 try {
-                    Path checksumFile = backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
-                    encrypt(new Path[]{checksumFile});
+                    mBackupItem.encrypt(new Path[]{mChecksum.getFile()});
                 } catch (IOException e) {
                     throw new BackupException("Failed to encrypt checksums.txt");
                 }
                 // Replace current backup:
                 // There's hardly any chance of getting a false here but checks are done anyway.
                 try {
-                    backupFile.commit();
+                    backupItem.commit();
                 } catch (Exception e) {
                     throw new BackupException("Could not finalise backup.", e);
                 }
@@ -187,12 +184,7 @@ public class TBConverter extends Converter {
             } catch (Throwable th) {
                 throw new BackupException("Unknown error occurred.", th);
             } finally {
-                if (!backupSuccess) {
-                    backupFile.cleanup();
-                }
-                if (mCrypto != null) {
-                    mCrypto.close();
-                }
+                backupItem.cleanup();
                 if (backupSuccess) {
                     BackupUtils.putBackupToDbAndBroadcast(ContextUtils.getContext(), mDestMetadata);
                 }
@@ -249,7 +241,7 @@ public class TBConverter extends Converter {
         String sourceBackupFilePrefix = SOURCE_PREFIX + getExt(mDestMetadata.tarType);
         Path[] sourceFiles;
         try {
-            sourceFiles = TarUtils.create(mDestMetadata.tarType, baseApkFile, mTempBackupPath, sourceBackupFilePrefix,
+            sourceFiles = TarUtils.create(mDestMetadata.tarType, baseApkFile, mBackupItem.getUnencryptedBackupPath(), sourceBackupFilePrefix,
                             /* language=regexp */new String[]{".*\\.apk"}, null, null, false)
                     .toArray(new Path[0]);
         } catch (Throwable th) {
@@ -259,7 +251,7 @@ public class TBConverter extends Converter {
         }
         // Overwrite with the new files
         try {
-            sourceFiles = encrypt(sourceFiles);
+            sourceFiles = mBackupItem.encrypt(sourceFiles);
         } catch (IOException e) {
             throw new BackupException("Failed to encrypt " + Arrays.toString(sourceFiles));
         }
@@ -297,7 +289,7 @@ public class TBConverter extends Converter {
             SplitOutputStream intSos = null, extSos = null;
             TarArchiveOutputStream intTos = null, extTos = null;
             if (intBackupFilePrefix != null) {
-                intSos = new SplitOutputStream(mTempBackupPath, intBackupFilePrefix, DEFAULT_SPLIT_SIZE);
+                intSos = new SplitOutputStream(mBackupItem.getUnencryptedBackupPath(), intBackupFilePrefix, DEFAULT_SPLIT_SIZE);
                 BufferedOutputStream bos = new BufferedOutputStream(intSos);
                 OutputStream cos;
                 if (TAR_GZIP.equals(mDestMetadata.tarType)) {
@@ -314,7 +306,7 @@ public class TBConverter extends Converter {
                 intTos.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_POSIX);
             }
             if (extBackupFilePrefix != null) {
-                extSos = new SplitOutputStream(mTempBackupPath, extBackupFilePrefix, DEFAULT_SPLIT_SIZE);
+                extSos = new SplitOutputStream(mBackupItem.getUnencryptedBackupPath(), extBackupFilePrefix, DEFAULT_SPLIT_SIZE);
                 BufferedOutputStream bos = new BufferedOutputStream(extSos);
                 OutputStream cos;
                 if (TAR_GZIP.equals(mDestMetadata.tarType)) {
@@ -398,14 +390,14 @@ public class TBConverter extends Converter {
             // Encrypt created backups and generate checksum
             if (intSos != null) {
                 // Encrypt backups
-                Path[] newBackupFiles = encrypt(intSos.getFiles().toArray(new Path[0]));
+                Path[] newBackupFiles = mBackupItem.encrypt(intSos.getFiles().toArray(new Path[0]));
                 for (Path file : newBackupFiles) {
                     mChecksum.add(file.getName(), DigestUtils.getHexDigest(mDestMetadata.checksumAlgo, file));
                 }
             }
             if (extSos != null) {
                 // Encrypt backups
-                Path[] newBackupFiles = encrypt(extSos.getFiles().toArray(new Path[0]));
+                Path[] newBackupFiles = mBackupItem.encrypt(extSos.getFiles().toArray(new Path[0]));
                 for (Path file : newBackupFiles) {
                     mChecksum.add(file.getName(), DigestUtils.getHexDigest(mDestMetadata.checksumAlgo, file));
                 }
@@ -490,21 +482,13 @@ public class TBConverter extends Converter {
     private void backupIcon() {
         if (mIcon == null) return;
         try {
-            Path iconFile = mTempBackupPath.findOrCreateFile(ICON_FILE, null);
+            Path iconFile = mBackupItem.getIconFile();
             try (OutputStream outputStream = iconFile.openOutputStream()) {
                 mIcon.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                 outputStream.flush();
             }
         } catch (IOException e) {
             Log.w(TAG, "Could not back up icon.");
-        }
-    }
-
-    @NonNull
-    private Path[] encrypt(@NonNull Path[] files) throws IOException {
-        synchronized (Class.class) {
-            mCrypto.encrypt(files);
-            return mCrypto.getNewFiles();
         }
     }
 }

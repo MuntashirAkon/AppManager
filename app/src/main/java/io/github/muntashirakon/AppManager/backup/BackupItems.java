@@ -15,20 +15,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.crypto.Crypto;
+import io.github.muntashirakon.AppManager.crypto.DummyCrypto;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathReader;
 import io.github.muntashirakon.io.PathWriter;
 
-public class BackupFiles {
+public class BackupItems {
     static final String APK_SAVING_DIRECTORY = "apks";
+    @Deprecated // No longer used
     static final String TEMPORARY_DIRECTORY = ".tmp";
 
-    static final String RULES_TSV = "rules.am.tsv";
-    static final String MISC_TSV = "misc.am.tsv";
-    static final String CHECKSUMS_TXT = "checksums.txt";
-    static final String FREEZE = ".freeze";
-    static final String NO_MEDIA = ".nomedia";
+    private static final String ICON_FILE = "icon.png";
+    private static final String RULES_TSV = "rules.am.tsv";
+    private static final String MISC_TSV = "misc.am.tsv";
+    private static final String CHECKSUMS_TXT = "checksums.txt";
+    private static final String FREEZE = ".freeze";
+    private static final String NO_MEDIA = ".nomedia";
 
     @NonNull
     public static Path getBaseDirectory() {
@@ -79,62 +84,173 @@ public class BackupFiles {
         }
     }
 
-    public static class BackupFile {
+    public static class BackupItem {
+        public static final String TAG = BackupItem.class.getSimpleName();
+
         @NonNull
         public final String backupName;
         @NonNull
         private final Path mBackupPath;
         @NonNull
         private final Path mTempBackupPath;
-        private final boolean mIsTemporary;
+        private final boolean mBackupMode;
+        private final Object mCryptoGuard = new Object();
+        @Nullable
+        private Crypto mCrypto;
+        @CryptoUtils.Mode
+        private String mCryptoMode = CryptoUtils.MODE_NO_ENCRYPTION;
+        private boolean mBackupSuccess = false;
+        private List<Path> mTemporaryFiles = new ArrayList<>();
 
-        public BackupFile(@NonNull Path backupPath, boolean hasTemporary) throws IOException {
+        public BackupItem(@NonNull Path backupPath, boolean backupMode) throws IOException {
             // For now, backup name is the same as the first path segment
             backupName = backupPath.getName();
             mBackupPath = backupPath;
-            mIsTemporary = hasTemporary;
-            if (mIsTemporary) {
+            mBackupMode = backupMode;
+            if (mBackupMode) {
                 mBackupPath.mkdirs();  // Create backup path if not exists
                 mTempBackupPath = getTemporaryBackupPath(mBackupPath);
             } else mTempBackupPath = mBackupPath;
         }
 
+        public void setCrypto(@Nullable Crypto crypto) {
+            if (crypto == null || crypto instanceof DummyCrypto) {
+                mCrypto = null;
+                mCryptoMode = CryptoUtils.MODE_NO_ENCRYPTION;
+            } else {
+                mCrypto = crypto;
+                mCryptoMode = crypto.getModeName();
+            }
+        }
+
         @NonNull
         public Path getBackupPath() {
-            return mIsTemporary ? mTempBackupPath : mBackupPath;
+            return mBackupMode ? mTempBackupPath : mBackupPath;
+        }
+
+        public Path getUnencryptedBackupPath() {
+            if (mCrypto == null) {
+                // Use real path for unencrypted backups
+                return getBackupPath();
+            } else {
+                // TODO: 8/30/25 Always use temporary path for encrypted backups
+                return getBackupPath();
+            }
+        }
+
+        @NonNull
+        public Path[] encrypt(@NonNull Path[] files) throws IOException {
+            // Encrypt the files and delete the originals
+            synchronized (mCryptoGuard) {
+                if (mCrypto == null) {
+                    // No encryption enabled
+                    return files;
+                }
+                List<Path> newFileList = new ArrayList<>();
+                // Get desired extension
+                String ext = CryptoUtils.getExtension(mCryptoMode);
+                // Create necessary files (1-1 correspondence)
+                for (Path inputFile : files) {
+                    Path parent = getBackupPath();
+                    String outputFilename = inputFile.getName() + ext;
+                    Path outputPath = parent.createNewFile(outputFilename, null);
+                    newFileList.add(outputPath);
+                    Log.i(TAG, "Input: %s\nOutput: %s", inputFile, outputPath);
+                }
+                Path[] newFiles = newFileList.toArray(new Path[0]);
+                // Perform actual encryption
+                mCrypto.encrypt(files, newFiles);
+                // Delete unencrypted files
+                for (Path inputFile : files) {
+                    if (!inputFile.delete()) {
+                        throw new IOException("Couldn't delete old file " + inputFile);
+                    }
+                }
+                return newFiles;
+            }
+        }
+
+        @NonNull
+        public Path[] decrypt(@NonNull Path[] files) throws IOException {
+            // Decrypt the files but do NOT delete the originals
+            synchronized (mCryptoGuard) {
+                if (mCrypto == null) {
+                    // No encryption enabled
+                    return files;
+                }
+                List<Path> newFileList = new ArrayList<>();
+                // Get desired extension
+                String ext = CryptoUtils.getExtension(mCryptoMode);
+                // Create necessary files (1-1 correspondence)
+                for (Path inputFile : files) {
+                    Path parent = getUnencryptedBackupPath();
+                    String filename = inputFile.getName();
+                    String outputFilename = filename.substring(0, filename.lastIndexOf(ext));
+                    Path outputPath = parent.createNewFile(outputFilename, null);
+                    newFileList.add(outputPath);
+                    Log.i(TAG, "Input: %s\nOutput: %s", inputFile, outputPath);
+                }
+                Path[] newFiles = newFileList.toArray(new Path[0]);
+                // Perform actual decryption
+                mCrypto.decrypt(files, newFiles);
+                mTemporaryFiles.addAll(newFileList);
+                return newFiles;
+            }
+        }
+
+        @NonNull
+        public Path getIconFile() throws IOException {
+            // Icon is never encrypted
+            if (mBackupMode) {
+                return getBackupPath().findOrCreateFile(ICON_FILE, null);
+            } else return getBackupPath().findFile(ICON_FILE);
         }
 
         @NonNull
         public Path getMetadataFile() throws IOException {
-            if (mIsTemporary) {
+            // meta is never encrypted
+            if (mBackupMode) {
                 return getBackupPath().findOrCreateFile(MetadataManager.META_FILE, null);
             } else return getBackupPath().findFile(MetadataManager.META_FILE);
         }
 
         @NonNull
-        public Path getChecksumFile(@CryptoUtils.Mode String mode) throws IOException {
-            if (mIsTemporary) {
-                return getBackupPath().findOrCreateFile(CHECKSUMS_TXT + CryptoUtils.getExtension(mode), null);
-            } else return getBackupPath().findFile(CHECKSUMS_TXT + CryptoUtils.getExtension(mode));
+        private Path getChecksumFile() throws IOException {
+            if (mBackupMode) {
+                // Needs to be encrypted in backup mode
+                return getUnencryptedBackupPath().findOrCreateFile(CHECKSUMS_TXT, null);
+            } else {
+                // Needs to be decrypted in restore mode
+                Path file = getBackupPath().findFile(CHECKSUMS_TXT + CryptoUtils.getExtension(mCryptoMode));
+                return decrypt(new Path[]{file})[0];
+            }
         }
 
         @NonNull
-        public Checksum getChecksum(@CryptoUtils.Mode String mode) throws IOException {
-            return new Checksum(getChecksumFile(mode), mIsTemporary ? "w" : "r");
+        public Checksum getChecksum() throws IOException {
+            return new Checksum(getChecksumFile(), mBackupMode ? "w" : "r");
         }
 
         @NonNull
-        public Path getMiscFile(@CryptoUtils.Mode String mode) throws IOException {
-            if (mIsTemporary) {
-                return getBackupPath().findOrCreateFile(MISC_TSV + CryptoUtils.getExtension(mode), null);
-            } else return getBackupPath().findFile(MISC_TSV + CryptoUtils.getExtension(mode));
+        public Path getMiscFile() throws IOException {
+            if (mBackupMode) {
+                // Needs to be encrypted in backup mode
+                return getUnencryptedBackupPath().findOrCreateFile(MISC_TSV, null);
+            } else {
+                // Needs to be decrypted in restore mode
+                return getBackupPath().findFile(MISC_TSV + CryptoUtils.getExtension(mCryptoMode));
+            }
         }
 
         @NonNull
         public Path getRulesFile(@CryptoUtils.Mode String mode) throws IOException {
-            if (mIsTemporary) {
-                return getBackupPath().findOrCreateFile(RULES_TSV + CryptoUtils.getExtension(mode), null);
-            } else return getBackupPath().findFile(RULES_TSV + CryptoUtils.getExtension(mode));
+            if (mBackupMode) {
+                // Needs to be encrypted in backup mode
+                return getUnencryptedBackupPath().findOrCreateFile(RULES_TSV, null);
+            } else {
+                // Needs to be decrypted in restore mode
+                return getBackupPath().findFile(RULES_TSV + CryptoUtils.getExtension(mCryptoMode));
+            }
         }
 
         public void freeze() throws IOException {
@@ -155,19 +271,34 @@ public class BackupFiles {
         }
 
         public void commit() throws IOException {
-            if (mIsTemporary) {
+            if (mBackupMode) {
+                if (mBackupSuccess) {
+                    // Backup already done
+                    return;
+                }
                 if (!delete()) {
                     throw new IOException("Could not delete " + mBackupPath);
                 }
                 if (!mTempBackupPath.moveTo(mBackupPath)) {
                     throw new IOException("Could not move " + mTempBackupPath + " to " + mBackupPath);
                 }
+                mBackupSuccess = true;
             }
         }
 
         public void cleanup() {
-            if (mIsTemporary) {
-                mTempBackupPath.delete();
+            if (mBackupMode) {
+                if (!mBackupSuccess) {
+                    // Backup wasn't successful, delete the directory
+                    mTempBackupPath.delete();
+                }
+            }
+            for (Path file : mTemporaryFiles) {
+                Log.d(TAG, "Deleting %s", file);
+                file.delete();
+            }
+            if (mCrypto != null) {
+                mCrypto.close();
             }
         }
 
@@ -193,14 +324,14 @@ public class BackupFiles {
     private final Path mPackagePath;
 
     /**
-     * Create and handle {@link BackupFile}.
+     * Create and handle {@link BackupItem}.
      *
      * @param packageName Name of the package whose backups has to be managed
      * @param userId      To whom the package belong
      * @param backupNames Name of the backups. If {@code null}, user handle will be used. If not
      *                    null, the backup names will have the format {@code userHandle_backupName}.
      */
-    public BackupFiles(@NonNull String packageName, int userId, @Nullable String[] backupNames) throws IOException {
+    public BackupItems(@NonNull String packageName, int userId, @Nullable String[] backupNames) throws IOException {
         mPackageName = packageName;
         mUserId = userId;
         if (backupNames == null) {
@@ -220,22 +351,22 @@ public class BackupFiles {
         return mPackageName;
     }
 
-    public BackupFile[] getBackupPaths(boolean hasTemporary) throws IOException {
-        BackupFile[] backupFiles = new BackupFile[mBackupNames.length];
+    public BackupItem[] getBackupPaths(boolean backupMode) throws IOException {
+        BackupItem[] backupFiles = new BackupItem[mBackupNames.length];
         for (int i = 0; i < mBackupNames.length; ++i) {
-            backupFiles[i] = new BackupFile(
-                    hasTemporary ?
+            backupFiles[i] = new BackupItem(
+                    backupMode ?
                             mPackagePath.findOrCreateDirectory(mBackupNames[i]) :
                             mPackagePath.findFile(mBackupNames[i]),
-                    hasTemporary);
+                    backupMode);
         }
         return backupFiles;
     }
 
-    BackupFile[] getFreshBackupPaths() throws IOException {
-        BackupFile[] backupFiles = new BackupFile[mBackupNames.length];
+    BackupItem[] getFreshBackupPaths() throws IOException {
+        BackupItem[] backupFiles = new BackupItem[mBackupNames.length];
         for (int i = 0; i < mBackupNames.length; ++i) {
-            backupFiles[i] = new BackupFile(getFreshBackupPath(mBackupNames[i]), true);
+            backupFiles[i] = new BackupItem(getFreshBackupPath(mBackupNames[i]), true);
         }
         return backupFiles;
     }
@@ -253,6 +384,7 @@ public class BackupFiles {
         private PrintWriter mWriter;
         private final HashMap<String, String> mChecksums = new HashMap<>();
         private final String mMode;
+        private final Path mFile;
 
         @NonNull
         public static String[] getCertChecksums(@NonNull Checksum checksum) {
@@ -267,7 +399,8 @@ public class BackupFiles {
             return certChecksums.toArray(new String[0]);
         }
 
-        public Checksum(@NonNull Path checksumFile, String mode) throws IOException {
+        Checksum(@NonNull Path checksumFile, String mode) throws IOException {
+            mFile = checksumFile;
             mMode = mode;
             if ("w".equals(mode)) {
                 mWriter = new PrintWriter(new BufferedWriter(new PathWriter(checksumFile)));
@@ -289,6 +422,10 @@ public class BackupFiles {
             } else throw new IOException("Unknown mode: " + mode);
         }
 
+        public Path getFile() {
+            return mFile;
+        }
+
         public void add(@NonNull String fileName, @NonNull String checksum) {
             synchronized (mChecksums) {
                 if (!"w".equals(mMode)) throw new IllegalStateException("add is inaccessible in mode " + mMode);
@@ -308,7 +445,10 @@ public class BackupFiles {
         @Override
         public void close() {
             synchronized (mChecksums) {
-                if (mWriter != null) mWriter.close();
+                if (mWriter != null) {
+                    mWriter.close();
+                    mWriter = null;
+                }
             }
         }
     }

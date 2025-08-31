@@ -49,7 +49,7 @@ public final class BackupUtils {
 
     @NonNull
     private static List<Path> getBackupPaths() {
-        Path baseDirectory = BackupFiles.getBaseDirectory();
+        Path baseDirectory = BackupItems.getBaseDirectory();
         List<Path> backupPaths;
         Path[] paths = baseDirectory.listFiles(Path::isDirectory);
         backupPaths = new ArrayList<>(paths.length);
@@ -61,10 +61,10 @@ public final class BackupUtils {
             if (SaveLogHelper.SAVED_LOGS_DIR.equals(path.getName())) {
                 continue;
             }
-            if (BackupFiles.APK_SAVING_DIRECTORY.equals(path.getName())) {
+            if (BackupItems.APK_SAVING_DIRECTORY.equals(path.getName())) {
                 continue;
             }
-            if (BackupFiles.TEMPORARY_DIRECTORY.equals(path.getName())) {
+            if (BackupItems.TEMPORARY_DIRECTORY.equals(path.getName())) {
                 continue;
             }
             // Other backups can store multiple backups per folder

@@ -23,7 +23,6 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +38,6 @@ import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -90,76 +88,65 @@ class RestoreOp implements Closeable {
     @NonNull
     private final Path mBackupPath;
     @NonNull
-    private final BackupFiles.BackupFile mBackupFile;
+    private final BackupItems.BackupItem mBackupItem;
     @Nullable
     private PackageInfo mPackageInfo;
     private int mUid;
     @NonNull
-    private final Crypto mCrypto;
-    @NonNull
     private final String mExtension;
     @NonNull
-    private final BackupFiles.Checksum mChecksum;
+    private final BackupItems.Checksum mChecksum;
     private final int mUserId;
     private boolean mIsInstalled;
-    private final List<Path> mDecryptedFiles = new ArrayList<>();
-
     private boolean mRequiresRestart;
 
     RestoreOp(@NonNull String packageName, @NonNull MetadataManager metadataManager,
-              @NonNull BackupFlags requestedFlags, @NonNull BackupFiles.BackupFile backupFile,
+              @NonNull BackupFlags requestedFlags, @NonNull BackupItems.BackupItem backupItem,
               int userId) throws BackupException {
         mPackageName = packageName;
         mRequestedFlags = requestedFlags;
-        mBackupFile = backupFile;
-        mBackupPath = mBackupFile.getBackupPath();
+        mBackupItem = backupItem;
+        mBackupPath = mBackupItem.getBackupPath();
         mUserId = userId;
         try {
-            metadataManager.readMetadata(mBackupFile);
+            metadataManager.readMetadata(mBackupItem);
             mMetadata = metadataManager.getMetadata();
             mBackupFlags = mMetadata.flags;
         } catch (IOException e) {
+            mBackupItem.cleanup();
             throw new BackupException("Failed to read metadata. Possibly due to malformed json file.", e);
         }
         // Setup crypto
         mExtension = CryptoUtils.getExtension(mMetadata.crypto);
         if (!CryptoUtils.isAvailable(mMetadata.crypto)) {
+            mBackupItem.cleanup();
             throw new BackupException("Mode " + mMetadata.crypto + " is currently unavailable.");
         }
         try {
-            mCrypto = CryptoUtils.getCrypto(mMetadata);
+            mBackupItem.setCrypto(CryptoUtils.getCrypto(mMetadata));
         } catch (CryptoException e) {
+            mBackupItem.cleanup();
             throw new BackupException("Failed to get crypto " + mMetadata.crypto, e);
-        }
-        Path checksumFile;
-        try {
-            checksumFile = mBackupFile.getChecksumFile(mMetadata.crypto);
-        } catch (IOException e) {
-            throw new BackupException("Could not get encrypted checksum.txt file.", e);
-        }
-        // Decrypt checksum
-        try {
-            decrypt(new Path[]{checksumFile});
-        } catch (IOException e) {
-            throw new BackupException("Failed to decrypt " + checksumFile.getName(), e);
         }
         // Get checksums
         try {
-            mChecksum = mBackupFile.getChecksum(CryptoUtils.MODE_NO_ENCRYPTION);
+            mChecksum = mBackupItem.getChecksum();
         } catch (Throwable e) {
-            mBackupFile.cleanup();
+            mBackupItem.cleanup();
             throw new BackupException("Failed to get checksums.", e);
         }
         // Verify metadata
         if (!requestedFlags.skipSignatureCheck()) {
             Path metadataFile;
             try {
-                metadataFile = mBackupFile.getMetadataFile();
+                metadataFile = mBackupItem.getMetadataFile();
             } catch (IOException e) {
+                mBackupItem.cleanup();
                 throw new BackupException("Could not get metadata file.", e);
             }
             String checksum = DigestUtils.getHexDigest(mMetadata.checksumAlgo, metadataFile);
             if (!checksum.equals(mChecksum.get(metadataFile.getName()))) {
+                mBackupItem.cleanup();
                 throw new BackupException("Couldn't verify metadata file." +
                         "\nFile: " + metadataFile +
                         "\nFound: " + checksum +
@@ -184,11 +171,8 @@ class RestoreOp implements Closeable {
     @Override
     public void close() {
         Log.d(TAG, "Close called");
-        mCrypto.close();
-        for (Path file : mDecryptedFiles) {
-            Log.d(TAG, "Deleting %s", file);
-            file.delete();
-        }
+        mChecksum.close();
+        mBackupItem.cleanup();
     }
 
     @NonNull
@@ -274,7 +258,7 @@ class RestoreOp implements Closeable {
         if (mPackageInfo != null) {
             // Check signature of the installed app
             List<String> certChecksumList = Arrays.asList(PackageUtils.getSigningCertChecksums(mMetadata.checksumAlgo, mPackageInfo, false));
-            String[] certChecksums = BackupFiles.Checksum.getCertChecksums(mChecksum);
+            String[] certChecksums = BackupItems.Checksum.getCertChecksums(mChecksum);
             for (String checksum : certChecksums) {
                 if (certChecksumList.contains(checksum)) continue;
                 isVerified = false;
@@ -316,7 +300,7 @@ class RestoreOp implements Closeable {
         } catch (Exception ignore) {
         }
         if (!packageStagingDirectory.canWrite()) {
-            packageStagingDirectory = mBackupPath;
+            packageStagingDirectory = mBackupItem.getUnencryptedBackupPath();
         }
         synchronized (sLock) {
             // Setup apk files, including split apk
@@ -336,7 +320,7 @@ class RestoreOp implements Closeable {
             }
             // Decrypt sources
             try {
-                backupSourceFiles = decrypt(backupSourceFiles);
+                backupSourceFiles = mBackupItem.decrypt(backupSourceFiles);
             } catch (IOException e) {
                 throw new BackupException("Failed to decrypt " + Arrays.toString(backupSourceFiles), e);
             }
@@ -435,7 +419,7 @@ class RestoreOp implements Closeable {
         }
         // Decrypt sources
         try {
-            keyStoreFiles = decrypt(keyStoreFiles);
+            keyStoreFiles = mBackupItem.decrypt(keyStoreFiles);
         } catch (IOException e) {
             throw new BackupException("Failed to decrypt " + Arrays.toString(keyStoreFiles), e);
         }
@@ -558,7 +542,7 @@ class RestoreOp implements Closeable {
             }
             // Decrypt data
             try {
-                dataFiles = decrypt(dataFiles);
+                dataFiles = mBackupItem.decrypt(dataFiles);
             } catch (IOException e) {
                 throw new BackupException("Failed to decrypt " + Arrays.toString(dataFiles), e);
             }
@@ -683,7 +667,7 @@ class RestoreOp implements Closeable {
     private void loadMiscRules(final PseudoRules rules) throws BackupException {
         Path miscFile;
         try {
-            miscFile = mBackupFile.getMiscFile(mMetadata.crypto);
+            miscFile = mBackupItem.getMiscFile();
         } catch (IOException e) {
             // There are no permissions, just skip
             return;
@@ -699,15 +683,9 @@ class RestoreOp implements Closeable {
         }
         // Decrypt permission file
         try {
-            decrypt(new Path[]{miscFile});
-        } catch (IOException e) {
+            miscFile = mBackupItem.decrypt(new Path[]{miscFile})[0];
+        } catch (IOException | IndexOutOfBoundsException e) {
             throw new BackupException("Failed to decrypt " + miscFile.getName(), e);
-        }
-        // Get decrypted file
-        try {
-            miscFile = mBackupFile.getMiscFile(CryptoUtils.MODE_NO_ENCRYPTION);
-        } catch (IOException e) {
-            throw new BackupException("Could not get decrypted misc file", e);
         }
         try {
             rules.loadExternalEntries(miscFile);
@@ -723,7 +701,7 @@ class RestoreOp implements Closeable {
         }
         Path rulesFile;
         try {
-            rulesFile = mBackupFile.getRulesFile(mMetadata.crypto);
+            rulesFile = mBackupItem.getRulesFile(mMetadata.crypto);
         } catch (IOException e) {
             if (mMetadata.hasRules) {
                 throw new BackupException("Rules file is missing.", e);
@@ -743,15 +721,9 @@ class RestoreOp implements Closeable {
         }
         // Decrypt rules file
         try {
-            decrypt(new Path[]{rulesFile});
-        } catch (IOException e) {
+            rulesFile = mBackupItem.decrypt(new Path[]{rulesFile})[0];
+        } catch (IOException | IndexOutOfBoundsException e) {
             throw new BackupException("Failed to decrypt " + rulesFile.getName(), e);
-        }
-        // Get decrypted file
-        try {
-            rulesFile = mBackupFile.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
-        } catch (IOException e) {
-            throw new BackupException("Could not get decrypted rules file", e);
         }
         try (RulesImporter importer = new RulesImporter(Arrays.asList(RuleType.values()), new int[]{mUserId})) {
             importer.addRulesFromPath(rulesFile);
@@ -766,16 +738,5 @@ class RestoreOp implements Closeable {
         for (Path file : files) {
             file.delete();
         }
-    }
-
-    @NonNull
-    private Path[] decrypt(@NonNull Path[] files) throws IOException {
-        Path[] newFiles;
-        synchronized (Crypto.class) {
-            mCrypto.decrypt(files);
-            newFiles = mCrypto.getNewFiles();
-        }
-        mDecryptedFiles.addAll(Arrays.asList(newFiles));
-        return newFiles.length > 0 ? newFiles : files;
     }
 }

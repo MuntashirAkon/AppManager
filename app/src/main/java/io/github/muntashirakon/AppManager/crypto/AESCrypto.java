@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.crypto;
 
-import androidx.annotation.AnyThread;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,8 +18,6 @@ import org.bouncycastle.crypto.params.KeyParameter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.crypto.SecretKey;
 import javax.security.auth.DestroyFailedException;
@@ -45,12 +42,17 @@ public class AESCrypto implements Crypto {
     private final byte[] mIv;
     @CryptoUtils.Mode
     private final String mParentMode;
-    private final List<Path> mNewFiles = new ArrayList<>();
 
     private int mMacSizeBits = MAC_SIZE_BITS;
 
     public AESCrypto(@NonNull byte[] iv) throws CryptoException {
         this(iv, CryptoUtils.MODE_AES, null);
+    }
+
+    @NonNull
+    @Override
+    public String getModeName() {
+        return mParentMode;
     }
 
     protected AESCrypto(@NonNull byte[] iv, @NonNull @CryptoUtils.Mode String mode, @Nullable byte[] encryptedAesKey)
@@ -123,8 +125,8 @@ public class AESCrypto implements Crypto {
 
     @WorkerThread
     @Override
-    public void encrypt(@NonNull Path[] files) throws IOException {
-        handleFiles(true, files);
+    public void encrypt(@NonNull Path[] inputFiles, @NonNull Path[] outputFiles) throws IOException {
+        handleFiles(true, inputFiles, outputFiles);
     }
 
     @Override
@@ -141,8 +143,8 @@ public class AESCrypto implements Crypto {
 
     @WorkerThread
     @Override
-    public void decrypt(@NonNull Path[] files) throws IOException {
-        handleFiles(false, files);
+    public void decrypt(@NonNull Path[] inputFiles, @NonNull Path[] outputFiles) throws IOException {
+        handleFiles(false, inputFiles, outputFiles);
     }
 
     @Override
@@ -158,30 +160,22 @@ public class AESCrypto implements Crypto {
     }
 
     @WorkerThread
-    private void handleFiles(boolean forEncryption, @NonNull Path[] files) throws IOException {
-        mNewFiles.clear();
+    private void handleFiles(boolean forEncryption, @NonNull Path[] inputFiles, @NonNull Path[] outputFiles) throws IOException {
         // `files` is never null here
-        if (files.length == 0) {
+        if (inputFiles.length == 0) {
             Log.d(TAG, "No files to de/encrypt");
             return;
+        }
+        if (inputFiles.length != outputFiles.length) {
+            throw new IOException("The number of input and output files are not the same.");
         }
         // Init cipher
         GCMModeCipher cipher = GCMBlockCipher.newInstance(AESEngine.newInstance());
         cipher.init(forEncryption, getParams());
-        // Get desired extension
-        String ext = CryptoUtils.getExtension(mParentMode);
         // Encrypt/decrypt files
-        for (Path inputPath : files) {
-            Path parent = inputPath.getParent();
-            if (parent == null) {
-                throw new IOException("Parent of " + inputPath + " cannot be null.");
-            }
-            String outputFilename;
-            if (!forEncryption) {
-                outputFilename = inputPath.getName().substring(0, inputPath.getName().lastIndexOf(ext));
-            } else outputFilename = inputPath.getName() + ext;
-            Path outputPath = parent.createNewFile(outputFilename, null);
-            mNewFiles.add(outputPath);
+        for (int i = 0; i < inputFiles.length; i++) {
+            Path inputPath = inputFiles[i];
+            Path outputPath = outputFiles[i];
             Log.i(TAG, "Input: %s\nOutput: %s", inputPath, outputPath);
             try (InputStream is = inputPath.openInputStream();
                  OutputStream os = outputPath.openOutputStream()) {
@@ -195,21 +189,8 @@ public class AESCrypto implements Crypto {
                     }
                 }
             }
-            // Delete unencrypted file
-            if (forEncryption) {
-                if (!inputPath.delete()) {
-                    throw new IOException("Couldn't delete old file " + inputPath);
-                }
-            }
         }
         // Total success
-    }
-
-    @AnyThread
-    @NonNull
-    @Override
-    public Path[] getNewFiles() {
-        return mNewFiles.toArray(new Path[0]);
     }
 
     @Override

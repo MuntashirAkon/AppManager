@@ -42,13 +42,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import io.github.muntashirakon.AppManager.backup.BackupException;
-import io.github.muntashirakon.AppManager.backup.BackupFiles;
+import io.github.muntashirakon.AppManager.backup.BackupItems;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
-import io.github.muntashirakon.AppManager.crypto.Crypto;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -91,13 +89,11 @@ public class OABConverter extends Converter {
     private final String mPackageName;
     @UserIdInt
     private final int mUserId;
-    private final List<Path> mDecryptedFiles = new ArrayList<>();
 
-    private Crypto mCrypto;
-    private BackupFiles.Checksum mChecksum;
+    private BackupItems.Checksum mChecksum;
     private MetadataManager.Metadata mSourceMetadata;
     private MetadataManager.Metadata mDestMetadata;
-    private Path mTempBackupPath;
+    private BackupItems.BackupItem mBackupItem;
 
     /**
      * @param backupLocation E.g. {@code /sdcard/oandbackups/package.name}
@@ -124,23 +120,23 @@ public class OABConverter extends Converter {
         MetadataManager metadataManager = MetadataManager.getNewInstance();
         metadataManager.setMetadata(mDestMetadata);
         // Simulate a backup creation
-        BackupFiles backupFiles;
-        BackupFiles.BackupFile[] backupFileList;
+        BackupItems backupItems;
+        BackupItems.BackupItem[] backupItemList;
         try {
-            backupFiles = new BackupFiles(mPackageName, mUserId, new String[]{"OAndBackup"});
-            backupFileList = backupFiles.getBackupPaths(true);
+            backupItems = new BackupItems(mPackageName, mUserId, new String[]{"OAndBackup"});
+            backupItemList = backupItems.getBackupPaths(true);
         } catch (IOException e) {
             throw new BackupException("Could not get backup files.", e);
         }
-        for (BackupFiles.BackupFile backupFile : backupFileList) {
+        for (BackupItems.BackupItem backupItem : backupItemList) {
             // We're iterating over a singleton list
             boolean backupSuccess = false;
             try {
-                mTempBackupPath = backupFile.getBackupPath();
-                mCrypto = ConvertUtils.setupCrypto(mDestMetadata);
-                mDestMetadata.backupName = backupFile.backupName;
+                mBackupItem = backupItem;
+                mBackupItem.setCrypto(ConvertUtils.setupCrypto(mDestMetadata));
+                mDestMetadata.backupName = backupItem.backupName;
                 try {
-                    mChecksum = backupFile.getChecksum(CryptoUtils.MODE_NO_ENCRYPTION);
+                    mChecksum = backupItem.getChecksum();
                 } catch (IOException e) {
                     throw new BackupException("Failed to create checksum file.", e);
                 }
@@ -153,28 +149,28 @@ public class OABConverter extends Converter {
                 // Write modified metadata
                 metadataManager.setMetadata(mDestMetadata);
                 try {
-                    metadataManager.writeMetadata(backupFile);
+                    metadataManager.writeMetadata(backupItem);
                 } catch (IOException e) {
                     throw new BackupException("Failed to write metadata.", e);
                 }
                 // Store checksum for metadata
                 try {
                     mChecksum.add(MetadataManager.META_FILE, DigestUtils.getHexDigest(mDestMetadata.checksumAlgo,
-                            backupFile.getMetadataFile()));
+                            backupItem.getMetadataFile()));
                 } catch (IOException e) {
                     throw new BackupException("Failed to generate checksum for meta.json", e);
+                } finally {
+                    mChecksum.close();
                 }
-                mChecksum.close();
                 // Encrypt checksum
                 try {
-                    Path checksumFile = backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
-                    encrypt(new Path[]{checksumFile});
+                    mBackupItem.encrypt(new Path[]{mChecksum.getFile()});
                 } catch (IOException e) {
                     throw new BackupException("Failed to encrypt checksums.txt", e);
                 }
                 // Replace current backup
                 try {
-                    backupFile.commit();
+                    backupItem.commit();
                 } catch (IOException e) {
                     throw new BackupException("Could not finalise backup.", e);
                 }
@@ -184,16 +180,7 @@ public class OABConverter extends Converter {
             } catch (Throwable th) {
                 throw new BackupException("Unknown error occurred.", th);
             } finally {
-                if (!backupSuccess) {
-                    backupFile.cleanup();
-                }
-                if (mCrypto != null) {
-                    mCrypto.close();
-                }
-                for (Path file : mDecryptedFiles) {
-                    Log.d(TAG, "Deleting %s", file);
-                    file.delete();
-                }
+                backupItem.cleanup();
                 if (backupSuccess) {
                     BackupUtils.putBackupToDbAndBroadcast(ContextUtils.getContext(), mDestMetadata);
                 }
@@ -282,7 +269,7 @@ public class OABConverter extends Converter {
         }
         // Decrypt APK file if needed
         try {
-            baseApkFiles = decrypt(baseApkFiles);
+            baseApkFiles = mBackupItem.decrypt(baseApkFiles);
         } catch (IOException e) {
             throw new BackupException("Failed to decrypt " + Arrays.toString(baseApkFiles), e);
         }
@@ -303,7 +290,7 @@ public class OABConverter extends Converter {
         String sourceBackupFilePrefix = SOURCE_PREFIX + getExt(mDestMetadata.tarType);
         Path[] sourceFiles;
         try {
-            sourceFiles = TarUtils.create(mDestMetadata.tarType, baseApkFile, mTempBackupPath, sourceBackupFilePrefix,
+            sourceFiles = TarUtils.create(mDestMetadata.tarType, baseApkFile, mBackupItem.getUnencryptedBackupPath(), sourceBackupFilePrefix,
                             /* language=regexp */ new String[]{".*\\.apk"}, null, null, false)
                     .toArray(new Path[0]);
         } catch (Throwable th) {
@@ -311,7 +298,7 @@ public class OABConverter extends Converter {
         }
         // Overwrite with the new files
         try {
-            sourceFiles = encrypt(sourceFiles);
+            sourceFiles = mBackupItem.encrypt(sourceFiles);
         } catch (IOException e) {
             throw new BackupException("Failed to encrypt " + Arrays.toString(sourceFiles), e);
         }
@@ -344,7 +331,7 @@ public class OABConverter extends Converter {
             files = new Path[]{dataFile};
             // Decrypt APK file if needed
             try {
-                files = decrypt(files);
+                files = mBackupItem.decrypt(files);
             } catch (IOException e) {
                 throw new BackupException("Failed to decrypt " + Arrays.toString(files), e);
             }
@@ -354,7 +341,7 @@ public class OABConverter extends Converter {
             }
             String dataBackupFilePrefix = DATA_PREFIX + (i++) + getExt(mDestMetadata.tarType);
             try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(files[0].openInputStream()));
-                 SplitOutputStream sos = new SplitOutputStream(mTempBackupPath, dataBackupFilePrefix, DEFAULT_SPLIT_SIZE);
+                 SplitOutputStream sos = new SplitOutputStream(mBackupItem.getUnencryptedBackupPath(), dataBackupFilePrefix, DEFAULT_SPLIT_SIZE);
                  BufferedOutputStream bos = new BufferedOutputStream(sos)) {
                 OutputStream os;
                 if (TAR_GZIP.equals(mDestMetadata.tarType)) {
@@ -400,7 +387,7 @@ public class OABConverter extends Converter {
                     tos.finish();
                 }
                 // Encrypt backups
-                Path[] newBackupFiles = encrypt(sos.getFiles().toArray(new Path[0]));
+                Path[] newBackupFiles = mBackupItem.encrypt(sos.getFiles().toArray(new Path[0]));
                 for (Path file : newBackupFiles) {
                     mChecksum.add(file.getName(), DigestUtils.getHexDigest(mDestMetadata.checksumAlgo, file));
                 }
@@ -408,24 +395,5 @@ public class OABConverter extends Converter {
                 throw new BackupException("Backup failed for " + dataFile, e);
             }
         }
-    }
-
-    @NonNull
-    private Path[] encrypt(@NonNull Path[] files) throws IOException {
-        synchronized (Crypto.class) {
-            mCrypto.encrypt(files);
-            return mCrypto.getNewFiles();
-        }
-    }
-
-    @NonNull
-    private Path[] decrypt(@NonNull Path[] files) throws IOException {
-        Path[] newFiles;
-        synchronized (Crypto.class) {
-            mCrypto.decrypt(files);
-            newFiles = mCrypto.getNewFiles();
-        }
-        mDecryptedFiles.addAll(Arrays.asList(newFiles));
-        return newFiles.length > 0 ? newFiles : files;
     }
 }

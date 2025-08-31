@@ -63,7 +63,7 @@ public final class MetadataManager {
     // All the attributes must be non-null
     public static class Metadata implements LocalizedString {
         public String backupName;  // This isn't part of the json file and for internal use only
-        public BackupFiles.BackupFile backupFile; // This isn't part of the json file and for internal use only
+        public BackupItems.BackupItem backupFile; // This isn't part of the json file and for internal use only
 
         public String label;  // label
         public String packageName;  // package_name
@@ -201,13 +201,13 @@ public final class MetadataManager {
     @NonNull
     public static Metadata getMetadata(@NonNull Path backupPath) throws IOException {
         MetadataManager metadataManager = MetadataManager.getNewInstance();
-        metadataManager.readMetadata(new BackupFiles.BackupFile(backupPath, false));
+        metadataManager.readMetadata(new BackupItems.BackupItem(backupPath, false));
         return metadataManager.getMetadata();
     }
 
     @WorkerThread
     @NonNull
-    public static Metadata getMetadata(@NonNull BackupFiles.BackupFile backupFile) throws IOException {
+    public static Metadata getMetadata(@NonNull BackupItems.BackupItem backupFile) throws IOException {
         MetadataManager metadataManager = MetadataManager.getNewInstance();
         metadataManager.readMetadata(backupFile);
         return metadataManager.getMetadata();
@@ -229,7 +229,7 @@ public final class MetadataManager {
     }
 
     @WorkerThread
-    synchronized public void readMetadata(@NonNull BackupFiles.BackupFile backupFile) throws IOException {
+    synchronized public void readMetadata(@NonNull BackupItems.BackupItem backupFile) throws IOException {
         String metadata = backupFile.getMetadataFile().getContentAsString();
         if (TextUtils.isEmpty(metadata)) {
             throw new IOException("Empty JSON string for path " + backupFile.getBackupPath());
@@ -283,7 +283,7 @@ public final class MetadataManager {
     }
 
     @WorkerThread
-    synchronized public void writeMetadata(@NonNull BackupFiles.BackupFile backupFile) throws IOException {
+    synchronized public void writeMetadata(@NonNull BackupItems.BackupItem backupFile) throws IOException {
         if (mMetadata == null) {
             throw new RuntimeException("Metadata not set for path " + backupFile.getBackupPath());
         }

@@ -49,7 +49,7 @@ import java.util.zip.ZipInputStream;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
-import io.github.muntashirakon.AppManager.backup.BackupFiles;
+import io.github.muntashirakon.AppManager.backup.BackupItems;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
@@ -101,7 +101,7 @@ public final class ApkUtils {
     @WorkerThread
     public static void backupApk(@NonNull Context ctx, @NonNull String packageName, @UserIdInt int userId)
             throws IOException, PackageManager.NameNotFoundException, RemoteException {
-        Path backupPath = BackupFiles.getApkBackupDirectory();
+        Path backupPath = BackupItems.getApkBackupDirectory();
         // Fetch package info
         PackageManager pm = ctx.getPackageManager();
         PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName,

@@ -65,7 +65,7 @@ public class BackupManager {
         mMetadataManager = MetadataManager.getNewInstance();
         mRequestedFlags = new BackupFlags(flags);
         try {
-            BackupFiles.createNoMediaIfNotExists();
+            BackupItems.createNoMediaIfNotExists();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -91,17 +91,17 @@ public class BackupManager {
         backupNames = getProcessedBackupNames(backupNames);
         try {
             // Get backup files based on the number of backupNames
-            BackupFiles backupFiles = new BackupFiles(mTargetPackage.getPackageName(), mTargetPackage.getUserId(), backupNames);
-            BackupFiles.BackupFile[] backupFileList = mRequestedFlags.backupMultiple() ?
-                    backupFiles.getFreshBackupPaths() : backupFiles.getBackupPaths(true);
+            BackupItems backupItems = new BackupItems(mTargetPackage.getPackageName(), mTargetPackage.getUserId(), backupNames);
+            BackupItems.BackupItem[] backupItemList = mRequestedFlags.backupMultiple() ?
+                    backupItems.getFreshBackupPaths() : backupItems.getBackupPaths(true);
             if (progressHandler != null) {
-                int max = calculateMaxProgress(backupFileList.length);
+                int max = calculateMaxProgress(backupItemList.length);
                 progressHandler.setProgressTextInterface(ProgressHandler.PROGRESS_PERCENT);
                 progressHandler.postUpdate(max, 0f);
             }
-            for (BackupFiles.BackupFile backupFile : backupFileList) {
+            for (BackupItems.BackupItem backupItem : backupItemList) {
                 try (BackupOp backupOp = new BackupOp(mTargetPackage.getPackageName(), mMetadataManager, mRequestedFlags,
-                        backupFile, mTargetPackage.getUserId())) {
+                        backupItem, mTargetPackage.getUserId())) {
                     backupOp.runBackup(progressHandler);
                     BackupUtils.putBackupToDbAndBroadcast(ContextUtils.getContext(), backupOp.getMetadata());
                 }
@@ -165,17 +165,17 @@ public class BackupManager {
         // Set backup userHandle to the userHandle we're working with.
         // This value is only set if backupNames is null or it consisted of only user handle
         if (backupUserId == -1) backupUserId = mTargetPackage.getUserId();
-        BackupFiles backupFiles;
-        BackupFiles.BackupFile[] backupFileList;
+        BackupItems backupItems;
+        BackupItems.BackupItem[] backupItemList;
         try {
-            backupFiles = new BackupFiles(mTargetPackage.getPackageName(), backupUserId, backupNames);
-            backupFileList = backupFiles.getBackupPaths(false);
+            backupItems = new BackupItems(mTargetPackage.getPackageName(), backupUserId, backupNames);
+            backupItemList = backupItems.getBackupPaths(false);
         } catch (IOException e) {
             throw new BackupException("Could not get backup files.", e);
         }
         // Only restore from the first backup though we shouldn't have more than one backup.
-        if (backupFileList.length > 0) {
-            if (backupFileList.length > 1) {
+        if (backupItemList.length > 0) {
+            if (backupItemList.length > 1) {
                 Log.w(RestoreOp.TAG, "More than one backups found! Restoring only the first backup.");
             }
             if (progressHandler != null) {
@@ -184,7 +184,7 @@ public class BackupManager {
                 progressHandler.postUpdate(max, 0f);
             }
             try (RestoreOp restoreOp = new RestoreOp(mTargetPackage.getPackageName(),
-                    mMetadataManager, mRequestedFlags, backupFileList[0],
+                    mMetadataManager, mRequestedFlags, backupItemList[0],
                     mTargetPackage.getUserId())) {
                 restoreOp.runRestore(progressHandler);
                 mRequiresRestart |= restoreOp.requiresRestart();
@@ -197,19 +197,19 @@ public class BackupManager {
     public void deleteBackup(@Nullable String[] backupNames) throws BackupException {
         if (backupNames == null) {
             // No backup names supplied, use user handle
-            BackupFiles backupFiles;
-            BackupFiles.BackupFile[] backupFileList;
+            BackupItems backupItems;
+            BackupItems.BackupItem[] backupItemList;
             try {
-                backupFiles = new BackupFiles(mTargetPackage.getPackageName(),
+                backupItems = new BackupItems(mTargetPackage.getPackageName(),
                         mTargetPackage.getUserId(), null);
-                backupFileList = backupFiles.getBackupPaths(false);
+                backupItemList = backupItems.getBackupPaths(false);
             } catch (IOException e) {
                 throw new BackupException("Could not get backup files.", e);
             }
-            for (BackupFiles.BackupFile backupFile : backupFileList) {
+            for (BackupItems.BackupItem backupItem : backupItemList) {
                 try {
-                    MetadataManager.Metadata metadata = MetadataManager.getMetadata(backupFile);
-                    if (!backupFile.isFrozen() && !backupFile.delete()) {
+                    MetadataManager.Metadata metadata = MetadataManager.getMetadata(backupItem);
+                    if (!backupItem.isFrozen() && !backupItem.delete()) {
                         throw new BackupException("Could not delete the selected backups");
                     }
                     BackupUtils.deleteBackupToDbAndBroadcast(ContextUtils.getContext(), metadata);
@@ -220,17 +220,17 @@ public class BackupManager {
         } else {
             // backupNames is not null but that doesn't mean that it's not empty,
             // requested for only single backups
-            BackupFiles.BackupFile backupFile;
+            BackupItems.BackupItem backupItem;
             for (String backupName : backupNames) {
                 MetadataManager.Metadata metadata;
                 try {
-                    backupFile = new BackupFiles.BackupFile(BackupFiles.getPackagePath(mTargetPackage.getPackageName(),
+                    backupItem = new BackupItems.BackupItem(BackupItems.getPackagePath(mTargetPackage.getPackageName(),
                             false).findFile(backupName), false);
-                    metadata = MetadataManager.getMetadata(backupFile);
+                    metadata = MetadataManager.getMetadata(backupItem);
                 } catch (IOException e) {
                     throw new BackupException("Could not get backup files.", e);
                 }
-                if (!backupFile.isFrozen() && !backupFile.delete()) {
+                if (!backupItem.isFrozen() && !backupItem.delete()) {
                     throw new BackupException("Could not delete the selected backups");
                 }
                 BackupUtils.deleteBackupToDbAndBroadcast(ContextUtils.getContext(), metadata);
@@ -249,21 +249,21 @@ public class BackupManager {
         // Set backup userHandle to the userHandle we're working with.
         // This value is only set if backupNames is null or it consisted of only user handle
         if (backupUserHandle == -1) backupUserHandle = mTargetPackage.getUserId();
-        BackupFiles backupFiles;
-        BackupFiles.BackupFile[] backupFileList;
+        BackupItems backupItems;
+        BackupItems.BackupItem[] backupItemList;
         try {
-            backupFiles = new BackupFiles(mTargetPackage.getPackageName(), backupUserHandle,
+            backupItems = new BackupItems(mTargetPackage.getPackageName(), backupUserHandle,
                     backupName == null ? null : new String[]{backupName});
-            backupFileList = backupFiles.getBackupPaths(false);
+            backupItemList = backupItems.getBackupPaths(false);
         } catch (IOException e) {
             throw new BackupException("Could not get backup files.", e);
         }
         // Only verify the first backup though we shouldn't have more than one backup.
-        if (backupFileList.length > 0) {
-            if (backupFileList.length > 1) {
+        if (backupItemList.length > 0) {
+            if (backupItemList.length > 1) {
                 Log.w(VerifyOp.TAG, "More than one backups found! Verifying only the first backup.");
             }
-            try (VerifyOp restoreOp = new VerifyOp(mMetadataManager, backupFileList[0])) {
+            try (VerifyOp restoreOp = new VerifyOp(mMetadataManager, backupItemList[0])) {
                 restoreOp.verify();
             }
         } else {

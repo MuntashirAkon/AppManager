@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
@@ -640,7 +641,7 @@ public final class Prefs {
         public static Path getAppManagerDirectory() {
             Uri uri = getVolumePath();
             Path path;
-            if (uri.getScheme().equals(ContentResolver.SCHEME_FILE)) {
+            if (Objects.equals(uri.getScheme(), ContentResolver.SCHEME_FILE)) {
                 // Append AppManager
                 String newPath = uri.getPath() + File.separator + "AppManager";
                 path = Paths.get(newPath);

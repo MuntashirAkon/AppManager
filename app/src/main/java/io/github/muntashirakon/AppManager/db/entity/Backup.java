@@ -12,7 +12,7 @@ import androidx.room.Entity;
 import java.io.IOException;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.backup.BackupFiles;
+import io.github.muntashirakon.AppManager.backup.BackupItems;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
@@ -88,7 +88,7 @@ public class Backup {
     @NonNull
     public Path getBackupPath() throws IOException {
         String backupUuid = TextUtils.isEmpty(uuid) ? null : uuid;
-        return BackupFiles.findBackupDirectory(backupName, packageName, backupUuid);
+        return BackupItems.findBackupDirectory(backupName, packageName, backupUuid);
     }
 
     public MetadataManager.Metadata getMetadata() throws IOException {
