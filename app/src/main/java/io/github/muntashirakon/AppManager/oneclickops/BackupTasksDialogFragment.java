@@ -281,7 +281,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
 
     private static boolean isDataDirectoryChanged(@NonNull Backup backup, Set<String> ignoredDirs) {
         try {
-            for (String dir : backup.getMetadata().dataDirs) {
+            for (String dir : backup.getItem().getMetadataV2().dataDirs) {
                 if (DirectoryUtils.isDirectoryChanged(Paths.get(dir), backup.backupTime, 3, ignoredDirs)) {
                     return true;
                 }

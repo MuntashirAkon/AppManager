@@ -8,6 +8,7 @@ import androidx.annotation.WorkerThread;
 import java.io.Closeable;
 import java.io.IOException;
 
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -20,30 +21,22 @@ class VerifyOp implements Closeable {
     @NonNull
     private final BackupFlags mBackupFlags;
     @NonNull
-    private final MetadataManager.Metadata mMetadata;
-    @NonNull
-    private final Path mBackupPath;
+    private final BackupMetadataV2 mMetadata;
     @NonNull
     private final BackupItems.BackupItem mBackupItem;
     @NonNull
-    private final String mExtension;
-    @NonNull
     private final BackupItems.Checksum mChecksum;
 
-    VerifyOp(@NonNull MetadataManager metadataManager, @NonNull BackupItems.BackupItem backupItem)
-            throws BackupException {
+    VerifyOp(@NonNull BackupItems.BackupItem backupItem) throws BackupException {
         mBackupItem = backupItem;
-        mBackupPath = mBackupItem.getBackupPath();
         try {
-            metadataManager.readMetadata(mBackupItem);
-            mMetadata = metadataManager.getMetadata();
+            mMetadata = mBackupItem.getMetadataV2();
             mBackupFlags = mMetadata.flags;
         } catch (IOException e) {
             mBackupItem.cleanup();
             throw new BackupException("Could not read metadata. Possibly due to a malformed json file.", e);
         }
         // Setup crypto
-        mExtension = CryptoUtils.getExtension(mMetadata.crypto);
         if (!CryptoUtils.isAvailable(mMetadata.crypto)) {
             mBackupItem.cleanup();
             throw new BackupException("Mode " + mMetadata.crypto + " is currently unavailable.");
@@ -64,7 +57,7 @@ class VerifyOp implements Closeable {
         // Verify metadata
         Path metadataFile;
         try {
-            metadataFile = mBackupItem.getMetadataFile();
+            metadataFile = mBackupItem.getMetadataV2File();
         } catch (IOException e) {
             mBackupItem.cleanup();
             throw new BackupException("Could not get metadata file.", e);
@@ -113,7 +106,7 @@ class VerifyOp implements Closeable {
     }
 
     private void verifyApkFiles() throws BackupException {
-        Path[] backupSourceFiles = BackupUtils.getSourceFiles(mBackupPath, mExtension);
+        Path[] backupSourceFiles = mBackupItem.getSourceFiles();
         if (backupSourceFiles.length == 0) {
             // No APK files found
             throw new BackupException("Backup does not contain any APK files.");
@@ -131,7 +124,7 @@ class VerifyOp implements Closeable {
     }
 
     private void verifyKeyStore() throws BackupException {
-        Path[] keyStoreFiles = BackupUtils.getKeyStoreFiles(mBackupPath, mExtension);
+        Path[] keyStoreFiles = mBackupItem.getKeyStoreFiles();
         if (keyStoreFiles.length == 0) {
             // Not having KeyStore backups is fine.
             return;
@@ -152,7 +145,7 @@ class VerifyOp implements Closeable {
         Path[] dataFiles;
         String checksum;
         for (int i = 0; i < mMetadata.dataDirs.length; ++i) {
-            dataFiles = BackupUtils.getDataFiles(mBackupPath, i, mExtension);
+            dataFiles = mBackupItem.getDataFiles(i);
             if (dataFiles.length == 0) {
                 throw new BackupException("No data files at index " + i + ".");
             }

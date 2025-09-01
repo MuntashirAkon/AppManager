@@ -24,7 +24,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
@@ -81,7 +81,7 @@ public final class ConvertUtils {
     }
 
     @NonNull
-    static Crypto setupCrypto(MetadataManager.Metadata metadata) throws BackupException {
+    static Crypto setupCrypto(BackupMetadataV2 metadata) throws BackupException {
         try {
             // Setup crypto
             CryptoUtils.setupCrypto(metadata);

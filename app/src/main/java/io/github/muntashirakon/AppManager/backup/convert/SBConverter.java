@@ -53,6 +53,7 @@ import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.settings.Prefs;
@@ -79,8 +80,8 @@ public class SBConverter extends Converter {
     private final List<Path> mFilesToBeDeleted = new ArrayList<>();
 
     private BackupItems.Checksum mChecksum;
-    private MetadataManager.Metadata mSourceMetadata;
-    private MetadataManager.Metadata mDestMetadata;
+    private BackupMetadataV2 mSourceMetadata;
+    private BackupMetadataV2 mDestMetadata;
     private BackupItems.BackupItem mBackupItem;
     private PackageInfo mPackageInfo;
     private Path mCachedApk;
@@ -102,12 +103,10 @@ public class SBConverter extends Converter {
     @Override
     public void convert() throws BackupException {
         // Source metadata
-        mSourceMetadata = new MetadataManager.Metadata();
+        mSourceMetadata = new BackupMetadataV2();
         generateMetadata();
         // Destination metadata
-        mDestMetadata = new MetadataManager.Metadata(mSourceMetadata);
-        MetadataManager metadataManager = MetadataManager.getNewInstance();
-        metadataManager.setMetadata(mDestMetadata);
+        mDestMetadata = new BackupMetadataV2(mSourceMetadata);
         // Simulate a backup creation
         // If the package has another backup named SB, another backup will be created
         BackupItems backupItems;
@@ -139,16 +138,15 @@ public class SBConverter extends Converter {
                     backupData();
                 }
                 // Write modified metadata
-                metadataManager.setMetadata(mDestMetadata);
                 try {
-                    metadataManager.writeMetadata(backupItem);
+                    MetadataManager.writeMetadataV2(mDestMetadata, backupItem);
                 } catch (IOException e) {
                     throw new BackupException("Failed to write metadata.");
                 }
                 // Store checksum for metadata
                 try {
-                    mChecksum.add(MetadataManager.META_FILE, DigestUtils.getHexDigest(mDestMetadata.checksumAlgo,
-                            backupItem.getMetadataFile()));
+                    mChecksum.add(MetadataManager.META_V2_FILE, DigestUtils.getHexDigest(mDestMetadata.checksumAlgo,
+                            backupItem.getMetadataV2File()));
                 } catch (IOException e) {
                     throw new BackupException("Failed to generate checksum for meta.json", e);
                 } finally {

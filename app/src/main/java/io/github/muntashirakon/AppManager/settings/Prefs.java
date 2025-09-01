@@ -2,7 +2,7 @@
 
 package io.github.muntashirakon.AppManager.settings;
 
-import static io.github.muntashirakon.AppManager.backup.MetadataManager.TAR_TYPES;
+import static io.github.muntashirakon.AppManager.backup.BackupUtils.TAR_TYPES;
 
 import android.Manifest;
 import android.content.ComponentName;

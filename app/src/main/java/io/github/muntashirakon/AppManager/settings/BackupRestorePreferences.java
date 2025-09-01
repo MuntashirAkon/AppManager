@@ -36,8 +36,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
+import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.backup.convert.ImportType;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
@@ -119,16 +119,16 @@ public class BackupRestorePreferences extends PreferenceFragment {
         // Backup compression method
         mCurrentCompressionMethod = Prefs.BackupRestore.getCompressionMethod();
         Preference compressionMethod = Objects.requireNonNull(findPreference("backup_compression_method"));
-        compressionMethod.setSummary(MetadataManager.getReadableTarType(mCurrentCompressionMethod));
+        compressionMethod.setSummary(BackupUtils.getReadableTarType(mCurrentCompressionMethod));
         compressionMethod.setOnPreferenceClickListener(preference -> {
-            new SearchableSingleChoiceDialogBuilder<>(mActivity, MetadataManager.TAR_TYPES, MetadataManager.TAR_TYPES_READABLE)
+            new SearchableSingleChoiceDialogBuilder<>(mActivity, BackupUtils.TAR_TYPES, BackupUtils.TAR_TYPES_READABLE)
                     .setTitle(R.string.pref_compression_method)
                     .setSelection(mCurrentCompressionMethod)
                     .setPositiveButton(R.string.save, (dialog, which, selectedTarType) -> {
                         if (selectedTarType != null) {
                             mCurrentCompressionMethod = selectedTarType;
                             Prefs.BackupRestore.setCompressionMethod(mCurrentCompressionMethod);
-                            compressionMethod.setSummary(MetadataManager.getReadableTarType(mCurrentCompressionMethod));
+                            compressionMethod.setSummary(BackupUtils.getReadableTarType(mCurrentCompressionMethod));
                         }
                     })
                     .setNegativeButton(R.string.cancel, null)

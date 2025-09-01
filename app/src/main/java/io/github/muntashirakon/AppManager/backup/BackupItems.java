@@ -2,6 +2,10 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
+import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -17,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.DummyCrypto;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
@@ -25,11 +30,10 @@ import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathReader;
 import io.github.muntashirakon.io.PathWriter;
+import io.github.muntashirakon.io.Paths;
 
 public class BackupItems {
     private static final String APK_SAVING_DIRECTORY = "apks";
-    @Deprecated // No longer used
-    private static final String TEMPORARY_DIRECTORY = ".tmp";
 
     private static final String ICON_FILE = "icon.png";
     private static final String RULES_TSV = "rules.am.tsv";
@@ -73,7 +77,7 @@ public class BackupItems {
             if (APK_SAVING_DIRECTORY.equals(path.getName())) {
                 continue;
             }
-            if (TEMPORARY_DIRECTORY.equals(path.getName())) {
+            if (".tmp".equals(path.getName())) {
                 continue;
             }
             // Other backups can store multiple backups per folder
@@ -270,11 +274,15 @@ public class BackupItems {
         }
 
         @NonNull
-        public Path getMetadataFile() throws IOException {
+        public Path getMetadataV2File() throws IOException {
             // meta is never encrypted
             if (mBackupMode) {
-                return getBackupPath().findOrCreateFile(MetadataManager.META_FILE, null);
-            } else return getBackupPath().findFile(MetadataManager.META_FILE);
+                return getBackupPath().findOrCreateFile(MetadataManager.META_V2_FILE, null);
+            } else return getBackupPath().findFile(MetadataManager.META_V2_FILE);
+        }
+
+        public BackupMetadataV2 getMetadataV2() throws IOException {
+            return MetadataManager.readMetadataV2(this);
         }
 
         @NonNull
@@ -314,6 +322,28 @@ public class BackupItems {
                 // Needs to be decrypted in restore mode
                 return getBackupPath().findFile(RULES_TSV + CryptoUtils.getExtension(mCryptoMode));
             }
+        }
+
+        @NonNull
+        public Path[] getSourceFiles() {
+            String ext = CryptoUtils.getExtension(mCryptoMode);
+            Path[] paths = getBackupPath().listFiles((dir, name) -> name.startsWith(SOURCE_PREFIX) && name.endsWith(ext));
+            return Paths.getSortedPaths(paths);
+        }
+
+        @NonNull
+        public Path[] getDataFiles(int index) {
+            String ext = CryptoUtils.getExtension(mCryptoMode);
+            final String dataPrefix = DATA_PREFIX + index;
+            Path[] paths = getBackupPath().listFiles((dir, name) -> name.startsWith(dataPrefix) && name.endsWith(ext));
+            return Paths.getSortedPaths(paths);
+        }
+
+        @NonNull
+        public Path[] getKeyStoreFiles() {
+            String ext = CryptoUtils.getExtension(mCryptoMode);
+            Path[] paths = getBackupPath().listFiles((dir, name) -> name.startsWith(KEYSTORE_PREFIX) && name.endsWith(ext));
+            return Paths.getSortedPaths(paths);
         }
 
         public void freeze() throws IOException {

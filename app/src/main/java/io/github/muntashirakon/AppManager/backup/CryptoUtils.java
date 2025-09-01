@@ -13,6 +13,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.security.SecureRandom;
 
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
 import io.github.muntashirakon.AppManager.crypto.AESCrypto;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
@@ -76,7 +77,7 @@ public class CryptoUtils {
 
     @WorkerThread
     @NonNull
-    public static Crypto getCrypto(@NonNull MetadataManager.Metadata metadata) throws CryptoException {
+    public static Crypto getCrypto(@NonNull BackupMetadataV2 metadata) throws CryptoException {
         switch (metadata.crypto) {
             case MODE_OPEN_PGP:
                 return new OpenPGPCrypto(ContextUtils.getContext(), metadata.keyIds);
@@ -118,7 +119,7 @@ public class CryptoUtils {
     }
 
     @WorkerThread
-    public static void setupCrypto(@NonNull MetadataManager.Metadata metadata) {
+    public static void setupCrypto(@NonNull BackupMetadataV2 metadata) {
         switch (metadata.crypto) {
             case MODE_OPEN_PGP:
                 metadata.keyIds = Prefs.Encryption.getOpenPgpKeyIds();

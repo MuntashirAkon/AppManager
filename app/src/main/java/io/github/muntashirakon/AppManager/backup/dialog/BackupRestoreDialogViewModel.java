@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
@@ -192,10 +192,10 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
                 return;
             }
             // Fetch backup info
-            List<MetadataManager.Metadata> metadata = new ArrayList<>();
+            List<BackupMetadataV2> metadataList = new ArrayList<>();
             for (Backup backup : backups) {
                 try {
-                    metadata.add(backup.getMetadata());
+                    metadataList.add(backup.getItem().getMetadataV2());
                 } catch (IOException e) {
                     // Not found
                     continue;
@@ -207,7 +207,7 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
             if (ThreadUtils.isInterrupted()) {
                 return;
             }
-            backupInfo.setBackups(metadata);
+            backupInfo.setBackupMetadataList(metadataList);
             if (apps.isEmpty()) {
                 backupInfo.setInstalled(false);
             } else {
@@ -217,7 +217,7 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
                     backupInfo.setInstalled(backupInfo.isInstalled() | app.isInstalled);
                 }
             }
-            if (!backupInfo.isInstalled() && backupInfo.getBackups().isEmpty()) {
+            if (!backupInfo.isInstalled() && backupInfo.getBackupMetadataList().isEmpty()) {
                 // App cannot be backed up or restored
                 continue;
             }
@@ -259,20 +259,20 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
         if (mBackupInfoList.size() == 1) {
             // Single backup
             BackupInfo backupInfo = mBackupInfoList.get(0);
-            for (MetadataManager.Metadata backup : backupInfo.getBackups()) {
-                mWorstBackupFlag &= backup.flags.getFlags();
+            for (BackupMetadataV2 metadata : backupInfo.getBackupMetadataList()) {
+                mWorstBackupFlag &= metadata.flags.getFlags();
             }
-            if (backupInfo.getBackups().isEmpty()) {
+            if (backupInfo.getBackupMetadataList().isEmpty()) {
                 mAppsWithoutBackups.add(backupInfo.getAppLabel());
             }
             if (!backupInfo.isInstalled()) {
                 mUninstalledApps.add(backupInfo.getAppLabel());
             }
-            if (backupInfo.isInstalled() && !backupInfo.getBackups().isEmpty()) {
+            if (backupInfo.isInstalled() && !backupInfo.getBackupMetadataList().isEmpty()) {
                 status = BackupInfoState.BOTH_SINGLE;
             } else if (backupInfo.isInstalled()) {
                 status = BackupInfoState.BACKUP_SINGLE;
-            } else if (!backupInfo.getBackups().isEmpty()) {
+            } else if (!backupInfo.getBackupMetadataList().isEmpty()) {
                 status = BackupInfoState.RESTORE_SINGLE;
             } else status = BackupInfoState.NONE;
         } else {
@@ -290,9 +290,9 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
                 }
                 if (backupInfo.hasBaseBackup()) {
                     hasBaseBackup = true;
-                    for (MetadataManager.Metadata backup : backupInfo.getBackups()) {
-                        if (backup.isBaseBackup()) {
-                            mWorstBackupFlag &= backup.flags.getFlags();
+                    for (BackupMetadataV2 metadata : backupInfo.getBackupMetadataList()) {
+                        if (metadata.isBaseBackup()) {
+                            mWorstBackupFlag &= metadata.flags.getFlags();
                         }
                     }
                 } else {
@@ -349,7 +349,7 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
         // For singleton restore, cross user restore is supported. So, we need to handle that here.
         if (operationInfo.mode == BackupRestoreDialogFragment.MODE_RESTORE && mBackupInfoList.size() == 1) {
             BackupInfo backupInfo = mBackupInfoList.get(0);
-            if (!backupInfo.getBackups().isEmpty() && backupInfo.userIds.size() == 1) {
+            if (!backupInfo.getBackupMetadataList().isEmpty() && backupInfo.userIds.size() == 1) {
                 // Singleton restore
                 for (int userId : userIds) {
                     // Same backup can be restored for multiple users

@@ -31,7 +31,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.SearchableFlagsDialogBuilder;
@@ -62,7 +62,7 @@ public class RestoreSingleFragment extends Fragment {
         MaterialButton moreButton = view.findViewById(R.id.more);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        BackupAdapter adapter = new BackupAdapter(mContext, mViewModel.getBackupInfo().getBackups(),
+        BackupAdapter adapter = new BackupAdapter(mContext, mViewModel.getBackupInfo().getBackupMetadataList(),
                 (metadata, selectionCount, added) -> {
                     restoreButton.setEnabled(selectionCount == 1);
                     deleteButton.setEnabled(selectionCount > 0);
@@ -84,11 +84,11 @@ public class RestoreSingleFragment extends Fragment {
             unfreezeMenuItem.setEnabled(frozenCount > 0);
 
             freezeMenuItem.setOnMenuItemClickListener(item -> {
-                List<MetadataManager.Metadata> selectedBackups = adapter.getSelectedBackups();
-                for (MetadataManager.Metadata metadata : selectedBackups) {
-                    if (metadata.backupFile != null) {
+                List<BackupMetadataV2> selectedBackups = adapter.getSelectedBackups();
+                for (BackupMetadataV2 metadata : selectedBackups) {
+                    if (metadata.backupItem != null) {
                         try {
-                            metadata.backupFile.freeze();
+                            metadata.backupItem.freeze();
                             ++adapter.mFrozenBackupSelectionCount;
                         } catch (IOException ignore) {
                         }
@@ -98,11 +98,11 @@ public class RestoreSingleFragment extends Fragment {
                 return true;
             });
             unfreezeMenuItem.setOnMenuItemClickListener(item -> {
-                List<MetadataManager.Metadata> selectedBackups = adapter.getSelectedBackups();
-                for (MetadataManager.Metadata metadata : selectedBackups) {
-                    if (metadata.backupFile != null) {
+                List<BackupMetadataV2> selectedBackups = adapter.getSelectedBackups();
+                for (BackupMetadataV2 metadata : selectedBackups) {
+                    if (metadata.backupItem != null) {
                         try {
-                            metadata.backupFile.unfreeze();
+                            metadata.backupItem.unfreeze();
                             --adapter.mFrozenBackupSelectionCount;
                         } catch (IOException ignore) {
                         }
@@ -115,7 +115,7 @@ public class RestoreSingleFragment extends Fragment {
         });
     }
 
-    private void handleRestore(@NonNull MetadataManager.Metadata selectedBackup) {
+    private void handleRestore(@NonNull BackupMetadataV2 selectedBackup) {
         BackupFlags flags = selectedBackup.flags;
         BackupFlags enabledFlags = BackupFlags.fromPref();
         enabledFlags.setFlags(flags.getFlags() & enabledFlags.getFlags());
@@ -149,14 +149,14 @@ public class RestoreSingleFragment extends Fragment {
                 .show();
     }
 
-    private void handleDelete(List<MetadataManager.Metadata> selectedBackups) {
+    private void handleDelete(List<BackupMetadataV2> selectedBackups) {
         new MaterialAlertDialogBuilder(mContext)
                 .setTitle(R.string.delete_backup)
                 .setMessage(R.string.are_you_sure)
                 .setNegativeButton(R.string.no, null)
                 .setPositiveButton(R.string.yes, (dialog, which) -> {
                     List<String> newBackupNames = new ArrayList<>(selectedBackups.size());
-                    for (MetadataManager.Metadata backup : selectedBackups) {
+                    for (BackupMetadataV2 backup : selectedBackups) {
                         newBackupNames.add(backup.backupName);
                     }
                     BackupRestoreDialogViewModel.OperationInfo operationInfo = new BackupRestoreDialogViewModel.OperationInfo();
@@ -170,12 +170,12 @@ public class RestoreSingleFragment extends Fragment {
 
     private static class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.ViewHolder> {
         public interface OnSelectionListener {
-            void onSelectionChanged(@Nullable MetadataManager.Metadata metadata, int selectionCount, boolean added);
+            void onSelectionChanged(@Nullable BackupMetadataV2 metadata, int selectionCount, boolean added);
         }
 
         private final int mLayoutId;
         @NonNull
-        private final List<MetadataManager.Metadata> mBackups = new ArrayList<>();
+        private final List<BackupMetadataV2> mBackups = new ArrayList<>();
         @NonNull
         private final List<Integer> mSelectedPositions = new ArrayList<>();
         @NonNull
@@ -184,14 +184,14 @@ public class RestoreSingleFragment extends Fragment {
         private int mFrozenBackupSelectionCount = 0;
 
         @SuppressLint("RestrictedApi")
-        public BackupAdapter(@NonNull Context context, @NonNull List<MetadataManager.Metadata> backups,
+        public BackupAdapter(@NonNull Context context, @NonNull List<BackupMetadataV2> backups,
                              @NonNull OnSelectionListener selectionListener) {
             mSelectionListener = selectionListener;
             mLayoutId = MaterialAttributes.resolveInteger(context, androidx.appcompat.R.attr.multiChoiceItemLayout,
                     com.google.android.material.R.layout.mtrl_alert_select_dialog_multichoice);
             mSelectionListener.onSelectionChanged(null, mSelectedPositions.size(), false);
             for (int i = 0; i < backups.size(); ++i) {
-                MetadataManager.Metadata backup = backups.get(i);
+                BackupMetadataV2 backup = backups.get(i);
                 mBackups.add(backup);
                 if (backup.isBaseBackup()) {
                     mSelectedPositions.add(i);
@@ -213,8 +213,8 @@ public class RestoreSingleFragment extends Fragment {
         }
 
         @NonNull
-        public List<MetadataManager.Metadata> getSelectedBackups() {
-            List<MetadataManager.Metadata> selectedBackups = new ArrayList<>();
+        public List<BackupMetadataV2> getSelectedBackups() {
+            List<BackupMetadataV2> selectedBackups = new ArrayList<>();
             for (int position : mSelectedPositions) {
                 selectedBackups.add(mBackups.get(position));
             }
@@ -230,7 +230,7 @@ public class RestoreSingleFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            MetadataManager.Metadata metadata = mBackups.get(position);
+            BackupMetadataV2 metadata = mBackups.get(position);
             boolean isSelected = mSelectedPositions.contains(position);
             holder.item.setChecked(isSelected);
             holder.item.setText(metadata.toLocalizedString(holder.item.getContext()));

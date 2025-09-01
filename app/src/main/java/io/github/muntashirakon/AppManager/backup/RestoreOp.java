@@ -33,6 +33,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.installer.InstallerOptions;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
@@ -84,40 +85,32 @@ class RestoreOp implements Closeable {
     @NonNull
     private final BackupFlags mRequestedFlags;
     @NonNull
-    private final MetadataManager.Metadata mMetadata;
-    @NonNull
-    private final Path mBackupPath;
+    private final BackupMetadataV2 mMetadata;
     @NonNull
     private final BackupItems.BackupItem mBackupItem;
     @Nullable
     private PackageInfo mPackageInfo;
     private int mUid;
     @NonNull
-    private final String mExtension;
-    @NonNull
     private final BackupItems.Checksum mChecksum;
     private final int mUserId;
     private boolean mIsInstalled;
     private boolean mRequiresRestart;
 
-    RestoreOp(@NonNull String packageName, @NonNull MetadataManager metadataManager,
-              @NonNull BackupFlags requestedFlags, @NonNull BackupItems.BackupItem backupItem,
-              int userId) throws BackupException {
+    RestoreOp(@NonNull String packageName, @NonNull BackupFlags requestedFlags,
+              @NonNull BackupItems.BackupItem backupItem, int userId) throws BackupException {
         mPackageName = packageName;
         mRequestedFlags = requestedFlags;
         mBackupItem = backupItem;
-        mBackupPath = mBackupItem.getBackupPath();
         mUserId = userId;
         try {
-            metadataManager.readMetadata(mBackupItem);
-            mMetadata = metadataManager.getMetadata();
+            mMetadata = mBackupItem.getMetadataV2();
             mBackupFlags = mMetadata.flags;
         } catch (IOException e) {
             mBackupItem.cleanup();
             throw new BackupException("Failed to read metadata. Possibly due to malformed json file.", e);
         }
         // Setup crypto
-        mExtension = CryptoUtils.getExtension(mMetadata.crypto);
         if (!CryptoUtils.isAvailable(mMetadata.crypto)) {
             mBackupItem.cleanup();
             throw new BackupException("Mode " + mMetadata.crypto + " is currently unavailable.");
@@ -139,7 +132,7 @@ class RestoreOp implements Closeable {
         if (!requestedFlags.skipSignatureCheck()) {
             Path metadataFile;
             try {
-                metadataFile = mBackupItem.getMetadataFile();
+                metadataFile = mBackupItem.getMetadataV2File();
             } catch (IOException e) {
                 mBackupItem.cleanup();
                 throw new BackupException("Could not get metadata file.", e);
@@ -173,11 +166,6 @@ class RestoreOp implements Closeable {
         Log.d(TAG, "Close called");
         mChecksum.close();
         mBackupItem.cleanup();
-    }
-
-    @NonNull
-    public MetadataManager.Metadata getMetadata() {
-        return mMetadata;
     }
 
     void runRestore(@Nullable ProgressHandler progressHandler) throws BackupException {
@@ -251,7 +239,7 @@ class RestoreOp implements Closeable {
         if (!mBackupFlags.backupApkFiles()) {
             throw new BackupException("APK restore is requested but backup doesn't contain any source files.");
         }
-        Path[] backupSourceFiles = BackupUtils.getSourceFiles(mBackupPath, mExtension);
+        Path[] backupSourceFiles = mBackupItem.getSourceFiles();
         if (backupSourceFiles.length == 0) {
             // No source backup found
             throw new BackupException("Source restore is requested but there are no source files.");
@@ -408,7 +396,7 @@ class RestoreOp implements Closeable {
         if (mPackageInfo == null) {
             throw new BackupException("KeyStore restore is requested but the app isn't installed.");
         }
-        Path[] keyStoreFiles = BackupUtils.getKeyStoreFiles(mBackupPath, mExtension);
+        Path[] keyStoreFiles = mBackupItem.getKeyStoreFiles();
         if (keyStoreFiles.length == 0) {
             throw new BackupException("KeyStore files should've existed but they didn't");
         }
@@ -478,7 +466,7 @@ class RestoreOp implements Closeable {
             // Verify integrity of the data backups
             String checksum;
             for (int i = 0; i < mMetadata.dataDirs.length; ++i) {
-                Path[] dataFiles = BackupUtils.getDataFiles(mBackupPath, i, mExtension);
+                Path[] dataFiles = mBackupItem.getDataFiles(i);
                 if (dataFiles.length == 0) {
                     throw new BackupException("Data restore is requested but there are no data files for index " + i + ".");
                 }
@@ -501,7 +489,7 @@ class RestoreOp implements Closeable {
             BackupDataDirectoryInfo dataDirectoryInfo = BackupDataDirectoryInfo.getInfo(dataSource, mUserId);
             Path dataSourceFile = Paths.get(dataSource);
 
-            Path[] dataFiles = BackupUtils.getDataFiles(mBackupPath, i, mExtension);
+            Path[] dataFiles = mBackupItem.getDataFiles(i);
             if (dataFiles.length == 0) {
                 throw new BackupException("Data restore is requested but there are no data files for index " + i + ".");
             }

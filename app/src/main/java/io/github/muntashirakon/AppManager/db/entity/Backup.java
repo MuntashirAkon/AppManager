@@ -15,7 +15,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.backup.BackupItems;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 
 @SuppressWarnings("NotNullFieldNotInitialized")
@@ -90,10 +90,6 @@ public class Backup {
         return BackupItems.findBackupItem(backupName, packageName, backupUuid);
     }
 
-    public MetadataManager.Metadata getMetadata() throws IOException {
-        return MetadataManager.getMetadata(getItem());
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -108,7 +104,7 @@ public class Backup {
     }
 
     @NonNull
-    public static Backup fromBackupMetadata(@NonNull MetadataManager.Metadata metadata) {
+    public static Backup fromBackupMetadata(@NonNull BackupMetadataV2 metadata) {
         Backup backup = new Backup();
         backup.packageName = metadata.packageName;
         backup.backupName = metadata.backupName != null ? metadata.backupName : String.valueOf(metadata.userHandle);

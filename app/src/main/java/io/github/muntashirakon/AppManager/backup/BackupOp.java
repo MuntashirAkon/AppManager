@@ -9,6 +9,7 @@ import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_P
 import static io.github.muntashirakon.AppManager.backup.BackupManager.MASTER_KEY;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
+import static io.github.muntashirakon.AppManager.backup.BackupUtils.TAR_TYPES;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET_SIGNING_CERTIFICATES;
 
 import android.annotation.UserIdInt;
@@ -26,9 +27,11 @@ import android.os.RemoteException;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+import androidx.core.content.pm.PackageInfoCompat;
 import androidx.core.content.pm.PermissionInfoCompat;
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -38,6 +41,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.ApkSource;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
@@ -71,6 +78,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.compat.ObjectsCompat;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -84,11 +92,9 @@ class BackupOp implements Closeable {
     @NonNull
     private final BackupItems.BackupItem mBackupItem;
     @NonNull
-    private final MetadataManager mMetadataManager;
-    @NonNull
     private final BackupFlags mBackupFlags;
     @NonNull
-    private final MetadataManager.Metadata mMetadata;
+    private final BackupMetadataV2 mMetadata;
     @NonNull
     private final PackageInfo mPackageInfo;
     @NonNull
@@ -101,12 +107,12 @@ class BackupOp implements Closeable {
     @NonNull
     private final PackageManager mPm;
 
-    BackupOp(@NonNull String packageName, @NonNull MetadataManager metadataManager, @NonNull BackupFlags backupFlags,
-             @NonNull BackupItems.BackupItem backupItem, @UserIdInt int userId) throws BackupException {
+    BackupOp(@NonNull String packageName, @NonNull BackupFlags backupFlags,
+             @NonNull BackupItems.BackupItem backupItem, @UserIdInt int userId)
+            throws BackupException {
         mPackageName = packageName;
         mBackupItem = backupItem;
         mUserId = userId;
-        mMetadataManager = metadataManager;
         mBackupFlags = backupFlags;
         mPm = ContextUtils.getContext().getPackageManager();
         try {
@@ -115,7 +121,7 @@ class BackupOp implements Closeable {
                             | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
             mApplicationInfo = mPackageInfo.applicationInfo;
             // Override existing metadata
-            mMetadata = mMetadataManager.setupMetadata(mPackageInfo, userId, backupFlags);
+            mMetadata = setupMetadata(mPackageInfo, userId, backupFlags);
             mMetadata.backupName = backupItem.backupName;
         } catch (Exception e) {
             mBackupItem.cleanup();
@@ -147,7 +153,7 @@ class BackupOp implements Closeable {
     }
 
     @NonNull
-    public MetadataManager.Metadata getMetadata() {
+    public BackupMetadataV2 getMetadata() {
         return mMetadata;
     }
 
@@ -187,16 +193,15 @@ class BackupOp implements Closeable {
             // Set backup time
             mMetadata.backupTime = System.currentTimeMillis();
             // Write modified metadata
-            mMetadataManager.setMetadata(mMetadata);
             try {
-                mMetadataManager.writeMetadata(mBackupItem);
+                MetadataManager.writeMetadataV2(mMetadata, mBackupItem);
             } catch (IOException e) {
                 throw new BackupException("Failed to write metadata.", e);
             }
             // Store checksum for metadata
             try {
-                mChecksum.add(MetadataManager.META_FILE, DigestUtils.getHexDigest(mMetadata.checksumAlgo,
-                        mBackupItem.getMetadataFile()));
+                mChecksum.add(MetadataManager.META_V2_FILE, DigestUtils.getHexDigest(mMetadata.checksumAlgo,
+                        mBackupItem.getMetadataV2File()));
             } catch (IOException e) {
                 throw new BackupException("Failed to generate checksum for meta.json", e);
             } finally {
@@ -227,6 +232,58 @@ class BackupOp implements Closeable {
         }
         float current = progressHandler.getLastProgress() + 1;
         progressHandler.postUpdate(current);
+    }
+
+    public BackupMetadataV2 setupMetadata(@NonNull PackageInfo packageInfo,
+                                          @UserIdInt int userHandle,
+                                          @NonNull BackupFlags requestedFlags) {
+        ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+        BackupMetadataV2 metadata = new BackupMetadataV2();
+        // We don't need to backup custom users or multiple backup flags
+        requestedFlags.removeFlag(BackupFlags.BACKUP_CUSTOM_USERS | BackupFlags.BACKUP_MULTIPLE);
+        metadata.flags = requestedFlags;
+        metadata.userHandle = userHandle;
+        metadata.tarType = Prefs.BackupRestore.getCompressionMethod();
+        metadata.crypto = CryptoUtils.getMode();
+        // Verify tar type
+        if (ArrayUtils.indexOf(TAR_TYPES, metadata.tarType) == -1) {
+            // Unknown tar type, set default
+            metadata.tarType = TarUtils.TAR_GZIP;
+        }
+        metadata.keyStore = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
+        metadata.label = applicationInfo.loadLabel(mPm).toString();
+        metadata.packageName = packageInfo.packageName;
+        metadata.versionName = packageInfo.versionName;
+        metadata.versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
+        metadata.apkName = new File(applicationInfo.sourceDir).getName();
+        metadata.dataDirs = BackupUtils.getDataDirectories(applicationInfo, requestedFlags.backupInternalData(),
+                requestedFlags.backupExternalData(), requestedFlags.backupMediaObb());
+        metadata.isSystem = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+        metadata.isSplitApk = false;
+        try (ApkFile apkFile = ApkSource.getApkSource(applicationInfo).resolve()) {
+            if (apkFile.isSplit()) {
+                List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+                int splitCount = apkEntries.size() - 1;
+                metadata.isSplitApk = splitCount > 0;
+                metadata.splitConfigs = new String[splitCount];
+                for (int i = 0; i < splitCount; ++i) {
+                    metadata.splitConfigs[i] = apkEntries.get(i + 1).getFileName();
+                }
+            }
+        } catch (ApkFile.ApkFileException e) {
+            e.printStackTrace();
+        }
+        metadata.splitConfigs = ArrayUtils.defeatNullable(metadata.splitConfigs);
+        metadata.hasRules = false;
+        if (requestedFlags.backupRules()) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageInfo.packageName, userHandle, false)) {
+                metadata.hasRules = cb.entryCount() > 0;
+            }
+        }
+        metadata.backupTime = 0;
+        metadata.installer = ObjectsCompat.requireNonNullElse(PackageManagerCompat.getInstallerPackageName(
+                packageInfo.packageName, userHandle), BuildConfig.APPLICATION_ID);
+        return metadata;
     }
 
     private void backupIcon() {
