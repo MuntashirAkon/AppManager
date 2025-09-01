@@ -324,7 +324,6 @@ public class BackupItems {
             getFreezeFile().delete();
         }
 
-        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
         public boolean isFrozen() {
             try {
                 return getFreezeFile().exists();
@@ -361,6 +360,9 @@ public class BackupItems {
             for (Path file : mTemporaryFiles) {
                 Log.d(TAG, "Deleting %s", file);
                 file.delete();
+            }
+            if (mTempUnencyptedPath != null) {
+                mTempUnencyptedPath.delete();
             }
             if (mCrypto != null) {
                 mCrypto.close();
