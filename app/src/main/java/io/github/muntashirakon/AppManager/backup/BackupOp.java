@@ -481,7 +481,7 @@ class BackupOp implements Closeable {
 
     private void backupRules() throws BackupException {
         try {
-            Path rulesFile = mBackupItem.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
+            Path rulesFile = mBackupItem.getRulesFile();
             try (OutputStream outputStream = rulesFile.openOutputStream();
                  ComponentsBlocker cb = ComponentsBlocker.getInstance(mPackageName, mUserId)) {
                 ComponentUtils.storeRules(outputStream, cb.getAll(), true);

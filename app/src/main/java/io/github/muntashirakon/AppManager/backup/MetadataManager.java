@@ -199,14 +199,6 @@ public final class MetadataManager {
 
     @WorkerThread
     @NonNull
-    public static Metadata getMetadata(@NonNull Path backupPath) throws IOException {
-        MetadataManager metadataManager = MetadataManager.getNewInstance();
-        metadataManager.readMetadata(new BackupItems.BackupItem(backupPath, false));
-        return metadataManager.getMetadata();
-    }
-
-    @WorkerThread
-    @NonNull
     public static Metadata getMetadata(@NonNull BackupItems.BackupItem backupFile) throws IOException {
         MetadataManager metadataManager = MetadataManager.getNewInstance();
         metadataManager.readMetadata(backupFile);

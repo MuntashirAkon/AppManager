@@ -30,7 +30,6 @@ public class BackupManager {
     static final String KEYSTORE_PREFIX = "keystore";
     static final int KEYSTORE_PLACEHOLDER = -1000;
 
-    public static final String ICON_FILE = "icon.png";
     public static final String CERT_PREFIX = "cert_";
     static final String MASTER_KEY = ".masterkey";
 
@@ -93,7 +92,7 @@ public class BackupManager {
             // Get backup files based on the number of backupNames
             BackupItems backupItems = new BackupItems(mTargetPackage.getPackageName(), mTargetPackage.getUserId(), backupNames);
             BackupItems.BackupItem[] backupItemList = mRequestedFlags.backupMultiple() ?
-                    backupItems.getFreshBackupPaths() : backupItems.getBackupPaths(true);
+                    backupItems.createItemsGracefully() : backupItems.getOrCreateItems();
             if (progressHandler != null) {
                 int max = calculateMaxProgress(backupItemList.length);
                 progressHandler.setProgressTextInterface(ProgressHandler.PROGRESS_PERCENT);
@@ -169,7 +168,7 @@ public class BackupManager {
         BackupItems.BackupItem[] backupItemList;
         try {
             backupItems = new BackupItems(mTargetPackage.getPackageName(), backupUserId, backupNames);
-            backupItemList = backupItems.getBackupPaths(false);
+            backupItemList = backupItems.getExistingItems();
         } catch (IOException e) {
             throw new BackupException("Could not get backup files.", e);
         }
@@ -202,7 +201,7 @@ public class BackupManager {
             try {
                 backupItems = new BackupItems(mTargetPackage.getPackageName(),
                         mTargetPackage.getUserId(), null);
-                backupItemList = backupItems.getBackupPaths(false);
+                backupItemList = backupItems.getExistingItems();
             } catch (IOException e) {
                 throw new BackupException("Could not get backup files.", e);
             }
@@ -224,8 +223,7 @@ public class BackupManager {
             for (String backupName : backupNames) {
                 MetadataManager.Metadata metadata;
                 try {
-                    backupItem = new BackupItems.BackupItem(BackupItems.getPackagePath(mTargetPackage.getPackageName(),
-                            false).findFile(backupName), false);
+                    backupItem = BackupItems.findBackupItem(backupName, mTargetPackage.getPackageName(), null);
                     metadata = MetadataManager.getMetadata(backupItem);
                 } catch (IOException e) {
                     throw new BackupException("Could not get backup files.", e);
@@ -254,7 +252,7 @@ public class BackupManager {
         try {
             backupItems = new BackupItems(mTargetPackage.getPackageName(), backupUserHandle,
                     backupName == null ? null : new String[]{backupName});
-            backupItemList = backupItems.getBackupPaths(false);
+            backupItemList = backupItems.getExistingItems();
         } catch (IOException e) {
             throw new BackupException("Could not get backup files.", e);
         }

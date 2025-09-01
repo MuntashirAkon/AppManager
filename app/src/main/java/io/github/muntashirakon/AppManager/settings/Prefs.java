@@ -42,6 +42,7 @@ import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.io.Path;
@@ -664,6 +665,12 @@ public final class Prefs {
 
         public static void setVolumePath(@NonNull String path) {
             AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, path);
+        }
+
+        @NonNull
+        public static Path getTempPath() {
+            // This path is intended for storing temporary data for backup/restore and similar operations
+            return Paths.get(FileUtils.getCachePath());
         }
     }
 

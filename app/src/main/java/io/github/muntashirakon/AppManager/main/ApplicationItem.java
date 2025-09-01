@@ -46,7 +46,6 @@ import java.util.concurrent.TimeUnit;
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
-import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
@@ -304,7 +303,7 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
         // App not installed
         if (backup != null) {
             try {
-                Path iconFile = backup.getBackupPath().findFile(BackupManager.ICON_FILE);
+                Path iconFile = backup.getItem().getIconFile();
                 if (iconFile.exists()) {
                     try (InputStream is = iconFile.openInputStream()) {
                         Drawable drawable = Drawable.createFromStream(is, name);

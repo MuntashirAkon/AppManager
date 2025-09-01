@@ -708,7 +708,7 @@ class RestoreOp implements Closeable {
         }
         Path rulesFile;
         try {
-            rulesFile = mBackupItem.getRulesFile(mMetadata.crypto);
+            rulesFile = mBackupItem.getRulesFile();
         } catch (IOException e) {
             if (mMetadata.hasRules) {
                 throw new BackupException("Rules file is missing.", e);

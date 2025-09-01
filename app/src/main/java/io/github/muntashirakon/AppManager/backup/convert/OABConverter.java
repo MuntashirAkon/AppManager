@@ -124,7 +124,7 @@ public class OABConverter extends Converter {
         BackupItems.BackupItem[] backupItemList;
         try {
             backupItems = new BackupItems(mPackageName, mUserId, new String[]{"OAndBackup"});
-            backupItemList = backupItems.getBackupPaths(true);
+            backupItemList = backupItems.getOrCreateItems();
         } catch (IOException e) {
             throw new BackupException("Could not get backup files.", e);
         }

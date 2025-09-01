@@ -29,7 +29,6 @@ import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
-import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -45,34 +44,6 @@ public final class BackupUtils {
 
     public static boolean isUuid(@NonNull String name) {
         return UUID_PATTERN.matcher(name).matches();
-    }
-
-    @NonNull
-    private static List<Path> getBackupPaths() {
-        Path baseDirectory = BackupItems.getBaseDirectory();
-        List<Path> backupPaths;
-        Path[] paths = baseDirectory.listFiles(Path::isDirectory);
-        backupPaths = new ArrayList<>(paths.length);
-        for (Path path : paths) {
-            if (isUuid(path.getName())) {
-                // UUID-based backups only store one backup per folder
-                backupPaths.add(path);
-            }
-            if (SaveLogHelper.SAVED_LOGS_DIR.equals(path.getName())) {
-                continue;
-            }
-            if (BackupItems.APK_SAVING_DIRECTORY.equals(path.getName())) {
-                continue;
-            }
-            if (BackupItems.TEMPORARY_DIRECTORY.equals(path.getName())) {
-                continue;
-            }
-            // Other backups can store multiple backups per folder
-            backupPaths.addAll(Arrays.asList(path.listFiles(Path::isDirectory)));
-        }
-        // We don't need to check further at this stage.
-        // It's the caller's job to check the contents if needed.
-        return backupPaths;
     }
 
     @NonNull
@@ -156,7 +127,7 @@ public final class BackupUtils {
         List<Backup> validatedBackups = new ArrayList<>(backups.size());
         for (Backup backup : backups) {
             try {
-                if (backup.getBackupPath().exists()) {
+                if (backup.getItem().exists()) {
                     validatedBackups.add(backup);
                 }
             } catch (IOException e) {
@@ -186,10 +157,10 @@ public final class BackupUtils {
     @NonNull
     public static HashMap<String, List<MetadataManager.Metadata>> getAllMetadata() {
         HashMap<String, List<MetadataManager.Metadata>> backupMetadata = new HashMap<>();
-        List<Path> backupPaths = getBackupPaths();
-        for (Path backupPath : backupPaths) {
+        List<BackupItems.BackupItem> backupPaths = BackupItems.findAllBackupItems();
+        for (BackupItems.BackupItem backupItem : backupPaths) {
             try {
-                MetadataManager.Metadata metadata = MetadataManager.getMetadata(backupPath);
+                MetadataManager.Metadata metadata = MetadataManager.getMetadata(backupItem);
                 if (!backupMetadata.containsKey(metadata.packageName)) {
                     backupMetadata.put(metadata.packageName, new ArrayList<>());
                 }

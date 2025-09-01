@@ -114,7 +114,7 @@ public class SBConverter extends Converter {
         BackupItems.BackupItem[] backupItemList;
         try {
             backupItems = new BackupItems(mPackageName, mUserId, new String[]{"SB"});
-            backupItemList = backupItems.getBackupPaths(true);
+            backupItemList = backupItems.getOrCreateItems();
         } catch (IOException e) {
             throw new BackupException("Could not get backup files.", e);
         }
