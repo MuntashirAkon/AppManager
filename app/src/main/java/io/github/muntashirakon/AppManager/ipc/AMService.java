@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.os.SystemProperties;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.util.Log;
@@ -72,6 +73,11 @@ public class AMService extends RootService {
         @Override
         public IBinder getService(String serviceName) throws RemoteException {
             return ServiceManager.getService(serviceName);
+        }
+
+        @Override
+        public void setprop(String name, String val) throws RemoteException {
+            SystemProperties.set(name, val);
         }
 
         @Override
