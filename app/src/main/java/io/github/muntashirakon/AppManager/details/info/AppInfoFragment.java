@@ -1217,7 +1217,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         builder = getMagiskProcessDialog(mMagiskHiddenProcesses, (dialog, which, mp, isChecked) ->
                 ThreadUtils.postOnBackgroundThread(() -> {
                     mp.setEnabled(isChecked);
-                    if (MagiskHide.apply(mp)) {
+                    if (MagiskHide.apply(mp, true)) {
                         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mUserId)) {
                             cb.setMagiskHide(mp);
                             mMainModel.getTagsAlteredLiveData().postValue(true);
@@ -1239,7 +1239,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         builder = getMagiskProcessDialog(mMagiskDeniedProcesses, (dialog, which, mp, isChecked) ->
                 ThreadUtils.postOnBackgroundThread(() -> {
                     mp.setEnabled(isChecked);
-                    if (MagiskDenyList.apply(mp)) {
+                    if (MagiskDenyList.apply(mp, true)) {
                         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mUserId)) {
                             cb.setMagiskDenyList(mp);
                             mMainModel.getTagsAlteredLiveData().postValue(true);

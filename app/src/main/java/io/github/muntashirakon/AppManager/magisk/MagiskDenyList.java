@@ -39,23 +39,23 @@ public class MagiskDenyList {
         } else return true;
     }
 
-    public static boolean apply(@NonNull MagiskProcess magiskProcess) {
+    public static boolean apply(@NonNull MagiskProcess magiskProcess, boolean forceEnable) {
         String packageName = magiskProcess.isIsolatedProcess() && !magiskProcess.isAppZygote() ? ISOLATED_MAGIC
                 : magiskProcess.packageName;
         if (magiskProcess.isEnabled()) {
-            return add(packageName, magiskProcess.name);
+            return add(packageName, magiskProcess.name, forceEnable);
         }
         return remove(packageName, magiskProcess.name);
     }
 
-    public static boolean add(String packageName, String processName) {
+    private static boolean add(String packageName, String processName, boolean forceEnable) {
         // Check DenyList status
-        if (!enableIfNotAlready(true)) return false;
+        if (!enableIfNotAlready(forceEnable)) return false;
         // DenyList is enabled, enable hide for the package
         return Runner.runCommand(new String[]{"magisk", "--denylist", "add", packageName, processName}).isSuccessful();
     }
 
-    public static boolean remove(String packageName, String processName) {
+    private static boolean remove(String packageName, String processName) {
         // Disable hide for the package (don't need to check for status)
         return Runner.runCommand(new String[]{"magisk", "--denylist", "rm", packageName, processName}).isSuccessful();
     }
