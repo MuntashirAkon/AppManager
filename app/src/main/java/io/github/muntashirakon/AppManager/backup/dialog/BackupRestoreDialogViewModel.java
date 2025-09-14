@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
-import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
@@ -192,10 +192,10 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
                 return;
             }
             // Fetch backup info
-            List<BackupMetadataV2> metadataList = new ArrayList<>();
+            List<BackupMetadataV5> metadataList = new ArrayList<>();
             for (Backup backup : backups) {
                 try {
-                    metadataList.add(backup.getItem().getMetadataV2());
+                    metadataList.add(backup.getItem().getMetadata());
                 } catch (IOException e) {
                     // Not found
                     continue;
@@ -259,8 +259,8 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
         if (mBackupInfoList.size() == 1) {
             // Single backup
             BackupInfo backupInfo = mBackupInfoList.get(0);
-            for (BackupMetadataV2 metadata : backupInfo.getBackupMetadataList()) {
-                mWorstBackupFlag &= metadata.flags.getFlags();
+            for (BackupMetadataV5 metadata : backupInfo.getBackupMetadataList()) {
+                mWorstBackupFlag &= metadata.info.flags.getFlags();
             }
             if (backupInfo.getBackupMetadataList().isEmpty()) {
                 mAppsWithoutBackups.add(backupInfo.getAppLabel());
@@ -290,9 +290,9 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
                 }
                 if (backupInfo.hasBaseBackup()) {
                     hasBaseBackup = true;
-                    for (BackupMetadataV2 metadata : backupInfo.getBackupMetadataList()) {
-                        if (metadata.isBaseBackup()) {
-                            mWorstBackupFlag &= metadata.flags.getFlags();
+                    for (BackupMetadataV5 metadata : backupInfo.getBackupMetadataList()) {
+                        if (metadata.info.isBaseBackup()) {
+                            mWorstBackupFlag &= metadata.info.flags.getFlags();
                         }
                     }
                 } else {

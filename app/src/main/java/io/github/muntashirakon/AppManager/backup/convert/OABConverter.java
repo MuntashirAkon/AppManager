@@ -16,6 +16,7 @@ import android.os.UserHandleHidden;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
 
 import com.github.luben.zstd.ZstdOutputStream;
 
@@ -48,6 +49,7 @@ import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
+import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -132,7 +134,12 @@ public class OABConverter extends Converter {
             boolean backupSuccess = false;
             try {
                 mBackupItem = backupItem;
-                mBackupItem.setCrypto(ConvertUtils.setupCrypto(mDestMetadata));
+                try {
+                    // Setup crypto
+                    mBackupItem.setCrypto(CryptoUtils.setupCrypto(mDestMetadata));
+                } catch (CryptoException e) {
+                    throw new BackupException("Failed to get crypto " + mDestMetadata.crypto, e);
+                }
                 mDestMetadata.backupName = backupItem.backupName;
                 try {
                     mChecksum = backupItem.getChecksum();
@@ -147,19 +154,13 @@ public class OABConverter extends Converter {
                 }
                 // Write modified metadata
                 try {
-                    MetadataManager.writeMetadataV2(mDestMetadata, backupItem);
+                    Pair<String, String> filenameChecksumPair = MetadataManager.writeMetadataV2(mDestMetadata, backupItem);
+                    mChecksum.add(filenameChecksumPair.first, filenameChecksumPair.second);
                 } catch (IOException e) {
                     throw new BackupException("Failed to write metadata.", e);
                 }
                 // Store checksum for metadata
-                try {
-                    mChecksum.add(MetadataManager.META_V2_FILE, DigestUtils.getHexDigest(mDestMetadata.checksumAlgo,
-                            backupItem.getMetadataV2File()));
-                } catch (IOException e) {
-                    throw new BackupException("Failed to generate checksum for meta.json", e);
-                } finally {
-                    mChecksum.close();
-                }
+                mChecksum.close();
                 // Encrypt checksum
                 try {
                     mBackupItem.encrypt(new Path[]{mChecksum.getFile()});

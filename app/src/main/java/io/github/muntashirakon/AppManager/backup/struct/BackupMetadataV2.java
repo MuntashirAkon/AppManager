@@ -226,9 +226,6 @@ public class BackupMetadataV2 implements LocalizedString, IJsonSerializer {
                     crypto.toUpperCase(Locale.ROOT)));
         }
         subtitleText.append(", ").append(context.getString(R.string.gz_bz2_compressed, getReadableTarType(tarType)));
-        if (keyStore) {
-            subtitleText.append(", ").append(context.getString(R.string.keystore));
-        }
         subtitleText.append(", ")
                 .append(context.getString(R.string.size)).append(LangUtils.getSeparatorString()).append(Formatter
                         .formatFileSize(context, getBackupSize()));

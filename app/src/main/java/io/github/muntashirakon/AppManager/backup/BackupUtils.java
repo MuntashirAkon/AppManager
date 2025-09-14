@@ -24,6 +24,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -61,14 +62,14 @@ public final class BackupUtils {
     public static HashMap<String, Backup> storeAllAndGetLatestBackupMetadata() {
         AppDb appDb = new AppDb();
         HashMap<String, Backup> backupMetadata = new HashMap<>();
-        HashMap<String, List<BackupMetadataV2>> allBackupMetadata = getAllMetadata();
+        HashMap<String, List<BackupMetadataV5>> allBackupMetadata = getAllMetadata();
         List<Backup> backups = new ArrayList<>();
-        for (List<BackupMetadataV2> metadataList : allBackupMetadata.values()) {
+        for (List<BackupMetadataV5> metadataList : allBackupMetadata.values()) {
             if (metadataList.isEmpty()) continue;
             Backup latestBackup = null;
             Backup backup;
-            for (BackupMetadataV2 metadata : metadataList) {
-                backup = Backup.fromBackupMetadata(metadata);
+            for (BackupMetadataV5 metadataV5 : metadataList) {
+                backup = Backup.fromBackupInfoAndMeta(metadataV5.info, metadataV5.metadata);
                 backups.add(backup);
                 if (latestBackup == null || backup.backupTime > latestBackup.backupTime) {
                     latestBackup = backup;
@@ -104,11 +105,21 @@ public final class BackupUtils {
         BroadcastUtils.sendDbPackageAltered(context, new String[]{metadata.packageName});
     }
 
-    public static void deleteBackupToDbAndBroadcast(@NonNull Context context, @NonNull BackupMetadataV2 metadata) {
+    public static void putBackupToDbAndBroadcast(@NonNull Context context, @NonNull BackupMetadataV5 metadata) {
+        if (Utils.isRoboUnitTest()) {
+            return;
+        }
         AppDb appDb = new AppDb();
-        appDb.deleteBackup(Backup.fromBackupMetadata(metadata));
-        appDb.updateApplication(context, metadata.packageName);
-        BroadcastUtils.sendDbPackageAltered(context, new String[]{metadata.packageName});
+        appDb.insert(Backup.fromBackupInfoAndMeta(metadata.info, metadata.metadata));
+        appDb.updateApplication(context, metadata.metadata.packageName);
+        BroadcastUtils.sendDbPackageAltered(context, new String[]{metadata.metadata.packageName});
+    }
+
+    public static void deleteBackupToDbAndBroadcast(@NonNull Context context, @NonNull BackupMetadataV5 metadata) {
+        AppDb appDb = new AppDb();
+        appDb.deleteBackup(Backup.fromBackupInfoAndMeta(metadata.info, metadata.metadata));
+        appDb.updateApplication(context, metadata.metadata.packageName);
+        BroadcastUtils.sendDbPackageAltered(context, new String[]{metadata.metadata.packageName});
     }
 
     @WorkerThread
@@ -146,17 +157,18 @@ public final class BackupUtils {
      */
     @WorkerThread
     @NonNull
-    private static HashMap<String, List<BackupMetadataV2>> getAllMetadata() {
-        HashMap<String, List<BackupMetadataV2>> backupMetadata = new HashMap<>();
+    private static HashMap<String, List<BackupMetadataV5>> getAllMetadata() {
+        HashMap<String, List<BackupMetadataV5>> backupMetadata = new HashMap<>();
         List<BackupItems.BackupItem> backupPaths = BackupItems.findAllBackupItems();
         for (BackupItems.BackupItem backupItem : backupPaths) {
             try {
-                BackupMetadataV2 metadata = backupItem.getMetadataV2();
+                BackupMetadataV5 metadataV5 = backupItem.getMetadata();
+                BackupMetadataV5.Metadata metadata = metadataV5.metadata;
                 if (!backupMetadata.containsKey(metadata.packageName)) {
                     backupMetadata.put(metadata.packageName, new ArrayList<>());
                 }
                 //noinspection ConstantConditions
-                backupMetadata.get(metadata.packageName).add(metadata);
+                backupMetadata.get(metadata.packageName).add(metadataV5);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -197,7 +209,7 @@ public final class BackupUtils {
                     return Integer.parseInt(userHandle);
                 }
             }
-            throw new IllegalArgumentException("Invalid backup name");
+            throw new IllegalArgumentException("Invalid backup name " + backupFileName);
         }
     }
 

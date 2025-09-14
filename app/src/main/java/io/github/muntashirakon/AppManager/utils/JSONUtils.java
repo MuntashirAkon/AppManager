@@ -15,6 +15,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public final class JSONUtils {
+    public static void putAll(@NonNull JSONObject base, @Nullable JSONObject jsonObject) throws JSONException {
+        if (jsonObject == null) return;
+        JSONArray keys = jsonObject.names();
+        if (keys != null) {
+            for (int i = 0; i < keys.length(); i++) {
+                String key = keys.getString(i);
+                base.put(key, jsonObject.get(key));
+            }
+        }
+    }
+
     @Contract("!null -> !null")
     @Nullable
     public static <T> JSONArray getJSONArray(@Nullable final T[] typicalArray) {

@@ -22,6 +22,7 @@ import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.pm.PackageInfoCompat;
+import androidx.core.util.Pair;
 
 import com.github.luben.zstd.ZstdOutputStream;
 
@@ -54,6 +55,7 @@ import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
+import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.settings.Prefs;
@@ -122,7 +124,12 @@ public class SBConverter extends Converter {
             boolean backupSuccess = false;
             try {
                 mBackupItem = backupItem;
-                mBackupItem.setCrypto(ConvertUtils.setupCrypto(mDestMetadata));
+                try {
+                    // Setup crypto
+                    mBackupItem.setCrypto(CryptoUtils.setupCrypto(mDestMetadata));
+                } catch (CryptoException e) {
+                    throw new BackupException("Failed to get crypto " + mDestMetadata.crypto, e);
+                }
                 mDestMetadata.backupName = backupItem.backupName;
                 try {
                     mChecksum = backupItem.getChecksum();
@@ -139,19 +146,12 @@ public class SBConverter extends Converter {
                 }
                 // Write modified metadata
                 try {
-                    MetadataManager.writeMetadataV2(mDestMetadata, backupItem);
+                    Pair<String, String> filenameChecksumPair = MetadataManager.writeMetadataV2(mDestMetadata, backupItem);
+                    mChecksum.add(filenameChecksumPair.first, filenameChecksumPair.second);
                 } catch (IOException e) {
                     throw new BackupException("Failed to write metadata.");
                 }
-                // Store checksum for metadata
-                try {
-                    mChecksum.add(MetadataManager.META_V2_FILE, DigestUtils.getHexDigest(mDestMetadata.checksumAlgo,
-                            backupItem.getMetadataV2File()));
-                } catch (IOException e) {
-                    throw new BackupException("Failed to generate checksum for meta.json", e);
-                } finally {
-                    mChecksum.close();
-                }
+                mChecksum.close();
                 // Encrypt checksum
                 try {
                     mBackupItem.encrypt(new Path[]{mChecksum.getFile()});
@@ -306,10 +306,12 @@ public class SBConverter extends Converter {
             throw new BackupException("Could not cache APK file", e);
         }
         String filePath = Objects.requireNonNull(mCachedApk.getFilePath());
-        mPackageInfo = mPm.getPackageArchiveInfo(filePath, 0);
-        if (mPackageInfo == null) {
+        PackageInfo packageInfo = mPm.getPackageArchiveInfo(filePath, 0);
+        if (packageInfo == null) {
             throw new BackupException("Could not fetch package info");
         }
+        mPackageInfo = packageInfo;
+        Objects.requireNonNull(mPackageInfo.applicationInfo);
         mPackageInfo.applicationInfo.publicSourceDir = filePath;
         mPackageInfo.applicationInfo.sourceDir = filePath;
         ApplicationInfo applicationInfo = mPackageInfo.applicationInfo;

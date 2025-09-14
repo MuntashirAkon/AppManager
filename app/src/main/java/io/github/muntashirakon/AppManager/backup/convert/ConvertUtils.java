@@ -22,11 +22,6 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.backup.BackupException;
-import io.github.muntashirakon.AppManager.backup.CryptoUtils;
-import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
-import io.github.muntashirakon.AppManager.crypto.Crypto;
-import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.io.FileSystemManager;
@@ -81,17 +76,6 @@ public final class ConvertUtils {
     }
 
     @NonNull
-    static Crypto setupCrypto(BackupMetadataV2 metadata) throws BackupException {
-        try {
-            // Setup crypto
-            CryptoUtils.setupCrypto(metadata);
-            return CryptoUtils.getCrypto(metadata);
-        } catch (CryptoException e) {
-            throw new BackupException("Failed to get crypto " + metadata.crypto, e);
-        }
-    }
-
-    @NonNull
     static String[] getChecksumsFromApk(@NonNull Path apkFile, @DigestUtils.Algorithm String algo)
             throws IOException, ApkFormatException, NoSuchAlgorithmException, CertificateEncodingException {
         // Since we can't directly work with ProxyFile, we need to cache it and read the signature
@@ -110,7 +94,7 @@ public final class ConvertUtils {
         ApkVerifier.Result apkVerifierResult = verifier.verify();
         // Get signer certificates
         List<X509Certificate> certificates = apkVerifierResult.getSignerCertificates();
-        if (certificates != null && certificates.size() > 0) {
+        if (certificates != null && !certificates.isEmpty()) {
             for (X509Certificate certificate : certificates) {
                 checksums.add(DigestUtils.getHexDigest(algo, certificate.getEncoded()));
             }

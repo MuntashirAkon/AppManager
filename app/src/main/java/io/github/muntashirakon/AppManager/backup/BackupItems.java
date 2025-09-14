@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.DummyCrypto;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
@@ -92,7 +92,7 @@ public class BackupItems {
 
     @Deprecated
     @NonNull
-    public static Path getPackagePath(@NonNull String packageName, boolean create) throws IOException {
+    private static Path getPackagePath(@NonNull String packageName, boolean create) throws IOException {
         if (create) {
             return getBaseDirectory().findOrCreateDirectory(packageName);
         } else return getBaseDirectory().findFile(packageName);
@@ -180,6 +180,10 @@ public class BackupItems {
                 mCrypto = crypto;
                 mCryptoMode = crypto.getModeName();
             }
+        }
+
+        public boolean isBackupMode() {
+            return mBackupMode;
         }
 
         @NonNull
@@ -273,16 +277,46 @@ public class BackupItems {
             } else return getBackupPath().findFile(ICON_FILE);
         }
 
+        public boolean isV5AndUp() {
+            return getBackupPath().hasFile(MetadataManager.INFO_V5_FILE);
+        }
+
+        public Path getInfoFile() throws IOException {
+            // info_v5.am.json is never encrypted
+            if (mBackupMode) {
+                return getBackupPath().findOrCreateFile(MetadataManager.INFO_V5_FILE, null);
+            } else return getBackupPath().findFile(MetadataManager.INFO_V5_FILE);
+        }
+
+        public Path getMetadataV5File() throws IOException {
+            if (mBackupMode) {
+                // Needs to be encrypted in backup mode
+                return getBackupPath().findOrCreateFile(MetadataManager.META_V5_FILE, null);
+            } else {
+                // Needs to be decrypted in restore mode
+                Path file = getBackupPath().findFile(MetadataManager.META_V5_FILE + CryptoUtils.getExtension(mCryptoMode));
+                return decrypt(new Path[]{file})[0];
+            }
+        }
+
         @NonNull
         public Path getMetadataV2File() throws IOException {
-            // meta is never encrypted
+            // meta_v2.am.json is never encrypted
             if (mBackupMode) {
                 return getBackupPath().findOrCreateFile(MetadataManager.META_V2_FILE, null);
             } else return getBackupPath().findFile(MetadataManager.META_V2_FILE);
         }
 
-        public BackupMetadataV2 getMetadataV2() throws IOException {
-            return MetadataManager.readMetadataV2(this);
+        public BackupMetadataV5.Info getInfo() throws IOException {
+            return MetadataManager.readInfo(this);
+        }
+
+        public BackupMetadataV5 getMetadata() throws IOException {
+            return MetadataManager.readMetadataV5(this);
+        }
+
+        public BackupMetadataV5 getMetadata(BackupMetadataV5.Info backupInfo) throws IOException {
+            return MetadataManager.readMetadataV5(this, backupInfo);
         }
 
         @NonNull
@@ -478,6 +512,7 @@ public class BackupItems {
         return backupFiles;
     }
 
+    @NonNull
     private Path getFreshBackupPath(String backupName) throws IOException {
         String newBackupName = backupName;
         int i = 0;

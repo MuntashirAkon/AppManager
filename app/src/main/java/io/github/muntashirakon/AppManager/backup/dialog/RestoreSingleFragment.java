@@ -31,7 +31,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
-import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.SearchableFlagsDialogBuilder;
@@ -84,11 +84,11 @@ public class RestoreSingleFragment extends Fragment {
             unfreezeMenuItem.setEnabled(frozenCount > 0);
 
             freezeMenuItem.setOnMenuItemClickListener(item -> {
-                List<BackupMetadataV2> selectedBackups = adapter.getSelectedBackups();
-                for (BackupMetadataV2 metadata : selectedBackups) {
-                    if (metadata.backupItem != null) {
+                List<BackupMetadataV5> selectedBackups = adapter.getSelectedBackups();
+                for (BackupMetadataV5 metadata : selectedBackups) {
+                    if (metadata.info.backupItem != null) {
                         try {
-                            metadata.backupItem.freeze();
+                            metadata.info.backupItem.freeze();
                             ++adapter.mFrozenBackupSelectionCount;
                         } catch (IOException ignore) {
                         }
@@ -98,11 +98,11 @@ public class RestoreSingleFragment extends Fragment {
                 return true;
             });
             unfreezeMenuItem.setOnMenuItemClickListener(item -> {
-                List<BackupMetadataV2> selectedBackups = adapter.getSelectedBackups();
-                for (BackupMetadataV2 metadata : selectedBackups) {
-                    if (metadata.backupItem != null) {
+                List<BackupMetadataV5> selectedBackups = adapter.getSelectedBackups();
+                for (BackupMetadataV5 metadata : selectedBackups) {
+                    if (metadata.info.backupItem != null) {
                         try {
-                            metadata.backupItem.unfreeze();
+                            metadata.info.backupItem.unfreeze();
                             --adapter.mFrozenBackupSelectionCount;
                         } catch (IOException ignore) {
                         }
@@ -115,8 +115,8 @@ public class RestoreSingleFragment extends Fragment {
         });
     }
 
-    private void handleRestore(@NonNull BackupMetadataV2 selectedBackup) {
-        BackupFlags flags = selectedBackup.flags;
+    private void handleRestore(@NonNull BackupMetadataV5 selectedBackup) {
+        BackupFlags flags = selectedBackup.info.flags;
         BackupFlags enabledFlags = BackupFlags.fromPref();
         enabledFlags.setFlags(flags.getFlags() & enabledFlags.getFlags());
         List<Integer> supportedBackupFlags = BackupFlags.getBackupFlagsAsArray(flags.getFlags());
@@ -142,22 +142,22 @@ public class RestoreSingleFragment extends Fragment {
                     operationInfo.mode = BackupRestoreDialogFragment.MODE_RESTORE;
                     operationInfo.op = BatchOpsManager.OP_RESTORE_BACKUP;
                     operationInfo.flags = enabledFlags.getFlags();
-                    operationInfo.backupNames = new String[]{selectedBackup.backupName};
+                    operationInfo.backupNames = new String[]{selectedBackup.info.backupName};
                     mViewModel.prepareForOperation(operationInfo);
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 
-    private void handleDelete(List<BackupMetadataV2> selectedBackups) {
+    private void handleDelete(List<BackupMetadataV5> selectedBackups) {
         new MaterialAlertDialogBuilder(mContext)
                 .setTitle(R.string.delete_backup)
                 .setMessage(R.string.are_you_sure)
                 .setNegativeButton(R.string.no, null)
                 .setPositiveButton(R.string.yes, (dialog, which) -> {
                     List<String> newBackupNames = new ArrayList<>(selectedBackups.size());
-                    for (BackupMetadataV2 backup : selectedBackups) {
-                        newBackupNames.add(backup.backupName);
+                    for (BackupMetadataV5 backup : selectedBackups) {
+                        newBackupNames.add(backup.info.backupName);
                     }
                     BackupRestoreDialogViewModel.OperationInfo operationInfo = new BackupRestoreDialogViewModel.OperationInfo();
                     operationInfo.mode = BackupRestoreDialogFragment.MODE_DELETE;
@@ -170,12 +170,12 @@ public class RestoreSingleFragment extends Fragment {
 
     private static class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.ViewHolder> {
         public interface OnSelectionListener {
-            void onSelectionChanged(@Nullable BackupMetadataV2 metadata, int selectionCount, boolean added);
+            void onSelectionChanged(@Nullable BackupMetadataV5 metadata, int selectionCount, boolean added);
         }
 
         private final int mLayoutId;
         @NonNull
-        private final List<BackupMetadataV2> mBackups = new ArrayList<>();
+        private final List<BackupMetadataV5> mBackups = new ArrayList<>();
         @NonNull
         private final List<Integer> mSelectedPositions = new ArrayList<>();
         @NonNull
@@ -184,18 +184,18 @@ public class RestoreSingleFragment extends Fragment {
         private int mFrozenBackupSelectionCount = 0;
 
         @SuppressLint("RestrictedApi")
-        public BackupAdapter(@NonNull Context context, @NonNull List<BackupMetadataV2> backups,
+        public BackupAdapter(@NonNull Context context, @NonNull List<BackupMetadataV5> backups,
                              @NonNull OnSelectionListener selectionListener) {
             mSelectionListener = selectionListener;
             mLayoutId = MaterialAttributes.resolveInteger(context, androidx.appcompat.R.attr.multiChoiceItemLayout,
                     com.google.android.material.R.layout.mtrl_alert_select_dialog_multichoice);
             mSelectionListener.onSelectionChanged(null, mSelectedPositions.size(), false);
             for (int i = 0; i < backups.size(); ++i) {
-                BackupMetadataV2 backup = backups.get(i);
+                BackupMetadataV5 backup = backups.get(i);
                 mBackups.add(backup);
-                if (backup.isBaseBackup()) {
+                if (backup.info.isBaseBackup()) {
                     mSelectedPositions.add(i);
-                    if (backup.isFrozen()) {
+                    if (backup.info.isFrozen()) {
                         ++mFrozenBackupSelectionCount;
                     }
                     mSelectionListener.onSelectionChanged(backup, mSelectedPositions.size(), true);
@@ -213,8 +213,8 @@ public class RestoreSingleFragment extends Fragment {
         }
 
         @NonNull
-        public List<BackupMetadataV2> getSelectedBackups() {
-            List<BackupMetadataV2> selectedBackups = new ArrayList<>();
+        public List<BackupMetadataV5> getSelectedBackups() {
+            List<BackupMetadataV5> selectedBackups = new ArrayList<>();
             for (int position : mSelectedPositions) {
                 selectedBackups.add(mBackups.get(position));
             }
@@ -230,7 +230,7 @@ public class RestoreSingleFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            BackupMetadataV2 metadata = mBackups.get(position);
+            BackupMetadataV5 metadata = mBackups.get(position);
             boolean isSelected = mSelectedPositions.contains(position);
             holder.item.setChecked(isSelected);
             holder.item.setText(metadata.toLocalizedString(holder.item.getContext()));
@@ -238,14 +238,14 @@ public class RestoreSingleFragment extends Fragment {
                 if (isSelected) {
                     // Now unselected
                     mSelectedPositions.remove((Integer) position);
-                    if (metadata.isFrozen()) {
+                    if (metadata.info.isFrozen()) {
                         --mFrozenBackupSelectionCount;
                     }
                     mSelectionListener.onSelectionChanged(metadata, mSelectedPositions.size(), false);
                 } else {
                     // Now selected
                     mSelectedPositions.add(position);
-                    if (metadata.isFrozen()) {
+                    if (metadata.info.isFrozen()) {
                         ++mFrozenBackupSelectionCount;
                     }
                     mSelectionListener.onSelectionChanged(metadata, mSelectedPositions.size(), true);

@@ -16,6 +16,7 @@ import io.github.muntashirakon.AppManager.backup.BackupItems;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 
 @SuppressWarnings("NotNullFieldNotInitialized")
@@ -120,6 +121,29 @@ public class Backup {
         backup.flags = metadata.flags.getFlags();
         backup.userId = metadata.userHandle;
         backup.tarType = metadata.tarType;
+        backup.hasKeyStore = metadata.keyStore;
+        backup.installer = metadata.installer;
+        backup.uuid = "";
+        return backup;
+    }
+
+    @NonNull
+    public static Backup fromBackupInfoAndMeta(@NonNull BackupMetadataV5.Info info, @NonNull BackupMetadataV5.Metadata metadata) {
+        Backup backup = new Backup();
+        backup.packageName = metadata.packageName;
+        backup.backupName = info.backupName;
+        backup.label = metadata.label;
+        backup.versionName = metadata.versionName;
+        backup.versionCode = metadata.versionCode;
+        backup.isSystem = metadata.isSystem;
+        backup.hasSplits = metadata.isSplitApk;
+        backup.hasRules = metadata.hasRules;
+        backup.backupTime = info.backupTime;
+        backup.crypto = info.crypto;
+        backup.version = metadata.version;
+        backup.flags = info.flags.getFlags();
+        backup.userId = info.userId;
+        backup.tarType = info.tarType;
         backup.hasKeyStore = metadata.keyStore;
         backup.installer = metadata.installer;
         backup.uuid = "";

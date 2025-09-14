@@ -207,7 +207,7 @@ public final class PackageManagerCompat {
     }
 
     @NonNull
-    public static PackageInfo getPackageInfo(@NonNull IPackageManager pm, @NonNull String packageName, int flags,
+    private static PackageInfo getPackageInfo(@NonNull IPackageManager pm, @NonNull String packageName, int flags,
                                              @UserIdInt int userId)
             throws RemoteException, PackageManager.NameNotFoundException {
         PackageInfo info = null;

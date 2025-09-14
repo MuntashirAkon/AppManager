@@ -8,7 +8,7 @@ import androidx.annotation.WorkerThread;
 import java.io.Closeable;
 import java.io.IOException;
 
-import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -21,7 +21,9 @@ class VerifyOp implements Closeable {
     @NonNull
     private final BackupFlags mBackupFlags;
     @NonNull
-    private final BackupMetadataV2 mMetadata;
+    private final BackupMetadataV5.Info mBackupInfo;
+    @NonNull
+    private final BackupMetadataV5.Metadata mBackupMetadata;
     @NonNull
     private final BackupItems.BackupItem mBackupItem;
     @NonNull
@@ -30,22 +32,28 @@ class VerifyOp implements Closeable {
     VerifyOp(@NonNull BackupItems.BackupItem backupItem) throws BackupException {
         mBackupItem = backupItem;
         try {
-            mMetadata = mBackupItem.getMetadataV2();
-            mBackupFlags = mMetadata.flags;
+            mBackupInfo = mBackupItem.getInfo();
+            mBackupFlags = mBackupInfo.flags;
         } catch (IOException e) {
             mBackupItem.cleanup();
-            throw new BackupException("Could not read metadata. Possibly due to a malformed json file.", e);
+            throw new BackupException("Could not read backup info. Possibly due to a malformed json file.", e);
         }
         // Setup crypto
-        if (!CryptoUtils.isAvailable(mMetadata.crypto)) {
+        if (!CryptoUtils.isAvailable(mBackupInfo.crypto)) {
             mBackupItem.cleanup();
-            throw new BackupException("Mode " + mMetadata.crypto + " is currently unavailable.");
+            throw new BackupException("Mode " + mBackupInfo.crypto + " is currently unavailable.");
         }
         try {
-            mBackupItem.setCrypto(CryptoUtils.getCrypto(mMetadata));
+            mBackupItem.setCrypto(mBackupInfo.getCrypto());
         } catch (CryptoException e) {
             mBackupItem.cleanup();
-            throw new BackupException("Could not get crypto " + mMetadata.crypto, e);
+            throw new BackupException("Could not get crypto " + mBackupInfo.crypto, e);
+        }
+        try {
+            mBackupMetadata = mBackupItem.getMetadata(mBackupInfo).metadata;
+        } catch (IOException e) {
+            mBackupItem.cleanup();
+            throw new BackupException("Could not read backup metadata. Possibly due to a malformed json file.", e);
         }
         // Get checksums
         try {
@@ -55,20 +63,11 @@ class VerifyOp implements Closeable {
             throw new BackupException("Could not get checksums.", e);
         }
         // Verify metadata
-        Path metadataFile;
         try {
-            metadataFile = mBackupItem.getMetadataV2File();
-        } catch (IOException e) {
+            verifyMetadata();
+        } catch (BackupException e) {
             mBackupItem.cleanup();
-            throw new BackupException("Could not get metadata file.", e);
-        }
-        String checksum = DigestUtils.getHexDigest(mMetadata.checksumAlgo, metadataFile);
-        if (!checksum.equals(mChecksum.get(metadataFile.getName()))) {
-            mBackupItem.cleanup();
-            throw new BackupException("Could not verify metadata." +
-                    "\nFile: " + metadataFile.getName() +
-                    "\nFound: " + checksum +
-                    "\nRequired: " + mChecksum.get(metadataFile.getName()));
+            throw e;
         }
     }
 
@@ -88,7 +87,7 @@ class VerifyOp implements Closeable {
             }
             if (mBackupFlags.backupData()) {
                 verifyData();
-                if (mMetadata.keyStore) {
+                if (mBackupMetadata.keyStore) {
                     verifyKeyStore();
                 }
             }
@@ -105,6 +104,38 @@ class VerifyOp implements Closeable {
         }
     }
 
+    private void verifyMetadata() throws BackupException {
+        boolean isV5AndUp = mBackupItem.isV5AndUp();
+        if (isV5AndUp) {
+            Path infoFile;
+            try {
+                infoFile = mBackupItem.getInfoFile();
+            } catch (IOException e) {
+                throw new BackupException("Could not get metadata file.", e);
+            }
+            String checksum = DigestUtils.getHexDigest(mBackupInfo.checksumAlgo, infoFile);
+            if (!checksum.equals(mChecksum.get(infoFile.getName()))) {
+                throw new BackupException("Couldn't verify metadata file." +
+                        "\nFile: " + infoFile +
+                        "\nFound: " + checksum +
+                        "\nRequired: " + mChecksum.get(infoFile.getName()));
+            }
+        }
+        Path metadataFile;
+        try {
+            metadataFile = isV5AndUp ? mBackupItem.getMetadataV5File() : mBackupItem.getMetadataV2File();
+        } catch (IOException e) {
+            throw new BackupException("Could not get metadata file.", e);
+        }
+        String checksum = DigestUtils.getHexDigest(mBackupInfo.checksumAlgo, metadataFile);
+        if (!checksum.equals(mChecksum.get(metadataFile.getName()))) {
+            throw new BackupException("Couldn't verify metadata file." +
+                    "\nFile: " + metadataFile +
+                    "\nFound: " + checksum +
+                    "\nRequired: " + mChecksum.get(metadataFile.getName()));
+        }
+    }
+
     private void verifyApkFiles() throws BackupException {
         Path[] backupSourceFiles = mBackupItem.getSourceFiles();
         if (backupSourceFiles.length == 0) {
@@ -113,7 +144,7 @@ class VerifyOp implements Closeable {
         }
         String checksum;
         for (Path file : backupSourceFiles) {
-            checksum = DigestUtils.getHexDigest(mMetadata.checksumAlgo, file);
+            checksum = DigestUtils.getHexDigest(mBackupInfo.checksumAlgo, file);
             if (!checksum.equals(mChecksum.get(file.getName()))) {
                 throw new BackupException("Could not verify APK files." +
                         "\nFile: " + file.getName() +
@@ -131,7 +162,7 @@ class VerifyOp implements Closeable {
         }
         String checksum;
         for (Path file : keyStoreFiles) {
-            checksum = DigestUtils.getHexDigest(mMetadata.checksumAlgo, file);
+            checksum = DigestUtils.getHexDigest(mBackupInfo.checksumAlgo, file);
             if (!checksum.equals(mChecksum.get(file.getName()))) {
                 throw new BackupException("Could not verify KeyStore files." +
                         "\nFile: " + file.getName() +
@@ -144,13 +175,13 @@ class VerifyOp implements Closeable {
     private void verifyData() throws BackupException {
         Path[] dataFiles;
         String checksum;
-        for (int i = 0; i < mMetadata.dataDirs.length; ++i) {
+        for (int i = 0; i < mBackupMetadata.dataDirs.length; ++i) {
             dataFiles = mBackupItem.getDataFiles(i);
             if (dataFiles.length == 0) {
                 throw new BackupException("No data files at index " + i + ".");
             }
             for (Path file : dataFiles) {
-                checksum = DigestUtils.getHexDigest(mMetadata.checksumAlgo, file);
+                checksum = DigestUtils.getHexDigest(mBackupInfo.checksumAlgo, file);
                 if (!checksum.equals(mChecksum.get(file.getName()))) {
                     throw new BackupException("Could not verify data files at index " + i + "." +
                             "\nFile: " + file.getName() +
@@ -169,7 +200,7 @@ class VerifyOp implements Closeable {
             // There are no permissions, just skip
             return;
         }
-        String checksum = DigestUtils.getHexDigest(mMetadata.checksumAlgo, miscFile);
+        String checksum = DigestUtils.getHexDigest(mBackupInfo.checksumAlgo, miscFile);
         if (!checksum.equals(mChecksum.get(miscFile.getName()))) {
             throw new BackupException("Could not verify extras." +
                     "\nFile: " + miscFile.getName() +
@@ -183,14 +214,14 @@ class VerifyOp implements Closeable {
         try {
             rulesFile = mBackupItem.getRulesFile();
         } catch (IOException e) {
-            if (mMetadata.hasRules) {
+            if (mBackupMetadata.hasRules) {
                 throw new BackupException("Rules file is missing.", e);
             } else {
                 // There are no rules, just skip
                 return;
             }
         }
-        String checksum = DigestUtils.getHexDigest(mMetadata.checksumAlgo, rulesFile);
+        String checksum = DigestUtils.getHexDigest(mBackupInfo.checksumAlgo, rulesFile);
         if (!checksum.equals(mChecksum.get(rulesFile.getName()))) {
             throw new BackupException("Could not verify rules file." +
                     "\nFile: " + rulesFile.getName() +

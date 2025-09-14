@@ -11,19 +11,16 @@ import androidx.annotation.WorkerThread;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.security.SecureRandom;
 
 import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
 import io.github.muntashirakon.AppManager.crypto.AESCrypto;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
-import io.github.muntashirakon.AppManager.crypto.DummyCrypto;
 import io.github.muntashirakon.AppManager.crypto.ECCCrypto;
 import io.github.muntashirakon.AppManager.crypto.OpenPGPCrypto;
 import io.github.muntashirakon.AppManager.crypto.RSACrypto;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.settings.Prefs;
-import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
 public class CryptoUtils {
     @StringDef(value = {
@@ -42,7 +39,6 @@ public class CryptoUtils {
     public static final String MODE_RSA = "rsa";
     public static final String MODE_ECC = "ecc";
     public static final String MODE_OPEN_PGP = "pgp";
-
     @Mode
     public static String getMode() {
         String currentMode = Prefs.Encryption.getEncryptionMode();
@@ -76,64 +72,12 @@ public class CryptoUtils {
     }
 
     @WorkerThread
-    @NonNull
-    public static Crypto getCrypto(@NonNull BackupMetadataV2 metadata) throws CryptoException {
-        switch (metadata.crypto) {
-            case MODE_OPEN_PGP:
-                return new OpenPGPCrypto(ContextUtils.getContext(), metadata.keyIds);
-            case MODE_AES: {
-                AESCrypto aesCrypto = new AESCrypto(metadata.iv);
-                if (metadata.version < 4) {
-                    // Old backups use 32 bit MAC
-                    aesCrypto.setMacSizeBits(AESCrypto.MAC_SIZE_BITS_OLD);
-                }
-                return aesCrypto;
-            }
-            case MODE_RSA: {
-                RSACrypto rsaCrypto = new RSACrypto(metadata.iv, metadata.aes);
-                if (metadata.version < 4) {
-                    // Old backups use 32 bit MAC
-                    rsaCrypto.setMacSizeBits(AESCrypto.MAC_SIZE_BITS_OLD);
-                }
-                if (metadata.aes == null) {
-                    metadata.aes = rsaCrypto.getEncryptedAesKey();
-                }
-                return rsaCrypto;
-            }
-            case MODE_ECC: {
-                ECCCrypto eccCrypto = new ECCCrypto(metadata.iv, metadata.aes);
-                if (metadata.version < 4) {
-                    // Old backups use 32 bit MAC
-                    eccCrypto.setMacSizeBits(AESCrypto.MAC_SIZE_BITS_OLD);
-                }
-                if (metadata.aes == null) {
-                    metadata.aes = eccCrypto.getEncryptedAesKey();
-                }
-                return eccCrypto;
-            }
-            case MODE_NO_ENCRYPTION:
-            default:
-                // Dummy crypto to generalise and return nonNull
-                return new DummyCrypto();
-        }
-    }
-
-    @WorkerThread
-    public static void setupCrypto(@NonNull BackupMetadataV2 metadata) {
-        switch (metadata.crypto) {
-            case MODE_OPEN_PGP:
-                metadata.keyIds = Prefs.Encryption.getOpenPgpKeyIds();
-                break;
-            case MODE_AES:
-            case MODE_RSA:
-            case MODE_ECC:
-                SecureRandom random = new SecureRandom();
-                metadata.iv = new byte[AESCrypto.GCM_IV_SIZE_BYTES];
-                random.nextBytes(metadata.iv);
-                break;
-            case MODE_NO_ENCRYPTION:
-            default:
-        }
+    public static Crypto setupCrypto(@NonNull BackupMetadataV2 metadata) throws CryptoException {
+        BackupCryptSetupHelper cryptoHelper = new BackupCryptSetupHelper(metadata.crypto, metadata.version);
+        metadata.keyIds = cryptoHelper.getKeyIds();
+        metadata.aes = cryptoHelper.getAes();
+        metadata.iv = cryptoHelper.getIv();
+        return cryptoHelper.crypto;
     }
 
     @WorkerThread

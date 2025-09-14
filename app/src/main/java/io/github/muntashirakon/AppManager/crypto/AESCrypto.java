@@ -109,18 +109,16 @@ public class AESCrypto implements Crypto {
     }
 
     @CallSuper
-    @Nullable
-    protected byte[] getEncryptedAesKey() {
-        try {
-            if (mParentMode.equals(CryptoUtils.MODE_RSA)) {
-                return RSACrypto.encryptAesKey(mSecretKey);
-            } else if (mParentMode.equals(CryptoUtils.MODE_ECC)) {
-                return ECCCrypto.encryptAesKey(mSecretKey);
-            }
-        } catch (CryptoException e) {
-            Log.e(TAG, e);
+    @NonNull
+    protected byte[] getEncryptedAesKey() throws CryptoException {
+        if (mParentMode.equals(CryptoUtils.MODE_RSA)) {
+            return RSACrypto.encryptAesKey(mSecretKey);
         }
-        return null;
+        if (mParentMode.equals(CryptoUtils.MODE_ECC)) {
+            return ECCCrypto.encryptAesKey(mSecretKey);
+        }
+        // Invalid mode
+        throw new CryptoException("Not in RSA or ECC mode");
     }
 
     @WorkerThread

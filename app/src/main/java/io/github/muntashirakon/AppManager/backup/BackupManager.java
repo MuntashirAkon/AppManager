@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import java.io.IOException;
 import java.util.Arrays;
 
-import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -204,7 +204,7 @@ public class BackupManager {
             }
             for (BackupItems.BackupItem backupItem : backupItemList) {
                 try {
-                    BackupMetadataV2 metadata = backupItem.getMetadataV2();
+                    BackupMetadataV5 metadata = backupItem.getMetadata();
                     if (!backupItem.isFrozen() && !backupItem.delete()) {
                         throw new BackupException("Could not delete the selected backups");
                     }
@@ -218,10 +218,10 @@ public class BackupManager {
             // requested for only single backups
             for (String backupName : backupNames) {
                 BackupItems.BackupItem backupItem;
-                BackupMetadataV2 metadata;
+                BackupMetadataV5 metadata;
                 try {
                     backupItem = BackupItems.findBackupItem(backupName, mTargetPackage.getPackageName(), null);
-                    metadata = backupItem.getMetadataV2();
+                    metadata = backupItem.getMetadata();
                 } catch (IOException e) {
                     throw new BackupException("Could not get backup files.", e);
                 }
