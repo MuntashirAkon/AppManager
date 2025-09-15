@@ -44,7 +44,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
@@ -81,7 +80,6 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.compat.ObjectsCompat;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -225,7 +223,7 @@ class BackupOp implements Closeable {
     public BackupMetadataV5 setupMetadataAndCrypto() throws CryptoException {
         // We don't need to backup custom users or multiple backup flags
         mBackupFlags.removeFlag(BackupFlags.BACKUP_CUSTOM_USERS | BackupFlags.BACKUP_MULTIPLE);
-        String backupName = mBackupItem.backupName;
+        String backupName = mBackupItem.getBackupName();
         long backupTime = System.currentTimeMillis();
         String tarType = Prefs.BackupRestore.getCompressionMethod();
         // Verify tar type
@@ -236,11 +234,11 @@ class BackupOp implements Closeable {
         String crypto = CryptoUtils.getMode();
         BackupCryptSetupHelper cryptoHelper = new BackupCryptSetupHelper(crypto, CURRENT_BACKUP_META_VERSION);
         mBackupItem.setCrypto(cryptoHelper.crypto);
-        BackupMetadataV5.Info backupInfo = new BackupMetadataV5.Info(backupName, backupTime,
-                mBackupFlags, mUserId, tarType, DigestUtils.SHA_256, crypto, cryptoHelper.getIv(),
+        BackupMetadataV5.Info backupInfo = new BackupMetadataV5.Info(backupTime, mBackupFlags,
+                mUserId, tarType, DigestUtils.SHA_256, crypto, cryptoHelper.getIv(),
                 cryptoHelper.getAes(), cryptoHelper.getKeyIds());
-        backupInfo.backupItem = mBackupItem;
-        BackupMetadataV5.Metadata metadata = new BackupMetadataV5.Metadata();
+        backupInfo.setBackupItem(mBackupItem);
+        BackupMetadataV5.Metadata metadata = new BackupMetadataV5.Metadata(backupName);
         metadata.keyStore = KeyStoreUtils.hasKeyStore(mApplicationInfo.uid);
         metadata.label = mApplicationInfo.loadLabel(mPm).toString();
         metadata.packageName = mPackageName;
@@ -271,8 +269,7 @@ class BackupOp implements Closeable {
                 metadata.hasRules = cb.entryCount() > 0;
             }
         }
-        metadata.installer = ObjectsCompat.requireNonNullElse(PackageManagerCompat.getInstallerPackageName(
-                mPackageInfo.packageName, mUserId), BuildConfig.APPLICATION_ID);
+        metadata.installer = PackageManagerCompat.getInstallerPackageName(mPackageInfo.packageName, mUserId);
         return new BackupMetadataV5(backupInfo, metadata);
     }
 

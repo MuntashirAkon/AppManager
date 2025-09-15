@@ -121,70 +121,64 @@ public class OABConverter extends Converter {
         // Destination files will be encrypted by the default encryption method
         mDestMetadata.crypto = CryptoUtils.getMode();
         // Simulate a backup creation
-        BackupItems backupItems;
-        BackupItems.BackupItem[] backupItemList;
+        BackupItems.BackupItem backupItem;
         try {
-            backupItems = new BackupItems(mPackageName, mUserId, new String[]{"OAndBackup"});
-            backupItemList = backupItems.getOrCreateItems();
+            backupItem = BackupItems.createBackupItemGracefully(mUserId, "OAndBackup", mPackageName);
         } catch (IOException e) {
             throw new BackupException("Could not get backup files.", e);
         }
-        for (BackupItems.BackupItem backupItem : backupItemList) {
-            // We're iterating over a singleton list
-            boolean backupSuccess = false;
+        boolean backupSuccess = false;
+        try {
+            mBackupItem = backupItem;
             try {
-                mBackupItem = backupItem;
-                try {
-                    // Setup crypto
-                    mBackupItem.setCrypto(CryptoUtils.setupCrypto(mDestMetadata));
-                } catch (CryptoException e) {
-                    throw new BackupException("Failed to get crypto " + mDestMetadata.crypto, e);
-                }
-                mDestMetadata.backupName = backupItem.backupName;
-                try {
-                    mChecksum = backupItem.getChecksum();
-                } catch (IOException e) {
-                    throw new BackupException("Failed to create checksum file.", e);
-                }
-                if (mDestMetadata.flags.backupApkFiles()) {
-                    backupApkFile();
-                }
-                if (mDestMetadata.flags.backupData()) {
-                    backupData();
-                }
-                // Write modified metadata
-                try {
-                    Pair<String, String> filenameChecksumPair = MetadataManager.writeMetadataV2(mDestMetadata, backupItem);
-                    mChecksum.add(filenameChecksumPair.first, filenameChecksumPair.second);
-                } catch (IOException e) {
-                    throw new BackupException("Failed to write metadata.", e);
-                }
-                // Store checksum for metadata
-                mChecksum.close();
-                // Encrypt checksum
-                try {
-                    mBackupItem.encrypt(new Path[]{mChecksum.getFile()});
-                } catch (IOException e) {
-                    throw new BackupException("Failed to encrypt checksums.txt", e);
-                }
-                // Replace current backup
-                try {
-                    backupItem.commit();
-                } catch (IOException e) {
-                    throw new BackupException("Could not finalise backup.", e);
-                }
-                backupSuccess = true;
-            } catch (BackupException e) {
-                throw e;
-            } catch (Throwable th) {
-                throw new BackupException("Unknown error occurred.", th);
-            } finally {
-                backupItem.cleanup();
-                if (backupSuccess) {
-                    BackupUtils.putBackupToDbAndBroadcast(ContextUtils.getContext(), mDestMetadata);
-                }
+                // Setup crypto
+                mBackupItem.setCrypto(CryptoUtils.setupCrypto(mDestMetadata));
+            } catch (CryptoException e) {
+                throw new BackupException("Failed to get crypto " + mDestMetadata.crypto, e);
             }
-            return;
+            mDestMetadata.backupName = backupItem.getBackupName();
+            try {
+                mChecksum = backupItem.getChecksum();
+            } catch (IOException e) {
+                throw new BackupException("Failed to create checksum file.", e);
+            }
+            if (mDestMetadata.flags.backupApkFiles()) {
+                backupApkFile();
+            }
+            if (mDestMetadata.flags.backupData()) {
+                backupData();
+            }
+            // Write modified metadata
+            try {
+                Pair<String, String> filenameChecksumPair = MetadataManager.writeMetadataV2(mDestMetadata, backupItem);
+                mChecksum.add(filenameChecksumPair.first, filenameChecksumPair.second);
+            } catch (IOException e) {
+                throw new BackupException("Failed to write metadata.", e);
+            }
+            // Store checksum for metadata
+            mChecksum.close();
+            // Encrypt checksum
+            try {
+                mBackupItem.encrypt(new Path[]{mChecksum.getFile()});
+            } catch (IOException e) {
+                throw new BackupException("Failed to encrypt checksums.txt", e);
+            }
+            // Replace current backup
+            try {
+                backupItem.commit();
+            } catch (IOException e) {
+                throw new BackupException("Could not finalise backup.", e);
+            }
+            backupSuccess = true;
+        } catch (BackupException e) {
+            throw e;
+        } catch (Throwable th) {
+            throw new BackupException("Unknown error occurred.", th);
+        } finally {
+            backupItem.cleanup();
+            if (backupSuccess) {
+                BackupUtils.putBackupToDbAndBroadcast(ContextUtils.getContext(), mDestMetadata);
+            }
         }
     }
 

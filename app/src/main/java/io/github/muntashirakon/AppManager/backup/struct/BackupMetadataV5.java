@@ -11,8 +11,8 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 import android.annotation.UserIdInt;
 import android.content.Context;
 import android.os.Build;
-import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.format.Formatter;
 
 import androidx.annotation.NonNull;
@@ -26,11 +26,9 @@ import java.util.Locale;
 import java.util.Objects;
 
 import aosp.libcore.util.HexEncoding;
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.BackupItems;
-import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.crypto.AESCrypto;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
@@ -52,7 +50,11 @@ import io.github.muntashirakon.util.LocalizedString;
 
 public class BackupMetadataV5 implements LocalizedString {
     public static class Info implements IJsonSerializer {
-        public BackupItems.BackupItem backupItem; // This isn't part of the json file and for internal use only
+        /**
+         * Relative location of the backup from the AppManager directory, internal use only.
+         */
+        private String mRelativeDir;
+        public BackupItems.BackupItem mBackupItem; // This isn't part of the json file and for internal use only
 
         /**
          * Metadata version.
@@ -66,8 +68,6 @@ public class BackupMetadataV5 implements LocalizedString {
          * </ul>
          */
         public final int version;  // version
-        @NonNull
-        public final String backupName;  // backup_name
         public final long backupTime;  // backup_time
         @NonNull
         public final BackupFlags flags;  // flags
@@ -92,8 +92,7 @@ public class BackupMetadataV5 implements LocalizedString {
         @Nullable
         private Crypto mCrypto;
 
-        public Info(@NonNull String backupName,
-                    long backupTime,
+        public Info(long backupTime,
                     @NonNull BackupFlags flags,
                     @UserIdInt int userId,
                     @TarUtils.TarType @NonNull String tarType,
@@ -103,7 +102,6 @@ public class BackupMetadataV5 implements LocalizedString {
                     @Nullable byte[] aes,
                     @Nullable String keyIds) {
             this.version = CURRENT_BACKUP_META_VERSION;
-            this.backupName = backupName;
             this.backupTime = backupTime;
             this.flags = flags;
             this.userId = userId;
@@ -118,7 +116,6 @@ public class BackupMetadataV5 implements LocalizedString {
 
         public Info(@NonNull JSONObject rootObject) throws JSONException {
             this.version = rootObject.getInt("version");
-            this.backupName = rootObject.getString("backup_name");
             this.backupTime = rootObject.getLong("backup_time");
             this.flags = new BackupFlags(rootObject.getInt("flags"));
             this.userId = rootObject.getInt("user_handle");
@@ -133,6 +130,18 @@ public class BackupMetadataV5 implements LocalizedString {
             verifyCrypto();
         }
 
+        public void setBackupItem(@NonNull BackupItems.BackupItem backupItem) {
+            mBackupItem = backupItem;
+            mRelativeDir = backupItem.getRelativeDir();
+        }
+
+        public BackupItems.BackupItem getBackupItem() {
+            return mBackupItem;
+        }
+
+        public String getRelativeDir() {
+            return mRelativeDir;
+        }
 
         // Get crypto only works when crypto is already setup.
         public Crypto getCrypto() throws CryptoException {
@@ -143,16 +152,12 @@ public class BackupMetadataV5 implements LocalizedString {
         }
 
         public long getBackupSize() {
-            if (backupItem == null) return 0L;
-            return Paths.size(backupItem.getBackupPath());
-        }
-
-        public boolean isBaseBackup() {
-            return String.valueOf(UserHandleHidden.myUserId()).equals(backupName);
+            if (mBackupItem == null) return 0L;
+            return Paths.size(mBackupItem.getBackupPath());
         }
 
         public boolean isFrozen() {
-            return backupItem != null && backupItem.isFrozen();
+            return mBackupItem != null && mBackupItem.isFrozen();
         }
 
         private void verifyCrypto() {
@@ -221,7 +226,6 @@ public class BackupMetadataV5 implements LocalizedString {
         @Override
         public JSONObject serializeToJson() throws JSONException {
             JSONObject rootObject = new JSONObject();
-            rootObject.put("backup_name", backupName);
             rootObject.put("backup_time", backupTime);
             rootObject.put("checksum_algo", checksumAlgo);
             rootObject.put("crypto", crypto);
@@ -241,6 +245,8 @@ public class BackupMetadataV5 implements LocalizedString {
     public static class Metadata implements IJsonSerializer {
         // For backward compatibility only
         public final int version;  // version
+        @Nullable
+        public final String backupName;  // backup_name
         public boolean hasRules;  // has_rules
         public String label;  // label
         public String packageName;  // package_name
@@ -253,14 +259,17 @@ public class BackupMetadataV5 implements LocalizedString {
         public String apkName;  // apk_name
         public String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);  // instruction_set
         public boolean keyStore;  // key_store
+        @Nullable
         public String installer;  // installer
 
-        public Metadata() {
+        public Metadata(@Nullable String backupName) {
             this.version = CURRENT_BACKUP_META_VERSION;
+            this.backupName = backupName;
         }
 
         public Metadata(@NonNull Metadata metadata) {
             version = metadata.version;
+            backupName = metadata.backupName;
             label = metadata.label;
             packageName = metadata.packageName;
             versionName = metadata.versionName;
@@ -282,6 +291,7 @@ public class BackupMetadataV5 implements LocalizedString {
 
         public Metadata(@NonNull JSONObject rootObject) throws JSONException {
             version = rootObject.getInt("version");
+            backupName = JSONUtils.optString(rootObject, "backup_name");
             label = rootObject.getString("label");
             packageName = rootObject.getString("package_name");
             versionName = rootObject.getString("version_name");
@@ -294,13 +304,15 @@ public class BackupMetadataV5 implements LocalizedString {
             apkName = rootObject.getString("apk_name");
             instructionSet = rootObject.getString("instruction_set");
             keyStore = rootObject.getBoolean("key_store");
-            installer = JSONUtils.getString(rootObject, "installer", BuildConfig.APPLICATION_ID);
+            installer = JSONUtils.optString(rootObject, "installer");
         }
 
         @NonNull
         @Override
         public JSONObject serializeToJson() throws JSONException {
             JSONObject rootObject = new JSONObject();
+            rootObject.put("version", version);
+            rootObject.put("backup_name", backupName);
             rootObject.put("label", label);
             rootObject.put("package_name", packageName);
             rootObject.put("version_name", versionName);
@@ -310,7 +322,6 @@ public class BackupMetadataV5 implements LocalizedString {
             rootObject.put("is_split_apk", isSplitApk);
             rootObject.put("split_configs", JSONUtils.getJSONArray(splitConfigs));
             rootObject.put("has_rules", hasRules);
-            rootObject.put("version", version);
             rootObject.put("apk_name", apkName);
             rootObject.put("instruction_set", instructionSet);
             rootObject.put("key_store", keyStore);
@@ -329,13 +340,15 @@ public class BackupMetadataV5 implements LocalizedString {
         this.metadata = metadata;
     }
 
+    public boolean isBaseBackup() {
+        return TextUtils.isEmpty(metadata.backupName);
+    }
 
     @Override
     @NonNull
     @WorkerThread
     public CharSequence toLocalizedString(@NonNull Context context) {
-        String shortName = BackupUtils.getShortBackupName(info.backupName);
-        CharSequence titleText = shortName == null ? context.getText(R.string.base_backup) : shortName;
+        CharSequence titleText = isBaseBackup() ? context.getText(R.string.base_backup) : metadata.backupName;
 
         StringBuilder subtitleText = new StringBuilder()
                 .append(DateUtils.formatDateTime(context, info.backupTime))

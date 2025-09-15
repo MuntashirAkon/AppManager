@@ -86,12 +86,10 @@ public class RestoreSingleFragment extends Fragment {
             freezeMenuItem.setOnMenuItemClickListener(item -> {
                 List<BackupMetadataV5> selectedBackups = adapter.getSelectedBackups();
                 for (BackupMetadataV5 metadata : selectedBackups) {
-                    if (metadata.info.backupItem != null) {
-                        try {
-                            metadata.info.backupItem.freeze();
-                            ++adapter.mFrozenBackupSelectionCount;
-                        } catch (IOException ignore) {
-                        }
+                    try {
+                        metadata.info.getBackupItem().freeze();
+                        ++adapter.mFrozenBackupSelectionCount;
+                    } catch (IOException ignore) {
                     }
                 }
                 adapter.notifyItemRangeChanged(0, adapter.getItemCount(), AdapterUtils.STUB);
@@ -100,12 +98,10 @@ public class RestoreSingleFragment extends Fragment {
             unfreezeMenuItem.setOnMenuItemClickListener(item -> {
                 List<BackupMetadataV5> selectedBackups = adapter.getSelectedBackups();
                 for (BackupMetadataV5 metadata : selectedBackups) {
-                    if (metadata.info.backupItem != null) {
-                        try {
-                            metadata.info.backupItem.unfreeze();
-                            --adapter.mFrozenBackupSelectionCount;
-                        } catch (IOException ignore) {
-                        }
+                    try {
+                        metadata.info.getBackupItem().unfreeze();
+                        --adapter.mFrozenBackupSelectionCount;
+                    } catch (IOException ignore) {
                     }
                 }
                 adapter.notifyItemRangeChanged(0, adapter.getItemCount(), AdapterUtils.STUB);
@@ -142,7 +138,7 @@ public class RestoreSingleFragment extends Fragment {
                     operationInfo.mode = BackupRestoreDialogFragment.MODE_RESTORE;
                     operationInfo.op = BatchOpsManager.OP_RESTORE_BACKUP;
                     operationInfo.flags = enabledFlags.getFlags();
-                    operationInfo.backupNames = new String[]{selectedBackup.info.backupName};
+                    operationInfo.backupNames = new String[]{selectedBackup.metadata.backupName};
                     mViewModel.prepareForOperation(operationInfo);
                 })
                 .setNegativeButton(R.string.cancel, null)
@@ -157,7 +153,7 @@ public class RestoreSingleFragment extends Fragment {
                 .setPositiveButton(R.string.yes, (dialog, which) -> {
                     List<String> newBackupNames = new ArrayList<>(selectedBackups.size());
                     for (BackupMetadataV5 backup : selectedBackups) {
-                        newBackupNames.add(backup.info.backupName);
+                        newBackupNames.add(backup.metadata.backupName);
                     }
                     BackupRestoreDialogViewModel.OperationInfo operationInfo = new BackupRestoreDialogViewModel.OperationInfo();
                     operationInfo.mode = BackupRestoreDialogFragment.MODE_DELETE;
@@ -193,7 +189,7 @@ public class RestoreSingleFragment extends Fragment {
             for (int i = 0; i < backups.size(); ++i) {
                 BackupMetadataV5 backup = backups.get(i);
                 mBackups.add(backup);
-                if (backup.info.isBaseBackup()) {
+                if (backup.isBaseBackup()) {
                     mSelectedPositions.add(i);
                     if (backup.info.isFrozen()) {
                         ++mFrozenBackupSelectionCount;

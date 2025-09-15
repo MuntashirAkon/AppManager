@@ -10,7 +10,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 
-class BackupInfo {
+public class BackupInfo {
     @NonNull
     public final String packageName;
     @NonNull

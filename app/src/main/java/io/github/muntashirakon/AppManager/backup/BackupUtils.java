@@ -15,6 +15,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.annotation.WorkerThread;
 
+import org.jetbrains.annotations.Contract;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,6 +52,72 @@ public final class BackupUtils {
         return UUID_PATTERN.matcher(name).matches();
     }
 
+    @Nullable
+    @Contract("!null -> !null")
+    public static String getCompatBackupName(@Nullable String backupName) {
+        if (MetadataManager.CURRENT_BACKUP_META_VERSION >= 5) {
+            return backupName;
+        }
+        return getV4SanitizedBackupName(backupName);
+    }
+
+    @NonNull
+    public static String getV4BackupName(@UserIdInt int userId, @Nullable String backupName) {
+        if (backupName == null) {
+            return String.valueOf(userId);
+        }
+        // For v4 and earlier, backup name is used as a filename. So, necessary sanitization may be
+        // required.
+        return userId + "_" + getV4SanitizedBackupName(backupName);
+    }
+
+    @Nullable
+    @Contract("!null -> !null")
+    public static String getV4SanitizedBackupName(@Nullable String backupName) {
+        if (backupName == null) {
+            return null;
+        }
+        // [\\/:?"<>|\s]
+        return backupName.trim().replaceAll("[\\\\/:?\"<>|\\s]+", "_");
+    }
+
+    @NonNull
+    public static String getV4RelativeDir(@NonNull String backupNameWithUser, @NonNull String packageName) {
+        // Relative directory needs to be inferred: {packageName}/{backupNameWithUser}
+        // where backupNameWithUser = {userid}[_{backup_name}]
+        return packageName + File.separator + backupNameWithUser;
+    }
+
+    @NonNull
+    public static String getV4RelativeDir(@UserIdInt int userId, @Nullable String backupName, @NonNull String packageName) {
+        // Relative directory needs to be inferred: {packageName}/{backupName}
+        // where backupName = {userid}[_{backup_name}]
+        return packageName + File.separator + getV4BackupName(userId, backupName);
+    }
+
+    @Nullable
+    public static String getRealBackupName(int backupVersion, @Nullable String backupNameWithUserId) {
+        if (backupVersion >= 5) {
+            return backupNameWithUserId;
+        } else {
+            // v4 or earlier backup: {userid}[_{backup_name}]
+            if (backupNameWithUserId == null || TextUtils.isDigitsOnly(backupNameWithUserId)) {
+                // It's only a user ID
+                return null;
+            } else {
+                int firstUnderscore = backupNameWithUserId.indexOf('_');
+                if (firstUnderscore != -1) {
+                    // Found an underscore
+                    String userHandle = backupNameWithUserId.substring(0, firstUnderscore);
+                    if (TextUtils.isDigitsOnly(userHandle)) {
+                        return backupNameWithUserId.substring(firstUnderscore + 1);
+                    }
+                }
+                throw new IllegalArgumentException("Invalid backup name " + backupNameWithUserId);
+            }
+        }
+    }
+
     public static String getReadableTarType(@TarUtils.TarType String tarType) {
         int i = ArrayUtils.indexOf(TAR_TYPES, tarType);
         if (i == -1) {
@@ -69,7 +138,7 @@ public final class BackupUtils {
             Backup latestBackup = null;
             Backup backup;
             for (BackupMetadataV5 metadataV5 : metadataList) {
-                backup = Backup.fromBackupInfoAndMeta(metadataV5.info, metadataV5.metadata);
+                backup = Backup.fromBackupMetadataV5(metadataV5);
                 backups.add(backup);
                 if (latestBackup == null || backup.backupTime > latestBackup.backupTime) {
                     latestBackup = backup;
@@ -110,14 +179,14 @@ public final class BackupUtils {
             return;
         }
         AppDb appDb = new AppDb();
-        appDb.insert(Backup.fromBackupInfoAndMeta(metadata.info, metadata.metadata));
+        appDb.insert(Backup.fromBackupMetadataV5(metadata));
         appDb.updateApplication(context, metadata.metadata.packageName);
         BroadcastUtils.sendDbPackageAltered(context, new String[]{metadata.metadata.packageName});
     }
 
     public static void deleteBackupToDbAndBroadcast(@NonNull Context context, @NonNull BackupMetadataV5 metadata) {
         AppDb appDb = new AppDb();
-        appDb.deleteBackup(Backup.fromBackupInfoAndMeta(metadata.info, metadata.metadata));
+        appDb.deleteBackup(Backup.fromBackupMetadataV5(metadata));
         appDb.updateApplication(context, metadata.metadata.packageName);
         BroadcastUtils.sendDbPackageAltered(context, new String[]{metadata.metadata.packageName});
     }
@@ -170,7 +239,7 @@ public final class BackupUtils {
                 //noinspection ConstantConditions
                 backupMetadata.get(metadata.packageName).add(metadataV5);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.w(TAG, "Invalid backup: %s", e, backupItem.getRelativeDir());
             }
         }
         return backupMetadata;

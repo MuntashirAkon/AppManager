@@ -48,12 +48,8 @@ public final class MetadataManager {
         }
         try {
             jsonObject = new JSONObject(infoString);
-            if (!v5AndUp) {
-                // Info is a subset of meta_v2.am.json except for backup_name (format: <user_id>[_<backup_name>])
-                jsonObject.put("backup_name", backupItem.backupName);
-            }
             BackupMetadataV5.Info info = new BackupMetadataV5.Info(jsonObject);
-            info.backupItem = backupItem;
+            info.setBackupItem(backupItem);
             return info;
         } catch (JSONException e) {
             throw new IOException(e.getMessage() + " for path " + infoFile, e);
@@ -72,12 +68,12 @@ public final class MetadataManager {
     public static BackupMetadataV5 readMetadataV5(@NonNull BackupItems.BackupItem backupItem,
                                                   @NonNull BackupMetadataV5.Info backupInfo)
             throws IOException {
-        boolean isV5AndLater = backupItem.isV5AndUp();
-        if (isV5AndLater) {
+        boolean v5AndUp = backupItem.isV5AndUp();
+        if (v5AndUp) {
             // Need to setup crypto in order to decrypt meta_v5.am.json
             setCrypto(backupItem, backupInfo);
         }
-        Path metadataFile = isV5AndLater ? backupItem.getMetadataV5File() : backupItem.getMetadataV2File();
+        Path metadataFile = v5AndUp ? backupItem.getMetadataV5File() : backupItem.getMetadataV2File();
         String metadataString = metadataFile.getContentAsString();
         JSONObject jsonObject;
         if (TextUtils.isEmpty(metadataString)) {
@@ -85,6 +81,10 @@ public final class MetadataManager {
         }
         try {
             jsonObject = new JSONObject(metadataString);
+            if (!v5AndUp) {
+                // Meta is a subset of meta_v2.am.json except for backup_name
+                jsonObject.put("backup_name", backupItem.getBackupName());
+            }
             BackupMetadataV5.Metadata metadata = new BackupMetadataV5.Metadata(jsonObject);
             return new BackupMetadataV5(backupInfo, metadata);
         } catch (JSONException e) {

@@ -194,13 +194,15 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
             // Fetch backup info
             List<BackupMetadataV5> metadataList = new ArrayList<>();
             for (Backup backup : backups) {
+                BackupMetadataV5 metadata;
                 try {
-                    metadataList.add(backup.getItem().getMetadata());
+                    metadata = backup.getItem().getMetadata();
+                    metadataList.add(metadata);
                 } catch (IOException e) {
                     // Not found
                     continue;
                 }
-                if (backup.isBaseBackup()) {
+                if (metadata.isBaseBackup()) {
                     backupInfo.setHasBaseBackup(true);
                 }
             }
@@ -291,7 +293,7 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
                 if (backupInfo.hasBaseBackup()) {
                     hasBaseBackup = true;
                     for (BackupMetadataV5 metadata : backupInfo.getBackupMetadataList()) {
-                        if (metadata.info.isBaseBackup()) {
+                        if (metadata.isBaseBackup()) {
                             mWorstBackupFlag &= metadata.info.flags.getFlags();
                         }
                     }

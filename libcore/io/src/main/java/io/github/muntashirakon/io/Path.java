@@ -259,6 +259,24 @@ public abstract class Path implements Comparable<Path> {
     public abstract Path findFile(@NonNull String displayName) throws FileNotFoundException;
 
     /**
+     * Return the file denoted by this abstract name in this file. File name
+     * can be either case-sensitive or case-insensitive depending on the file
+     * provider.
+     *
+     * @param displayName Display name for the file with extension and/or
+     *                    file separator if applicable.
+     * @return The first file that matches the name, {@code null} otherwise.
+     */
+    @Nullable
+    public Path findFileOrNull(@NonNull String displayName) {
+        try {
+            return findFile(displayName);
+        } catch (FileNotFoundException ignore) {
+            return null;
+        }
+    }
+
+    /**
      * Return a file that is a direct child of this directory, creating if necessary.
      *
      * @param displayName Display name for the file with or without extension.

@@ -44,7 +44,7 @@ public class BackupManagerTest {
         UserPackagePair pair = new UserPackagePair("dnsfilter.android", 0);
         BackupManager bm = new BackupManager(pair, 1110);
         bm.backup(null, null);
-        BackupItems.BackupItem backupItem = BackupItems.findBackupItem("0", "dnsfilter.android", null);
+        BackupItems.BackupItem backupItem = BackupItems.findBackupItemV4(0, null, "dnsfilter.android");
         assertEquals(1, backupItem.getSourceFiles().length);
         assertEquals(1, backupItem.getDataFiles(0).length);
         assertEquals(1, backupItem.getDataFiles(1).length);
@@ -52,10 +52,10 @@ public class BackupManagerTest {
         assertFalse(backupItem.isV5AndUp());
         assertTrue(backupItem.getMetadataV2File().exists());
         BackupMetadataV5 metadata = backupItem.getMetadata();
-        assertEquals("0", metadata.info.backupName);
+        assertNull(metadata.metadata.backupName);
         assertEquals(0, metadata.info.userId);
         assertEquals(MetadataManager.CURRENT_BACKUP_META_VERSION, metadata.info.version);
-        assertTrue(metadata.info.isBaseBackup());
+        assertTrue(metadata.isBaseBackup());
         assertEquals("dnsfilter.android", metadata.metadata.packageName);
         assertEquals(2, metadata.metadata.dataDirs.length);
         assertEquals(BuildConfig.APPLICATION_ID, metadata.metadata.installer);
@@ -74,7 +74,7 @@ public class BackupManagerTest {
         BackupManager bm = new BackupManager(pair, 1110 | BackupFlags.BACKUP_MULTIPLE);
         bm.backup(new String[]{"test_backup"}, null);
         System.out.println(Arrays.toString(Prefs.Storage.getAppManagerDirectory().findFile("dnsfilter.android").listFileNames()));
-        BackupItems.BackupItem backupItem = BackupItems.findBackupItem("0_test_backup", "dnsfilter.android", null);
+        BackupItems.BackupItem backupItem = BackupItems.findBackupItemV4(0, "test_backup", "dnsfilter.android");
         assertEquals(1, backupItem.getSourceFiles().length);
         assertEquals(1, backupItem.getDataFiles(0).length);
         assertEquals(1, backupItem.getDataFiles(1).length);
@@ -82,10 +82,10 @@ public class BackupManagerTest {
         assertFalse(backupItem.isV5AndUp());
         assertTrue(backupItem.getMetadataV2File().exists());
         BackupMetadataV5 metadata = backupItem.getMetadata();
-        assertEquals("0_test_backup", metadata.info.backupName);
+        assertEquals("test_backup", metadata.metadata.backupName);
         assertEquals(0, metadata.info.userId);
         assertEquals(MetadataManager.CURRENT_BACKUP_META_VERSION, metadata.info.version);
-        assertFalse(metadata.info.isBaseBackup());
+        assertFalse(metadata.isBaseBackup());
         assertEquals("dnsfilter.android", metadata.metadata.packageName);
         assertEquals(2, metadata.metadata.dataDirs.length);
         assertEquals(BuildConfig.APPLICATION_ID, metadata.metadata.installer);
@@ -179,7 +179,7 @@ public class BackupManagerTest {
         assertTrue(amDir.exists());
         UserPackagePair pair = new UserPackagePair("dnsfilter.android", 0);
         BackupManager bm = new BackupManager(pair, 1110);
-        assertThrows(BackupException.class, () -> bm.deleteBackup(new String[]{"test"}));
+        assertThrows(IllegalArgumentException.class, () -> bm.deleteBackup(new String[]{"test"}));
         assertTrue(amDir.exists());
         Path appBackupPath = amDir.findFile("dnsfilter.android");
         appBackupPath.findFile("0");

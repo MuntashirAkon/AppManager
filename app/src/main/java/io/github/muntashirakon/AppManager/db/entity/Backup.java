@@ -2,10 +2,10 @@
 
 package io.github.muntashirakon.AppManager.db.entity;
 
-import android.os.UserHandleHidden;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
@@ -14,6 +14,7 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.backup.BackupItems;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
+import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
 import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
@@ -72,23 +73,28 @@ public class Backup {
     public boolean hasKeyStore;
 
     @ColumnInfo(name = "installer_app")
+    @Nullable
     public String installer;
 
     @ColumnInfo(name = "info_hash")
-    public String uuid;
+    public String relativeDir;
 
     public BackupFlags getFlags() {
         return new BackupFlags(flags);
     }
 
-    public boolean isBaseBackup() {
-        return String.valueOf(UserHandleHidden.myUserId()).equals(backupName);
-    }
-
     @NonNull
     public BackupItems.BackupItem getItem() throws IOException {
-        String backupUuid = TextUtils.isEmpty(uuid) ? null : uuid;
-        return BackupItems.findBackupItem(backupName, packageName, backupUuid);
+        String relativeDir;
+        if (TextUtils.isEmpty(this.relativeDir)) {
+            if (version >= 5) {
+                // In backup v5 onwards, relativeDir must be set
+                throw new IOException("relativeDir not set.");
+            }
+            // Relative directory needs to be inferred.
+            relativeDir = BackupUtils.getV4RelativeDir(userId, backupName, packageName);
+        } else relativeDir = this.relativeDir;
+        return BackupItems.findBackupItem(relativeDir);
     }
 
     @Override
@@ -96,19 +102,21 @@ public class Backup {
         if (this == o) return true;
         if (!(o instanceof Backup)) return false;
         Backup backup = (Backup) o;
-        return packageName.equals(backup.packageName) && backupName.equals(backup.backupName);
+        return packageName.equals(backup.packageName)
+                && userId == backup.userId
+                && backupName.equals(backup.backupName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(packageName, backupName);
+        return Objects.hash(packageName, userId, backupName);
     }
 
     @NonNull
     public static Backup fromBackupMetadata(@NonNull BackupMetadataV2 metadata) {
         Backup backup = new Backup();
         backup.packageName = metadata.packageName;
-        backup.backupName = metadata.backupName != null ? metadata.backupName : String.valueOf(metadata.userHandle);
+        backup.backupName = metadata.backupName != null ? metadata.backupName : "";
         backup.label = metadata.label;
         backup.versionName = metadata.versionName;
         backup.versionCode = metadata.versionCode;
@@ -123,15 +131,20 @@ public class Backup {
         backup.tarType = metadata.tarType;
         backup.hasKeyStore = metadata.keyStore;
         backup.installer = metadata.installer;
-        backup.uuid = "";
+        backup.relativeDir = metadata.backupItem.getRelativeDir();
         return backup;
+    }
+
+    @NonNull
+    public static Backup fromBackupMetadataV5(@NonNull BackupMetadataV5 metadata) {
+        return fromBackupInfoAndMeta(metadata.info, metadata.metadata);
     }
 
     @NonNull
     public static Backup fromBackupInfoAndMeta(@NonNull BackupMetadataV5.Info info, @NonNull BackupMetadataV5.Metadata metadata) {
         Backup backup = new Backup();
         backup.packageName = metadata.packageName;
-        backup.backupName = info.backupName;
+        backup.backupName = metadata.backupName != null ? metadata.backupName : "";
         backup.label = metadata.label;
         backup.versionName = metadata.versionName;
         backup.versionCode = metadata.versionCode;
@@ -146,7 +159,7 @@ public class Backup {
         backup.tarType = info.tarType;
         backup.hasKeyStore = metadata.keyStore;
         backup.installer = metadata.installer;
-        backup.uuid = "";
+        backup.relativeDir = info.getRelativeDir();
         return backup;
     }
 }
