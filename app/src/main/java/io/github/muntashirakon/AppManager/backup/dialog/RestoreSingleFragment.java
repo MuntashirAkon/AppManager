@@ -138,7 +138,7 @@ public class RestoreSingleFragment extends Fragment {
                     operationInfo.mode = BackupRestoreDialogFragment.MODE_RESTORE;
                     operationInfo.op = BatchOpsManager.OP_RESTORE_BACKUP;
                     operationInfo.flags = enabledFlags.getFlags();
-                    operationInfo.backupNames = new String[]{selectedBackup.metadata.backupName};
+                    operationInfo.relativeDirs = new String[]{selectedBackup.info.getRelativeDir()};
                     mViewModel.prepareForOperation(operationInfo);
                 })
                 .setNegativeButton(R.string.cancel, null)
@@ -151,14 +151,14 @@ public class RestoreSingleFragment extends Fragment {
                 .setMessage(R.string.are_you_sure)
                 .setNegativeButton(R.string.no, null)
                 .setPositiveButton(R.string.yes, (dialog, which) -> {
-                    List<String> newBackupNames = new ArrayList<>(selectedBackups.size());
+                    List<String> relativeDirs = new ArrayList<>(selectedBackups.size());
                     for (BackupMetadataV5 backup : selectedBackups) {
-                        newBackupNames.add(backup.metadata.backupName);
+                        relativeDirs.add(backup.info.getRelativeDir());
                     }
                     BackupRestoreDialogViewModel.OperationInfo operationInfo = new BackupRestoreDialogViewModel.OperationInfo();
                     operationInfo.mode = BackupRestoreDialogFragment.MODE_DELETE;
                     operationInfo.op = BatchOpsManager.OP_DELETE_BACKUP;
-                    operationInfo.backupNames = newBackupNames.toArray(new String[0]);
+                    operationInfo.relativeDirs = relativeDirs.toArray(new String[0]);
                     mViewModel.prepareForOperation(operationInfo);
                 })
                 .show();

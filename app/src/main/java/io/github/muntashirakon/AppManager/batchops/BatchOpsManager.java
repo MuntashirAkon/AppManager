@@ -338,6 +338,7 @@ public class BatchOpsManager {
         try {
             BatchBackupOptions options = Objects.requireNonNull((BatchBackupOptions) info.options);
             int max = info.size();
+            BackupManager backupManager = new BackupManager();
             for (int i = 0; i < max; ++i) {
                 UserPackagePair pair = info.getPair(i);
                 executor.submit(() -> {
@@ -348,9 +349,8 @@ public class BatchOpsManager {
                     CharSequence appLabel = PackageUtils.getPackageLabel(pm, pair.getPackageName(), pair.getUserId());
                     CharSequence title = context.getString(R.string.backing_up_app, appLabel);
                     ProgressHandler subProgressHandler = newSubProgress(operationName, title);
-                    BackupManager backupManager = BackupManager.getNewInstance(pair, options.getFlags());
                     try {
-                        backupManager.backup(options.getBackupNames(), subProgressHandler);
+                        backupManager.backup(options.getBackupOpOptions(pair.getPackageName(), pair.getUserId()), subProgressHandler);
                     } catch (BackupException e) {
                         log("====> op=BACKUP_RESTORE, mode=BACKUP pkg=" + pair, e);
                         failedPackages.add(pair);
@@ -380,6 +380,7 @@ public class BatchOpsManager {
         try {
             BatchBackupOptions options = Objects.requireNonNull((BatchBackupOptions) info.options);
             int max = info.size();
+            BackupManager backupManager = new BackupManager();
             for (int i = 0; i < max; ++i) {
                 UserPackagePair pair = info.getPair(i);
                 executor.submit(() -> {
@@ -390,9 +391,8 @@ public class BatchOpsManager {
                     CharSequence appLabel = PackageUtils.getPackageLabel(pm, pair.getPackageName(), pair.getUserId());
                     CharSequence title = context.getString(R.string.restoring_app, appLabel);
                     ProgressHandler subProgressHandler = newSubProgress(operationName, title);
-                    BackupManager backupManager = BackupManager.getNewInstance(pair, options.getFlags());
                     try {
-                        backupManager.restore(options.getBackupNames(), subProgressHandler);
+                        backupManager.restore(options.getRestoreOpOptions(pair.getPackageName(), pair.getUserId()), subProgressHandler);
                         requiresRestart.set(requiresRestart.get() | backupManager.requiresRestart());
                     } catch (Throwable e) {
                         log("====> op=BACKUP_RESTORE, mode=RESTORE pkg=" + pair, e);
@@ -419,13 +419,13 @@ public class BatchOpsManager {
         try {
             BatchBackupOptions options = Objects.requireNonNull((BatchBackupOptions) info.options);
             int max = info.size();
+            BackupManager backupManager = new BackupManager();
             UserPackagePair pair;
             for (int i = 0; i < max; ++i) {
                 updateProgress(lastProgress, i + 1);
                 pair = info.getPair(i);
-                BackupManager backupManager = BackupManager.getNewInstance(pair, options.getFlags());
                 try {
-                    backupManager.deleteBackup(options.getBackupNames());
+                    backupManager.deleteBackup(options.getDeleteOpOptions(pair.getPackageName(), pair.getUserId()));
                 } catch (BackupException e) {
                     log("====> op=BACKUP_RESTORE, mode=DELETE pkg=" + pair, e);
                     failedPackages.add(pair);

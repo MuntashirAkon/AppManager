@@ -30,7 +30,6 @@ import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.CpuUtils;
@@ -155,13 +154,13 @@ public class BackupTasksDialogFragment extends DialogFragment {
                     List<ApplicationItem> applicationItems = new ArrayList<>();
                     List<CharSequence> applicationLabels = new ArrayList<>();
                     Backup backup;
+                    BackupManager backupManager = new BackupManager();
                     for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), false, true)) {
                         if (ThreadUtils.isInterrupted()) return;
                         backup = item.backup;
                         if (backup == null || !item.isInstalled) continue;
                         try {
-                            BackupManager.getNewInstance(new UserPackagePair(item.packageName, backup.userId),
-                                    0).verify(backup.backupName);
+                            backupManager.verify(backup.relativeDir);
                         } catch (Throwable e) {
                             applicationItems.add(item);
                             applicationLabels.add(new SpannableStringBuilder(backup.label)
@@ -200,6 +199,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                     ignoredDirs.add("code_cache");
                     ignoredDirs.add("no_backup");
                     boolean hasUsageAccess = FeatureController.isUsageAccessEnabled() && SelfPermissions.checkUsageStatsPermission();
+                    BackupManager backupManager = new BackupManager();
                     Backup backup;
                     for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), false, true)) {
                         if (ThreadUtils.isInterrupted()) return;
@@ -218,7 +218,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                                 // 4. Check directory change
                                 || isDataDirectoryChanged(backup, ignoredDirs)
                                 // 5. Check integrity
-                                || !isVerified(item, backup)) {
+                                || !isVerified(backupManager, backup)) {
                             applicationItems.add(item);
                             applicationLabels.add(new SpannableStringBuilder().append(backup.label)
                                     .append(LangUtils.getSeparatorString())
@@ -269,10 +269,9 @@ public class BackupTasksDialogFragment extends DialogFragment {
         super.onDestroy();
     }
 
-    private boolean isVerified(@NonNull ApplicationItem item, @NonNull Backup backup) {
+    private boolean isVerified(@NonNull BackupManager backupManager, @NonNull Backup backup) {
         try {
-            BackupManager.getNewInstance(new UserPackagePair(item.packageName, backup.userId),
-                    0).verify(backup.backupName);
+            backupManager.verify(backup.relativeDir);
             return true;
         } catch (Throwable ignore) {
             return false;

@@ -3,34 +3,34 @@
 package io.github.muntashirakon.AppManager.self;
 
 import androidx.annotation.NonNull;
-import androidx.collection.ArrayMap;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 class Migration {
-    private final ArrayMap<Long, List<MigrationTask>> mMigrationTaskList = new ArrayMap<>();
+    private final List<MigrationTask> mMigrationTasks = new ArrayList<>();
 
     public void addTask(@NonNull MigrationTask migrationTask) {
-        List<MigrationTask> migrationTasks = mMigrationTaskList.get(migrationTask.toVersion);
-        if (migrationTasks == null) {
-            migrationTasks = new ArrayList<>();
-            mMigrationTaskList.put(migrationTask.toVersion, migrationTasks);
-        }
-        migrationTasks.add(migrationTask);
+        mMigrationTasks.add(migrationTask);
     }
 
-    public void migrate(long fromVersion, long toVersion) {
-        List<MigrationTask> migrationTasks = mMigrationTaskList.get(toVersion);
-        if (migrationTasks == null) {
+    public void migrate(long fromVersion) {
+        if (fromVersion == 0) {
+            // This is a new version, no migration needed
             return;
         }
+        List<MigrationTask> migrationTasks = mMigrationTasks.stream()
+                // Any tasks with toVersion > fromVersion hasn't been run yet
+                .filter(task -> task.toVersion > fromVersion)
+                // Migration performed in ascending order
+                .sorted(Comparator.comparingLong((MigrationTask task) -> task.fromVersion)
+                        .thenComparingLong(task -> task.toVersion))
+                .collect(Collectors.toList());
         for (MigrationTask migrationTask : migrationTasks) {
-            if (!migrationTask.shouldRunMigration(fromVersion)) {
-                continue;
-            }
             if (migrationTask.mainThread) {
                 ThreadUtils.postOnMainThread(migrationTask);
             } else migrationTask.run();

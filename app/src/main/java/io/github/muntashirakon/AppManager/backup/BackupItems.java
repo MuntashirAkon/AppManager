@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.DummyCrypto;
+import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Prefs;
@@ -56,36 +57,22 @@ public class BackupItems {
     }
 
     @NonNull
-    public static BackupItem findBackupItemV4(@UserIdInt int userId, @Nullable String backupName, @NonNull String packageName) throws FileNotFoundException {
-        return findBackupItem(BackupUtils.getV4RelativeDir(userId, backupName, packageName));
-    }
-
-    @NonNull
-    public static BackupItem findBackupItemV5(@NonNull String backupUuid) throws FileNotFoundException {
-        return findBackupItem(backupUuid);
-    }
-
-    @NonNull
-    public static BackupItem findOrCreateBackupItem(@UserIdInt int userId, @Nullable String backupName, @Nullable String packageName, @Nullable String backupUuid) throws IOException {
+    public static BackupItem findOrCreateBackupItem(@UserIdInt int userId, @Nullable String backupName, @Nullable String packageName) throws IOException {
         if (MetadataManager.CURRENT_BACKUP_META_VERSION < 5 && packageName == null) {
             throw new IllegalArgumentException("packageName must be set for meta version 4 and earlier");
         }
         Path backupPath;
-        BackupItem previousV4Backup = null;
-        if (backupUuid != null || MetadataManager.CURRENT_BACKUP_META_VERSION >= 5) {
-            //noinspection ConstantValue
-            if (backupUuid == null) {
-                // When switching from v4 to v5 backups
-                backupUuid = UUID.randomUUID().toString();
+        List<BackupItem> previousBackupItems = null;
+        if (MetadataManager.CURRENT_BACKUP_META_VERSION >= 5) {
+            List<Backup> previousBackups = BackupUtils.retrieveBackupFromDb(userId, backupName, packageName);
+            if (!previousBackups.isEmpty()) {
+                previousBackupItems = new ArrayList<>(previousBackups.size());
+                for (Backup backup : previousBackups) {
+                    previousBackupItems.add(backup.getItem());
+                }
             }
-            Path baseDir = getBaseDirectory();
-            boolean exists = baseDir.hasFile(backupUuid);
-            backupPath = baseDir.findOrCreateDirectory(backupUuid);
-            //noinspection ConstantValue
-            if (!exists && packageName != null) {
-                // There may be a previous v4 backup which may need to be deleted
-                previousV4Backup = getPreviousV4Backup(userId, backupName, packageName);
-            }
+            String backupUuid = UUID.randomUUID().toString();
+            backupPath = getBaseDirectory().findOrCreateDirectory(backupUuid);
         } else {
             backupPath = getBaseDirectory()
                     .findOrCreateDirectory(packageName)
@@ -93,7 +80,7 @@ public class BackupItems {
         }
         BackupItem backupItem = new BackupItem(backupPath, true);
         backupItem.setBackupName(BackupUtils.getCompatBackupName(backupName));
-        backupItem.setPreviousV4Backup(previousV4Backup);
+        backupItem.setPreviousBackups(previousBackupItems);
         return backupItem;
     }
 
@@ -119,18 +106,6 @@ public class BackupItems {
         BackupItem backupItem = new BackupItem(backupPath, true);
         backupItem.setBackupName(BackupUtils.getCompatBackupName(backupName));
         return backupItem;
-    }
-
-    @Nullable
-    private static BackupItem getPreviousV4Backup(@UserIdInt int userId, @Nullable String backupName, @NonNull String packageName) {
-        Path baseDir = getBaseDirectory();
-        // Format: {packagename}/{userid}[_{backup_name}]
-        Path pkgDir = baseDir.findFileOrNull(packageName);
-        if (pkgDir == null) {
-            return null;
-        }
-        Path backupPath = pkgDir.findFileOrNull(BackupUtils.getV4BackupName(userId, backupName));
-        return backupPath != null ? new BackupItem(backupPath) : null;
     }
 
     @NonNull
@@ -218,7 +193,7 @@ public class BackupItems {
         private final List<Path> mTemporaryFiles = new ArrayList<>();
         private Path mTempUnencyptedPath;
         @Nullable
-        private BackupItem mPreviousV4Backup;
+        private List<BackupItem> mPreviousBackups;
 
         private BackupItem(@NonNull Path backupPath, boolean backupMode) throws IOException {
             mBackupPath = backupPath;
@@ -266,8 +241,8 @@ public class BackupItems {
             return BackupUtils.getRealBackupName(4, mBackupPath.getName());
         }
 
-        public void setPreviousV4Backup(@Nullable BackupItem previousV4Backup) {
-            mPreviousV4Backup = previousV4Backup;
+        public void setPreviousBackups(@Nullable List<BackupItem> previousBackups) {
+            mPreviousBackups = previousBackups;
         }
 
         public String getRelativeDir() {
@@ -508,9 +483,11 @@ public class BackupItems {
                 if (!mTempBackupPath.moveTo(mBackupPath)) {
                     throw new IOException("Could not move " + mTempBackupPath + " to " + mBackupPath);
                 }
-                if (mPreviousV4Backup != null) {
-                    if (!mPreviousV4Backup.delete()) {
-                        throw new IOException("Could not delete " + mPreviousV4Backup.mBackupPath);
+                if (mPreviousBackups != null) {
+                    for (BackupItem previousBackup : mPreviousBackups) {
+                        if (!previousBackup.delete()) {
+                            Log.w(TAG, "Could not delete %s", previousBackup.mBackupPath);
+                        }
                     }
                 }
                 mBackupSuccess = true;
@@ -544,6 +521,14 @@ public class BackupItems {
 
         public boolean delete() {
             if (mBackupPath.exists()) {
+                if (!isV5AndUp()) {
+                    // For v4 and earlier, delete parent if it's the last one.
+                    Path parent = mBackupPath.requireParent();
+                    if (parent.listFiles().length == 1) {
+                        // Also deletes children
+                        return parent.delete();
+                    }
+                }
                 return mBackupPath.delete();
             }
             return true;  // The backup path doesn't exist anyway
@@ -553,51 +538,6 @@ public class BackupItems {
         private Path getFreezeFile() throws FileNotFoundException {
             return getBackupPath().findFile(FREEZE);
         }
-    }
-
-    @NonNull
-    private final String mPackageName;
-    private final int mUserId;
-    @NonNull
-    private final String[] mBackupNames;
-
-    /**
-     * Create and handle {@link BackupItem}.
-     *
-     * @param packageName Name of the package whose backups has to be managed
-     * @param userId      To whom the package belong
-     * @param backupNames Name of the backups. If {@code null}, user handle will be used. If not
-     *                    null, the backup names will have the format {@code userHandle_backupName}.
-     */
-    public BackupItems(@NonNull String packageName, int userId, @Nullable String[] backupNames) throws IOException {
-        mPackageName = packageName;
-        mUserId = userId;
-        if (backupNames == null) {
-            mBackupNames = new String[]{null};
-        } else {
-            mBackupNames = backupNames;
-        }
-    }
-
-    @NonNull
-    public String getPackageName() {
-        return mPackageName;
-    }
-
-    public BackupItem[] getOrCreateItems() throws IOException {
-        BackupItem[] backupItems = new BackupItem[mBackupNames.length];
-        for (int i = 0; i < mBackupNames.length; ++i) {
-            backupItems[i] = findOrCreateBackupItem(mUserId, mBackupNames[i], mPackageName, null);
-        }
-        return backupItems;
-    }
-
-    public BackupItem[] createItemsGracefully() throws IOException {
-        BackupItem[] backupItems = new BackupItem[mBackupNames.length];
-        for (int i = 0; i < mBackupNames.length; ++i) {
-            backupItems[i] = createBackupItemGracefully(mUserId, mBackupNames[i], mPackageName);
-        }
-        return backupItems;
     }
 
     public static class Checksum implements Closeable {

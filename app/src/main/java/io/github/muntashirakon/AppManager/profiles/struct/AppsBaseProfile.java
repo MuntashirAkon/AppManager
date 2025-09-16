@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.profiles.struct;
 
 import android.app.AppOpsManager;
 import android.content.Context;
-import android.os.UserHandleHidden;
 import android.text.TextUtils;
 
 import androidx.annotation.CallSuper;
@@ -264,17 +263,13 @@ public abstract class AppsBaseProfile extends BaseProfile {
         if (backupInfo != null) {
             log(logger, "====> Started backup/restore.");
             BackupFlags backupFlags = new BackupFlags(backupInfo.flags);
-            String[] backupNames = null;
+            String[] backupNames;
             if (backupFlags.backupMultiple() && backupInfo.name != null) {
-                if (state.equals(BaseProfile.STATE_OFF)) {
-                    backupNames = new String[]{UserHandleHidden.myUserId() + '_' + backupInfo.name};
-                } else {
-                    backupNames = new String[]{backupInfo.name};
-                }
-            }
+                backupNames = new String[]{backupInfo.name};
+            } else backupNames = null;
             // Always add backup custom users
             backupFlags.addFlag(BackupFlags.BACKUP_CUSTOM_USERS);
-            BatchBackupOptions options = new BatchBackupOptions(backupFlags.getFlags(), backupNames);
+            BatchBackupOptions options = new BatchBackupOptions(backupFlags.getFlags(), backupNames, null);
             int op;
             switch (state) {
                 case BaseProfile.STATE_ON:  // Take backup

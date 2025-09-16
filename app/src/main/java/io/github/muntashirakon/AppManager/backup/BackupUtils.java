@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
@@ -206,6 +207,57 @@ public final class BackupUtils {
             }
         }
         return validatedBackups;
+    }
+
+    @NonNull
+    public static List<Backup> retrieveBackupFromDb(@UserIdInt int userId,
+                                                    @Nullable String backupName,
+                                                    @NonNull String packageName) {
+        List<Backup> backups = getBackupMetadataFromDbNoLockValidate(packageName);
+        if (backupName == null) {
+            backupName = "";
+        }
+        backupName = getV4SanitizedBackupName(backupName);
+        List<Backup> backupList = new ArrayList<>();
+        for (Backup backup : backups) {
+            if (backup.userId != userId) {
+                continue;
+            }
+            if (!Objects.equals(backupName, getV4SanitizedBackupName(backup.backupName))) {
+                continue;
+            }
+            backupList.add(backup);
+        }
+        return backupList;
+    }
+
+    @Nullable
+    public static Backup retrieveLatestBackupFromDb(@UserIdInt int userId,
+                                                    @Nullable String backupName,
+                                                    @NonNull String packageName) {
+        List<Backup> backups = getBackupMetadataFromDbNoLockValidate(packageName);
+        if (backupName == null) {
+            backupName = "";
+        }
+        backupName = getV4SanitizedBackupName(backupName);
+        for (Backup backup : backups) {
+            if (backup.userId == userId && Objects.equals(backupName, getV4SanitizedBackupName(backup.backupName))) {
+                return backup;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public static Backup retrieveBaseBackupFromDb(@UserIdInt int userId,
+                                                  @NonNull String packageName) {
+        List<Backup> backups = getBackupMetadataFromDbNoLockValidate(packageName);
+        for (Backup backup : backups) {
+            if (backup.userId == userId && TextUtils.isEmpty(backup.backupName)) {
+                return backup;
+            }
+        }
+        return null;
     }
 
     @WorkerThread
