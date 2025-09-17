@@ -24,22 +24,20 @@ import io.github.muntashirakon.AppManager.utils.ExUtils;
  * file location. Although the help page of the command include an -f switch for file, it actually does not work with
  * the command and only intended for ADB itself.
  */
-public class BackupCompat {
-    private final IBackupManager mBackupManager;
+public final class BackupCompat {
 
-    public BackupCompat() {
-        mBackupManager = getBackupManager();
+    private BackupCompat() {
     }
 
     /**
      * @see IBackupManager#setBackupEnabledForUser(int, boolean)
      */
-    public void setBackupEnabledForUser(@UserIdInt int userId, boolean isEnabled) {
+    public static void setBackupEnabledForUser(@UserIdInt int userId, boolean isEnabled) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                mBackupManager.setBackupEnabledForUser(userId, isEnabled);
+                getBackupManager().setBackupEnabledForUser(userId, isEnabled);
             } else {
-                mBackupManager.setBackupEnabled(isEnabled);
+                getBackupManager().setBackupEnabled(isEnabled);
             }
         } catch (RemoteException e) {
             ExUtils.rethrowFromSystemServer(e);
@@ -49,13 +47,13 @@ public class BackupCompat {
     /**
      * @see IBackupManager#isBackupEnabledForUser(int)
      */
-    public boolean isBackupEnabledForUser(@UserIdInt int userId) {
+    public static boolean isBackupEnabledForUser(@UserIdInt int userId) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                return mBackupManager.isBackupEnabledForUser(userId);
+                return getBackupManager().isBackupEnabledForUser(userId);
             }
             if (UserHandleHidden.myUserId() == userId) {
-                return mBackupManager.isBackupEnabled();
+                return getBackupManager().isBackupEnabled();
             }
             // Multiuser backup only available since Android 10
             return false;
@@ -64,66 +62,66 @@ public class BackupCompat {
         }
     }
 
-    public boolean setBackupPassword(String currentPw, String newPw) {
+    public static boolean setBackupPassword(String currentPw, String newPw) {
         try {
-            return mBackupManager.setBackupPassword(currentPw, newPw);
+            return getBackupManager().setBackupPassword(currentPw, newPw);
         } catch (RemoteException e) {
             return ExUtils.rethrowFromSystemServer(e);
         }
     }
 
-    public boolean hasBackupPassword() {
+    public static boolean hasBackupPassword() {
         try {
-            return mBackupManager.hasBackupPassword();
+            return getBackupManager().hasBackupPassword();
         } catch (RemoteException e) {
             return ExUtils.rethrowFromSystemServer(e);
         }
     }
 
     @SuppressWarnings("deprecation")
-    public void adbBackup(@UserIdInt int userId, ParcelFileDescriptor fd, boolean includeApks, boolean includeObbs,
-                          boolean includeShared, boolean doWidgets, boolean allApps, boolean allIncludesSystem,
-                          boolean doCompress, boolean doKeyValue, String[] packageNames) throws RemoteException {
+    public static void adbBackup(@UserIdInt int userId, ParcelFileDescriptor fd, boolean includeApks, boolean includeObbs,
+                                 boolean includeShared, boolean doWidgets, boolean allApps, boolean allIncludesSystem,
+                                 boolean doCompress, boolean doKeyValue, String[] packageNames) throws RemoteException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            mBackupManager.adbBackup(userId, fd, includeApks, includeObbs, includeShared, doWidgets, allApps, allIncludesSystem, doCompress, doKeyValue, packageNames);
+            getBackupManager().adbBackup(userId, fd, includeApks, includeObbs, includeShared, doWidgets, allApps, allIncludesSystem, doCompress, doKeyValue, packageNames);
         } else {
             if (UserHandleHidden.myUserId() != userId) {
                 throw new RemoteException("Backup only allowed for current user");
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                mBackupManager.adbBackup(fd, includeApks, includeObbs, includeShared, doWidgets, allApps, allIncludesSystem, doCompress, doKeyValue, packageNames);
+                getBackupManager().adbBackup(fd, includeApks, includeObbs, includeShared, doWidgets, allApps, allIncludesSystem, doCompress, doKeyValue, packageNames);
             } else {
-                mBackupManager.fullBackup(fd, includeApks, includeObbs, includeShared, doWidgets, allApps, allIncludesSystem, doCompress, packageNames);
+                getBackupManager().fullBackup(fd, includeApks, includeObbs, includeShared, doWidgets, allApps, allIncludesSystem, doCompress, packageNames);
             }
         }
     }
 
     @SuppressWarnings("deprecation")
-    public void adbRestore(@UserIdInt int userId, ParcelFileDescriptor fd) throws RemoteException {
+    public static void adbRestore(@UserIdInt int userId, ParcelFileDescriptor fd) throws RemoteException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            mBackupManager.adbRestore(userId, fd);
+            getBackupManager().adbRestore(userId, fd);
         } else {
             if (UserHandleHidden.myUserId() != userId) {
                 throw new RemoteException("Backup only allowed for current user");
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                mBackupManager.adbRestore(fd);
-            } else mBackupManager.fullRestore(fd);
+                getBackupManager().adbRestore(fd);
+            } else getBackupManager().fullRestore(fd);
         }
     }
 
     @SuppressWarnings("deprecation")
-    public boolean isAppEligibleForBackupForUser(@UserIdInt int userId, String packageName) {
+    public static boolean isAppEligibleForBackupForUser(@UserIdInt int userId, String packageName) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                return mBackupManager.isAppEligibleForBackupForUser(userId, packageName);
+                return getBackupManager().isAppEligibleForBackupForUser(userId, packageName);
             } else {
                 if (UserHandleHidden.myUserId() != userId) {
                     // Multiuser support unavailable
                     return false;
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    return mBackupManager.isAppEligibleForBackup(packageName);
+                    return getBackupManager().isAppEligibleForBackup(packageName);
                 }
                 // In API 23 and earlier, set it to eligible by default
                 return true;
@@ -135,13 +133,14 @@ public class BackupCompat {
 
     @SuppressWarnings("deprecation")
     @NonNull
-    public String[] filterAppsEligibleForBackupForUser(@UserIdInt int userId, @NonNull String[] packages) {
+    public static String[] filterAppsEligibleForBackupForUser(@UserIdInt int userId, @NonNull String[] packages) {
+        IBackupManager backupManager = getBackupManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             return ArrayUtils.defeatNullable(ExUtils.<String[]>exceptionAsNull(() -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    mBackupManager.filterAppsEligibleForBackupForUser(userId, packages);
+                    backupManager.filterAppsEligibleForBackupForUser(userId, packages);
                 } else {
-                    mBackupManager.filterAppsEligibleForBackup(packages);
+                    backupManager.filterAppsEligibleForBackup(packages);
                 }
                 return null;
             }));
@@ -156,7 +155,7 @@ public class BackupCompat {
             boolean isEligible;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 isEligible = Boolean.TRUE.equals(ExUtils.exceptionAsNull(() ->
-                        mBackupManager.isAppEligibleForBackup(packageName)));
+                        backupManager.isAppEligibleForBackup(packageName)));
             } else isEligible = true;
             if (isEligible) {
                 eligibleApps.add(packageName);

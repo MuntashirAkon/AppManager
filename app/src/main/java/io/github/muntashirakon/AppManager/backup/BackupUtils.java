@@ -27,7 +27,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
 import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
@@ -171,16 +170,6 @@ public final class BackupUtils {
         return backupMetadata;
     }
 
-    public static void putBackupToDbAndBroadcast(@NonNull Context context, @NonNull BackupMetadataV2 metadata) {
-        if (Utils.isRoboUnitTest()) {
-            return;
-        }
-        AppDb appDb = new AppDb();
-        appDb.insert(Backup.fromBackupMetadata(metadata));
-        appDb.updateApplication(context, metadata.packageName);
-        BroadcastUtils.sendDbPackageAltered(context, new String[]{metadata.packageName});
-    }
-
     public static void putBackupToDbAndBroadcast(@NonNull Context context, @NonNull BackupMetadataV5 metadata) {
         if (Utils.isRoboUnitTest()) {
             return;
@@ -303,41 +292,12 @@ public final class BackupUtils {
         return backupMetadata;
     }
 
-    @Nullable
-    public static String getShortBackupName(@NonNull String backupFileName) {
-        if (TextUtils.isDigitsOnly(backupFileName)) {
-            // It's already a user handle
-            return null;
-        } else {
-            int firstUnderscore = backupFileName.indexOf('_');
-            if (firstUnderscore != -1) {
-                // Found an underscore
-                String userHandle = backupFileName.substring(0, firstUnderscore);
-                if (TextUtils.isDigitsOnly(userHandle)) {
-                    // The new backup system
-                    return backupFileName.substring(firstUnderscore + 1);
-                }
-            }
-            // Could be the old naming style
-            throw new IllegalArgumentException("Invalid backup name " + backupFileName);
+    @NonNull
+    public static String getDataFilePrefix(int index, @Nullable String fullExtension) {
+        if (fullExtension == null) {
+            return BackupManager.DATA_PREFIX + index;
         }
-    }
-
-    static int getUserHandleFromBackupName(@NonNull String backupFileName) {
-        if (TextUtils.isDigitsOnly(backupFileName)) {
-            return Integer.parseInt(backupFileName);
-        } else {
-            int firstUnderscore = backupFileName.indexOf('_');
-            if (firstUnderscore != -1) {
-                // Found an underscore
-                String userHandle = backupFileName.substring(0, firstUnderscore);
-                if (TextUtils.isDigitsOnly(userHandle)) {
-                    // The new backup system
-                    return Integer.parseInt(userHandle);
-                }
-            }
-            throw new IllegalArgumentException("Invalid backup name " + backupFileName);
-        }
+        return BackupManager.DATA_PREFIX + index + fullExtension;
     }
 
     @NonNull
@@ -355,7 +315,7 @@ public final class BackupUtils {
 
     @SuppressLint("SdCardPath")
     @NonNull
-    static String[] getDataDirectories(@NonNull ApplicationInfo applicationInfo, boolean loadInternal,
+    static List<String> getDataDirectories(@NonNull ApplicationInfo applicationInfo, boolean loadInternal,
                                        boolean loadExternal, boolean loadMediaObb) {
         // Data directories *must* be readable and non-empty
         ArrayList<String> dataDirs = new ArrayList<>();
@@ -398,7 +358,7 @@ public final class BackupUtils {
                 }
             }
         }
-        return dataDirs.toArray(new String[0]);
+        return dataDirs;
     }
 
     /**

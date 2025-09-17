@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
-import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
 
@@ -356,14 +355,14 @@ public class BackupItems {
             } else return getBackupPath().findFile(MetadataManager.INFO_V5_FILE);
         }
 
-        public Path getMetadataV5File() throws IOException {
+        public Path getMetadataV5File(boolean decryptIfRequired) throws IOException {
             if (mBackupMode) {
                 // Needs to be encrypted in backup mode
                 return getBackupPath().findOrCreateFile(MetadataManager.META_V5_FILE, null);
             } else {
                 // Needs to be decrypted in restore mode
                 Path file = getBackupPath().findFile(MetadataManager.META_V5_FILE + CryptoUtils.getExtension(mCryptoMode));
-                return decrypt(new Path[]{file})[0];
+                return decryptIfRequired ? decrypt(new Path[]{file})[0] : file;
             }
         }
 
@@ -436,7 +435,7 @@ public class BackupItems {
         @NonNull
         public Path[] getDataFiles(int index) {
             String ext = CryptoUtils.getExtension(mCryptoMode);
-            final String dataPrefix = DATA_PREFIX + index;
+            final String dataPrefix = BackupUtils.getDataFilePrefix(index, null); // extension can be anything
             Path[] paths = getBackupPath().listFiles((dir, name) -> name.startsWith(dataPrefix) && name.endsWith(ext));
             return Paths.getSortedPaths(paths);
         }

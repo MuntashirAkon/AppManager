@@ -60,10 +60,14 @@ public final class ConvertUtils {
         metadata.packageName = metadataV2.packageName;
         metadata.versionName = metadataV2.versionName;
         metadata.versionCode = metadataV2.versionCode;
-        metadata.dataDirs = metadataV2.dataDirs;
+        if (metadataV2.dataDirs != null) {
+            metadata.dataDirs = metadataV2.dataDirs.clone();
+        }
         metadata.isSystem = metadataV2.isSystem;
         metadata.isSplitApk = metadataV2.isSplitApk;
-        metadata.splitConfigs = metadataV2.splitConfigs;
+        if (metadataV2.splitConfigs != null) {
+            metadata.splitConfigs = metadataV2.splitConfigs.clone();
+        }
         metadata.apkName = metadataV2.apkName;
         metadata.instructionSet = metadataV2.instructionSet;
         metadata.keyStore = metadataV2.keyStore;

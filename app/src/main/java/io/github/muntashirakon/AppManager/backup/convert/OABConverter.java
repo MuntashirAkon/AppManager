@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.backup.convert;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
 import static io.github.muntashirakon.AppManager.utils.TarUtils.DEFAULT_SPLIT_SIZE;
@@ -336,7 +335,7 @@ public class OABConverter extends Converter {
             if (files.length != 1) {
                 throw new BackupException("Incorrect number of APK files: " + files.length);
             }
-            String dataBackupFilePrefix = DATA_PREFIX + (i++) + getExt(tarType);
+            String dataBackupFilePrefix = BackupUtils.getDataFilePrefix(i++, getExt(tarType));
             try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(files[0].openInputStream()));
                  SplitOutputStream sos = new SplitOutputStream(mBackupItem.getUnencryptedBackupPath(), dataBackupFilePrefix, DEFAULT_SPLIT_SIZE);
                  BufferedOutputStream bos = new BufferedOutputStream(sos)) {

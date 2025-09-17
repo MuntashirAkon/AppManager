@@ -82,7 +82,7 @@ public final class MetadataManager {
             // Need to setup crypto in order to decrypt meta_v5.am.json
             setCrypto(backupItem, backupInfo);
         }
-        Path metadataFile = v5AndUp ? backupItem.getMetadataV5File() : backupItem.getMetadataV2File();
+        Path metadataFile = v5AndUp ? backupItem.getMetadataV5File(true) : backupItem.getMetadataV2File();
         String metadataString = metadataFile.getContentAsString();
         JSONObject jsonObject;
         if (TextUtils.isEmpty(metadataString)) {
@@ -137,14 +137,16 @@ public final class MetadataManager {
     @NonNull
     private static Map<String, String> writeMetadataV5(@NonNull BackupMetadataV5 metadata, @NonNull BackupItems.BackupItem backupFile) throws IOException {
         Map<String, String> filenameChecksumMap = new LinkedHashMap<>(2);
-        Path metadataFile = backupFile.getMetadataV5File();
+        Path metadataFile = backupFile.getMetadataV5File(true);
         try (OutputStream outputStream = metadataFile.openOutputStream()) {
             outputStream.write(metadata.metadata.serializeToJson().toString(4).getBytes());
-            filenameChecksumMap.put(metadataFile.getName(), DigestUtils.getHexDigest(
-                    metadata.info.checksumAlgo, metadataFile));
         } catch (JSONException e) {
             throw new IOException(e.getMessage() + " for file " + metadataFile, e);
         }
+        // Encrypt the metadata
+        Path encryptedMetadataFile = backupFile.encrypt(new Path[]{metadataFile})[0];
+        filenameChecksumMap.put(encryptedMetadataFile.getName(), DigestUtils.getHexDigest(
+                metadata.info.checksumAlgo, encryptedMetadataFile));
         Path infoFile = backupFile.getInfoFile();
         try (OutputStream outputStream = infoFile.openOutputStream()) {
             outputStream.write(metadata.info.serializeToJson().toString(4).getBytes());

@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.backup.convert;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
 import static io.github.muntashirakon.AppManager.utils.TarUtils.DEFAULT_SPLIT_SIZE;
@@ -22,7 +21,6 @@ import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.pm.PackageInfoCompat;
-import androidx.core.util.Pair;
 
 import com.github.luben.zstd.ZstdOutputStream;
 
@@ -226,20 +224,24 @@ public class SBConverter extends Converter {
         String tarType = mDestMetadata.info.tarType;
         int i = 0;
         for (Path dataFile : dataFiles) {
-            String dataBackupFilePrefix = DATA_PREFIX + (i++) + getExt(tarType);
+            String dataBackupFilePrefix = BackupUtils.getDataFilePrefix(i++, getExt(tarType));
             try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(dataFile.openInputStream()));
                  SplitOutputStream sos = new SplitOutputStream(mBackupItem.getUnencryptedBackupPath(), dataBackupFilePrefix, DEFAULT_SPLIT_SIZE);
                  BufferedOutputStream bos = new BufferedOutputStream(sos)) {
                 // TODO: 31/5/21 Check backup format (each zip file has a comment section which can be parsed as JSON)
                 OutputStream os;
-                if (TAR_GZIP.equals(tarType)) {
-                    os = new GzipCompressorOutputStream(bos);
-                } else if (TAR_BZIP2.equals(tarType)) {
-                    os = new BZip2CompressorOutputStream(bos);
-                } else if (TAR_ZSTD.equals(tarType)) {
-                    os = new ZstdOutputStream(bos);
-                } else {
-                    throw new BackupException("Invalid compression type: " + tarType);
+                switch (tarType) {
+                    case TAR_GZIP:
+                        os = new GzipCompressorOutputStream(bos);
+                        break;
+                    case TAR_BZIP2:
+                        os = new BZip2CompressorOutputStream(bos);
+                        break;
+                    case TAR_ZSTD:
+                        os = new ZstdOutputStream(bos);
+                        break;
+                    default:
+                        throw new BackupException("Invalid compression type: " + tarType);
                 }
                 try (TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                     tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);

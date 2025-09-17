@@ -1535,4 +1535,6 @@
     <string name="package_source_other">Other</string>
     <string name="pref_disable_apk_verification">Disable package verification</string>
     <string name="pref_disable_apk_verification_description">Ask the installer to skip running the package verifier (e.g., Play Protect) during the installation.</string>
+    <string name="adb_data">ADB data</string>
+    <string name="adb_data_description">Back up data in ADB format. This option supersedes \"Internal data\" and \"External data\" options.</string>
 </resources>

@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.filters.options;
 
+import static io.github.muntashirakon.AppManager.backup.BackupFlags.BACKUP_ADB_DATA;
 import static io.github.muntashirakon.AppManager.backup.BackupFlags.BACKUP_APK_FILES;
 import static io.github.muntashirakon.AppManager.backup.BackupFlags.BACKUP_CACHE;
 import static io.github.muntashirakon.AppManager.backup.BackupFlags.BACKUP_EXTRAS;
@@ -43,6 +44,7 @@ public class BackupOption extends FilterOption {
         put(BACKUP_APK_FILES, "Apk files");
         put(BACKUP_INT_DATA, "Internal data");
         put(BACKUP_EXT_DATA, "External data");
+        put(BACKUP_ADB_DATA, "ADB data");
         put(BACKUP_EXT_OBB_MEDIA, "OBB and media");
         put(BACKUP_CACHE, "Cache");
         put(BACKUP_EXTRAS, "Extras");

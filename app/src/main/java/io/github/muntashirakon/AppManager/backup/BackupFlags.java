@@ -18,7 +18,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -32,6 +34,7 @@ public final class BackupFlags {
             BACKUP_APK_FILES,
             BACKUP_INT_DATA,
             BACKUP_EXT_DATA,
+            BACKUP_ADB_DATA,
             BACKUP_EXT_OBB_MEDIA,
             BACKUP_EXCLUDE_CACHE,
             BACKUP_EXTRAS,
@@ -39,7 +42,6 @@ public final class BackupFlags {
             BACKUP_MULTIPLE,
             BACKUP_RULES,
             BACKUP_NO_SIGNATURE_CHECK,
-            BACKUP_ADB_DATA,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface BackupFlag {
@@ -67,6 +69,7 @@ public final class BackupFlags {
         put(BACKUP_APK_FILES, new Pair<>(R.string.backup_apk_files, R.string.backup_apk_files_description));
         put(BACKUP_INT_DATA, new Pair<>(R.string.internal_data, R.string.backup_internal_data_description));
         put(BACKUP_EXT_DATA, new Pair<>(R.string.external_data, R.string.backup_external_data_description));
+        put(BACKUP_ADB_DATA, new Pair<>(R.string.adb_data, R.string.adb_data_description));
         put(BACKUP_EXT_OBB_MEDIA, new Pair<>(R.string.backup_obb_media, R.string.backup_obb_media_description));
         put(BACKUP_CACHE, new Pair<>(R.string.backup_cache, R.string.backup_cache_description));
         put(BACKUP_EXTRAS, new Pair<>(R.string.backup_extras, R.string.backup_extras_description));
@@ -86,6 +89,7 @@ public final class BackupFlags {
         return flags;
     }
 
+    @NonNull
     public static List<Integer> getSupportedBackupFlagsAsArray() {
         List<Integer> backupFlags = new ArrayList<>();
         backupFlags.add(BACKUP_APK_FILES);
@@ -93,6 +97,9 @@ public final class BackupFlags {
             backupFlags.add(BACKUP_INT_DATA);
         }
         backupFlags.add(BACKUP_EXT_DATA);
+        if (BuildConfig.DEBUG && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.BACKUP)) {
+            backupFlags.add(BACKUP_ADB_DATA);
+        }
         backupFlags.add(BACKUP_EXT_OBB_MEDIA);
         backupFlags.add(BACKUP_CACHE);
         backupFlags.add(BACKUP_EXTRAS);
@@ -118,6 +125,9 @@ public final class BackupFlags {
         }
         if ((flags & BACKUP_EXT_DATA) != 0) {
             backupFlags.add(BACKUP_EXT_DATA);
+        }
+        if ((flags & BACKUP_ADB_DATA) != 0) {
+            backupFlags.add(BACKUP_ADB_DATA);
         }
         if ((flags & BACKUP_EXT_OBB_MEDIA) != 0) {
             backupFlags.add(BACKUP_EXT_OBB_MEDIA);
@@ -214,12 +224,16 @@ public final class BackupFlags {
         return (mFlags & BACKUP_EXT_DATA) != 0;
     }
 
+    public boolean backupAdbData() {
+        return (mFlags & BACKUP_ADB_DATA) != 0;
+    }
+
     public boolean backupMediaObb() {
         return (mFlags & BACKUP_EXT_OBB_MEDIA) != 0;
     }
 
     public boolean backupData() {
-        return backupInternalData() || backupExternalData() || backupMediaObb();
+        return backupInternalData() || backupExternalData() || backupAdbData() || backupMediaObb();
     }
 
     public boolean backupRules() {
@@ -261,6 +275,10 @@ public final class BackupFlags {
         }
         if (backupExternalData()) {
             sb.append(append ? "+" : "").append("Ext");
+            append = true;
+        }
+        if (backupAdbData()) {
+            sb.append(append ? "+" : "").append("ADB");
             append = true;
         }
         if (backupMediaObb()) {

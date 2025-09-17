@@ -34,6 +34,8 @@ public class BackupManager {
     public static final String DATA_PREFIX = "data";
     static final String KEYSTORE_PREFIX = "keystore";
     static final int KEYSTORE_PLACEHOLDER = -1000;
+    static final String DATA_BACKUP_SPECIAL_PREFIX = "special:";
+    static final String DATA_BACKUP_SPECIAL_ADB = DATA_BACKUP_SPECIAL_PREFIX + "adb";
 
     public static final String CERT_PREFIX = "cert_";
     static final String MASTER_KEY = ".masterkey";

@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.ParcelFileDescriptor;
 import android.system.ErrnoException;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +37,7 @@ import io.github.muntashirakon.AppManager.apk.installer.InstallerOptions;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
+import io.github.muntashirakon.AppManager.compat.BackupCompat;
 import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
@@ -67,6 +70,7 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.ParcelFileDescriptorUtil;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Path;
@@ -231,7 +235,7 @@ class RestoreOp implements Closeable {
         }
         Path metadataFile;
         try {
-            metadataFile = isV5AndUp ? mBackupItem.getMetadataV5File() : mBackupItem.getMetadataV2File();
+            metadataFile = isV5AndUp ? mBackupItem.getMetadataV5File(false) : mBackupItem.getMetadataV2File();
         } catch (IOException e) {
             throw new BackupException("Could not get metadata file.", e);
         }
@@ -521,84 +525,117 @@ class RestoreOp implements Closeable {
         PackageManagerCompat.clearApplicationUserData(mPackageName, mUserId);
         // Restore backups
         for (int i = 0; i < mBackupMetadata.dataDirs.length; ++i) {
-            String dataSource = BackupUtils.getWritableDataDirectory(mBackupMetadata.dataDirs[i], mBackupInfo.userId, mUserId);
-            BackupDataDirectoryInfo dataDirectoryInfo = BackupDataDirectoryInfo.getInfo(dataSource, mUserId);
-            Path dataSourceFile = dataDirectoryInfo.getDirectory();
-
-            Path[] dataFiles = mBackupItem.getDataFiles(i);
-            if (dataFiles.length == 0) {
-                throw new BackupException("Data restore is requested but there are no data files for index " + i + ".");
-            }
-            UidGidPair uidGidPair = dataSourceFile.getUidGid();
-            if (uidGidPair == null) {
-                // Fallback to app UID
-                uidGidPair = new UidGidPair(mUid, mUid);
-            }
-            if (dataDirectoryInfo.isExternal()) {
-                // Skip if external data restore is not requested
-                switch (dataDirectoryInfo.subtype) {
-                    case BackupDataDirectoryInfo.TYPE_ANDROID_DATA:
-                        // Skip restoring Android/data directory if not requested
-                        if (!mRequestedFlags.backupExternalData()) {
-                            continue;
-                        }
-                        break;
-                    case BackupDataDirectoryInfo.TYPE_ANDROID_OBB:
-                    case BackupDataDirectoryInfo.TYPE_ANDROID_MEDIA:
-                        // Skip restoring Android/data or Android/media if media/obb restore not requested
-                        if (!mRequestedFlags.backupMediaObb()) {
-                            continue;
-                        }
-                        break;
-                    case BackupDataDirectoryInfo.TYPE_CREDENTIAL_PROTECTED:
-                    case BackupDataDirectoryInfo.TYPE_CUSTOM:
-                    case BackupDataDirectoryInfo.TYPE_DEVICE_PROTECTED:
-                        // NOP
-                        break;
-                }
+            String backupDataDir = mBackupMetadata.dataDirs[i];
+            if (backupDataDir.equals(BackupManager.DATA_BACKUP_SPECIAL_ADB)) {
+                // Adb backup restore
+                restoreAdb(i);
             } else {
-                // Skip if internal data restore is not requested.
-                if (!mRequestedFlags.backupInternalData()) continue;
+                // Regular directory restore
+                restoreDirectory(mBackupMetadata.dataDirs[i], i);
             }
-            // Create data folder if not exists
-            if (!dataSourceFile.exists()) {
-                if (dataDirectoryInfo.isExternal() && !dataDirectoryInfo.isMounted) {
-                    if (!Utils.isRoboUnitTest()) {
-                        throw new BackupException("External directory containing " + dataSource + " is not mounted.");
-                    } // else Skip checking for mounted partition for robolectric tests
-                }
-                if (!dataSourceFile.mkdirs()) {
-                    throw new BackupException("Could not create directory " + dataSourceFile);
-                }
-                if (!dataDirectoryInfo.isExternal()) {
-                    // Restore UID, GID
-                    dataSourceFile.setUidGid(uidGidPair);
-                }
+        }
+    }
+
+    private void restoreDirectory(@NonNull String dir, int index) throws BackupException {
+        String dataSource = BackupUtils.getWritableDataDirectory(dir, mBackupInfo.userId, mUserId);
+        BackupDataDirectoryInfo dataDirectoryInfo = BackupDataDirectoryInfo.getInfo(dataSource, mUserId);
+        Path dataSourceFile = dataDirectoryInfo.getDirectory();
+
+        Path[] dataFiles = mBackupItem.getDataFiles(index);
+        if (dataFiles.length == 0) {
+            throw new BackupException("Data restore is requested but there are no data files for index " + index + ".");
+        }
+        UidGidPair uidGidPair = dataSourceFile.getUidGid();
+        if (uidGidPair == null) {
+            // Fallback to app UID
+            uidGidPair = new UidGidPair(mUid, mUid);
+        }
+        if (dataDirectoryInfo.isExternal()) {
+            // Skip if external data restore is not requested
+            switch (dataDirectoryInfo.subtype) {
+                case BackupDataDirectoryInfo.TYPE_ANDROID_DATA:
+                    // Skip restoring Android/data directory if not requested
+                    if (!mRequestedFlags.backupExternalData()) {
+                        return;
+                    }
+                    break;
+                case BackupDataDirectoryInfo.TYPE_ANDROID_OBB:
+                case BackupDataDirectoryInfo.TYPE_ANDROID_MEDIA:
+                    // Skip restoring Android/data or Android/media if media/obb restore not requested
+                    if (!mRequestedFlags.backupMediaObb()) {
+                        return;
+                    }
+                    break;
+                case BackupDataDirectoryInfo.TYPE_CREDENTIAL_PROTECTED:
+                case BackupDataDirectoryInfo.TYPE_CUSTOM:
+                case BackupDataDirectoryInfo.TYPE_DEVICE_PROTECTED:
+                    // NOP
+                    break;
             }
-            // Decrypt data
-            try {
-                dataFiles = mBackupItem.decrypt(dataFiles);
-            } catch (IOException e) {
-                throw new BackupException("Failed to decrypt " + Arrays.toString(dataFiles), e);
+        } else {
+            // Skip if internal data restore is not requested.
+            if (!mRequestedFlags.backupInternalData()) {
+                return;
             }
-            // Extract data to the data directory
-            try {
-                String publicSourceDir = new File(Objects.requireNonNull(mPackageInfo.applicationInfo).publicSourceDir).getParent();
-                TarUtils.extract(mBackupInfo.tarType, dataFiles, dataSourceFile, null, BackupUtils
-                        .getExcludeDirs(!mRequestedFlags.backupCache(), null), publicSourceDir);
-            } catch (Throwable th) {
-                throw new BackupException("Failed to restore data files for index " + i + ".", th);
-            }
-            // Restore UID and GID
-            if (!Runner.runCommand(String.format(Locale.ROOT, "chown -R %d:%d \"%s\"", uidGidPair.uid, uidGidPair.gid, dataSourceFile.getFilePath())).isSuccessful()) {
+        }
+        // Create data folder if not exists
+        if (!dataSourceFile.exists()) {
+            if (dataDirectoryInfo.isExternal() && !dataDirectoryInfo.isMounted) {
                 if (!Utils.isRoboUnitTest()) {
-                    throw new BackupException("Failed to restore ownership info for index " + i + ".");
-                } // else Don't care about permissions
+                    throw new BackupException("External directory containing " + dataSource + " is not mounted.");
+                } // else Skip checking for mounted partition for robolectric tests
             }
-            // Restore context
+            if (!dataSourceFile.mkdirs()) {
+                throw new BackupException("Could not create directory " + dataSourceFile);
+            }
             if (!dataDirectoryInfo.isExternal()) {
-                Runner.runCommand(new String[]{"restorecon", "-R", dataSourceFile.getFilePath()});
+                // Restore UID, GID
+                dataSourceFile.setUidGid(uidGidPair);
             }
+        }
+        // Decrypt data
+        try {
+            dataFiles = mBackupItem.decrypt(dataFiles);
+        } catch (IOException e) {
+            throw new BackupException("Failed to decrypt " + Arrays.toString(dataFiles), e);
+        }
+        // Extract data to the data directory
+        try {
+            String publicSourceDir = new File(Objects.requireNonNull(mPackageInfo.applicationInfo).publicSourceDir).getParent();
+            TarUtils.extract(mBackupInfo.tarType, dataFiles, dataSourceFile, null, BackupUtils
+                    .getExcludeDirs(!mRequestedFlags.backupCache(), null), publicSourceDir);
+        } catch (Throwable th) {
+            throw new BackupException("Failed to restore data files for index " + index + ".", th);
+        }
+        // Restore UID and GID
+        if (!Runner.runCommand(String.format(Locale.ROOT, "chown -R %d:%d \"%s\"", uidGidPair.uid, uidGidPair.gid, dataSourceFile.getFilePath())).isSuccessful()) {
+            if (!Utils.isRoboUnitTest()) {
+                throw new BackupException("Failed to restore ownership info for index " + index + ".");
+            } // else Don't care about permissions
+        }
+        // Restore context
+        if (!dataDirectoryInfo.isExternal()) {
+            Runner.runCommand(new String[]{"restorecon", "-R", dataSourceFile.getFilePath()});
+        }
+    }
+
+    private void restoreAdb(int index) throws BackupException {
+        Path[] dataFiles = mBackupItem.getDataFiles(index);
+        if (dataFiles.length != 1) {
+            throw new BackupException("ADB restore is requested but there are no .ab files.");
+        }
+        // Decrypt data
+        try {
+            dataFiles = mBackupItem.decrypt(dataFiles);
+        } catch (IOException e) {
+            throw new BackupException("Failed to decrypt " + Arrays.toString(dataFiles), e);
+        }
+        // Restore data
+        try (InputStream is = dataFiles[0].openInputStream()) {
+            ParcelFileDescriptor fd = ParcelFileDescriptorUtil.pipeFrom(is);
+            BackupCompat.adbRestore(mUserId, fd);
+        } catch (Throwable th) {
+            throw new BackupException("Failed to restore ADB data", th);
         }
     }
 

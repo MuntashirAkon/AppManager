@@ -71,7 +71,7 @@ public class BackupManagerTest {
         assertEquals(1, backupItem.getDataFiles(1).length);
         assertTrue(backupItem.getIconFile().exists());
         assertTrue(backupItem.isV5AndUp());
-        assertTrue(backupItem.getMetadataV5File().exists());
+        assertTrue(backupItem.getMetadataV5File(false).exists());
         assertTrue(backupItem.getInfoFile().exists());
         BackupMetadataV5 metadata = backupItem.getMetadata();
         assertNull(metadata.metadata.backupName);
@@ -106,7 +106,7 @@ public class BackupManagerTest {
         assertEquals(1, backupItem.getDataFiles(1).length);
         assertTrue(backupItem.getIconFile().exists());
         assertTrue(backupItem.isV5AndUp());
-        assertTrue(backupItem.getMetadataV5File().exists());
+        assertTrue(backupItem.getMetadataV5File(false).exists());
         assertTrue(backupItem.getInfoFile().exists());
         BackupMetadataV5 metadata = backupItem.getMetadata();
         assertEquals("test_backup", metadata.metadata.backupName);

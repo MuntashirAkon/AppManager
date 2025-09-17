@@ -123,7 +123,7 @@ class VerifyOp implements Closeable {
         }
         Path metadataFile;
         try {
-            metadataFile = isV5AndUp ? mBackupItem.getMetadataV5File() : mBackupItem.getMetadataV2File();
+            metadataFile = isV5AndUp ? mBackupItem.getMetadataV5File(false) : mBackupItem.getMetadataV2File();
         } catch (IOException e) {
             throw new BackupException("Could not get metadata file.", e);
         }

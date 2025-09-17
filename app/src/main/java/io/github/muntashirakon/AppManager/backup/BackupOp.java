@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.backup;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PLACEHOLDER;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.MASTER_KEY;
@@ -22,6 +21,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
@@ -47,6 +47,7 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
+import io.github.muntashirakon.AppManager.compat.BackupCompat;
 import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
@@ -76,6 +77,7 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.ParcelFileDescriptorUtil;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -244,8 +246,23 @@ class BackupOp implements Closeable {
         metadata.versionName = mPackageInfo.versionName;
         metadata.versionCode = PackageInfoCompat.getLongVersionCode(mPackageInfo);
         metadata.apkName = new File(mApplicationInfo.sourceDir).getName();
-        metadata.dataDirs = BackupUtils.getDataDirectories(mApplicationInfo, mBackupFlags.backupInternalData(),
-                mBackupFlags.backupExternalData(), mBackupFlags.backupMediaObb());
+        String[] dataDirs;
+        if (mBackupFlags.backupAdbData()) {
+            mBackupFlags.removeFlag(BackupFlags.BACKUP_INT_DATA);
+            mBackupFlags.removeFlag(BackupFlags.BACKUP_EXT_DATA);
+            List<String> defaultDirs = BackupUtils.getDataDirectories(mApplicationInfo, false,
+                    false, mBackupFlags.backupMediaObb());
+            dataDirs = new String[defaultDirs.size() + 1];
+            for (int i = 0; i < defaultDirs.size(); ++i) {
+                dataDirs[i] = defaultDirs.get(i);
+            }
+            dataDirs[defaultDirs.size()] = BackupManager.DATA_BACKUP_SPECIAL_ADB;
+        } else {
+            // Non-ADB backup: default
+            dataDirs = BackupUtils.getDataDirectories(mApplicationInfo, mBackupFlags.backupInternalData(),
+                    mBackupFlags.backupExternalData(), mBackupFlags.backupMediaObb()).toArray(new String[0]);
+        }
+        metadata.dataDirs = dataDirs;
         metadata.isSystem = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         metadata.isSplitApk = false;
         try (ApkFile apkFile = ApkSource.getApkSource(mApplicationInfo).resolve()) {
@@ -316,17 +333,15 @@ class BackupOp implements Closeable {
     }
 
     private void backupData() throws BackupException {
-        String sourceBackupFilePrefix;
-        Path[] dataFiles;
         for (int i = 0; i < mMetadata.metadata.dataDirs.length; ++i) {
-            sourceBackupFilePrefix = DATA_PREFIX + i + getExt(mMetadata.info.tarType);
-            try {
-                dataFiles = TarUtils.create(mMetadata.info.tarType, Paths.get(mMetadata.metadata.dataDirs[i]), mBackupItem.getUnencryptedBackupPath(),
-                                sourceBackupFilePrefix, null, null,
-                                BackupUtils.getExcludeDirs(!mBackupFlags.backupCache()), false)
-                        .toArray(new Path[0]);
-            } catch (Throwable th) {
-                throw new BackupException("Failed to backup data directory at " + mMetadata.metadata.dataDirs[i], th);
+            Path[] dataFiles;
+            String backupDataDir = mMetadata.metadata.dataDirs[i];
+            if (backupDataDir.equals(BackupManager.DATA_BACKUP_SPECIAL_ADB)) {
+                // ADB backup
+                dataFiles = backupAdb(i);
+            } else {
+                // Regular directory backup
+                dataFiles = backupDirectory(backupDataDir, i);
             }
             try {
                 dataFiles = mBackupItem.encrypt(dataFiles);
@@ -336,6 +351,37 @@ class BackupOp implements Closeable {
             for (Path file : dataFiles) {
                 mChecksum.add(file.getName(), DigestUtils.getHexDigest(mMetadata.info.checksumAlgo, file));
             }
+        }
+    }
+
+    @NonNull
+    private Path[] backupDirectory(@NonNull String dir, int index) throws BackupException {
+        String filePrefix = BackupUtils.getDataFilePrefix(index, getExt(mMetadata.info.tarType));
+        try {
+            return TarUtils.create(mMetadata.info.tarType, Paths.get(dir),
+                            mBackupItem.getUnencryptedBackupPath(),
+                            filePrefix, null, null,
+                            BackupUtils.getExcludeDirs(!mBackupFlags.backupCache()), false)
+                    .toArray(new Path[0]);
+        } catch (Throwable th) {
+            throw new BackupException("Failed to backup data directory at " + dir, th);
+        }
+    }
+
+    @NonNull
+    private Path[] backupAdb(int index) throws BackupException {
+        try {
+            String filePrefix = BackupUtils.getDataFilePrefix(index, ".ab");
+            Path abFile = mBackupItem.getUnencryptedBackupPath().createNewFile(filePrefix, null);
+            try (OutputStream os = abFile.openOutputStream()) {
+                ParcelFileDescriptor fd = ParcelFileDescriptorUtil.pipeTo(os);
+                BackupCompat.adbBackup(mUserId, fd, false, false, false,
+                        false, false, false, false, true,
+                        new String[]{mPackageName});
+            }
+            return new Path[]{abFile};
+        } catch (Throwable th) {
+            throw new BackupException("Failed to backup ADB data.", th);
         }
     }
 
