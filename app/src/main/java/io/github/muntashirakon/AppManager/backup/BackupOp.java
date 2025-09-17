@@ -10,7 +10,6 @@ import static io.github.muntashirakon.AppManager.backup.BackupManager.MASTER_KEY
 import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
 import static io.github.muntashirakon.AppManager.backup.BackupUtils.TAR_TYPES;
-import static io.github.muntashirakon.AppManager.backup.MetadataManager.CURRENT_BACKUP_META_VERSION;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET_SIGNING_CERTIFICATES;
 
 import android.annotation.UserIdInt;
@@ -232,7 +231,7 @@ class BackupOp implements Closeable {
             tarType = TarUtils.TAR_GZIP;
         }
         String crypto = CryptoUtils.getMode();
-        BackupCryptSetupHelper cryptoHelper = new BackupCryptSetupHelper(crypto, CURRENT_BACKUP_META_VERSION);
+        BackupCryptSetupHelper cryptoHelper = new BackupCryptSetupHelper(crypto, MetadataManager.getCurrentBackupMetaVersion());
         mBackupItem.setCrypto(cryptoHelper.crypto);
         BackupMetadataV5.Info backupInfo = new BackupMetadataV5.Info(backupTime, mBackupFlags,
                 mUserId, tarType, DigestUtils.SHA_256, crypto, cryptoHelper.getIv(),

@@ -56,7 +56,7 @@ public final class BackupUtils {
     @Nullable
     @Contract("!null -> !null")
     public static String getCompatBackupName(@Nullable String backupName) {
-        if (MetadataManager.CURRENT_BACKUP_META_VERSION >= 5) {
+        if (MetadataManager.getCurrentBackupMetaVersion() >= 5) {
             return backupName;
         }
         return getV4SanitizedBackupName(backupName);
@@ -80,6 +80,12 @@ public final class BackupUtils {
         }
         // [\\/:?"<>|\s]
         return backupName.trim().replaceAll("[\\\\/:?\"<>|\\s]+", "_");
+    }
+
+    @NonNull
+    public static String getV5RelativeDir(@NonNull String backupUuid) {
+        // backups/{backupUuid}
+        return BackupItems.BACKUP_DIRECTORY + File.separator + backupUuid;
     }
 
     @NonNull

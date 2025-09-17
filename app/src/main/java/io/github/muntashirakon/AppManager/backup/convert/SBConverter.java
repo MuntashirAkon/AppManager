@@ -43,6 +43,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -55,6 +56,7 @@ import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV2;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
@@ -82,8 +84,7 @@ public class SBConverter extends Converter {
     private final List<Path> mFilesToBeDeleted = new ArrayList<>();
 
     private BackupItems.Checksum mChecksum;
-    private BackupMetadataV2 mSourceMetadata;
-    private BackupMetadataV2 mDestMetadata;
+    private BackupMetadataV5 mDestMetadata;
     private BackupItems.BackupItem mBackupItem;
     private PackageInfo mPackageInfo;
     private Path mCachedApk;
@@ -105,44 +106,40 @@ public class SBConverter extends Converter {
     @Override
     public void convert() throws BackupException {
         // Source metadata
-        mSourceMetadata = new BackupMetadataV2();
-        generateMetadata();
-        // Destination metadata
-        mDestMetadata = new BackupMetadataV2(mSourceMetadata);
+        BackupMetadataV2 sourceMetadata = generateMetadata();
         // Simulate a backup creation
-        BackupItems.BackupItem backupItem;
         try {
-            backupItem = BackupItems.createBackupItemGracefully(mUserId, "SB", mPackageName);
+            mBackupItem = BackupItems.createBackupItemGracefully(mUserId, "SB", mPackageName);
         } catch (IOException e) {
             throw new BackupException("Could not get backup files.", e);
         }
         boolean backupSuccess = false;
         try {
-            mBackupItem = backupItem;
             try {
-                // Setup crypto
-                mBackupItem.setCrypto(CryptoUtils.setupCrypto(mDestMetadata));
+                // Destination metadata
+                mDestMetadata = ConvertUtils.getV5Metadata(sourceMetadata, mBackupItem);
             } catch (CryptoException e) {
-                throw new BackupException("Failed to get crypto " + mDestMetadata.crypto, e);
+                throw new BackupException("Failed to get crypto " + mDestMetadata.info.crypto, e);
             }
-            mDestMetadata.backupName = backupItem.getBackupName();
             try {
-                mChecksum = backupItem.getChecksum();
+                mChecksum = mBackupItem.getChecksum();
             } catch (IOException e) {
                 throw new BackupException("Failed to create checksum file.", e);
             }
             // Backup icon
             backupIcon();
-            if (mDestMetadata.flags.backupApkFiles()) {
+            if (mDestMetadata.info.flags.backupApkFiles()) {
                 backupApkFile();
             }
-            if (mDestMetadata.flags.backupData()) {
+            if (mDestMetadata.info.flags.backupData()) {
                 backupData();
             }
             // Write modified metadata
             try {
-                Pair<String, String> filenameChecksumPair = MetadataManager.writeMetadataV2(mDestMetadata, backupItem);
-                mChecksum.add(filenameChecksumPair.first, filenameChecksumPair.second);
+                Map<String, String> filenameChecksumMap = MetadataManager.writeMetadata(mDestMetadata, mBackupItem);
+                for (Map.Entry<String, String> filenameChecksumPair : filenameChecksumMap.entrySet()) {
+                    mChecksum.add(filenameChecksumPair.getKey(), filenameChecksumPair.getValue());
+                }
             } catch (IOException e) {
                 throw new BackupException("Failed to write metadata.");
             }
@@ -155,7 +152,7 @@ public class SBConverter extends Converter {
             }
             // Replace current backup
             try {
-                backupItem.commit();
+                mBackupItem.commit();
             } catch (IOException e) {
                 throw new BackupException("Could not finalise backup.", e);
             }
@@ -165,7 +162,7 @@ public class SBConverter extends Converter {
         } catch (Throwable th) {
             throw new BackupException("Unknown error occurred.", th);
         } finally {
-            backupItem.cleanup();
+            mBackupItem.cleanup();
             mCachedApk.requireParent().delete();
             if (backupSuccess) {
                 BackupUtils.putBackupToDbAndBroadcast(ContextUtils.getContext(), mDestMetadata);
@@ -184,19 +181,19 @@ public class SBConverter extends Converter {
         Path sourceDir = mCachedApk.requireParent();
         // Get certificate checksums
         try {
-            String[] checksums = ConvertUtils.getChecksumsFromApk(mCachedApk, mDestMetadata.checksumAlgo);
+            String[] checksums = ConvertUtils.getChecksumsFromApk(mCachedApk, mDestMetadata.info.checksumAlgo);
             for (int i = 0; i < checksums.length; ++i) {
                 mChecksum.add(CERT_PREFIX + i, checksums[i]);
             }
         } catch (Exception ignore) {
         }
         // Backup APK files
-        String[] apkFiles = ArrayUtils.appendElement(String.class, mDestMetadata.splitConfigs, mDestMetadata.apkName);
-        String sourceBackupFilePrefix = SOURCE_PREFIX + getExt(mDestMetadata.tarType);
+        String[] apkFiles = ArrayUtils.appendElement(String.class, mDestMetadata.metadata.splitConfigs, mDestMetadata.metadata.apkName);
+        String sourceBackupFilePrefix = SOURCE_PREFIX + getExt(mDestMetadata.info.tarType);
         Path[] sourceFiles;
         try {
             // We have to specify APK files because the folder may contain many
-            sourceFiles = TarUtils.create(mDestMetadata.tarType, sourceDir, mBackupItem.getUnencryptedBackupPath(), sourceBackupFilePrefix,
+            sourceFiles = TarUtils.create(mDestMetadata.info.tarType, sourceDir, mBackupItem.getUnencryptedBackupPath(), sourceBackupFilePrefix,
                     apkFiles, null, null, false).toArray(new Path[0]);
         } catch (Throwable th) {
             throw new BackupException("APK files backup is requested but no APK files have been backed up.", th);
@@ -207,41 +204,42 @@ public class SBConverter extends Converter {
             throw new BackupException("Failed to encrypt " + Arrays.toString(sourceFiles));
         }
         for (Path file : sourceFiles) {
-            mChecksum.add(file.getName(), DigestUtils.getHexDigest(mDestMetadata.checksumAlgo, file));
+            mChecksum.add(file.getName(), DigestUtils.getHexDigest(mDestMetadata.info.checksumAlgo, file));
         }
     }
 
     private void backupData() throws BackupException {
         List<Path> dataFiles = new ArrayList<>(3);
         try {
-            if (mDestMetadata.flags.backupInternalData()) {
+            if (mDestMetadata.info.flags.backupInternalData()) {
                 dataFiles.add(getIntDataFile());
             }
-            if (mDestMetadata.flags.backupExternalData()) {
+            if (mDestMetadata.info.flags.backupExternalData()) {
                 dataFiles.add(getExtDataFile());
             }
-            if (mDestMetadata.flags.backupMediaObb()) {
+            if (mDestMetadata.info.flags.backupMediaObb()) {
                 dataFiles.add(getObbFile());
             }
         } catch (FileNotFoundException e) {
             throw new BackupException("Could not get data files", e);
         }
+        String tarType = mDestMetadata.info.tarType;
         int i = 0;
         for (Path dataFile : dataFiles) {
-            String dataBackupFilePrefix = DATA_PREFIX + (i++) + getExt(mDestMetadata.tarType);
+            String dataBackupFilePrefix = DATA_PREFIX + (i++) + getExt(tarType);
             try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(dataFile.openInputStream()));
                  SplitOutputStream sos = new SplitOutputStream(mBackupItem.getUnencryptedBackupPath(), dataBackupFilePrefix, DEFAULT_SPLIT_SIZE);
                  BufferedOutputStream bos = new BufferedOutputStream(sos)) {
                 // TODO: 31/5/21 Check backup format (each zip file has a comment section which can be parsed as JSON)
                 OutputStream os;
-                if (TAR_GZIP.equals(mDestMetadata.tarType)) {
+                if (TAR_GZIP.equals(tarType)) {
                     os = new GzipCompressorOutputStream(bos);
-                } else if (TAR_BZIP2.equals(mDestMetadata.tarType)) {
+                } else if (TAR_BZIP2.equals(tarType)) {
                     os = new BZip2CompressorOutputStream(bos);
-                } else if (TAR_ZSTD.equals(mDestMetadata.tarType)) {
+                } else if (TAR_ZSTD.equals(tarType)) {
                     os = new ZstdOutputStream(bos);
                 } else {
-                    throw new BackupException("Invalid compression type: " + mDestMetadata.tarType);
+                    throw new BackupException("Invalid compression type: " + tarType);
                 }
                 try (TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                     tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
@@ -279,7 +277,7 @@ public class SBConverter extends Converter {
                 // Encrypt backups
                 Path[] newBackupFiles = mBackupItem.encrypt(sos.getFiles().toArray(new Path[0]));
                 for (Path file : newBackupFiles) {
-                    mChecksum.add(file.getName(), DigestUtils.getHexDigest(mDestMetadata.checksumAlgo, file));
+                    mChecksum.add(file.getName(), DigestUtils.getHexDigest(mDestMetadata.info.checksumAlgo, file));
                 }
             } catch (IOException e) {
                 throw new BackupException("Backup failed for " + dataFile, e);
@@ -288,7 +286,9 @@ public class SBConverter extends Converter {
     }
 
     @SuppressLint("WrongConstant")
-    private void generateMetadata() throws BackupException {
+    @NonNull
+    private BackupMetadataV2 generateMetadata() throws BackupException {
+        BackupMetadataV2 metadataV2 = new BackupMetadataV2();
         mCachedApk = FileUtils.getTempPath(mPackageName, "base.apk");
         try (InputStream pis = getApkFile().openInputStream()) {
             try (OutputStream fos = mCachedApk.openOutputStream()) {
@@ -313,15 +313,15 @@ public class SBConverter extends Converter {
             throw new BackupException("Package name mismatch: Expected=" + mPackageName + ", Actual=" + mPackageInfo.packageName);
         }
 
-        mSourceMetadata.label = applicationInfo.loadLabel(mPm).toString();
-        mSourceMetadata.packageName = mPackageName;
-        mSourceMetadata.versionName = mPackageInfo.versionName;
-        mSourceMetadata.versionCode = PackageInfoCompat.getLongVersionCode(mPackageInfo);
-        mSourceMetadata.isSystem = false;
-        mSourceMetadata.hasRules = false;
-        mSourceMetadata.backupTime = mBackupTime;
-        mSourceMetadata.crypto = CryptoUtils.getMode();
-        mSourceMetadata.apkName = "base.apk";
+        metadataV2.label = applicationInfo.loadLabel(mPm).toString();
+        metadataV2.packageName = mPackageName;
+        metadataV2.versionName = mPackageInfo.versionName;
+        metadataV2.versionCode = PackageInfoCompat.getLongVersionCode(mPackageInfo);
+        metadataV2.isSystem = false;
+        metadataV2.hasRules = false;
+        metadataV2.backupTime = mBackupTime;
+        metadataV2.crypto = CryptoUtils.MODE_NO_ENCRYPTION;
+        metadataV2.apkName = "base.apk";
         // Backup flags
         BackupFlags flags = new BackupFlags(BackupFlags.BACKUP_APK_FILES);
         try {
@@ -341,24 +341,25 @@ public class SBConverter extends Converter {
             flags.addFlag(BackupFlags.BACKUP_CACHE);
         } catch (FileNotFoundException ignore) {
         }
-        mSourceMetadata.flags = flags;
-        mSourceMetadata.dataDirs = ConvertUtils.getDataDirs(mPackageName, mUserId, flags.backupInternalData(),
+        metadataV2.flags = flags;
+        metadataV2.dataDirs = ConvertUtils.getDataDirs(mPackageName, mUserId, flags.backupInternalData(),
                 flags.backupExternalData(), flags.backupMediaObb());
         try {
             mFilesToBeDeleted.add(getSplitFile());
-            mSourceMetadata.isSplitApk = true;
+            metadataV2.isSplitApk = true;
         } catch (FileNotFoundException e) {
-            mSourceMetadata.isSplitApk = false;
+            metadataV2.isSplitApk = false;
         }
         try {
-            mSourceMetadata.splitConfigs = cacheAndGetSplitConfigs();
+            metadataV2.splitConfigs = cacheAndGetSplitConfigs();
         } catch (IOException | RemoteException e) {
             throw new BackupException("Could not cache splits", e);
         }
-        mSourceMetadata.userHandle = mUserId;
-        mSourceMetadata.tarType = Prefs.BackupRestore.getCompressionMethod();
-        mSourceMetadata.keyStore = false;
-        mSourceMetadata.installer = Prefs.Installer.getInstallerPackageName();
+        metadataV2.userId = mUserId;
+        metadataV2.tarType = Prefs.BackupRestore.getCompressionMethod();
+        metadataV2.keyStore = false;
+        metadataV2.installer = Prefs.Installer.getInstallerPackageName();
+        return metadataV2;
     }
 
     @NonNull

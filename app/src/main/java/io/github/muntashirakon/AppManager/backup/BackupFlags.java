@@ -39,6 +39,7 @@ public final class BackupFlags {
             BACKUP_MULTIPLE,
             BACKUP_RULES,
             BACKUP_NO_SIGNATURE_CHECK,
+            BACKUP_ADB_DATA,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface BackupFlag {
@@ -60,6 +61,7 @@ public final class BackupFlags {
     public static final int BACKUP_MULTIPLE = 1 << 9;
     public static final int BACKUP_EXTRAS = 1 << 10;
     public static final int BACKUP_CACHE = 1 << 11;
+    public static final int BACKUP_ADB_DATA = 1 << 12;
 
     private static final LinkedHashMap<Integer, Pair<Integer, Integer>> sBackupFlagsMap = new LinkedHashMap<Integer, Pair<Integer, Integer>>() {{
         put(BACKUP_APK_FILES, new Pair<>(R.string.backup_apk_files, R.string.backup_apk_files_description));

@@ -35,20 +35,22 @@ public class BackupCompat {
      * @see IBackupManager#setBackupEnabledForUser(int, boolean)
      */
     public void setBackupEnabledForUser(@UserIdInt int userId, boolean isEnabled) {
-        ExUtils.exceptionAsIgnored(() -> {
+        try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 mBackupManager.setBackupEnabledForUser(userId, isEnabled);
             } else {
                 mBackupManager.setBackupEnabled(isEnabled);
             }
-        });
+        } catch (RemoteException e) {
+            ExUtils.rethrowFromSystemServer(e);
+        }
     }
 
     /**
      * @see IBackupManager#isBackupEnabledForUser(int)
      */
     public boolean isBackupEnabledForUser(@UserIdInt int userId) {
-        return Boolean.TRUE.equals(ExUtils.exceptionAsNull(() -> {
+        try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 return mBackupManager.isBackupEnabledForUser(userId);
             }
@@ -57,15 +59,25 @@ public class BackupCompat {
             }
             // Multiuser backup only available since Android 10
             return false;
-        }));
+        } catch (RemoteException e) {
+            return ExUtils.rethrowFromSystemServer(e);
+        }
     }
 
     public boolean setBackupPassword(String currentPw, String newPw) {
-        return Boolean.TRUE.equals(ExUtils.exceptionAsNull(() -> mBackupManager.setBackupPassword(currentPw, newPw)));
+        try {
+            return mBackupManager.setBackupPassword(currentPw, newPw);
+        } catch (RemoteException e) {
+            return ExUtils.rethrowFromSystemServer(e);
+        }
     }
 
     public boolean hasBackupPassword() {
-        return Boolean.TRUE.equals(ExUtils.exceptionAsNull(mBackupManager::hasBackupPassword));
+        try {
+            return mBackupManager.hasBackupPassword();
+        } catch (RemoteException e) {
+            return ExUtils.rethrowFromSystemServer(e);
+        }
     }
 
     @SuppressWarnings("deprecation")
@@ -102,7 +114,7 @@ public class BackupCompat {
 
     @SuppressWarnings("deprecation")
     public boolean isAppEligibleForBackupForUser(@UserIdInt int userId, String packageName) {
-        return Boolean.TRUE.equals(ExUtils.exceptionAsNull(() -> {
+        try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 return mBackupManager.isAppEligibleForBackupForUser(userId, packageName);
             } else {
@@ -116,7 +128,9 @@ public class BackupCompat {
                 // In API 23 and earlier, set it to eligible by default
                 return true;
             }
-        }));
+        } catch (RemoteException e) {
+            return ExUtils.rethrowFromSystemServer(e);
+        }
     }
 
     @SuppressWarnings("deprecation")

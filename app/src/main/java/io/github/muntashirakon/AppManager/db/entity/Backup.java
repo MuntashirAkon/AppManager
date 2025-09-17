@@ -127,7 +127,7 @@ public class Backup {
         backup.crypto = metadata.crypto;
         backup.version = metadata.version;
         backup.flags = metadata.flags.getFlags();
-        backup.userId = metadata.userHandle;
+        backup.userId = metadata.userId;
         backup.tarType = metadata.tarType;
         backup.hasKeyStore = metadata.keyStore;
         backup.installer = metadata.installer;

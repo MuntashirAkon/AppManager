@@ -14,6 +14,7 @@ import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.BackupItems;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
+import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.history.IJsonSerializer;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -41,8 +42,11 @@ public class BackupMetadataV2 implements IJsonSerializer {
     public String checksumAlgo = DigestUtils.SHA_256;  // checksum_algo
     @CryptoUtils.Mode
     public String crypto;  // crypto
+    @Nullable
     public byte[] iv;  // iv
-    public byte[] aes;  // aes (encrypted using RSA, for RSA only)
+    @Nullable
+    public byte[] aes;  // aes (encrypted using RSA/ECC, for RSA/ECC only)
+    @Nullable
     public String keyIds;  // key_ids
     /**
      * Metadata version.
@@ -53,17 +57,18 @@ public class BackupMetadataV2 implements IJsonSerializer {
      *     <li>{@code 4} - Since v3.0.3 and v3.1.0-alpha02, AES GCM MAC size is 128 bits</li>
      * </ul>
      */
-    public int version = 4;  // version
+    public int version;  // version
     public String apkName;  // apk_name
     public String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);  // instruction_set
     public BackupFlags flags;  // flags
-    public int userHandle;  // user_handle
+    public int userId;  // user_handle
     @TarUtils.TarType
     public String tarType;  // tar_type
     public boolean keyStore;  // key_store
     public String installer;  // installer
 
     public BackupMetadataV2() {
+        version = MetadataManager.getCurrentBackupMetaVersion();
     }
 
     public BackupMetadataV2(@NonNull BackupMetadataV2 metadata) {
@@ -97,7 +102,7 @@ public class BackupMetadataV2 implements IJsonSerializer {
         apkName = metadata.apkName;
         instructionSet = metadata.instructionSet;
         flags = new BackupFlags(metadata.flags.getFlags());
-        userHandle = metadata.userHandle;
+        userId = metadata.userId;
         tarType = metadata.tarType;
         keyStore = metadata.keyStore;
         installer = metadata.installer;
@@ -126,7 +131,7 @@ public class BackupMetadataV2 implements IJsonSerializer {
         rootObject.put("apk_name", apkName);
         rootObject.put("instruction_set", instructionSet);
         rootObject.put("flags", flags.getFlags());
-        rootObject.put("user_handle", userHandle);
+        rootObject.put("user_handle", userId);
         rootObject.put("tar_type", tarType);
         rootObject.put("key_store", keyStore);
         rootObject.put("installer", installer);

@@ -321,8 +321,12 @@ class RestoreOp implements Closeable {
             }
         } catch (Exception ignore) {
         }
-        if (!packageStagingDirectory.canWrite()) {
-            packageStagingDirectory = mBackupItem.getUnencryptedBackupPath();
+        try {
+            if (!packageStagingDirectory.canWrite()) {
+                packageStagingDirectory = mBackupItem.getUnencryptedBackupPath();
+            }
+        } catch (IOException e) {
+            throw new BackupException("Could not create package staging directory", e);
         }
         synchronized (sLock) {
             // Setup apk files, including split apk

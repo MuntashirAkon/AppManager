@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.backup;
 
 import static org.junit.Assert.*;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,16 +32,97 @@ public class BackupManagerTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
     private Path rscBackupPath;
     private Path tmpBackupPath;
+    private int mDefaultMetaVersion;
 
     @Before
     public void setUp() {
         assert classLoader != null;
+        mDefaultMetaVersion = MetadataManager.getCurrentBackupMetaVersion();
         rscBackupPath = Paths.get(classLoader.getResource("backups/v4").getFile());
         tmpBackupPath = Paths.get(RoboUtils.getTestBaseDir());
     }
 
+    @After
+    public void tearDown() {
+        MetadataManager.setCurrentBackupMetaVersion(mDefaultMetaVersion);
+        for (Path path : tmpBackupPath.listFiles()) {
+            path.delete();
+        }
+    }
+
+    @Test
+    public void testBackupV5Default() throws BackupException, IOException {
+        MetadataManager.setCurrentBackupMetaVersion(5);
+        // First run restore
+        testRestoreV4Default();
+        // Do backup
+        Prefs.Storage.setVolumePath(tmpBackupPath.getUri().toString());
+        BackupManager bm = new BackupManager();
+        BackupOpOptions options = new BackupOpOptions("dnsfilter.android", 0, 1110, null, true);
+        bm.backup(options, null);
+        Path[] backupPaths = Prefs.Storage.getAppManagerDirectory().findFile(BackupItems.BACKUP_DIRECTORY).listFiles();
+        assertEquals(1, backupPaths.length);
+        Path backupPath = backupPaths[0];
+        String backupUuid = backupPath.getName();
+        assertTrue(BackupUtils.isUuid(backupUuid));
+        BackupItems.BackupItem backupItem = BackupItems.findBackupItem(BackupUtils.getV5RelativeDir(backupUuid));
+        assertEquals(1, backupItem.getSourceFiles().length);
+        assertEquals(1, backupItem.getDataFiles(0).length);
+        assertEquals(1, backupItem.getDataFiles(1).length);
+        assertTrue(backupItem.getIconFile().exists());
+        assertTrue(backupItem.isV5AndUp());
+        assertTrue(backupItem.getMetadataV5File().exists());
+        assertTrue(backupItem.getInfoFile().exists());
+        BackupMetadataV5 metadata = backupItem.getMetadata();
+        assertNull(metadata.metadata.backupName);
+        assertEquals(0, metadata.info.userId);
+        assertEquals(MetadataManager.getCurrentBackupMetaVersion(), metadata.info.version);
+        assertTrue(metadata.isBaseBackup());
+        assertEquals("dnsfilter.android", metadata.metadata.packageName);
+        assertEquals(2, metadata.metadata.dataDirs.length);
+        assertEquals(BuildConfig.APPLICATION_ID, metadata.metadata.installer);
+        assertFalse(metadata.metadata.isSplitApk);
+        bm.verify(BackupUtils.getV5RelativeDir(backupUuid));
+    }
+
+    @Test
+    public void testBackupV5Custom() throws BackupException, IOException {
+        MetadataManager.setCurrentBackupMetaVersion(5);
+        // First run restore
+        testRestoreV4Default();
+        // Do backup
+        Prefs.Storage.setVolumePath(tmpBackupPath.getUri().toString());
+        BackupManager bm = new BackupManager();
+        BackupOpOptions options = new BackupOpOptions("dnsfilter.android", 0, 1110 | BackupFlags.BACKUP_MULTIPLE, "test_backup", false);
+        bm.backup(options, null);
+        Path[] backupPaths = Prefs.Storage.getAppManagerDirectory().findFile(BackupItems.BACKUP_DIRECTORY).listFiles();
+        assertEquals(1, backupPaths.length);
+        Path backupPath = backupPaths[0];
+        String backupUuid = backupPath.getName();
+        assertTrue(BackupUtils.isUuid(backupUuid));
+        BackupItems.BackupItem backupItem = BackupItems.findBackupItem(BackupUtils.getV5RelativeDir(backupUuid));
+        assertEquals(1, backupItem.getSourceFiles().length);
+        assertEquals(1, backupItem.getDataFiles(0).length);
+        assertEquals(1, backupItem.getDataFiles(1).length);
+        assertTrue(backupItem.getIconFile().exists());
+        assertTrue(backupItem.isV5AndUp());
+        assertTrue(backupItem.getMetadataV5File().exists());
+        assertTrue(backupItem.getInfoFile().exists());
+        BackupMetadataV5 metadata = backupItem.getMetadata();
+        assertEquals("test_backup", metadata.metadata.backupName);
+        assertEquals(0, metadata.info.userId);
+        assertEquals(MetadataManager.getCurrentBackupMetaVersion(), metadata.info.version);
+        assertFalse(metadata.isBaseBackup());
+        assertEquals("dnsfilter.android", metadata.metadata.packageName);
+        assertEquals(2, metadata.metadata.dataDirs.length);
+        assertEquals(BuildConfig.APPLICATION_ID, metadata.metadata.installer);
+        assertFalse(metadata.metadata.isSplitApk);
+        bm.verify(BackupUtils.getV5RelativeDir(backupUuid));
+    }
+
     @Test
     public void testBackupV4Default() throws BackupException, IOException {
+        MetadataManager.setCurrentBackupMetaVersion(4);
         // First run restore
         testRestoreV4Default();
         // Do backup
@@ -58,7 +140,7 @@ public class BackupManagerTest {
         BackupMetadataV5 metadata = backupItem.getMetadata();
         assertNull(metadata.metadata.backupName);
         assertEquals(0, metadata.info.userId);
-        assertEquals(MetadataManager.CURRENT_BACKUP_META_VERSION, metadata.info.version);
+        assertEquals(MetadataManager.getCurrentBackupMetaVersion(), metadata.info.version);
         assertTrue(metadata.isBaseBackup());
         assertEquals("dnsfilter.android", metadata.metadata.packageName);
         assertEquals(2, metadata.metadata.dataDirs.length);
@@ -70,6 +152,7 @@ public class BackupManagerTest {
 
     @Test
     public void testBackupV4Custom() throws BackupException, IOException {
+        MetadataManager.setCurrentBackupMetaVersion(4);
         // First run restore
         testRestoreV4Default();
         // Do backup
@@ -87,7 +170,7 @@ public class BackupManagerTest {
         BackupMetadataV5 metadata = backupItem.getMetadata();
         assertEquals("test_backup", metadata.metadata.backupName);
         assertEquals(0, metadata.info.userId);
-        assertEquals(MetadataManager.CURRENT_BACKUP_META_VERSION, metadata.info.version);
+        assertEquals(MetadataManager.getCurrentBackupMetaVersion(), metadata.info.version);
         assertFalse(metadata.isBaseBackup());
         assertEquals("dnsfilter.android", metadata.metadata.packageName);
         assertEquals(2, metadata.metadata.dataDirs.length);

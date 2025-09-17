@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.backup.struct;
 
 import static io.github.muntashirakon.AppManager.backup.BackupUtils.getReadableTarType;
-import static io.github.muntashirakon.AppManager.backup.MetadataManager.CURRENT_BACKUP_META_VERSION;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
@@ -30,6 +29,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.BackupItems;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
+import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.crypto.AESCrypto;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
@@ -101,7 +101,7 @@ public class BackupMetadataV5 implements LocalizedString {
                     @Nullable byte[] iv,
                     @Nullable byte[] aes,
                     @Nullable String keyIds) {
-            this.version = CURRENT_BACKUP_META_VERSION;
+            this.version = MetadataManager.getCurrentBackupMetaVersion();
             this.backupTime = backupTime;
             this.flags = flags;
             this.userId = userId;
@@ -263,7 +263,7 @@ public class BackupMetadataV5 implements LocalizedString {
         public String installer;  // installer
 
         public Metadata(@Nullable String backupName) {
-            this.version = CURRENT_BACKUP_META_VERSION;
+            this.version = MetadataManager.getCurrentBackupMetaVersion();
             this.backupName = backupName;
         }
 
@@ -348,7 +348,7 @@ public class BackupMetadataV5 implements LocalizedString {
     @NonNull
     @WorkerThread
     public CharSequence toLocalizedString(@NonNull Context context) {
-        CharSequence titleText = isBaseBackup() ? context.getText(R.string.base_backup) : metadata.backupName;
+        CharSequence titleText = isBaseBackup() ? context.getText(R.string.base_backup) : Objects.requireNonNull(metadata.backupName);
 
         StringBuilder subtitleText = new StringBuilder()
                 .append(DateUtils.formatDateTime(context, info.backupTime))
