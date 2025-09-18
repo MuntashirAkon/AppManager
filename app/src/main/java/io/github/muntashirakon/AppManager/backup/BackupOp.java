@@ -6,7 +6,6 @@ import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFI
 import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PLACEHOLDER;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.MASTER_KEY;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
 import static io.github.muntashirakon.AppManager.backup.BackupUtils.TAR_TYPES;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET_SIGNING_CERTIFICATES;
@@ -246,18 +245,26 @@ class BackupOp implements Closeable {
         metadata.versionName = mPackageInfo.versionName;
         metadata.versionCode = PackageInfoCompat.getLongVersionCode(mPackageInfo);
         metadata.apkName = new File(mApplicationInfo.sourceDir).getName();
-        String[] dataDirs;
+        String[] dataDirs = null;
         if (mBackupFlags.backupAdbData()) {
-            mBackupFlags.removeFlag(BackupFlags.BACKUP_INT_DATA);
-            mBackupFlags.removeFlag(BackupFlags.BACKUP_EXT_DATA);
-            List<String> defaultDirs = BackupUtils.getDataDirectories(mApplicationInfo, false,
-                    false, mBackupFlags.backupMediaObb());
-            dataDirs = new String[defaultDirs.size() + 1];
-            for (int i = 0; i < defaultDirs.size(); ++i) {
-                dataDirs[i] = defaultDirs.get(i);
+            if (BackupCompat.isAppEligibleForBackupForUser(mUserId, mPackageName)) {
+                mBackupFlags.removeFlag(BackupFlags.BACKUP_INT_DATA);
+                mBackupFlags.removeFlag(BackupFlags.BACKUP_EXT_DATA);
+                List<String> defaultDirs = BackupUtils.getDataDirectories(mApplicationInfo, false,
+                        false, mBackupFlags.backupMediaObb());
+                dataDirs = new String[defaultDirs.size() + 1];
+                for (int i = 0; i < defaultDirs.size(); ++i) {
+                    dataDirs[i] = defaultDirs.get(i);
+                }
+                dataDirs[defaultDirs.size()] = BackupManager.DATA_BACKUP_SPECIAL_ADB;
+            } else {
+                // ADB backup cannot be used.
+                mBackupFlags.removeFlag(BackupFlags.BACKUP_ADB_DATA);
+                mBackupFlags.addFlag(BackupFlags.BACKUP_INT_DATA);
+                mBackupFlags.addFlag(BackupFlags.BACKUP_EXT_DATA);
             }
-            dataDirs[defaultDirs.size()] = BackupManager.DATA_BACKUP_SPECIAL_ADB;
-        } else {
+        }
+        if (dataDirs == null) {
             // Non-ADB backup: default
             dataDirs = BackupUtils.getDataDirectories(mApplicationInfo, mBackupFlags.backupInternalData(),
                     mBackupFlags.backupExternalData(), mBackupFlags.backupMediaObb()).toArray(new String[0]);
@@ -304,7 +311,7 @@ class BackupOp implements Closeable {
 
     private void backupApkFiles() throws BackupException {
         Path dataAppPath = OsEnvironment.getDataAppDirectory();
-        final String sourceBackupFilePrefix = SOURCE_PREFIX + getExt(mMetadata.info.tarType);
+        final String sourceBackupFilePrefix = BackupUtils.getSourceFilePrefix(getExt(mMetadata.info.tarType));
         Path sourceDir = Paths.get(PackageUtils.getSourceDir(mApplicationInfo));
         if (dataAppPath.equals(sourceDir)) {
             // APK located inside /data/app directory

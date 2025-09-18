@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.backup.convert;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
 import static io.github.muntashirakon.AppManager.utils.TarUtils.DEFAULT_SPLIT_SIZE;
 import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_BZIP2;
@@ -19,16 +18,12 @@ import android.util.Base64;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.github.luben.zstd.ZstdOutputStream;
-
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
-import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -222,7 +217,7 @@ public class TBConverter extends Converter {
         } catch (Exception ignore) {
         }
         // Backup APK file
-        String sourceBackupFilePrefix = SOURCE_PREFIX + getExt(mDestMetadata.info.tarType);
+        String sourceBackupFilePrefix = BackupUtils.getSourceFilePrefix(getExt(mDestMetadata.info.tarType));
         Path[] sourceFiles;
         try {
             sourceFiles = TarUtils.create(mDestMetadata.info.tarType, baseApkFile, mBackupItem.getUnencryptedBackupPath(), sourceBackupFilePrefix,
@@ -276,20 +271,7 @@ public class TBConverter extends Converter {
             if (intBackupFilePrefix != null) {
                 intSos = new SplitOutputStream(mBackupItem.getUnencryptedBackupPath(), intBackupFilePrefix, DEFAULT_SPLIT_SIZE);
                 BufferedOutputStream bos = new BufferedOutputStream(intSos);
-                OutputStream cos;
-                switch (tarType) {
-                    case TAR_GZIP:
-                        cos = new GzipCompressorOutputStream(bos);
-                        break;
-                    case TAR_BZIP2:
-                        cos = new BZip2CompressorOutputStream(bos);
-                        break;
-                    case TAR_ZSTD:
-                        cos = new ZstdOutputStream(bos);
-                        break;
-                    default:
-                        throw new BackupException("Invalid compression type: " + tarType);
-                }
+                OutputStream cos = TarUtils.createCompressedStream(bos, tarType);
                 intTos = new TarArchiveOutputStream(cos);
                 intTos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
                 intTos.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_POSIX);
@@ -297,20 +279,7 @@ public class TBConverter extends Converter {
             if (extBackupFilePrefix != null) {
                 extSos = new SplitOutputStream(mBackupItem.getUnencryptedBackupPath(), extBackupFilePrefix, DEFAULT_SPLIT_SIZE);
                 BufferedOutputStream bos = new BufferedOutputStream(extSos);
-                OutputStream cos;
-                switch (tarType) {
-                    case TAR_GZIP:
-                        cos = new GzipCompressorOutputStream(bos);
-                        break;
-                    case TAR_BZIP2:
-                        cos = new BZip2CompressorOutputStream(bos);
-                        break;
-                    case TAR_ZSTD:
-                        cos = new ZstdOutputStream(bos);
-                        break;
-                    default:
-                        throw new BackupException("Invalid compression type: " + tarType);
-                }
+                OutputStream cos = TarUtils.createCompressedStream(bos, tarType);
                 extTos = new TarArchiveOutputStream(cos);
                 extTos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
                 extTos.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_POSIX);

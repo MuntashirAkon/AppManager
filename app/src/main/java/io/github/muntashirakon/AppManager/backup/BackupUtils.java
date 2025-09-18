@@ -293,6 +293,14 @@ public final class BackupUtils {
     }
 
     @NonNull
+    public static String getSourceFilePrefix(@Nullable String fullExtension) {
+        if (fullExtension == null) {
+            return BackupManager.SOURCE_PREFIX;
+        }
+        return BackupManager.SOURCE_PREFIX + fullExtension;
+    }
+
+    @NonNull
     public static String getDataFilePrefix(int index, @Nullable String fullExtension) {
         if (fullExtension == null) {
             return BackupManager.DATA_PREFIX + index;

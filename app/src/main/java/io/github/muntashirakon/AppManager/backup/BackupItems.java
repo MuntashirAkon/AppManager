@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.backup;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
 
 import android.annotation.UserIdInt;
 
@@ -428,7 +427,8 @@ public class BackupItems {
         @NonNull
         public Path[] getSourceFiles() {
             String ext = CryptoUtils.getExtension(mCryptoMode);
-            Path[] paths = getBackupPath().listFiles((dir, name) -> name.startsWith(SOURCE_PREFIX) && name.endsWith(ext));
+            final String sourcePrefix = BackupUtils.getSourceFilePrefix(null);
+            Path[] paths = getBackupPath().listFiles((dir, name) -> name.startsWith(sourcePrefix) && name.endsWith(ext));
             return Paths.getSortedPaths(paths);
         }
 

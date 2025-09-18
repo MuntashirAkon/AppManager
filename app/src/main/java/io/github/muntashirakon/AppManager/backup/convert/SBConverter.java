@@ -3,12 +3,8 @@
 package io.github.muntashirakon.AppManager.backup.convert;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
 import static io.github.muntashirakon.AppManager.utils.TarUtils.DEFAULT_SPLIT_SIZE;
-import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_BZIP2;
-import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_GZIP;
-import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_ZSTD;
 
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
@@ -22,12 +18,8 @@ import android.os.UserHandleHidden;
 import androidx.annotation.NonNull;
 import androidx.core.content.pm.PackageInfoCompat;
 
-import com.github.luben.zstd.ZstdOutputStream;
-
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -187,7 +179,7 @@ public class SBConverter extends Converter {
         }
         // Backup APK files
         String[] apkFiles = ArrayUtils.appendElement(String.class, mDestMetadata.metadata.splitConfigs, mDestMetadata.metadata.apkName);
-        String sourceBackupFilePrefix = SOURCE_PREFIX + getExt(mDestMetadata.info.tarType);
+        String sourceBackupFilePrefix = BackupUtils.getSourceFilePrefix(getExt(mDestMetadata.info.tarType));
         Path[] sourceFiles;
         try {
             // We have to specify APK files because the folder may contain many
@@ -227,22 +219,9 @@ public class SBConverter extends Converter {
             String dataBackupFilePrefix = BackupUtils.getDataFilePrefix(i++, getExt(tarType));
             try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(dataFile.openInputStream()));
                  SplitOutputStream sos = new SplitOutputStream(mBackupItem.getUnencryptedBackupPath(), dataBackupFilePrefix, DEFAULT_SPLIT_SIZE);
-                 BufferedOutputStream bos = new BufferedOutputStream(sos)) {
+                 BufferedOutputStream bos = new BufferedOutputStream(sos);
+                 OutputStream os = TarUtils.createCompressedStream(bos, tarType)) {
                 // TODO: 31/5/21 Check backup format (each zip file has a comment section which can be parsed as JSON)
-                OutputStream os;
-                switch (tarType) {
-                    case TAR_GZIP:
-                        os = new GzipCompressorOutputStream(bos);
-                        break;
-                    case TAR_BZIP2:
-                        os = new BZip2CompressorOutputStream(bos);
-                        break;
-                    case TAR_ZSTD:
-                        os = new ZstdOutputStream(bos);
-                        break;
-                    default:
-                        throw new BackupException("Invalid compression type: " + tarType);
-                }
                 try (TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                     tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
                     tos.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_POSIX);
