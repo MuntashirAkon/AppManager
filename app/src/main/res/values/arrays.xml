@@ -256,7 +256,7 @@
         <item>components</item>
         <item>data_size</item>
         <item>data_usage</item>
-        <item>freeze-unfreeze</item>
+        <item>freeze_unfreeze</item>
         <item>installed</item>
         <item>installer</item>
         <item>last_update</item>
