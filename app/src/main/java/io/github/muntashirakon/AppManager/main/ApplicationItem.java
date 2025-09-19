@@ -756,8 +756,9 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
 
     @Override
     public boolean isSuspended() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return (flags & ApplicationInfo.FLAG_SUSPENDED) != 0;
+        fetchPackageInfo();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mApplicationInfo != null) {
+            return ApplicationInfoCompat.isSuspended(mApplicationInfo);
         }
         // Not supported
         return false;
@@ -765,6 +766,10 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
 
     @Override
     public boolean isEnabled() {
+        fetchPackageInfo();
+        if (mApplicationInfo != null) {
+            return mApplicationInfo.enabled;
+        }
         return !isDisabled;
     }
 
