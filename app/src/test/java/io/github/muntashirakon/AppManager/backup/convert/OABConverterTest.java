@@ -94,7 +94,6 @@ public class OABConverterTest {
         Collections.sort(files);
         assertEquals(internalStorage, files);
         files = TarUtilsTest.getFileNamesGZip(Arrays.asList(backupItem.getDataFiles(1)));
-        System.out.println("Files: " + files);
         Collections.sort(files);
         assertEquals(externalStorage, files);
     }
