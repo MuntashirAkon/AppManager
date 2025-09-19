@@ -18,7 +18,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
@@ -97,7 +96,7 @@ public final class BackupFlags {
             backupFlags.add(BACKUP_INT_DATA);
         }
         backupFlags.add(BACKUP_EXT_DATA);
-        if (BuildConfig.DEBUG && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.BACKUP)) {
+        if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.BACKUP)) {
             backupFlags.add(BACKUP_ADB_DATA);
         }
         backupFlags.add(BACKUP_EXT_OBB_MEDIA);

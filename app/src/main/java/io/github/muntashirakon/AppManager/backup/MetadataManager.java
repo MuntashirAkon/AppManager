@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -26,7 +25,7 @@ import io.github.muntashirakon.io.Path;
 
 public final class MetadataManager {
     public static final String TAG = MetadataManager.class.getSimpleName();
-    private static int currentBackupMetaVersion = BuildConfig.DEBUG ? 5 : 4;
+    private static int currentBackupMetaVersion = 5;
 
     public static final String META_V2_FILE = "meta_v2.am.json";
     // New scheme
