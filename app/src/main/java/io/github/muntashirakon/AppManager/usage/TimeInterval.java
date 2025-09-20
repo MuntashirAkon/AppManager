@@ -15,7 +15,7 @@ public class TimeInterval extends Pair<Long, Long> {
 
     public TimeInterval(long begin, long end) {
         super(begin, end);
-        mIntervalType = UsageUtils.USAGE_TODAY;
+        mIntervalType = IntervalType.INTERVAL_DAILY;
     }
 
     public int getIntervalType() {

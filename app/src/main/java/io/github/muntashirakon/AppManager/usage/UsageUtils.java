@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.usage;
 
 import android.os.SystemClock;
 
-import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 
 import java.util.Calendar;
@@ -12,30 +11,12 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public final class UsageUtils {
-    @IntDef(value = {
-            USAGE_TODAY,
-            USAGE_YESTERDAY,
-            USAGE_WEEKLY,
-            USAGE_LAST_BOOT
-    })
-    public @interface IntervalType {
-    }
-
-    public static final int USAGE_TODAY = 0;
-    public static final int USAGE_YESTERDAY = 1;
-    public static final int USAGE_WEEKLY = 2;
-    public static final int USAGE_LAST_BOOT = 5;
-
     @NonNull
     public static TimeInterval getTimeInterval(@IntervalType int sort) {
         switch (sort) {
-            case USAGE_YESTERDAY:
-                return getYesterday();
-            case USAGE_WEEKLY:
+            case IntervalType.INTERVAL_WEEKLY:
                 return getLastWeek();
-            case USAGE_LAST_BOOT:
-                return getSinceLastBoot();
-            case USAGE_TODAY:
+            case IntervalType.INTERVAL_DAILY:
             default:
                 return getToday();
         }
@@ -88,7 +69,7 @@ public final class UsageUtils {
         calendar.set(Calendar.SECOND, 59);
         calendar.set(Calendar.MILLISECOND, 999);
         long endOfDay = calendar.getTimeInMillis();
-        return new TimeInterval(USAGE_TODAY, beginningOfDay, endOfDay);
+        return new TimeInterval(IntervalType.INTERVAL_DAILY, beginningOfDay, endOfDay);
     }
 
     /**
@@ -210,7 +191,7 @@ public final class UsageUtils {
 
         // Set weekStart to beginning of Monday (00:00:00.000)
         Calendar startCal = Calendar.getInstance(TimeZone.getDefault());
-         startCal.setTimeInMillis(weekStart);
+        startCal.setTimeInMillis(weekStart);
         startCal.set(Calendar.HOUR_OF_DAY, 0);
         startCal.set(Calendar.MINUTE, 0);
         startCal.set(Calendar.SECOND, 0);
@@ -224,7 +205,7 @@ public final class UsageUtils {
         endCal.set(Calendar.SECOND, 59);
         endCal.set(Calendar.MILLISECOND, 999);
 
-        return new TimeInterval(USAGE_WEEKLY, startCal.getTimeInMillis(), endCal.getTimeInMillis());
+        return new TimeInterval(IntervalType.INTERVAL_WEEKLY, startCal.getTimeInMillis(), endCal.getTimeInMillis());
     }
 
     /**

@@ -66,8 +66,7 @@
         <item>@string/type_uri_array_list</item>
     </string-array>
     <string-array name="usage_interval_dropdown_list">
-        <item>@string/usage_today</item>
-        <item>@string/usage_yesterday</item>
+        <item>@string/usage_daily</item>
         <item>@string/usage_weekly</item>
     </string-array>
     <string-array name="whats_new_titles">
@@ -273,4 +272,5 @@
         <item>trackers</item>
         <item>version_name</item>
     </string-array>
+    <string name="usage_daily">Daily</string>
 </resources>

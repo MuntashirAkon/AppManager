@@ -2,11 +2,6 @@
 
 package io.github.muntashirakon.AppManager.usage;
 
-import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_LAST_BOOT;
-import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_TODAY;
-import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_WEEKLY;
-import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_YESTERDAY;
-
 import android.graphics.drawable.Drawable;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
@@ -145,16 +140,11 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         holder.screenTimeView.setText(DateUtils.getFormattedDuration(mActivity, mActivity.viewModel.getTotalScreenTime()));
         switch (currentInterval) {
-            case USAGE_TODAY:
+            case IntervalType.INTERVAL_DAILY:
                 holder.usageIntervalView.setText(R.string.usage_today);
                 break;
-            case USAGE_YESTERDAY:
-                holder.usageIntervalView.setText(R.string.usage_yesterday);
-                break;
-            case USAGE_WEEKLY:
+            case IntervalType.INTERVAL_WEEKLY:
                 holder.usageIntervalView.setText(R.string.usage_7_days);
-                break;
-            case USAGE_LAST_BOOT:
                 break;
         }
 
@@ -182,8 +172,8 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.packageName.setText(usageInfo.packageName);
         // Set usage
         long lastTimeUsed = usageInfo.lastUsageTime > 1 ? (System.currentTimeMillis() - usageInfo.lastUsageTime) : 0;
-        if (mActivity.viewModel.getCurrentInterval() != USAGE_YESTERDAY
-                && usageInfo.packageName.equals(BuildConfig.APPLICATION_ID)) {
+        if (usageInfo.packageName.equals(BuildConfig.APPLICATION_ID)) {
+            // TODO: 9/20/25 Display this only for the present day/week
             // Special case for App Manager since the user is using the app right now
             holder.lastUsageDate.setText(R.string.running);
         } else if (lastTimeUsed > 1) {

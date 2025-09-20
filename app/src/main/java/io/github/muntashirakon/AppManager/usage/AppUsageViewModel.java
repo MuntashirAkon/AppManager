@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.AppManager.usage;
 
-import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_TODAY;
-
 import android.app.Application;
 
 import androidx.annotation.AnyThread;
@@ -30,8 +28,8 @@ public class AppUsageViewModel extends AndroidViewModel {
 
     private long mTotalScreenTime;
     private boolean mHasMultipleUsers;
-    @UsageUtils.IntervalType
-    private int mCurrentInterval = USAGE_TODAY;
+    @IntervalType
+    private int mCurrentInterval = IntervalType.INTERVAL_DAILY;
     private int mSortOrder = SortOrder.SORT_BY_SCREEN_TIME;
 
     public AppUsageViewModel(@NonNull Application application) {
@@ -46,12 +44,12 @@ public class AppUsageViewModel extends AndroidViewModel {
         return mPackageUsageInfoLiveData;
     }
 
-    public void setCurrentInterval(@UsageUtils.IntervalType int currentInterval) {
+    public void setCurrentInterval(@IntervalType int currentInterval) {
         mCurrentInterval = currentInterval;
         loadPackageUsageInfoList();
     }
 
-    @UsageUtils.IntervalType
+    @IntervalType
     public int getCurrentInterval() {
         return mCurrentInterval;
     }
