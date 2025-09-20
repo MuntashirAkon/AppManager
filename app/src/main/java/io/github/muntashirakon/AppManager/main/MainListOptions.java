@@ -88,6 +88,7 @@ public class MainListOptions extends ListOptions {
             FILTER_USER_APPS,
             FILTER_SYSTEM_APPS,
             FILTER_FROZEN_APPS,
+            FILTER_UNFROZEN_APPS,
             FILTER_APPS_WITH_RULES,
             FILTER_APPS_WITH_ACTIVITIES,
             FILTER_APPS_WITH_BACKUPS,
@@ -121,6 +122,7 @@ public class MainListOptions extends ListOptions {
     public static final int FILTER_APPS_WITH_SAF = 1 << 12;
     public static final int FILTER_APPS_WITH_SSAID = 1 << 13;
     public static final int FILTER_STOPPED_APPS = 1 << 14;
+    public static final int FILTER_UNFROZEN_APPS = 1 << 15;
 
     // For now, just generate FilterItem
     @NonNull
@@ -137,6 +139,11 @@ public class MainListOptions extends ListOptions {
         if ((flags & FILTER_FROZEN_APPS) != 0) {
             FreezeOption option = new FreezeOption();
             option.setKeyValue("frozen", null);
+            filterItem.addFilterOption(option);
+        }
+        if ((flags & FILTER_UNFROZEN_APPS) != 0) {
+            FreezeOption option = new FreezeOption();
+            option.setKeyValue("unfrozen", null);
             filterItem.addFilterOption(option);
         }
         if ((flags & FILTER_APPS_WITH_RULES) != 0) {
@@ -323,6 +330,7 @@ public class MainListOptions extends ListOptions {
             put(FILTER_USER_APPS, R.string.filter_user_apps);
             put(FILTER_SYSTEM_APPS, R.string.filter_system_apps);
             put(FILTER_FROZEN_APPS, R.string.filter_frozen_apps);
+            put(FILTER_UNFROZEN_APPS, R.string.filter_unfrozen_apps);
             put(FILTER_STOPPED_APPS, R.string.filter_force_stopped_apps);
             put(FILTER_INSTALLED_APPS, R.string.installed_apps);
             put(FILTER_UNINSTALLED_APPS, R.string.uninstalled_apps);
