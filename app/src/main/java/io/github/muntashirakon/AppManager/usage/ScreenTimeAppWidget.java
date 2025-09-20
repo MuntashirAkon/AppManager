@@ -45,9 +45,10 @@ public class ScreenTimeAppWidget extends AppWidgetProvider {
         int[] userIds = Users.getUsersIds();
         List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
         AppUsageStatsManager usageStatsManager = AppUsageStatsManager.getInstance();
+        TimeInterval interval = UsageUtils.getToday();
         for (int userId : userIds) {
             ExUtils.exceptionAsIgnored(() -> packageUsageInfoList.addAll(usageStatsManager
-                    .getUsageStats(UsageUtils.USAGE_TODAY, userId)));
+                    .getUsageStats(interval, userId)));
         }
         Collections.sort(packageUsageInfoList, (o1, o2) -> -Long.compare(o1.screenTime, o2.screenTime));
         long totalScreenTime = 0;

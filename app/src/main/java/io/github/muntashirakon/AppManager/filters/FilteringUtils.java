@@ -24,6 +24,7 @@ import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.PackageUsageInfo;
+import io.github.muntashirakon.AppManager.usage.TimeInterval;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -54,8 +55,9 @@ public final class FilteringUtils {
             // List usages
             Map<String, PackageUsageInfo> packageUsageInfoList = new HashMap<>();
             if (hasUsageAccess) {
-                List<PackageUsageInfo> usageInfoList = ExUtils.exceptionAsNull(() -> AppUsageStatsManager.getInstance()
-                        .getUsageStats(UsageUtils.USAGE_WEEKLY, userId));
+                TimeInterval interval = UsageUtils.getLastWeek();
+                List<PackageUsageInfo> usageInfoList = ExUtils.exceptionAsNull(() ->
+                        AppUsageStatsManager.getInstance().getUsageStats(interval, userId));
                 if (usageInfoList != null) {
                     for (PackageUsageInfo info : usageInfoList) {
                         if (ThreadUtils.isInterrupted()) return Collections.emptyList();

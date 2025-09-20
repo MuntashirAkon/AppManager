@@ -175,21 +175,21 @@ public class AppUsageStatsManager {
      * called whenever an app goes to background and <code>Activity#onResume</code> is called
      * whenever an app appears in foreground.
      *
-     * @param usageInterval Usage interval
+     * @param interval Usage interval
      * @return A list of package usage
      * @throws SecurityException If usage stats permission is not available for the user
      * @throws RemoteException   If usage stats cannot be retrieved due to transaction error
      */
     @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
     @NonNull
-    public List<PackageUsageInfo> getUsageStats(@UsageUtils.IntervalType int usageInterval, @UserIdInt int userId)
+    public List<PackageUsageInfo> getUsageStats(@NonNull TimeInterval interval, @UserIdInt int userId)
             throws RemoteException, SecurityException {
         List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
         int _try = 5; // try to get usage stats at most 5 times
         Throwable re;
         do {
             try {
-                packageUsageInfoList.addAll(getUsageStatsInternal(usageInterval, userId));
+                packageUsageInfoList.addAll(getUsageStatsInternal(interval, userId));
                 re = null;
             } catch (Throwable e) {
                 re = e;
@@ -204,10 +204,9 @@ public class AppUsageStatsManager {
     @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
     @NonNull
     public PackageUsageInfo getUsageStatsForPackage(@NonNull String packageName,
-                                                    @UsageUtils.IntervalType int usageInterval,
+                                                    @NonNull TimeInterval range,
                                                     @UserIdInt int userId)
             throws RemoteException, PackageManager.NameNotFoundException {
-        UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(usageInterval);
         ApplicationInfo applicationInfo = PackageManagerCompat.getApplicationInfo(packageName, MATCH_UNINSTALLED_PACKAGES
                 | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
         PackageUsageInfo packageUsageInfo = new PackageUsageInfo(mContext, packageName, userId, applicationInfo);
@@ -306,16 +305,15 @@ public class AppUsageStatsManager {
      * called whenever an app goes to background and <code>Activity#onResume</code> is called
      * whenever an app appears in foreground.
      *
-     * @param usageInterval Usage interval
+     * @param interval Usage interval
      * @return A list of package usage
      */
     @NonNull
-    private List<PackageUsageInfo> getUsageStatsInternal(@UsageUtils.IntervalType int usageInterval,
+    private List<PackageUsageInfo> getUsageStatsInternal(@NonNull TimeInterval interval,
                                                          @UserIdInt int userId) {
         List<PackageUsageInfo> screenTimeList = new ArrayList<>();
         Map<String, PerPackageUsageInternal> perPackageUsageMap = new HashMap<>();
         // Get events
-        UsageUtils.TimeInterval interval = UsageUtils.getTimeInterval(usageInterval);
         List<UsageEvents.Event> events = UsageStatsManagerCompat.queryEventsSorted(interval.getStartTime(), interval.getEndTime(), userId, USUAL_ACTIVITY_EVENTS);
         long lastShutdownTime = 0L;
         for (UsageEvents.Event event : events) {
@@ -385,7 +383,7 @@ public class AppUsageStatsManager {
     }
 
     @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
-    public static long getLastActivityTime(String packageName, @NonNull UsageUtils.TimeInterval interval) {
+    public static long getLastActivityTime(String packageName, @NonNull TimeInterval interval) {
         UsageEvents events = UsageStatsManagerCompat.queryEvents(interval.getStartTime(), interval.getEndTime(),
                 UserHandleHidden.myUserId());
         if (events == null) return 0L;
@@ -402,21 +400,21 @@ public class AppUsageStatsManager {
 
     @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
     @NonNull
-    public static SparseArrayCompat<DataUsage> getMobileData(@NonNull UsageUtils.TimeInterval interval) {
+    public static SparseArrayCompat<DataUsage> getMobileData(@NonNull TimeInterval interval) {
         return getDataUsageForNetwork(TRANSPORT_CELLULAR, interval);
     }
 
 
     @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
     @NonNull
-    public static SparseArrayCompat<DataUsage> getWifiData(@NonNull UsageUtils.TimeInterval interval) {
+    public static SparseArrayCompat<DataUsage> getWifiData(@NonNull TimeInterval interval) {
         return getDataUsageForNetwork(TRANSPORT_WIFI, interval);
     }
 
     @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
     @NonNull
     public static SparseArrayCompat<DataUsage> getDataUsageForNetwork(@Transport int networkType,
-                                                                @NonNull UsageUtils.TimeInterval interval) {
+                                                                      @NonNull TimeInterval interval) {
         SparseArrayCompat<DataUsage> dataUsageSparseArray = new SparseArrayCompat<>();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             @SuppressWarnings("deprecation")
@@ -453,13 +451,12 @@ public class AppUsageStatsManager {
 
     @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
     @NonNull
-    public static DataUsage getDataUsageForPackage(int uid, @UsageUtils.IntervalType int intervalType) {
+    public static DataUsage getDataUsageForPackage(int uid, @NonNull TimeInterval range) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             @SuppressWarnings("deprecation")
             ProcUidNetStat netStat = ProcFs.getInstance().getUidNetStat(uid);
             return netStat != null ? new DataUsage(netStat.txBytes, netStat.rxBytes) : DataUsage.EMPTY;
         }
-        UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(intervalType);
         List<String> subscriberIds;
         long totalTx = 0;
         long totalRx = 0;

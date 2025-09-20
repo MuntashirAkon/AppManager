@@ -75,8 +75,9 @@ public class AppUsageViewModel extends AndroidViewModel {
 
     public void loadPackageUsageInfo(PackageUsageInfo usageInfo) {
         ThreadUtils.postOnBackgroundThread(() -> ExUtils.exceptionAsIgnored(() -> {
-            PackageUsageInfo packageUsageInfo = AppUsageStatsManager.getInstance().getUsageStatsForPackage(
-                    usageInfo.packageName, mCurrentInterval, usageInfo.userId);
+            TimeInterval interval = UsageUtils.getTimeInterval(mCurrentInterval);
+            PackageUsageInfo packageUsageInfo = AppUsageStatsManager.getInstance()
+                    .getUsageStatsForPackage(usageInfo.packageName, interval, usageInfo.userId);
             packageUsageInfo.copyOthers(usageInfo);
             mPackageUsageInfoLiveData.postValue(packageUsageInfo);
         }));
@@ -87,10 +88,11 @@ public class AppUsageViewModel extends AndroidViewModel {
         ThreadUtils.postOnBackgroundThread(() -> {
             int[] userIds = Users.getUsersIds();
             AppUsageStatsManager usageStatsManager = AppUsageStatsManager.getInstance();
+            TimeInterval interval = UsageUtils.getTimeInterval(mCurrentInterval);
             mPackageUsageInfoList.clear();
             for (int userId : userIds) {
                 ExUtils.exceptionAsIgnored(() -> mPackageUsageInfoList.addAll(usageStatsManager
-                        .getUsageStats(mCurrentInterval, userId)));
+                        .getUsageStats(interval, userId)));
             }
             mTotalScreenTime = 0;
             Set<Integer> users = new HashSet<>(3);

@@ -31,7 +31,7 @@ import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
-import io.github.muntashirakon.AppManager.usage.UsageUtils;
+import io.github.muntashirakon.AppManager.usage.TimeInterval;
 import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -214,7 +214,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                         if (needSourceUpdate
                                 // 3. Last activity date
                                 || (hasUsageAccess && AppUsageStatsManager.getLastActivityTime(item.packageName,
-                                new UsageUtils.TimeInterval(backup.backupTime, System.currentTimeMillis())) > backup.backupTime)
+                                new TimeInterval(backup.backupTime, System.currentTimeMillis())) > backup.backupTime)
                                 // 4. Check directory change
                                 || isDataDirectoryChanged(backup, ignoredDirs)
                                 // 5. Check integrity

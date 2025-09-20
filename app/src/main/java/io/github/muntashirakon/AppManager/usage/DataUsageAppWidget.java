@@ -33,7 +33,7 @@ public class DataUsageAppWidget extends AppWidgetProvider {
         // Fetch colors
         context = AppearanceUtils.getThemedWidgetContext(context, false);
         // Fetch data
-        UsageUtils.TimeInterval interval = UsageUtils.getTimeInterval(UsageUtils.USAGE_TODAY);
+        TimeInterval interval = UsageUtils.getToday();
         SparseArrayCompat<AppUsageStatsManager.DataUsage> mobileData = AppUsageStatsManager.getMobileData(interval);
         SparseArrayCompat<AppUsageStatsManager.DataUsage> wifiData = AppUsageStatsManager.getWifiData(interval);
         long mobileTx = 0;

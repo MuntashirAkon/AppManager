@@ -70,6 +70,7 @@ import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
+import io.github.muntashirakon.AppManager.usage.TimeInterval;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
@@ -366,8 +367,8 @@ public class AppInfoViewModel extends AndroidViewModel {
                 if (hasUsageAccess) {
                     // Net statistics
                     AppUsageStatsManager.DataUsage dataUsage;
-                    dataUsage = AppUsageStatsManager.getDataUsageForPackage(applicationInfo.uid,
-                            UsageUtils.USAGE_LAST_BOOT);
+                    TimeInterval interval = UsageUtils.getLastWeek();
+                    dataUsage = AppUsageStatsManager.getDataUsageForPackage(applicationInfo.uid, interval);
                     if (dataUsage.getTotal() == 0 && !ArrayUtils.contains(
                             packageInfo.requestedPermissions, Manifest.permission.INTERNET)) {
                         appInfo.dataUsage = null;

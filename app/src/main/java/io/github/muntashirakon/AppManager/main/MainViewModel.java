@@ -68,6 +68,7 @@ import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.PackageUsageInfo;
+import io.github.muntashirakon.AppManager.usage.TimeInterval;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -462,9 +463,11 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 if (filterItem.getTimesUsageInfoUsed() > 0) {
                     boolean hasUsageAccess = FeatureController.isUsageAccessEnabled() && SelfPermissions.checkUsageStatsPermission();
                     if (hasUsageAccess) {
+                        TimeInterval interval = UsageUtils.getLastWeek();
                         for (int userId : Users.getUsersIds()) {
-                            List<PackageUsageInfo> usageInfoList = ExUtils.exceptionAsNull(() -> AppUsageStatsManager.getInstance()
-                                    .getUsageStats(UsageUtils.USAGE_WEEKLY, userId));
+                            List<PackageUsageInfo> usageInfoList;
+                            usageInfoList = ExUtils.exceptionAsNull(() -> AppUsageStatsManager
+                                    .getInstance().getUsageStats(interval, userId));
                             if (usageInfoList != null) {
                                 for (PackageUsageInfo info : usageInfoList) {
                                     if (ThreadUtils.isInterrupted()) return;
