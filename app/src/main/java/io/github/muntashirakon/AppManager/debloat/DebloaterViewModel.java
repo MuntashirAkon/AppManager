@@ -172,6 +172,12 @@ public class DebloaterViewModel extends AndroidViewModel {
                     if ((mFilterFlags & DebloaterListOptions.FILTER_SYSTEM_APPS) != 0 && !debloatObject.isSystemApp()) {
                         continue;
                     }
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_FROZEN_APPS) != 0 && !debloatObject.isFrozen()) {
+                        continue;
+                    }
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_UNFROZEN_APPS) != 0 && debloatObject.isFrozen()) {
+                        continue;
+                    }
                     debloatObjects.add(debloatObject);
                 }
             }

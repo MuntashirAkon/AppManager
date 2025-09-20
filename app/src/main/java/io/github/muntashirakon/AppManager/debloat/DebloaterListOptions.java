@@ -43,6 +43,8 @@ public class DebloaterListOptions extends CapsuleBottomSheetDialogFragment {
             FILTER_SYSTEM_APPS,
             FILTER_INSTALLED_APPS,
             FILTER_UNINSTALLED_APPS,
+            FILTER_FROZEN_APPS,
+            FILTER_UNFROZEN_APPS,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface Filter {
@@ -65,6 +67,8 @@ public class DebloaterListOptions extends CapsuleBottomSheetDialogFragment {
     public static final int FILTER_SYSTEM_APPS = 1 << 11;
     public static final int FILTER_INSTALLED_APPS = 1 << 12;
     public static final int FILTER_UNINSTALLED_APPS = 1 << 13;
+    public static final int FILTER_FROZEN_APPS = 1 << 14;
+    public static final int FILTER_UNFROZEN_APPS = 1 << 15;
 
     private static final SparseIntArray LIST_FILTER_MAP = new SparseIntArray() {{
         put(FILTER_LIST_AOSP, R.string.debloat_list_aosp);
@@ -86,6 +90,8 @@ public class DebloaterListOptions extends CapsuleBottomSheetDialogFragment {
         put(FILTER_SYSTEM_APPS, R.string.filter_system_apps);
         put(FILTER_INSTALLED_APPS, R.string.installed_apps);
         put(FILTER_UNINSTALLED_APPS, R.string.uninstalled_apps);
+        put(FILTER_FROZEN_APPS, R.string.filter_frozen_apps);
+        put(FILTER_UNFROZEN_APPS, R.string.filter_unfrozen_apps);
     }};
 
     @Filter

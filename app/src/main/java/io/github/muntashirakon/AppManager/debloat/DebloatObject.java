@@ -26,6 +26,7 @@ import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 
 public class DebloatObject {
     @IntDef({REMOVAL_SAFE, REMOVAL_REPLACE, REMOVAL_CAUTION, REMOVAL_UNSAFE})
@@ -80,6 +81,8 @@ public class DebloatObject {
     private boolean mInstalled;
     @Nullable
     private Boolean mSystemApp = null;
+    @Nullable
+    private Boolean mFrozen = null;
     @Nullable
     private List<SuggestionObject> mSuggestions;
 
@@ -184,6 +187,10 @@ public class DebloatObject {
         return Boolean.FALSE.equals(mSystemApp);
     }
 
+    public boolean isFrozen() {
+        return Boolean.TRUE.equals(mFrozen);
+    }
+
     public void fillInstallInfo(@NonNull Context context, @NonNull AppDb appDb) {
         PackageManager pm = context.getPackageManager();
         List<SuggestionObject> suggestionObjects = getSuggestions();
@@ -200,6 +207,8 @@ public class DebloatObject {
         // Update application data
         mInstalled = false;
         mUsers = null;
+        mSystemApp = null;
+        mFrozen = null;
         List<App> apps = appDb.getAllApplications(packageName);
         for (App app : apps) {
             if (!app.isInstalled) {
@@ -208,6 +217,7 @@ public class DebloatObject {
             mInstalled = true;
             addUser(app.userId);
             mSystemApp = app.isSystemApp();
+            mFrozen = !app.isEnabled;
             mLabel = app.packageLabel;
             if (getIcon() == null) {
                 try {
@@ -217,6 +227,7 @@ public class DebloatObject {
                     mSystemApp = ApplicationInfoCompat.isSystemApp(ai);
                     mLabel = ai.loadLabel(pm);
                     mIcon = ai.loadIcon(pm);
+                    mFrozen = FreezeUtils.isFrozen(ai);
                 } catch (RemoteException | PackageManager.NameNotFoundException ignore) {
                 }
             }
