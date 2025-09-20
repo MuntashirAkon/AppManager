@@ -28,6 +28,7 @@ import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.terminal.TermActivity;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.viewer.ExplorerActivity;
@@ -45,6 +46,7 @@ public class FeatureController {
             FEAT_APP_INFO,
             FEAT_CODE_EDITOR,
             FEAT_VIRUS_TOTAL,
+            FEAT_TERMINAL,
     })
     public @interface FeatureFlags {
     }
@@ -60,6 +62,7 @@ public class FeatureController {
     private static final int FEAT_APP_INFO = 1 << 8;
     private static final int FEAT_CODE_EDITOR = 1 << 9;
     public static final int FEAT_VIRUS_TOTAL = 1 << 10;
+    public static final int FEAT_TERMINAL = 1 << 11;
 
     @NonNull
     public static FeatureController getInstance() {
@@ -71,24 +74,26 @@ public class FeatureController {
 
     private static final LinkedHashMap<Integer, Integer> sFeatureFlagsMap = new LinkedHashMap<Integer, Integer>() {
         {
-            featureFlags.add(FEAT_INTERCEPTOR);
-            put(FEAT_INTERCEPTOR, R.string.interceptor);
-            featureFlags.add(FEAT_MANIFEST);
-            put(FEAT_MANIFEST, R.string.manifest_viewer);
-            featureFlags.add(FEAT_SCANNER);
-            put(FEAT_SCANNER, R.string.scanner);
-            featureFlags.add(FEAT_INSTALLER);
-            put(FEAT_INSTALLER, R.string.package_installer);
-            featureFlags.add(FEAT_USAGE_ACCESS);
-            put(FEAT_USAGE_ACCESS, R.string.usage_access);
-            featureFlags.add(FEAT_LOG_VIEWER);
-            put(FEAT_LOG_VIEWER, R.string.log_viewer);
             featureFlags.add(FEAT_APP_EXPLORER);
             put(FEAT_APP_EXPLORER, R.string.app_explorer);
             featureFlags.add(FEAT_APP_INFO);
             put(FEAT_APP_INFO, R.string.app_info);
             featureFlags.add(FEAT_CODE_EDITOR);
             put(FEAT_CODE_EDITOR, R.string.title_code_editor);
+            featureFlags.add(FEAT_INTERCEPTOR);
+            put(FEAT_INTERCEPTOR, R.string.interceptor);
+            featureFlags.add(FEAT_LOG_VIEWER);
+            put(FEAT_LOG_VIEWER, R.string.log_viewer);
+            featureFlags.add(FEAT_MANIFEST);
+            put(FEAT_MANIFEST, R.string.manifest_viewer);
+            featureFlags.add(FEAT_INSTALLER);
+            put(FEAT_INSTALLER, R.string.package_installer);
+            featureFlags.add(FEAT_SCANNER);
+            put(FEAT_SCANNER, R.string.scanner);
+            featureFlags.add(FEAT_TERMINAL);
+            put(FEAT_TERMINAL, R.string.title_terminal_emulator);
+            featureFlags.add(FEAT_USAGE_ACCESS);
+            put(FEAT_USAGE_ACCESS, R.string.usage_access);
             featureFlags.add(FEAT_VIRUS_TOTAL);
             put(FEAT_VIRUS_TOTAL, R.string.virus_total);
         }
@@ -154,6 +159,10 @@ public class FeatureController {
         return getInstance().isEnabled(FEAT_CODE_EDITOR);
     }
 
+    public static boolean isTerminalEnabled() {
+        return getInstance().isEnabled(FEAT_TERMINAL);
+    }
+
     private boolean isEnabled(@FeatureFlags int key) {
         ComponentName cn;
         switch (key) {
@@ -187,6 +196,9 @@ public class FeatureController {
                 break;
             case FEAT_CODE_EDITOR:
                 cn = getComponentName(key, CodeEditorActivity.ALIAS_EDITOR);
+                break;
+            case FEAT_TERMINAL:
+                cn = getComponentName(key, TermActivity.class);
                 break;
             default:
                 throw new IllegalArgumentException();
@@ -224,6 +236,9 @@ public class FeatureController {
                 break;
             case FEAT_CODE_EDITOR:
                 modifyState(key, CodeEditorActivity.ALIAS_EDITOR, enabled);
+                break;
+            case FEAT_TERMINAL:
+                modifyState(key, TermActivity.class, enabled);
                 break;
         }
         // Modify flags

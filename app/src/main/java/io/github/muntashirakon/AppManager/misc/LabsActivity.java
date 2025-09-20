@@ -50,12 +50,14 @@ public class LabsActivity extends BaseActivity {
                     Intent intent = new Intent(this, SysConfigActivity.class);
                     startActivity(intent);
                 });
-        addAction(this, flowLayout, R.string.title_terminal_emulator, R.drawable.ic_frost_termux)
-                .setOnClickListener(v -> {
-                    Intent intent = new Intent(this, TermActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                });
+        if (FeatureController.isTerminalEnabled()) {
+            addAction(this, flowLayout, R.string.title_terminal_emulator, R.drawable.ic_frost_termux)
+                    .setOnClickListener(v -> {
+                        Intent intent = new Intent(this, TermActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    });
+        }
         addAction(this, flowLayout, R.string.files, R.drawable.ic_file_document_multiple)
                 .setOnClickListener(v -> {
                     Intent intent = new Intent(this, FmActivity.class);
