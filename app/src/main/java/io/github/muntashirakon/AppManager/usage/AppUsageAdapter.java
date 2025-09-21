@@ -13,6 +13,7 @@ import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -40,11 +41,15 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     static class ListHeaderViewHolder extends RecyclerView.ViewHolder {
         final MaterialTextView screenTimeView;
         final MaterialTextView usageIntervalView;
+        final MaterialButton previousButton;
+        final MaterialButton nextButton;
 
         public ListHeaderViewHolder(@NonNull View itemView) {
             super(itemView);
             screenTimeView = itemView.findViewById(R.id.screen_time);
             usageIntervalView = itemView.findViewById(R.id.time);
+            previousButton = itemView.findViewById(R.id.action_previous);
+            nextButton = itemView.findViewById(R.id.action_next);
         }
     }
 
@@ -120,8 +125,8 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case VIEW_TYPE_HEADER:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_usage_header, parent, false);
                 return new ListHeaderViewHolder(view);
-            default:
             case VIEW_TYPE_LIST_ITEM:
+            default:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_usage, parent, false);
                 return new ListItemViewHolder(view);
         }
@@ -135,19 +140,15 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void onBindViewHolder(@NonNull ListHeaderViewHolder holder) {
-        // Make spinner the first item to focus on
-        int currentInterval = mActivity.viewModel.getCurrentInterval();
+        int intervalType = mActivity.viewModel.getCurrentInterval();
+        long duration = mActivity.viewModel.getTotalScreenTime();
+        long date = mActivity.viewModel.getCurrentDate();
 
-        holder.screenTimeView.setText(DateUtils.getFormattedDuration(mActivity, mActivity.viewModel.getTotalScreenTime()));
-        switch (currentInterval) {
-            case IntervalType.INTERVAL_DAILY:
-                holder.usageIntervalView.setText(R.string.usage_today);
-                break;
-            case IntervalType.INTERVAL_WEEKLY:
-                holder.usageIntervalView.setText(R.string.usage_7_days);
-                break;
-        }
-
+        holder.screenTimeView.setText(DateUtils.getFormattedDuration(mActivity, duration));
+        holder.usageIntervalView.setText(UsageUtils.getIntervalDescription(mActivity, intervalType, date));
+        holder.nextButton.setVisibility(UsageUtils.hasNextDay(date) ? View.VISIBLE : View.INVISIBLE);
+        holder.nextButton.setOnClickListener(v -> mActivity.viewModel.loadNext());
+        holder.previousButton.setOnClickListener(v -> mActivity.viewModel.loadPrevious());
     }
 
     public void onBindViewHolder(@NonNull ListItemViewHolder holder, int position) {
@@ -172,8 +173,8 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.packageName.setText(usageInfo.packageName);
         // Set usage
         long lastTimeUsed = usageInfo.lastUsageTime > 1 ? (System.currentTimeMillis() - usageInfo.lastUsageTime) : 0;
-        if (usageInfo.packageName.equals(BuildConfig.APPLICATION_ID)) {
-            // TODO: 9/20/25 Display this only for the present day/week
+        long currentDate = mActivity.viewModel.getCurrentDate();
+        if (usageInfo.packageName.equals(BuildConfig.APPLICATION_ID) && UsageUtils.isToday(currentDate)) {
             // Special case for App Manager since the user is using the app right now
             holder.lastUsageDate.setText(R.string.running);
         } else if (lastTimeUsed > 1) {

@@ -30,6 +30,7 @@ public class AppUsageViewModel extends AndroidViewModel {
     private boolean mHasMultipleUsers;
     @IntervalType
     private int mCurrentInterval = IntervalType.INTERVAL_DAILY;
+    private long mCurrentDate = System.currentTimeMillis();
     private int mSortOrder = SortOrder.SORT_BY_SCREEN_TIME;
 
     public AppUsageViewModel(@NonNull Application application) {
@@ -44,8 +45,18 @@ public class AppUsageViewModel extends AndroidViewModel {
         return mPackageUsageInfoLiveData;
     }
 
+    public void setCurrentDate(long currentDate) {
+        mCurrentDate = currentDate;
+        loadPackageUsageInfoList();
+    }
+
+    public long getCurrentDate() {
+        return mCurrentDate;
+    }
+
     public void setCurrentInterval(@IntervalType int currentInterval) {
         mCurrentInterval = currentInterval;
+        mCurrentDate = System.currentTimeMillis();
         loadPackageUsageInfoList();
     }
 
@@ -71,9 +82,17 @@ public class AppUsageViewModel extends AndroidViewModel {
         return mHasMultipleUsers;
     }
 
+    public void loadNext() {
+        setCurrentDate(UsageUtils.getNextDateFromInterval(mCurrentInterval, mCurrentDate));
+    }
+
+    public void loadPrevious() {
+        setCurrentDate(UsageUtils.getPreviousDateFromInterval(mCurrentInterval, mCurrentDate));
+    }
+
     public void loadPackageUsageInfo(PackageUsageInfo usageInfo) {
         ThreadUtils.postOnBackgroundThread(() -> ExUtils.exceptionAsIgnored(() -> {
-            TimeInterval interval = UsageUtils.getTimeInterval(mCurrentInterval);
+            TimeInterval interval = UsageUtils.getTimeInterval(mCurrentInterval, mCurrentDate);
             PackageUsageInfo packageUsageInfo = AppUsageStatsManager.getInstance()
                     .getUsageStatsForPackage(usageInfo.packageName, interval, usageInfo.userId);
             packageUsageInfo.copyOthers(usageInfo);
@@ -86,7 +105,7 @@ public class AppUsageViewModel extends AndroidViewModel {
         ThreadUtils.postOnBackgroundThread(() -> {
             int[] userIds = Users.getUsersIds();
             AppUsageStatsManager usageStatsManager = AppUsageStatsManager.getInstance();
-            TimeInterval interval = UsageUtils.getTimeInterval(mCurrentInterval);
+            TimeInterval interval = UsageUtils.getTimeInterval(mCurrentInterval, mCurrentDate);
             mPackageUsageInfoList.clear();
             for (int userId : userIds) {
                 ExUtils.exceptionAsIgnored(() -> mPackageUsageInfoList.addAll(usageStatsManager

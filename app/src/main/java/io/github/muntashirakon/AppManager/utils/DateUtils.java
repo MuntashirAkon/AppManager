@@ -53,6 +53,10 @@ public final class DateUtils {
 
     public static String getFormattedDuration(@NonNull Context context, long millis, boolean addSign,
                                               boolean includeSeconds) {
+        Resources res = context.getResources();
+        if (millis == 0) {
+            return res.getQuantityString(R.plurals.usage_minutes, 0, 0);
+        }
         String fTime = "";
         if (millis < 0) {
             millis = -millis;
@@ -60,7 +64,6 @@ public final class DateUtils {
         }
         long time = millis / 1000; // seconds
         long month, day, hour, min, sec;
-        Resources res = context.getResources();
         month = time / 2_592_000;
         time %= 2_592_000;
         day = time / 86_400;

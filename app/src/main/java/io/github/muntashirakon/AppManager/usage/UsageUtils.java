@@ -2,29 +2,69 @@
 
 package io.github.muntashirakon.AppManager.usage;
 
-import android.os.SystemClock;
+import android.content.Context;
+import android.text.format.DateFormat;
 
 import androidx.annotation.NonNull;
 
 import java.util.Calendar;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
+
+import io.github.muntashirakon.AppManager.R;
 
 public final class UsageUtils {
     @NonNull
-    public static TimeInterval getTimeInterval(@IntervalType int sort) {
-        switch (sort) {
+    public static TimeInterval getTimeInterval(@IntervalType int interval, long date) {
+        switch (interval) {
             case IntervalType.INTERVAL_WEEKLY:
-                return getLastWeek();
+                return getWeekBounds(date);
             case IntervalType.INTERVAL_DAILY:
             default:
-                return getToday();
+                return getDayBounds(date);
         }
     }
 
     @NonNull
-    public static TimeInterval getSinceLastBoot() {
-        return new TimeInterval(SystemClock.elapsedRealtime(), System.currentTimeMillis());
+    public static CharSequence getIntervalDescription(@NonNull Context context,
+                                                      @IntervalType int interval,
+                                                      long date) {
+        switch (interval) {
+            case IntervalType.INTERVAL_WEEKLY:
+                return getWeekDescription(context, date);
+            case IntervalType.INTERVAL_DAILY:
+            default:
+                return getDateDescription(context, date);
+        }
+    }
+
+    public static long getNextDateFromInterval(@IntervalType int interval, long currentDate) {
+        switch (interval) {
+            case IntervalType.INTERVAL_WEEKLY:
+                return UsageUtils.getNextWeekDay(currentDate);
+            case IntervalType.INTERVAL_DAILY:
+            default:
+                return UsageUtils.getNextDay(currentDate);
+        }
+    }
+
+    public static long getPreviousDateFromInterval(@IntervalType int interval, long currentDate) {
+        switch (interval) {
+            case IntervalType.INTERVAL_WEEKLY:
+                return UsageUtils.getPreviousWeekDay(currentDate);
+            case IntervalType.INTERVAL_DAILY:
+            default:
+                return UsageUtils.getPreviousDay(currentDate);
+        }
+    }
+
+    public static boolean isToday(long date) {
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        calendar.setTimeInMillis(date);
+        moveToStartOfDay(calendar);
+        long targetTime = calendar.getTimeInMillis();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        moveToStartOfDay(calendar);
+        return targetTime == calendar.getTimeInMillis();
     }
 
     @NonNull
@@ -34,16 +74,9 @@ public final class UsageUtils {
     }
 
     @NonNull
-    public static TimeInterval getYesterday() {
-        long timeNow = System.currentTimeMillis();
-        return getDayBounds(getPreviousDay(timeNow));
-    }
-
-    @NonNull
     public static TimeInterval getLastWeek() {
-        long timeEnd = System.currentTimeMillis();
-        long timeStart = timeEnd - TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS);
-        return new TimeInterval(timeStart, timeEnd);
+        long timeNow = System.currentTimeMillis();
+        return getWeekBounds(timeNow);
     }
 
     /**
@@ -55,21 +88,25 @@ public final class UsageUtils {
     public static TimeInterval getDayBounds(long date) {
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
         calendar.setTimeInMillis(date);
-
         // Set to beginning of day (00:00:00.000)
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
+        moveToStartOfDay(calendar);
         long beginningOfDay = calendar.getTimeInMillis();
-
         // Set to end of day (23:59:59.999)
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        calendar.set(Calendar.MILLISECOND, 999);
+        moveToEndOfDay(calendar);
         long endOfDay = calendar.getTimeInMillis();
         return new TimeInterval(IntervalType.INTERVAL_DAILY, beginningOfDay, endOfDay);
+    }
+
+    public static boolean hasNextDay(long date) {
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        calendar.setTimeInMillis(date);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        moveToStartOfDay(calendar);
+        long dayStart = calendar.getTimeInMillis();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        moveToStartOfDay(calendar);
+        long todayStart = calendar.getTimeInMillis();
+        return dayStart <= todayStart;
     }
 
     /**
@@ -82,6 +119,19 @@ public final class UsageUtils {
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
         calendar.setTimeInMillis(date);
         calendar.add(Calendar.DAY_OF_MONTH, 1);
+        return calendar.getTimeInMillis();
+    }
+
+    /**
+     * Gets the next day date from a given date
+     *
+     * @param date Input date in milliseconds
+     * @return Next day date in milliseconds
+     */
+    public static long getNextWeekDay(long date) {
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        calendar.setTimeInMillis(date);
+        calendar.add(Calendar.DAY_OF_MONTH, 7);
         return calendar.getTimeInMillis();
     }
 
@@ -99,139 +149,110 @@ public final class UsageUtils {
     }
 
     /**
-     * Gets the week number of the year for a given date
+     * Gets the previous day date from a given date
      *
      * @param date Input date in milliseconds
-     * @return Week number (1-53)
+     * @return Previous day date in milliseconds
      */
-    public static int getWeekOfYear(long date) {
+    public static long getPreviousWeekDay(long date) {
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
         calendar.setTimeInMillis(date);
-        return calendar.get(Calendar.WEEK_OF_YEAR);
-    }
-
-    /**
-     * Gets the day number (Calendar constant) from a date in milliseconds
-     *
-     * @param date Input date in milliseconds
-     * @return Day number constant (e.g., Calendar.MONDAY, Calendar.TUESDAY, etc.)
-     */
-    public static int getDayOfWeek(long date) {
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        calendar.setTimeInMillis(date);
-        return calendar.get(Calendar.DAY_OF_WEEK);
-    }
-
-    /**
-     * Gets the year from a date in milliseconds
-     *
-     * @param date Input date in milliseconds
-     * @return Year (e.g., 2025)
-     */
-    public static int getYear(long date) {
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        calendar.setTimeInMillis(date);
-        return calendar.get(Calendar.YEAR);
-    }
-
-    /**
-     * Gets a date from week number and a date
-     *
-     * @param weekNumber Week number (1-53)
-     * @param date       A date
-     * @return Date in milliseconds
-     */
-    public static long getDateFromWeekAndDayName(int weekNumber, int date) {
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        calendar.setTimeInMillis(date);
-        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-        int year = calendar.get(Calendar.YEAR);
-        return getDateFromWeekAndDay(weekNumber, year, dayOfWeek);
-    }
-
-    /**
-     * Gets a date from week number and day of week
-     *
-     * @param weekNumber Week number (1-53)
-     * @param year       Year
-     * @param dayOfWeek  Day of week (Calendar.MONDAY = 2, Calendar.SUNDAY = 1)
-     * @return Date in milliseconds
-     */
-    public static long getDateFromWeekAndDay(int weekNumber, int year, int dayOfWeek) {
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-
-        // Set to the first day of the year
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, Calendar.JANUARY);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        // Set to the desired week
-        calendar.set(Calendar.WEEK_OF_YEAR, weekNumber);
-
-        // Set to the desired day of week
-        calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
-
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
         return calendar.getTimeInMillis();
     }
 
     /**
      * Gets the beginning and end time of a week in milliseconds
      *
-     * @param weekNumber Week number (1-53)
-     * @param year       Year
+     * @param date Any date in the week in milliseconds
      */
-    public static TimeInterval getWeekBounds(int weekNumber, int year) {
-        int firstDayOfWeek = Calendar.getInstance(TimeZone.getDefault()).getFirstDayOfWeek();
-        long weekStart = getDateFromWeekAndDay(weekNumber, year, firstDayOfWeek);
-        long weekEnd = getDateFromWeekAndDay(weekNumber, year, getEndOfWeekDay(firstDayOfWeek));
+    @NonNull
+    public static TimeInterval getWeekBounds(long date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(date);
+        // Clear time part for start of day calculation
+        moveToStartOfDay(calendar);
+        // Move to the first day of the week according to locale
+        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+        long startOfWeekMillis = calendar.getTimeInMillis();
+        // Move to the last day of the week
+        calendar.add(Calendar.DAY_OF_WEEK, 6);
+        // Set time to the end of the day (23:59:59.999) for the last day
+        moveToEndOfDay(calendar);
+        long endOfWeekMillis = calendar.getTimeInMillis();
 
-        // Set weekStart to beginning of Monday (00:00:00.000)
-        Calendar startCal = Calendar.getInstance(TimeZone.getDefault());
-        startCal.setTimeInMillis(weekStart);
-        startCal.set(Calendar.HOUR_OF_DAY, 0);
-        startCal.set(Calendar.MINUTE, 0);
-        startCal.set(Calendar.SECOND, 0);
-        startCal.set(Calendar.MILLISECOND, 0);
-
-        // Set weekEnd to end of Sunday (23:59:59.999)
-        Calendar endCal = Calendar.getInstance(TimeZone.getDefault());
-        endCal.setTimeInMillis(weekEnd);
-        endCal.set(Calendar.HOUR_OF_DAY, 23);
-        endCal.set(Calendar.MINUTE, 59);
-        endCal.set(Calendar.SECOND, 59);
-        endCal.set(Calendar.MILLISECOND, 999);
-
-        return new TimeInterval(IntervalType.INTERVAL_WEEKLY, startCal.getTimeInMillis(), endCal.getTimeInMillis());
+        return new TimeInterval(IntervalType.INTERVAL_WEEKLY, startOfWeekMillis, endOfWeekMillis);
     }
 
     /**
-     * Returns the end of week day (Calendar constant) given the start of week day
+     * Returns a CharSequence describing the given dateMillis relative to today.
      *
-     * @param startOfWeekDay Calendar constant for the start day of the week (e.g., Calendar.MONDAY)
-     * @return Calendar constant for the end day of the week
+     * @param context    Android context to access resources
+     * @param dateMillis Date in milliseconds since epoch
+     * @return description of date
      */
-    public static int getEndOfWeekDay(int startOfWeekDay) {
-        switch (startOfWeekDay) {
-            case Calendar.MONDAY:
-                return Calendar.SUNDAY;
-            case Calendar.SUNDAY:
-                return Calendar.SATURDAY;
-            case Calendar.TUESDAY:
-                return Calendar.MONDAY;
-            case Calendar.WEDNESDAY:
-                return Calendar.TUESDAY;
-            case Calendar.THURSDAY:
-                return Calendar.WEDNESDAY;
-            case Calendar.FRIDAY:
-                return Calendar.THURSDAY;
-            case Calendar.SATURDAY:
-                return Calendar.FRIDAY;
-            default:
-                throw new IllegalArgumentException("Invalid day of week: " + startOfWeekDay);
+    @NonNull
+    public static CharSequence getWeekDescription(Context context, long dateMillis) {
+        TimeInterval targetInterval = getWeekBounds(dateMillis);
+        long today = System.currentTimeMillis();
+
+        if (today >= targetInterval.getStartTime() && today <= targetInterval.getEndTime()) {
+            return context.getString(R.string.usage_this_week);
         }
+
+        long sameDayLastWeek = getPreviousWeekDay(today);
+        if (sameDayLastWeek >= targetInterval.getStartTime() && sameDayLastWeek <= targetInterval.getEndTime()) {
+            return context.getString(R.string.usage_last_week);
+        }
+
+        java.text.DateFormat formatter = DateFormat.getMediumDateFormat(context);
+        return formatter.format(targetInterval.getStartTime()) + "–" + formatter.format(targetInterval.getEndTime());
+    }
+
+    /**
+     * Returns a CharSequence describing the given dateMillis relative to today.
+     *
+     * @param context    Android context to access resources
+     * @param dateMillis Date in milliseconds since epoch
+     * @return description of date
+     */
+    @NonNull
+    public static CharSequence getDateDescription(Context context, long dateMillis) {
+        Calendar inputCal = Calendar.getInstance();
+        inputCal.setTimeInMillis(dateMillis);
+
+        Calendar todayCal = Calendar.getInstance();
+
+        // Clear time components for accurate comparison
+        moveToStartOfDay(todayCal);
+        moveToStartOfDay(inputCal);
+
+        long diffMillis = todayCal.getTimeInMillis() - inputCal.getTimeInMillis();
+        long oneDayMillis = 24 * 60 * 60 * 1000L;
+
+        if (diffMillis == 0) {
+            // Same day -> today
+            return context.getString(R.string.usage_today);
+        } else if (diffMillis == oneDayMillis) {
+            // Yesterday
+            return context.getString(R.string.usage_yesterday);
+        } else {
+            // Otherwise, formatted date string using system locale and patterns
+            return DateFormat.getMediumDateFormat(context).format(dateMillis);
+        }
+    }
+
+    private static void moveToStartOfDay(@NonNull Calendar cal) {
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+    }
+
+    private static void moveToEndOfDay(@NonNull Calendar cal) {
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MILLISECOND, 999);
     }
 }

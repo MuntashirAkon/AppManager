@@ -1,27 +1,62 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/screen_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppTheme.DisplaySmall"
-        android:focusable="false"
-        tools:text="1 hr 20 mins" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/action_previous"
+        style="@style/Widget.AppTheme.Button.IconButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:layout_weight="0"
+        android:paddingVertical="@dimen/padding_small"
+        app:icon="@drawable/ic_less_than"
+        android:contentDescription="@string/goto_previous"
+        app:iconSize="20dp" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/time"
-        android:layout_width="match_parent"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/padding_medium"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppTheme.TitleSmall"
-        android:focusable="false"
-        tools:text="Today" />
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/screen_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppTheme.DisplaySmall"
+            tools:text="1 hr 20 mins" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_medium"
+            android:focusable="false"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppTheme.TitleSmall"
+            tools:text="Today" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/action_next"
+        style="@style/Widget.AppTheme.Button.IconButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/padding_small"
+        android:layout_weight="0"
+        android:paddingVertical="@dimen/padding_small"
+        app:icon="@drawable/ic_greater_than"
+        android:contentDescription="@string/next"
+        app:iconSize="20dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
