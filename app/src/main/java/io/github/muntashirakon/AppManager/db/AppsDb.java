@@ -15,6 +15,8 @@ import io.github.muntashirakon.AppManager.db.dao.FmFavoriteDao;
 import io.github.muntashirakon.AppManager.db.dao.FreezeTypeDao;
 import io.github.muntashirakon.AppManager.db.dao.LogFilterDao;
 import io.github.muntashirakon.AppManager.db.dao.OpHistoryDao;
+import io.github.muntashirakon.AppManager.db.dao.ArchivedAppDao;
+import io.github.muntashirakon.AppManager.db.entity.ArchivedApp;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.db.entity.FmFavorite;
