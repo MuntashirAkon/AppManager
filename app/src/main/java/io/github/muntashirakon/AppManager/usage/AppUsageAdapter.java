@@ -151,11 +151,7 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.nextButton.setVisibility(UsageUtils.hasNextDay(date) ? View.VISIBLE : View.INVISIBLE);
         holder.nextButton.setOnClickListener(v -> mActivity.viewModel.loadNext());
         holder.previousButton.setOnClickListener(v -> mActivity.viewModel.loadPrevious());
-        if (intervalType == IntervalType.INTERVAL_DAILY) {
-            UsageDataProcessor.updateChartWithHourlyAppUsage(holder.barChartView, mActivity.viewModel.getPackageUsageEntries(), date);
-        } else {
-            UsageDataProcessor.updateChartWithDailyAppUsage(holder.barChartView, mActivity.viewModel.getPackageUsageEntries(), date);
-        }
+        UsageDataProcessor.updateChartWithAppUsage(holder.barChartView, mActivity.viewModel.getPackageUsageEntries(), intervalType, date);
     }
 
     public void onBindViewHolder(@NonNull ListItemViewHolder holder, int position) {

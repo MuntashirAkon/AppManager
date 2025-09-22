@@ -17,6 +17,19 @@ public class UsageDataProcessor {
     private static final long HOUR_IN_MILLIS = 60 * 60 * 1000L;
     private static final long DAY_IN_MILLIS = 24L * 60 * 60 * 1000;
 
+    public static void updateChartWithAppUsage(@NonNull BarChartView chart,
+                                               @NonNull List<PackageUsageInfo.Entry> events,
+                                               @IntervalType int interval, long targetDate) {
+        switch (interval) {
+            case IntervalType.INTERVAL_WEEKLY:
+                updateChartWithDailyAppUsage(chart, events, targetDate);
+                break;
+            case IntervalType.INTERVAL_DAILY:
+            default:
+                updateChartWithHourlyAppUsage(chart, events, targetDate);
+        }
+    }
+
     public static void updateChartWithHourlyAppUsage(BarChartView chart, List<PackageUsageInfo.Entry> events, long targetDate) {
         float[] hourlyMinutes = convertToMinutes(groupIntoHourlyBucketsForDay(events, targetDate));
 

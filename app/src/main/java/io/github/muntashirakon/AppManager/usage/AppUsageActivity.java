@@ -96,7 +96,8 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             mAppUsageAdapter.setDefaultList(packageUsageInfoList);
         });
         viewModel.getPackageUsageInfo().observe(this, packageUsageInfo -> {
-            AppUsageDetailsDialog fragment = AppUsageDetailsDialog.getInstance(packageUsageInfo);
+            AppUsageDetailsDialog fragment = AppUsageDetailsDialog.getInstance(packageUsageInfo,
+                    viewModel.getCurrentInterval(), viewModel.getCurrentDate());
             fragment.show(getSupportFragmentManager(), AppUsageDetailsDialog.TAG);
         });
         checkPermissions();

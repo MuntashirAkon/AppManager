@@ -96,13 +96,11 @@ public class AppUsageViewModel extends AndroidViewModel {
     }
 
     public void loadPackageUsageInfo(PackageUsageInfo usageInfo) {
-        ThreadUtils.postOnBackgroundThread(() -> ExUtils.exceptionAsIgnored(() -> {
-            TimeInterval interval = UsageUtils.getTimeInterval(mCurrentInterval, mCurrentDate);
-            PackageUsageInfo packageUsageInfo = AppUsageStatsManager.getInstance()
-                    .getUsageStatsForPackage(usageInfo.packageName, interval, usageInfo.userId);
-            packageUsageInfo.copyOthers(usageInfo);
-            mPackageUsageInfoLiveData.postValue(packageUsageInfo);
-        }));
+        if (ThreadUtils.isMainThread()) {
+            mPackageUsageInfoLiveData.setValue(usageInfo);
+        } else {
+            mPackageUsageInfoLiveData.postValue(usageInfo);
+        }
     }
 
     @AnyThread
