@@ -1541,4 +1541,12 @@
     <string name="goto_previous">Previous</string>
     <string name="usage_this_week">This week</string>
     <string name="usage_last_week">Last week</string>
+    <string name="bar_chart_content_description">Bar chart with %d data points.</string>
+    <string name="usage_daily_bar_chart_accessibility_description">Usage at %1$s is %2$.0f minutes. Bar %3$d of %4$d</string>
+    <string name="usage_weekly_hours_bar_chart_accessibility_description">Usage on %1$s is %2$.lf hours. Bar %3$d of %4$d</string>
+    <string name="usage_weekly_minutes_bar_chart_accessibility_description">Usage on %1$s is %2$.0f minutes. Bar %3$d of %4$d</string>
+    <string name="usage_bar_chart_y_axis_label_minute">%.0f min</string>
+    <string name="usage_bar_chart_y_axis_label_hour">%.0 hr</string>
+    <string name="usage_bar_chart_tooltip_minutes">%s • %.0f minutes</string>
+    <string name="usage_bar_chart_tooltip_hours">%s • %.1f hours</string>
 </resources>

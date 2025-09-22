@@ -29,6 +29,7 @@ import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.adapters.SelectedArrayAdapter;
+import io.github.muntashirakon.util.AccessibilityUtils;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialSpinner;
@@ -43,6 +44,8 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             R.id.action_sort_by_wifi_data};
 
     AppUsageViewModel viewModel;
+    MaterialSpinner spinner;
+    RecyclerView recyclerView;
     LinearProgressIndicator progressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
     private AppUsageAdapter mAppUsageAdapter;
@@ -68,7 +71,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         progressIndicator.setVisibilityAfterHide(View.GONE);
 
         // Interval
-        MaterialSpinner spinner = findViewById(R.id.spinner);
+        spinner = findViewById(R.id.spinner);
         UiUtils.applyWindowInsetsAsMargin(spinner, false, false);
         spinner.requestFocus();
         ArrayAdapter<CharSequence> intervalSpinnerAdapter = SelectedArrayAdapter.createFromResource(this,
@@ -82,7 +85,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
 
         // Get usage stats
         mAppUsageAdapter = new AppUsageAdapter(this);
-        RecyclerView recyclerView = findViewById(R.id.scrollView);
+        recyclerView = findViewById(R.id.scrollView);
         recyclerView.setEmptyView(findViewById(android.R.id.empty));
         recyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(this));
         recyclerView.setAdapter(mAppUsageAdapter);
@@ -94,6 +97,15 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         viewModel.getPackageUsageInfoList().observe(this, packageUsageInfoList -> {
             ProgressIndicatorCompat.setVisibility(progressIndicator, false);
             mAppUsageAdapter.setDefaultList(packageUsageInfoList);
+            // Focus on the first item
+            recyclerView.post(() -> {
+                if (recyclerView.getChildCount() > 0) {
+                    View firstChild = recyclerView.getChildAt(0);
+                    if (firstChild != null) {
+                        AccessibilityUtils.requestAccessibilityFocus(firstChild);
+                    }
+                }
+            });
         });
         viewModel.getPackageUsageInfo().observe(this, packageUsageInfo -> {
             AppUsageDetailsDialog fragment = AppUsageDetailsDialog.getInstance(packageUsageInfo,

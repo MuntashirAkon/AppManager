@@ -2,14 +2,20 @@
 
 package io.github.muntashirakon.AppManager.usage;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 
+import java.time.DayOfWeek;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
+import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
@@ -43,10 +49,22 @@ public class UsageDataProcessor {
         }
 
         chart.setManualYAxisRange(0f, nextDivisibleBy4(Collections.max(values)));
-        chart.setYAxisFormat("%.0f min");
+        chart.setYAxisFormat(chart.getContext().getString(R.string.usage_bar_chart_y_axis_label_minute));
         chart.setData(values, labels);
-        chart.setTooltipListener((barIndex, value, label) ->
-                String.format("%s • %.0f minutes", label, value));
+        chart.setTooltipListener(new BarChartView.TooltipListener() {
+            @NonNull
+            @Override
+            public String getTooltipText(Context context, int barIndex, float value, String label) {
+                return context.getString(R.string.usage_bar_chart_tooltip_minutes, label, value);
+            }
+
+            @NonNull
+            @Override
+            public String getAccessibilityText(Context context, int barIndex, int barCount, float value, String label) {
+                return context.getString(R.string.usage_daily_bar_chart_accessibility_description,
+                        label, value, (barIndex + 1), barCount);
+            }
+        });
     }
 
     public static void updateChartWithDailyAppUsage(BarChartView chart, List<PackageUsageInfo.Entry> events, long targetDate) {
@@ -65,14 +83,42 @@ public class UsageDataProcessor {
 
         for (int i = 0; i < Math.min(dailyUsage.length, weekDayLabels.length); i++) {
             values.add(dailyUsage[i]);
-            labels.add(weekDayLabels[i]);
+            labels.add(getLocalizedShortDayNameFromLabel(weekDayLabels[i]));
         }
 
         chart.setManualYAxisRange(0f, nextDivisibleBy4(Collections.max(values)));
-        chart.setYAxisFormat(displayInHours ? "%.0f hr" : "%.0f min");
+        String yAxisFormat;
+        if (displayInHours) {
+            yAxisFormat = chart.getContext().getString(R.string.usage_bar_chart_y_axis_label_hour);
+        } else {
+            yAxisFormat = chart.getContext().getString(R.string.usage_bar_chart_y_axis_label_minute);
+        }
+        chart.setYAxisFormat(yAxisFormat);
         chart.setData(values, labels);
-        chart.setTooltipListener((barIndex, value, label) ->
-                String.format(displayInHours ? "%s • %.1f hours" : "%s • %.1f minutes", label, value));
+        chart.setTooltipListener(new BarChartView.TooltipListener() {
+            @NonNull
+            @Override
+            public String getTooltipText(Context context, int barIndex, float value, String label) {
+                String localizedLabel = getLocalizedFullDayNameFromLabel(weekDayLabels[barIndex]);
+                if (displayInHours) {
+                    return context.getString(R.string.usage_bar_chart_tooltip_hours, localizedLabel, value);
+                } else {
+                    return context.getString(R.string.usage_bar_chart_tooltip_minutes, localizedLabel, value);
+                }
+            }
+
+            @NonNull
+            @Override
+            public String getAccessibilityText(Context context, int barIndex, int barCount, float value, String label) {
+                if (displayInHours) {
+                    return context.getString(R.string.usage_weekly_hours_bar_chart_accessibility_description,
+                            getLocalizedFullDayNameFromLabel(weekDayLabels[barIndex]), value, (barIndex + 1), barCount);
+                } else {
+                    return context.getString(R.string.usage_weekly_minutes_bar_chart_accessibility_description,
+                            getLocalizedFullDayNameFromLabel(weekDayLabels[barIndex]), value, (barIndex + 1), barCount);
+                }
+            }
+        });
     }
 
     /**
@@ -159,6 +205,46 @@ public class UsageDataProcessor {
             }
         }
         return msBuckets;
+    }
+
+    public static String getLocalizedFullDayNameFromLabel(@NonNull String label) {
+        switch (label) {
+            case "Mon":
+                return DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL, Locale.getDefault());
+            case "Tue":
+                return DayOfWeek.TUESDAY.getDisplayName(TextStyle.FULL, Locale.getDefault());
+            case "Wed":
+                return DayOfWeek.WEDNESDAY.getDisplayName(TextStyle.FULL, Locale.getDefault());
+            case "Thu":
+                return DayOfWeek.THURSDAY.getDisplayName(TextStyle.FULL, Locale.getDefault());
+            case "Fri":
+                return DayOfWeek.FRIDAY.getDisplayName(TextStyle.FULL, Locale.getDefault());
+            case "Sat":
+                return DayOfWeek.SATURDAY.getDisplayName(TextStyle.FULL, Locale.getDefault());
+            case "Sun":
+                return DayOfWeek.SUNDAY.getDisplayName(TextStyle.FULL, Locale.getDefault());
+        }
+        throw new IllegalArgumentException("Invalid label " + label);
+    }
+
+    public static String getLocalizedShortDayNameFromLabel(@NonNull String label) {
+        switch (label) {
+            case "Mon":
+                return DayOfWeek.MONDAY.getDisplayName(TextStyle.SHORT, Locale.getDefault());
+            case "Tue":
+                return DayOfWeek.TUESDAY.getDisplayName(TextStyle.SHORT, Locale.getDefault());
+            case "Wed":
+                return DayOfWeek.WEDNESDAY.getDisplayName(TextStyle.SHORT, Locale.getDefault());
+            case "Thu":
+                return DayOfWeek.THURSDAY.getDisplayName(TextStyle.SHORT, Locale.getDefault());
+            case "Fri":
+                return DayOfWeek.FRIDAY.getDisplayName(TextStyle.SHORT, Locale.getDefault());
+            case "Sat":
+                return DayOfWeek.SATURDAY.getDisplayName(TextStyle.SHORT, Locale.getDefault());
+            case "Sun":
+                return DayOfWeek.SUNDAY.getDisplayName(TextStyle.SHORT, Locale.getDefault());
+        }
+        throw new IllegalArgumentException("Invalid label " + label);
     }
 
     @NonNull

@@ -10,15 +10,21 @@ import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.accessibility.AccessibilityEvent;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.TintTypedArray;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.customview.widget.ExploreByTouchHelper;
 
 import com.google.android.material.internal.ThemeEnforcement;
 
@@ -26,6 +32,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.util.UiUtils;
@@ -90,6 +97,11 @@ public class BarChartView extends View {
     private String mEmptyText;
     private boolean mValueOnTopOfBar;
 
+    // Accessibility
+    @Nullable
+    private BarChartAccessibilityHelper mAccessibilityHelper;
+    private int mFocusedBarIndex = -1;
+
     // Tooltip listener
     @Nullable
     private TooltipListener mTooltipListener = null;
@@ -101,10 +113,22 @@ public class BarChartView extends View {
          * @param barIndex Index of the touched bar
          * @param value    Value of the bar
          * @param label    Label of the bar
-         * @return Custom tooltip text, or null to use default format
+         * @return Custom tooltip text
          */
-        @Nullable
-        String getTooltipText(int barIndex, float value, String label);
+        @NonNull
+        String getTooltipText(Context context, int barIndex, float value, String label);
+
+        /**
+         * Called when accessibility is used
+         *
+         * @param barIndex Index of the touched bar
+         * @param barCount Number of bars
+         * @param value    Value of the bar
+         * @param label    Label of the bar
+         * @return Custom accessibility text
+         */
+        @NonNull
+        String getAccessibilityText(Context context, int barIndex, int barCount, float value, String label);
     }
 
     public BarChartView(@NonNull Context context) {
@@ -147,6 +171,7 @@ public class BarChartView extends View {
             a.recycle();
         }
         initializePaints();
+        initializeAccessibility();
     }
 
     private void initializePaints() {
@@ -179,6 +204,18 @@ public class BarChartView extends View {
         mTooltipBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTooltipBgPaint.setColor(mTooltipBgColor);
         mTooltipBgPaint.setStyle(Paint.Style.FILL);
+    }
+
+    private void initializeAccessibility() {
+        mAccessibilityHelper = new BarChartAccessibilityHelper(this);
+        ViewCompat.setAccessibilityDelegate(this, mAccessibilityHelper);
+
+        // Make the view focusable for keyboard navigation
+        setFocusable(true);
+        setFocusableInTouchMode(true);
+
+        // Set initial content description
+        updateOverallContentDescription();
     }
 
     private float dpToPx(float dp) {
@@ -234,6 +271,17 @@ public class BarChartView extends View {
         }
 
         invalidate();
+
+        // Update accessibility
+        updateOverallContentDescription();
+        if (mAccessibilityHelper != null) {
+            mAccessibilityHelper.invalidateRoot();
+        }
+
+        // Reset focus
+        mFocusedBarIndex = -1;
+        mTouchedBarIndex = -1;
+        mShowTouchLine = false;
     }
 
     private void calculateValueRange() {
@@ -489,12 +537,7 @@ public class BarChartView extends View {
 
         // Use custom tooltip if listener is set
         if (mTooltipListener != null) {
-            String customText = mTooltipListener.getTooltipText(mTouchedBarIndex, bar.value, bar.label);
-            if (customText != null) {
-                tooltipText = customText;
-            } else {
-                tooltipText = String.format("(%s, %s)", bar.label, formatYAxisValue(bar.value));
-            }
+            tooltipText = mTooltipListener.getTooltipText(getContext(), mTouchedBarIndex, bar.value, bar.label);
         } else {
             tooltipText = String.format("(%s, %s)", bar.label, formatYAxisValue(bar.value));
         }
@@ -522,6 +565,121 @@ public class BarChartView extends View {
                 tooltipX + dpToPx(8),
                 tooltipY + tooltipHeight - dpToPx(6),
                 mTooltipTextPaint);
+    }
+
+    @Override
+    public boolean dispatchHoverEvent(MotionEvent event) {
+        if (mAccessibilityHelper != null && mAccessibilityHelper.dispatchHoverEvent(event)) {
+            return true;
+        }
+        return super.dispatchHoverEvent(event);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (mAccessibilityHelper != null && mAccessibilityHelper.dispatchKeyEvent(event)) {
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    protected void onFocusChanged(boolean gainFocus, int direction,
+                                  @Nullable Rect previouslyFocusedRect) {
+        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+        if (mAccessibilityHelper != null) {
+            mAccessibilityHelper.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // Handle keyboard navigation
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_DPAD_LEFT:
+            case KeyEvent.KEYCODE_DPAD_RIGHT:
+                return handleDirectionalNavigation(keyCode);
+            case KeyEvent.KEYCODE_DPAD_CENTER:
+            case KeyEvent.KEYCODE_ENTER:
+                return handleBarSelection();
+            case KeyEvent.KEYCODE_ESCAPE:
+                return handleClearSelection();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * Handle directional navigation with keyboard/D-pad
+     */
+    private boolean handleDirectionalNavigation(int keyCode) {
+        if (mBarDataList.isEmpty()) return false;
+
+        int newFocusedIndex = mFocusedBarIndex;
+
+        if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+            newFocusedIndex = Math.max(0, mFocusedBarIndex - 1);
+        } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            newFocusedIndex = Math.min(mBarDataList.size() - 1, mFocusedBarIndex + 1);
+        }
+
+        if (newFocusedIndex != mFocusedBarIndex) {
+            mFocusedBarIndex = newFocusedIndex;
+
+            // Announce the newly focused bar
+            BarData bar = mBarDataList.get(mFocusedBarIndex);
+            String announcement = getAccessibleBarDescription(mFocusedBarIndex, bar);
+            announceForAccessibility(announcement);
+
+            // Update accessibility focus
+            if (mAccessibilityHelper != null) {
+                mAccessibilityHelper.invalidateVirtualView(mFocusedBarIndex);
+            }
+
+            invalidate();
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Handle bar selection via keyboard
+     */
+    private boolean handleBarSelection() {
+        if (mFocusedBarIndex >= 0 && mFocusedBarIndex < mBarDataList.size()) {
+            selectBarForAccessibility(mFocusedBarIndex);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Handle clearing selection
+     */
+    private boolean handleClearSelection() {
+        if (mTouchedBarIndex >= 0) {
+            mTouchedBarIndex = -1;
+            mShowTouchLine = false;
+            invalidate();
+            // TODO: 9/22/25 Support localization
+            announceForAccessibility("Selection cleared");
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean performClick() {
+        // Ensure performClick is called for accessibility
+        super.performClick();
+
+        // If there's a focused bar, select it
+        if (mFocusedBarIndex >= 0 && mFocusedBarIndex < mBarDataList.size()) {
+            selectBarForAccessibility(mFocusedBarIndex);
+            return true;
+        }
+
+        return true;
     }
 
     @Override
@@ -704,6 +862,193 @@ public class BarChartView extends View {
         BarData(float value, String label) {
             this.value = value;
             this.label = label;
+        }
+    }
+
+    /**
+     * Get accessible description for a specific bar
+     */
+    @NonNull
+    private String getAccessibleBarDescription(int barIndex, BarData bar) {
+        if (mTooltipListener != null) {
+            return mTooltipListener.getAccessibilityText(getContext(), barIndex, mBarDataList.size(), bar.value, bar.label);
+        }
+        String valueText = formatYAxisValue(bar.value);
+        return String.format(Locale.getDefault(), "%s: %s. Bar %d of %d.", bar.label, valueText, barIndex + 1, mBarDataList.size());
+    }
+
+    @NonNull
+    private Rect getBarBounds(int barIndex) {
+        if (barIndex < 0 || barIndex >= mBarDataList.size()) {
+            return new Rect();
+        }
+
+        BarDimensions dims = calculateBarDimensions();
+        float barLeft = mChartLeft + dims.gapWidth + (barIndex * (dims.barWidth + dims.gapWidth));
+        float barRight = barLeft + dims.barWidth;
+
+        BarData bar = mBarDataList.get(barIndex);
+        float barTop = mChartBottom - (bar.value / mMaxValue) * mChartHeight;
+        float barBottom = mChartBottom;
+
+        return new Rect((int) barLeft, (int) barTop, (int) barRight, (int) barBottom);
+    }
+
+    private int getBarIndexAtPosition(float x, float y) {
+        if (mBarDataList.isEmpty()) return -1;
+        if (x < mChartLeft || x > mChartRight || y < mChartTop || y > mChartBottom) {
+            return -1;
+        }
+
+        BarDimensions dims = calculateBarDimensions();
+        for (int i = 0; i < mBarDataList.size(); i++) {
+            float barLeft = mChartLeft + dims.gapWidth + (i * (dims.barWidth + dims.gapWidth));
+            float barRight = barLeft + dims.barWidth;
+
+            if (x >= barLeft && x <= barRight) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void selectBarForAccessibility(int barIndex) {
+        if (barIndex >= 0 && barIndex < mBarDataList.size()) {
+            mTouchedBarIndex = barIndex;
+            mShowTouchLine = true;
+            invalidate();
+
+            // Announce the selection
+            BarData bar = mBarDataList.get(barIndex);
+            String announcement = getAccessibleBarDescription(barIndex, bar);
+            // TODO: 9/22/25 Localization
+            announceForAccessibility("Selected. " + announcement);
+
+            // Notify accessibility helper
+            if (mAccessibilityHelper != null) {
+                mAccessibilityHelper.invalidateVirtualView(barIndex);
+                mAccessibilityHelper.sendEventForVirtualView(barIndex,
+                        AccessibilityEvent.TYPE_VIEW_SELECTED);
+            }
+        }
+    }
+
+    private void updateOverallContentDescription() {
+        String description;
+        if (mBarDataList.isEmpty()) {
+            description = mEmptyText != null ? mEmptyText : "Empty bar chart";
+        } else {
+            description = getContext().getString(R.string.bar_chart_content_description, mBarDataList.size());
+        }
+        setContentDescription(description);
+    }
+
+    /**
+     * Custom ExploreByTouchHelper for making individual bars accessible
+     */
+    private class BarChartAccessibilityHelper extends ExploreByTouchHelper {
+
+        public BarChartAccessibilityHelper(View forView) {
+            super(forView);
+        }
+
+        @Override
+        protected int getVirtualViewAt(float x, float y) {
+            // Find which bar is at the given coordinates
+            int barIndex = getBarIndexAtPosition(x, y);
+            return barIndex >= 0 ? barIndex : ExploreByTouchHelper.INVALID_ID;
+        }
+
+        @Override
+        protected void getVisibleVirtualViews(List<Integer> virtualViewIds) {
+            // Add all visible bars as virtual views
+            for (int i = 0; i < mBarDataList.size(); i++) {
+                virtualViewIds.add(i);
+            }
+        }
+
+        @Override
+        protected void onPopulateNodeForVirtualView(int virtualViewId,
+                                                    @NonNull AccessibilityNodeInfoCompat node) {
+            if (virtualViewId < 0 || virtualViewId >= mBarDataList.size()) {
+                return;
+            }
+
+            BarData bar = mBarDataList.get(virtualViewId);
+
+            // Set the content description
+            String description = getAccessibleBarDescription(virtualViewId, bar);
+            node.setContentDescription(description);
+
+            // Set the role
+            node.setClassName("android.widget.Button"); // Treat as button for interaction
+
+            // Make it clickable and focusable
+            node.setClickable(true);
+            node.setFocusable(true);
+            node.setVisibleToUser(true);
+
+            // Add click action
+            node.addAction(AccessibilityNodeInfoCompat.ACTION_CLICK);
+
+            // Set the bounds of this virtual view
+            Rect bounds = getBarBounds(virtualViewId);
+            node.setBoundsInParent(bounds);
+
+            // Set state information
+            if (virtualViewId == mTouchedBarIndex) {
+                node.setSelected(true);
+                node.addAction(AccessibilityNodeInfoCompat.ACTION_CLEAR_SELECTION);
+            }
+        }
+
+        @Override
+        protected boolean onPerformActionForVirtualView(int virtualViewId, int action,
+                                                        @Nullable Bundle arguments) {
+            if (virtualViewId < 0 || virtualViewId >= mBarDataList.size()) {
+                return false;
+            }
+
+            switch (action) {
+                case AccessibilityNodeInfoCompat.ACTION_CLICK:
+                    // Simulate bar selection
+                    selectBarForAccessibility(virtualViewId);
+                    return true;
+
+                case AccessibilityNodeInfoCompat.ACTION_ACCESSIBILITY_FOCUS:
+                    mFocusedBarIndex = virtualViewId;
+                    invalidateVirtualView(virtualViewId);
+                    return true;
+
+                case AccessibilityNodeInfoCompat.ACTION_CLEAR_ACCESSIBILITY_FOCUS:
+                    if (mFocusedBarIndex == virtualViewId) {
+                        mFocusedBarIndex = -1;
+                        invalidateVirtualView(virtualViewId);
+                    }
+                    return true;
+
+                case AccessibilityNodeInfoCompat.ACTION_CLEAR_SELECTION:
+                    if (mTouchedBarIndex == virtualViewId) {
+                        mTouchedBarIndex = -1;
+                        mShowTouchLine = false;
+                        invalidate();
+                        // TODO: 9/22/25 Localization
+                        announceForAccessibility("Bar deselected");
+                    }
+                    return true;
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPopulateEventForVirtualView(int virtualViewId, @NonNull AccessibilityEvent event) {
+            if (virtualViewId < 0 || virtualViewId >= mBarDataList.size()) {
+                return;
+            }
+
+            BarData bar = mBarDataList.get(virtualViewId);
+            event.setContentDescription(getAccessibleBarDescription(virtualViewId, bar));
+            event.setClassName("android.widget.Button");
         }
     }
 }

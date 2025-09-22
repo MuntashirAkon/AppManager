@@ -159,6 +159,7 @@
             android:layout_height="150dp"
             android:layout_margin="@dimen/padding_medium"
             android:layout_weight="0"
+            android:importantForAccessibility="yes"
             app:gridLineCount="4" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

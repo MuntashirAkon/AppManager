@@ -145,9 +145,17 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         int intervalType = mActivity.viewModel.getCurrentInterval();
         long duration = mActivity.viewModel.getTotalScreenTime();
         long date = mActivity.viewModel.getCurrentDate();
-
-        holder.screenTimeView.setText(DateUtils.getFormattedDuration(mActivity, duration));
-        holder.usageIntervalView.setText(UsageUtils.getIntervalDescription(mActivity, intervalType, date));
+        CharSequence formattedDuration = DateUtils.getFormattedDuration(mActivity, duration);
+        CharSequence intervalDescription = UsageUtils.getIntervalDescription(mActivity, intervalType, date);
+        StringBuilder contentDescription = new StringBuilder()
+                .append(mActivity.getString(R.string.app_usage))
+                .append(" ")
+                .append(intervalDescription)
+                .append(". ")
+                .append(formattedDuration);
+        holder.itemView.setContentDescription(contentDescription);
+        holder.screenTimeView.setText(formattedDuration);
+        holder.usageIntervalView.setText(intervalDescription);
         holder.nextButton.setVisibility(UsageUtils.hasNextDay(date) ? View.VISIBLE : View.INVISIBLE);
         holder.nextButton.setOnClickListener(v -> mActivity.viewModel.loadNext());
         holder.previousButton.setOnClickListener(v -> mActivity.viewModel.loadPrevious());
