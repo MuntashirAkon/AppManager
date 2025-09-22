@@ -162,7 +162,7 @@ public class EditFilterOptionFragment extends DialogFragment {
         ArrayAdapter<CharSequence> filters = SelectedArrayAdapter.createFromResource(activity, R.array.finder_filters, io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item);
         filterSpinner.setAdapter(filters);
         mKeySpinner = view.findViewById(R.id.type_selector_spinner);
-        mKeyAdapter = new ArrayAdapter<>(requireActivity(), io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item);
+        mKeyAdapter = new SelectedArrayAdapter<>(requireActivity(), io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item);
         mKeySpinner.setAdapter(mKeyAdapter);
         mGenericEditText = view.findViewById(R.id.input_string);
         mGenericEditText.addTextChangedListener(mGenericEditTextWatcher);

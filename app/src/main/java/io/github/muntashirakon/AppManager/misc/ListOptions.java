@@ -22,14 +22,13 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.materialswitch.MaterialSwitch;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.LinkedHashMap;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
-import io.github.muntashirakon.widget.MaterialAutoCompleteTextView;
+import io.github.muntashirakon.widget.MaterialSpinner;
 
 public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
     public static final String TAG = ListOptions.class.getSimpleName();
@@ -79,8 +78,7 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
     @Nullable
     private ListOptionsViewModel mListOptionsViewModel;
 
-    protected TextInputLayout profileNameText;
-    protected MaterialAutoCompleteTextView profileNameInput;
+    protected MaterialSpinner profileNameSpinner;
     protected MaterialButton selectUserView;
 
     public void setListOptionActions(@Nullable ListOptionActions listOptionActions) {
@@ -108,8 +106,7 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
         mFilterOptions = view.findViewById(R.id.filter_options);
         mOptionsText = view.findViewById(R.id.options_text);
         mOptionsView = view.findViewById(R.id.options);
-        profileNameText = view.findViewById(android.R.id.text1);
-        profileNameInput = view.findViewById(android.R.id.input);
+        profileNameSpinner = view.findViewById(R.id.spinner);
         selectUserView = view.findViewById(R.id.user);
 
         init(false);
@@ -204,8 +201,7 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
 
         // Profile
         boolean profileEnabled = enableProfileNameInput();
-        profileNameText.setVisibility(profileEnabled ? View.VISIBLE : View.GONE);
-        profileNameInput.setVisibility(profileEnabled ? View.VISIBLE : View.GONE);
+        profileNameSpinner.setVisibility(profileEnabled ? View.VISIBLE : View.GONE);
 
         // User
         boolean selectUserEnabled = enableSelectUser();

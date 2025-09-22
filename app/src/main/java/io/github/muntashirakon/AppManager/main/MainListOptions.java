@@ -3,8 +3,7 @@
 package io.github.muntashirakon.AppManager.main;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.IntDef;
@@ -34,8 +33,8 @@ import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.adapters.SelectedArrayAdapter;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
-import io.github.muntashirakon.adapters.AnyFilterArrayAdapter;
 
 public class MainListOptions extends ListOptions {
     public static final String TAG = MainListOptions.class.getSimpleName();
@@ -203,47 +202,46 @@ public class MainListOptions extends ListOptions {
     }
 
     private final List<String> mProfileNames = new ArrayList<>();
-    private final TextWatcher mProfileInputWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            MainActivity activity = (MainActivity) requireActivity();
-            if (activity.viewModel == null) {
-                return;
-            }
-            if (s != null) {
-                String profileName = s.toString().trim();
-                if (mProfileNames.contains(profileName)) {
-                    activity.viewModel.setFilterProfileName(profileName);
-                    return;
-                }
-            }
-            activity.viewModel.setFilterProfileName(null);
-        }
-    };
     private Future<?> mProfileSuggestionsResult;
+    @Nullable
+    private SelectedArrayAdapter<String> mAdapter;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         MainActivity activity = (MainActivity) requireActivity();
-        profileNameInput.addTextChangedListener(mProfileInputWatcher);
+        profileNameSpinner.setOnItemClickListener((parent, view1, position, id) -> {
+            if (mAdapter == null || activity.viewModel == null) {
+                return;
+            }
+            if (position == 0) {
+                // No profiles
+                activity.viewModel.setFilterProfileName(null);
+            } else {
+                activity.viewModel.setFilterProfileName(mAdapter.getItem(position));
+            }
+        });
         mProfileSuggestionsResult = ThreadUtils.postOnBackgroundThread(() -> {
             mProfileNames.clear();
+            mProfileNames.add(getString(R.string.no_profiles));
             mProfileNames.addAll(ProfileManager.getProfileNames());
+            mAdapter = new SelectedArrayAdapter<>(activity,
+                    io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item_small,
+                    mProfileNames);
             if (isDetached() || ThreadUtils.isInterrupted()) return;
             activity.runOnUiThread(() -> {
-                profileNameInput.setAdapter(new AnyFilterArrayAdapter<>(activity,
-                        io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item_small, mProfileNames));
+                profileNameSpinner.setAdapter(mAdapter);
                 if (activity.viewModel != null) {
-                    profileNameInput.setText(activity.viewModel.getFilterProfileName());
+                    String selectedProfile = activity.viewModel.getFilterProfileName();
+                    if (TextUtils.isEmpty(selectedProfile)) {
+                        profileNameSpinner.setSelection(0);
+                    } else {
+                        int i = mProfileNames.indexOf(selectedProfile);
+                        if (i < 0) {
+                           i = 0;
+                        }
+                        profileNameSpinner.setSelection(i);
+                    }
                 }
             });
         });

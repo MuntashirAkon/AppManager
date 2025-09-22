@@ -108,24 +108,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@android:id/text1"
-            style="@style/Widget.AppTheme.TextInputLayout.ExposedDropdownMenu.Small"
+        <io.github.muntashirakon.widget.MaterialSpinner
+            style="@style/Widget.AppTheme.MaterialSpinner.Small"
+            android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:hint="@string/input_profile_name"
-            app:hintAnimationEnabled="true"
-            app:hintEnabled="true">
-
-            <io.github.muntashirakon.widget.MaterialAutoCompleteTextView
-                android:id="@android:id/input"
-                android:layout_width="match_parent"
-                android:layout_height="34dp"
-                android:singleLine="true" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:hint="@string/input_profile_name" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
