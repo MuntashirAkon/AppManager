@@ -56,6 +56,11 @@
         android:title="@string/debloater_title" />
 
     <item
+        android:id="@+id/action_archived_apps"
+        android:icon="@drawable/ic_archive"
+        android:title="Archived Apps" />
+
+    <item
         android:id="@+id/action_labs"
         android:icon="@drawable/ic_package"
         android:title="@string/title_labs_activity" />

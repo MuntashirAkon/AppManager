@@ -78,6 +78,10 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
+import io.github.muntashirakon.AppManager.db.AppsDb;
+import io.github.muntashirakon.AppManager.db.entity.ArchivedApp;
+import io.github.muntashirakon.AppManager.runner.Runner;
+
 @WorkerThread
 public class BatchOpsManager {
     public static final String TAG = "BatchOpsManager";
@@ -107,6 +111,7 @@ public class BatchOpsManager {
             OP_UNBLOCK_TRACKERS,
             OP_UNINSTALL,
             OP_UNFREEZE,
+            OP_ARCHIVE,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface OpType {
@@ -136,6 +141,7 @@ public class BatchOpsManager {
     public static final int OP_NET_POLICY = 20;
     public static final int OP_DEXOPT = 21;
     public static final int OP_ADVANCED_FREEZE = 22;
+    public static final int OP_ARCHIVE = 23;
 
     private static final String GROUP_ID = BuildConfig.APPLICATION_ID + ".notification_group.BATCH_OPS";
 
@@ -256,6 +262,8 @@ public class BatchOpsManager {
                 return opBackupRestore(info, BackupRestoreDialogFragment.MODE_RESTORE);
             case OP_UNINSTALL:
                 return opUninstall(info);
+            case OP_ARCHIVE:
+                return opArchive(info);
             case OP_UNBLOCK_TRACKERS:
                 return opUnblockTrackers(info);
             case OP_BLOCK_COMPONENTS:
@@ -859,6 +867,36 @@ public class BatchOpsManager {
             }
         }
         accessibility.enableUninstall(false);
+        return new Result(failedPackages);
+    }
+
+    @NonNull
+    private Result opArchive(@NonNull BatchOpsInfo info) {
+        List<UserPackagePair> failedPackages = new ArrayList<>();
+        float lastProgress = mProgressHandler != null ? mProgressHandler.getLastProgress() : 0;
+        ArchivedAppDao archivedAppDao = AppsDb.getInstance().archivedAppDao();
+        PackageManager pm = ContextUtils.getContext().getPackageManager();
+        int max = info.size();
+        UserPackagePair pair;
+        for (int i = 0; i < max; ++i) {
+            updateProgress(lastProgress, i + 1);
+            pair = info.getPair(i);
+            try {
+                Runner.Result result = Runner.runCommand("pm uninstall -k " + pair.getPackageName());
+                if (result.isSuccessful()) {
+                    ApplicationInfo appInfo = pm.getApplicationInfo(pair.getPackageName(), 0);
+                    String appName = appInfo.loadLabel(pm).toString();
+                    ArchivedApp archivedApp = new ArchivedApp(pair.getPackageName(), appName, System.currentTimeMillis());
+                    archivedAppDao.insert(archivedApp);
+                } else {
+                    failedPackages.add(pair);
+                    log("====> op=ARCHIVE, pkg=" + pair);
+                }
+            } catch (Exception e) {
+                failedPackages.add(pair);
+                log("====> op=ARCHIVE, pkg=" + pair, e);
+            }
+        }
         return new Result(failedPackages);
     }
 

@@ -6,6 +6,10 @@
         android:icon="@drawable/ic_trash_can"
         android:title="@string/uninstall" />
     <item
+        android:id="@+id/action_archive"
+        android:icon="@drawable/ic_archive"
+        android:title="@string/archive" />
+    <item
         android:id="@+id/action_freeze_unfreeze"
         android:icon="@drawable/ic_snowflake"
         android:title="@string/freeze_unfreeze" />

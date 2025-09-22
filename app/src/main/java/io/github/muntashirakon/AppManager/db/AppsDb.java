@@ -23,7 +23,7 @@ import io.github.muntashirakon.AppManager.db.entity.LogFilter;
 import io.github.muntashirakon.AppManager.db.entity.OpHistory;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
-@Database(entities = {App.class, LogFilter.class, Backup.class, OpHistory.class, FmFavorite.class, FreezeType.class}, version = 7)
+@Database(entities = {App.class, LogFilter.class, Backup.class, OpHistory.class, FmFavorite.class, FreezeType.class, ArchivedApp.class}, version = 8)
 public abstract class AppsDb extends RoomDatabase {
     private static AppsDb sAppsDb;
 
@@ -58,10 +58,17 @@ public abstract class AppsDb extends RoomDatabase {
         }
     };
 
+    public static final Migration M_7_8 = new Migration(7, 8) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+            db.execSQL("CREATE TABLE IF NOT EXISTS `archived_apps` (`package_name` TEXT NOT NULL, `app_name` TEXT, `archive_timestamp` INTEGER NOT NULL, PRIMARY KEY(`package_name`))");
+        }
+    };
+
     public static AppsDb getInstance() {
         if (sAppsDb == null) {
             sAppsDb = Room.databaseBuilder(ContextUtils.getContext(), AppsDb.class, "apps.db")
-                    .addMigrations(M_2_3, M_3_4, M_4_5, M_5_6, M_6_7)
+                    .addMigrations(M_2_3, M_3_4, M_4_5, M_5_6, M_6_7, M_7_8)
                     .fallbackToDestructiveMigrationOnDowngrade()
                     .build();
             try {
@@ -84,4 +91,6 @@ public abstract class AppsDb extends RoomDatabase {
     public abstract FmFavoriteDao fmFavoriteDao();
 
     public abstract FreezeTypeDao freezeTypeDao();
+
+    public abstract ArchivedAppDao archivedAppDao();
 }
