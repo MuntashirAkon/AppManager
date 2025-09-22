@@ -32,4 +32,33 @@
 
     <style name="Widget.AppTheme.AppWidget" parent="Widget.AppTheme.AppWidgetOverlay" />
 
+    <style name="Widget.AppTheme.BarChartView" parent="android:Widget">
+        <!-- Bar appearance -->
+        <item name="barColor">?attr/colorPrimaryContainer</item>
+        <item name="selectedBarColor">?attr/colorPrimary</item>
+        <item name="minBarWidth">8dp</item>
+        <item name="maxBarWidth">24dp</item>
+        <item name="valueOnTopOfBar">false</item>
+
+        <!-- Grid appearance -->
+        <item name="gridColor">?attr/colorOutline</item>
+        <item name="gridStrokeWidth">1dp</item>
+        <item name="gridLineCount">6</item>
+        <item name="gridLabelsOnLeft">true</item>
+
+        <!-- Label appearance -->
+        <item name="textColor">?attr/colorOutline</item>
+        <item name="textSize">@dimen/font_size_medium</item>
+        <item name="yAxisFormat">@null</item>
+        <item name="emptyText">@string/no_usage_in_this_time_range</item>
+
+        <!-- Touch line appearance -->
+        <item name="touchLineColor">?attr/colorOutline</item>
+        <item name="touchLineWidth">2dp</item>
+
+        <!-- Tooltip appearance -->
+        <item name="tooltipBackgroundColor">?attr/colorSurfaceInverse</item>
+        <item name="tooltipTextColor">?attr/colorOnSurfaceInverse</item>
+        <item name="tooltipCornerRadius">6dp</item>
+    </style>
 </resources>

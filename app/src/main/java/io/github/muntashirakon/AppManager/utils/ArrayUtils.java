@@ -277,6 +277,50 @@ public class ArrayUtils {
         return total;
     }
 
+    public static int max(@NonNull int[] array) {
+        int candidate = array[0];
+        for (int i = 1; i < array.length; ++i) {
+            int next = array[i];
+            if (next > candidate) {
+                candidate = next;
+            }
+        }
+        return candidate;
+    }
+
+    public static long max(@NonNull long[] array) {
+        long candidate = array[0];
+        for (int i = 1; i < array.length; ++i) {
+            long next = array[i];
+            if (next > candidate) {
+                candidate = next;
+            }
+        }
+        return candidate;
+    }
+
+    public static float max(@NonNull float[] array) {
+        float candidate = array[0];
+        for (int i = 1; i < array.length; ++i) {
+            float next = array[i];
+            if (next > candidate) {
+                candidate = next;
+            }
+        }
+        return candidate;
+    }
+
+    public static <T extends Object & Comparable<? super T>> T max(@NonNull T[] array) {
+        T candidate = array[0];
+        for (int i = 1; i < array.length; ++i) {
+            T next = array[i];
+            if (next.compareTo(candidate) > 0) {
+                candidate = next;
+            }
+        }
+        return candidate;
+    }
+
     @NonNull
     public static int[] convertToIntArray(@NonNull List<Integer> list) {
         int[] array = new int[list.size()];

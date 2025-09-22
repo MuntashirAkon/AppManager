@@ -366,6 +366,7 @@ public class AppUsageStatsManager {
             if (wifiData.containsKey(uid)) {
                 packageUsageInfo.wifiData = wifiData.get(uid);
             } else packageUsageInfo.wifiData = DataUsage.EMPTY;
+            packageUsageInfo.entries = usage.entries;
             screenTimeList.add(packageUsageInfo);
         }
         return screenTimeList;

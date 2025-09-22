@@ -25,6 +25,7 @@ public class AppUsageViewModel extends AndroidViewModel {
     private final MutableLiveData<List<PackageUsageInfo>> mPackageUsageInfoListLiveData = new MutableLiveData<>();
     private final MutableLiveData<PackageUsageInfo> mPackageUsageInfoLiveData = new MutableLiveData<>();
     private final List<PackageUsageInfo> mPackageUsageInfoList = Collections.synchronizedList(new ArrayList<>());
+    private final List<PackageUsageInfo.Entry> mPackageUsageEntries = Collections.synchronizedList(new ArrayList<>());
 
     private long mTotalScreenTime;
     private boolean mHasMultipleUsers;
@@ -43,6 +44,10 @@ public class AppUsageViewModel extends AndroidViewModel {
 
     public LiveData<PackageUsageInfo> getPackageUsageInfo() {
         return mPackageUsageInfoLiveData;
+    }
+
+    public List<PackageUsageInfo.Entry> getPackageUsageEntries() {
+        return mPackageUsageEntries;
     }
 
     public void setCurrentDate(long currentDate) {
@@ -113,7 +118,11 @@ public class AppUsageViewModel extends AndroidViewModel {
             }
             mTotalScreenTime = 0;
             Set<Integer> users = new HashSet<>(3);
+            mPackageUsageEntries.clear();
             for (PackageUsageInfo appItem : mPackageUsageInfoList) {
+                if (appItem.entries != null) {
+                    mPackageUsageEntries.addAll(appItem.entries);
+                }
                 mTotalScreenTime += appItem.screenTime;
                 users.add(appItem.userId);
             }
