@@ -21,7 +21,7 @@
             android:layout_weight="0"
             android:contentDescription="@string/goto_previous"
             android:paddingVertical="@dimen/padding_small"
-            app:icon="@drawable/ic_less_than"
+            app:icon="@drawable/ic_previous"
             app:iconSize="20dp" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -60,7 +60,7 @@
             android:layout_weight="0"
             android:contentDescription="@string/next"
             android:paddingVertical="@dimen/padding_small"
-            app:icon="@drawable/ic_greater_than"
+            app:icon="@drawable/ic_next"
             app:iconSize="20dp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
