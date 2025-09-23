@@ -886,14 +886,20 @@ public class BatchOpsManager {
         for (int i = 0; i < max; ++i) {
             updateProgress(lastProgress, i + 1);
             pair = info.getPair(i);
+
+            if (BuildConfig.APPLICATION_ID.equals(pair.getPackageName())) {
+                log("====> op=ARCHIVE, cannot archive the app itself");
+                failedPackages.add(pair);
+                continue;
+            }
+
             try {
                 // Get app info before uninstalling
                 ApplicationInfo appInfo = pm.getApplicationInfo(pair.getPackageName(), 0);
                 String appName = appInfo.loadLabel(pm).toString();
 
                 PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
-                Runner.Result result = Runner.runCommand("pm uninstall --user " + pair.getUserId() + " --keep-data " + pair.getPackageName());
-                if (result.isSuccessful()) {
+                if (installer.uninstall(pair.getPackageName(), pair.getUserId(), true)) {
                     ArchivedApp archivedApp = new ArchivedApp(pair.getPackageName(), appName, System.currentTimeMillis());
                     archivedAppDao.insert(archivedApp);
                 } else {
