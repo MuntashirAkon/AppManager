@@ -1546,7 +1546,10 @@
     <string name="usage_weekly_hours_bar_chart_accessibility_description">Usage on %1$s is %2$.lf hours. Bar %3$d of %4$d</string>
     <string name="usage_weekly_minutes_bar_chart_accessibility_description">Usage on %1$s is %2$.0f minutes. Bar %3$d of %4$d</string>
     <string name="usage_bar_chart_y_axis_label_minute">%.0f min</string>
-    <string name="usage_bar_chart_y_axis_label_hour">%.0 hr</string>
-    <string name="usage_bar_chart_tooltip_minutes">%s • %.0f minutes</string>
-    <string name="usage_bar_chart_tooltip_hours">%s • %.1f hours</string>
+    <string name="usage_bar_chart_y_axis_label_hour">%.0f hr</string>
+    <string name="usage_bar_chart_tooltip_minutes">%1$s • %2$.0f minutes</string>
+    <string name="usage_bar_chart_tooltip_hours">%1$s • %2$.1f hours</string>
+    <string name="modify_last_modification_time">Modify last modification time</string>
+    <string name="modify_last_access_time">Modify last access time</string>
+    <string name="change_id">Change ID</string>
 </resources>

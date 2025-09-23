@@ -236,6 +236,7 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
         mFabGroup = view.findViewById(R.id.fab);
         mFabGroup.inflate(R.menu.fragment_fm_speed_dial);
         mFabGroup.setOnActionSelectedListener(this);
+        mFabGroup.setContentDescription(getString(R.string.add));
         UiUtils.applyWindowInsetsAsMargin(view.findViewById(R.id.fab_holder));
         mEmptyView = view.findViewById(android.R.id.empty);
         mEmptyViewIcon = view.findViewById(R.id.icon);

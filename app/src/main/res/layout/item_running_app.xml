@@ -5,12 +5,12 @@
     style="@style/Widget.AppTheme.CardView.ListItem.Outlined"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="0dp"
+    android:layout_marginHorizontal="?attr/listItemMarginHorizontal"
+    android:layout_marginVertical="?attr/listItemMarginVertical"
+    android:checkable="true"
     android:clickable="true"
     android:focusable="true"
-    android:checkable="true"
-    android:layout_marginHorizontal="?attr/listItemMarginHorizontal"
-    android:layout_marginVertical="?attr/listItemMarginVertical">
+    app:cardElevation="0dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -48,8 +48,8 @@
                 android:id="@+id/package_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="italic"
                 android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textStyle="italic"
                 tools:text="io.github.muntashirakon.AppManager" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -59,8 +59,8 @@
                 android:gravity="center_vertical"
                 android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textSize="10sp"
-                tools:text="Process ID: 10000, Parent Process ID: 1000"
-                tools:ignore="SmallSp" />
+                tools:ignore="SmallSp"
+                tools:text="Process ID: 10000, Parent Process ID: 1000" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/memory_usage"
@@ -68,8 +68,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textSize="10sp"
-                tools:text="Memory: 162 MB, Virtual Memory: 14.72 GB"
-                tools:ignore="SmallSp" />
+                tools:ignore="SmallSp"
+                tools:text="Memory: 162 MB, Virtual Memory: 14.72 GB" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/user_state_info"
@@ -77,8 +77,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textSize="10sp"
-                tools:text="User: u0_a167 (10167), State: Sleeping (Unknown)"
-                tools:ignore="SmallSp" />
+                tools:ignore="SmallSp"
+                tools:text="User: u0_a167 (10167), State: Sleeping (Unknown)" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/selinux_context"
@@ -86,8 +86,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textSize="10sp"
-                tools:text="SELinux: u:r:untrusted_app:s0:c110,c257"
-                tools:ignore="SmallSp" />
+                tools:ignore="SmallSp"
+                tools:text="SELinux: u:r:untrusted_app:s0:c110,c257" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -96,10 +96,11 @@
             style="@style/Widget.AppTheme.Button.IconButton"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
-            android:layout_marginStart="@dimen/padding_small"
-            android:padding="@dimen/padding_small"
-            android:layout_weight="0"
             android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/padding_small"
+            android:layout_weight="0"
+            android:contentDescription="@string/abc_action_menu_overflow_description"
+            android:padding="@dimen/padding_small"
             app:icon="@drawable/ic_more_vert"
             app:iconSize="20dp" />
 

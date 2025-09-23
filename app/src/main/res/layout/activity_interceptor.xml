@@ -23,9 +23,9 @@
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_linear"
             style="@style/Widget.AppTheme.LinearProgressIndicator"
-            android:indeterminate="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
 
     </io.github.muntashirakon.widget.AppBarLayout>
 
@@ -34,9 +34,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:paddingBottom="?attr/actionBarSize"
         android:clipToPadding="false"
         android:fitsSystemWindows="true"
+        android:paddingBottom="?attr/actionBarSize"
         app:fastScrollerEnabled="true"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
@@ -186,9 +186,10 @@
                 android:hint="@string/identifier"
                 android:paddingStart="@dimen/padding_medium"
                 android:paddingEnd="@dimen/padding_medium"
-                app:endIconMode="custom"
                 app:endIconDrawable="@drawable/ic_autorenew"
+                app:endIconMode="custom"
                 app:hintAnimationEnabled="true"
+                app:endIconContentDescription="@string/change_id"
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -246,6 +247,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_weight="0"
+                    android:contentDescription="@string/add_item"
                     android:focusable="true"
                     app:icon="@drawable/ic_add" />
 
@@ -282,6 +284,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_weight="0"
+                    android:contentDescription="@string/add_item"
                     android:focusable="true"
                     app:icon="@drawable/ic_add" />
 
@@ -318,6 +321,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_weight="0"
+                    android:contentDescription="@string/add_item"
                     android:focusable="true"
                     app:icon="@drawable/ic_add" />
 
@@ -356,12 +360,12 @@
     <com.google.android.material.bottomappbar.BottomAppBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
-        android:fitsSystemWindows="true"
         android:layout_gravity="bottom"
-        app:contentInsetStartWithNavigation="0dp"
-        app:contentInsetStart="@dimen/padding_small"
+        android:fitsSystemWindows="true"
+        android:minHeight="?attr/actionBarSize"
         app:contentInsetEnd="@dimen/padding_small"
+        app:contentInsetStart="@dimen/padding_small"
+        app:contentInsetStartWithNavigation="0dp"
         app:navigationIcon="@null">
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -374,9 +378,9 @@
                 style="@style/Widget.AppTheme.Button.FilledTonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/padding_small"
+                android:layout_weight="1"
                 android:singleLine="true"
                 android:text="@string/reset_to_default"
                 android:visibility="gone" />
@@ -386,9 +390,9 @@
                 style="@style/Widget.AppTheme.Button.FilledButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/padding_small"
+                android:layout_weight="1"
                 android:singleLine="true"
                 android:text="@string/resend_intent" />
 

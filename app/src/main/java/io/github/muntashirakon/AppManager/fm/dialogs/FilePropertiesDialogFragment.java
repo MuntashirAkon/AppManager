@@ -124,7 +124,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         Path path = Paths.get(Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_PATH, Uri.class)));
         mViewModel = new ViewModelProvider(this).get(FilePropertiesViewModel.class);
         mIconView = bodyView.findViewById(android.R.id.icon);
-        mSymlinkIconView = bodyView.findViewById(R.id.symolic_link_icon);
+        mSymlinkIconView = bodyView.findViewById(R.id.symbolic_link_icon);
         mNameView = bodyView.findViewById(R.id.name);
         mSummaryView = bodyView.findViewById(R.id.summary);
         mChecksumsView = bodyView.findViewById(R.id.checksums);

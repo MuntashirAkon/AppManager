@@ -52,6 +52,7 @@ import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.util.AccessibilityUtils;
 import io.github.muntashirakon.view.TextInputLayoutCompat;
 import io.github.muntashirakon.widget.MaterialSpinner;
 import io.github.muntashirakon.widget.TextInputTextView;
@@ -141,6 +142,7 @@ public class ChecksumsDialogFragment extends DialogFragment {
                 mTextView.setVisibility(View.VISIBLE);
                 mTextView.setText(algoHashPair.second);
                 TextInputLayoutCompat.fromTextInputEditText(mTextView).setHint(algoHashPair.first);
+                AccessibilityUtils.requestAccessibilityFocus(mTextView);
             });
             mViewModel.loadChecksums(mPath);
         }

@@ -42,7 +42,7 @@
                     tools:srcCompat="@mipmap/ic_launcher_round" />
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/symolic_link_icon"
+                    android:id="@+id/symbolic_link_icon"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="start|bottom"

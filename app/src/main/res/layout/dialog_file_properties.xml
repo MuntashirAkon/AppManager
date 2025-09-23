@@ -36,7 +36,7 @@
                     tools:srcCompat="@mipmap/ic_launcher_round" />
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/symolic_link_icon"
+                    android:id="@+id/symbolic_link_icon"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="start|bottom"
@@ -105,6 +105,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/padding_small"
                 android:layout_weight="0"
+                android:contentDescription="@string/more_info"
                 app:icon="@drawable/ic_more_vert"
                 app:iconSize="30dp" />
 
@@ -170,6 +171,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/padding_small"
             android:hint="@string/file_open_with"
+            app:endIconCheckable="false"
             app:endIconContentDescription="@string/file_change_open_with"
             app:endIconDrawable="@drawable/ic_file_replace"
             app:endIconMode="custom"
@@ -251,6 +253,8 @@
                 android:layout_marginBottom="@dimen/padding_small"
                 android:layout_weight="1"
                 android:hint="@string/file_modification_date"
+                app:endIconCheckable="false"
+                app:endIconContentDescription="@string/modify_last_modification_time"
                 app:endIconDrawable="@drawable/ic_touch_app"
                 app:endIconMode="custom"
                 app:hintEnabled="true">
@@ -274,8 +278,10 @@
                 android:layout_marginBottom="@dimen/padding_small"
                 android:layout_weight="1"
                 android:hint="@string/file_accessed_date"
+                app:endIconContentDescription="@string/modify_last_access_time"
                 app:endIconDrawable="@drawable/ic_touch_app"
                 app:endIconMode="custom"
+                app:endIconCheckable="false"
                 app:hintEnabled="true">
 
                 <io.github.muntashirakon.widget.TextInputTextView
@@ -323,6 +329,8 @@
                 android:layout_marginBottom="@dimen/padding_small"
                 android:layout_weight="1"
                 android:hint="@string/file_owner_id"
+                app:endIconCheckable="false"
+                app:endIconContentDescription="@string/change_owner_uid"
                 app:endIconDrawable="@drawable/ic_edit"
                 app:endIconMode="custom"
                 app:hintEnabled="true">
@@ -346,6 +354,8 @@
                 android:layout_marginBottom="@dimen/padding_small"
                 android:layout_weight="1"
                 android:hint="@string/file_group_id"
+                app:endIconCheckable="false"
+                app:endIconContentDescription="@string/change_group_gid"
                 app:endIconDrawable="@drawable/ic_edit"
                 app:endIconMode="custom"
                 app:hintEnabled="true">
@@ -376,6 +386,8 @@
                 android:layout_marginBottom="@dimen/padding_small"
                 android:layout_weight="1"
                 android:hint="@string/unix_file_permissions"
+                app:endIconCheckable="false"
+                app:endIconContentDescription="@string/change_mode"
                 app:endIconDrawable="@drawable/ic_edit"
                 app:endIconMode="custom"
                 app:hintEnabled="true">
@@ -399,8 +411,10 @@
                 android:layout_marginBottom="@dimen/padding_small"
                 android:layout_weight="1"
                 android:hint="@string/selinux_context"
+                app:endIconContentDescription="@string/title_change_selinux_context"
                 app:endIconDrawable="@drawable/ic_edit"
                 app:endIconMode="custom"
+                app:endIconCheckable="false"
                 app:hintEnabled="true">
 
                 <io.github.muntashirakon.widget.TextInputTextView
