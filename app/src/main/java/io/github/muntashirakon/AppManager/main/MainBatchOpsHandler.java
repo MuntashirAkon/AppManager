@@ -30,6 +30,7 @@ public class MainBatchOpsHandler implements MultiSelectionView.OnSelectionChange
     private final MenuItem mExportAppListMenu;
     private final MenuItem mOptimizeMenu;
     private final MenuItem mAddToProfileMenu;
+    private final MenuItem mArchiveMenu;
 
     private boolean mCanFreezeUnfreezePackages;
     private boolean mCanForceStopPackages;
@@ -55,6 +56,7 @@ public class MainBatchOpsHandler implements MultiSelectionView.OnSelectionChange
         mExportAppListMenu = selectionMenu.findItem(R.id.action_export_app_list);
         mOptimizeMenu = selectionMenu.findItem(R.id.action_optimize);
         mAddToProfileMenu = selectionMenu.findItem(R.id.action_add_to_profile);
+        mArchiveMenu = selectionMenu.findItem(R.id.action_archive);
         updateConstraints();
     }
 
