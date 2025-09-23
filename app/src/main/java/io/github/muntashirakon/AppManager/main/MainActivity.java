@@ -356,6 +356,9 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         } else if (id == R.id.action_debloater) {
             Intent intent = new Intent(getApplicationContext(), DebloaterActivity.class);
             startActivity(intent);
+        } else if (id == R.id.action_archived_apps) {
+            Intent archivedAppsIntent = new Intent(this, ArchivedAppsActivity.class);
+            startActivity(archivedAppsIntent);
         } else return super.onOptionsItemSelected(item);
         return true;
     }
