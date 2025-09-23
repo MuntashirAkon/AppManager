@@ -883,43 +883,19 @@ public class BatchOpsManager {
         PackageManager pm = ContextUtils.getContext().getPackageManager();
         int max = info.size();
         UserPackagePair pair;
-
-        // Get adb device
-        String adbDevice = null;
-        try {
-            Runner.Result result = Runner.runCommand("/data/data/com.termux/files/usr/bin/adb devices");
-            if (result.isSuccessful()) {
-                List<String> output = result.getOutputAsList();
-                if (output.size() > 1) {
-                    String[] parts = output.get(1).split("\\s+");
-                    if (parts.length > 1 && "device".equals(parts[1])) {
-                        adbDevice = parts[0];
-                    }
-                }
-            }
-        } catch (Exception e) {
-            log("====> op=ARCHIVE, failed to get adb device", e);
-        }
-
-        if (adbDevice == null) {
-            log("====> op=ARCHIVE, no adb device found");
-            return new Result(info.getPairList(), false);
-        }
-
         for (int i = 0; i < max; ++i) {
             updateProgress(lastProgress, i + 1);
             pair = info.getPair(i);
             try {
-                String command = "/data/data/com.termux/files/usr/bin/adb -s " + adbDevice + " shell pm uninstall -k " + pair.getPackageName();
-                Runner.Result result = Runner.runCommand(command);
-                if (result.isSuccessful()) {
+                PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
+                if (installer.uninstall(pair.getPackageName(), pair.getUserId(), true)) {
                     ApplicationInfo appInfo = pm.getApplicationInfo(pair.getPackageName(), 0);
                     String appName = appInfo.loadLabel(pm).toString();
                     ArchivedApp archivedApp = new ArchivedApp(pair.getPackageName(), appName, System.currentTimeMillis());
                     archivedAppDao.insert(archivedApp);
                 } else {
                     failedPackages.add(pair);
-                    log("====> op=ARCHIVE, pkg=" + pair + ", exitCode=" + result.getExitCode() + ", stderr=" + result.getStderr());
+                    log("====> op=ARCHIVE, pkg=" + pair);
                 }
             } catch (Exception e) {
                 failedPackages.add(pair);
