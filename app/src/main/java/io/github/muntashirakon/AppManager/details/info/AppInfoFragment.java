@@ -1677,8 +1677,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 .setTitle(mAppLabel)
                 .setMessage(R.string.archive_message)
                 .setPositiveButton(R.string.archive, (dialog, which) -> {
-                    List<String> packageNames = Collections.singletonList(mPackageName);
-                    List<Integer> userIds = Collections.singletonList(mUserId);
+                    ArrayList<String> packageNames = new ArrayList<>(Collections.singletonList(mPackageName));
+                    ArrayList<Integer> userIds = new ArrayList<>(Collections.singletonList(mUserId));
                     BatchQueueItem item = BatchQueueItem.getBatchOpQueue(
                             BatchOpsManager.OP_ARCHIVE, packageNames, userIds, null);
                     Intent intent = BatchOpsService.getServiceIntent(mActivity, item);
