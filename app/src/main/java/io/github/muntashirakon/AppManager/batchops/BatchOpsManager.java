@@ -887,10 +887,12 @@ public class BatchOpsManager {
             updateProgress(lastProgress, i + 1);
             pair = info.getPair(i);
             try {
+                // Get app info before uninstalling
+                ApplicationInfo appInfo = pm.getApplicationInfo(pair.getPackageName(), 0);
+                String appName = appInfo.loadLabel(pm).toString();
+
                 PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
                 if (installer.uninstall(pair.getPackageName(), pair.getUserId(), true)) {
-                    ApplicationInfo appInfo = pm.getApplicationInfo(pair.getPackageName(), 0);
-                    String appName = appInfo.loadLabel(pm).toString();
                     ArchivedApp archivedApp = new ArchivedApp(pair.getPackageName(), appName, System.currentTimeMillis());
                     archivedAppDao.insert(archivedApp);
                 } else {
