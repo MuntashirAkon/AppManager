@@ -1,0 +1,55 @@
+diff --git a/app/build.gradle b/app/build.gradle
+index 068cc152c..80b80c0fb 100644
+--- a/app/build.gradle
++++ b/app/build.gradle
+@@ -188,6 +188,11 @@ dependencies {
+     // Unit Testing
+     testImplementation "junit:junit:${junit_version}"
+     testImplementation "org.robolectric:robolectric:${robolectric_version}"
++
++    // Shizuku
++    def shizuku_version = "13.1.5"
++    implementation "dev.rikka.shizuku:api:$shizuku_version"
++    implementation "dev.rikka.shizuku:provider:$shizuku_version"
+ }
+ 
+ preBuild.dependsOn ":server:build"
+diff --git a/app/src/main/java/io/github/muntashirakon/AppManager/batchops/BatchOpsManager.java b/app/src/main/java/io/github/muntashirakon/AppManager/batchops/BatchOpsManager.java
+index 9e589c641..ea541cf0d 100644
+--- a/app/src/main/java/io/github/muntashirakon/AppManager/batchops/BatchOpsManager.java
++++ b/app/src/main/java/io/github/muntashirakon/AppManager/batchops/BatchOpsManager.java
+@@ -82,6 +82,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
+ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+ import io.github.muntashirakon.io.Path;
+ import io.github.muntashirakon.io.Paths;
++import io.github.muntashirakon.AppManager.utils.ShizukuUtils;
+ 
+ import io.github.muntashirakon.AppManager.db.AppsDb;
+ import io.github.muntashirakon.AppManager.db.entity.ArchivedApp;
+@@ -898,8 +899,24 @@ public class BatchOpsManager {
+                 ApplicationInfo appInfo = pm.getApplicationInfo(pair.getPackageName(), 0);
+                 String appName = appInfo.loadLabel(pm).toString();
+ 
+-                PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
+-                if (installer.uninstall(pair.getPackageName(), pair.getUserId(), true)) {
++                boolean success = false;
++                if (ShizukuUtils.isShizukuAvailable()) {
++                    rikka.shizuku.ShizukuRemoteProcess process = ShizukuUtils.runCommand("pm uninstall -k " + pair.getPackageName());
++                    if (process != null) {
++                        int exitCode = process.waitFor();
++                        if (exitCode == 0) {
++                            success = true;
++                        } else {
++                            log("====> op=ARCHIVE, pkg=" + pair + ", exitCode=" + exitCode);
++                        }
++                    }
++                } else {
++                    // Fallback to the old method if Shizuku is not available
++                    PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
++                    success = installer.uninstall(pair.getPackageName(), pair.getUserId(), true);
++                }
++
++                if (success) {
+                     ArchivedApp archivedApp = new ArchivedApp(pair.getPackageName(), appName, System.currentTimeMillis());
+                     archivedAppDao.insert(archivedApp);
+                 } else {

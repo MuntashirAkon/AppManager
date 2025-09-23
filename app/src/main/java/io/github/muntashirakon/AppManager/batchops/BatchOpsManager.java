@@ -82,6 +82,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.AppManager.utils.ShizukuUtils;
 
 import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.entity.ArchivedApp;
@@ -898,8 +899,24 @@ public class BatchOpsManager {
                 ApplicationInfo appInfo = pm.getApplicationInfo(pair.getPackageName(), 0);
                 String appName = appInfo.loadLabel(pm).toString();
 
-                PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
-                if (installer.uninstall(pair.getPackageName(), pair.getUserId(), true)) {
+                boolean success = false;
+                if (ShizukuUtils.isShizukuAvailable()) {
+                    rikka.shizuku.ShizukuRemoteProcess process = ShizukuUtils.runCommand("pm uninstall -k " + pair.getPackageName());
+                    if (process != null) {
+                        int exitCode = process.waitFor();
+                        if (exitCode == 0) {
+                            success = true;
+                        } else {
+                            log("====> op=ARCHIVE, pkg=" + pair + ", exitCode=" + exitCode);
+                        }
+                    }
+                } else {
+                    // Fallback to the old method if Shizuku is not available
+                    PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
+                    success = installer.uninstall(pair.getPackageName(), pair.getUserId(), true);
+                }
+
+                if (success) {
                     ArchivedApp archivedApp = new ArchivedApp(pair.getPackageName(), appName, System.currentTimeMillis());
                     archivedAppDao.insert(archivedApp);
                 } else {

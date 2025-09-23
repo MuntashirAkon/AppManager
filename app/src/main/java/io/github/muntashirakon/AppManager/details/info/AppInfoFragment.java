@@ -1406,6 +1406,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
                 builder.show();
             });
+
+            // Set archive
+            ActionItem archiveAction = new ActionItem(R.string.archive, R.drawable.ic_archive);
+            actionItems.add(archiveAction);
+            archiveAction.setOnClickListener(v -> archiveApp());
+
+            // Set archive
+            ActionItem archiveAction = new ActionItem(R.string.archive, R.drawable.ic_archive);
+            actionItems.add(archiveAction);
+            archiveAction.setOnClickListener(v -> archiveApp());
             // Enable/disable app (root/ADB only)
             if (canFreeze && isFrozen) {
                 // Enable app
@@ -1670,6 +1680,22 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         } catch (PackageManager.NameNotFoundException ignored) {
         }
         return actionItems;
+    }
+
+    private void archiveApp() {
+        new MaterialAlertDialogBuilder(mActivity)
+                .setTitle(mAppLabel)
+                .setMessage(R.string.archive_message)
+                .setPositiveButton(R.string.archive, (dialog, which) -> {
+                    ArrayList<String> packageNames = new ArrayList<>(Collections.singletonList(mPackageName));
+                    ArrayList<Integer> userIds = new ArrayList<>(Collections.singletonList(mUserId));
+                    BatchQueueItem item = BatchQueueItem.getBatchOpQueue(
+                            BatchOpsManager.OP_ARCHIVE, packageNames, userIds, null);
+                    Intent intent = BatchOpsService.getServiceIntent(mActivity, item);
+                    ContextCompat.startForegroundService(mActivity, intent);
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     private void archiveApp() {
