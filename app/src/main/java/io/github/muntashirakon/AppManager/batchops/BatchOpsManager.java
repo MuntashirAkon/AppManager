@@ -893,6 +893,7 @@ public class BatchOpsManager {
 
                 PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
                 Runner.Result result = Runner.runCommand("pm uninstall --user " + pair.getUserId() + " --keep-data " + pair.getPackageName());
+                if (result.isSuccessful()) {
                     ArchivedApp archivedApp = new ArchivedApp(pair.getPackageName(), appName, System.currentTimeMillis());
                     archivedAppDao.insert(archivedApp);
                 } else {
