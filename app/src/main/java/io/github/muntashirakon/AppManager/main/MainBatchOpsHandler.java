@@ -99,6 +99,7 @@ public class MainBatchOpsHandler implements MultiSelectionView.OnSelectionChange
         /* === Enable/Disable === */
         // Enable “Uninstall” action iff all selections are installed
         mUninstallMenu.setEnabled(nonZeroSelection && (areAllInstalled || areAllUninstalledWithoutData));
+        mArchiveMenu.setEnabled(nonZeroSelection && areAllInstalled);
         mFreezeUnfreezeMenu.setEnabled(nonZeroSelection && areAllInstalled);
         mForceStopMenu.setEnabled(nonZeroSelection && areAllInstalled);
         mClearDataCacheMenu.setEnabled(nonZeroSelection && areAllInstalled);

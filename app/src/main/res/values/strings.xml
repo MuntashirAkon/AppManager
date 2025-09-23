@@ -3,6 +3,7 @@
     <string name="_lang_tag" translatable="false">en</string>
     <string name="uninstall">Uninstall</string>
     <string name="archive">Archive</string>
+    <string name="archive_message">Are you sure you want to archive this app? The app will be uninstalled, but its data will be kept.</string>
     <string name="permissions">Uses permissions</string>
     <string name="require_no_permission">No permission required</string>
     <string name="activities">Activities</string>

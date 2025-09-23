@@ -485,6 +485,8 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
             AddToProfileDialogFragment dialog = AddToProfileDialogFragment.getInstance(viewModel.getSelectedPackages()
                     .keySet().toArray(new String[0]));
             dialog.show(getSupportFragmentManager(), AddToProfileDialogFragment.TAG);
+        } else if (id == R.id.action_archive) {
+            handleBatchOpWithWarning(BatchOpsManager.OP_ARCHIVE);
         } else {
             return false;
         }

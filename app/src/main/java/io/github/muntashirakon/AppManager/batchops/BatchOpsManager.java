@@ -887,7 +887,8 @@ public class BatchOpsManager {
             updateProgress(lastProgress, i + 1);
             pair = info.getPair(i);
             try {
-                Runner.Result result = Runner.runCommand("pm uninstall -k " + pair.getPackageName());
+                // FIXME: Hardcoded device ID
+                Runner.Result result = Runner.runCommand("adb -s 192.168.0.60:35789 shell pm uninstall -k " + pair.getPackageName());
                 if (result.isSuccessful()) {
                     ApplicationInfo appInfo = pm.getApplicationInfo(pair.getPackageName(), 0);
                     String appName = appInfo.loadLabel(pm).toString();
@@ -895,7 +896,7 @@ public class BatchOpsManager {
                     archivedAppDao.insert(archivedApp);
                 } else {
                     failedPackages.add(pair);
-                    log("====> op=ARCHIVE, pkg=" + pair);
+                    log("====> op=ARCHIVE, pkg=" + pair + ", exitCode=" + result.getExitCode() + ", stderr=" + result.getStderr());
                 }
             } catch (Exception e) {
                 failedPackages.add(pair);

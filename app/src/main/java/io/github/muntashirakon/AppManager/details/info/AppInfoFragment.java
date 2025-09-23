@@ -1672,6 +1672,22 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return actionItems;
     }
 
+    private void archiveApp() {
+        new MaterialAlertDialogBuilder(mActivity)
+                .setTitle(mAppLabel)
+                .setMessage(R.string.archive_message)
+                .setPositiveButton(R.string.archive, (dialog, which) -> {
+                    List<String> packageNames = Collections.singletonList(mPackageName);
+                    List<Integer> userIds = Collections.singletonList(mUserId);
+                    BatchQueueItem item = BatchQueueItem.getBatchOpQueue(
+                            BatchOpsManager.OP_ARCHIVE, packageNames, userIds, null);
+                    Intent intent = BatchOpsService.getServiceIntent(mActivity, item);
+                    ContextCompat.startForegroundService(mActivity, intent);
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
     @UiThread
     private void startActivityForSplit(Intent intent) {
         if (mMainModel == null) return;
