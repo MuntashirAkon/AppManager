@@ -901,14 +901,11 @@ public class BatchOpsManager {
 
                 boolean success = false;
                 if (ShizukuUtils.isShizukuAvailable()) {
-                    rikka.shizuku.ShizukuRemoteProcess process = ShizukuUtils.runCommand("pm uninstall -k " + pair.getPackageName());
-                    if (process != null) {
-                        int exitCode = process.waitFor();
-                        if (exitCode == 0) {
-                            success = true;
-                        } else {
-                            log("====> op=ARCHIVE, pkg=" + pair + ", exitCode=" + exitCode);
-                        }
+                    Integer exitCode = ShizukuUtils.runCommand(ContextUtils.getContext(), "pm uninstall -k " + pair.getPackageName());
+                    if (exitCode != null && exitCode == 0) {
+                        success = true;
+                    } else {
+                        log("====> op=ARCHIVE, pkg=" + pair + ", exitCode=" + exitCode);
                     }
                 } else {
                     // Fallback to the old method if Shizuku is not available

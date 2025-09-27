@@ -1307,6 +1307,10 @@
             android:foregroundServiceType="dataSync|specialUse"
             tools:targetApi="r" />
 
+        <service
+            android:name=".utils.RemoteCommandService"
+            android:exported="false" />
+
         <receiver
             android:name=".servermanager.ServerStatusChangeReceiver"
             android:exported="true"
