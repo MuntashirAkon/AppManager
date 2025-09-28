@@ -23,6 +23,7 @@ import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.TypefaceUtil;
 
 public class AppManager extends Application {
+    // Trigger build
     static {
         Shell.enableVerboseLogging = BuildConfig.DEBUG;
         Shell.setDefaultBuilder(Shell.Builder.create()
