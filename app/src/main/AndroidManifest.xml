@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="auto">
 
+    <uses-sdk tools:overrideLibrary="rikka.shizuku.api"/>
+
     <uses-feature
         android:name="android.software.leanback"
         android:required="false" />
@@ -1400,6 +1402,15 @@
         <meta-data
             android:name="android.permission.INTERNET.mode"
             android:value="runtime" />
+
+        <provider
+            android:name="rikka.shizuku.ShizukuProvider"
+            android:authorities="${applicationId}.shizuku"
+            android:enabled="true"
+            android:exported="true"
+            android:multiprocess="false"
+            android:permission="android.permission.MANAGE_DOCUMENTS" />
+
     </application>
 
 </manifest>

@@ -189,10 +189,10 @@ dependencies {
     testImplementation "junit:junit:${junit_version}"
     testImplementation "org.robolectric:robolectric:${robolectric_version}"
 
-//    // Shizuku
-//    def shizuku_version = "13.1.5"
-//    implementation "dev.rikka.shizuku:api:$shizuku_version"
-//    implementation "dev.rikka.shizuku:provider:$shizuku_version"
+    // Shizuku
+    def shizuku_version = "13.1.5"
+    implementation "dev.rikka.shizuku:api:$shizuku_version"
+    implementation "dev.rikka.shizuku:provider:$shizuku_version"
 }
 
 preBuild.dependsOn ":server:build"
