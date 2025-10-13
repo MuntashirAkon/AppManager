@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import androidx.annotation.WorkerThread;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
@@ -78,6 +80,9 @@ public final class FreezeUtils {
 
     public static void freeze(@NonNull String packageName, @UserIdInt int userId, @FreezeMethod int freezeType)
             throws RemoteException {
+        if (BuildConfig.APPLICATION_ID.equals(packageName) && userId == UserHandleHidden.myUserId()) {
+            throw new RemoteException("Could not freeze myself.");
+        }
         if (freezeType == FREEZE_HIDE) {
             if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS)) {
                 PackageManagerCompat.hidePackage(packageName, userId, true);
