@@ -100,11 +100,15 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
 
     @Override
     public void onBindViewHolder(@NonNull PathHolder holder, int position) {
+        String actualPathPart = mPathParts.get(position);
         String pathPart;
         if (position == 0) {
-            pathPart = mAlternativeRootName != null ? mAlternativeRootName : mPathParts.get(position);
-        } else pathPart = "» " + mPathParts.get(position);
+            pathPart = mAlternativeRootName != null ? mAlternativeRootName : actualPathPart;
+        } else pathPart = "» " + actualPathPart;
         holder.textView.setText(pathPart);
+        if (position == 0 && pathPart.equals("/")) {
+            holder.itemView.setContentDescription(holder.itemView.getContext().getString(R.string.root));
+        } else holder.itemView.setContentDescription(actualPathPart);
         holder.itemView.setOnClickListener(v -> {
             if (mCurrentPosition != position) {
                 mViewModel.loadFiles(calculateUri(position));

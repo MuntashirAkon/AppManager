@@ -29,7 +29,6 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
@@ -46,6 +45,7 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.proc.ProcMemoryInfo;
+import io.github.muntashirakon.util.AccessibilityUtils;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
@@ -112,6 +112,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
             return;
         }
         Context context = holder.itemView.getContext();
+        StringBuilder contentDescription = new StringBuilder();
         // Memory
         long appMemory = mProcMemoryInfo.getApplicationMemory();
         long cachedMemory = mProcMemoryInfo.getCachedMemory();
@@ -119,6 +120,13 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         long freeMemory = mProcMemoryInfo.getFreeMemory();
         double total = appMemory + cachedMemory + buffers + freeMemory;
         boolean totalIsNonZero = total > 0;
+        String fUsedMemory = Formatter.formatFileSize(context, mProcMemoryInfo.getUsedMemory());
+        String fTotalMemory = Formatter.formatFileSize(context, mProcMemoryInfo.getTotalMemory());
+        String fAvailableMemory = Formatter.formatFileSize(context, mProcMemoryInfo.getAvailableMemory());
+        String fAppMemory = Formatter.formatShortFileSize(context, appMemory);
+        String fCachedMemory = Formatter.formatShortFileSize(context, cachedMemory);
+        String fBuffers = Formatter.formatShortFileSize(context, buffers);
+        String fFreeMemory = Formatter.formatShortFileSize(context, freeMemory);
         AdapterUtils.setVisible(holder.mMemoryInfoChart, totalIsNonZero);
         AdapterUtils.setVisible(holder.mMemoryShortInfoView, totalIsNonZero);
         AdapterUtils.setVisible(holder.mMemoryInfoView, totalIsNonZero);
@@ -129,16 +137,18 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
                 setLayoutWidth(holder.mMemoryInfoChartChildren[1], (int) (width * cachedMemory / total));
                 setLayoutWidth(holder.mMemoryInfoChartChildren[2], (int) (width * buffers / total));
             });
+            // Update content description for memory (free memory is not important for accessibility)
+            contentDescription.append(context.getString(R.string.memory_usage_accessibility_description,
+                    fUsedMemory, fTotalMemory, fAvailableMemory, fAppMemory, fCachedMemory, fBuffers));
+        } else {
+            contentDescription.append(context.getString(R.string.memory_usage_unavailable));
         }
-        holder.mMemoryShortInfoView.setText(UIUtils.getStyledKeyValue(context, R.string.memory, Formatter
-                .formatFileSize(context, mProcMemoryInfo.getUsedMemory()) + "/" + Formatter
-                .formatFileSize(context, mProcMemoryInfo.getTotalMemory()) + " (" +
-                context.getString(R.string.available_memory, Formatter
-                        .formatFileSize(context, mProcMemoryInfo.getAvailableMemory())) + ")"));
+        holder.mMemoryShortInfoView.setText(UIUtils.getStyledKeyValue(context, R.string.memory,
+                fUsedMemory + "/" + fTotalMemory + " (" +
+                context.getString(R.string.available_memory, fAvailableMemory) + ")"));
         // Set color info
-        Spannable memInfo = UIUtils.charSequenceToSpannable(context.getString(R.string.memory_chart_info, Formatter
-                        .formatShortFileSize(context, appMemory), Formatter.formatShortFileSize(context, cachedMemory),
-                Formatter.formatShortFileSize(context, buffers), Formatter.formatShortFileSize(context, freeMemory)));
+        Spannable memInfo = UIUtils.charSequenceToSpannable(context.getString(R.string.memory_chart_info,
+                fAppMemory, fCachedMemory, fBuffers, fFreeMemory));
         setColors(holder.itemView, memInfo, new int[]{com.google.android.material.R.attr.colorOnSurface, androidx.appcompat.R.attr.colorPrimary, com.google.android.material.R.attr.colorTertiary,
                 com.google.android.material.R.attr.colorSurfaceVariant});
         holder.mMemoryInfoView.setText(memInfo);
@@ -146,6 +156,8 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         // Swap
         long usedSwap = mProcMemoryInfo.getUsedSwap();
         long totalSwap = mProcMemoryInfo.getTotalSwap();
+        String fUsedSwap = Formatter.formatFileSize(context, usedSwap);
+        String fTotalSwap = Formatter.formatFileSize(context, totalSwap);
         boolean totalSwapIsNonZero = totalSwap > 0;
         AdapterUtils.setVisible(holder.mSwapInfoChart, totalSwapIsNonZero);
         AdapterUtils.setVisible(holder.mSwapShortInfoView, totalSwapIsNonZero);
@@ -155,14 +167,17 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
                 int width = holder.mSwapInfoChart.getWidth();
                 setLayoutWidth(holder.mSwapInfoChartChildren[0], (int) (width * usedSwap / totalSwap));
             });
+            // Update content description for swap
+            contentDescription.append("\n\n");
+            contentDescription.append(context.getString(R.string.swap_usage_accessibility_description, fTotalSwap, fUsedSwap));
         }
-        holder.mSwapShortInfoView.setText(UIUtils.getStyledKeyValue(context, R.string.swap, Formatter
-                .formatFileSize(context, usedSwap) + "/" + Formatter.formatFileSize(context, totalSwap)));
+        holder.mSwapShortInfoView.setText(UIUtils.getStyledKeyValue(context, R.string.swap, fUsedSwap + "/" + fTotalSwap));
         // Set color and size info
         Spannable swapInfo = UIUtils.charSequenceToSpannable(context.getString(R.string.swap_chart_info, Formatter
                 .formatShortFileSize(context, usedSwap), Formatter.formatShortFileSize(context, totalSwap - usedSwap)));
         setColors(holder.itemView, swapInfo, new int[]{com.google.android.material.R.attr.colorOnSurface, com.google.android.material.R.attr.colorSurfaceVariant});
         holder.mSwapInfoView.setText(swapInfo);
+        holder.itemView.setContentDescription(contentDescription);
     }
 
     private void onBindViewHolder(@NonNull BodyViewHolder holder, int position) {
@@ -267,20 +282,27 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
             popupMenu.show();
         });
         // Set selections
-        holder.icon.setOnClickListener(v -> toggleSelection(position));
+        holder.icon.setOnClickListener(v -> {
+            toggleSelection(position);
+            AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
+        });
         holder.itemView.setOnLongClickListener(v -> {
             ProcessItem lastSelectedItem = mModel.getLastSelectedItem();
             int lastSelectedItemPosition = lastSelectedItem == null ? -1 : mProcessItems.indexOf(lastSelectedItem);
             if (lastSelectedItemPosition >= 0) {
                 // Select from last selection to this selection
                 selectRange(lastSelectedItemPosition + 1, position);
-            } else toggleSelection(position);
+            } else {
+                toggleSelection(position);
+                AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
+            }
             return true;
         });
         // Open process details
         holder.itemView.setOnClickListener(v -> {
             if (isInSelectionMode()) {
                 toggleSelection(position);
+                AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
             } else {
                 mModel.requestDisplayProcessDetails(processItem);
             }

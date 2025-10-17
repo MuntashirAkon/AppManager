@@ -27,6 +27,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
+import io.github.muntashirakon.util.AccessibilityUtils;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
@@ -120,12 +121,17 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
         holder.labelView.setText(label);
         holder.itemView.setOnLongClickListener(v -> {
             toggleSelection(position);
+            AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
             return true;
         });
-        holder.iconView.setOnClickListener(v -> toggleSelection(position));
+        holder.iconView.setOnClickListener(v -> {
+            toggleSelection(position);
+            AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
+        });
         holder.itemView.setOnClickListener(v -> {
             if (isInSelectionMode()) {
                 toggleSelection(position);
+                AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
             } else {
                 BloatwareDetailsDialog dialog = BloatwareDetailsDialog.getInstance(debloatObject.packageName);
                 dialog.show(mActivity.getSupportFragmentManager(), BloatwareDetailsDialog.TAG);

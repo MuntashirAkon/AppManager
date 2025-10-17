@@ -54,6 +54,7 @@
             android:layout_gravity="center"
             android:layout_weight="0"
             app:icon="@drawable/ic_replay"
+            android:contentDescription="@string/action_run"
             app:iconSize="20dp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

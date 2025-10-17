@@ -47,6 +47,11 @@
         android:title="@string/copy_this_path" />
 
     <item
+        android:id="@+id/action_select"
+        android:icon="@drawable/ic_check_circle"
+        android:title="@string/item_select" />
+
+    <item
         android:id="@+id/action_properties"
         android:icon="@drawable/ic_information"
         android:title="@string/file_properties" />

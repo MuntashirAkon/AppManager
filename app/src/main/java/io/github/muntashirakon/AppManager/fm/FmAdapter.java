@@ -40,6 +40,7 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.util.AccessibilityUtils;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
@@ -81,6 +82,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
             holder.itemView.setOnClickListener(v -> {
                 if (isInSelectionMode()) {
                     toggleSelection(position);
+                    AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
                     return;
                 }
                 mViewModel.loadFiles(item.path.getUri());
@@ -89,6 +91,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
             holder.itemView.setOnClickListener(v -> {
                 if (isInSelectionMode()) {
                     toggleSelection(position);
+                    AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
                     return;
                 }
                 // TODO: 16/11/22 Retrieve default open with from DB and open the file with it
@@ -101,9 +104,13 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
         // Set background colors
         holder.itemView.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.transparent));
         // Set selections
-        holder.icon.setOnClickListener(v -> toggleSelection(position));
+        holder.icon.setOnClickListener(v -> {
+            toggleSelection(position);
+            AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
+        });
         // Set actions
-        holder.action.setOnClickListener(v -> displayActions(holder.action, item));
+        PopupMenu popupMenu = getPopupMenu(holder.action, item, position);
+        holder.action.setOnClickListener(v -> popupMenu.show());
         holder.itemView.setOnLongClickListener(v -> {
             // Long click listener: Select/deselect an app.
             // 1) Turn selection mode on if this is the first item in the selection list
@@ -123,7 +130,10 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
             if (lastSelectedItemPosition >= 0) {
                 // Select from last selection to this selection
                 selectRange(lastSelectedItemPosition, position);
-            } else toggleSelection(position);
+            } else {
+                toggleSelection(position);
+                AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
+            }
             return true;
         });
         super.onBindViewHolder(holder, position);
@@ -211,7 +221,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
         return mAdapterList.size();
     }
 
-    private void displayActions(View anchor, FmItem item) {
+    private PopupMenu getPopupMenu(@NonNull View anchor, @NonNull FmItem item, int position) {
         PopupMenu popupMenu = new PopupMenu(anchor.getContext(), anchor);
         popupMenu.setForceShowIcon(true);
         popupMenu.inflate(R.menu.fragment_fm_item_actions);
@@ -222,6 +232,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
         MenuItem renameAction = menu.findItem(R.id.action_rename);
         MenuItem deleteAction = menu.findItem(R.id.action_delete);
         MenuItem shareAction = menu.findItem(R.id.action_share);
+        MenuItem selectAction = menu.findItem(R.id.action_select);
         // Disable actions based on criteria
         boolean canRead = item.path.canRead();
         boolean canWrite = item.path.canWrite();
@@ -237,19 +248,19 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
             fragment.show(mFmActivity.getSupportFragmentManager(), OpenWithDialogFragment.TAG);
             return true;
         });
-        menu.findItem(R.id.action_cut).setOnMenuItemClickListener(menuItem -> {
+        cutAction.setOnMenuItemClickListener(menuItem -> {
             FmTasks.FmTask fmTask = new FmTasks.FmTask(FmTasks.FmTask.TYPE_CUT, Collections.singletonList(item.path));
             FmTasks.getInstance().enqueue(fmTask);
             UIUtils.displayShortToast(R.string.copied_to_clipboard);
             return false;
         });
-        menu.findItem(R.id.action_copy).setOnMenuItemClickListener(menuItem -> {
+        copyAction.setOnMenuItemClickListener(menuItem -> {
             FmTasks.FmTask fmTask = new FmTasks.FmTask(FmTasks.FmTask.TYPE_COPY, Collections.singletonList(item.path));
             FmTasks.getInstance().enqueue(fmTask);
             UIUtils.displayShortToast(R.string.copied_to_clipboard);
             return false;
         });
-        menu.findItem(R.id.action_rename).setOnMenuItemClickListener(menuItem -> {
+        renameAction.setOnMenuItemClickListener(menuItem -> {
             RenameDialogFragment dialog = RenameDialogFragment.getInstance(item.path.getName(), (prefix, extension) -> {
                 String displayName;
                 if (!TextUtils.isEmpty(extension)) {
@@ -267,7 +278,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
             dialog.show(mFmActivity.getSupportFragmentManager(), RenameDialogFragment.TAG);
             return false;
         });
-        menu.findItem(R.id.action_delete).setOnMenuItemClickListener(menuItem -> {
+        deleteAction.setOnMenuItemClickListener(menuItem -> {
             new MaterialAlertDialogBuilder(mFmActivity)
                     .setTitle(mFmActivity.getString(R.string.delete_filename, item.path.getName()))
                     .setMessage(R.string.are_you_sure)
@@ -283,8 +294,14 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
                     .show();
             return true;
         });
-        menu.findItem(R.id.action_share).setOnMenuItemClickListener(menuItem -> {
+        shareAction.setOnMenuItemClickListener(menuItem -> {
             mViewModel.shareFiles(Collections.singletonList(item.path));
+            return true;
+        });
+        selectAction.setOnMenuItemClickListener(menuItem -> {
+            select(position);
+            notifySelectionChange();
+            notifyItemChanged(position, AdapterUtils.STUB);
             return true;
         });
         boolean isVfs = mViewModel.getOptions().isVfs();
@@ -312,7 +329,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
             mViewModel.getDisplayPropertiesLiveData().setValue(item.path.getUri());
             return true;
         });
-        popupMenu.show();
+        return popupMenu;
     }
 
     protected static class ViewHolder extends MultiSelectionView.ViewHolder {

@@ -58,11 +58,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/padding_medium"
+        android:accessibilityTraversalBefore="@android:id/list"
         android:clickable="true"
         android:contentDescription="@string/clear_history"
         android:fitsSystemWindows="true"
         android:focusable="true"
         android:src="@drawable/ic_brush"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        tools:targetApi="22" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

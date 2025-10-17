@@ -34,6 +34,7 @@ import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.util.AccessibilityUtils;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
@@ -409,6 +410,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
         holder.itemView.setOnClickListener(v -> {
             if (isInSelectionMode()) {
                 toggleSelection(position);
+                AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
             } else {
                 LogLine line = holder.logLine;
                 line.setExpanded(!line.isExpanded());
@@ -424,7 +426,10 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
                 if (lastSelectedItemPosition >= 0) {
                     // Select from last selection to this selection
                     selectRange(lastSelectedItemPosition, position);
-                } else toggleSelection(position);
+                } else {
+                    toggleSelection(position);
+                    AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
+                }
                 return true;
             }
             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
@@ -448,6 +453,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
                     .setIcon(R.drawable.ic_check_circle)
                     .setOnMenuItemClickListener(menuItem -> {
                         toggleSelection(position);
+                        AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
                         return true;
                     });
             popupMenu.show();

@@ -33,6 +33,7 @@ import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.RestartUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.util.AccessibilityUtils;
 
 public class BatchOpsResultsActivity extends BaseActivity {
     private RecyclerView mRecyclerView;
@@ -58,7 +59,10 @@ public class BatchOpsResultsActivity extends BaseActivity {
         MaterialButton logToggler = findViewById(R.id.action_view_logs);
         mLogViewer = findViewById(R.id.text);
         mLogViewer.setKeyListener(null);
-        logToggler.setOnClickListener(v -> mLogViewer.setVisibility(View.VISIBLE));
+        logToggler.setOnClickListener(v -> {
+            mLogViewer.setVisibility(View.VISIBLE);
+            AccessibilityUtils.requestAccessibilityFocus(mLogViewer);
+        });
         handleIntent(getIntent());
     }
 

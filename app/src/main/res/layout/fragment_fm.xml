@@ -40,11 +40,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingHorizontal="@dimen/padding_medium"
-                        android:scrollbars="horizontal"
-                        android:focusable="false"
                         android:clipToPadding="false"
                         android:fitsSystemWindows="false"
+                        android:focusable="false"
+                        android:paddingHorizontal="@dimen/padding_medium"
+                        android:scrollbars="horizontal"
                         tools:listitem="@layout/m3_preference" />
 
                     <com.google.android.material.button.MaterialButton
@@ -52,6 +52,7 @@
                         style="@style/Widget.AppTheme.Button.IconButton"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="0"
                         android:contentDescription="@string/item_edit"
                         app:icon="@drawable/ic_edit" />
@@ -66,10 +67,10 @@
                         android:id="@+id/list_item"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scrollbars="none"
-                        android:focusable="false"
                         android:clipToPadding="false"
                         android:fitsSystemWindows="true"
+                        android:focusable="false"
+                        android:scrollbars="none"
                         app:fastScrollerEnabled="true"
                         tools:listitem="@layout/m3_preference" />
 
@@ -77,21 +78,21 @@
                         android:id="@android:id/empty"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
                         android:visibility="gone"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical"
                         tools:visibility="visible">
 
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/icon"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:minHeight="48dp"
-                            android:maxHeight="72dp"
-                            android:adjustViewBounds="true"
                             android:layout_gravity="center_horizontal"
+                            android:adjustViewBounds="true"
+                            android:maxHeight="72dp"
+                            android:minHeight="48dp"
                             app:srcCompat="@drawable/ic_caution" />
 
                         <com.google.android.material.textview.MaterialTextView
@@ -106,15 +107,15 @@
                             android:id="@+id/message"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            android:textAppearance="?attr/textAppearanceBodySmall"
-                            android:textIsSelectable="true"
                             android:fontFamily="monospace"
                             android:maxLines="10"
-                            android:scrollbars="vertical"
                             android:overScrollMode="ifContentScrolls"
-                            tools:visibility="visible"
-                            tools:text="Folder does not exist." />
+                            android:scrollbars="vertical"
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textIsSelectable="true"
+                            android:visibility="gone"
+                            tools:text="Folder does not exist."
+                            tools:visibility="visible" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -148,10 +149,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/padding_medium"
+            android:accessibilityTraversalBefore="@id/list_item"
+            android:contentDescription="@string/add"
             app:sdMainFabClosedSrc="@drawable/ic_add"
             app:sdOverlayLayout="@id/overlay"
-            android:layout_margin="@dimen/padding_medium"
-            android:contentDescription="@string/add" />
+            tools:targetApi="22" />
     </FrameLayout>
 
 </FrameLayout>

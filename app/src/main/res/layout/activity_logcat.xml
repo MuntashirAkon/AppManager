@@ -43,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/padding_medium"
+        android:accessibilityTraversalBefore="@id/main_layout"
         android:contentDescription="@string/log_stop_recording"
         android:fitsSystemWindows="true"
         android:text="@string/log_stop_recording"
@@ -52,6 +53,7 @@
         app:icon="@drawable/ic_stop"
         app:iconTint="?attr/colorOnError"
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        tools:targetApi="22"
         tools:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -393,7 +393,9 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         if (selectionCount > 0) {
             if (getVisibility() != VISIBLE) show();
         }
-        mSelectionCounter.setText(String.format(Locale.getDefault(), "%d/%d", selectionCount, mAdapter.getTotalItemCount()));
+        int totalItems = mAdapter.getTotalItemCount();
+        mSelectionCounter.setText(String.format(Locale.getDefault(), "%d/%d", selectionCount, totalItems));
+        mSelectionCounter.setContentDescription(getContext().getString(R.string.selected_items_accessibility_description, selectionCount, totalItems));
         mSelectAllView.setChecked(mAdapter.areAllSelected(), false);
         if (mSelectionChangeListener != null && mSelectionChangeListener.onSelectionChange(selectionCount)) {
             mSelectionActionsView.updateMenuView();

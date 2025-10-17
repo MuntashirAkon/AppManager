@@ -34,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/padding_medium"
         android:layout_marginBottom="72dp"
+        android:accessibilityTraversalBefore="@id/pager"
         android:clickable="true"
         android:contentDescription="@string/add_item"
         android:fitsSystemWindows="true"
@@ -41,6 +42,7 @@
         android:src="@drawable/ic_add"
         app:layout_anchor="@id/bottom_navigation"
         app:layout_anchorGravity="right|top"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        tools:targetApi="22" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
