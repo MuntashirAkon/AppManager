@@ -129,7 +129,7 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
     public void loadCustomCommands() {
         mExecutor.submit(() -> {
             try {
-                ServerConfig.init(getApplication(), UserHandleHidden.myUserId());
+                ServerConfig.init(getApplication());
                 mCustomCommand0.postValue(ServerConfig.getServerRunnerCommand(0));
                 mCustomCommand1.postValue(ServerConfig.getServerRunnerCommand(1));
             } catch (Throwable e) {

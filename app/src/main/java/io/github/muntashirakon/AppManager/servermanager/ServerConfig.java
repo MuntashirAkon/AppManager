@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.servermanager;
 
 import android.annotation.SuppressLint;
-import android.annotation.UserIdInt;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -25,6 +24,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
 import io.github.muntashirakon.AppManager.server.common.Constants;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 
@@ -34,18 +34,16 @@ public final class ServerConfig {
 
     public static final int DEFAULT_ADB_PORT = 5555;
     static final String SERVER_RUNNER_EXEC_NAME = "run_server.sh";
-    private static final int DEFAULT_LOCAL_SERVER_PORT = 60001;
     private static final String LOCAL_TOKEN = "l_token";
     private static final File[] SERVER_RUNNER_EXEC = new File[2];
     private static final File[] SERVER_RUNNER_JAR = new File[2];
     private static final SharedPreferences sPreferences = ContextUtils.getContext()
             .getSharedPreferences("server_config", Context.MODE_PRIVATE);
-    private static int sServerPort = DEFAULT_LOCAL_SERVER_PORT;
     private static volatile boolean sInitialised = false;
 
     @WorkerThread
     @NoOps
-    public static void init(@NonNull Context context, @UserIdInt int userHandle) throws IOException {
+    public static void init(@NonNull Context context) throws IOException {
         if (sInitialised) {
             return;
         }
@@ -69,9 +67,6 @@ public final class ServerConfig {
         FileUtils.chmod711(deStorage);
         FileUtils.chmod644(SERVER_RUNNER_JAR[1]);
         FileUtils.chmod644(SERVER_RUNNER_EXEC[1]);
-        if (userHandle != 0) {
-            sServerPort += userHandle;
-        }
 
         sInitialised = true;
     }
@@ -133,7 +128,7 @@ public final class ServerConfig {
 
     @AnyThread
     public static int getLocalServerPort() {
-        return sServerPort;
+        return Prefs.Misc.getAdbLocalServerPort();
     }
 
     @WorkerThread

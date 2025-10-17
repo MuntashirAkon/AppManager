@@ -126,6 +126,27 @@ public class AdvancedPreferences extends PreferenceFragment {
                     .show();
             return true;
         });
+        // ADB local server port
+        Preference adbLsPort = Objects.requireNonNull(findPreference("adb_local_server_port"));
+        int port = Prefs.Misc.getAdbLocalServerPort();
+        adbLsPort.setSummary(String.valueOf(port));
+        adbLsPort.setOnPreferenceClickListener(pref -> {
+            new TextInputDialogBuilder(requireActivity(), null)
+                    .setTitle(R.string.adb_local_server_port)
+                    .setInputText(String.valueOf(port))
+                    .setInputInputType(InputType.TYPE_CLASS_NUMBER)
+                    .setInputImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfoCompat.IME_FLAG_NO_PERSONALIZED_LEARNING)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.save, (dialog, which, inputText, isChecked) -> {
+                        if (inputText != null && TextUtils.isDigitsOnly(inputText)) {
+                            int c = Integer.decode(inputText.toString());
+                            Prefs.Misc.setAdbLocalServerPort(c);
+                            adbLsPort.setSummary(String.valueOf(c));
+                        }
+                    })
+                    .show();
+            return true;
+        });
         // Import/export App Manager's KeyStore
         ((Preference) Objects.requireNonNull(findPreference("import_export_keystore")))
                 .setOnPreferenceClickListener(preference -> {

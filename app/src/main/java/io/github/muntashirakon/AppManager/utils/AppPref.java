@@ -10,6 +10,7 @@ import android.content.pm.PackageInstaller;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.UserHandleHidden;
 import android.util.Log;
 import android.view.View;
 
@@ -54,6 +55,7 @@ public class AppPref {
      */
     @Keep
     public enum PrefKey {
+        PREF_ADB_LOCAL_SERVER_PORT_INT,
         PREF_APP_OP_SHOW_DEFAULT_BOOL,
         PREF_APP_OP_SORT_ORDER_INT,
         PREF_APP_THEME_INT,
@@ -373,6 +375,8 @@ public class AppPref {
     @NonNull
     public Object getDefaultValue(@NonNull PrefKey key) {
         switch (key) {
+            case PREF_ADB_LOCAL_SERVER_PORT_INT:
+                return (UserHandleHidden.myUserId() + 60001);
             case PREF_BACKUP_FLAGS_INT:
                 return BackupFlags.BACKUP_INT_DATA | BackupFlags.BACKUP_RULES
                         | BackupFlags.BACKUP_APK_FILES | BackupFlags.BACKUP_EXTRAS;

@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.servermanager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.UserHandleHidden;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
@@ -87,7 +86,7 @@ public class LocalServer {
         mContext = ContextUtils.getDeContext(ContextUtils.getContext());
         mLocalServerManager = LocalServerManager.getInstance(mContext);
         // Initialise necessary files and permissions
-        ServerConfig.init(mContext, UserHandleHidden.myUserId());
+        ServerConfig.init(mContext);
         // Start server if not already
         checkConnect();
     }

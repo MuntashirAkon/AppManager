@@ -573,6 +573,14 @@ public final class Prefs {
         public static boolean sendNotificationsToConnectedDevices() {
             return AppPref.getBoolean(AppPref.PrefKey.PREF_SEND_NOTIFICATIONS_TO_CONNECTED_DEVICES_BOOL);
         }
+
+        public static void setAdbLocalServerPort(int port) {
+            AppPref.set(AppPref.PrefKey.PREF_ADB_LOCAL_SERVER_PORT_INT, port);
+        }
+
+        public static int getAdbLocalServerPort() {
+            return AppPref.getInt(AppPref.PrefKey.PREF_ADB_LOCAL_SERVER_PORT_INT);
+        }
     }
 
     public static final class RunningApps {
