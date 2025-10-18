@@ -1557,4 +1557,5 @@
     <string name="swap_usage_accessibility_description">The system has allocated %s for swap and currently using %s.</string>
     <string name="selected_items_accessibility_description">Selected %d out of %d items</string>
     <string name="adb_local_server_port">ADB local server port</string>
+    <string name="waiting_for_wifi">Waiting for Wi-Fi</string>
 </resources>

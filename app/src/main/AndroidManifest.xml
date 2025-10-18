@@ -1292,6 +1292,11 @@
             android:exported="false"
             android:foregroundServiceType="dataSync|specialUse" />
         <service
+            android:name=".servermanager.WifiWaitService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync|specialUse"
+            tools:targetApi="30" />
+        <service
             android:name=".adb.AdbPairingService"
             android:exported="false"
             android:foregroundServiceType="dataSync|specialUse"
