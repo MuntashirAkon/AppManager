@@ -27,12 +27,12 @@ public final class FilterOptions {
             case "pkg_name": return new PackageNameOption();
             case "running_apps": return new RunningAppsOption();
             case "screen_time": return new ScreenTimeOption();
-            case "shared_uid": return new SharedUidOption();
             case "signature": return new SignatureOption();
             case "target_sdk": return new TargetSdkOption();
             case "times_opened": return new TimesOpenedOption();
             case "total_size": return new TotalSizeOption();
             case "trackers": return new TrackersOption();
+            case "uid": return new UidOption();
             case "version_name": return new VersionNameOption();
         }
         throw new IllegalArgumentException("Invalid filter: " + filterName);

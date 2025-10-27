@@ -360,6 +360,12 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
         return -1;
     }
 
+    @Override
+    public int getUid() {
+        int uid = mApplicationInfo != null ? mApplicationInfo.uid : this.uid;
+        return UserHandleHidden.getAppId(uid);
+    }
+
     public void setPackageUsageInfo(@Nullable PackageUsageInfo packageUsageInfo) {
         mPackageUsageInfo = packageUsageInfo;
     }

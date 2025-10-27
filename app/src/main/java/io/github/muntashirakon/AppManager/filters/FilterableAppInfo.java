@@ -127,6 +127,11 @@ public class FilterableAppInfo implements IFilterableAppInfo {
     }
 
     @Override
+    public int getUid() {
+        return mApplicationInfo.uid;
+    }
+
+    @Override
     @NonNull
     public String getAppLabel() {
         if (mAppLabel == null) {

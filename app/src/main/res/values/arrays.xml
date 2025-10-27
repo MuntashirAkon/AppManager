@@ -264,12 +264,12 @@
         <item>pkg_name</item>
         <item>running_apps</item>
         <item>screen_time</item>
-        <item>shared_uid</item>
         <item>signature</item>
         <item>target_sdk</item>
         <item>times_opened</item>
         <item>total_size</item>
         <item>trackers</item>
+        <item>uid</item>
         <item>version_name</item>
     </string-array>
     <string name="usage_daily">Daily</string>

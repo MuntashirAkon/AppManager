@@ -27,6 +27,8 @@ public interface IFilterableAppInfo {
 
     int getUserId();
 
+    int getUid();
+
     @NonNull
     String getAppLabel();
 
