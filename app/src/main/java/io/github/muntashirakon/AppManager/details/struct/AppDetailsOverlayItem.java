@@ -1,7 +1,9 @@
 package io.github.muntashirakon.AppManager.details.struct;
 
+import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.content.om.IOverlayManager;
+import android.content.om.OverlayIdentifier;
 import android.content.om.OverlayInfo;
 import android.content.om.OverlayInfoHidden;
 import android.os.Build;
@@ -54,6 +56,12 @@ public class AppDetailsOverlayItem extends AppDetailsItem<OverlayInfoHidden> {
             return getState() != OverlayInfoHidden.STATE_ENABLED_IMMUTABLE;
         }
         return true;
+    }
+
+    @NonNull
+    @RequiresApi(Build.VERSION_CODES.S)
+    public OverlayIdentifier getOverlayIdentifier() {
+        return item.getOverlayIdentifier();
     }
 
     public String getReadableState() {
