@@ -832,10 +832,16 @@
                 <data android:scheme="view-source" />
                 <data android:scheme="sqlite" />
 
+                <!-- Intercept Alipay links -->
+                <data android:scheme="alipays" />
+
                 <!-- Intercept Google play links -->
                 <data android:scheme="market" />
                 <data android:scheme="store" />
                 <data android:scheme="android" />
+
+                <!-- Intercept WeChat links -->
+                <data android:scheme="weixin" />
 
                 <!-- Intercept WhatsApp links -->
                 <data android:scheme="whatsapp" />
@@ -893,10 +899,16 @@
                 <data android:scheme="view-source" />
                 <data android:scheme="sqlite" />
 
+                <!-- Intercept Alipay links -->
+                <data android:scheme="alipays" />
+
                 <!-- Intercept Google play links -->
                 <data android:scheme="market" />
                 <data android:scheme="store" />
                 <data android:scheme="android" />
+
+                <!-- Intercept WeChat links -->
+                <data android:scheme="weixin" />
 
                 <data android:mimeType="*/*" />
             </intent-filter>
