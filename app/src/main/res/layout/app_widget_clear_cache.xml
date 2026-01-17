@@ -1,8 +1,10 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.AppTheme.AppWidget"
     android:layout_width="48dp"
     android:layout_height="48dp"
+    android:layout_gravity="center"
     android:background="@drawable/app_widget_background"
     android:theme="@style/AppTheme.AppWidgetContainer.IconOnly">
 
@@ -14,5 +16,7 @@
         android:layout_centerVertical="true"
         android:contentDescription="@string/clear_app_cache"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_clear_cache" />
+        android:src="@drawable/ic_clear_cache"
+        android:tint="?android:attr/textColorSecondary"
+        tools:ignore="UseAppTint" />
 </RelativeLayout>

@@ -7,8 +7,6 @@ import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIB
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -37,6 +35,9 @@ import androidx.annotation.StringRes;
 import androidx.core.content.pm.PermissionInfoCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import org.jetbrains.annotations.Contract;
+
+import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
@@ -457,6 +458,27 @@ public class Utils {
         return major + "." + minor;
     }
 
+    @Nullable
+    public static String getVulkanVersion(PackageManager pm) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            return null;
+        }
+        // https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/core/java/android/os/GraphicsEnvironment.java;l=193;drc=f80e786d308318894be30d54b93f38034496fc66
+        if (pm.hasSystemFeature(PackageManager.FEATURE_VULKAN_HARDWARE_VERSION, 0x00403000)) {
+            return "1.3";
+        }
+        if (pm.hasSystemFeature(PackageManager.FEATURE_VULKAN_HARDWARE_VERSION, 0x00402000)) {
+            return "1.2";
+        }
+        if (pm.hasSystemFeature(PackageManager.FEATURE_VULKAN_HARDWARE_VERSION, 0x00401000)) {
+            return "1.1";
+        }
+        if (pm.hasSystemFeature(PackageManager.FEATURE_VULKAN_HARDWARE_VERSION, 0x00400000)) {
+            return "1.0";
+        }
+        return null;
+    }
+
     @CheckResult
     @NonNull
     public static byte[] charsToBytes(@NonNull char[] chars) {
@@ -533,9 +555,10 @@ public class Utils {
         return buf.toString();
     }
 
-    public static int getIntegerFromString(CharSequence needle,
-                                           List<CharSequence> stringsToMatch,
-                                           List<Integer> associatedIntegers)
+    @Contract("null,_,_ -> fail")
+    public static int getIntegerFromString(@Nullable CharSequence needle,
+                                           @NonNull List<CharSequence> stringsToMatch,
+                                           @NonNull List<Integer> associatedIntegers)
             throws IllegalArgumentException {
         if (needle == null) throw new IllegalArgumentException("Needle cannot be null");
         if (stringsToMatch.size() != associatedIntegers.size()) {
@@ -571,8 +594,7 @@ public class Utils {
     }
 
     public static void copyToClipboard(@NonNull Context context, @Nullable CharSequence label, @NonNull CharSequence text) {
-        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        clipboard.setPrimaryClip(ClipData.newPlainText(label, text));
+        ClipboardUtils.copyToClipboard(context, label, text.toString());
         UIUtils.displayShortToast(R.string.copied_to_clipboard);
     }
 
@@ -626,6 +648,34 @@ public class Utils {
         NetworkInfo info = cm.getActiveNetworkInfo();
         return info != null && info.getType() == ConnectivityManager.TYPE_WIFI;
     }
+
+    @NonNull
+    public static <T> String prettyPrintObject(@Nullable T obj) {
+        if (obj == null) {
+            return "null";
+        }
+        StringBuilder sb = new StringBuilder();
+        Class<?> clazz = obj.getClass();
+        sb.append(clazz.getSimpleName()).append("{");
+        Field[] fields = clazz.getDeclaredFields();
+        for (int i = 0; i < fields.length; i++) {
+            Field field = fields[i];
+            field.setAccessible(true);
+            sb.append(field.getName()).append("=");
+            try {
+                Object value = field.get(obj);
+                sb.append(value);
+            } catch (IllegalAccessException e) {
+                sb.append("N/A");
+            }
+            if (i < fields.length - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append("}");
+        return sb.toString();
+    }
+
 
     public static boolean isRoboUnitTest() {
         return "robolectric".equals(Build.FINGERPRINT);

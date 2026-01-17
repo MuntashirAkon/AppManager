@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.TypefaceUtil;
@@ -73,7 +72,6 @@ public class AppearancePreferences extends PreferenceFragment {
         // Black theme/custom theme
         SwitchPreferenceCompat useSystemFontPref = Objects.requireNonNull(findPreference("use_system_font"));
         useSystemFontPref.setChecked(Prefs.Appearance.useSystemFont());
-        useSystemFontPref.setVisible(BuildConfig.DEBUG);
         useSystemFontPref.setOnPreferenceChangeListener((preference, newValue) -> {
             if (((boolean) newValue)) {
                 // Enable system font

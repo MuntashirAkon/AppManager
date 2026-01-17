@@ -39,18 +39,18 @@ public class MagiskHide {
         } else return true;
     }
 
-    public static boolean apply(@NonNull MagiskProcess magiskProcess) {
+    public static boolean apply(@NonNull MagiskProcess magiskProcess, boolean forceEnable) {
         String packageName = magiskProcess.isIsolatedProcess() && !magiskProcess.isAppZygote() ? ISOLATED_MAGIC
                 : magiskProcess.packageName;
         if (magiskProcess.isEnabled()) {
-            return add(packageName, magiskProcess.name);
+            return add(packageName, magiskProcess.name, forceEnable);
         }
         return remove(packageName, magiskProcess.name);
     }
 
-    private static boolean add(String packageName, String processName) {
+    private static boolean add(String packageName, String processName, boolean forceEnable) {
         // Check MagiskHide status
-        if (!enableIfNotAlready(true)) return false;
+        if (!enableIfNotAlready(forceEnable)) return false;
         // MagiskHide is enabled, enable hide for the package
         return Runner.runCommand(new String[]{"magiskhide", "add", packageName, processName}).isSuccessful();
     }

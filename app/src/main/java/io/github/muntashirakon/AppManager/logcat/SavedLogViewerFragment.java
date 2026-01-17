@@ -20,6 +20,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
+import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -81,7 +82,7 @@ public class SavedLogViewerFragment extends AbsLogViewerFragment implements LogV
     public void onNewLogsAvailable(@NonNull List<LogLine> logLines) {
         mActivity.hideProgressBar();
         for (LogLine logLine : logLines) {
-            mLogListAdapter.addWithFilter(logLine, "", true);
+            mLogListAdapter.addWithFilter(logLine, new SearchCriteria(null), true);
             mActivity.addToAutocompleteSuggestions(logLine);
         }
 

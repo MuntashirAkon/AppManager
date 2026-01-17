@@ -6,8 +6,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageInstaller;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.os.UserHandleHidden;
 import android.util.Log;
 import android.view.View;
 
@@ -52,6 +55,7 @@ public class AppPref {
      */
     @Keep
     public enum PrefKey {
+        PREF_ADB_LOCAL_SERVER_PORT_INT,
         PREF_APP_OP_SHOW_DEFAULT_BOOL,
         PREF_APP_OP_SORT_ORDER_INT,
         PREF_APP_THEME_INT,
@@ -96,11 +100,15 @@ public class AppPref {
 
         PREF_INSTALLER_BLOCK_TRACKERS_BOOL,
         PREF_INSTALLER_ALWAYS_ON_BACKGROUND_BOOL,
+        PREF_INSTALLER_DEFAULT_PKG_SOURCE_INT,
+        PREF_INSTALLER_DISABLE_VERIFICATION_BOOL,
         PREF_INSTALLER_DISPLAY_CHANGES_BOOL,
         PREF_INSTALLER_FORCE_DEX_OPT_BOOL,
         PREF_INSTALLER_INSTALL_LOCATION_INT,
         PREF_INSTALLER_INSTALLER_APP_STR,
+        PREF_INSTALLER_SET_ORIGIN_BOOL,
         PREF_INSTALLER_SIGN_APK_BOOL,
+        PREF_INSTALLER_UPDATE_OWNERSHIP_BOOL,
 
         PREF_LAST_VERSION_CODE_LONG,
         PREF_LAYOUT_ORIENTATION_INT,
@@ -123,6 +131,7 @@ public class AppPref {
         PREF_OPEN_PGP_PACKAGE_STR,
         PREF_OPEN_PGP_USER_ID_STR,
         PREF_PERMISSIONS_SORT_ORDER_INT,
+        PREF_OVERLAYS_SORT_ORDER_INT,
 
         PREF_RUNNING_APPS_FILTER_FLAGS_INT,
         PREF_RUNNING_APPS_SORT_ORDER_INT,
@@ -366,6 +375,8 @@ public class AppPref {
     @NonNull
     public Object getDefaultValue(@NonNull PrefKey key) {
         switch (key) {
+            case PREF_ADB_LOCAL_SERVER_PORT_INT:
+                return (UserHandleHidden.myUserId() + 60001);
             case PREF_BACKUP_FLAGS_INT:
                 return BackupFlags.BACKUP_INT_DATA | BackupFlags.BACKUP_RULES
                         | BackupFlags.BACKUP_APK_FILES | BackupFlags.BACKUP_EXTRAS;
@@ -375,13 +386,13 @@ public class AppPref {
             case PREF_GLOBAL_BLOCKING_ENABLED_BOOL:
             case PREF_INSTALLER_ALWAYS_ON_BACKGROUND_BOOL:
             case PREF_INSTALLER_BLOCK_TRACKERS_BOOL:
+            case PREF_INSTALLER_DISABLE_VERIFICATION_BOOL:
             case PREF_INSTALLER_FORCE_DEX_OPT_BOOL:
             case PREF_INSTALLER_SIGN_APK_BOOL:
             case PREF_BACKUP_ANDROID_KEYSTORE_BOOL:
             case PREF_ENABLE_SCREEN_LOCK_BOOL:
             case PREF_MAIN_WINDOW_SORT_REVERSE_BOOL:
             case PREF_LOG_VIEWER_EXPAND_BY_DEFAULT_BOOL:
-            case PREF_LOG_VIEWER_OMIT_SENSITIVE_INFO_BOOL:
             case PREF_APP_THEME_PURE_BLACK_BOOL:
             case PREF_DISPLAY_CHANGELOG_BOOL:
             case PREF_FM_DISPLAY_IN_LAUNCHER_BOOL:
@@ -393,7 +404,10 @@ public class AppPref {
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_SHOW_DISCLAIMER_BOOL:
             case PREF_LOG_VIEWER_SHOW_PID_TID_TIMESTAMP_BOOL:
+            case PREF_LOG_VIEWER_OMIT_SENSITIVE_INFO_BOOL:
             case PREF_INSTALLER_DISPLAY_CHANGES_BOOL:
+            case PREF_INSTALLER_SET_ORIGIN_BOOL:
+            case PREF_INSTALLER_UPDATE_OWNERSHIP_BOOL:
             case PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL:
             case PREF_ZIP_ALIGN_BOOL:
             case PREF_SEND_NOTIFICATIONS_TO_CONNECTED_DEVICES_BOOL:
@@ -420,6 +434,8 @@ public class AppPref {
             case PREF_COMPONENTS_SORT_ORDER_INT:
             case PREF_PERMISSIONS_SORT_ORDER_INT:
                 return AppDetailsFragment.SORT_BY_NAME;
+            case PREF_OVERLAYS_SORT_ORDER_INT:
+                return AppDetailsFragment.SORT_BY_PRIORITY;
             case PREF_RUNNING_APPS_SORT_ORDER_INT:
                 return RunningAppsActivity.SORT_BY_PID;
             case PREF_RUNNING_APPS_FILTER_FLAGS_INT:
@@ -434,6 +450,11 @@ public class AppPref {
                 return "";
             case PREF_MODE_OF_OPS_STR:
                 return Ops.MODE_AUTO;
+            case PREF_INSTALLER_DEFAULT_PKG_SOURCE_INT:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    // Shell default
+                    return PackageInstaller.PACKAGE_SOURCE_OTHER;
+                } else return 0;
             case PREF_INSTALLER_INSTALL_LOCATION_INT:
                 return PackageInfo.INSTALL_LOCATION_AUTO;
             case PREF_INSTALLER_INSTALLER_APP_STR:

@@ -6,8 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.DrawableRes;
@@ -22,9 +22,10 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.activity.LeadingActivityTrackerActivity;
 import io.github.muntashirakon.AppManager.editor.CodeEditorActivity;
 import io.github.muntashirakon.AppManager.fm.FmActivity;
+import io.github.muntashirakon.AppManager.history.ops.OpHistoryActivity;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
-import io.github.muntashirakon.AppManager.runner.TermActivity;
+import io.github.muntashirakon.AppManager.terminal.TermActivity;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
@@ -49,12 +50,14 @@ public class LabsActivity extends BaseActivity {
                     Intent intent = new Intent(this, SysConfigActivity.class);
                     startActivity(intent);
                 });
-        addAction(this, flowLayout, R.string.title_terminal_emulator, R.drawable.ic_frost_termux)
-                .setOnClickListener(v -> {
-                    Intent intent = new Intent(this, TermActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                });
+        if (FeatureController.isTerminalEnabled()) {
+            addAction(this, flowLayout, R.string.title_terminal_emulator, R.drawable.ic_frost_termux)
+                    .setOnClickListener(v -> {
+                        Intent intent = new Intent(this, TermActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    });
+        }
         addAction(this, flowLayout, R.string.files, R.drawable.ic_file_document_multiple)
                 .setOnClickListener(v -> {
                     Intent intent = new Intent(this, FmActivity.class);
@@ -81,6 +84,12 @@ public class LabsActivity extends BaseActivity {
                         startActivity(intent);
                     });
         }
+        addAction(this, flowLayout, R.string.op_history, R.drawable.ic_history)
+                .setOnClickListener(v -> {
+                    Intent intent = new Intent(this, OpHistoryActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                });
     }
 
     @Override
@@ -93,13 +102,13 @@ public class LabsActivity extends BaseActivity {
     }
 
     @NonNull
-    private static MaterialButton addAction(@NonNull Context context, @NonNull ViewGroup layout,
+    private static MaterialButton addAction(@NonNull Context context, @NonNull ViewGroup parent,
                                             @StringRes int stringResId, @DrawableRes int iconResId) {
-        MaterialButton button = (MaterialButton) View.inflate(context, R.layout.item_app_info_action, null);
+        MaterialButton button = (MaterialButton) LayoutInflater.from(context).inflate(R.layout.item_app_info_action, parent, false);
         button.setBackgroundTintList(ColorStateList.valueOf(ColorCodes.getListItemColor1(context)));
         button.setText(stringResId);
         button.setIconResource(iconResId);
-        layout.addView(button);
+        parent.addView(button);
         return button;
     }
 }

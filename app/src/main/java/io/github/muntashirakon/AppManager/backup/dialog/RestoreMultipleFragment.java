@@ -54,7 +54,7 @@ public class RestoreMultipleFragment extends Fragment {
         supportedFlags |= BackupFlags.BACKUP_CUSTOM_USERS;
         int checkedFlags = BackupFlags.fromPref().getFlags() & supportedFlags;
         int disabledFlags = 0;
-        if (mViewModel.getUninstalledApps().size() > 0) {
+        if (!mViewModel.getUninstalledApps().isEmpty()) {
             checkedFlags |= BackupFlags.BACKUP_APK_FILES;
             disabledFlags |= BackupFlags.BACKUP_APK_FILES;
         }
@@ -62,7 +62,7 @@ public class RestoreMultipleFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         Set<CharSequence> appsWithoutBackups = mViewModel.getAppsWithoutBackups();
-        if (appsWithoutBackups.size() > 0) {
+        if (!appsWithoutBackups.isEmpty()) {
             SpannableStringBuilder sb = new SpannableStringBuilder(getString(R.string.backup_apps_cannot_be_restored));
             for (CharSequence appLabel : appsWithoutBackups) {
                 sb.append("\n● ").append(appLabel);

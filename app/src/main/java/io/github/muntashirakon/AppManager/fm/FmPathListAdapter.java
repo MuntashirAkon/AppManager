@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -59,7 +60,7 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
             setCurrentPosition(paths.size() - 1);
         } else {
             // Case 2
-            mCurrentPosition = mPathParts.size() - 1;
+            mCurrentPosition = paths.size() - 1;
             AdapterUtils.notifyDataSetChanged(this, mPathParts, paths);
         }
     }
@@ -85,9 +86,9 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
         int lastPosition = mCurrentPosition;
         mCurrentPosition = currentPosition;
         if (lastPosition >= 0) {
-            notifyItemChanged(lastPosition);
+            notifyItemChanged(lastPosition, AdapterUtils.STUB);
         }
-        notifyItemChanged(currentPosition);
+        notifyItemChanged(currentPosition, AdapterUtils.STUB);
     }
 
     @NonNull
@@ -99,11 +100,15 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
 
     @Override
     public void onBindViewHolder(@NonNull PathHolder holder, int position) {
+        String actualPathPart = mPathParts.get(position);
         String pathPart;
         if (position == 0) {
-            pathPart = mAlternativeRootName != null ? mAlternativeRootName : mPathParts.get(position);
-        } else pathPart = "» " + mPathParts.get(position);
+            pathPart = mAlternativeRootName != null ? mAlternativeRootName : actualPathPart;
+        } else pathPart = "» " + actualPathPart;
         holder.textView.setText(pathPart);
+        if (position == 0 && pathPart.equals("/")) {
+            holder.itemView.setContentDescription(holder.itemView.getContext().getString(R.string.root));
+        } else holder.itemView.setContentDescription(actualPathPart);
         holder.itemView.setOnClickListener(v -> {
             if (mCurrentPosition != position) {
                 mViewModel.loadFiles(calculateUri(position));
@@ -127,6 +132,12 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
                         intent.setDataAndType(calculateUri(position), DocumentsContract.Document.MIME_TYPE_DIR);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                         context.startActivity(intent);
+                        return true;
+                    });
+            // Add to favorites
+            menu.add(R.string.add_to_favorites)
+                    .setOnMenuItemClickListener(item -> {
+                        mViewModel.addToFavorite(Paths.get(calculateUri(position)), mViewModel.getOptions());
                         return true;
                     });
             // Properties

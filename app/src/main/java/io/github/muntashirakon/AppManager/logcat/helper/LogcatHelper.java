@@ -76,8 +76,14 @@ public class LogcatHelper {
     }
 
     @NonNull
-    private static String[] getLogcatArgs(@LogBufferId int buffers, boolean dumpAndExit) {
-        List<String> args = new ArrayList<>(Arrays.asList("logcat", "-v", "time"));
+    public static String[] getLogcatArgs(@LogBufferId int buffers, boolean dumpAndExit) {
+        // https://cs.android.com/android/platform/superproject/main/+/main:system/logging/liblog/logprint.cpp;l=1547;drc=b4d6320e2ae398b36f0aaafb2ecd83609d2d99af
+        // threadtime: <time:%m-%d %H:%M:%S.%03ld> <uid:%5s> <pid:%5d> <tid:%5d> <level:%c> <tag:%s\s+>: <message>
+        // Modifiers:
+        // - uid: Display UID (Android 7 onwards)
+        // - descriptive: Descriptive output, currently NOP (Android 8 onwards)
+        // * UID is not guaranteed
+        List<String> args = new ArrayList<>(Arrays.asList("logcat", "-v", "threadtime", "-v", "uid"));
 
         if (buffers == LOG_ID_ALL) {
             args.add("-b");

@@ -5,6 +5,7 @@ package io.github.muntashirakon.dialog;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.CheckedTextView;
 import android.widget.FrameLayout;
 
 import androidx.annotation.ArrayRes;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -144,7 +146,7 @@ public class SearchableSingleChoiceDialogBuilder<T> {
     }
 
     public SearchableSingleChoiceDialogBuilder<T> reloadListUi() {
-        mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount());
+        mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount(), AdapterUtils.STUB);
         return this;
     }
 
@@ -160,6 +162,16 @@ public class SearchableSingleChoiceDialogBuilder<T> {
 
     public SearchableSingleChoiceDialogBuilder<T> hideSearchBar(boolean hide) {
         mSearchView.setVisibility(hide ? View.GONE : View.VISIBLE);
+        return this;
+    }
+
+    public SearchableSingleChoiceDialogBuilder<T> setIcon(@DrawableRes int iconRes) {
+        mBuilder.setIcon(iconRes);
+        return this;
+    }
+
+    public SearchableSingleChoiceDialogBuilder<T> setIcon(@Nullable Drawable icon) {
+        mBuilder.setIcon(icon);
         return this;
     }
 
@@ -368,7 +380,7 @@ public class SearchableSingleChoiceDialogBuilder<T> {
                 position = mFilteredItems.indexOf(mSelectedItem);
             }
             if (position >= 0) {
-                notifyItemChanged(position);
+                notifyItemChanged(position, AdapterUtils.STUB);
             }
             triggerSingleChoiceClickListener(mSelectedItem, selected);
         }

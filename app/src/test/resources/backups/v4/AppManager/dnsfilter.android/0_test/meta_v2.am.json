@@ -1,0 +1,25 @@
+{
+    "label": "personalDNSfilter",
+    "package_name": "dnsfilter.android",
+    "version_name": "1.50.58.1",
+    "version_code": 1505801,
+    "data_dirs": [
+        "\/data\/data\/dnsfilter.android",
+        "\/storage\/emulated\/0\/Android\/data\/dnsfilter.android"
+    ],
+    "is_system": false,
+    "is_split_apk": false,
+    "split_configs": [],
+    "has_rules": false,
+    "backup_time": 1757782908072,
+    "checksum_algo": "SHA-256",
+    "crypto": "none",
+    "version": 4,
+    "apk_name": "base.apk",
+    "instruction_set": "arm64",
+    "flags": 1110,
+    "user_handle": 0,
+    "tar_type": "z",
+    "key_store": false,
+    "installer": "io.github.muntashirakon.AppManager"
+}

@@ -62,7 +62,7 @@ public class SecurityAndOpsViewModel extends AndroidViewModel implements Ops.Adb
                 Log.d(TAG, "Start migration");
                 // App is updated
                 AppPref.set(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_BOOL, true);
-                Migrations.startMigration(lastVersion, thisVersion);
+                Migrations.startMigration(lastVersion);
                 // Migration is done: set this as the last version
                 AppPref.set(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
                 Log.d(TAG, "End migration");

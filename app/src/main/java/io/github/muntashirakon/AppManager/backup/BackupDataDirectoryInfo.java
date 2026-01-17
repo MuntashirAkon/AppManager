@@ -7,6 +7,7 @@ import android.annotation.UserIdInt;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -54,16 +55,14 @@ public class BackupDataDirectoryInfo {
     @NonNull
     private static BackupDataDirectoryInfo getExternalInfo(@NonNull String dataDir, @NonNull String baseDir) {
         String relativeDir = dataDir.substring(baseDir.length()); // No starting separator
-        int subType = TYPE_CUSTOM;
+        int subType;
         if (relativeDir.startsWith("Android/data/")) {
             subType = TYPE_ANDROID_DATA;
-        }
-        if (relativeDir.startsWith("Android/obb/")) {
+        } else if (relativeDir.startsWith("Android/obb/")) {
             subType = TYPE_ANDROID_OBB;
-        }
-        if (relativeDir.startsWith("Android/media/")) {
+        } else if (relativeDir.startsWith("Android/media/")) {
             subType = TYPE_ANDROID_MEDIA;
-        }
+        } else subType = TYPE_CUSTOM;
         return new BackupDataDirectoryInfo(dataDir, Paths.get(baseDir).isDirectory(), TYPE_EXTERNAL, subType);
     }
 
@@ -99,7 +98,9 @@ public class BackupDataDirectoryInfo {
     public static final int TYPE_EXTERNAL = 2;
     public static final int TYPE_UNKNOWN = 3;
 
-    public final String rawRath;
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    public final String rawPath;
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     public final Path path;
     public final boolean isMounted;
     @Type
@@ -108,11 +109,15 @@ public class BackupDataDirectoryInfo {
     public final int subtype;
 
     private BackupDataDirectoryInfo(String path, boolean isMounted, @Type int type, @SubType int subtype) {
-        this.rawRath = path;
+        this.rawPath = path;
         this.path = Paths.get(path);
         this.isMounted = isMounted;
         this.type = type;
         this.subtype = subtype;
+    }
+
+    public Path getDirectory() {
+        return path;
     }
 
     public boolean isExternal() {

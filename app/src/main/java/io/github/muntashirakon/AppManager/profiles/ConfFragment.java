@@ -15,12 +15,12 @@ import androidx.lifecycle.ViewModelProvider;
 import io.github.muntashirakon.AppManager.R;
 
 public class ConfFragment extends Fragment {
-    private AppsProfileActivity mActivity;
+    private AppsBaseProfileActivity mActivity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (AppsProfileActivity) requireActivity();
+        mActivity = (AppsBaseProfileActivity) requireActivity();
     }
 
     @Nullable
@@ -32,7 +32,7 @@ public class ConfFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ProfileViewModel model = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+        AppsProfileViewModel model = new ViewModelProvider(requireActivity()).get(AppsProfileViewModel.class);
         model.observeProfileLoaded().observe(getViewLifecycleOwner(), profileName -> {
             if (profileName == null) return;
             getChildFragmentManager()

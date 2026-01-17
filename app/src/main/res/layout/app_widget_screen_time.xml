@@ -1,24 +1,35 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget_background"
     style="@style/Widget.AppTheme.AppWidget"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/app_widget_background"
+    android:padding="0dp"
     android:theme="@style/AppTheme.AppWidgetContainer">
+
+    <include
+        layout="@layout/app_widget_refresh_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/app_widget_background_padding">
 
         <TextView
+            android:id="@+id/screen_time_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@string/screen_time" />
+            android:text="@string/screen_time"
+            android:textColor="?android:attr/textColorSecondary" />
 
         <TextView
             android:id="@+id/screen_time"
@@ -26,14 +37,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
+            android:autoSizeMaxTextSize="38sp"
+            android:autoSizeMinTextSize="16sp"
+            android:autoSizeTextType="uniform"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:paddingVertical="@dimen/padding_small"
+            android:text="2h 30m"
             android:textColor="?android:attr/textColorPrimary"
-            android:textSize="36sp"
+            android:textSize="27sp"
             android:textStyle="bold"
-            tools:text="2h 30m" />
+            tools:ignore="HardcodedText"
+            tools:targetApi="o" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,50 +57,56 @@
             android:orientation="horizontal">
 
             <RelativeLayout
-                android:layout_width="50dp"
+                android:layout_width="52dp"
                 android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/app3_time"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginStart="4sp"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_marginHorizontal="4sp"
                     android:layout_marginTop="64sp"
                     android:background="@drawable/circle_background"
-                    android:backgroundTint="#e9c2c3"
+                    android:backgroundTint="#d4e3ff"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textColor="?android:attr/textColorPrimaryInverse"
+                    android:text="20m"
+                    android:textColor="#1b1b1b"
                     android:textSize="@dimen/font_size_medium"
-                    tools:text="20m" />
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/app2_time"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginStart="2sp"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_marginHorizontal="2sp"
                     android:layout_marginTop="32sp"
                     android:background="@drawable/circle_background"
-                    android:backgroundTint="#674A6A"
+                    android:backgroundTint="#565e71"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:text="45m"
+                    android:textColor="#f9f9f9"
                     android:textSize="@dimen/font_size_medium"
-                    tools:text="45m" />
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/app1_time"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="0sp"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_marginHorizontal="0sp"
                     android:layout_marginTop="0sp"
                     android:background="@drawable/circle_background"
-                    android:backgroundTint="#342932"
+                    android:backgroundTint="#1b1b1b"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:text="~1h"
+                    android:textColor="#f9f9f9"
                     android:textSize="@dimen/font_size_medium"
-                    tools:text="~1h" />
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
 
             </RelativeLayout>
 
@@ -102,8 +123,10 @@
                     android:layout_marginTop="12sp"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:text="Signal"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="@dimen/font_size_medium"
-                    tools:text="Signal" />
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/app2_label"
@@ -112,8 +135,10 @@
                     android:layout_marginTop="41sp"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:text="App Manager"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="@dimen/font_size_medium"
-                    tools:text="App Manager" />
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/app3_label"
@@ -122,8 +147,10 @@
                     android:layout_marginTop="71sp"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:text="K-9 Mail"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="@dimen/font_size_medium"
-                    tools:text="K-9 Mail" />
+                    tools:ignore="HardcodedText" />
 
             </RelativeLayout>
 
@@ -131,4 +158,4 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+</FrameLayout>

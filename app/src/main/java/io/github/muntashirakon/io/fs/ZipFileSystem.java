@@ -253,7 +253,7 @@ class ZipFileSystem extends VirtualFileSystem {
     }
 
     @Override
-    public long lastModified(@NonNull Node<?> node) {
+    protected long lastModified(@NonNull Node<?> node) {
         if (node.getObject() == null) {
             return getFile().lastModified();
         }
@@ -342,6 +342,14 @@ class ZipFileSystem extends VirtualFileSystem {
             throw new FileNotFoundException("Class definition for " + node.getFullPath() + " is not found.");
         }
         return Objects.requireNonNull(mZipFile).getInputStream(zipEntry);
+    }
+
+    @Override
+    protected void cacheFile(@NonNull Node<?> src, @NonNull File sink) throws IOException {
+        try (InputStream is = getInputStream(src);
+             FileOutputStream os = new FileOutputStream(sink)) {
+            IoUtils.copy(is, os);
+        }
     }
 
     @NonNull

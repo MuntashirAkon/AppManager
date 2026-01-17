@@ -61,6 +61,7 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.util.AccessibilityUtils;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
@@ -129,17 +130,19 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
 
     @GuardedBy("mAdapterList")
     @Override
-    protected void select(int position) {
+    protected boolean select(int position) {
         synchronized (mAdapterList) {
             mAdapterList.set(position, mActivity.viewModel.select(mAdapterList.get(position)));
+            return true;
         }
     }
 
     @GuardedBy("mAdapterList")
     @Override
-    protected void deselect(int position) {
+    protected boolean deselect(int position) {
         synchronized (mAdapterList) {
             mAdapterList.set(position, mActivity.viewModel.deselect(mAdapterList.get(position)));
+            return true;
         }
     }
 
@@ -188,6 +191,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             // If selection mode is on, select/deselect the current item instead of the default behaviour
             if (isInSelectionMode()) {
                 toggleSelection(position);
+                AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
                 return;
             }
             handleClick(item);
@@ -202,11 +206,17 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                 if (lastSelectedItemPosition >= 0) {
                     // Select from last selection to this selection
                     selectRange(lastSelectedItemPosition, position);
-                } else toggleSelection(position);
+                } else {
+                    toggleSelection(position);
+                    AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
+                }
             }
             return true;
         });
-        holder.icon.setOnClickListener(v -> toggleSelection(position));
+        holder.icon.setOnClickListener(v -> {
+            toggleSelection(position);
+            AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
+        });
         // Box-stroke colors: uninstalled > disabled > force-stopped > regular
         if (!item.isInstalled) {
             cardView.setStrokeColor(ColorCodes.getAppUninstalledIndicatorColor(context));
@@ -390,6 +400,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                 // The app is already installed, and we were wrong to assume that it was installed.
                 // Update data before opening it.
                 item.isInstalled = true;
+                item.isOnlyDataInstalled = false;
                 item.userIds = new int[]{UserHandleHidden.myUserId()};
                 Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, UserHandleHidden.myUserId());
                 mActivity.startActivity(intent);

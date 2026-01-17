@@ -11,12 +11,12 @@ import java.util.Objects;
  */
 public class AppDetailsItem<T> {
     @NonNull
-    public T mainItem;
+    public T item;
     @NonNull
     public String name = "";
 
     public AppDetailsItem(@NonNull T object) {
-        mainItem = object;
+        item = object;
     }
 
     @Override

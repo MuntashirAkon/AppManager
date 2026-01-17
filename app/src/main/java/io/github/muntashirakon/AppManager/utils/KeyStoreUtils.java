@@ -2,26 +2,26 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import android.os.Build;
 import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
 public final class KeyStoreUtils {
     public static boolean hasKeyStore(int uid) {
-        Path keyStorePath = getKeyStorePath(UserHandleHidden.getUserId(uid));
-        String[] fileNames = keyStorePath.listFileNames();
-        String uidStr = uid + "_";
-        for (String fileName : fileNames) {
-            if (fileName.startsWith(uidStr)) return true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            return hasKeyStoreV2(uid);
         }
-        return false;
+        return hasKeyStoreV1(uid);
     }
 
     public static boolean hasMasterKey(int uid) {
@@ -56,5 +56,21 @@ public final class KeyStoreUtils {
     @NonNull
     public static Path getMasterKey(int userHandle) throws FileNotFoundException {
         return getKeyStorePath(userHandle).findFile(".masterkey");
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    public static boolean hasKeyStoreV2(int uid) {
+        return Runner.runCommand(new String[]{"su", "" + uid, "-c", "keystore_cli_v2", "list"})
+                .getOutputAsList().size() > 1;
+    }
+
+    public static boolean hasKeyStoreV1(int uid) {
+        Path keyStorePath = getKeyStorePath(UserHandleHidden.getUserId(uid));
+        String[] fileNames = keyStorePath.listFileNames();
+        String uidStr = uid + "_";
+        for (String fileName : fileNames) {
+            if (fileName.startsWith(uidStr)) return true;
+        }
+        return false;
     }
 }

@@ -15,21 +15,27 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.annotation.WorkerThread;
 
+import org.jetbrains.annotations.Contract;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
-import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
+import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -37,38 +43,93 @@ import io.github.muntashirakon.io.Paths;
 public final class BackupUtils {
     public static final String TAG = BackupUtils.class.getSimpleName();
 
+    public static final String[] TAR_TYPES = new String[]{TarUtils.TAR_GZIP, TarUtils.TAR_BZIP2, TarUtils.TAR_ZSTD};
+    public static final String[] TAR_TYPES_READABLE = new String[]{"GZip", "BZip2", "Zstandard"};
+
     private static final Pattern UUID_PATTERN = Pattern.compile("[a-f\\d]{8}(-[a-f\\d]{4}){3}-[a-f\\d]{12}");
 
     public static boolean isUuid(@NonNull String name) {
         return UUID_PATTERN.matcher(name).matches();
     }
 
-    @NonNull
-    private static List<Path> getBackupPaths() {
-        Path baseDirectory = BackupFiles.getBaseDirectory();
-        List<Path> backupPaths;
-        Path[] paths = baseDirectory.listFiles(Path::isDirectory);
-        backupPaths = new ArrayList<>(paths.length);
-        for (Path path : paths) {
-            if (isUuid(path.getName())) {
-                // UUID-based backups only store one backup per folder
-                backupPaths.add(path);
-            }
-            if (SaveLogHelper.SAVED_LOGS_DIR.equals(path.getName())) {
-                continue;
-            }
-            if (BackupFiles.APK_SAVING_DIRECTORY.equals(path.getName())) {
-                continue;
-            }
-            if (BackupFiles.TEMPORARY_DIRECTORY.equals(path.getName())) {
-                continue;
-            }
-            // Other backups can store multiple backups per folder
-            backupPaths.addAll(Arrays.asList(path.listFiles(Path::isDirectory)));
+    @Nullable
+    @Contract("!null -> !null")
+    public static String getCompatBackupName(@Nullable String backupName) {
+        if (MetadataManager.getCurrentBackupMetaVersion() >= 5) {
+            return backupName;
         }
-        // We don't need to check further at this stage.
-        // It's the caller's job to check the contents if needed.
-        return backupPaths;
+        return getV4SanitizedBackupName(backupName);
+    }
+
+    @NonNull
+    public static String getV4BackupName(@UserIdInt int userId, @Nullable String backupName) {
+        if (backupName == null) {
+            return String.valueOf(userId);
+        }
+        // For v4 and earlier, backup name is used as a filename. So, necessary sanitization may be
+        // required.
+        return userId + "_" + getV4SanitizedBackupName(backupName);
+    }
+
+    @Nullable
+    @Contract("!null -> !null")
+    public static String getV4SanitizedBackupName(@Nullable String backupName) {
+        if (backupName == null) {
+            return null;
+        }
+        // [\\/:?"<>|\s]
+        return backupName.trim().replaceAll("[\\\\/:?\"<>|\\s]+", "_");
+    }
+
+    @NonNull
+    public static String getV5RelativeDir(@NonNull String backupUuid) {
+        // backups/{backupUuid}
+        return BackupItems.BACKUP_DIRECTORY + File.separator + backupUuid;
+    }
+
+    @NonNull
+    public static String getV4RelativeDir(@NonNull String backupNameWithUser, @NonNull String packageName) {
+        // Relative directory needs to be inferred: {packageName}/{backupNameWithUser}
+        // where backupNameWithUser = {userid}[_{backup_name}]
+        return packageName + File.separator + backupNameWithUser;
+    }
+
+    @NonNull
+    public static String getV4RelativeDir(@UserIdInt int userId, @Nullable String backupName, @NonNull String packageName) {
+        // Relative directory needs to be inferred: {packageName}/{backupName}
+        // where backupName = {userid}[_{backup_name}]
+        return packageName + File.separator + getV4BackupName(userId, backupName);
+    }
+
+    @Nullable
+    public static String getRealBackupName(int backupVersion, @Nullable String backupNameWithUserId) {
+        if (backupVersion >= 5) {
+            return backupNameWithUserId;
+        } else {
+            // v4 or earlier backup: {userid}[_{backup_name}]
+            if (backupNameWithUserId == null || TextUtils.isDigitsOnly(backupNameWithUserId)) {
+                // It's only a user ID
+                return null;
+            } else {
+                int firstUnderscore = backupNameWithUserId.indexOf('_');
+                if (firstUnderscore != -1) {
+                    // Found an underscore
+                    String userHandle = backupNameWithUserId.substring(0, firstUnderscore);
+                    if (TextUtils.isDigitsOnly(userHandle)) {
+                        return backupNameWithUserId.substring(firstUnderscore + 1);
+                    }
+                }
+                throw new IllegalArgumentException("Invalid backup name " + backupNameWithUserId);
+            }
+        }
+    }
+
+    public static String getReadableTarType(@TarUtils.TarType String tarType) {
+        int i = ArrayUtils.indexOf(TAR_TYPES, tarType);
+        if (i == -1) {
+            return "GZip";
+        }
+        return TAR_TYPES_READABLE[i];
     }
 
     @WorkerThread
@@ -76,14 +137,14 @@ public final class BackupUtils {
     public static HashMap<String, Backup> storeAllAndGetLatestBackupMetadata() {
         AppDb appDb = new AppDb();
         HashMap<String, Backup> backupMetadata = new HashMap<>();
-        HashMap<String, List<MetadataManager.Metadata>> allBackupMetadata = getAllMetadata();
+        HashMap<String, List<BackupMetadataV5>> allBackupMetadata = getAllMetadata();
         List<Backup> backups = new ArrayList<>();
-        for (List<MetadataManager.Metadata> metadataList : allBackupMetadata.values()) {
+        for (List<BackupMetadataV5> metadataList : allBackupMetadata.values()) {
             if (metadataList.isEmpty()) continue;
             Backup latestBackup = null;
             Backup backup;
-            for (MetadataManager.Metadata metadata : metadataList) {
-                backup = Backup.fromBackupMetadata(metadata);
+            for (BackupMetadataV5 metadataV5 : metadataList) {
+                backup = Backup.fromBackupMetadataV5(metadataV5);
                 backups.add(backup);
                 if (latestBackup == null || backup.backupTime > latestBackup.backupTime) {
                     latestBackup = backup;
@@ -109,21 +170,21 @@ public final class BackupUtils {
         return backupMetadata;
     }
 
-    public static void putBackupToDbAndBroadcast(@NonNull Context context, @NonNull MetadataManager.Metadata metadata) {
+    public static void putBackupToDbAndBroadcast(@NonNull Context context, @NonNull BackupMetadataV5 metadata) {
         if (Utils.isRoboUnitTest()) {
             return;
         }
         AppDb appDb = new AppDb();
-        appDb.insert(Backup.fromBackupMetadata(metadata));
-        appDb.updateApplication(context, metadata.packageName);
-        BroadcastUtils.sendDbPackageAltered(context, new String[]{metadata.packageName});
+        appDb.insert(Backup.fromBackupMetadataV5(metadata));
+        appDb.updateApplication(context, metadata.metadata.packageName);
+        BroadcastUtils.sendDbPackageAltered(context, new String[]{metadata.metadata.packageName});
     }
 
-    public static void deleteBackupToDbAndBroadcast(@NonNull Context context, @NonNull MetadataManager.Metadata metadata) {
+    public static void deleteBackupToDbAndBroadcast(@NonNull Context context, @NonNull BackupMetadataV5 metadata) {
         AppDb appDb = new AppDb();
-        appDb.deleteBackup(Backup.fromBackupMetadata(metadata));
-        appDb.updateApplication(context, metadata.packageName);
-        BroadcastUtils.sendDbPackageAltered(context, new String[]{metadata.packageName});
+        appDb.deleteBackup(Backup.fromBackupMetadataV5(metadata));
+        appDb.updateApplication(context, metadata.metadata.packageName);
+        BroadcastUtils.sendDbPackageAltered(context, new String[]{metadata.metadata.packageName});
     }
 
     @WorkerThread
@@ -133,7 +194,7 @@ public final class BackupUtils {
         List<Backup> validatedBackups = new ArrayList<>(backups.size());
         for (Backup backup : backups) {
             try {
-                if (backup.getBackupPath().exists()) {
+                if (backup.getItem().exists()) {
                     validatedBackups.add(backup);
                 }
             } catch (IOException e) {
@@ -141,6 +202,57 @@ public final class BackupUtils {
             }
         }
         return validatedBackups;
+    }
+
+    @NonNull
+    public static List<Backup> retrieveBackupFromDb(@UserIdInt int userId,
+                                                    @Nullable String backupName,
+                                                    @NonNull String packageName) {
+        List<Backup> backups = getBackupMetadataFromDbNoLockValidate(packageName);
+        if (backupName == null) {
+            backupName = "";
+        }
+        backupName = getV4SanitizedBackupName(backupName);
+        List<Backup> backupList = new ArrayList<>();
+        for (Backup backup : backups) {
+            if (backup.userId != userId) {
+                continue;
+            }
+            if (!Objects.equals(backupName, getV4SanitizedBackupName(backup.backupName))) {
+                continue;
+            }
+            backupList.add(backup);
+        }
+        return backupList;
+    }
+
+    @Nullable
+    public static Backup retrieveLatestBackupFromDb(@UserIdInt int userId,
+                                                    @Nullable String backupName,
+                                                    @NonNull String packageName) {
+        List<Backup> backups = getBackupMetadataFromDbNoLockValidate(packageName);
+        if (backupName == null) {
+            backupName = "";
+        }
+        backupName = getV4SanitizedBackupName(backupName);
+        for (Backup backup : backups) {
+            if (backup.userId == userId && Objects.equals(backupName, getV4SanitizedBackupName(backup.backupName))) {
+                return backup;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public static Backup retrieveBaseBackupFromDb(@UserIdInt int userId,
+                                                  @NonNull String packageName) {
+        List<Backup> backups = getBackupMetadataFromDbNoLockValidate(packageName);
+        for (Backup backup : backups) {
+            if (backup.userId == userId && TextUtils.isEmpty(backup.backupName)) {
+                return backup;
+            }
+        }
+        return null;
     }
 
     @WorkerThread
@@ -161,62 +273,43 @@ public final class BackupUtils {
      */
     @WorkerThread
     @NonNull
-    public static HashMap<String, List<MetadataManager.Metadata>> getAllMetadata() {
-        HashMap<String, List<MetadataManager.Metadata>> backupMetadata = new HashMap<>();
-        List<Path> backupPaths = getBackupPaths();
-        for (Path backupPath : backupPaths) {
+    private static HashMap<String, List<BackupMetadataV5>> getAllMetadata() {
+        HashMap<String, List<BackupMetadataV5>> backupMetadata = new HashMap<>();
+        List<BackupItems.BackupItem> backupPaths = BackupItems.findAllBackupItems();
+        for (BackupItems.BackupItem backupItem : backupPaths) {
             try {
-                MetadataManager.Metadata metadata = MetadataManager.getMetadata(backupPath);
+                BackupMetadataV5 metadataV5 = backupItem.getMetadata();
+                BackupMetadataV5.Metadata metadata = metadataV5.metadata;
                 if (!backupMetadata.containsKey(metadata.packageName)) {
                     backupMetadata.put(metadata.packageName, new ArrayList<>());
                 }
                 //noinspection ConstantConditions
-                backupMetadata.get(metadata.packageName).add(metadata);
+                backupMetadata.get(metadata.packageName).add(metadataV5);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.w(TAG, "Invalid backup: %s", e, backupItem.getRelativeDir());
             }
         }
         return backupMetadata;
     }
 
-    @Nullable
-    public static String getShortBackupName(@NonNull String backupFileName) {
-        if (TextUtils.isDigitsOnly(backupFileName)) {
-            // It's already a user handle
-            return null;
-        } else {
-            int firstUnderscore = backupFileName.indexOf('_');
-            if (firstUnderscore != -1) {
-                // Found an underscore
-                String userHandle = backupFileName.substring(0, firstUnderscore);
-                if (TextUtils.isDigitsOnly(userHandle)) {
-                    // The new backup system
-                    return backupFileName.substring(firstUnderscore + 1);
-                }
-            }
-            // Could be the old naming style
-            throw new IllegalArgumentException("Invalid backup name " + backupFileName);
+    @NonNull
+    public static String getSourceFilePrefix(@Nullable String fullExtension) {
+        if (fullExtension == null) {
+            return BackupManager.SOURCE_PREFIX;
         }
-    }
-
-    static int getUserHandleFromBackupName(@NonNull String backupFileName) {
-        if (TextUtils.isDigitsOnly(backupFileName)) return Integer.parseInt(backupFileName);
-        else {
-            int firstUnderscore = backupFileName.indexOf('_');
-            if (firstUnderscore != -1) {
-                // Found an underscore
-                String userHandle = backupFileName.substring(0, firstUnderscore);
-                if (TextUtils.isDigitsOnly(userHandle)) {
-                    // The new backup system
-                    return Integer.parseInt(userHandle);
-                }
-            }
-            throw new IllegalArgumentException("Invalid backup name");
-        }
+        return BackupManager.SOURCE_PREFIX + fullExtension;
     }
 
     @NonNull
-    static String[] getExcludeDirs(boolean includeCache, @Nullable String ...others) {
+    public static String getDataFilePrefix(int index, @Nullable String fullExtension) {
+        if (fullExtension == null) {
+            return BackupManager.DATA_PREFIX + index;
+        }
+        return BackupManager.DATA_PREFIX + index + fullExtension;
+    }
+
+    @NonNull
+    static String[] getExcludeDirs(boolean includeCache, @Nullable String... others) {
         // Lib dirs has to be ignored by default
         List<String> excludeDirs = new ArrayList<>(Arrays.asList(BackupManager.LIB_DIR));
         if (includeCache) {
@@ -230,7 +323,7 @@ public final class BackupUtils {
 
     @SuppressLint("SdCardPath")
     @NonNull
-    static String[] getDataDirectories(@NonNull ApplicationInfo applicationInfo, boolean loadInternal,
+    static List<String> getDataDirectories(@NonNull ApplicationInfo applicationInfo, boolean loadInternal,
                                        boolean loadExternal, boolean loadMediaObb) {
         // Data directories *must* be readable and non-empty
         ArrayList<String> dataDirs = new ArrayList<>();
@@ -273,7 +366,7 @@ public final class BackupUtils {
                 }
             }
         }
-        return dataDirs.toArray(new String[0]);
+        return dataDirs;
     }
 
     /**

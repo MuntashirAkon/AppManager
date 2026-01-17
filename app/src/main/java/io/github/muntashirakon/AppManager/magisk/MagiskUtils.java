@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.utils.AlphanumComparator;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
@@ -172,7 +173,7 @@ public class MagiskUtils {
             }
         }
         List<MagiskProcess> magiskProcesses = new ArrayList<>(processNameProcessMap.values());
-        Collections.sort(magiskProcesses, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
+        Collections.sort(magiskProcesses, (o1, o2) -> AlphanumComparator.compareStringIgnoreCase(o1.name, o2.name));
         return magiskProcesses;
     }
 

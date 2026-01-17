@@ -15,6 +15,7 @@ import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.om.OverlayInfo;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
@@ -54,6 +55,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -69,6 +71,7 @@ import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.DevicePolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
+import io.github.muntashirakon.AppManager.compat.OverlayManagerCompact;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsActivityItem;
@@ -78,6 +81,7 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsDefinedPermis
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsFeatureItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsLibraryItem;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsOverlayItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsServiceItem;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -115,6 +119,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private final ExecutorService mExecutor = Executors.newFixedThreadPool(4);
     private final CountDownLatch mPackageInfoWatcher = new CountDownLatch(1);
     private final MutableLiveData<PackageInfo> mPackageInfoLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mTagsAlteredLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mFreezeTypeLiveData = new MutableLiveData<>();
+    private final MutableLiveData<AppDetailsComponentItem> mComponentChangedLiveData = new MutableLiveData<>();
 
     @Nullable
     private PackageInfo mPackageInfo;
@@ -139,6 +146,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private int mSortOrderAppOps = Prefs.AppDetailsPage.getAppOpsSortOrder();
     @AppDetailsFragment.SortOrder
     private int mSortOrderPermissions = Prefs.AppDetailsPage.getPermissionsSortOrder();
+    @AppDetailsFragment.SortOrder
+    private int mSortOrderOverlays = Prefs.AppDetailsPage.getOverlaysSortOrder();
     private String mSearchQuery;
     @AdvancedSearchView.SearchType
     private int mSearchType;
@@ -176,6 +185,21 @@ public class AppDetailsViewModel extends AndroidViewModel {
             ((CachedApkSource) mApkSource).cleanup();
         }
         mExecutor.shutdownNow();
+    }
+
+    public LiveData<Integer> getFreezeTypeLiveData() {
+        return mFreezeTypeLiveData;
+    }
+
+    public void loadFreezeType() {
+        mExecutor.submit(() -> {
+            Integer freezeType = FreezeUtils.loadFreezeMethod(mPackageName);
+            mFreezeTypeLiveData.postValue(freezeType);
+        });
+    }
+
+    public MutableLiveData<Boolean> getTagsAlteredLiveData() {
+        return mTagsAlteredLiveData;
     }
 
     @UiThread
@@ -303,6 +327,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 mSortOrderPermissions = sortOrder;
                 Prefs.AppDetailsPage.setPermissionsSortOrder(sortOrder);
                 break;
+            case AppDetailsFragment.OVERLAYS:
+                mSortOrderOverlays = sortOrder;
+                Prefs.AppDetailsPage.setOverlaysSortOrder(sortOrder);
         }
         mExecutor.submit(() -> filterAndSortItemsInternal(property));
     }
@@ -321,6 +348,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 return mSortOrderAppOps;
             case AppDetailsFragment.USES_PERMISSIONS:
                 return mSortOrderPermissions;
+            case AppDetailsFragment.OVERLAYS:
+                return mSortOrderOverlays;
         }
         return AppDetailsFragment.SORT_BY_NAME;
     }
@@ -342,7 +371,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         mExecutor.submit(() -> filterAndSortItemsInternal(property));
     }
 
-    @SuppressLint("SwitchIntDef")
+    @SuppressLint({"SwitchIntDef", "NewApi"})
     @WorkerThread
     private void filterAndSortItemsInternal(@AppDetailsFragment.Property int property) {
         switch (property) {
@@ -423,6 +452,27 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     mPermissions.postValue(filterAndSortPermissions(mPermissionItems));
                 }
                 break;
+            case AppDetailsFragment.OVERLAYS: {
+                List<AppDetailsOverlayItem> appDetailsItems;
+                synchronized (mOverlays) {
+                    if (!TextUtils.isEmpty(mSearchQuery)) {
+                        appDetailsItems = AdvancedSearchView.matches(mSearchQuery, mOverlays.getValue(),
+                                (ChoiceGenerator<AppDetailsOverlayItem>) item -> lowercaseIfNotRegex(item.name,
+                                        mSearchType), mSearchType);
+                    } else appDetailsItems = mOverlays.getValue();
+                }
+                Collections.sort(appDetailsItems, (o1, o2) -> {
+                    switch (mSortOrderOverlays) {
+                        case AppDetailsFragment.SORT_BY_NAME:
+                            return o1.name.compareToIgnoreCase(o2.name);
+                        case AppDetailsFragment.SORT_BY_PRIORITY:
+                            return Integer.compare(o1.getPriority(), o2.getPriority());
+                    }
+                    return 0;
+                });
+                mOverlays.postValue(new ArrayList<>(appDetailsItems));
+                break;
+            }
             case AppDetailsFragment.APP_INFO:
             case AppDetailsFragment.CONFIGURATIONS:
             case AppDetailsFragment.FEATURES:
@@ -508,6 +558,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                                         @ComponentRule.ComponentStatus String componentStatus) {
         if (mExternalApk) return;
         mExecutor.submit(() -> {
+            Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::pauseWatcher);
             String componentName = componentItem.name;
             synchronized (mBlockerLocker) {
                 waitForBlockerOrExit();
@@ -528,9 +579,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 // Commit changes
                 mBlocker.commit();
                 mBlocker.setReadOnly();
-                // FIXME: 18/1/22 Do not reload all components, only reload this component
-                // Update UI
-                reloadComponents();
+                Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::resumeWatcher);
             }
         });
     }
@@ -709,7 +758,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (mExternalApk) return false;
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null) return false;
-        boolean isSuccessful = false;
         try {
             if (appOpItem.isAllowed()) {
                 appOpItem.disallowAppOp(packageInfo, mAppOpsManager);
@@ -883,6 +931,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 return observeInternal(mSignatures);
             case AppDetailsFragment.SHARED_LIBRARIES:
                 return observeInternal(mSharedLibraries);
+            case AppDetailsFragment.OVERLAYS:
+                return observeInternal(mOverlays);
             case AppDetailsFragment.APP_INFO:
                 return observeInternal(mAppInfo);
             default:
@@ -900,6 +950,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @AnyThread
     public void load(@AppDetailsFragment.Property int property) {
         mExecutor.submit(() -> {
+            Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::pauseWatcher);
             switch (property) {
                 case AppDetailsFragment.ACTIVITIES:
                     loadActivities();
@@ -934,12 +985,17 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 case AppDetailsFragment.SHARED_LIBRARIES:
                     loadSharedLibraries();
                     break;
+                case AppDetailsFragment.OVERLAYS:
+                    loadOverlays();
+                    break;
                 case AppDetailsFragment.APP_INFO:
                     loadAppInfo();
                     break;
             }
+            Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::resumeWatcher);
         });
     }
+
 
     private final MutableLiveData<Boolean> mIsPackageExistLiveData = new MutableLiveData<>();
     private boolean mIsPackageExist = true;
@@ -1020,10 +1076,15 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void reloadComponents() {
-        mExecutor.submit(this::loadActivities);
-        mExecutor.submit(this::loadServices);
-        mExecutor.submit(this::loadReceivers);
-        mExecutor.submit(this::loadProviders);
+        mExecutor.submit(() -> {
+            Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::pauseWatcher);
+            loadActivities();
+            loadServices();
+            loadReceivers();
+            loadProviders();
+            loadOverlays();
+            Optional.ofNullable(mReceiver).ifPresent(PackageIntentReceiver::resumeWatcher);
+        });
     }
 
     @SuppressLint("WrongConstant")
@@ -1898,36 +1959,75 @@ public class AppDetailsViewModel extends AndroidViewModel {
         mSharedLibraries.postValue(appDetailsItems);
     }
 
+    @NonNull
+    private final MutableLiveData<List<AppDetailsOverlayItem>> mOverlays = new MutableLiveData<>();
+
+    @WorkerThread
+    private void loadOverlays() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || mPackageName == null || mExternalApk
+                || !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CHANGE_OVERLAY_PACKAGES)) {
+            mOverlays.postValue(Collections.emptyList());
+            return;
+        }
+        final List<OverlayInfo> overlays = ExUtils.requireNonNullElse(() -> OverlayManagerCompact
+                        .getOverlayManager().getOverlayInfosForTarget(mPackageName, mUserId),
+                Collections.emptyList());
+        List<AppDetailsOverlayItem> overlayItems = new ArrayList<>(overlays.size());
+        for (OverlayInfo overlay : overlays) {
+            overlayItems.add(new AppDetailsOverlayItem(overlay));
+        }
+        mOverlays.postValue(overlayItems);
+    }
+
     /**
      * Helper class to look for interesting changes to the installed apps
      * so that the loader can be updated.
      */
     public static class PackageIntentReceiver extends PackageChangeReceiver {
         final AppDetailsViewModel mModel;
+        volatile boolean mPauseWatcher = false;
+        int mChangeCount = 0;
 
         public PackageIntentReceiver(@NonNull AppDetailsViewModel model) {
             super(model.getApplication());
             mModel = model;
         }
 
+        public void resumeWatcher() {
+            if (mChangeCount > 0) {
+                mChangeCount = 0;
+                mModel.setPackageChanged();
+            }
+            mPauseWatcher = false;
+        }
+
+        public void pauseWatcher() {
+            mChangeCount = 0;
+            mPauseWatcher = true;
+        }
+
         @Override
         @WorkerThread
         protected void onPackageChanged(Intent intent, @Nullable Integer uid, @Nullable String[] packages) {
+            boolean packageChanged = false;
             if (uid != null) {
                 if (mModel.mPackageInfo != null && mModel.mPackageInfo.applicationInfo.uid == uid) {
                     Log.d(TAG, "Package is changed.");
-                    mModel.setPackageChanged();
+                    packageChanged = true;
                 }
             } else if (packages != null) {
                 for (String packageName : packages) {
                     if (packageName.equals(mModel.mPackageName)) {
                         Log.d(TAG, "Package availability changed.");
-                        mModel.setPackageChanged();
+                        packageChanged = true;
+                        break;
                     }
                 }
-            } else {
-                Log.d(TAG, "Locale changed.");
-                mModel.setPackageChanged();
+            }
+            if (packageChanged) {
+                if (mPauseWatcher) {
+                    ++mChangeCount;
+                } else mModel.setPackageChanged();
             }
         }
     }

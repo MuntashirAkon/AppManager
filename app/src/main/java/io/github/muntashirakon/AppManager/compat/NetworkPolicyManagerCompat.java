@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 
 public final class NetworkPolicyManagerCompat {
     public static final String TAG = NetworkPolicyManagerCompat.class.getSimpleName();
@@ -88,14 +89,22 @@ public final class NetworkPolicyManagerCompat {
 
     @NetPolicy
     @RequiresPermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY)
-    public static int getUidPolicy(int uid) throws RemoteException {
-        return getNetPolicyManager().getUidPolicy(uid);
+    public static int getUidPolicy(int uid) {
+        try {
+            return getNetPolicyManager().getUidPolicy(uid);
+        } catch (RemoteException e) {
+            return ExUtils.rethrowFromSystemServer(e);
+        }
     }
 
     @RequiresPermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY)
-    public static void setUidPolicy(int uid, int policies) throws RemoteException {
+    public static void setUidPolicy(int uid, int policies) {
         if (UserHandleHidden.isApp(uid)) {
-            getNetPolicyManager().setUidPolicy(uid, policies);
+            try {
+                getNetPolicyManager().setUidPolicy(uid, policies);
+            } catch (RemoteException e) {
+                ExUtils.rethrowFromSystemServer(e);
+            }
         } else {
             Log.w(TAG, "Cannot set policy %d to uid %d", policies, uid);
         }

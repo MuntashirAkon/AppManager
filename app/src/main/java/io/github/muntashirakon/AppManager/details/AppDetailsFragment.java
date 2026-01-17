@@ -17,7 +17,6 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
@@ -26,6 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialAlertView;
@@ -46,7 +46,8 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
             FEATURES,
             CONFIGURATIONS,
             SIGNATURES,
-            SHARED_LIBRARIES
+            SHARED_LIBRARIES,
+            OVERLAYS,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface Property {
@@ -64,6 +65,7 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
     public static final int CONFIGURATIONS = 9;
     public static final int SIGNATURES = 10;
     public static final int SHARED_LIBRARIES = 11;
+    public static final int OVERLAYS = 12;
 
     @IntDef(value = {
             SORT_BY_NAME,
@@ -72,7 +74,8 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
             SORT_BY_APP_OP_VALUES,
             SORT_BY_DENIED_APP_OPS,
             SORT_BY_DANGEROUS_PERMS,
-            SORT_BY_DENIED_PERMS
+            SORT_BY_DENIED_PERMS,
+            SORT_BY_PRIORITY,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface SortOrder {
@@ -85,12 +88,13 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
     public static final int SORT_BY_DENIED_APP_OPS = 4;
     public static final int SORT_BY_DANGEROUS_PERMS = 5;
     public static final int SORT_BY_DENIED_PERMS = 6;
+    public static final int SORT_BY_PRIORITY = 7;
 
     public static final int[] sSortMenuItemIdsMap = {
             R.id.action_sort_by_name, R.id.action_sort_by_blocked_components,
             R.id.action_sort_by_tracker_components, R.id.action_sort_by_app_ops_values,
             R.id.action_sort_by_denied_app_ops, R.id.action_sort_by_dangerous_permissions,
-            R.id.action_sort_by_denied_permissions};
+            R.id.action_sort_by_denied_permissions, R.id.action_sort_by_priority};
 
     public static final String ARG_TYPE = "type";
 
@@ -130,7 +134,7 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
         swipeRefresh.setOnRefreshListener(this);
         recyclerView = view.findViewById(R.id.scrollView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(activity));
         emptyView = view.findViewById(android.R.id.empty);
         recyclerView.setEmptyView(emptyView);
         progressIndicator = view.findViewById(R.id.progress_linear);

@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.Users;
 
 public class NetworkStatsCompat implements AutoCloseable {
@@ -33,8 +34,11 @@ public class NetworkStatsCompat implements AutoCloseable {
         mTemplate = template;
         mStartTime = startTime;
         mEndTime = endTime;
-        String callingPackage = SelfPermissions.getCallingPackage(Users.getSelfOrRemoteUid());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+        int callingUid = Users.getSelfOrRemoteUid();
+        String callingPackage = SelfPermissions.getCallingPackage(callingUid);
+        if (callingUid == Ops.ROOT_UID) {
+            mSession = statsService.openSession();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             mSession = statsService.openSessionForUsageStats(flags, callingPackage);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mSession = statsService.openSessionForUsageStats(callingPackage);

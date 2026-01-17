@@ -7,6 +7,7 @@ plugins {
 android {
     namespace 'io.github.muntashirakon.hiddenapi'
     compileSdk compile_sdk
+    buildToolsVersion = build_tools
 
     defaultConfig {
         minSdk min_sdk

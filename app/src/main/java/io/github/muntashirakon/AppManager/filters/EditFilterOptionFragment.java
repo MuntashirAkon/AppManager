@@ -16,8 +16,6 @@ import static io.github.muntashirakon.AppManager.filters.options.FilterOption.TY
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -72,50 +70,11 @@ public class EditFilterOptionFragment extends DialogFragment {
     public static final String ARG_POSITION = "pos";
 
     public interface OnClickDialogButtonInterface {
-        void onDeleteItem(int position);
+        void onDeleteItem(int position, int id);
 
-        void onUpdateItem(int position, @NonNull WrappedFilterOption item);
+        void onUpdateItem(int position, @NonNull FilterOption item);
 
-        void onAddItem(@NonNull WrappedFilterOption item);
-    }
-
-    public static class WrappedFilterOption implements Parcelable {
-        public char logic;
-        public FilterOption filterOption;
-
-        public WrappedFilterOption() {
-        }
-
-        protected WrappedFilterOption(@NonNull Parcel in) {
-            logic = in.readString().charAt(0);
-            filterOption = FilterOptions.create(in.readString());
-            filterOption.setKeyValue(in.readString(), in.readString());
-        }
-
-        @Override
-        public void writeToParcel(@NonNull Parcel dest, int flags) {
-            dest.writeString(logic + "");
-            dest.writeString(filterOption.type);
-            dest.writeString(filterOption.getKey());
-            dest.writeString(filterOption.getValue());
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        public static final Creator<WrappedFilterOption> CREATOR = new Creator<WrappedFilterOption>() {
-            @Override
-            public WrappedFilterOption createFromParcel(Parcel in) {
-                return new WrappedFilterOption(in);
-            }
-
-            @Override
-            public WrappedFilterOption[] newArray(int size) {
-                return new WrappedFilterOption[size];
-            }
-        };
+        void onAddItem(@NonNull FilterOption item);
     }
 
     private MaterialSpinner mKeySpinner;
@@ -195,18 +154,15 @@ public class EditFilterOptionFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         FragmentActivity activity = requireActivity();
         Bundle args = requireArguments();
-        WrappedFilterOption wrappedFilterOption = BundleCompat.getParcelable(args, ARG_OPTION, WrappedFilterOption.class);
-        if (wrappedFilterOption != null) {
-            mFilterOption = wrappedFilterOption.filterOption;
-        }
+        mFilterOption = BundleCompat.getParcelable(args, ARG_OPTION, FilterOption.class);
         mPosition = args.getInt(ARG_POSITION, -1);
         boolean editMode = mFilterOption != null;
-        View view = View.inflate(activity, R.layout.dialog_edit_filter_item, null);
+        View view = View.inflate(activity, R.layout.dialog_edit_filter_option, null);
         MaterialSpinner filterSpinner = view.findViewById(R.id.filter_selector_spinner);
         ArrayAdapter<CharSequence> filters = SelectedArrayAdapter.createFromResource(activity, R.array.finder_filters, io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item);
         filterSpinner.setAdapter(filters);
         mKeySpinner = view.findViewById(R.id.type_selector_spinner);
-        mKeyAdapter = new ArrayAdapter<>(requireActivity(), io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item);
+        mKeyAdapter = new SelectedArrayAdapter<>(requireActivity(), io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item);
         mKeySpinner.setAdapter(mKeyAdapter);
         mGenericEditText = view.findViewById(R.id.input_string);
         mGenericEditText.addTextChangedListener(mGenericEditTextWatcher);
@@ -255,13 +211,6 @@ public class EditFilterOptionFragment extends DialogFragment {
                         UIUtils.displayLongToast(R.string.key_name_cannot_be_null);
                         return;
                     }
-                    WrappedFilterOption newWrappedFilterOption;
-                    if (wrappedFilterOption != null) newWrappedFilterOption = wrappedFilterOption;
-                    else {
-                        newWrappedFilterOption = new WrappedFilterOption();
-                    }
-                    newWrappedFilterOption.logic = '&';
-                    newWrappedFilterOption.filterOption = mCurrentFilterOption;
                     Editable editable = mGenericEditText.getText();
                     try {
                         Objects.requireNonNull(mCurrentKey);
@@ -272,16 +221,16 @@ public class EditFilterOptionFragment extends DialogFragment {
                         return;
                     }
                     if (editMode) {
-                        mOnClickDialogButtonInterface.onUpdateItem(mPosition, newWrappedFilterOption);
+                        mOnClickDialogButtonInterface.onUpdateItem(mPosition, mCurrentFilterOption);
                     } else {
-                        mOnClickDialogButtonInterface.onAddItem(newWrappedFilterOption);
+                        mOnClickDialogButtonInterface.onAddItem(mCurrentFilterOption);
                     }
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     if (getDialog() != null) getDialog().cancel();
                 });
         if (editMode) {
-            builder.setNeutralButton(R.string.delete, (dialog, which) -> mOnClickDialogButtonInterface.onDeleteItem(mPosition));
+            builder.setNeutralButton(R.string.delete, (dialog, which) -> mOnClickDialogButtonInterface.onDeleteItem(mPosition, mFilterOption.id));
         }
         return builder.create();
     }
@@ -297,7 +246,7 @@ public class EditFilterOptionFragment extends DialogFragment {
         mCurrentKey = filterOption.getKey();
         mCurrentKeyType = filterOption.getKeyType();
         mKeySpinner.setSelection(mKeyAdapter.getPosition(mCurrentKey));
-        // Update the textfield
+        // Update the text field
         mGenericEditText.setText(filterOption.getValue());
         updateUiForType(mCurrentKeyType);
     }
@@ -396,12 +345,12 @@ public class EditFilterOptionFragment extends DialogFragment {
 
         public void setFlagMap(@NonNull Map<Integer, CharSequence> flagMap) {
             mFlagMap = flagMap;
-            AdapterUtils.notifyDataSetChanged(this, mFlags, flagMap.keySet());
+            AdapterUtils.notifyDataSetChanged(this, mFlags, new ArrayList<>(flagMap.keySet()));
         }
 
         public void setFlag(int flag) {
             mFlag = flag;
-            notifyItemRangeChanged(0, mFlags.size());
+            notifyItemRangeChanged(0, mFlags.size(), AdapterUtils.STUB);
         }
 
         public int getFlag() {
@@ -419,12 +368,18 @@ public class EditFilterOptionFragment extends DialogFragment {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             int flag = mFlags.get(position);
             CharSequence flagName = mFlagMap.get(flag);
-            boolean selected = (mFlag & flag) != 0;
             holder.item.setText(flagName);
-            holder.item.setChecked(selected);
+            holder.item.setChecked((mFlag & flag) != 0);
             holder.item.setOnClickListener(v -> {
-                mFlag |= flag;
-                holder.item.setChecked(true);
+                if ((mFlag & flag) != 0) {
+                    // Already selected, deselect
+                    mFlag &= ~flag;
+                    holder.item.setChecked(false);
+                } else {
+                    // Not yet selected, select
+                    mFlag |= flag;
+                    holder.item.setChecked(true);
+                }
                 mItemClickListener.onClick(v);
             });
         }

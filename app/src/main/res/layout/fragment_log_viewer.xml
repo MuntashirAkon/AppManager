@@ -1,28 +1,28 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <io.github.muntashirakon.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        android:fitsSystemWindows="true">
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/log_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@null"
             android:fontFamily="monospace"
             android:gravity="top"
             android:padding="@dimen/padding_small"
-            android:textSize="@dimen/font_size_medium"
             android:textIsSelectable="true"
+            android:textSize="@dimen/font_size_medium"
             android:visibility="visible"
-            android:background="@null"
             tools:text="@tools:sample/lorem/random" />
 
     </io.github.muntashirakon.widget.NestedScrollView>
@@ -31,11 +31,13 @@
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/padding_medium"
+        android:accessibilityTraversalBefore="@id/scrollView"
+        android:fitsSystemWindows="true"
         android:text="@string/clear"
         app:icon="@drawable/ic_brush"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        tools:targetApi="22" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

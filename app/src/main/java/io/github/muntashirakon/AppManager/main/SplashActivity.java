@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.main;
 
+import static io.github.muntashirakon.AppManager.BaseActivity.ASKED_PERMISSIONS;
+
 import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
 import android.content.Intent;
@@ -25,6 +27,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.color.DynamicColors;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -33,6 +37,7 @@ import io.github.muntashirakon.AppManager.compat.BiometricAuthenticatorsCompat;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreActivity;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.life.BuildExpiryChecker;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
@@ -53,13 +58,19 @@ public class SplashActivity extends AppCompatActivity {
                 // Need authentication and/or verify mode of operation
                 ensureSecurityAndModeOfOp();
             });
+    private final ActivityResultLauncher<String[]> mPermissionCheckActivity = registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(),
+            permissionStatusMap -> {
+                // Run authentication
+                doAuthenticate();
+            });
 
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
         setTheme(Prefs.Appearance.isPureBlackTheme() ? R.style.AppTheme_Splash_Black : R.style.AppTheme_Splash);
+        SplashScreen.installSplashScreen(this);
         EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
-        SplashScreen.installSplashScreen(this);
         DynamicColors.applyToActivityIfAvailable(this);
         setContentView(R.layout.activity_authentication);
         ((TextView) findViewById(R.id.version)).setText(String.format(Locale.ROOT, "%s (%d)",
@@ -73,10 +84,27 @@ public class SplashActivity extends AppCompatActivity {
         }
         if (Boolean.TRUE.equals(BuildExpiryChecker.buildExpired())) {
             // Build has expired
-            BuildExpiryChecker.getBuildExpiredDialog(this).show();
+            BuildExpiryChecker.getBuildExpiredDialog(this, (dialog, which) -> doAuthenticate()).show();
             return;
         }
-        // Run authentication
+        // Init permission checks
+        if (!initPermissionChecks()) {
+            // Run authentication
+            doAuthenticate();
+        }
+    }
+
+    @CallSuper
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void doAuthenticate() {
         mViewModel = new ViewModelProvider(this).get(SecurityAndOpsViewModel.class);
         mBiometricPrompt = new BiometricPrompt(this, ContextCompat.getMainExecutor(this),
                 new BiometricPrompt.AuthenticationCallback() {
@@ -135,31 +163,17 @@ public class SplashActivity extends AppCompatActivity {
         });
         if (!mViewModel.isAuthenticating()) {
             mViewModel.setAuthenticating(true);
-            authenticate();
+            // Check KeyStore
+            if (KeyStoreManager.hasKeyStorePassword()) {
+                // We already have a working keystore password.
+                // Only need authentication and/or verify mode of operation.
+                ensureSecurityAndModeOfOp();
+                return;
+            }
+            Intent keyStoreIntent = new Intent(this, KeyStoreActivity.class)
+                    .putExtra(KeyStoreActivity.EXTRA_KS, true);
+            mKeyStoreActivity.launch(keyStoreIntent);
         }
-    }
-
-    @CallSuper
-    @SuppressLint("RestrictedApi")
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (menu instanceof MenuBuilder) {
-            ((MenuBuilder) menu).setOptionalIconsVisible(true);
-        }
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    private void authenticate() {
-        // Check KeyStore
-        if (KeyStoreManager.hasKeyStorePassword()) {
-            // We already have a working keystore password.
-            // Only need authentication and/or verify mode of operation.
-            ensureSecurityAndModeOfOp();
-            return;
-        }
-        Intent keyStoreIntent = new Intent(this, KeyStoreActivity.class)
-                .putExtra(KeyStoreActivity.EXTRA_KS, true);
-        mKeyStoreActivity.launch(keyStoreIntent);
     }
 
     private void ensureSecurityAndModeOfOp() {
@@ -194,5 +208,20 @@ public class SplashActivity extends AppCompatActivity {
         if (mViewModel != null) {
             mViewModel.setModeOfOps();
         }
+    }
+
+    private boolean initPermissionChecks() {
+        List<String> permissionsToBeAsked = new ArrayList<>(ASKED_PERMISSIONS.size());
+        for (String permission : ASKED_PERMISSIONS.keySet()) {
+            if (!SelfPermissions.checkSelfPermission(permission)) {
+                permissionsToBeAsked.add(permission);
+            }
+        }
+        if (!permissionsToBeAsked.isEmpty()) {
+            // Ask required permissions
+            mPermissionCheckActivity.launch(permissionsToBeAsked.toArray(new String[0]));
+            return true;
+        }
+        return false;
     }
 }

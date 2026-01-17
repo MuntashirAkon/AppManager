@@ -1,3 +1,5 @@
+import javax.inject.Inject
+
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 plugins {
@@ -7,6 +9,7 @@ plugins {
 android {
     namespace 'io.github.muntashirakon.AppManager.docs'
     compileSdk compile_sdk
+    buildToolsVersion = build_tools
 
     defaultConfig {
         minSdk min_sdk
@@ -18,11 +21,18 @@ android {
     }
 }
 
+// https://docs.gradle.org/current/userguide/service_injection.html#execoperations
+interface InjectedExecOps {
+    @Inject
+    ExecOperations getExecOps()
+}
+
 tasks.register('buildDocs') {
+    def injected = project.objects.newInstance(InjectedExecOps)
     doLast {
         println("=== docs: start ===")
         String buildExec = "${rootProject.projectDir.absolutePath}/scripts/make_docs.sh"
-        exec {
+        injected.execOps.exec {
             workingDir = project.rootDir
             executable = buildExec
         }

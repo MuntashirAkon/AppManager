@@ -26,9 +26,10 @@ import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 
 public class DebloatObject {
-    @IntDef({REMOVAL_SAFE, REMOVAL_REPLACE, REMOVAL_CAUTION})
+    @IntDef({REMOVAL_SAFE, REMOVAL_REPLACE, REMOVAL_CAUTION, REMOVAL_UNSAFE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Removal {
     }
@@ -36,6 +37,7 @@ public class DebloatObject {
     public static final int REMOVAL_SAFE = 1;
     public static final int REMOVAL_REPLACE = 1 << 1;
     public static final int REMOVAL_CAUTION = 1 << 2;
+    public static final int REMOVAL_UNSAFE = 1 << 3;
 
     @SerializedName("id")
     public String packageName;
@@ -68,6 +70,8 @@ public class DebloatObject {
     @Nullable
     private String mSuggestionId;
 
+    private int mId;
+
     @Nullable
     private Drawable mIcon;
     @Nullable
@@ -78,7 +82,17 @@ public class DebloatObject {
     @Nullable
     private Boolean mSystemApp = null;
     @Nullable
+    private Boolean mFrozen = null;
+    @Nullable
     private List<SuggestionObject> mSuggestions;
+
+    public void setId(int id) {
+        mId = id;
+    }
+
+    public int getId() {
+        return mId;
+    }
 
     @NonNull
     public String[] getDependencies() {
@@ -100,6 +114,8 @@ public class DebloatObject {
                 return REMOVAL_REPLACE;
             case "caution":
                 return REMOVAL_CAUTION;
+            case "unsafe":
+                return REMOVAL_UNSAFE;
         }
     }
 
@@ -135,6 +151,11 @@ public class DebloatObject {
     public CharSequence getLabel() {
         return mLabel != null ? mLabel : mInternalLabel;
     }
+    @NonNull
+    public CharSequence getLabelOrPackageName() {
+        CharSequence label = mLabel != null ? mLabel : mInternalLabel;
+        return label != null ? label : packageName;
+    }
 
     @Nullable
     public Drawable getIcon() {
@@ -166,6 +187,10 @@ public class DebloatObject {
         return Boolean.FALSE.equals(mSystemApp);
     }
 
+    public boolean isFrozen() {
+        return Boolean.TRUE.equals(mFrozen);
+    }
+
     public void fillInstallInfo(@NonNull Context context, @NonNull AppDb appDb) {
         PackageManager pm = context.getPackageManager();
         List<SuggestionObject> suggestionObjects = getSuggestions();
@@ -182,6 +207,8 @@ public class DebloatObject {
         // Update application data
         mInstalled = false;
         mUsers = null;
+        mSystemApp = null;
+        mFrozen = null;
         List<App> apps = appDb.getAllApplications(packageName);
         for (App app : apps) {
             if (!app.isInstalled) {
@@ -190,6 +217,7 @@ public class DebloatObject {
             mInstalled = true;
             addUser(app.userId);
             mSystemApp = app.isSystemApp();
+            mFrozen = !app.isEnabled;
             mLabel = app.packageLabel;
             if (getIcon() == null) {
                 try {
@@ -199,6 +227,7 @@ public class DebloatObject {
                     mSystemApp = ApplicationInfoCompat.isSystemApp(ai);
                     mLabel = ai.loadLabel(pm);
                     mIcon = ai.loadIcon(pm);
+                    mFrozen = FreezeUtils.isFrozen(ai);
                 } catch (RemoteException | PackageManager.NameNotFoundException ignore) {
                 }
             }

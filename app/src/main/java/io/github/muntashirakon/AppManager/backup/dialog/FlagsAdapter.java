@@ -19,6 +19,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.util.AdapterUtils;
 
 class FlagsAdapter extends RecyclerView.Adapter<FlagsAdapter.ViewHolder> {
     private final int mLayoutId;
@@ -76,7 +77,7 @@ class FlagsAdapter extends RecyclerView.Adapter<FlagsAdapter.ViewHolder> {
                 // Now selected
                 mSelectedFlags |= flag;
             }
-            notifyItemChanged(position);
+            notifyItemChanged(position, AdapterUtils.STUB);
         });
     }
 

@@ -10,6 +10,7 @@ import android.os.Process;
 import android.os.RemoteException;
 import android.os.UserHandle;
 import android.os.UserHandleHidden;
+import android.os.UserManager;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
@@ -36,6 +38,7 @@ public final class Users {
     @NonNull
     public static List<UserInfo> getAllUsers() {
         if (sUserInfoList.isEmpty() || sUnprivilegedMode) {
+            int uid = getSelfOrRemoteUid();
             IUserManager userManager = IUserManager.Stub.asInterface(ProxyBinder.getService(Context.USER_SERVICE));
             if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS)
                     || SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CREATE_USERS)) {
@@ -54,6 +57,14 @@ public final class Users {
                 }
                 if (userInfoList != null) {
                     for (android.content.pm.UserInfo userInfo : userInfoList) {
+                        try {
+                            if (uid == Ops.SHELL_UID && userManager.hasUserRestriction(UserManager.DISALLOW_DEBUGGING_FEATURES, userInfo.id)) {
+                                Log.w(TAG, "Shell cannot access user %s as debugging is disallowed.", userInfo.id);
+                                continue;
+                            }
+                        } catch (RemoteException e) {
+                            ExUtils.rethrowFromSystemServer(e);
+                        }
                         sUserInfoList.add(new UserInfo(userInfo));
                     }
                 }
@@ -63,7 +74,7 @@ public final class Users {
                 // The above didn't succeed, try no-root mode
                 Log.d(TAG, "Missing required permission: MANAGE_USERS or CREATE_USERS (7+). Falling back to unprivileged mode.");
                 List<android.content.pm.UserInfo> userInfoList = userManager.getProfiles(
-                        UserHandleHidden.getUserId(getSelfOrRemoteUid()), false);
+                        UserHandleHidden.getUserId(uid), false);
                 for (android.content.pm.UserInfo userInfo : userInfoList) {
                     sUserInfoList.add(new UserInfo(userInfo));
                 }

@@ -57,6 +57,8 @@ import java.util.Locale;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
+import io.github.muntashirakon.util.UiUtils;
+import io.github.muntashirakon.view.AutoFitGridLayoutManager;
 import io.github.muntashirakon.widget.SearchView;
 
 public class UIUtils {
@@ -339,10 +341,29 @@ public class UIUtils {
     }
 
     @NonNull
+    public static AutoFitGridLayoutManager getGridLayoutAt450Dp(@NonNull Context context) {
+        return new AutoFitGridLayoutManager(context, UiUtils.dpToPx(context, 450));
+    }
+
+    @NonNull
     public static Spannable charSequenceToSpannable(@NonNull CharSequence text) {
         if (text instanceof Spannable) {
             return (Spannable) text;
         } else return sSpannableFactory.newSpannable(text);
+    }
+
+    @AnyThread
+    @NonNull
+    public static Bitmap getMutableBitmapFromDrawable(@NonNull Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            return bitmap.copy(Bitmap.Config.ARGB_8888, true);
+        }
+        final Bitmap bmp = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(bmp);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bmp;
     }
 
     @AnyThread

@@ -18,6 +18,10 @@ import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.backup.BackupException;
+import io.github.muntashirakon.AppManager.backup.BackupItems;
+import io.github.muntashirakon.AppManager.backup.BackupUtils;
+import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.TarUtilsTest;
 import io.github.muntashirakon.io.Path;
@@ -82,14 +86,22 @@ public class TBConverterTest {
         Path propFile = Paths.get(new File(backupLocation, PACKAGE_NAME_FULL + "-20210529-164214.properties"));
         TBConverter tbConvert = new TBConverter(propFile);
         tbConvert.convert();
-        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_FULL).findFile("0_TB");
+        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory()
+                .findFile(BackupItems.BACKUP_DIRECTORY)
+                .listFiles()[0];
+        BackupItems.BackupItem backupItem = BackupItems.findBackupItem(BackupUtils.getV5RelativeDir(newBackupLocation.getName()));
         // Verify source
-        assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
-                newBackupLocation.findFile("source.tar.gz.0"))));
-        List<String> files = TarUtilsTest.getFileNamesGZip(Collections.singletonList(newBackupLocation.findFile("data0.tar.gz.0")));
+        BackupMetadataV5 metadataV5 = backupItem.getMetadata();
+        assertEquals(MetadataManager.getCurrentBackupMetaVersion(), metadataV5.info.version);
+        assertEquals("TB", metadataV5.metadata.backupName);
+        assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(
+                Arrays.asList(backupItem.getSourceFiles())));
+        List<String> files = TarUtilsTest.getFileNamesGZip(
+                Arrays.asList(backupItem.getDataFiles(0)));
         Collections.sort(files);
         assertEquals(internalStorage, files);
-        files = TarUtilsTest.getFileNamesGZip(Collections.singletonList(newBackupLocation.findFile("data1.tar.gz.0")));
+        files = TarUtilsTest.getFileNamesGZip(
+                Arrays.asList(backupItem.getDataFiles(1)));
         Collections.sort(files);
         assertEquals(externalStorage, files);
     }
@@ -104,11 +116,18 @@ public class TBConverterTest {
         Path propFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK_INT + "-20210529-164210.properties"));
         TBConverter tbConvert = new TBConverter(propFile);
         tbConvert.convert();
-        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_INT).findFile("0_TB");
+        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory()
+                .findFile(BackupItems.BACKUP_DIRECTORY)
+                .listFiles()[0];
+        BackupItems.BackupItem backupItem = BackupItems.findBackupItem(BackupUtils.getV5RelativeDir(newBackupLocation.getName()));
         // Verify source
-        assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
-                newBackupLocation.findFile("source.tar.gz.0"))));
-        List<String> files = TarUtilsTest.getFileNamesGZip(Collections.singletonList(newBackupLocation.findFile("data0.tar.gz.0")));
+        BackupMetadataV5 metadataV5 = backupItem.getMetadata();
+        assertEquals(MetadataManager.getCurrentBackupMetaVersion(), metadataV5.info.version);
+        assertEquals("TB", metadataV5.metadata.backupName);
+        assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(
+                Arrays.asList(backupItem.getSourceFiles())));
+        List<String> files = TarUtilsTest.getFileNamesGZip(
+                Arrays.asList(backupItem.getDataFiles(0)));
         Collections.sort(files);
         assertEquals(internalStorage, files);
         assertFalse(newBackupLocation.hasFile("data1.tar.gz.0"));
@@ -125,9 +144,16 @@ public class TBConverterTest {
         Path propFile = Paths.get(new File(backupLocation, PACKAGE_NAME_INT + "-20210529-164219.properties"));
         TBConverter tbConvert = new TBConverter(propFile);
         tbConvert.convert();
-        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_INT).findFile("0_TB");
+        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory()
+                .findFile(BackupItems.BACKUP_DIRECTORY)
+                .listFiles()[0];
+        BackupItems.BackupItem backupItem = BackupItems.findBackupItem(BackupUtils.getV5RelativeDir(newBackupLocation.getName()));
         // Verify source
-        List<String> files = TarUtilsTest.getFileNamesGZip(Collections.singletonList(newBackupLocation.findFile("data0.tar.gz.0")));
+        BackupMetadataV5 metadataV5 = backupItem.getMetadata();
+        assertEquals(MetadataManager.getCurrentBackupMetaVersion(), metadataV5.info.version);
+        assertEquals("TB", metadataV5.metadata.backupName);
+        List<String> files = TarUtilsTest.getFileNamesGZip(
+                Arrays.asList(backupItem.getDataFiles(0)));
         Collections.sort(files);
         assertEquals(internalStorage, files);
         assertFalse(newBackupLocation.hasFile("source.tar.gz.0"));
@@ -139,10 +165,16 @@ public class TBConverterTest {
         Path propFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK + "-20210530-111646.properties"));
         TBConverter tbConvert = new TBConverter(propFile);
         tbConvert.convert();
-        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_APK).findFile("0_TB");
+        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory()
+                .findFile(BackupItems.BACKUP_DIRECTORY)
+                .listFiles()[0];
+        BackupItems.BackupItem backupItem = BackupItems.findBackupItem(BackupUtils.getV5RelativeDir(newBackupLocation.getName()));
         // Verify source
-        assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
-                newBackupLocation.findFile("source.tar.gz.0"))));
+        BackupMetadataV5 metadataV5 = backupItem.getMetadata();
+        assertEquals(MetadataManager.getCurrentBackupMetaVersion(), metadataV5.info.version);
+        assertEquals("TB", metadataV5.metadata.backupName);
+        assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(
+                Arrays.asList(backupItem.getSourceFiles())));
         assertFalse(newBackupLocation.hasFile("data0.tar.gz.0"));
         assertFalse(newBackupLocation.hasFile("data1.tar.gz.0"));
     }

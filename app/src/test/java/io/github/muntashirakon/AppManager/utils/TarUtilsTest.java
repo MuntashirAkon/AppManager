@@ -387,6 +387,20 @@ public class TarUtilsTest {
         return fileNames;
     }
 
+    @NonNull
+    public static List<String> getFileNamesNoCompress(@NonNull List<Path> tarFiles) throws IOException {
+        List<String> fileNames = new ArrayList<>();
+        try (SplitInputStream sis = new SplitInputStream(tarFiles);
+             BufferedInputStream bis = new BufferedInputStream(sis);
+             TarArchiveInputStream tis = new TarArchiveInputStream(bis)) {
+            ArchiveEntry entry;
+            while ((entry = tis.getNextEntry()) != null) {
+                fileNames.add(entry.getName());
+            }
+        }
+        return fileNames;
+    }
+
     private static void createTest(@NonNull Path source, @NonNull Path testRoot, @Nullable String[] include,
                                    @Nullable String[] exclude, @NonNull List<String> expectedPaths) throws Throwable {
         List<Path> files = TarUtils.create(TarUtils.TAR_GZIP, testRoot, source, "am.tar.gz", include,

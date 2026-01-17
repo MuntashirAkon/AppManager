@@ -1,6 +1,194 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
 \chapter{Changelogs}\label{ch:changelogs} %%##$chapter-title>>
 
+\section{v4.0.5 (445)}\label{sec:v4.0.5-(445)}
+\begin{itemize}
+    \item Added option to allow installing the existing applications in the installer page
+    \item Display unsafe bloatware info
+    \item Display vector icon on the splash screen in Android 7.1 and earlier
+    \item Enabled ``Clear data from uninstalled apps'' to no-root users in 1-click ops page
+    \item Enabled predictive back in Android 14 onwards
+    \item Improved accessibility by updating the content description of the action items
+    \item In app info tab, open ``Open by default'' setting in the ``Open links'' dialog
+    \item In debloater page, sort by app label (or app name) rather than package name
+    \item Fixed freezing an app with ``Remember for this app'' turned on
+    \item Fixed selecting texts in the list items due to framework bugs
+    \item Fixed setting app ops in custom ROMs with MIUI properties injected
+    \item Fixed updating profile modification status when an application is deleted from the list
+    \item Handled common colors and cursor movements in terminal output.
+\end{itemize}
+
+\section{v4.0.4 (444)}\label{sec:v4.0.4-(444)}
+\begin{itemize}
+    \item Optimized searching and filtering in the main page
+    \item Adopted sentence-case for the titles
+    \item Use the configured state to execute a profile for the simple shortcuts
+    \item Prevented crashing while searching throughout the application
+    \item Fixed integer overflow issue in the tar compression.
+\end{itemize}
+
+\section{v4.0.3 (443)}\label{sec:v4.0.3-(443)}
+\begin{itemize}
+    \item Updated translations
+    \item Improved handling the list items throughout App Manager
+    \item Fixed a regression error in file manager
+    \item Fixed spinners in the App Usage and the System Config pages.
+\end{itemize}
+
+\section{v4.0.2 (442)}\label{sec:v4.0.2-(442)}
+\begin{itemize}
+    \item Updated bloatware
+    \item Fixed fetching applications in multi-user environment in no-root mode
+    \item Fixed opening \texttt{app-manager} URLs from the web browsers
+    \item Fixed updating SSAID
+    \item Prevented a crash in Android < 9.0 that occurs due to invalid app ops.
+\end{itemize}
+
+\section{v4.0.1 (441)}\label{sec:v4.0.1-(441)}
+\subsection{Overlay management}
+In the App Details page, a new tab ``Overlays'' is added where per-app overlays are displayed. They
+can also be enabled or disabled using the toggle button. In addition, if the App Details page of an
+overlay package is opened, a ``Overlay'' tag will be displayed in the App Info tab. Clicking on the
+tag opens a dialog containing additional info along with a button that allows navigating to the
+App Details page of the overlay target package if it is installed.
+
+\paragraph{Known limitation} At present, it only works for root/ADB users in Android 8 (Oreo) and
+later.
+
+\subsection{Unfreeze option in activity shortcuts}
+If the application corresponding to the shortcut being launched is frozen, App Manager will now
+offer you to unfreeze the app temporarily so that the shortcut can be launched. The app will be
+frozen again once the screen is locked.
+
+\paragraph{Known limitation} This may not work on devices without a screen lock or if the screen is
+locked some time after the display goes off.
+
+\subsection{\texttt{market}-like URL support}
+Third-party applications can now open the App Details page of any installed package by invoking an
+Intent with an URL with the following format:
+
+\begin{verbatim}
+app-manager://details?id=<pkg>&user=<user_id>
+\end{verbatim}
+
+where \texttt{<pkg>} stands for package name, and \texttt{<user\_id>} stands for the user ID which
+is optional.
+
+\subsection{Updated color codes}
+In order to improve accessibility, certain color codes have been improved. Visit
+\href{app-manager://settings/about/version}{Settings > About > Version/Changelog} for details.
+
+\subsection{Others}
+\begin{itemize}
+    \item Avoided waiting for the remote server to respond when no-root mode is set
+    \item Fixed downgrading apps in Android 10 onwards
+    \item Fixed installer issues in the Huawei stock operating systems
+    \item Improved text formatting in the ``What's New'' dialog
+    \item In the UI tracker window, fixed clicking on the icon after it is iconified
+    \item Updated bloatware and suggestions
+\end{itemize}
+
+\section{v4.0.0 (440)}\label{sec:v4.0.0-(440)}
+
+App Manager v4.0.0 comes with a lot of new features and improvements. Visit
+\href{app-manager://settings/about/version}{Settings > About > Version/Changelog} for details.
+
+\subsection{New logo!}
+The new logo is just a cursive ``A''. The design is based on the
+\href{https://freetengwar.sourceforge.net/}{Tengwar Telcontar} font which was created to bring the
+Tengwar script, originally created by J. R. R. Tolkien, to the digital world. The letter has the
+classic App Manager color (i.e., \#dcaf74) and uses a pure black background instead of a shade of
+grey.
+
+\subsection{Android 14 and 15 support}
+App Manager now targets Android 14 and fully supports Android 15.
+
+\paragraph{Known issue} KeyStore backup/restore is not working in Android 12 and later.
+
+\subsection{Revamped debloater}
+Debloating profiles were available as ``Presets'' in the Profiles page which has now been replaced
+with the Debloater page and can be accessed from the three-dots menu in the Main page.
+\href{https://github.com/MuntashirAkon/android-debloat-list}{ADL} is a new project that focuses on
+maintaining a list of bloatware as well as potential open source alternatives. Contributions are
+welcome!
+
+\subsection{Introducing file manager}
+App Manager offers an (almost) fully-featured file manager with basic file operations, such as copy,
+cut, rename, and delete along with the batch operations. It also offers an extensive ``Open with\dots''
+dialog to open a file with another app, and a comprehensive file properties viewer. Folders can also
+be added to the list of favorites for quick access. And many more.
+
+\subsection{Integrated code editor}
+Manifest and code viewers have been replaced with this new editor. Among other regular features, it
+includes proper syntax highlighting and advanced searching options. In addition, files from
+third-party apps can also be opened for editing.
+
+\subsection{History of operations}
+All 1-click operations, batch operations, and profile invocations are now stored as history. The
+history items can also be executed from the History page. To ensure consistency, the profile state,
+configurations, package list are also stored, and this stored version is executed instead of the
+actual profile. As a result, this works even if the profile is deleted.
+
+\subsection{Per-app freezing, and more}
+Freeze/unfreeze feature now supports setting per-app freezing method which is beneficial in certain
+scenarios, such as when a user want to suspend some apps while using the disable method as the
+default. In addition, an ``Advanced suspend'' option is added which force-stops an application
+before suspending it, thus, prevent it's services from running in the background.
+
+\subsection{Log viewer enhancements}
+Log viewer now supports enhanced searching and filtering options, such as keyword- and regular
+expression-based searching and filtering. Please read the in-app changelog for details. Support for
+batch operations has also been added.
+
+\subsection{Launching non-exported activities}
+App Manager now supports launching non-exported activities in no-root and ADB mode. However, in
+no-root mode, \texttt{android.permission.WRITE\_SECURE\_SETTINGS} permission is required.
+
+\subsection{New tags in App Info tab}
+Five new tags are added in the App Info tab. They are: bloatware, Xposed, sensors disabled, open
+links, and static shared libs. Clicking on ``bloatware'' will display more information regarding
+the bloatware and suggest alternatives, ``Xposed'' tag will display dependency information, ``open
+links'' will display a list of links supported by the application, and ``static shared libs'' will
+display all version of the application installed in the system along with an option to uninstall
+them. The latter is useful for applications, such as Trichrome.
+
+\paragraph{Known issue} ``Sensors disabled'' only works real-time. That means if the application is
+not currently active, this tag will always display even though the applications may use sensors
+while it is running. This is a framework limitation and nothing can be done to avoid it effectively.
+
+\subsection{Per-session installer options}
+It is not possible to modify installer options during the installation by clicking on the ``settings''
+button in the installation dialog. The installer options will be applied to all the applications
+installed in the same session (i.e., the installer queue).
+
+\subsection{Advanced mode of operations, ADB enhancements, \dots}
+App Manager now supports running its remote server (which is used as a proxy for running privileged
+operations) as any supported user (UID). This includes root (0), system (1000), and shell/ADB (2000)
+through the custom commands. This is also useful for Fire TVs which have disabled connecting to ADB
+from localhost through socket connection. In addition, ADB pairing is now done using notifications
+rather than split screen. ADB connection speed can also be improved by choosing to run App Manager
+in the background which can be configured in the settings.
+
+\subsection{Data usage widget, and more}
+Data usage widget display the total data usage for the day, similar to the screen time widget which
+displays the total screen time for the day. In addition, existing widgets have been improved.
+
+\subsection{Others}
+\begin{itemize}
+    \item Replaced log viewer, sys config, Terminal, etc. with Labs page
+    \item Added an option to disable sensors for each app in the App Info tab
+    \item Added an option to perform runtime optimization of applications in the 1-click Ops page
+    and in the App Info tab
+    \item Added support for Zstandard compression for backup/restore
+    \item Enabling APK signing now automatically enables zip align feature
+    \item Support exporting application list as CSV or JSON in the batch operations
+    \item Added pure black theme support
+    \item Display current activity name (when possible) in the UI Tracker window
+    \item Added an option to filter apps by user in the Main page
+    \item Display a link to Pithus report in the scanner page if available.
+\end{itemize}
+
+
 \section{v3.1.0 (423)}\label{sec:v3.1.0-(423)}
 
 App Manager v3.1.0 comes with a few new features and a lot of improvements.

@@ -2,11 +2,13 @@
 
 package io.github.muntashirakon.AppManager.apk.behavior;
 
+import android.annotation.UserIdInt;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.UserHandleHidden;
+import android.text.SpannableStringBuilder;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -20,8 +22,11 @@ import java.lang.annotation.RetentionPolicy;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 
 public final class FreezeUnfreeze {
     @IntDef(flag = true, value = {
@@ -54,6 +59,16 @@ public final class FreezeUnfreeze {
         return intent;
     }
 
+    @NonNull
+    public static Intent getShortcutIntent(@NonNull Context context, @NonNull String packageName, @UserIdInt int userId, int flags) {
+        Intent intent = new Intent(context, FreezeUnfreezeActivity.class);
+        intent.putExtra(EXTRA_PACKAGE_NAME, packageName);
+        intent.putExtra(EXTRA_USER_ID, userId);
+        intent.putExtra(EXTRA_FLAGS, flags);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
+    }
+
     @Nullable
     public static FreezeUnfreezeShortcutInfo getShortcutInfo(@NonNull Intent intent) {
         String packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
@@ -70,6 +85,42 @@ public final class FreezeUnfreeze {
         return shortcutInfo;
     }
 
+    private static final Integer[] FREEZING_METHODS = new Integer[]{
+            FreezeUtils.FREEZE_SUSPEND,
+            FreezeUtils.FREEZE_ADV_SUSPEND,
+            FreezeUtils.FREEZE_DISABLE,
+            FreezeUtils.FREEZE_HIDE
+    };
+
+    private static final Integer[] FREEZING_METHOD_TITLES = new Integer[]{
+            R.string.suspend_app,
+            R.string.advanced_suspend_app,
+            R.string.disable,
+            R.string.hide_app
+    };
+
+    private static final Integer[] FREEZING_METHOD_DESCRIPTIONS = new Integer[]{
+            R.string.suspend_app_description,
+            R.string.advanced_suspend_app_description,
+            R.string.disable_app_description,
+            R.string.hide_app_description
+    };
+
+    @NonNull
+    public static SearchableSingleChoiceDialogBuilder<Integer> getFreezeDialog(
+            @NonNull Context context,
+            @FreezeUtils.FreezeMethod int selectedType) {
+        CharSequence[] itemDescription = new CharSequence[FREEZING_METHODS.length];
+        for (int i = 0; i < FREEZING_METHODS.length; ++i) {
+            itemDescription[i] = new SpannableStringBuilder()
+                    .append(context.getString(FREEZING_METHOD_TITLES[i]))
+                    .append("\n")
+                    .append(UIUtils.getSmallerText(context.getString(FREEZING_METHOD_DESCRIPTIONS[i])));
+        }
+        return new SearchableSingleChoiceDialogBuilder<>(context, FREEZING_METHODS, itemDescription)
+                .setSelectionIndex(ArrayUtils.indexOf(FREEZING_METHODS, selectedType));
+    }
+
     static void launchApp(@NonNull FragmentActivity activity, @NonNull FreezeUnfreezeShortcutInfo shortcutInfo) {
         Intent launchIntent = PackageManagerCompat.getLaunchIntentForPackage(shortcutInfo.packageName, shortcutInfo.userId);
         if (launchIntent == null) {
@@ -84,12 +135,13 @@ public final class FreezeUnfreeze {
             activity.startActivity(launchIntent);
             Intent intent = getShortcutIntent(activity, shortcutInfo);
             intent.putExtra(EXTRA_FORCE_FREEZE, true);
-            PendingIntent pendingIntent = PendingIntentCompat.getActivity(activity, 0, intent,
-                    PendingIntent.FLAG_ONE_SHOT, false);
+            int requestCode = shortcutInfo.hashCode();
+            PendingIntent pendingIntent = PendingIntentCompat.getActivity(activity, requestCode,
+                    intent, PendingIntent.FLAG_ONE_SHOT, false);
             // There's a small chance that the notification by shortcutInfo.hasCode() already exists, in that case,
             // find the next one. This will cause trouble with dismissing the notification, but this is a viable
             // trade-off.
-            String notificationTag = String.valueOf(shortcutInfo.hashCode());
+            String notificationTag = String.valueOf(requestCode);
             NotificationUtils.displayFreezeUnfreezeNotification(activity, notificationTag, builder -> builder
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setWhen(System.currentTimeMillis())

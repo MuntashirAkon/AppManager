@@ -116,7 +116,7 @@ public class LiveLogViewerFragment extends AbsLogViewerFragment implements LogVi
     public void onNewLogsAvailable(@NonNull List<LogLine> logLines) {
         mActivity.hideProgressBar();
         for (LogLine logLine : logLines) {
-            mLogListAdapter.addWithFilter(logLine, mQueryString, true);
+            mLogListAdapter.addWithFilter(logLine, mSearchCriteria, true);
             mActivity.addToAutocompleteSuggestions(logLine);
         }
 

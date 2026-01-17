@@ -20,6 +20,7 @@ import android.content.pm.IPackageInstaller;
 import android.content.pm.IPackageInstallerSession;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
+import android.content.pm.PackageInstaller.SessionParams;
 import android.content.pm.PackageInstallerHidden;
 import android.content.pm.PackageManager;
 import android.content.pm.VersionedPackage;
@@ -30,6 +31,7 @@ import android.os.IBinder;
 import android.os.Process;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
+import android.provider.Settings;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -65,11 +67,14 @@ import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.utils.HuaweiUtils;
 import io.github.muntashirakon.AppManager.utils.MiuiUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -398,14 +403,14 @@ public final class PackageInstallerCompat {
     public static final int INSTALL_BYPASS_LOW_TARGET_SDK_BLOCK = 0x01000000;
 
     /**
-     * Flag parameter for {@link PackageInstaller.SessionParams} to indicate that the
+     * Flag parameter for {@link SessionParams} to indicate that the
      * update ownership enforcement is requested.
      */
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     public static final int INSTALL_REQUEST_UPDATE_OWNERSHIP = 1 << 25;
 
     /**
-     * Flag parameter for {@link PackageInstaller.SessionParams} to indicate that this
+     * Flag parameter for {@link SessionParams} to indicate that this
      * session is from a managed user or profile.
      */
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
@@ -470,6 +475,8 @@ public final class PackageInstallerCompat {
     @RequiresApi(Build.VERSION_CODES.P)
     public static final int DELETE_CHATTY = 0x80000000;
 
+    public static final String SETTINGS_VERIFIER_VERIFY_ADB_INSTALLS = "verifier_verify_adb_installs";
+
     public interface OnInstallListener {
         @WorkerThread
         void onStartInstall(int sessionId, String packageName);
@@ -477,8 +484,9 @@ public final class PackageInstallerCompat {
         // MIUI-begin: MIUI 12.5+ workaround
 
         /**
-         * MIUI 12.5+ may require more than one tries in order to have successful installations. This is only needed
-         * during APK installations, not APK uninstallations or install-existing attempts.
+         * MIUI 12.5+ may require more than one tries in order to have successful installations.
+         * This is only needed during APK installations, not APK uninstallations or install-existing
+         * attempts.
          *
          * @param apkFile Underlying APK file if available.
          */
@@ -486,6 +494,20 @@ public final class PackageInstallerCompat {
         default void onAnotherAttemptInMiui(@Nullable ApkFile apkFile) {
         }
         // MIUI-end
+
+        // HyperOS-begin: HyperOS 2.0+ workaround
+
+        /**
+         * In HyperOS 2.0+, the installer for the system apps must be another system app. The
+         * overridden method must set the package installer to a valid system app. This is only
+         * needed during APK installations, not APK uninstallations or install-existing attempts.
+         *
+         * @param apkFile Underlying APK file if available.
+         */
+        @WorkerThread
+        default void onSecondAttemptInHyperOsWithoutInstaller(@Nullable ApkFile apkFile) {
+        }
+        // HyperOS-end
 
         @WorkerThread
         void onFinishedInstall(int sessionId, String packageName, int result, @Nullable String blockingPackage,
@@ -560,11 +582,14 @@ public final class PackageInstallerCompat {
     private PackageInstaller.Session mSession;
     // MIUI-added: Multiple attempts may be required
     int mAttempts = 1;
-    private final Context mContext = ContextUtils.getContext();
+    private final Context mContext;
     private final boolean mHasInstallPackagePermission;
+    private int mLastVerifyAdbInstallsResult;
 
     private PackageInstallerCompat() {
+        mContext = ContextUtils.getContext();
         mHasInstallPackagePermission = SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES);
+        mLastVerifyAdbInstallsResult = -1;
     }
 
     public void setOnInstallListener(@Nullable OnInstallListener onInstallListener) {
@@ -618,11 +643,13 @@ public final class PackageInstallerCompat {
                 }
             });
             userId = allRequestedUsers[0];
+            String originatingPackage = options.isSetOriginatingPackage() ? options.getOriginatingPackage() : null;
+            Uri originatingUri = options.isSetOriginatingPackage() ? options.getOriginatingUri() : null;
             Log.d(TAG, "Install: opening session...");
             if (!openSession(userId, installFlags, options.getInstallerName(),
-                    options.getInstallLocation(), options.getOriginatingPackage(),
-                    options.getOriginatingUri(), options.getInstallScenario(),
-                    options.getPackageSource(), options.requestUpdateOwnership())) {
+                    options.getInstallLocation(), originatingPackage, originatingUri,
+                    options.getInstallScenario(), options.getPackageSource(),
+                    options.requestUpdateOwnership(), options.isDisableApkVerification())) {
                 return false;
             }
             List<ApkFile.Entry> selectedEntries = new ArrayList<>();
@@ -663,6 +690,7 @@ public final class PackageInstallerCompat {
             return commit(userId);
         } finally {
             unregisterReceiver();
+            restoreVerifySettings();
         }
     }
 
@@ -694,10 +722,12 @@ public final class PackageInstallerCompat {
                 }
             }
             userId = allRequestedUsers[0];
+            String originatingPackage = options.isSetOriginatingPackage() ? options.getOriginatingPackage() : null;
+            Uri originatingUri = options.isSetOriginatingPackage() ? options.getOriginatingUri() : null;
             if (!openSession(userId, installFlags, options.getInstallerName(),
-                    options.getInstallLocation(), options.getOriginatingPackage(),
-                    options.getOriginatingUri(), options.getInstallScenario(),
-                    options.getPackageSource(), options.requestUpdateOwnership())) {
+                    options.getInstallLocation(), originatingPackage, originatingUri,
+                    options.getInstallScenario(), options.getPackageSource(),
+                    options.requestUpdateOwnership(), options.isDisableApkVerification())) {
                 return false;
             }
             long totalSize = 0;
@@ -724,6 +754,7 @@ public final class PackageInstallerCompat {
             return commit(userId);
         } finally {
             unregisterReceiver();
+            restoreVerifySettings();
         }
     }
 
@@ -789,9 +820,11 @@ public final class PackageInstallerCompat {
                                 String installerName, int installLocation,
                                 @Nullable String originatingPackage, @Nullable Uri originatingUri,
                                 int installScenario, int packageSource,
-                                boolean requestUpdateOwnership) {
-        String requestedInstallerPackageName = mHasInstallPackagePermission ? installerName : null;
-        String installerPackageName = Build.VERSION.SDK_INT < Build.VERSION_CODES.P && mHasInstallPackagePermission
+                                boolean requestUpdateOwnership, boolean disableVerification) {
+        // Changing package installer in stock Huawei with UID 2000 does not work
+        boolean canChangeInstaller = mHasInstallPackagePermission && (!HuaweiUtils.isStockHuawei() || Users.getSelfOrRemoteUid() != Ops.SHELL_UID);
+        String requestedInstallerPackageName = canChangeInstaller ? installerName : null;
+        String installerPackageName = Build.VERSION.SDK_INT < Build.VERSION_CODES.P && canChangeInstaller
                 ? installerName : BuildConfig.APPLICATION_ID;
         try {
             mPackageInstaller = PackageManagerCompat.getPackageInstaller();
@@ -803,7 +836,25 @@ public final class PackageInstallerCompat {
         // Clean old sessions
         cleanOldSessions();
         // Create install session
-        PackageInstaller.SessionParams sessionParams = new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
+        SessionParams sessionParams = new SessionParams(SessionParams.MODE_FULL_INSTALL);
+        if (disableVerification) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+                    && SelfPermissions.isSystemOrRootOrShell()) {
+                // This disables verification for this UID temporarily
+                ExUtils.exceptionAsIgnored(() ->
+                        mPackageInstaller.disableVerificationForUid(Users.getSelfOrRemoteUid()));
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                installFlags |= INSTALL_DISABLE_VERIFICATION;
+            }
+            // In addition, we may also want to use the traditional methods
+            if (SelfPermissions.isShell()) {
+                mLastVerifyAdbInstallsResult = Settings.Global.getInt(mContext.getContentResolver(), SETTINGS_VERIFIER_VERIFY_ADB_INSTALLS, 1);
+                if (mLastVerifyAdbInstallsResult != 0) {
+                    Settings.Global.putInt(mContext.getContentResolver(), SETTINGS_VERIFIER_VERIFY_ADB_INSTALLS, 0);
+                }
+            }
+        }
         Refine.<PackageInstallerHidden.SessionParams>unsafeCast(sessionParams).installFlags |= installFlags;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             Refine.<PackageInstallerHidden.SessionParams>unsafeCast(sessionParams).installerPackageName = requestedInstallerPackageName;
@@ -829,7 +880,7 @@ public final class PackageInstallerCompat {
         // Set install user action and install scenario
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             // We hope system will not prompt an install confirmation
-            sessionParams.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED);
+            sessionParams.setRequireUserAction(SessionParams.USER_ACTION_NOT_REQUIRED);
             sessionParams.setInstallScenario(installScenario);
         }
         // Set package source (shell uses PACKAGE_SOURCE_OTHER)
@@ -867,11 +918,24 @@ public final class PackageInstallerCompat {
         return true;
     }
 
+    private void restoreVerifySettings() {
+        if (mLastVerifyAdbInstallsResult == 1) {
+            int val = Settings.Global.getInt(mContext.getContentResolver(), SETTINGS_VERIFIER_VERIFY_ADB_INSTALLS, 1);
+            if (val != 1) {
+                // Restore value
+                Settings.Global.putInt(mContext.getContentResolver(), SETTINGS_VERIFIER_VERIFY_ADB_INSTALLS, 1);
+            }
+        }
+    }
+
     @InstallFlags
     private static int getInstallFlags(@UserIdInt int userId) {
-        int flags = INSTALL_ALLOW_TEST | INSTALL_REPLACE_EXISTING;
+        int flags = INSTALL_FROM_ADB | INSTALL_ALLOW_TEST | INSTALL_REPLACE_EXISTING;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            flags |= INSTALL_FULL_APP;
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            flags |= INSTALL_ALLOW_DOWNGRADE_API29;
+            flags |= INSTALL_REQUEST_DOWNGRADE | INSTALL_ALLOW_DOWNGRADE_API29;
         } else flags |= INSTALL_ALLOW_DOWNGRADE;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             flags |= INSTALL_BYPASS_LOW_TARGET_SDK_BLOCK;
@@ -1034,25 +1098,45 @@ public final class PackageInstallerCompat {
                                   @Nullable String blockingPackage,
                                   @Nullable String statusMessage) {
         ThreadUtils.ensureWorkerThread();
-        // MIUI-begin: In MIUI 12.5 and 20.2.0, it might be required to try installing the APK files more than once.
         if (finalStatus == STATUS_FAILURE_ABORTED
                 && mSessionId == sessionId
-                && mOnInstallListener != null
-                && !SelfPermissions.checkSelfPermission(Manifest.permission.INSTALL_PACKAGES)
-                && MiuiUtils.isActualMiuiVersionAtLeast("12.5", "20.2.0")
-                && Objects.equals(statusMessage, "INSTALL_FAILED_ABORTED: Permission denied")
-                && mAttempts <= 3) {
-            // Try once more
-            ++mAttempts;
-            Log.i(TAG, "MIUI: Installation attempt no %d for package %s", mAttempts, mPackageName);
-            mInteractionWatcher.countDown();
-            mInstallWatcher.countDown();
-            // Remove old broadcast receivers
-            unregisterReceiver();
-            mOnInstallListener.onAnotherAttemptInMiui(mApkFile);
-            return;
+                && mOnInstallListener != null) {
+            boolean privileged = SelfPermissions.checkSelfPermission(Manifest.permission.INSTALL_PACKAGES);
+            // MIUI-begin: In MIUI 12.5 and 20.2.0, it might be required to try installing the APK files more than once.
+            if (!privileged
+                    && MiuiUtils.isActualMiuiVersionAtLeast("12.5", "20.2.0")
+                    && Objects.equals(statusMessage, "INSTALL_FAILED_ABORTED: Permission denied")
+                    && mAttempts <= 3) {
+                // Try once more
+                ++mAttempts;
+                Log.i(TAG, "MIUI: Installation attempt no %d for package %s", mAttempts, mPackageName);
+                mInteractionWatcher.countDown();
+                mInstallWatcher.countDown();
+                // Remove old broadcast receivers
+                unregisterReceiver();
+                mOnInstallListener.onAnotherAttemptInMiui(mApkFile);
+                return;
+            }
+            // MIUI-end
+            // HyperOS-begin: In HyperOS 2.0, installer package needs to be altered
+            if (privileged
+                    // TODO: 1/10/25 Check for HyperOS?
+                    && statusMessage != null
+                    && statusMessage.startsWith("INSTALL_FAILED_HYPEROS_ISOLATION_VIOLATION: ")
+                    && mAttempts <= 2) {
+                // Try a second time with installer set to shell
+                ++mAttempts;
+                Log.i(TAG, "HyperOS: %s", statusMessage);
+                Log.i(TAG, "HyperOS: Second attempt for %s", mPackageName);
+                mInteractionWatcher.countDown();
+                mInstallWatcher.countDown();
+                // Remove old broadcast receivers
+                unregisterReceiver();
+                mOnInstallListener.onSecondAttemptInHyperOsWithoutInstaller(mApkFile);
+                return;
+            }
+            // HyperOS-end
         }
-        // MIUI-end
         // No need to check package name since it's been checked before
         if (finalStatus == STATUS_FAILURE_SESSION_CREATE || (mSessionId == sessionId)) {
             if (mOnInstallListener != null) {

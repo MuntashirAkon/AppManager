@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.backup.convert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +18,12 @@ import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.backup.BackupException;
+import io.github.muntashirakon.AppManager.backup.BackupItems;
+import io.github.muntashirakon.AppManager.backup.BackupUtils;
+import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.utils.RoboUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtilsTest;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -32,13 +38,19 @@ public class SBConverterTest {
 
     private final ClassLoader classLoader = getClass().getClassLoader();
     private File backupLocation;
+    private Path tmpBackupPath;
 
     @Before
-    public void setUp() {
-        Prefs.Storage.setVolumePath("/tmp");
-        Paths.get("/tmp/AppManager").delete();
+    public void setUp() throws IOException {
         assert classLoader != null;
         backupLocation = new File(classLoader.getResource("SwiftBackup").getFile());
+        tmpBackupPath = Paths.get(RoboUtils.getTestBaseDir()).createNewDirectory("backup-dir");
+        Prefs.Storage.setVolumePath(tmpBackupPath.toString());
+    }
+
+    @After
+    public void tearDown() {
+        tmpBackupPath.delete();
     }
 
     @Test
@@ -55,14 +67,20 @@ public class SBConverterTest {
         Path xmlFile = Paths.get(new File(backupLocation, PACKAGE_NAME_FULL + ".xml"));
         SBConverter sbConvert = new SBConverter(xmlFile);
         sbConvert.convert();
-        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_FULL).findFile("0_SB");
+        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory()
+                .findFile(BackupItems.BACKUP_DIRECTORY)
+                .listFiles()[0];
+        BackupItems.BackupItem backupItem = BackupItems.findBackupItem(BackupUtils.getV5RelativeDir(newBackupLocation.getName()));
         // Verify source
-        assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
-                newBackupLocation.findFile("source.tar.gz.0"))));
-        List<String> files = TarUtilsTest.getFileNamesGZip(Collections.singletonList(newBackupLocation.findFile("data0.tar.gz.0")));
+        BackupMetadataV5 metadataV5 = backupItem.getMetadata();
+        assertEquals(MetadataManager.getCurrentBackupMetaVersion(), metadataV5.info.version);
+        assertEquals("SB", metadataV5.metadata.backupName);
+        assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(
+                Arrays.asList(backupItem.getSourceFiles())));
+        List<String> files = TarUtilsTest.getFileNamesGZip(Arrays.asList(backupItem.getDataFiles(0)));
         Collections.sort(files);
         assertEquals(internalStorage, files);
-        files = TarUtilsTest.getFileNamesGZip(Collections.singletonList(newBackupLocation.findFile("data1.tar.gz.0")));
+        files = TarUtilsTest.getFileNamesGZip(Arrays.asList(backupItem.getDataFiles(1)));
         Collections.sort(files);
         assertEquals(externalStorage, files);
     }
@@ -76,11 +94,17 @@ public class SBConverterTest {
         Path xmlFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK_INT + ".xml"));
         SBConverter sbConvert = new SBConverter(xmlFile);
         sbConvert.convert();
-        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_INT).findFile("0_SB");
+        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory()
+                .findFile(BackupItems.BACKUP_DIRECTORY)
+                .listFiles()[0];
+        BackupItems.BackupItem backupItem = BackupItems.findBackupItem(BackupUtils.getV5RelativeDir(newBackupLocation.getName()));
         // Verify source
-        assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
-                newBackupLocation.findFile("source.tar.gz.0"))));
-        List<String> files = TarUtilsTest.getFileNamesGZip(Collections.singletonList(newBackupLocation.findFile("data0.tar.gz.0")));
+        BackupMetadataV5 metadataV5 = backupItem.getMetadata();
+        assertEquals(MetadataManager.getCurrentBackupMetaVersion(), metadataV5.info.version);
+        assertEquals("SB", metadataV5.metadata.backupName);
+        assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(
+                Arrays.asList(backupItem.getSourceFiles())));
+        List<String> files = TarUtilsTest.getFileNamesGZip(Arrays.asList(backupItem.getDataFiles(0)));
         Collections.sort(files);
         assertEquals(internalStorage, files);
         assertFalse(newBackupLocation.hasFile("data1.tar.gz.0"));
@@ -91,46 +115,63 @@ public class SBConverterTest {
         Path xmlFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK + ".xml"));
         SBConverter sbConvert = new SBConverter(xmlFile);
         sbConvert.convert();
-        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_APK).findFile("0_SB");
+        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory()
+                .findFile(BackupItems.BACKUP_DIRECTORY)
+                .listFiles()[0];
+        BackupItems.BackupItem backupItem = BackupItems.findBackupItem(BackupUtils.getV5RelativeDir(newBackupLocation.getName()));
         // Verify source
-        assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
-                newBackupLocation.findFile("source.tar.gz.0"))));
+        BackupMetadataV5 metadataV5 = backupItem.getMetadata();
+        assertEquals(MetadataManager.getCurrentBackupMetaVersion(), metadataV5.info.version);
+        assertEquals("SB", metadataV5.metadata.backupName);
+        assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(
+                Arrays.asList(backupItem.getSourceFiles())));
         assertFalse(newBackupLocation.hasFile("data0.tar.gz.0"));
         assertFalse(newBackupLocation.hasFile("data1.tar.gz.0"));
     }
 
-    // FIXME: 14/9/21 The tests below are disabled due to Rebolectric unable to parse APK files
-//    @Test
-//    public void convertApkSplitsTest() throws BackupException, IOException {
-//        final List<String> expectedApkFiles = Arrays.asList("base.apk",
-//                "split_config.en.apk",
-//                "split_config.hdpi.apk");
-//        Collections.sort(expectedApkFiles);
-//        Path xmlFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK_SPLITS + ".xml"));
-//        SBConverter sbConvert = new SBConverter(xmlFile);
-//        sbConvert.convert();
-//        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_SPLITS).findFile("0_SB");
-//        // Verify source
-//        List<String> actualApkFiles = TarUtilsTest.getFileNamesGZip(Collections.singletonList(
-//                newBackupLocation.findFile("source.tar.gz.0")));
-//        Collections.sort(actualApkFiles);
-//        assertEquals(expectedApkFiles, actualApkFiles);
-//        assertFalse(newBackupLocation.hasFile("data0.tar.gz.0"));
-//        assertFalse(newBackupLocation.hasFile("data1.tar.gz.0"));
-//    }
-//
-//
+    @Test
+    public void convertApkSplitsTest() throws BackupException, IOException {
+        final List<String> expectedApkFiles = Arrays.asList("base.apk",
+                "split_config.en.apk",
+                "split_config.hdpi.apk");
+        Collections.sort(expectedApkFiles);
+        Path xmlFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK_SPLITS + ".xml"));
+        SBConverter sbConvert = new SBConverter(xmlFile);
+        sbConvert.convert();
+        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory()
+                .findFile(BackupItems.BACKUP_DIRECTORY)
+                .listFiles()[0];
+        BackupItems.BackupItem backupItem = BackupItems.findBackupItem(BackupUtils.getV5RelativeDir(newBackupLocation.getName()));
+        // Verify source
+        BackupMetadataV5 metadataV5 = backupItem.getMetadata();
+        assertEquals(MetadataManager.getCurrentBackupMetaVersion(), metadataV5.info.version);
+        assertEquals("SB", metadataV5.metadata.backupName);
+        List<String> actualApkFiles = TarUtilsTest.getFileNamesGZip(
+                Arrays.asList(backupItem.getSourceFiles()));
+        Collections.sort(actualApkFiles);
+        assertEquals(expectedApkFiles, actualApkFiles);
+        assertFalse(newBackupLocation.hasFile("data0.tar.gz.0"));
+        assertFalse(newBackupLocation.hasFile("data1.tar.gz.0"));
+    }
+
+
+    // FIXME: 14/9/21 The test below is disabled due to Rebolectric unable to parse APK files
 //    @Test
 //    public void convertApkObbTest() throws BackupException, IOException {
 //        Path xmlFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK_OBB + ".xml"));
 //        SBConverter sbConvert = new SBConverter(xmlFile);
 //        sbConvert.convert();
-//        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_OBB).findFile("0_SB");
+//        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory()
+//                .findFile(BackupItems.BACKUP_DIRECTORY)
+//                .listFiles()[0];
+//        BackupItems.BackupItem backupItem = BackupItems.findBackupItem(BackupUtils.getV5RelativeDir(newBackupLocation.getName()));
 //        // Verify source
-//        assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
-//                newBackupLocation.findFile("source.tar.gz.0"))));
-//        assertEquals(Collections.singletonList("test-assets.obb"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
-//                newBackupLocation.findFile("data0.tar.gz.0"))));
+//        BackupMetadataV5 metadataV5 = backupItem.getMetadata();
+//        assertEquals(MetadataManager.getCurrentBackupMetaVersion(), metadataV5.info.version);
+//        assertEquals("SB", metadataV5.metadata.backupName);
+//        assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(
+//                Arrays.asList(backupItem.getSourceFiles())));
+//        assertEquals(Collections.singletonList("test-assets.obb"), TarUtilsTest.getFileNamesGZip(Arrays.asList(backupItem.getDataFiles(0))));
 //        assertFalse(newBackupLocation.hasFile("data1.tar.gz.0"));
 //    }
 }

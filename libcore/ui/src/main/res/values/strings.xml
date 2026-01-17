@@ -1,4 +1,5 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
     <string name="select_all">Select all</string>
+    <string name="selected_items_accessibility_description">Selected %d out of %d items</string>
 </resources>

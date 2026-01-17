@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.self.life;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -48,7 +49,8 @@ public final class BuildExpiryChecker {
     };
 
     @NonNull
-    public static AlertDialog getBuildExpiredDialog(@NonNull FragmentActivity activity) {
+    public static AlertDialog getBuildExpiredDialog(@NonNull FragmentActivity activity,
+                                                    @Nullable DialogInterface.OnClickListener continueClickListener) {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.app_manager_build_expired)
                 .setMessage(R.string.app_manager_build_expired_message)
@@ -68,7 +70,7 @@ public final class BuildExpiryChecker {
                     activity.finishAndRemoveTask();
                 });
         if (getBuildType() == BUILD_TYPE_STABLE) {
-            builder.setNeutralButton(R.string.action_continue, null);
+            builder.setNeutralButton(R.string.action_continue, continueClickListener);
         }
         return builder.create();
     }

@@ -78,7 +78,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     public static final String TAG = LogViewerActivity.class.getSimpleName();
 
     public interface SearchingInterface {
-        void onQuery(@Nullable String searchTerm);
+        void onQuery(@Nullable SearchCriteria searchCriteria);
     }
 
     public static final String EXTRA_FILTER = "filter";
@@ -97,7 +97,8 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     @Nullable
     private AlertDialog mLoadingDialog;
     private SearchView mSearchView;
-    private String mSearchQuery;
+    @Nullable
+    private SearchCriteria mSearchCriteria;
     private boolean mDynamicallyEnteringSearchQuery;
     private final Set<String> mSearchSuggestionsSet = new HashSet<>();
     private CursorAdapter mSearchSuggestionsAdapter;
@@ -223,14 +224,6 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
         startLogging();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (!mSearchView.isIconified()) {
-            mSearchView.setIconified(true);
-        }
-        super.onBackPressed();
-    }
-
     public void loadNewFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
@@ -289,7 +282,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
                 UIUtils.displayLongToast(R.string.toast_invalid_level, level);
             } else {
                 mViewModel.setLogLevel(logLevelLimit);
-                search(mSearchQuery);
+                search(mSearchCriteria);
             }
         }
     }
@@ -304,7 +297,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
         applyFiltersFromIntent(intent);
         Uri dataUri = IntentCompat.getDataUri(intent);
@@ -345,7 +338,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
                 .commit();
     }
 
-    private void populateSuggestionsAdapter(String query) {
+    private void populateSuggestionsAdapter(@Nullable String query) {
         final MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID, "suggestion"});
         List<String> suggestionsForQuery = getSuggestionsForQuery(query);
         for (int i = 0, suggestionsForQuerySize = suggestionsForQuery.size(); i < suggestionsForQuerySize; i++) {
@@ -355,7 +348,8 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
         mSearchSuggestionsAdapter.changeCursor(c);
     }
 
-    private List<String> getSuggestionsForQuery(String query) {
+    @NonNull
+    private List<String> getSuggestionsForQuery(@Nullable String query) {
         List<String> suggestions = new ArrayList<>(mSearchSuggestionsSet);
         Collections.sort(suggestions, String.CASE_INSENSITIVE_ORDER);
         List<String> actualSuggestions = new ArrayList<>();
@@ -373,7 +367,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         }
         return false;
@@ -382,7 +376,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     @Override
     public boolean onSearchByClick(MenuItem item, LogLine logLine) {
         if (logLine != null) {
-            if (logLine.getProcessId() == -1) {
+            if (logLine.getPid() == -1) {
                 // invalid line
                 return false;
             }
@@ -400,7 +394,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     @Override
     public boolean onQueryTextChange(String newText) {
         if (!mDynamicallyEnteringSearchQuery) {
-            search(newText);
+            search(new SearchCriteria(newText));
             populateSuggestionsAdapter(newText);
         }
         mDynamicallyEnteringSearchQuery = false;
@@ -414,7 +408,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
 
     @Override
     public boolean onSuggestionClick(int position) {
-        List<String> suggestions = getSuggestionsForQuery(mSearchQuery);
+        List<String> suggestions = getSuggestionsForQuery(mSearchCriteria != null ? mSearchCriteria.query : null);
         if (!suggestions.isEmpty()) {
             mSearchView.setQuery(suggestions.get(position), true);
         }
@@ -444,7 +438,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     }
 
     void displayLogViewerSettings() {
-        Intent intent = SettingsActivity.getIntent(this, "log_viewer_prefs");
+        Intent intent = SettingsActivity.getSettingsIntent(this, "log_viewer_prefs");
         mActivityLauncher.launch(intent, result -> {
             // Preferences may have changed
             mViewModel.setCollapsedMode(!Prefs.LogViewer.expandByDefault());
@@ -467,14 +461,32 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
                 .setNegativeButton(R.string.close, null)
                 .show();
 
+        TextInputLayout pkg = view.findViewById(R.id.search_by_pkg);
         TextInputLayout tag = view.findViewById(R.id.search_by_tag);
+        TextInputLayout uid = view.findViewById(R.id.search_by_uid);
         TextInputLayout pid = view.findViewById(R.id.search_by_pid);
 
+        if (logLine.getPackageName() == null) {
+            pkg.setVisibility(View.GONE);
+        }
+        if (logLine.getUidOwner() == null) {
+            uid.setVisibility(View.GONE);
+        }
+
+        TextView pkgText = pkg.getEditText();
         TextView tagText = tag.getEditText();
+        TextView uidText = uid.getEditText();
         TextView pidText = pid.getEditText();
 
+        Objects.requireNonNull(pkgText).setText(logLine.getPackageName());
         Objects.requireNonNull(tagText).setText(logLine.getTagName());
-        Objects.requireNonNull(pidText).setText(String.valueOf(logLine.getProcessId()));
+        Objects.requireNonNull(uidText).setText(String.format(Locale.ROOT, "%s (%d)", logLine.getUidOwner(), logLine.getUid()));
+        Objects.requireNonNull(pidText).setText(String.valueOf(logLine.getPid()));
+
+        pkg.setEndIconOnClickListener(v -> {
+            setSearchQuery(SearchCriteria.PKG_KEYWORD + logLine.getPackageName());
+            dialog.dismiss();
+        });
 
         tag.setEndIconOnClickListener(v -> {
             String tagQuery = (logLine.getTagName().contains(" ")) ? ('"' + logLine.getTagName() + '"') : logLine.getTagName();
@@ -482,8 +494,13 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
             dialog.dismiss();
         });
 
+        uid.setEndIconOnClickListener(v -> {
+            setSearchQuery(SearchCriteria.UID_KEYWORD + logLine.getUidOwner());
+            dialog.dismiss();
+        });
+
         pid.setEndIconOnClickListener(v -> {
-            setSearchQuery(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
+            setSearchQuery(SearchCriteria.PID_KEYWORD + logLine.getPid());
             dialog.dismiss();
         });
     }
@@ -586,28 +603,29 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
 
     private void resetFilter() {
         mViewModel.setLogLevel(Prefs.LogViewer.getLogLevel());
-        search(mSearchQuery);
+        search(mSearchCriteria);
     }
 
     private void setSearchQuery(String text) {
         // Sets the search text without invoking autosuggestions, which are really only useful when typing
         mDynamicallyEnteringSearchQuery = true;
-        search(text);
+        search(new SearchCriteria(text));
         mSearchView.setIconified(false);
-        mSearchView.setQuery(mSearchQuery, true);
+        mSearchView.setQuery(mSearchCriteria != null ? mSearchCriteria.query : null, true);
         mSearchView.clearFocus();
     }
 
-    String getSearchQuery() {
-        return mSearchQuery;
+    @Nullable
+    SearchCriteria getSearchQuery() {
+        return mSearchCriteria;
     }
 
-    void search(String filterText) {
+    void search(@Nullable SearchCriteria searchCriteria) {
         if (mSearchingInterface != null) {
-            mSearchingInterface.onQuery(filterText);
+            mSearchingInterface.onQuery(searchCriteria);
         }
-        mSearchQuery = filterText;
-        if (!TextUtils.isEmpty(mSearchQuery)) {
+        mSearchCriteria = searchCriteria;
+        if (mSearchCriteria == null || !TextUtils.isEmpty(mSearchCriteria.query)) {
             mDynamicallyEnteringSearchQuery = true;
         }
     }
@@ -615,7 +633,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     private void addToAutocompleteSuggestions(String trimmed) {
         if (mSearchSuggestionsSet.size() < MAX_NUM_SUGGESTIONS && !mSearchSuggestionsSet.contains(trimmed)) {
             mSearchSuggestionsSet.add(trimmed);
-            populateSuggestionsAdapter(mSearchQuery);
+            populateSuggestionsAdapter(mSearchCriteria != null ? mSearchCriteria.query : null);
         }
     }
 }

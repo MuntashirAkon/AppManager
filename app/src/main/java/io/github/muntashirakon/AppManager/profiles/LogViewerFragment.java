@@ -31,7 +31,7 @@ public class LogViewerFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        ProfileViewModel model = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+        AppsProfileViewModel model = new ViewModelProvider(requireActivity()).get(AppsProfileViewModel.class);
         AppCompatEditText tv = view.findViewById(R.id.log_content);
         tv.setKeyListener(null);
         ExtendedFloatingActionButton efab = view.findViewById(R.id.floatingActionButton);
@@ -46,7 +46,7 @@ public class LogViewerFragment extends Fragment {
 
     @Override
     public void onResume() {
-        AppsProfileActivity activity = (AppsProfileActivity) requireActivity();
+        AppsBaseProfileActivity activity = (AppsBaseProfileActivity) requireActivity();
         if (activity.getSupportActionBar() != null) {
             activity.getSupportActionBar().setSubtitle(R.string.log_viewer);
         }

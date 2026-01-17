@@ -24,9 +24,9 @@
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_linear"
             style="@style/Widget.AppTheme.LinearProgressIndicator"
-            android:indeterminate="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
 
     </io.github.muntashirakon.widget.AppBarLayout>
 
@@ -34,26 +34,28 @@
         android:id="@+id/item_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
-        android:focusable="false"
         android:clipToPadding="false"
         android:fitsSystemWindows="true"
+        android:focusable="false"
+        android:scrollbars="none"
         app:fastScrollerEnabled="true"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         tools:listitem="@layout/item_main" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:fitsSystemWindows="true"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_filter_menu"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/padding_medium"
+        android:accessibilityTraversalBefore="@id/item_list"
+        android:clickable="true"
         android:contentDescription="@string/filter"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
+        android:fitsSystemWindows="true"
+        android:focusable="true"
+        android:src="@drawable/ic_filter_menu"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        tools:targetApi="22" />
 
     <io.github.muntashirakon.widget.MultiSelectionView
         android:id="@+id/selection_view"

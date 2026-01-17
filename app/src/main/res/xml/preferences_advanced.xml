@@ -20,6 +20,12 @@
         app:iconSpaceReserved="false" />
 
     <Preference
+        app:key="adb_local_server_port"
+        app:title="@string/adb_local_server_port"
+        tools:summary="60001"
+        app:iconSpaceReserved="false" />
+
+    <Preference
         app:key="import_export_keystore"
         app:title="@string/pref_import_export_keystore"
         app:summary="@string/pref_import_export_keystore_msg"

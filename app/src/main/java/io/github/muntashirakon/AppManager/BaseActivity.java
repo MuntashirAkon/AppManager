@@ -3,28 +3,20 @@
 package io.github.muntashirakon.AppManager;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.CallSuper;
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.biometric.BiometricPrompt;
 import androidx.biometric.BiometricPrompt.AuthenticationResult;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
@@ -44,10 +36,10 @@ import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.settings.SecurityAndOpsViewModel;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends PerProcessActivity {
     public static final String TAG = BaseActivity.class.getSimpleName();
 
-    private static final HashMap<String, Boolean> ASKED_PERMISSIONS = new HashMap<String, Boolean>() {{
+    public static final HashMap<String, Boolean> ASKED_PERMISSIONS = new HashMap<String, Boolean>() {{
         // (permission, required) pairs
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             put(Manifest.permission.POST_NOTIFICATIONS, false);
@@ -62,6 +54,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     private SecurityAndOpsViewModel mViewModel;
     private boolean mDisplayLoader = true;
     private BiometricPrompt mBiometricPrompt;
+    @Nullable
+    private Bundle mSavedInstanceState;
 
     private final ActivityResultLauncher<Intent> mKeyStoreActivity = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -71,11 +65,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     private final ActivityResultLauncher<String[]> mPermissionCheckActivity = registerForActivityResult(
             new ActivityResultContracts.RequestMultiplePermissions(),
             permissionStatusMap -> {
+                // Run authentication
+                doAuthenticate(mSavedInstanceState);
+                mSavedInstanceState = null;
             });
 
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
-        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
         if (Ops.isAuthenticated()) {
             Log.d(TAG, "Already authenticated.");
@@ -85,10 +81,43 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         if (Boolean.TRUE.equals(BuildExpiryChecker.buildExpired())) {
             // Build has expired
-            BuildExpiryChecker.getBuildExpiredDialog(this).show();
+            BuildExpiryChecker.getBuildExpiredDialog(this, (dialog, which) -> doAuthenticate(savedInstanceState)).show();
             return;
         }
-        // Run authentication
+        // Init permission checks
+        mSavedInstanceState = savedInstanceState;
+        if (!initPermissionChecks(true)) {
+            mSavedInstanceState = null;
+            // Run authentication
+            doAuthenticate(savedInstanceState);
+        }
+    }
+
+    protected abstract void onAuthenticated(@Nullable Bundle savedInstanceState);
+
+    @CallSuper
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mViewModel != null && mViewModel.isAuthenticating() && mAlertDialog != null) {
+            if (mDisplayLoader) {
+                mAlertDialog.show();
+            } else {
+                mAlertDialog.hide();
+            }
+        }
+    }
+
+    @CallSuper
+    @Override
+    protected void onStop() {
+        if (mAlertDialog != null) {
+            mAlertDialog.dismiss();
+        }
+        super.onStop();
+    }
+
+    private void doAuthenticate(@Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(SecurityAndOpsViewModel.class);
         mBiometricPrompt = new BiometricPrompt(this, ContextCompat.getMainExecutor(this),
                 new BiometricPrompt.AuthenticationCallback() {
@@ -148,83 +177,22 @@ public abstract class BaseActivity extends AppCompatActivity {
                     if (mAlertDialog != null) mAlertDialog.dismiss();
                     Ops.setAuthenticated(this, true);
                     onAuthenticated(savedInstanceState);
-                    initPermissionChecks(true);
                     InternalCacheCleanerService.scheduleAlarm(getApplicationContext());
             }
         });
         if (!mViewModel.isAuthenticating()) {
             mViewModel.setAuthenticating(true);
-            authenticate();
-        }
-    }
-
-    protected abstract void onAuthenticated(@Nullable Bundle savedInstanceState);
-
-    public boolean getTransparentBackground() {
-        return false;
-    }
-
-    @CallSuper
-    @SuppressLint("RestrictedApi")
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (menu instanceof MenuBuilder) {
-            ((MenuBuilder) menu).setOptionalIconsVisible(true);
-        }
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @CallSuper
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (mViewModel != null && mViewModel.isAuthenticating() && mAlertDialog != null) {
-            if (mDisplayLoader) {
-                mAlertDialog.show();
-            } else {
-                mAlertDialog.hide();
+            // Check KeyStore
+            if (KeyStoreManager.hasKeyStorePassword()) {
+                // We already have a working keystore password.
+                // Only need authentication and/or verify mode of operation.
+                ensureSecurityAndModeOfOp();
+                return;
             }
+            Intent keyStoreIntent = new Intent(this, KeyStoreActivity.class)
+                    .putExtra(KeyStoreActivity.EXTRA_KS, true);
+            mKeyStoreActivity.launch(keyStoreIntent);
         }
-    }
-
-    @CallSuper
-    @Override
-    protected void onStop() {
-        if (mAlertDialog != null) {
-            mAlertDialog.dismiss();
-        }
-        super.onStop();
-    }
-
-    protected void clearBackStack() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if (fragmentManager.getBackStackEntryCount() > 0) {
-            FragmentManager.BackStackEntry entry = fragmentManager.getBackStackEntryAt(0);
-            fragmentManager.popBackStackImmediate(entry.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
-    }
-
-    protected void removeCurrentFragment(@IdRes int id) {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(id);
-        if (fragment != null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .remove(fragment)
-                    .commit();
-        }
-    }
-
-    private void authenticate() {
-        // Check KeyStore
-        if (KeyStoreManager.hasKeyStorePassword()) {
-            // We already have a working keystore password.
-            // Only need authentication and/or verify mode of operation.
-            ensureSecurityAndModeOfOp();
-            return;
-        }
-        Intent keyStoreIntent = new Intent(this, KeyStoreActivity.class)
-                .putExtra(KeyStoreActivity.EXTRA_KS, true);
-        mKeyStoreActivity.launch(keyStoreIntent);
     }
 
     private void ensureSecurityAndModeOfOp() {
@@ -268,7 +236,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    private void initPermissionChecks(boolean checkAll) {
+    private boolean initPermissionChecks(boolean checkAll) {
         List<String> permissionsToBeAsked = new ArrayList<>(ASKED_PERMISSIONS.size());
         for (String permission : ASKED_PERMISSIONS.keySet()) {
             boolean required = Boolean.TRUE.equals(ASKED_PERMISSIONS.get(permission));
@@ -279,6 +247,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (!permissionsToBeAsked.isEmpty()) {
             // Ask required permissions
             mPermissionCheckActivity.launch(permissionsToBeAsked.toArray(new String[0]));
+            return true;
         }
+        return false;
     }
 }

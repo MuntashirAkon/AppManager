@@ -26,7 +26,6 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.card.MaterialCardView;
 
@@ -68,7 +67,7 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
         mAllClasses = mViewModel.getAllClasses();
         mTrackerClasses = mViewModel.getTrackerClasses();
         if (mAllClasses == null) {
-            mActivity.onBackPressed();
+            mActivity.getOnBackPressedDispatcher().onBackPressed();
             return;
         }
         if (mTrackerClasses == null) {
@@ -82,7 +81,7 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
         mEmptyView = view.findViewById(android.R.id.empty);
         listView.setEmptyView(mEmptyView);
         mClassListingAdapter = new ClassListingAdapter(mActivity, mViewModel);
-        listView.setLayoutManager(new LinearLayoutManager(mActivity));
+        listView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(mActivity));
         listView.setAdapter(mClassListingAdapter);
         mActivity.addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
         showProgress(true);
@@ -264,7 +263,6 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
                     @Override
                     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                         synchronized (mAdapterList) {
-                            mAdapterList.clear();
                             if (filterResults.values == null) {
                                 AdapterUtils.notifyDataSetChanged(ClassListingAdapter.this, mAdapterList, mDefaultList);
                             } else {

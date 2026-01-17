@@ -46,10 +46,8 @@
     <string name="pages$main-page$$filter-title">フィルタ</string>
     <string name="pages$main-page$$profile_name-title">プロファイル名</string>
     <string name="pages$main-page$$1-click-ops-title">ワンタップ一括処理</string>
-    <string name="pages$main-page$$system-config-title">システムコンフィグ</string>
     <string name="pages$main-page$$running-apps-title">実行中のアプリ</string>
     <string name="pages$main-page$$profiles-title">プロファイル</string>
-    <string name="pages$main-page$$log-viewer-title">ログビューワ</string>
     <string name="pages$main-page$$apk-updater-title">APK Updater</string>
     <string name="pages$main-page$$settings-title">設定</string>
     <string name="pages$main-page$instructions">\\textbf{ヘルプ}をタップすると、オフライン版のApp Managerユーザーマニュアルが開きます。
@@ -235,18 +233,10 @@
     <string name="pages$app-details-page$$permission-tabs-title">権限タブ</string>
     <string name="pages$app-details-page$$uses-permissions-title">使用する権限</string>
     <string name="pages$app-details-page$$signatures-tab-title">署名情報タブ</string>
-    <string name="pages$app-details-page$$other-tabs-title">その他のタブ</string>
     <string name="pages$main-page$app-usage">\\textit{画面の使用時間}、\\textit{データ使用量}（モバイルとWi-Fiの両方）、\\textit{アプリを開いた回数}などのアプリ使用統計は、
 \nメニューの\\textbf{アプリ使用状況}オプションをクリックすることでアクセス可能です。
 \nただし、これには\\textit{使用状況へのアクセス権限}が必要です。
 \n\\hyperref[subsec:enable/disable-features]{設定}で使用状況アクセス機能を無効にしている場合、このメニュー項目は表示されません。</string>
-    <string name="pages$main-page$system-config">このメニュー項目は、様々なシステム設定、OEM、ベンダー、AOSP、またはMagiskモジュールによってAndroidに含まれる
-\nブラックリスト/ホワイトリストが表示される新しいページを開くものです。
-\nこれにはRoot権限が必要です。そのため、App Managerにroot権限が付与されていない場合、このメニュー項目は表示されません。</string>
-    <string name="pages$main-page$log-viewer">\\texttt{Logcat}コマンドを使用してログを表示・管理できるログビューアページを開くメニューです。
-\nデフォルトでは、このページはApp Managerのアクティビティのみを表示できます。
-\nただし、\\texttt{android.permission.READ\\_LOGS}が付与されている場合は、すべてのプロセスからのログを表示することができます。
-\nこの権限は、現在の\\hyperref[subsec:mode-of-operation]{動作モード}がRootまたはADBである場合に自動的に付与されます。</string>
     <string name="pages$main-page$running-apps">このメニューでは、実行中のアプリケーションまたはプロセスの一覧を表示する新しいページを開きます。
 \nまた、現在のメモリとキャッシュ（利用可能な場合）の使用量も表示されます。
 \nルートまたはADBがApp Managerで利用できない場合、Androidの最近のバージョンでのみ表示されます。
@@ -293,8 +283,6 @@
 \nアプリが持ちうるほぼすべての情報が記述されています。</string>
     <string name="pages$app-details-page$app-info-tab">\\textbf{アプリ情報}タブには、アプリケーションに関する一般的な情報が含まれています。
 \nまた、このタブ内で実行可能な多くのアクションが表示されます。</string>
-    <string name="pages$app-details-page$other-tabs">その他のタブは、機能、設定、共有ライブラリ、署名などのAndroidマニフェストのコンポーネントを一覧表示します。
-\nこれらのタブに関する完全な説明は、近日中に公開される予定です。</string>
     <string name="pages$app-details-page$app-info-general-information">以下のリストは、アプリ情報タブに記載されている順番と同じです。
 \n\\begin{itemize}
 \n \\item \\textbf{アプリ名} アプリのアイコンです。アプリにアイコンがない場合は、システムデフォルトのアイコンが表示されます。

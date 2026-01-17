@@ -148,8 +148,9 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
                     // Trigger for all ops except disable, force-stop and uninstall
                     @BatchOpsManager.OpType int op;
                     op = intent.getIntExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_NONE);
-                    if (op != BatchOpsManager.OP_NONE && op != BatchOpsManager.OP_FREEZE &&
-                            op != BatchOpsManager.OP_UNFREEZE && op != BatchOpsManager.OP_UNINSTALL) {
+                    if (op != BatchOpsManager.OP_NONE && op != BatchOpsManager.OP_ADVANCED_FREEZE
+                            && op != BatchOpsManager.OP_FREEZE && op != BatchOpsManager.OP_UNFREEZE
+                            && op != BatchOpsManager.OP_UNINSTALL) {
                         String[] packages = intent.getStringArrayExtra(BatchOpsService.EXTRA_OP_PKG);
                         ArrayList<String> failedPackages = intent.getStringArrayListExtra(BatchOpsService.EXTRA_FAILED_PKG);
                         if (packages != null && failedPackages != null) {

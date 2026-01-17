@@ -25,7 +25,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
-import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
+import io.github.muntashirakon.AppManager.profiles.struct.AppsBaseProfile;
+import io.github.muntashirakon.AppManager.profiles.struct.BaseProfile;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -38,11 +39,11 @@ import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.util.UiUtils;
 
 public class ConfPreferences extends PreferenceFragmentCompat {
-    private AppsProfileActivity mActivity;
-    private ProfileViewModel mModel;
+    private AppsBaseProfileActivity mActivity;
+    private AppsProfileViewModel mModel;
 
-    @AppsProfile.ProfileState
-    private final List<String> mStates = Arrays.asList(AppsProfile.STATE_ON, AppsProfile.STATE_OFF);
+    @BaseProfile.ProfileState
+    private final List<String> mStates = Arrays.asList(BaseProfile.STATE_ON, BaseProfile.STATE_OFF);
     @Nullable
     private String[] mComponents;
     @Nullable
@@ -50,7 +51,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
     @Nullable
     private String[] mPermissions;
     @Nullable
-    private AppsProfile.BackupInfo mBackupInfo;
+    private AppsBaseProfile.BackupInfo mBackupInfo;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_profile_config, rootKey);
         getPreferenceManager().setPreferenceDataStore(new ConfDataStore());
-        mActivity = (AppsProfileActivity) requireActivity();
+        mActivity = (AppsBaseProfileActivity) requireActivity();
         if (mActivity.model == null) {
             // ViewModel should never be null.
             // If it's null, it means that we're on the wrong Fragment
@@ -224,7 +225,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                     .setView(view)
                     .setPositiveButton(R.string.ok, (dialog, which) -> {
                         if (mBackupInfo == null) {
-                            mBackupInfo = new AppsProfile.BackupInfo();
+                            mBackupInfo = new AppsBaseProfile.BackupInfo();
                         }
                         CharSequence backupName = editText.getText();
                         BackupFlags backupFlags1 = new BackupFlags(backupFlags.get());

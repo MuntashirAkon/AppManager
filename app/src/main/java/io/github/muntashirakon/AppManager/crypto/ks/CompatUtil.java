@@ -189,7 +189,7 @@ public class CompatUtil {
      * Returns the unique SecureRandom instance shared for all local storage encryption operations.
      */
     @NonNull
-    private static SecureRandom getPrng() {
+    public static SecureRandom getPrng() {
         if (sPrng == null) {
             sPrng = new SecureRandom();
         }

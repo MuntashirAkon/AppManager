@@ -1,1 +1,1 @@
-App Manager - Android package manager
+App Manager

@@ -35,9 +35,9 @@ public class ECCCrypto extends AESCrypto {
         super(iv, CryptoUtils.MODE_ECC, encryptedAesKey);
     }
 
-    @Nullable
+    @NonNull
     @Override
-    public byte[] getEncryptedAesKey() {
+    public byte[] getEncryptedAesKey() throws CryptoException {
         return super.getEncryptedAesKey();
     }
 

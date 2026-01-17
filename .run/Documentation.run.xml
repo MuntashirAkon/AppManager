@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Documentation" type="LATEX_RUN_CONFIGURATION" factoryName="LaTeX configuration factory">
+  <configuration default="false" name="Documentation" type="LATEX_RUN_CONFIGURATION" factoryName="LaTeX configuration factory" activateToolWindowBeforeRun="false">
     <texify>
       <compiler>PDFLATEX</compiler>
       <compiler-path>pdflatex</compiler-path>

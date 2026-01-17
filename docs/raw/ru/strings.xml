@@ -151,10 +151,8 @@
     <string name="pages$main-page$$profile_name-title">Имя профиля</string>
     <string name="pages$main-page$$1-click-ops-title">Операции в 1 клик</string>
     <string name="pages$main-page$$app-usage-title">Использование приложения</string>
-    <string name="pages$main-page$$system-config-title">Конфигурация системы</string>
     <string name="pages$main-page$$running-apps-title">Запущеные приложения</string>
     <string name="pages$main-page$$profiles-title">Профили</string>
-    <string name="pages$main-page$$log-viewer-title">Просмотр лога</string>
     <string name="pages$main-page$$apk-updater-title">Программа обновления APK</string>
     <string name="pages$main-page$$termux-title">Termux</string>
     <string name="pages$main-page$$settings-title">Настройки</string>
@@ -228,9 +226,6 @@
 \ntimes an app was opened} можно получить кликнув на опцию \\textbf{App Usage} в меню. Однако это требует разрешения
 \n\\textit{Usage Access}. Этот пункт меню не будет указан, если функция доступа к использованию отключена в
 \n\\hyperref[subsec:enable/disable-features]{settings}.</string>
-    <string name="pages$main-page$system-config">Этот пункт меню открывает новую страницу, на которой отображаются различные системные конфигурации, такие как, черные/белые списки включенные
-\nв Android по OEM, поставщики, AOSP или модули Magisk. Требуется root. Следовательно, этого пункта меню не будет в списке,
-\nесли нет прав root для App Manager.</string>
     <string name="pages$main-page$running-apps">Этот пункт меню открывает новую страницу, на которой отображается список запущенных приложений или
 \nпроцессов. Он также отображает текущее использование памяти и кэша (если доступно). Если root или ADB
 \nнедоступны для диспетчера приложений, он отображает только себя в последних версиях Android.
@@ -250,9 +245,6 @@
     <string name="pages$app-details-page$$colour-codes-title">Цветовые коды</string>
     <string name="pages$app-details-page$$app-info-tab-title">Вкладка \"Сведения о приложении\"</string>
     <string name="pages$app-details-page$$section-title">Страница сведений о приложении</string>
-    <string name="pages$main-page$log-viewer">Этот пункт меню открывает страницу просмотра журнала где отображаются логи с возможностью управлять ими с помощью команды \\texttt{logcat}. По умолчанию эта страница может отображать только действия диспетчера приложений. Однако она может отображать журналы со всех 
-\n обрабатываемых процессов если предоставлено разрешение \\texttt{android.permission.READ\\_LOGS}. Это разрешение предоставляется автоматически, если текущий
-\n\\hyperref[subsec:mode-of-operation]{режим работы} либо root, либо ADB\\@.</string>
     <string name="pages$main-page$termux">Если в системе установлено приложение \\href{https://github.com/termux/termux-app}{Termux}, запущенный сеанс (или
 \nновый сеанс) можно открыть через этот пункт меню. Параметр остается скрытым, если приложение отсутствует в
 \nсистема.</string>

@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.RemoteException;
 import android.telephony.SubscriptionInfo;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
@@ -15,7 +16,6 @@ import com.android.internal.telephony.ISub;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
@@ -29,9 +29,6 @@ public class SubscriptionManagerCompat {
     public static List<SubscriptionInfo> getActiveSubscriptionInfoList() {
         try {
             ISub sub = getSub();
-            if (sub == null) {
-                return null;
-            }
             int uid = Users.getSelfOrRemoteUid();
             String callingPackage = SelfPermissions.getCallingPackage(uid);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -57,9 +54,6 @@ public class SubscriptionManagerCompat {
     public static String getSubscriberIdForSubscriber(long subId) {
         try {
             IPhoneSubInfo sub = getPhoneSubInfo();
-            if (sub == null) {
-                return null;
-            }
             int uid = Users.getSelfOrRemoteUid();
             String callingPackage = SelfPermissions.getCallingPackage(uid);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -77,23 +71,13 @@ public class SubscriptionManagerCompat {
         return null;
     }
 
-    @Nullable
+    @NonNull
     private static ISub getSub() {
-        try {
-            return ISub.Stub.asInterface(ProxyBinder.getService("isub"));
-        } catch (NullPointerException e) {
-            Log.i(TAG, "No isub, Huawei GSI?", e);
-            return null;
-        }
+        return ISub.Stub.asInterface(ProxyBinder.getService("isub"));
     }
 
-    @Nullable
+    @NonNull
     private static IPhoneSubInfo getPhoneSubInfo() {
-        try {
-            return IPhoneSubInfo.Stub.asInterface(ProxyBinder.getService("iphonesubinfo"));
-        } catch (NullPointerException e) {
-            Log.i(TAG, "No iphonesubinfo, Huawei GSI?", e);
-            return null;
-        }
+        return IPhoneSubInfo.Stub.asInterface(ProxyBinder.getService("iphonesubinfo"));
     }
 }

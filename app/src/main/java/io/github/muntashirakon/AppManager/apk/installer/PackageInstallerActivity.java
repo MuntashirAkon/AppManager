@@ -102,21 +102,18 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     @NonNull
     public static Intent getLaunchableInstance(@NonNull Context context, ApkSource apkSource) {
         Intent intent = new Intent(context, PackageInstallerActivity.class);
-        intent.putExtra(EXTRA_APK_FILE_LINK, apkSource);
+        IntentCompat.putWrappedParcelableExtra(intent, EXTRA_APK_FILE_LINK, apkSource);
         return intent;
     }
 
     @NonNull
     public static Intent getLaunchableInstance(@NonNull Context context, @NonNull String packageName) {
         Intent intent = new Intent(context, PackageInstallerActivity.class);
-        intent.putExtra(EXTRA_INSTALL_EXISTING, true);
-        intent.putExtra(EXTRA_PACKAGE_NAME, packageName);
+        intent.setData(Uri.parse("package:" + packageName));
         return intent;
     }
 
     private static final String EXTRA_APK_FILE_LINK = "link";
-    public static final String EXTRA_INSTALL_EXISTING = "install_existing";
-    public static final String EXTRA_PACKAGE_NAME = "pkg";
     public static final String ACTION_PACKAGE_INSTALLED = BuildConfig.APPLICATION_ID + ".action.PACKAGE_INSTALLED";
 
     private int mSessionId = -1;
@@ -204,8 +201,9 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         }
         synchronized (mApkQueue) {
             mApkQueue.addAll(ApkQueueItem.fromIntent(intent, Utils.getRealReferrer(this)));
+
         }
-        ApkSource apkSource = IntentCompat.getParcelableExtra(intent, EXTRA_APK_FILE_LINK, ApkSource.class);
+        ApkSource apkSource = IntentCompat.getUnwrappedParcelableExtra(intent, EXTRA_APK_FILE_LINK, ApkSource.class);
         if (apkSource != null) {
             synchronized (mApkQueue) {
                 mApkQueue.add(ApkQueueItem.fromApkSource(apkSource));
@@ -357,7 +355,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         boolean canDisplayNotification = Utils.canDisplayNotification(this);
         boolean alwaysOnBackground = canDisplayNotification && Prefs.Installer.installInBackground();
         Intent intent = new Intent(this, PackageInstallerService.class);
-        intent.putExtra(PackageInstallerService.EXTRA_QUEUE_ITEM, mCurrentItem);
+        IntentCompat.putWrappedParcelableExtra(intent, PackageInstallerService.EXTRA_QUEUE_ITEM, mCurrentItem);
         if (!SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES)) {
             // For unprivileged mode, use accessibility service if enabled
             mMultiplexer.enableInstall(true);

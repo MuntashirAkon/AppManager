@@ -25,6 +25,8 @@ import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragmen
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.IntentHidden;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +35,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.os.BundleCompat;
 import androidx.core.util.Pair;
 
 import java.util.ArrayList;
@@ -41,11 +44,31 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.compat.IntegerCompat;
+import io.github.muntashirakon.AppManager.compat.UriCompat;
 import io.github.muntashirakon.AppManager.fm.FmUtils;
-import io.github.muntashirakon.AppManager.utils.MotorolaUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 
 public final class IntentCompat {
+    public static void putWrappedParcelableExtra(@NonNull Intent intent, @Nullable String name,
+                                                 @Nullable Parcelable parcelable) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(name, parcelable);
+        intent.putExtra(name, bundle);
+    }
+
+    @Nullable
+    public static <T extends Parcelable> T getUnwrappedParcelableExtra(@NonNull Intent intent,
+                                                                       @Nullable String name,
+                                                                       @NonNull Class<T> clazz) {
+        Bundle bundle = intent.getBundleExtra(name);
+        if (bundle == null) {
+            return null;
+        }
+        return BundleCompat.getParcelable(bundle, name, clazz);
+    }
+
     /**
      * Retrieve extended data from the intent.
      *
@@ -66,7 +89,7 @@ public final class IntentCompat {
      *
      * @param name  The name of the desired item.
      * @param clazz The type of the items inside the array list. This is only verified when
-     *              unparceling.
+     *              parcelling.
      * @return the value of an item previously added with
      * putParcelableArrayListExtra(), or null if no
      * ArrayList<Parcelable> value was found.
@@ -246,7 +269,7 @@ public final class IntentCompat {
     }
 
     @Nullable
-    private static Pair<Integer, String> valueToParsableStringAndType(Object object) {
+    private static Pair<Integer, String> valueToParsableStringAndType(@Nullable Object object) {
         if (object == null) {
             return new Pair<>(TYPE_NULL, null);
         } else if (object instanceof String) {
@@ -306,7 +329,7 @@ public final class IntentCompat {
         } else if (object instanceof List) {
             @SuppressWarnings("rawtypes")
             List list = (List) object;
-            if (list.size() == 0) {
+            if (list.isEmpty()) {
                 // Type is lost forever, return null
                 // FIXME: Try to infer type using reflection
                 return new Pair<>(TYPE_NULL, null);
@@ -588,9 +611,12 @@ public final class IntentCompat {
                 sb.append(prefix).append(" CATEGORY\t").append(category).append("\n");
             }
         }
-        if (cn != null) sb.append(prefix).append(" COMPONENT\t").append(cn.flattenToString()).append("\n");
-        if (packageName != null) sb.append(prefix).append(" PACKAGE\t").append(packageName).append("\n");
-        if (flags != 0) sb.append(prefix).append(" FLAGS\t0x").append(Integer.toHexString(flags)).append("\n");
+        if (cn != null)
+            sb.append(prefix).append(" COMPONENT\t").append(cn.flattenToString()).append("\n");
+        if (packageName != null)
+            sb.append(prefix).append(" PACKAGE\t").append(packageName).append("\n");
+        if (flags != 0)
+            sb.append(prefix).append(" FLAGS\t0x").append(Integer.toHexString(flags)).append("\n");
         if (extras != null) {
             for (String key : extras.keySet()) {
                 Pair<Integer, String> typeAndString = valueToParsableStringAndType(extras.get(key));
@@ -672,6 +698,14 @@ public final class IntentCompat {
         return intent;
     }
 
+    public static int getExtendedFlags(@NonNull Intent intent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            // Added in Android 14 r50
+            return ExUtils.requireNonNullElse(() -> Refine.<IntentHidden>unsafeCast(intent).getExtendedFlags(), 0);
+        }
+        return 0;
+    }
+
     /**
      * Convert this Intent into a String holding a URI representation of it.
      * The returned URI string has been properly URI encoded, so it can be
@@ -689,10 +723,11 @@ public final class IntentCompat {
      */
     @NonNull
     public static String toUri(@NonNull Intent intent, int flags) {
-        if (!MotorolaUtils.isMotorola() || Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+        long flagsLong = intent.getFlags() & 0xFFFFFFFFL;
+        if (flagsLong < 0x80000000L || Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
             return intent.toUri(flags);
         }
-        // Special case for Motorola (A11+)
+        // Special workaround for Motorola and MIUI (> A10 and < A15)
         StringBuilder uri = new StringBuilder(128);
         if ((flags & Intent.URI_ANDROID_APP_SCHEME) != 0) {
             if (intent.getPackage() == null) {
@@ -700,28 +735,34 @@ public final class IntentCompat {
                         "Intent must include an explicit package name to build an android-app: " + intent);
             }
             uri.append("android-app://");
-            uri.append(intent.getPackage());
+            uri.append(Uri.encode(intent.getPackage()));
             String scheme = null;
             Uri data = intent.getData();
             if (data != null) {
-                scheme = data.getScheme();
+                // All values here must be wrapped with Uri#encodeIfNotEncoded because it is
+                // possible to exploit the Uri API to return a raw unencoded value, which will
+                // not deserialize properly and may cause the resulting Intent to be transformed
+                // to a malicious value.
+                scheme = UriCompat.encodeIfNotEncoded(data.getScheme(), null);
                 if (scheme != null) {
                     uri.append('/');
                     uri.append(scheme);
-                    String authority = data.getEncodedAuthority();
+                    String authority = UriCompat.encodeIfNotEncoded(data.getEncodedAuthority(), null);
                     if (authority != null) {
                         uri.append('/');
                         uri.append(authority);
-                        String path = data.getEncodedPath();
+
+                        // Multiple path segments are allowed, don't encode the path / separator
+                        String path = UriCompat.encodeIfNotEncoded(data.getEncodedPath(), "/");
                         if (path != null) {
                             uri.append(path);
                         }
-                        String queryParams = data.getEncodedQuery();
+                        String queryParams = UriCompat.encodeIfNotEncoded(data.getEncodedQuery(), null);
                         if (queryParams != null) {
                             uri.append('?');
                             uri.append(queryParams);
                         }
-                        String fragment = data.getEncodedFragment();
+                        String fragment = UriCompat.encodeIfNotEncoded(data.getEncodedFragment(), null);
                         if (fragment != null) {
                             uri.append('#');
                             uri.append(fragment);
@@ -773,13 +814,14 @@ public final class IntentCompat {
         StringBuilder frag = new StringBuilder(128);
 
         toUriInner(intent, frag, scheme, defAction, defPackage, flags);
-        if (intent.getSelector() != null) {
+        Intent selector = intent.getSelector();
+        if (selector != null) {
             frag.append("SEL;");
             // Note that for now we are not going to try to handle the
             // data part; not clear how to represent this as a URI, and
             // not much utility in it.
-            Uri data = intent.getSelector().getData();
-            toUriInner(intent.getSelector(), frag, data != null ? data.getScheme() : null, null, null, flags);
+            toUriInner(selector, frag, selector.getData() != null ? selector.getData().getScheme() : null,
+                    null, null, flags);
         }
 
         if (frag.length() > 0) {
@@ -789,44 +831,63 @@ public final class IntentCompat {
         }
     }
 
-    private static void toUriInner(Intent intent, StringBuilder uri, @Nullable String scheme, String defAction,
-                                   @Nullable String defPackage, int flags) {
+    private static void toUriInner(Intent intent, StringBuilder uri, @Nullable String scheme,
+                                   @Nullable String defAction, @Nullable String defPackage,
+                                   int flags) {
         if (scheme != null) {
-            uri.append("scheme=").append(scheme).append(';');
+            uri.append("scheme=").append(Uri.encode(scheme)).append(';');
         }
-        if (intent.getAction() != null && !intent.getAction().equals(defAction)) {
-            uri.append("action=").append(Uri.encode(intent.getAction())).append(';');
+        String action = intent.getAction();
+        if (action != null && !action.equals(defAction)) {
+            uri.append("action=").append(Uri.encode(action)).append(';');
         }
-        if (intent.getCategories() != null) {
-            for (String category : intent.getCategories()) {
+        Set<String> categories = intent.getCategories();
+        if (categories != null) {
+            for (String category : categories) {
                 uri.append("category=").append(Uri.encode(category)).append(';');
             }
         }
-        if (intent.getType() != null) {
-            uri.append("type=").append(Uri.encode(intent.getType(), "/")).append(';');
+        String type = intent.getType();
+        if (type != null) {
+            uri.append("type=").append(Uri.encode(type, "/")).append(';');
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && intent.getIdentifier() != null) {
-            uri.append("identifier=").append(Uri.encode(intent.getIdentifier(), "/")).append(';');
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            String mIdentifier = intent.getIdentifier();
+            if (mIdentifier != null) {
+                uri.append("identifier=").append(Uri.encode(mIdentifier, "/")).append(';');
+            }
         }
-        if (intent.getFlags() != 0) {
+        int intentFlags = intent.getFlags();
+        if (intentFlags != 0) {
             uri.append("launchFlags=").append(IntegerCompat.toSignedHex(intent.getFlags())).append(';');
         }
-        if (intent.getPackage() != null && !intent.getPackage().equals(defPackage)) {
-            uri.append("package=").append(Uri.encode(intent.getPackage())).append(';');
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            int extendedFlags = getExtendedFlags(intent);
+            if (extendedFlags != 0) {
+                uri.append("extendedLaunchFlags=0x").append(Integer.toHexString(extendedFlags))
+                        .append(';');
+            }
         }
-        if (intent.getComponent() != null) {
-            uri.append("component=")
-                    .append(Uri.encode(intent.getComponent().flattenToShortString(), "/"))
-                    .append(';');
+        String intentPackage = intent.getPackage();
+        if (intentPackage != null && !intentPackage.equals(defPackage)) {
+            uri.append("package=").append(Uri.encode(intentPackage)).append(';');
         }
-        if (intent.getSourceBounds() != null) {
+        ComponentName component = intent.getComponent();
+        if (component != null) {
+            uri.append("component=").append(Uri.encode(
+                    component.flattenToShortString(), "/")).append(';');
+        }
+        Rect sourceBounds = intent.getSourceBounds();
+        if (sourceBounds != null) {
             uri.append("sourceBounds=")
-                    .append(Uri.encode(intent.getSourceBounds().flattenToString()))
+                    .append(Uri.encode(sourceBounds.flattenToString()))
                     .append(';');
         }
-        if (intent.getExtras() != null) {
-            for (String key : intent.getExtras().keySet()) {
-                final Object value = intent.getExtras().get(key);
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            for (String key : extras.keySet()) {
+                final Object value = extras.get(key);
                 char entryType =
                         value instanceof String ? 'S' :
                                 value instanceof Boolean ? 'B' :

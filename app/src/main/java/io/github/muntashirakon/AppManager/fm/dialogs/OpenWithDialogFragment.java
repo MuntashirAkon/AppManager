@@ -388,6 +388,7 @@ public class OpenWithDialogFragment extends DialogFragment {
                 title = itemView.findViewById(android.R.id.title);
                 summary = itemView.findViewById(android.R.id.summary);
                 icon = itemView.findViewById(android.R.id.icon);
+                icon.setContentDescription(itemView.getContext().getString(R.string.icon));
             }
         }
     }

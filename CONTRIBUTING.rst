@@ -53,7 +53,7 @@ Rules
 **Note:** Repositories located in sites other than GitHub are currently
 considered mirrors and any pull or merge requests submitted there will not be
 accepted.  Instead, you can submit patches (as ``.patch`` files) via email
-attachment.  My email address is muntashirakon [at] riseup [dot] net.  Beware
+attachment.  My email address is am4android [at] riseup [dot] net.  Beware
 that such emails may be publicly accessible in future.  GitHub pull requests
 will be merged manually using the corresponding patches.  As a result, GitHub
 may falsely mark them *closed* instead of *merged*.

@@ -10,7 +10,14 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class DexOptOptions implements Parcelable {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import io.github.muntashirakon.AppManager.history.IJsonSerializer;
+import io.github.muntashirakon.AppManager.history.JsonDeserializer;
+import io.github.muntashirakon.AppManager.utils.JSONUtils;
+
+public class DexOptOptions implements Parcelable, IJsonSerializer {
     @NonNull
     public static DexOptOptions getDefault() {
         DexOptOptions options = new DexOptOptions();
@@ -22,6 +29,7 @@ public class DexOptOptions implements Parcelable {
 
     @Nullable
     public String[] packages;
+    @Nullable
     public String compilerFiler;
     public boolean compileLayouts;
     public boolean clearProfileData;
@@ -54,6 +62,34 @@ public class DexOptOptions implements Parcelable {
         dest.writeByte((byte) (bootComplete ? 1 : 0));
         dest.writeByte((byte) (forceCompilation ? 1 : 0));
         dest.writeByte((byte) (forceDexOpt ? 1 : 0));
+    }
+
+    protected DexOptOptions(@NonNull JSONObject jsonObject) throws JSONException {
+        packages = JSONUtils.getArray(String.class, jsonObject.optJSONArray("packages"));
+        compilerFiler = jsonObject.getString("compiler_filter");
+        compileLayouts = jsonObject.getBoolean("compile_layouts");
+        clearProfileData = jsonObject.getBoolean("clear_profile_data");
+        checkProfiles = jsonObject.getBoolean("check_profiles");
+        bootComplete = jsonObject.getBoolean("boot_complete");
+        forceCompilation = jsonObject.getBoolean("force_compilation");
+        forceDexOpt = jsonObject.getBoolean("force_dex_opt");
+    }
+
+    public static final JsonDeserializer.Creator<DexOptOptions> DESERIALIZER = DexOptOptions::new;
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("packages", JSONUtils.getJSONArray(packages));
+        jsonObject.put("compiler_filer", compilerFiler);
+        jsonObject.put("compile_layouts", compileLayouts);
+        jsonObject.put("clear_profile_data", clearProfileData);
+        jsonObject.put("check_profiles", checkProfiles);
+        jsonObject.put("boot_complete", bootComplete);
+        jsonObject.put("force_compilation", forceCompilation);
+        jsonObject.put("force_dex_opt", forceDexOpt);
+        return jsonObject;
     }
 
     @Override

@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +48,7 @@ import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat
 import io.github.muntashirakon.AppManager.compat.InstallSourceInfoCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
+import io.github.muntashirakon.AppManager.compat.PackageInfoCompat2;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.SensorServiceCompat;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
@@ -70,6 +70,7 @@ import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
+import io.github.muntashirakon.AppManager.usage.TimeInterval;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
@@ -149,7 +150,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         TagCloud tagCloud = new TagCloud();
         try {
-            HashMap<String, RuleType> trackerComponents = ComponentUtils.getTrackerComponentsForPackage(packageInfo);
+            Map<String, RuleType> trackerComponents = ComponentUtils.getTrackerComponentsForPackage(packageInfo);
             tagCloud.trackerComponents = new ArrayList<>(trackerComponents.size());
             for (String component : trackerComponents.keySet()) {
                 ComponentRule componentRule = mMainModel.getComponentRule(component);
@@ -181,9 +182,17 @@ public class AppInfoViewModel extends AndroidViewModel {
             tagCloud.isDebuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
             tagCloud.isTestOnly = ApplicationInfoCompat.isTestOnly(applicationInfo);
             tagCloud.hasCode = (applicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) != 0;
+            tagCloud.isOverlay = PackageInfoCompat2.getOverlayTarget(packageInfo) != null;
             tagCloud.hasRequestedLargeHeap = (applicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0;
             if (ThreadUtils.isInterrupted()) {
                 return;
+            }
+            tagCloud.isRunning = false;
+            for (ActivityManager.RunningAppProcessInfo info : ActivityManagerCompat.getRunningAppProcesses()) {
+                if (ArrayUtils.contains(info.pkgList, packageName)) {
+                    tagCloud.isRunning = true;
+                    break;
+                }
             }
             tagCloud.runningServices = ActivityManagerCompat.getRunningServices(packageName, userId);
             tagCloud.isForceStopped = ApplicationInfoCompat.isStopped(applicationInfo);
@@ -221,14 +230,14 @@ public class AppInfoViewModel extends AndroidViewModel {
             List<DebloatObject> debloatObjects = StaticDataset.getDebloatObjects();
             for (DebloatObject debloatObject : debloatObjects) {
                 if (packageName.equals(debloatObject.packageName)) {
-                    tagCloud.isBloatware = true;
+                    tagCloud.bloatwareRemovalType = debloatObject.getRemoval();
                     break;
                 }
             }
             if (ThreadUtils.isInterrupted()) {
                 return;
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+            if (!isExternalApk && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
                     && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_SENSORS)) {
                 tagCloud.sensorsEnabled = SensorServiceCompat.isSensorEnabled(packageName, userId);
             } else tagCloud.sensorsEnabled = true;
@@ -255,7 +264,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                 tagCloud.isBatteryOptimized = true;
             }
             if (!isExternalApk && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY)) {
-                tagCloud.netPolicies = ExUtils.requireNonNullElse(() -> NetworkPolicyManagerCompat.getUidPolicy(applicationInfo.uid), 0);
+                tagCloud.netPolicies = NetworkPolicyManagerCompat.getUidPolicy(applicationInfo.uid);
             } else {
                 tagCloud.netPolicies = 0;
             }
@@ -358,8 +367,8 @@ public class AppInfoViewModel extends AndroidViewModel {
                 if (hasUsageAccess) {
                     // Net statistics
                     AppUsageStatsManager.DataUsage dataUsage;
-                    dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
-                            applicationInfo.uid, UsageUtils.USAGE_LAST_BOOT);
+                    TimeInterval interval = UsageUtils.getLastWeek();
+                    dataUsage = AppUsageStatsManager.getDataUsageForPackage(applicationInfo.uid, interval);
                     if (dataUsage.getTotal() == 0 && !ArrayUtils.contains(
                             packageInfo.requestedPermissions, Manifest.permission.INTERNET)) {
                         appInfo.dataUsage = null;
@@ -453,7 +462,9 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isDebuggable;
         public boolean isTestOnly;
         public boolean hasCode;
+        public boolean isOverlay;
         public boolean hasRequestedLargeHeap;
+        public boolean isRunning;
         public List<ActivityManager.RunningServiceInfo> runningServices;
         public List<MagiskProcess> magiskHiddenProcesses;
         public List<MagiskProcess> magiskDeniedProcesses;
@@ -463,7 +474,8 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isAppSuspended;
         public boolean isMagiskHideEnabled;
         public boolean isMagiskDenyListEnabled;
-        public boolean isBloatware;
+        @DebloatObject.Removal
+        public int bloatwareRemovalType;
         public boolean sensorsEnabled;
         @Nullable
         public XposedModuleInfo xposedModuleInfo;

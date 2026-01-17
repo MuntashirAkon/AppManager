@@ -34,9 +34,9 @@ public class RSACrypto extends AESCrypto {
         super(iv, CryptoUtils.MODE_RSA, encryptedAesKey);
     }
 
+    @NonNull
     @Override
-    @Nullable
-    public byte[] getEncryptedAesKey() {
+    public byte[] getEncryptedAesKey() throws CryptoException {
         return super.getEncryptedAesKey();
     }
 

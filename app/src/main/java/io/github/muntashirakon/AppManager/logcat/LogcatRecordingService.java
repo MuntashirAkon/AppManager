@@ -151,7 +151,7 @@ public class LogcatRecordingService extends ForegroundService {
         boolean searchCriteriaWillAlwaysMatch = searchCriteria.isEmpty();
         boolean logLevelAcceptsEverything = logLevel == android.util.Log.VERBOSE;
         StringBuilder stringBuilder = new StringBuilder();
-        LogcatReaderLoader loader = IntentCompat.getParcelableExtra(intent, EXTRA_LOADER, LogcatReaderLoader.class);
+        LogcatReaderLoader loader = IntentCompat.getUnwrappedParcelableExtra(intent, EXTRA_LOADER, LogcatReaderLoader.class);
         if (loader == null) {
             // No loader found
             return;

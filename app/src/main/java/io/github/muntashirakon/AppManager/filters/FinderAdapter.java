@@ -24,10 +24,10 @@ import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.util.AdapterUtils;
 
 public class FinderAdapter extends RecyclerView.Adapter<FinderAdapter.ViewHolder> {
-    private final List<FilterItem.FilteredItemInfo> mAdapterList = new ArrayList<>();
+    private final List<FilterItem.FilteredItemInfo<FilterableAppInfo>> mAdapterList = new ArrayList<>();
 
     @UiThread
-    public void setDefaultList(List<FilterItem.FilteredItemInfo> list) {
+    public void setDefaultList(List<FilterItem.FilteredItemInfo<FilterableAppInfo>> list) {
         synchronized (mAdapterList) {
             AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
         }
@@ -42,7 +42,7 @@ public class FinderAdapter extends RecyclerView.Adapter<FinderAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        FilterItem.FilteredItemInfo itemInfo;
+        FilterItem.FilteredItemInfo<FilterableAppInfo> itemInfo;
         synchronized (mAdapterList) {
             itemInfo = mAdapterList.get(position);
         }

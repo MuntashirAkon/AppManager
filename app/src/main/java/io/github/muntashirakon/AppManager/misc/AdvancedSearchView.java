@@ -38,6 +38,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.SearchView;
 
@@ -387,13 +388,16 @@ public class AdvancedSearchView extends SearchView {
     public static <T> List<T> matches(@NonNull String query, @Nullable Collection<T> choices,
                                       @NonNull ChoicesGenerator<T> generator, @SearchType int type) {
         if (choices == null) return null;
-        if (choices.size() == 0) return Collections.emptyList();
+        if (choices.isEmpty()) return Collections.emptyList();
         List<T> results = new ArrayList<>(choices.size());
         if (type == SEARCH_TYPE_REGEX) {
             Pattern p;
             try {
                 p = Pattern.compile(query);
                 for (T choice : choices) {
+                    if (ThreadUtils.isInterrupted()) {
+                        return Collections.emptyList();
+                    }
                     List<String> texts = generator.getChoices(choice);
                     for (String text : texts) {
                         if (text == null) continue;
@@ -409,6 +413,9 @@ public class AdvancedSearchView extends SearchView {
         }
         // Rests are typical
         for (T choice : choices) {
+            if (ThreadUtils.isInterrupted()) {
+                return Collections.emptyList();
+            }
             List<String> texts = generator.getChoices(choice);
             for (String text : texts) {
                 if (text == null) continue;

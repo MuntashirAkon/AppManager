@@ -15,7 +15,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public final class JSONUtils {
-    @Contract("null -> null")
+    public static void putAll(@NonNull JSONObject base, @Nullable JSONObject jsonObject) throws JSONException {
+        if (jsonObject == null) return;
+        JSONArray keys = jsonObject.names();
+        if (keys != null) {
+            for (int i = 0; i < keys.length(); i++) {
+                String key = keys.getString(i);
+                base.put(key, jsonObject.get(key));
+            }
+        }
+    }
+
+    @Contract("!null -> !null")
     @Nullable
     public static <T> JSONArray getJSONArray(@Nullable final T[] typicalArray) {
         if (typicalArray == null) return null;
@@ -24,7 +35,7 @@ public final class JSONUtils {
         return jsonArray;
     }
 
-    @Contract("null -> null")
+    @Contract("!null -> !null")
     @Nullable
     public static JSONArray getJSONArray(@Nullable final int[] typicalArray) {
         if (typicalArray == null) return null;
@@ -33,35 +44,41 @@ public final class JSONUtils {
         return jsonArray;
     }
 
-    @Contract("null -> null")
+    @Contract("!null -> !null")
     @Nullable
     public static <T> JSONArray getJSONArray(@Nullable final Collection<T> collection) {
-        if (collection == null || collection.size() == 0) return null;
+        if (collection == null) return null;
         JSONArray jsonArray = new JSONArray();
         for (T elem : collection) jsonArray.put(elem);
         return jsonArray;
     }
 
-    @NonNull
-    public static <T> T[] getArray(Class<T> clazz, @NonNull final JSONArray jsonArray)
+    @Contract("_,!null -> !null")
+    @Nullable
+    public static <T> T[] getArray(Class<T> clazz, @Nullable final JSONArray jsonArray)
             throws JSONException {
+        if (jsonArray == null) return null;
         //noinspection unchecked
         T[] typicalArray = (T[]) Array.newInstance(clazz, jsonArray.length());
         for (int i = 0; i < jsonArray.length(); ++i) typicalArray[i] = clazz.cast(jsonArray.get(i));
         return typicalArray;
     }
 
-    @NonNull
-    public static int[] getIntArray(@NonNull final JSONArray jsonArray)
+    @Contract("!null -> !null")
+    @Nullable
+    public static int[] getIntArray(@Nullable final JSONArray jsonArray)
             throws JSONException {
+        if (jsonArray == null) return null;
         int[] typicalArray = new int[jsonArray.length()];
         for (int i = 0; i < jsonArray.length(); ++i) typicalArray[i] = jsonArray.getInt(i);
         return typicalArray;
     }
 
-    @NonNull
-    public static <T> ArrayList<T> getArray(@NonNull final JSONArray jsonArray)
+    @Contract("!null -> !null")
+    @Nullable
+    public static <T> ArrayList<T> getArray(@Nullable final JSONArray jsonArray)
             throws JSONException {
+        if (jsonArray == null) return null;
         ArrayList<T> arrayList = new ArrayList<>(jsonArray.length());
         for (int i = 0; i < jsonArray.length(); ++i) {
             //noinspection unchecked
@@ -70,38 +87,12 @@ public final class JSONUtils {
         return arrayList;
     }
 
-    @Nullable
-    public static JSONArray getJSONArray(@NonNull final JSONObject jsonObject, @NonNull String key) {
-        try {
-            return jsonObject.getJSONArray(key);
-        } catch (JSONException e) {
-            return null;
-        }
-    }
-
-    @Nullable
-    public static JSONObject getJSONObject(@NonNull final JSONObject jsonObject, @NonNull String key) {
-        try {
-            return jsonObject.getJSONObject(key);
-        } catch (JSONException e) {
-            return null;
-        }
-    }
-
     @Contract("_,_,!null -> !null")
     @Nullable
     public static String getString(@NonNull final JSONObject jsonObject, @NonNull String key,
                                    @Nullable String defaultValue) {
         try {
             return jsonObject.getString(key);
-        } catch (JSONException e) {
-            return defaultValue;
-        }
-    }
-
-    public static boolean getBoolean(@NonNull final JSONObject jsonObject, @NonNull String key, boolean defaultValue) {
-        try {
-            return jsonObject.getBoolean(key);
         } catch (JSONException e) {
             return defaultValue;
         }
@@ -116,11 +107,33 @@ public final class JSONUtils {
         return null;
     }
 
-    public static long getLong(@NonNull final JSONObject jsonObject, @NonNull String key, long defaultValue) {
-        try {
-            return jsonObject.getLong(key);
-        } catch (JSONException ignore) {
+    @Nullable
+    public static String getString(@NonNull final JSONObject jsonObject, @NonNull String key)
+            throws JSONException {
+        Object obj = jsonObject.get(key);
+        if (obj == JSONObject.NULL) {
+            return null;
         }
-        return defaultValue;
+        return jsonObject.getString(key);
+    }
+
+    @Nullable
+    public static String optString(@NonNull final JSONObject jsonObject, @NonNull String key) {
+        Object obj = jsonObject.opt(key);
+        if (obj == null || obj == JSONObject.NULL) {
+            return null;
+        }
+        return jsonObject.optString(key);
+    }
+
+
+    @Nullable
+    public static String optString(@NonNull final JSONObject jsonObject, @NonNull String key,
+                                   @Nullable String fallback) {
+        Object obj = jsonObject.opt(key);
+        if (obj == null || obj == JSONObject.NULL) {
+            return null;
+        }
+        return jsonObject.optString(key, fallback);
     }
 }

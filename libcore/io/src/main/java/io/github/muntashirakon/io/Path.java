@@ -5,7 +5,6 @@ package io.github.muntashirakon.io;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.ParcelFileDescriptor;
 import android.system.ErrnoException;
 
@@ -258,6 +257,24 @@ public abstract class Path implements Comparable<Path> {
      */
     @NonNull
     public abstract Path findFile(@NonNull String displayName) throws FileNotFoundException;
+
+    /**
+     * Return the file denoted by this abstract name in this file. File name
+     * can be either case-sensitive or case-insensitive depending on the file
+     * provider.
+     *
+     * @param displayName Display name for the file with extension and/or
+     *                    file separator if applicable.
+     * @return The first file that matches the name, {@code null} otherwise.
+     */
+    @Nullable
+    public Path findFileOrNull(@NonNull String displayName) {
+        try {
+            return findFile(displayName);
+        } catch (FileNotFoundException ignore) {
+            return null;
+        }
+    }
 
     /**
      * Return a file that is a direct child of this directory, creating if necessary.
@@ -569,8 +586,15 @@ public abstract class Path implements Comparable<Path> {
     @Nullable
     @Contract("!null -> !null")
     public String getContentAsString(@Nullable String emptyValue) {
+        return getContentAsString(emptyValue, Charset.defaultCharset());
+    }
+
+
+    @Nullable
+    @Contract("!null,_ -> !null")
+    public String getContentAsString(@Nullable String emptyValue, @NonNull Charset charset) {
         try (InputStream inputStream = openInputStream()) {
-            return new String(IoUtils.readFully(inputStream, -1, true), Charset.defaultCharset());
+            return new String(IoUtils.readFully(inputStream, -1, true), charset);
         } catch (Exception e) {
             e.printStackTrace();
             return emptyValue;

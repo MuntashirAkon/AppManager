@@ -1,1 +1,1 @@
-A full-featured open source package manager for android.
+A fully-featured package manager for android.

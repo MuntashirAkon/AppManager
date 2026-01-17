@@ -388,7 +388,6 @@
     <string name="features">Функции</string>
     <string name="whats_new">Что нового</string>
     <string name="blocking_rules">Правила блокировки</string>
-    <string name="cache">Кеш</string>
     <string name="external_data">Внешние данные</string>
     <string name="data">Данные</string>
     <string name="backup">Бекап</string>
@@ -1394,7 +1393,6 @@
     <string name="debloat_removal_type">Тип</string>
     <string name="system_app_put_back">Вернуть</string>
     <string name="debloat_list_misc">Разное</string>
-    <string name="debloat_list_pending">На рассмотрении</string>
     <string name="debloat_removal_replace">Замена</string>
     <string name="debloat_removal_caution">Осторожно</string>
     <string name="debloat_removal_safe">Безопасно</string>
@@ -1491,4 +1489,49 @@
     <string name="copy_profile_id">Скопировать идентификатор профиля</string>
     <string name="profile_id">ID профиля</string>
     <string name="choose_a_profile_state">Выберите состояние профиля</string>
+    <string name="netpolicy_reject_metered_data">Отклонять данные в сетях с лимитным тарифным планом</string>
+    <string name="netpolicy_allow_metered_background_data">Разрешить фоновую передачу данных в сетях с лимитным трафиком, даже если включена функция экономии трафика</string>
+    <string name="pref_toggle_internet_msg">Активируйте интернет возможности в App Manager</string>
+    <string name="launch_activity_dialog_title">Запуск Активити: Требуется Действие</string>
+    <string name="pref_use_log_viewer">Использовать средство просмотра логов</string>
+    <string name="netpolicy_reject_metered_background_data">Отклонить фоновые данные в сетях с лимитным трафиком</string>
+    <string name="mode_of_op_custom_command">Если вы не можете использовать ни один из режимов, вы можете запустить следующую команду в любой поддерживаемой оболочке, чтобы запустить диспетчер приложений в привилегированном режиме:</string>
+    <string name="pref_use_vt">Используйте VirusTotal</string>
+    <string name="pref_use_vt_no_internet">Для работы VirusTotal требуется Интернет, который не включен. Сначала включите <a href="app-manager://settings/privacy_prefs/toggle_internet">\"Использовать Интернет\"</a>.</string>
+    <string name="status_remote_server_inactive">Удаленный сервер неактивен</string>
+    <string name="status_remote_services_active">Удаленные сервисы активны</string>
+    <string name="status_remote_services_inactive">Удаленные сервисы неактивны</string>
+    <string name="status_connecting_via_mode">Подключение через %s</string>
+    <string name="adb_pairing_pairing_code">Код сопряжения</string>
+    <string name="status_connected_via_mode">Подключено через %s</string>
+    <string name="status_not_connected_via_mode">Не удалось подключиться через %s</string>
+    <string name="adb_pairing_instruction">Перейдите к параметрам разработчика, чтобы включить беспроводную отладку и сгенерировать код сопряжения.</string>
+    <string name="adb_pairing_found_pairing_service_with_port">Найден сервис с портом %d</string>
+    <string name="adb_pairing_stop_searching">Стоп</string>
+    <string name="adb_pairing_searching_for_port">Идет поиск…</string>
+    <string name="adb_pairing_input_pairing_code">Код сопряжения</string>
+    <string name="select_filter">Выберите фильтр</string>
+    <string name="size_in_bytes">Размер (байты)</string>
+    <string name="invalid_regex">Недопустимое регулярное выражение!</string>
+    <string name="value_cannot_be_empty">Значение не может быть пустым!</string>
+    <string name="date">Дата</string>
+    <string name="pref_installer">Используйте установщик</string>
+    <string name="pref_cat_general">Главное</string>
+    <string name="status_remote_server_active">Удаленный сервер активен</string>
+    <string name="finder_title">Поисковик</string>
+    <string name="status_connecting">Подключение…</string>
+    <string name="adb_pairing_pairing_in_progress">Сопряжение…</string>
+    <string name="adb_pairing_retry_pairing">Повтор</string>
+    <string name="mode_of_op_custom_command_title">Пользовательская команда</string>
+    <string name="virus_total">VirusTotal</string>
+    <string name="sensors">Датчики</string>
+    <string name="tag_sensors_disabled">Датчики отключены</string>
+    <string name="apk_source">Источник APK</string>
+    <string name="actual_installer">Фактический установщик</string>
+    <string name="pref_use_system_font">Использовать системный шрифт</string>
+    <string name="mode_of_op_alternative_custom_command">Если при выполнении вышеуказанной команды вы получите ошибку «разрешение отклонено», выполните следующую команду:</string>
+    <string name="activity_name">Имя активити</string>
+    <string name="pref_use_system_font_msg">Использовать системный шрифт по умолчанию вместо material шрифта. <font fgcolor="#ff0000">Это экспериментальная функция.</font></string>
+    <string name="backup_cache">Кэш</string>
+    <string name="launch_activity_dialog_message">App Manager пытается запустить активити через <b>Поисковый помощник</b> (обычно Google Assistant), но не может этого сделать из-за недостаточного разрешения. Для запуска активити, включите <b>Поисковый помощник</b> вручную (обычно это делается долгим нажатием на кнопку Домой). Нажмите на кнопку <b>Закрыть</b> после завершения запуска активити, чтобы вернуться к исходному помощнику.</string>
 </resources>

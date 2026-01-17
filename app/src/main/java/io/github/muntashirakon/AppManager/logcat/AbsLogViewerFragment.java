@@ -34,6 +34,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logcat.helper.PreferenceHelper;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
 import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
+import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.settings.LogViewerPreferences;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -43,12 +44,14 @@ import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public abstract class AbsLogViewerFragment extends Fragment implements MenuProvider,
         LogViewerViewModel.LogLinesAvailableInterface,
         MultiSelectionActionsView.OnItemSelectedListener,
-        LogViewerActivity.SearchingInterface, Filter.FilterListener {
+        MultiSelectionView.OnSelectionModeChangeListener,
+        LogViewerActivity.SearchingInterface, Filter.FilterListener{
     public static final String TAG = AbsLogViewerFragment.class.getSimpleName();
 
     protected RecyclerView mRecyclerView;
@@ -58,7 +61,8 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
     protected LogViewerRecyclerAdapter mLogListAdapter;
 
     protected boolean mAutoscrollToBottom = true;
-    protected volatile String mQueryString;
+    @Nullable
+    protected volatile SearchCriteria mSearchCriteria;
 
     protected final StoragePermission mStoragePermission = StoragePermission.init(this);
     protected final RecyclerView.OnScrollListener mRecyclerViewScrollListener = new RecyclerView.OnScrollListener() {
@@ -79,14 +83,14 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
             }
         }
     };
-    private final OnBackPressedCallback mOnBackPressedCallback = new OnBackPressedCallback(true) {
+    private final OnBackPressedCallback mOnBackPressedCallback = new OnBackPressedCallback(false) {
         @Override
         public void handleOnBackPressed() {
             if (mLogListAdapter.isInSelectionMode()) {
                 mMultiSelectionView.cancel();
             } else {
                 setEnabled(false);
-                requireActivity().onBackPressed();
+                requireActivity().getOnBackPressedDispatcher().onBackPressed();
             }
         }
     };
@@ -107,15 +111,16 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mRecyclerView.setItemAnimator(null);
         // Check for query string
-        mQueryString = mActivity.getSearchQuery();
-        if (mQueryString != null) {
-            mRecyclerView.postDelayed(() -> mActivity.search(mQueryString), 1000);
+        mSearchCriteria = mActivity.getSearchQuery();
+        if (mSearchCriteria != null) {
+            mRecyclerView.postDelayed(() -> mActivity.search(mSearchCriteria), 1000);
         }
         mLogListAdapter = new LogViewerRecyclerAdapter();
         mLogListAdapter.setClickListener(mActivity);
         mMultiSelectionView = view.findViewById(R.id.selection_view);
         mMultiSelectionView.setAdapter(mLogListAdapter);
         mMultiSelectionView.setOnItemSelectedListener(this);
+        mMultiSelectionView.setOnSelectionModeChangeListener(this);
         mMultiSelectionView.hide();
         mRecyclerView.setAdapter(mLogListAdapter);
         mRecyclerView.addOnScrollListener(mRecyclerViewScrollListener);
@@ -124,7 +129,7 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
         mViewModel.getExpandLogsLiveData().observe(getViewLifecycleOwner(), expanded -> {
             int oldFirstVisibleItem = ((LinearLayoutManager) Objects.requireNonNull(mRecyclerView.getLayoutManager())).findFirstVisibleItemPosition();
             mLogListAdapter.setCollapseMode(!expanded);
-            mLogListAdapter.notifyItemRangeChanged(0, mLogListAdapter.getItemCount());
+            mLogListAdapter.notifyItemRangeChanged(0, mLogListAdapter.getItemCount(), AdapterUtils.STUB);
             // Scroll to bottom or the first visible item
             if (mAutoscrollToBottom) {
                 mRecyclerView.scrollToPosition(mLogListAdapter.getItemCount() - 1);
@@ -197,7 +202,7 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
                     .setOnSingleChoiceClickListener((dialog, which, selectedLogLevel, isChecked) -> {
                         mViewModel.setLogLevel(selectedLogLevel);
                         // Search again
-                        mActivity.search(mQueryString);
+                        mActivity.search(mSearchCriteria);
                     })
                     .setNegativeButton(R.string.close, null)
                     .show();
@@ -214,12 +219,22 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
         return true;
     }
 
+    @Override
+    public void onSelectionModeEnabled() {
+        mOnBackPressedCallback.setEnabled(true);
+    }
+
+    @Override
+    public void onSelectionModeDisabled() {
+        mOnBackPressedCallback.setEnabled(false);
+    }
+
     @CallSuper
     @Override
-    public void onQuery(@Nullable String searchTerm) {
-        mQueryString = searchTerm;
+    public void onQuery(@Nullable SearchCriteria searchCriteria) {
+        mSearchCriteria = searchCriteria;
         Filter filter = mLogListAdapter.getFilter();
-        filter.filter(searchTerm, this);
+        filter.filter(searchCriteria != null ? searchCriteria.query : null, this);
     }
 
     @Override

@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
@@ -24,7 +23,9 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.filters.IFilterableAppInfo;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
@@ -36,6 +37,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         @Nullable
         public CharSequence label;
         public ApplicationInfo applicationInfo;
+        public IFilterableAppInfo filterableAppInfo;
 
         public AppsFragmentItem(@NonNull String packageName) {
             this.packageName = packageName;
@@ -58,15 +60,15 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
     }
 
-    private AppsProfileActivity mActivity;
+    private AppsBaseProfileActivity mActivity;
     private SwipeRefreshLayout mSwipeRefresh;
     private LinearProgressIndicator mProgressIndicator;
-    private ProfileViewModel mModel;
+    private AppsProfileViewModel mModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (AppsProfileActivity) requireActivity();
+        mActivity = (AppsBaseProfileActivity) requireActivity();
     }
 
     @Nullable
@@ -82,7 +84,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setOnRefreshListener(this);
         RecyclerView recyclerView = view.findViewById(R.id.scrollView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(mActivity));
         final TextView emptyView = view.findViewById(android.R.id.empty);
         emptyView.setText(R.string.no_apps);
         recyclerView.setEmptyView(emptyView);
@@ -104,7 +106,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onResume() {
         super.onResume();
         if (mActivity.getSupportActionBar() != null) {
-            mActivity.getSupportActionBar().setSubtitle(R.string.apps);
+            mActivity.getSupportActionBar().setSubtitle(mModel.getPreviewTitleString());
         }
         mActivity.fab.show();
     }
@@ -116,11 +118,13 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     public class AppsRecyclerAdapter extends RecyclerView.Adapter<AppsRecyclerAdapter.ViewHolder> {
-        PackageManager pm;
+        final PackageManager pm;
         final ArrayList<AppsFragmentItem> packages = new ArrayList<>();
+        final ImageLoader.DefaultImageDrawable defaultImage;
 
         private AppsRecyclerAdapter() {
             pm = mActivity.getPackageManager();
+            defaultImage = new ImageLoader.DefaultImageDrawable("android_default_icon", pm.getDefaultActivityIcon());
         }
 
         void setList(List<AppsFragmentItem> list) {
@@ -138,7 +142,12 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             AppsFragmentItem fragmentItem = packages.get(position);
             holder.icon.setTag(fragmentItem);
-            ImageLoader.getInstance().displayImage(fragmentItem.packageName, fragmentItem.applicationInfo, holder.icon);
+            if (fragmentItem.applicationInfo != null) {
+                ImageLoader.getInstance().displayImage(fragmentItem.packageName, fragmentItem.applicationInfo, holder.icon);
+            } else {
+                ImageLoader.getInstance().displayImage(fragmentItem.packageName, holder.icon, tag ->
+                        new ImageLoader.ImageFetcherResult(tag, UIUtils.getBitmapFromDrawable(fragmentItem.filterableAppInfo.getAppIcon()), true, true, defaultImage));
+            }
             CharSequence label = fragmentItem.label;
             holder.title.setText(label != null ? label : fragmentItem.packageName);
             if (label != null) {
@@ -147,19 +156,21 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             } else {
                 holder.subtitle.setVisibility(View.GONE);
             }
-            holder.itemView.setOnClickListener(v -> {
-            });
-            holder.itemView.setOnLongClickListener(v -> {
-                PopupMenu popupMenu = new PopupMenu(mActivity, holder.itemView);
-                popupMenu.setForceShowIcon(true);
-                popupMenu.getMenu().add(R.string.delete).setIcon(R.drawable.ic_trash_can)
-                        .setOnMenuItemClickListener(item -> {
-                            mModel.deletePackage(fragmentItem.packageName);
-                            return true;
-                        });
-                popupMenu.show();
-                return true;
-            });
+            if (fragmentItem.applicationInfo != null) {
+                holder.itemView.setOnClickListener(v -> {
+                });
+                holder.itemView.setOnLongClickListener(v -> {
+                    PopupMenu popupMenu = new PopupMenu(mActivity, holder.itemView);
+                    popupMenu.setForceShowIcon(true);
+                    popupMenu.getMenu().add(R.string.delete).setIcon(R.drawable.ic_trash_can)
+                            .setOnMenuItemClickListener(item -> {
+                                mModel.deletePackage(fragmentItem.packageName);
+                                return true;
+                            });
+                    popupMenu.show();
+                    return true;
+                });
+            }
         }
 
         @Override
@@ -175,6 +186,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 icon = itemView.findViewById(android.R.id.icon);
+                icon.setContentDescription(itemView.getContext().getString(R.string.icon));
                 title = itemView.findViewById(android.R.id.title);
                 subtitle = itemView.findViewById(android.R.id.summary);
             }

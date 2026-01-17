@@ -4,6 +4,8 @@ package io.github.muntashirakon.AppManager.debloat;
 
 import android.app.Application;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -18,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
@@ -132,14 +135,13 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
         } else {
             mOpenAppInfoButton.setVisibility(View.GONE);
         }
-        CharSequence label = debloatObject.getLabel();
-        mAppLabelView.setText(label != null ? label : debloatObject.packageName);
+        mAppLabelView.setText(debloatObject.getLabelOrPackageName());
         mPackageNameView.setText(debloatObject.packageName);
         String warning = debloatObject.getWarning();
         if (warning != null) {
             mWarningView.setVisibility(View.VISIBLE);
             mWarningView.setText(warning);
-            if (debloatObject.getRemoval() != DebloatObject.REMOVAL_CAUTION) {
+            if (debloatObject.getRemoval() >= DebloatObject.REMOVAL_CAUTION) {
                 mWarningView.setAlertType(MaterialAlertView.ALERT_TYPE_INFO);
             } else mWarningView.setAlertType(MaterialAlertView.ALERT_TYPE_WARN);
         } else mWarningView.setVisibility(View.GONE);
@@ -161,6 +163,10 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
             case DebloatObject.REMOVAL_REPLACE:
                 removalColor = ColorCodes.getRemovalReplaceIndicatorColor(requireContext());
                 removalRes = R.string.debloat_removal_replace_short_description;
+                break;
+            case DebloatObject.REMOVAL_UNSAFE:
+                removalColor = ColorCodes.getRemovalUnsafeIndicatorColor(requireContext());
+                removalRes = R.string.debloat_removal_unsafe;
                 break;
         }
         mFlowLayout.removeAllViews();
@@ -211,12 +217,12 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
         return sb;
     }
 
-    private void addTag(@NonNull ViewGroup parent, @StringRes int titleRes, @ColorInt int textColor) {
+    private void addTag(@NonNull ViewGroup parent, @StringRes int titleRes, @ColorInt int background) {
         Chip chip = (Chip) LayoutInflater.from(requireContext()).inflate(R.layout.item_chip, parent, false);
         chip.setText(titleRes);
-        if (textColor >= 0) {
-            chip.setTextColor(textColor);
-        }
+        chip.setChipBackgroundColor(ColorStateList.valueOf(background));
+        double luminance = ColorUtils.calculateLuminance(background);
+        chip.setTextColor(luminance < 0.5 ? Color.WHITE : Color.BLACK);
         parent.addView(chip);
     }
 

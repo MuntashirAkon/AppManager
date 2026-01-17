@@ -22,6 +22,8 @@ import org.jetbrains.annotations.Contract;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -29,6 +31,7 @@ import java.util.Objects;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
+import io.github.muntashirakon.AppManager.utils.AlphanumComparator;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
@@ -184,6 +187,18 @@ public final class Paths {
 
     public static boolean exists(@Nullable File path) {
         return path != null && path.exists();
+    }
+
+    @Nullable
+    @Contract("!null -> !null")
+    public static Path[] getSortedPaths(@Nullable Path[] paths) {
+        if (paths == null) {
+            return null;
+        }
+        // Default sort is usually an alphabetical sort which should've been an alphanumerical sort
+        ArrayList<Path> sortedPaths = new ArrayList<>(Arrays.asList(paths));
+        Collections.sort(sortedPaths, (o1, o2) -> AlphanumComparator.compareStringIgnoreCase(o1.getName(), o2.getName()));
+        return sortedPaths.toArray(new Path[0]);
     }
 
     @NonNull

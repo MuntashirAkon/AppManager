@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.collection.ArrayMap;
 import androidx.core.os.ConfigurationCompat;
@@ -28,9 +29,11 @@ import io.github.muntashirakon.AppManager.debloat.SuggestionObject;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.algo.AhoCorasick;
 
 public class StaticDataset {
-    private static String[] sTrackerCodeSignatures;
+    @Nullable
+    private static AhoCorasick sAhoCorasickTrackerCache;
     private static String[] sTrackerNames;
     private static List<DebloatObject> sDebloatObjects;
 
@@ -83,10 +86,21 @@ public class StaticDataset {
     }
 
     public static String[] getTrackerCodeSignatures() {
-        if (sTrackerCodeSignatures == null) {
-            sTrackerCodeSignatures = ContextUtils.getContext().getResources().getStringArray(R.array.tracker_signatures);
+        return ContextUtils.getContext().getResources().getStringArray(R.array.tracker_signatures);
+    }
+
+    public static AhoCorasick getSearchableTrackerSignatures() {
+        if (sAhoCorasickTrackerCache == null) {
+            sAhoCorasickTrackerCache = new AhoCorasick(getTrackerCodeSignatures());
         }
-        return sTrackerCodeSignatures;
+        return sAhoCorasickTrackerCache;
+    }
+
+    public static void cleanup() {
+        if (sAhoCorasickTrackerCache != null) {
+            sAhoCorasickTrackerCache.close();
+            sAhoCorasickTrackerCache = null;
+        }
     }
 
     public static String[] getTrackerNames() {
@@ -123,9 +137,11 @@ public class StaticDataset {
         String jsonContent = FileUtils.getContentFromAssets(context, "debloat.json");
         try {
             List<DebloatObject> debloatObjects = Arrays.asList(gson.fromJson(jsonContent, DebloatObject[].class));
+            int id = 0;
             for (DebloatObject debloatObject : debloatObjects) {
                 List<SuggestionObject> suggestionObjects = idSuggestionObjectsMap.get(debloatObject.getSuggestionId());
                 debloatObject.setSuggestions(suggestionObjects);
+                debloatObject.setId(id++);
             }
             return debloatObjects;
         } catch (Throwable e) {

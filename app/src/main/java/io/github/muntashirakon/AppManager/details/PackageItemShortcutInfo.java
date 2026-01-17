@@ -92,6 +92,6 @@ public class PackageItemShortcutInfo<T extends PackageItemInfo & Parcelable> ext
     }
 
     private boolean requireProxy() {
-        return !BuildConfig.APPLICATION_ID.equals(mPackageItemInfo.packageName) && mUserId != UserHandleHidden.myUserId();
+        return !BuildConfig.APPLICATION_ID.equals(mPackageItemInfo.packageName) || mUserId != UserHandleHidden.myUserId();
     }
 }

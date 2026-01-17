@@ -14,6 +14,7 @@
         <item>@string/configurations</item>
         <item>@string/app_signing_signatures</item>
         <item>@string/shared_libs</item>
+        <item>@string/overlays</item>
     </array>
     <array name="rule_types">
         <item>@string/activities</item>
@@ -66,8 +67,7 @@
         <item>@string/type_uri_array_list</item>
     </string-array>
     <string-array name="usage_interval_dropdown_list">
-        <item>@string/usage_today</item>
-        <item>@string/usage_yesterday</item>
+        <item>@string/usage_daily</item>
         <item>@string/usage_weekly</item>
     </string-array>
     <string-array name="whats_new_titles">
@@ -125,6 +125,10 @@
         <item>@string/pkcs12_keystore</item>
         <item>@string/bouncy_castle_keystore</item>
         <item>@string/pem_and_pk8</item>
+    </string-array>
+    <string-array name="profile_types">
+        <item>@string/apps</item>
+        <item>@string/filters</item>
     </string-array>
     <integer-array name="random_colors">
         <item>@color/original_orange</item>
@@ -244,17 +248,20 @@
     <string-array name="finder_filters">
         <item>apk_size</item>
         <item>app_label</item>
+        <item>app_type</item>
         <item>backup</item>
         <item>bloatware</item>
         <item>cache_size</item>
+        <item>compile_sdk</item>
         <item>components</item>
         <item>data_size</item>
         <item>data_usage</item>
+        <item>freeze_unfreeze</item>
         <item>installed</item>
         <item>installer</item>
         <item>last_update</item>
         <item>min_sdk</item>
-        <!--item>permission</item-->
+        <item>permissions</item>
         <item>pkg_name</item>
         <item>running_apps</item>
         <item>screen_time</item>
@@ -263,6 +270,8 @@
         <item>times_opened</item>
         <item>total_size</item>
         <item>trackers</item>
+        <item>uid</item>
         <item>version_name</item>
     </string-array>
+    <string name="usage_daily">Daily</string>
 </resources>

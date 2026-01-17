@@ -2,11 +2,6 @@
 
 package io.github.muntashirakon.AppManager.usage;
 
-import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_LAST_BOOT;
-import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_TODAY;
-import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_WEEKLY;
-import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_YESTERDAY;
-
 import android.graphics.drawable.Drawable;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
@@ -18,6 +13,7 @@ import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -45,11 +41,17 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     static class ListHeaderViewHolder extends RecyclerView.ViewHolder {
         final MaterialTextView screenTimeView;
         final MaterialTextView usageIntervalView;
+        final MaterialButton previousButton;
+        final MaterialButton nextButton;
+        final BarChartView barChartView;
 
         public ListHeaderViewHolder(@NonNull View itemView) {
             super(itemView);
             screenTimeView = itemView.findViewById(R.id.screen_time);
             usageIntervalView = itemView.findViewById(R.id.time);
+            previousButton = itemView.findViewById(R.id.action_previous);
+            nextButton = itemView.findViewById(R.id.action_next);
+            barChartView = itemView.findViewById(R.id.bar_chart);
         }
     }
 
@@ -87,7 +89,8 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     void setDefaultList(List<PackageUsageInfo> list) {
         synchronized (mAdapterList) {
-            AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
+            notifyItemChanged(0, AdapterUtils.STUB);
+            AdapterUtils.notifyDataSetChanged(this, 1, mAdapterList, list);
         }
     }
 
@@ -102,7 +105,7 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemCount() {
         synchronized (mAdapterList) {
-            return mAdapterList.size() + 1;
+            return mAdapterList.size();
         }
     }
 
@@ -112,7 +115,7 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return 0;
         }
         synchronized (mAdapterList) {
-            return Objects.hashCode(mAdapterList.get(position - 1));
+            return Objects.hashCode(mAdapterList.get(position));
         }
     }
 
@@ -124,8 +127,8 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case VIEW_TYPE_HEADER:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_usage_header, parent, false);
                 return new ListHeaderViewHolder(view);
-            default:
             case VIEW_TYPE_LIST_ITEM:
+            default:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_usage, parent, false);
                 return new ListItemViewHolder(view);
         }
@@ -135,28 +138,28 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (position == 0) {
             onBindViewHolder((ListHeaderViewHolder) holder);
-        } else onBindViewHolder((ListItemViewHolder) holder, position - 1);
+        } else onBindViewHolder((ListItemViewHolder) holder, position);
     }
 
     public void onBindViewHolder(@NonNull ListHeaderViewHolder holder) {
-        // Make spinner the first item to focus on
-        int currentInterval = mActivity.viewModel.getCurrentInterval();
-
-        holder.screenTimeView.setText(DateUtils.getFormattedDuration(mActivity, mActivity.viewModel.getTotalScreenTime()));
-        switch (currentInterval) {
-            case USAGE_TODAY:
-                holder.usageIntervalView.setText(R.string.usage_today);
-                break;
-            case USAGE_YESTERDAY:
-                holder.usageIntervalView.setText(R.string.usage_yesterday);
-                break;
-            case USAGE_WEEKLY:
-                holder.usageIntervalView.setText(R.string.usage_7_days);
-                break;
-            case USAGE_LAST_BOOT:
-                break;
-        }
-
+        int intervalType = mActivity.viewModel.getCurrentInterval();
+        long duration = mActivity.viewModel.getTotalScreenTime();
+        long date = mActivity.viewModel.getCurrentDate();
+        CharSequence formattedDuration = DateUtils.getFormattedDuration(mActivity, duration);
+        CharSequence intervalDescription = UsageUtils.getIntervalDescription(mActivity, intervalType, date);
+        StringBuilder contentDescription = new StringBuilder()
+                .append(mActivity.getString(R.string.app_usage))
+                .append(" ")
+                .append(intervalDescription)
+                .append(". ")
+                .append(formattedDuration);
+        holder.itemView.setContentDescription(contentDescription);
+        holder.screenTimeView.setText(formattedDuration);
+        holder.usageIntervalView.setText(intervalDescription);
+        holder.nextButton.setVisibility(UsageUtils.hasNextDay(date) ? View.VISIBLE : View.INVISIBLE);
+        holder.nextButton.setOnClickListener(v -> mActivity.viewModel.loadNext());
+        holder.previousButton.setOnClickListener(v -> mActivity.viewModel.loadPrevious());
+        UsageDataProcessor.updateChartWithAppUsage(holder.barChartView, mActivity.viewModel.getPackageUsageEntries(), intervalType, date);
     }
 
     public void onBindViewHolder(@NonNull ListItemViewHolder holder, int position) {
@@ -181,8 +184,8 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.packageName.setText(usageInfo.packageName);
         // Set usage
         long lastTimeUsed = usageInfo.lastUsageTime > 1 ? (System.currentTimeMillis() - usageInfo.lastUsageTime) : 0;
-        if (mActivity.viewModel.getCurrentInterval() != USAGE_YESTERDAY
-                && usageInfo.packageName.equals(BuildConfig.APPLICATION_ID)) {
+        long currentDate = mActivity.viewModel.getCurrentDate();
+        if (usageInfo.packageName.equals(BuildConfig.APPLICATION_ID) && UsageUtils.isToday(currentDate)) {
             // Special case for App Manager since the user is using the app right now
             holder.lastUsageDate.setText(R.string.running);
         } else if (lastTimeUsed > 1) {

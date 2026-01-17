@@ -19,6 +19,7 @@ import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
+import org.jetbrains.annotations.Contract;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -74,21 +75,8 @@ public final class TarUtils {
                                     @Nullable Long splitSize, @Nullable String[] exclude, boolean followLinks)
             throws IOException {
         try (SplitOutputStream sos = new SplitOutputStream(dest, destFilePrefix, splitSize == null ? DEFAULT_SPLIT_SIZE : splitSize);
-             BufferedOutputStream bos = new BufferedOutputStream(sos)) {
-            OutputStream os;
-            switch (type) {
-                case TAR_GZIP:
-                    os = new GzipCompressorOutputStream(bos);
-                    break;
-                case TAR_BZIP2:
-                    os = new BZip2CompressorOutputStream(bos);
-                    break;
-                case TAR_ZSTD:
-                    os = new ZstdOutputStream(bos);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid compression type: " + type);
-            }
+             BufferedOutputStream bos = new BufferedOutputStream(sos);
+             OutputStream os = createCompressedStream(bos, type)) {
             try (TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
                 tos.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_POSIX);
@@ -158,21 +146,8 @@ public final class TarUtils {
         } else exclusionPatterns = null;
         // Run extraction
         try (SplitInputStream sis = new SplitInputStream(sources);
-             BufferedInputStream bis = new BufferedInputStream(sis)) {
-            InputStream is;
-            switch (type) {
-                case TAR_GZIP:
-                    is = new GzipCompressorInputStream(bis, true);
-                    break;
-                case TAR_BZIP2:
-                    is = new BZip2CompressorInputStream(bis, true);
-                    break;
-                case TAR_ZSTD:
-                    is = new ZstdInputStream(bis);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid compression type: " + type);
-            }
+             BufferedInputStream bis = new BufferedInputStream(sis);
+             InputStream is = createDecompressedStream(bis, type)) {
             try (TarArchiveInputStream tis = new TarArchiveInputStream(is)) {
                 String realDestPath = dest.getRealFilePath();
                 TarArchiveEntry entry;
@@ -240,6 +215,40 @@ public final class TarUtils {
             } finally {
                 is.close();
             }
+        }
+    }
+
+    @Contract("_, _ -> new")
+    @NonNull
+    public static InputStream createDecompressedStream(@NonNull InputStream compressedStream,
+                                                        @NonNull @TarType String tarType)
+            throws IOException {
+        switch (tarType) {
+            case TAR_GZIP:
+                return new GzipCompressorInputStream(compressedStream, true);
+            case TAR_BZIP2:
+                return new BZip2CompressorInputStream(compressedStream, true);
+            case TAR_ZSTD:
+                return new ZstdInputStream(compressedStream);
+            default:
+                throw new IllegalArgumentException("Invalid compression type: " + tarType);
+        }
+    }
+
+    @Contract("_, _ -> new")
+    @NonNull
+    public static OutputStream createCompressedStream(@NonNull OutputStream regularStream,
+                                                       @NonNull @TarType String tarType)
+            throws IOException {
+        switch (tarType) {
+            case TAR_GZIP:
+                return new GzipCompressorOutputStream(regularStream);
+            case TAR_BZIP2:
+                return new BZip2CompressorOutputStream(regularStream);
+            case TAR_ZSTD:
+                return new ZstdOutputStream(regularStream);
+            default:
+                throw new IllegalArgumentException("Invalid compression type: " + tarType);
         }
     }
 

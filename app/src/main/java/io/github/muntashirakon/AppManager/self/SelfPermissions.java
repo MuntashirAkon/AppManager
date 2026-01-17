@@ -241,6 +241,10 @@ public class SelfPermissions {
                 || checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS, callingUid);
     }
 
+    public static boolean isShell() {
+        return Users.getSelfOrRemoteUid() == Ops.SHELL_UID;
+    }
+
     public static boolean isSystem() {
         return Users.getSelfOrRemoteUid() == Ops.SYSTEM_UID;
     }

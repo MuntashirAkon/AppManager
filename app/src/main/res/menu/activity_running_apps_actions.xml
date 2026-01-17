@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:icon="@drawable/ic_sort"
@@ -27,6 +26,9 @@
                 <item
                     android:id="@+id/action_sort_by_memory_usage"
                     android:title="@string/sort_by_memory_usage" />
+                <item
+                    android:id="@+id/action_sort_by_cpu_time"
+                    android:title="@string/sort_by_cpu_time" />
 
             </group>
         </menu>
@@ -56,7 +58,7 @@
     <item
         android:id="@+id/action_toggle_kill"
         android:icon="@drawable/ic_clear"
-        app:showAsAction="never"
-        android:title="@string/toggle_kill_for_system_apps" />
+        android:title="@string/toggle_kill_for_system_apps"
+        app:showAsAction="never" />
 
 </menu>

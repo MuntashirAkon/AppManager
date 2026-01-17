@@ -7,6 +7,7 @@ import android.content.pm.PermissionInfo;
 import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PermissionInfoCompat;
 
@@ -25,6 +26,8 @@ public class AppDetailsPermissionItem extends AppDetailsItem<PermissionInfo> {
     public final boolean modifiable;
     public final int flags;
     public final int protectionFlags;
+    @Nullable
+    public final PermUtils.SettingItem settingItem;
 
     public AppDetailsPermissionItem(@NonNull PermissionInfo permissionInfo, @NonNull Permission permission, int flags) {
         super(permissionInfo);
@@ -33,6 +36,7 @@ public class AppDetailsPermissionItem extends AppDetailsItem<PermissionInfo> {
         this.protectionFlags = PermissionInfoCompat.getProtectionFlags(permissionInfo);
         this.modifiable = PermUtils.isModifiable(permission);
         this.flags = flags;
+        this.settingItem = PermUtils.permissionNameToSettingItem.get(permissionInfo.name);
     }
 
     public boolean isGranted() {

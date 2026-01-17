@@ -3,65 +3,89 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <io.github.muntashirakon.preference.TopSwitchPreference
+        app:iconSpaceReserved="false"
         app:key="use_installer"
-        app:title="@string/pref_installer"
         app:persistent="false"
-        app:iconSpaceReserved="false" />
+        app:title="@string/pref_installer" />
 
     <PreferenceCategory
+        app:iconSpaceReserved="false"
         app:key="cat_general"
-        app:title="@string/pref_cat_general"
-        app:iconSpaceReserved="false">
+        app:title="@string/pref_cat_general">
 
         <Preference
+            app:iconSpaceReserved="false"
             app:key="installer_install_location"
             app:title="@string/install_location"
-            tools:summary="Auto"
-            app:iconSpaceReserved="false" />
+            tools:summary="Auto" />
 
 
         <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
             app:key="installer_block_trackers"
-            app:title="@string/block_trackers"
             app:summary="@string/pref_block_trackers_msg"
-            app:iconSpaceReserved="false" />
+            app:title="@string/block_trackers" />
 
         <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
             app:key="installer_display_changes"
-            app:title="@string/pref_display_changes"
             app:summary="@string/pref_display_changes_msg"
-            app:iconSpaceReserved="false" />
+            app:title="@string/pref_display_changes" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
+        app:iconSpaceReserved="false"
         app:key="cat_advanced"
-        app:title="@string/pref_cat_advanced"
-        app:iconSpaceReserved="false">
+        app:title="@string/pref_cat_advanced">
 
         <Preference
+            app:iconSpaceReserved="false"
             app:key="installer_installer_app"
             app:title="@string/installer_app"
-            tools:summary="App Manager"
-            app:iconSpaceReserved="false" />
+            tools:summary="App Manager" />
 
         <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="installer_disable_verification"
+            app:summary="@string/pref_disable_apk_verification_description"
+            app:title="@string/pref_disable_apk_verification" />
+
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="installer_update_ownership"
+            app:summary="@string/pref_request_update_ownership_description"
+            app:title="@string/pref_request_update_ownership" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="installer_default_pkg_source"
+            app:title="@string/pref_default_package_source"
+            tools:summary="Other" />
+
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="installer_set_origin"
+            app:summary="@string/pref_set_origin_description"
+            app:title="@string/pref_set_origin" />
+
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
             app:key="installer_sign_apk"
-            app:title="@string/pref_sign_apk"
             app:summary="@string/pref_sign_apk_msg"
-            app:iconSpaceReserved="false" />
+            app:title="@string/pref_sign_apk" />
 
         <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
             app:key="installer_force_dex_opt"
-            app:title="@string/optimize_option_force_dexopt"
             app:summary="@string/pref_installer_force_dexopt_description"
-            app:iconSpaceReserved="false" />
+            app:title="@string/optimize_option_force_dexopt" />
 
         <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
             app:key="installer_always_on_background"
-            app:title="@string/pref_always_on_background"
             app:summary="@string/pref_always_on_background_msg"
-            app:iconSpaceReserved="false" />
+            app:title="@string/pref_always_on_background" />
 
     </PreferenceCategory>
 

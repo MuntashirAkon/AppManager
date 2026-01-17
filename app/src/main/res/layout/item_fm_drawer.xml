@@ -1,0 +1,39 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.AppTheme.CardView.ListItem"
+    android:layout_width="match_parent"
+    android:layout_height="56dp">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/item_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/padding_medium"
+        android:paddingVertical="12dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/item_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="12dp"
+            android:layout_weight="0"
+            android:importantForAccessibility="no"
+            tools:ignore="ContentDescription"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/item_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            tools:text="@tools:sample/lorem" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</com.google.android.material.card.MaterialCardView>

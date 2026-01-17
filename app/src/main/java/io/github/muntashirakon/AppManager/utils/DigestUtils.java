@@ -196,12 +196,12 @@ public class DigestUtils {
     }
 
     @NonNull
-    private static byte[] longToBytes(long l) {
-        byte[] result = new byte[8];
-        for (int i = 7; i >= 0; i--) {
-            result[i] = (byte) (l & 0xFF);
-            l >>= 8;
-        }
-        return result;
+    public static byte[] longToBytes(long l) {
+        byte[] bytes = new byte[4];
+        bytes[0] = (byte) ((l >> 24) & 0xFF);
+        bytes[1] = (byte) ((l >> 16) & 0xFF);
+        bytes[2] = (byte) ((l >> 8) & 0xFF);
+        bytes[3] = (byte) (l & 0xFF);
+        return bytes;
     }
 }

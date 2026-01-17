@@ -34,7 +34,7 @@ import java.lang.ref.WeakReference;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 
-import io.github.muntashirakon.AppManager.BaseActivity;
+import io.github.muntashirakon.AppManager.PerProcessActivity;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 
@@ -73,7 +73,17 @@ public final class AppearanceUtils {
         options.nightMode = Prefs.Appearance.getNightMode();
         ContextThemeWrapper newCtx = new ContextThemeWrapper(context, options.theme);
         newCtx.applyOverrideConfiguration(createOverrideConfiguration(context, options));
-        return newCtx;
+        return DynamicColors.wrapContextIfAvailable(newCtx);
+    }
+
+    /**
+     * Return a {@link ContextThemeWrapper} with the default locale, layout direction, theme and night mode.
+     */
+    @NonNull
+    public static Context getThemedWidgetContext(@NonNull Context context, boolean transparent) {
+        int theme = transparent ? Prefs.Appearance.getTransparentAppTheme() : Prefs.Appearance.getAppTheme();
+        ContextThemeWrapper newCtx = new ContextThemeWrapper(context, theme);
+        return DynamicColors.wrapContextIfAvailable(newCtx);
     }
 
     /**
@@ -116,8 +126,8 @@ public final class AppearanceUtils {
     private static class ActivityAppearanceCallback implements Application.ActivityLifecycleCallbacks {
         @Override
         public void onActivityPreCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
-            if (activity instanceof BaseActivity) {
-                boolean transparentBackground = ((BaseActivity) activity).getTransparentBackground();
+            if (activity instanceof PerProcessActivity) {
+                boolean transparentBackground = ((PerProcessActivity) activity).getTransparentBackground();
                 activity.setTheme(transparentBackground
                         ? Prefs.Appearance.getTransparentAppTheme()
                         : Prefs.Appearance.getAppTheme());

@@ -37,7 +37,6 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.io.FileSystemManager;
-import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.UidGidPair;
@@ -118,6 +117,9 @@ public abstract class VirtualFileSystem {
     private static VirtualFileSystem getNewInstance(@NonNull Path file, @NonNull String type) {
         if (ZipFileSystem.TYPE.equals(type)) {
             return new ZipFileSystem(file);
+        }
+        if (ApkFileSystem.TYPE.equals(type)) {
+            return new ApkFileSystem(file);
         }
         if (DexFileSystem.TYPE.equals(type)) {
             return new DexFileSystem(file);
@@ -1057,13 +1059,15 @@ public abstract class VirtualFileSystem {
     @NonNull
     protected abstract InputStream getInputStream(@NonNull Node<?> node) throws IOException;
 
+    protected abstract void cacheFile(@NonNull Node<?> src, @NonNull File sink) throws IOException;
+
     @Nullable
     protected File findCachedFile(@NonNull Node<?> node) {
         FileCacheItem fileCacheItem = mFileCacheMap.get(node.getFullPath());
         return fileCacheItem != null ? fileCacheItem.cachedFile : null;
     }
 
-    private File getCachedFile(@NonNull Node<?> node, boolean write) throws IOException {
+    protected File getCachedFile(@NonNull Node<?> node, boolean write) throws IOException {
         FileCacheItem fileCacheItem = mFileCacheMap.get(node.getFullPath());
         if (fileCacheItem != null) {
             if (write) {
@@ -1075,10 +1079,7 @@ public abstract class VirtualFileSystem {
         File cachedFile = mFileCache.createCachedFile(Paths.getPathExtension(node.getName()));
         if (node.isPhysical()) {
             // The file exists physically. It has to be cached first.
-            try (InputStream is = getInputStream(node);
-                 FileOutputStream os = new FileOutputStream(cachedFile)) {
-                IoUtils.copy(is, os);
-            }
+            cacheFile(node, cachedFile);
         }
         fileCacheItem = new FileCacheItem(cachedFile);
         if (write) {
@@ -1104,6 +1105,8 @@ public abstract class VirtualFileSystem {
         @Nullable
         private HashMap<String, Node<T>> mChildren = null;
         private boolean mDirectory;
+        @Nullable
+        private HashMap<String, Object> mExtra = null;
 
         protected Node(@Nullable Node<T> parent, @NonNull String name) {
             this(parent, name, null);
@@ -1197,7 +1200,7 @@ public abstract class VirtualFileSystem {
         @SuppressWarnings("unchecked")
         @Nullable
         public Node<T>[] listChildren() {
-            if (mChildren == null || mChildren.size() == 0) return null;
+            if (mChildren == null || mChildren.isEmpty()) return null;
             return mChildren.values().toArray(new Node[0]);
         }
 
@@ -1214,6 +1217,31 @@ public abstract class VirtualFileSystem {
             if (child == null || mChildren == null) return;
             mChildren.remove(child.mName);
             child.mParent = null;
+        }
+
+        public <U> void addExtra(@NonNull String fieldName, @Nullable U object) {
+            if (mExtra == null) {
+                mExtra = new HashMap<>();
+            }
+            mExtra.put(fieldName, object);
+        }
+
+        @Nullable
+        public <U> U getExtra(@NonNull String fieldName) {
+            //noinspection unchecked
+            return mExtra != null ? (U) mExtra.get(fieldName) : null;
+        }
+
+        @Nullable
+        public <U> U removeExtra(@NonNull String fieldName) {
+            if (mExtra != null) {
+                Object v = mExtra.remove(fieldName);
+                if (v != null) {
+                    //noinspection unchecked
+                    return (U) v;
+                }
+            }
+            return null;
         }
 
         private static String calculateFullPath(@Nullable Node<?> parent, @NonNull Node<?> child) {

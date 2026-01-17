@@ -1,0 +1,36 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_refresh_details"
+        android:icon="@drawable/ic_refresh"
+        android:title="@string/refresh"
+        app:showAsAction="never" />
+
+    <item
+        android:icon="@drawable/ic_sort"
+        android:title="@string/sort"
+        app:showAsAction="never">
+
+        <menu>
+
+            <group
+                android:checkableBehavior="single"
+                android:menuCategory="container">
+
+                <item
+                    android:id="@+id/action_sort_by_name"
+                    android:title="@string/sort_by_overlay_names" />
+
+                <item
+                    android:id="@+id/action_sort_by_priority"
+                    android:title="@string/sort_by_priority" />
+
+            </group>
+
+        </menu>
+
+    </item>
+
+</menu>

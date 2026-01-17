@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
@@ -43,38 +45,34 @@ import io.github.muntashirakon.io.Paths;
 
 public final class ComponentUtils {
     public static boolean isTracker(String componentName) {
-        for (String signature : StaticDataset.getTrackerCodeSignatures()) {
-            if (componentName.startsWith(signature) || componentName.contains(signature)) {
-                return true;
-            }
-        }
-        return false;
+        return StaticDataset.getSearchableTrackerSignatures().search(componentName).length > 0;
     }
 
-    @NonNull
-    public static HashMap<String, RuleType> getTrackerComponentsForPackage(PackageInfo packageInfo) {
-        HashMap<String, RuleType> trackers = new HashMap<>();
+    public static int getTrackerComponentsCountForPackage(PackageInfo packageInfo) {
         HashMap<String, RuleType> components = PackageUtils.collectComponentClassNames(packageInfo);
-        for (String componentName : components.keySet()) {
-            if (isTracker(componentName))
-                trackers.put(componentName, components.get(componentName));
-        }
-        return trackers;
+        return (int) components.keySet().stream()
+                .filter(ComponentUtils::isTracker)
+                .count();
     }
 
     @NonNull
-    public static HashMap<String, RuleType> getTrackerComponentsForPackage(String packageName, @UserIdInt int userHandle) {
-        HashMap<String, RuleType> trackers = new HashMap<>();
+    public static Map<String, RuleType> getTrackerComponentsForPackage(PackageInfo packageInfo) {
+        HashMap<String, RuleType> components = PackageUtils.collectComponentClassNames(packageInfo);
+        return components.entrySet().stream()
+                .filter(entry -> isTracker(entry.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    @NonNull
+    public static Map<String, RuleType> getTrackerComponentsForPackage(String packageName, @UserIdInt int userHandle) {
         HashMap<String, RuleType> components = PackageUtils.collectComponentClassNames(packageName, userHandle);
-        for (String componentName : components.keySet()) {
-            if (isTracker(componentName))
-                trackers.put(componentName, components.get(componentName));
-        }
-        return trackers;
+        return components.entrySet().stream()
+                .filter(entry -> isTracker(entry.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     public static void blockTrackingComponents(@NonNull UserPackagePair pair) {
-        HashMap<String, RuleType> components = ComponentUtils.getTrackerComponentsForPackage(pair.getPackageName(), pair.getUserId());
+        Map<String, RuleType> components = ComponentUtils.getTrackerComponentsForPackage(pair.getPackageName(), pair.getUserId());
         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserId())) {
             for (String componentName : components.keySet()) {
                 cb.addComponent(componentName, Objects.requireNonNull(components.get(componentName)));
@@ -99,7 +97,7 @@ public final class ComponentUtils {
     }
 
     public static void unblockTrackingComponents(@NonNull UserPackagePair pair) {
-        HashMap<String, RuleType> components = getTrackerComponentsForPackage(pair.getPackageName(), pair.getUserId());
+        Map<String, RuleType> components = getTrackerComponentsForPackage(pair.getPackageName(), pair.getUserId());
         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserId())) {
             for (String componentName : components.keySet()) {
                 cb.removeComponent(componentName);

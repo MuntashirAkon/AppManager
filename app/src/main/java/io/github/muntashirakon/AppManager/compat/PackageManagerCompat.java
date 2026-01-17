@@ -207,7 +207,7 @@ public final class PackageManagerCompat {
     }
 
     @NonNull
-    public static PackageInfo getPackageInfo(@NonNull IPackageManager pm, @NonNull String packageName, int flags,
+    private static PackageInfo getPackageInfo(@NonNull IPackageManager pm, @NonNull String packageName, int flags,
                                              @UserIdInt int userId)
             throws RemoteException, PackageManager.NameNotFoundException {
         PackageInfo info = null;
@@ -341,8 +341,13 @@ public final class PackageManagerCompat {
             return null;
         }
         LauncherApps launcherApps = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
-        if (!launcherApps.isPackageEnabled(packageName, userHandle)) {
-            // Package not enabled
+        try {
+            if (!launcherApps.isPackageEnabled(packageName, userHandle)) {
+                // Package not enabled
+                return null;
+            }
+        } catch (SecurityException e) {
+            Log.w(TAG, "Could not retrieve enable state of " + packageName + " for user "  + userHandle, e);
             return null;
         }
         List<LauncherActivityInfo> activityInfoList = launcherApps.getActivityList(packageName, userHandle);
@@ -437,11 +442,17 @@ public final class PackageManagerCompat {
     @RequiresPermission(allOf = {"android.permission.SUSPEND_APPS", ManifestCompat.permission.MANAGE_USERS})
     public static void suspendPackages(String[] packageNames, @UserIdInt int userId, boolean suspend) throws RemoteException {
         String callingPackage = SelfPermissions.getCallingPackage(Users.getSelfOrRemoteUid());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            try {
+                getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, null, null, null, 0, callingPackage, 0, userId);
+            } catch (NoSuchMethodError e) {
+                getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, null, null, (SuspendDialogInfo) null, callingPackage, userId);
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, null, null, (SuspendDialogInfo) null, callingPackage, userId);
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.P) {
             getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, null, null, (String) null, callingPackage, userId);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        } else {
             getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, userId);
         }
         if (userId != UserHandleHidden.myUserId()) {
@@ -480,7 +491,7 @@ public final class PackageManagerCompat {
                 // Find using private flags
                 ApplicationInfo info = getApplicationInfo(packageName,
                         PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
-                return (ApplicationInfoCompat.getPrivateFlags(info) & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;
+                return ApplicationInfoCompat.isHidden(info);
             } catch (PackageManager.NameNotFoundException ignore) {
             }
         }
@@ -582,7 +593,7 @@ public final class PackageManagerCompat {
     }
 
     @RequiresPermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)
-    public static void forceStopPackage(String packageName, int userId) throws RemoteException, SecurityException {
+    public static void forceStopPackage(String packageName, int userId) throws SecurityException {
         try {
             ActivityManagerCompat.getActivityManager().forceStopPackage(packageName, userId);
             BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{packageName});

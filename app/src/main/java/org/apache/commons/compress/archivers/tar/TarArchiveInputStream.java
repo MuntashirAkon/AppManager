@@ -554,7 +554,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
     }
 
     private void readGlobalPaxHeaders() throws IOException {
-        globalPaxHeaders = TarUtils.parsePaxHeaders(this, globalSparseHeaders, globalPaxHeaders);
+        globalPaxHeaders = TarUtils.parsePaxHeaders(this, globalSparseHeaders, globalPaxHeaders, entrySize);
         getNextEntry(); // Get the actual file entry
 
         if (currEntry == null) {
@@ -589,7 +589,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
      */
     private void paxHeaders() throws IOException {
         List<TarArchiveStructSparse> sparseHeaders = new ArrayList<>();
-        final Map<String, String> headers = TarUtils.parsePaxHeaders(this, sparseHeaders, globalPaxHeaders);
+        final Map<String, String> headers = TarUtils.parsePaxHeaders(this, sparseHeaders, globalPaxHeaders, entrySize);
 
         // for 0.1 PAX Headers
         if (headers.containsKey("GNU.sparse.map")) {

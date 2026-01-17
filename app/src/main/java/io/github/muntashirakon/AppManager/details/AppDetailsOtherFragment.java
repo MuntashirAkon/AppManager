@@ -293,7 +293,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
             holder.chipType.setText(item.type);
             switch (item.type) {
                 case "APK": {
-                    PackageInfo packageInfo = (PackageInfo) item.mainItem;
+                    PackageInfo packageInfo = (PackageInfo) item.item;
                     StringBuilder sb = new StringBuilder()
                             .append(packageInfo.packageName)
                             .append("\n");
@@ -306,6 +306,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                         sb.append("\n").append(item.path);
                         holder.launchBtn.setVisibility(View.VISIBLE);
                         holder.launchBtn.setIconResource(io.github.muntashirakon.ui.R.drawable.ic_information);
+                        holder.launchBtn.setContentDescription(holder.itemView.getContext().getString(R.string.app_info));
                         holder.launchBtn.setOnClickListener(v -> {
                             Intent intent = AppDetailsActivity.getIntent(context, Paths.get(item.path), false);
                             startActivity(intent);
@@ -320,7 +321,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                 case "SO": {
                     if (item.path == null) {
                         // Native lib
-                        holder.textView2.setText(((LocalizedString) item.mainItem).toLocalizedString(context));
+                        holder.textView2.setText(((LocalizedString) item.item).toLocalizedString(context));
                         holder.launchBtn.setVisibility(View.GONE);
                         break;
                     } // else shared lib, fallthrough
@@ -331,6 +332,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
                     holder.textView2.setText(sb);
                     holder.launchBtn.setVisibility(View.VISIBLE);
                     holder.launchBtn.setIconResource(R.drawable.ic_open_in_new);
+                    holder.launchBtn.setContentDescription(holder.itemView.getContext().getString(R.string.open));
                     holder.launchBtn.setOnClickListener(openAsFolderInFM(context, item.path.getParent()));
                     break;
                 }
@@ -344,7 +346,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 item = (AppDetailsFeatureItem) mAdapterList.get(index);
             }
-            FeatureInfo featureInfo = item.mainItem;
+            FeatureInfo featureInfo = item.item;
             // Set background
             if (item.required && !item.available) {
                 view.setStrokeColor(ContextCompat.getColor(context, io.github.muntashirakon.ui.R.color.red));
@@ -377,7 +379,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
             MaterialCardView view = holder.itemView;
             final ConfigurationInfo configurationInfo;
             synchronized (mAdapterList) {
-                configurationInfo = (ConfigurationInfo) mAdapterList.get(index).mainItem;
+                configurationInfo = (ConfigurationInfo) mAdapterList.get(index).item;
             }
             view.setStrokeColor(Color.TRANSPARENT);
             // GL ES version
@@ -400,7 +402,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 item = mAdapterList.get(index);
             }
-            final X509Certificate signature = (X509Certificate) item.mainItem;
+            final X509Certificate signature = (X509Certificate) item.item;
             final SpannableStringBuilder builder = new SpannableStringBuilder();
             if (index == 0) {
                 // Display verifier info

@@ -1,0 +1,4 @@
+- Updated translations
+- Improved handling the list items throughout App Manager
+- Fixed a regression error in file manager
+- Fixed spinners in the App Usage and the System Config pages.

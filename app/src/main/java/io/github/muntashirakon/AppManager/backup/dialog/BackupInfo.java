@@ -8,9 +8,9 @@ import androidx.collection.ArraySet;
 import java.util.Collections;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 
-class BackupInfo {
+public class BackupInfo {
     @NonNull
     public final String packageName;
     @NonNull
@@ -18,7 +18,7 @@ class BackupInfo {
 
     private CharSequence mAppLabel;
     @NonNull
-    private List<MetadataManager.Metadata> mBackups = Collections.emptyList();
+    private List<BackupMetadataV5> mBackupMetadataList = Collections.emptyList();
     private boolean mInstalled;
     private boolean mHasBaseBackup;
 
@@ -38,12 +38,12 @@ class BackupInfo {
     }
 
     @NonNull
-    public List<MetadataManager.Metadata> getBackups() {
-        return mBackups;
+    public List<BackupMetadataV5> getBackupMetadataList() {
+        return mBackupMetadataList;
     }
 
-    public void setBackups(@NonNull List<MetadataManager.Metadata> backups) {
-        mBackups = backups;
+    public void setBackupMetadataList(@NonNull List<BackupMetadataV5> backupMetadataList) {
+        mBackupMetadataList = backupMetadataList;
     }
 
     public boolean hasBaseBackup() {

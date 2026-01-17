@@ -2,14 +2,7 @@
 
 package io.github.muntashirakon.AppManager.filters;
 
-import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET_SIGNING_CERTIFICATES;
-import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
-import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES;
-import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
-
 import android.app.Application;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.UserHandleHidden;
 
 import androidx.annotation.WorkerThread;
@@ -19,18 +12,16 @@ import androidx.lifecycle.MutableLiveData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class FinderViewModel extends AndroidViewModel {
     public static final String TAG = FinderViewModel.class.getSimpleName();
 
     private final MutableLiveData<Long> mLastUpdateTimeLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<FilterItem.FilteredItemInfo>> mFilteredAppListLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<FilterItem.FilteredItemInfo<FilterableAppInfo>>> mFilteredAppListLiveData = new MutableLiveData<>();
     private Future<?> mAppListLoaderFuture;
     @Nullable
     private List<FilterableAppInfo> mFilterableAppInfoList;
@@ -50,7 +41,7 @@ public class FinderViewModel extends AndroidViewModel {
         return mLastUpdateTimeLiveData;
     }
 
-    public MutableLiveData<List<FilterItem.FilteredItemInfo>> getFilteredAppListLiveData() {
+    public MutableLiveData<List<FilterItem.FilteredItemInfo<FilterableAppInfo>>> getFilteredAppListLiveData() {
         return mFilteredAppListLiveData;
     }
 
@@ -78,21 +69,6 @@ public class FinderViewModel extends AndroidViewModel {
         // TODO: 8/2/24 Allow multiple users
         // TODO: 8/2/24 Include backups for uninstalled apps
         int[] userIds = new int[]{UserHandleHidden.myUserId()}; //Users.getUsersIds();
-        List<FilterableAppInfo> filterableAppInfoList = new ArrayList<>();
-        for (int userId : userIds) {
-            if (ThreadUtils.isInterrupted()) return;
-            List<PackageInfo> packageInfoList = PackageManagerCompat.getInstalledPackages(
-                    PackageManager.GET_META_DATA | GET_SIGNING_CERTIFICATES
-                            | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
-                            | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
-                            | MATCH_DISABLED_COMPONENTS | MATCH_UNINSTALLED_PACKAGES
-                            | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
-            for (PackageInfo packageInfo : packageInfoList) {
-                // Interrupt thread on request
-                if (ThreadUtils.isInterrupted()) return;
-                filterableAppInfoList.add(new FilterableAppInfo(packageInfo));
-            }
-        }
-        mFilterableAppInfoList = filterableAppInfoList;
+        mFilterableAppInfoList = FilteringUtils.loadFilterableAppInfo(userIds);
     }
 }

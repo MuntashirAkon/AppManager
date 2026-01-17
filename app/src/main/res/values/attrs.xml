@@ -1,0 +1,33 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources>
+    <attr name="barChartViewStyle" format="reference" />
+    <declare-styleable name="BarChartView">
+        <!-- Bar appearance -->
+        <attr name="barColor" format="color" />
+        <attr name="selectedBarColor" format="color" />
+        <attr name="minBarWidth" format="dimension" />
+        <attr name="maxBarWidth" format="dimension" />
+        <attr name="valueOnTopOfBar" format="boolean" />
+
+        <!-- Grid appearance -->
+        <attr name="gridColor" format="color" />
+        <attr name="gridStrokeWidth" format="dimension" />
+        <attr name="gridLineCount" format="integer" />
+        <attr name="gridLabelsOnLeft" format="boolean" />
+
+        <!-- Text appearance -->
+        <attr name="textColor" format="color" />
+        <attr name="textSize" format="dimension" />
+        <attr name="yAxisFormat" format="string" />
+        <attr name="emptyText" format="string" />
+
+        <!-- Touch line appearance -->
+        <attr name="touchLineColor" format="color" />
+        <attr name="touchLineWidth" format="dimension" />
+
+        <!-- Tooltip appearance -->
+        <attr name="tooltipBackgroundColor" format="color" />
+        <attr name="tooltipTextColor" format="color" />
+        <attr name="tooltipCornerRadius" format="dimension" />
+    </declare-styleable>
+</resources>

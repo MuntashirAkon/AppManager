@@ -22,7 +22,7 @@ public interface IPackageInstaller extends IInterface {
     int createSession(PackageInstaller.SessionParams params, String installerPackageName,
                       int userId) throws RemoteException;
 
-    @RequiresApi(31)
+    @RequiresApi(Build.VERSION_CODES.S)
     int createSession(PackageInstaller.SessionParams params, String installerPackageName,
                       String installerAttributionTag, int userId);
 
@@ -78,6 +78,9 @@ public interface IPackageInstaller extends IInterface {
                                 List<String> whiteListedPermissions) throws RemoteException;
 
     void setPermissionsResult(int sessionId, boolean accepted) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    void disableVerificationForUid(int uid) throws RemoteException;
 
     abstract class Stub extends Binder implements IPackageInstaller {
         public static IPackageInstaller asInterface(IBinder binder) {

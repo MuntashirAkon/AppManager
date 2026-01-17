@@ -3,13 +3,18 @@
 package androidx.documentfile.provider;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.provider.DocumentsContract;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.io.Paths;
 
@@ -57,5 +62,22 @@ public final class DocumentFileUtils {
             return secondaryName;
         }
         throw new IllegalArgumentException("Invalid Uri, expected a tree Uri.");
+    }
+
+    @Nullable
+    public static ResolveInfo getUriSource(@NonNull Context context, @NonNull Uri uri) {
+        String authority = uri.getAuthority();
+        if (authority == null) {
+            return null;
+        }
+        PackageManager pm = context.getPackageManager();
+        Intent intent = new Intent(DocumentsContract.PROVIDER_INTERFACE);
+        List<ResolveInfo> infos = pm.queryIntentContentProviders(intent, 0);
+        for (ResolveInfo info : infos) {
+            if (Objects.equals(authority, info.providerInfo.authority)) {
+                return info;
+            }
+        }
+        return null;
     }
 }

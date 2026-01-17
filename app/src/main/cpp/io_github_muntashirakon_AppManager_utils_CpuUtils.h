@@ -15,6 +15,14 @@ extern "C" {
 JNIEXPORT jlong JNICALL Java_io_github_muntashirakon_AppManager_utils_CpuUtils_getClockTicksPerSecond
   (JNIEnv *, jclass);
 
+/*
+ * Class:     io_github_muntashirakon_AppManager_utils_CpuUtils
+ * Method:    getCpuModel
+ * Signature: ()java/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_io_github_muntashirakon_AppManager_utils_CpuUtils_getCpuModel
+        (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

@@ -54,6 +54,7 @@
             android:clickable="true"
             android:nextFocusLeft="@id/action_select_all"
             android:nextFocusDown="@id/selection_actions"
+            android:contentDescription="@android:string/cancel"
             app:icon="@drawable/mtrl_ic_cancel"
             app:iconTint="@color/m3_textfield_indicator_text_color"
             app:iconSize="24dp" />

@@ -39,6 +39,7 @@ public class MaterialSpinner extends TextInputLayout {
         mAutoCompleteTextView.setInputType(EditorInfo.TYPE_NULL);
         mAutoCompleteTextView.setKeyListener(null);
         mAutoCompleteTextView.setFocusable(false);
+        setEndIconTintList(mAutoCompleteTextView.getTextColors());
         setEndIconMode(END_ICON_DROPDOWN_MENU);
         TextInputLayoutCompat.fixEndIcon(this);
     }

@@ -134,7 +134,6 @@
     <string name="sort_by_memory_usage">Využití paměti</string>
     <string name="rsa_modulus">Modul</string>
     <string name="conversion_failed">Konverze se nezdařila.</string>
-    <string name="cache">Mezipaměť</string>
     <string name="test_only">Pouze test</string>
     <string name="validity">Platnost</string>
     <string name="pref_backup_flags_msg">Přidáním předvoleb pro možnosti zálohování odpadá nutnost vybírat příznaky při každém zálohování/obnovení.</string>

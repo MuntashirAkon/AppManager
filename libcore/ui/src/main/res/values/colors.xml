@@ -3,8 +3,12 @@
     <color name="textColorPrimary">#DE000000</color>
     <color name="textColorSecondary">#99000000</color>
 
+    <color name="salem_green">#1b8654</color>
+    <color name="lilac_bush_purple">#8267b8</color>
+    <color name="pumpkin_orange">#ff8017</color>
+
     <color name="disabled_user">#FF8A80</color>
-    <color name="highlight">@color/background_tan</color>
+    <color name="highlight">#FFFF9F</color>
     <color name="red">#B3FF0000</color>
     <color name="running">#EA80FC</color>
     <color name="semi_transparent">#10000000</color>
@@ -12,6 +16,9 @@
     <color name="sixty_percent_white">#9AFFFFFF</color>
     <color name="sixty_percent_black">#9A000000</color>
     <color name="tracker">#FFFF8017</color> <!-- dark orange -->
+    <color name="changelog_new">#198754</color>
+    <color name="changelog_improve">#563d7c</color>
+    <color name="changelog_fix">#ffc107</color>
 
     <color name="grey">#ffe0e0e0</color>
     <color name="original_orange">#ff9702</color>

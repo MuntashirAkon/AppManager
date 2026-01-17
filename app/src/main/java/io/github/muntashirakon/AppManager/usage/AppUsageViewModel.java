@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.AppManager.usage;
 
-import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_TODAY;
-
 import android.app.Application;
 
 import androidx.annotation.AnyThread;
@@ -27,11 +25,13 @@ public class AppUsageViewModel extends AndroidViewModel {
     private final MutableLiveData<List<PackageUsageInfo>> mPackageUsageInfoListLiveData = new MutableLiveData<>();
     private final MutableLiveData<PackageUsageInfo> mPackageUsageInfoLiveData = new MutableLiveData<>();
     private final List<PackageUsageInfo> mPackageUsageInfoList = Collections.synchronizedList(new ArrayList<>());
+    private final List<PackageUsageInfo.Entry> mPackageUsageEntries = Collections.synchronizedList(new ArrayList<>());
 
     private long mTotalScreenTime;
     private boolean mHasMultipleUsers;
-    @UsageUtils.IntervalType
-    private int mCurrentInterval = USAGE_TODAY;
+    @IntervalType
+    private int mCurrentInterval = IntervalType.INTERVAL_DAILY;
+    private long mCurrentDate = System.currentTimeMillis();
     private int mSortOrder = SortOrder.SORT_BY_SCREEN_TIME;
 
     public AppUsageViewModel(@NonNull Application application) {
@@ -46,12 +46,26 @@ public class AppUsageViewModel extends AndroidViewModel {
         return mPackageUsageInfoLiveData;
     }
 
-    public void setCurrentInterval(@UsageUtils.IntervalType int currentInterval) {
-        mCurrentInterval = currentInterval;
+    public List<PackageUsageInfo.Entry> getPackageUsageEntries() {
+        return mPackageUsageEntries;
+    }
+
+    public void setCurrentDate(long currentDate) {
+        mCurrentDate = currentDate;
         loadPackageUsageInfoList();
     }
 
-    @UsageUtils.IntervalType
+    public long getCurrentDate() {
+        return mCurrentDate;
+    }
+
+    public void setCurrentInterval(@IntervalType int currentInterval) {
+        mCurrentInterval = currentInterval;
+        mCurrentDate = System.currentTimeMillis();
+        loadPackageUsageInfoList();
+    }
+
+    @IntervalType
     public int getCurrentInterval() {
         return mCurrentInterval;
     }
@@ -73,13 +87,20 @@ public class AppUsageViewModel extends AndroidViewModel {
         return mHasMultipleUsers;
     }
 
+    public void loadNext() {
+        setCurrentDate(UsageUtils.getNextDateFromInterval(mCurrentInterval, mCurrentDate));
+    }
+
+    public void loadPrevious() {
+        setCurrentDate(UsageUtils.getPreviousDateFromInterval(mCurrentInterval, mCurrentDate));
+    }
+
     public void loadPackageUsageInfo(PackageUsageInfo usageInfo) {
-        ThreadUtils.postOnBackgroundThread(() -> ExUtils.exceptionAsIgnored(() -> {
-            PackageUsageInfo packageUsageInfo = AppUsageStatsManager.getInstance().getUsageStatsForPackage(
-                    usageInfo.packageName, mCurrentInterval, usageInfo.userId);
-            packageUsageInfo.copyOthers(usageInfo);
-            mPackageUsageInfoLiveData.postValue(packageUsageInfo);
-        }));
+        if (ThreadUtils.isMainThread()) {
+            mPackageUsageInfoLiveData.setValue(usageInfo);
+        } else {
+            mPackageUsageInfoLiveData.postValue(usageInfo);
+        }
     }
 
     @AnyThread
@@ -87,14 +108,19 @@ public class AppUsageViewModel extends AndroidViewModel {
         ThreadUtils.postOnBackgroundThread(() -> {
             int[] userIds = Users.getUsersIds();
             AppUsageStatsManager usageStatsManager = AppUsageStatsManager.getInstance();
+            TimeInterval interval = UsageUtils.getTimeInterval(mCurrentInterval, mCurrentDate);
             mPackageUsageInfoList.clear();
             for (int userId : userIds) {
                 ExUtils.exceptionAsIgnored(() -> mPackageUsageInfoList.addAll(usageStatsManager
-                        .getUsageStats(mCurrentInterval, userId)));
+                        .getUsageStats(interval, userId)));
             }
             mTotalScreenTime = 0;
             Set<Integer> users = new HashSet<>(3);
+            mPackageUsageEntries.clear();
             for (PackageUsageInfo appItem : mPackageUsageInfoList) {
+                if (appItem.entries != null) {
+                    mPackageUsageEntries.addAll(appItem.entries);
+                }
                 mTotalScreenTime += appItem.screenTime;
                 users.add(appItem.userId);
             }
@@ -104,10 +130,11 @@ public class AppUsageViewModel extends AndroidViewModel {
     }
 
     private void sortItems() {
+        Collator collator = Collator.getInstance();
         Collections.sort(mPackageUsageInfoList, ((o1, o2) -> {
             switch (mSortOrder) {
                 case SortOrder.SORT_BY_APP_LABEL:
-                    return Collator.getInstance().compare(o1.appLabel, o2.appLabel);
+                    return collator.compare(o1.appLabel, o2.appLabel);
                 case SortOrder.SORT_BY_LAST_USED:
                     return -Long.compare(o1.lastUsageTime, o2.lastUsageTime);
                 case SortOrder.SORT_BY_MOBILE_DATA:

@@ -45,6 +45,7 @@ import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.PackageUsageInfo;
+import io.github.muntashirakon.AppManager.usage.TimeInterval;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
@@ -261,6 +262,11 @@ public class AppDb {
                 // Interrupt thread on request
                 if (ThreadUtils.isInterrupted()) return;
 
+                if (!SelfPermissions.checkCrossUserPermission(userId, false)) {
+                    // No support for cross user
+                    continue;
+                }
+
                 List<PackageInfo> packageInfoList = PackageManagerCompat.getInstalledPackages(
                         GET_SIGNING_CERTIFICATES | PackageManager.GET_ACTIVITIES
                                 | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
@@ -356,8 +362,9 @@ public class AppDb {
             // Interrupt thread on request
             if (ThreadUtils.isInterrupted()) return;
             if (hasUsageAccess) {
-                List<PackageUsageInfo> usageInfoList = ExUtils.exceptionAsNull(() -> AppUsageStatsManager.getInstance()
-                        .getUsageStats(UsageUtils.USAGE_WEEKLY, userId));
+                TimeInterval interval = UsageUtils.getLastWeek();
+                List<PackageUsageInfo> usageInfoList = ExUtils.exceptionAsNull(() ->
+                        AppUsageStatsManager.getInstance().getUsageStats(interval, userId));
                 if (usageInfoList != null) {
                     packageUsageInfoList.addAll(usageInfoList);
                 }

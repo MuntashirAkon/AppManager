@@ -28,13 +28,10 @@ import org.openintents.openpgp.util.OpenPgpServiceConnection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.crypto.Cipher;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Prefs;
@@ -53,16 +50,14 @@ public class OpenPGPCrypto implements Crypto {
     private OpenPgpServiceConnection mService;
     private boolean mSuccessFlag;
     private boolean mErrorFlag;
-    private Path[] mFiles;
-    @NonNull
-    private final List<Path> mNewFiles = new ArrayList<>();
+    private Path[] mInputFiles;
+    private Path[] mOutputFiles;
     private InputStream mIs;
     private OutputStream mOs;
     @NonNull
     private final long[] mKeyIds;
     private final String mProvider;
     private Intent mLastIntent;
-    private int mLastMode;
     private final Context mContext;
     private final Handler mHandler;
     private boolean mIsFileMode;  // Whether to en/decrypt a file than an stream
@@ -77,7 +72,7 @@ public class OpenPGPCrypto implements Crypto {
                     // TODO: 17/12/21 Handle this better by using CountdownLatch
                     new Thread(() -> {
                         try {
-                            doAction(mLastIntent, mLastMode, false);
+                            doAction(mLastIntent, false);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -102,6 +97,12 @@ public class OpenPGPCrypto implements Crypto {
         bind();
     }
 
+    @NonNull
+    @Override
+    public String getModeName() {
+        return CryptoUtils.MODE_OPEN_PGP;
+    }
+
     @Override
     public void close() {
         // Unbind service
@@ -112,24 +113,24 @@ public class OpenPGPCrypto implements Crypto {
 
     @WorkerThread
     @Override
-    public void decrypt(@NonNull Path[] files) throws IOException {
+    public void decrypt(@NonNull Path[] inputFiles, @NonNull Path[] outputFiles) throws IOException {
         Intent intent = new Intent(OpenPgpApi.ACTION_DECRYPT_VERIFY);
-        handleFiles(intent, Cipher.DECRYPT_MODE, files);
+        handleFiles(intent, inputFiles, outputFiles);
     }
 
     @Override
     public void decrypt(@NonNull InputStream encryptedStream, @NonNull OutputStream unencryptedStream)
             throws IOException {
         Intent intent = new Intent(OpenPgpApi.ACTION_DECRYPT_VERIFY);
-        handleStreams(intent, Cipher.DECRYPT_MODE, encryptedStream, unencryptedStream);
+        handleStreams(intent, encryptedStream, unencryptedStream);
     }
 
     @WorkerThread
     @Override
-    public void encrypt(@NonNull Path[] filesList) throws IOException {
+    public void encrypt(@NonNull Path[] inputFiles, @NonNull Path[] outputFiles) throws IOException {
         Intent intent = new Intent(OpenPgpApi.ACTION_ENCRYPT);
         intent.putExtra(OpenPgpApi.EXTRA_KEY_IDS, mKeyIds);
-        handleFiles(intent, Cipher.ENCRYPT_MODE, filesList);
+        handleFiles(intent, inputFiles, outputFiles);
     }
 
     @Override
@@ -137,63 +138,57 @@ public class OpenPGPCrypto implements Crypto {
             throws IOException {
         Intent intent = new Intent(OpenPgpApi.ACTION_ENCRYPT);
         intent.putExtra(OpenPgpApi.EXTRA_KEY_IDS, mKeyIds);
-        handleStreams(intent, Cipher.ENCRYPT_MODE, unencryptedStream, encryptedStream);
+        handleStreams(intent, unencryptedStream, encryptedStream);
     }
 
     @WorkerThread
-    private void handleFiles(Intent intent, int mode, @NonNull Path[] filesList) throws IOException {
+    private void handleFiles(Intent intent, @NonNull Path[] inputFiles, @NonNull Path[] outputFiles) throws IOException {
         mIsFileMode = true;
         waitForServiceBound();
         mIs = null;
         mOs = null;
-        mFiles = filesList;
-        mNewFiles.clear();
+        mInputFiles = inputFiles;
+        mOutputFiles = outputFiles;
         mLastIntent = intent;
-        mLastMode = mode;
-        doAction(intent, mode, true);
+        doAction(intent, true);
     }
 
     @WorkerThread
-    private void handleStreams(Intent intent, int mode, @NonNull InputStream is, @NonNull OutputStream os)
+    private void handleStreams(Intent intent, @NonNull InputStream is, @NonNull OutputStream os)
             throws IOException {
         mIsFileMode = false;
         waitForServiceBound();
         mIs = is;
         mOs = os;
-        mFiles = new Path[0];
+        mInputFiles = new Path[0];
+        mOutputFiles = new Path[0];
         mLastIntent = intent;
-        mLastMode = mode;
-        doAction(intent, mode, true);
+        doAction(intent, true);
     }
 
     @WorkerThread
-    private void doAction(Intent intent, int mode, boolean waitForResult) throws IOException {
+    private void doAction(Intent intent, boolean waitForResult) throws IOException {
         if (mIsFileMode) {
-            doActionForFiles(intent, mode, waitForResult);
+            doActionForFiles(intent, waitForResult);
         } else {
             doActionForStream(intent, waitForResult);
         }
     }
 
     @WorkerThread
-    private void doActionForFiles(Intent intent, int mode, boolean waitForResult) throws IOException {
+    private void doActionForFiles(Intent intent, boolean waitForResult) throws IOException {
         mErrorFlag = false;
         // `files` is never null here
-        if (mFiles.length == 0) {
+        if (mInputFiles.length == 0) {
             Log.d(TAG, "No files to de/encrypt");
             return;
         }
-        for (Path inputPath : mFiles) {
-            Path parent = inputPath.getParent();
-            if (parent == null) {
-                throw new IOException("Parent of " + inputPath + " cannot be null.");
-            }
-            String outputFilename;
-            if (mode == Cipher.DECRYPT_MODE) {
-                outputFilename = inputPath.getName().substring(0, inputPath.getName().lastIndexOf(GPG_EXT));
-            } else outputFilename = inputPath.getName() + GPG_EXT;
-            Path outputPath = parent.createNewFile(outputFilename, null);
-            mNewFiles.add(outputPath);
+        if (mInputFiles.length != mOutputFiles.length) {
+            throw new IOException("The number of input and output files are not the same.");
+        }
+        for (int i = 0; i < mInputFiles.length; i++) {
+            Path inputPath = mInputFiles[i];
+            Path outputPath = mOutputFiles[i];
             Log.i(TAG, "Input: %s\nOutput: %s", inputPath, outputPath);
             InputStream is = inputPath.openInputStream();
             OutputStream os = outputPath.openOutputStream();
@@ -204,12 +199,6 @@ public class OpenPGPCrypto implements Crypto {
             if (mErrorFlag) {
                 outputPath.delete();
                 throw new IOException("Error occurred during en/decryption process");
-            }
-            // Delete unencrypted file
-            if (mode == Cipher.ENCRYPT_MODE) {
-                if (!inputPath.delete()) {
-                    throw new IOException("Couldn't delete old file " + inputPath);
-                }
             }
         }
         // Total success
@@ -225,12 +214,6 @@ public class OpenPGPCrypto implements Crypto {
         if (mErrorFlag) {
             throw new IOException("Error occurred during en/decryption process");
         }
-    }
-
-    @NonNull
-    @Override
-    public Path[] getNewFiles() {
-        return mNewFiles.toArray(new Path[0]);
     }
 
     private void bind() {

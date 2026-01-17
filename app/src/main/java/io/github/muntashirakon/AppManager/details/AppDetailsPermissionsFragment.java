@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.materialswitch.MaterialSwitch;
@@ -419,6 +420,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             TextView textView8;
             ImageView imageView;
             MaterialSwitch toggleSwitch;
+            MaterialButton settingButton;
             Chip chipType;
 
             public ViewHolder(@NonNull View itemView) {
@@ -427,6 +429,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                 switch (mRequestedProperty) {
                     case PERMISSIONS:
                         imageView = itemView.findViewById(R.id.icon);
+                        imageView.setContentDescription(itemView.getContext().getString(R.string.icon));
                         textView1 = itemView.findViewById(R.id.label);
                         textView2 = itemView.findViewById(R.id.name);
                         textView3 = itemView.findViewById(R.id.taskAffinity);
@@ -456,6 +459,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                         textView4 = itemView.findViewById(R.id.perm_package_name);
                         textView5 = itemView.findViewById(R.id.perm_group);
                         toggleSwitch = itemView.findViewById(R.id.perm_toggle_btn);
+                        settingButton = itemView.findViewById(R.id.action_settings);
                         break;
                     default:
                         break;
@@ -620,7 +624,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                 // TODO: 22/5/23 Perform using a ViewModel
                 ThreadUtils.postOnBackgroundThread(() -> {
                     if (viewModel != null && viewModel.setAppOpMode(item)) {
-                        ThreadUtils.postOnMainThread(() -> notifyItemChanged(index));
+                        ThreadUtils.postOnMainThread(() -> notifyItemChanged(index, AdapterUtils.STUB));
                     } else {
                         ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(isAllowed
                                 ? R.string.failed_to_enable_op : R.string.failed_to_disable_op));
@@ -637,7 +641,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                             // TODO: 22/5/23 Perform using a ViewModel
                             ThreadUtils.postOnBackgroundThread(() -> {
                                 if (viewModel != null && viewModel.setAppOpMode(item, opMode)) {
-                                    ThreadUtils.postOnMainThread(() -> notifyItemChanged(index));
+                                    ThreadUtils.postOnMainThread(() -> notifyItemChanged(index, AdapterUtils.STUB));
                                 } else {
                                     ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(
                                             R.string.failed_to_change_app_op_mode));
@@ -655,7 +659,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 permissionItem = (AppDetailsPermissionItem) mAdapterList.get(index);
             }
-            @NonNull PermissionInfo permissionInfo = permissionItem.mainItem;
+            @NonNull PermissionInfo permissionInfo = permissionItem.item;
             final String permName = permissionInfo.name;
             // Set permission name
             if (mConstraint != null && permName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
@@ -700,7 +704,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                 holder.itemView.setOnClickListener(v -> ThreadUtils.postOnBackgroundThread(() -> {
                     try {
                         if (Objects.requireNonNull(viewModel).togglePermission(permissionItem)) {
-                            ThreadUtils.postOnMainThread(() -> notifyItemChanged(index));
+                            ThreadUtils.postOnMainThread(() -> notifyItemChanged(index, AdapterUtils.STUB));
                         } else throw new Exception("Couldn't grant permission: " + permName);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -713,6 +717,22 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                 holder.toggleSwitch.setVisibility(View.GONE);
                 holder.itemView.setOnClickListener(null);
                 holder.itemView.setClickable(false);
+                if (permissionItem.settingItem != null) {
+                    holder.settingButton.setVisibility(View.VISIBLE);
+                    holder.settingButton.setOnClickListener(v -> {
+                        try {
+                            String packageName = Objects.requireNonNull(viewModel).getPackageName();
+                            startActivity(permissionItem.settingItem.toIntent(Objects.requireNonNull(packageName)));
+                        } catch (Throwable th) {
+                            th.printStackTrace();
+                            if (th.getLocalizedMessage() != null) {
+                                UIUtils.displayLongToast(th.getLocalizedMessage());
+                            }
+                        }
+                    });
+                } else {
+                    holder.settingButton.setVisibility(View.GONE);
+                }
             }
             int flags = permissionItem.permission.getFlags();
             holder.itemView.setOnLongClickListener(flags == 0 ? null : v -> {
@@ -736,7 +756,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 permissionItem = (AppDetailsDefinedPermissionItem) mAdapterList.get(index);
             }
-            PermissionInfo permissionInfo = permissionItem.mainItem;
+            PermissionInfo permissionInfo = permissionItem.item;
             // Internal or external
             holder.chipType.setText(permissionItem.isExternal ? R.string.external : R.string.internal);
             // Label

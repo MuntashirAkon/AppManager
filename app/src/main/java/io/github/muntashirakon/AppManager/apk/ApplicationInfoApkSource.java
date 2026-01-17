@@ -3,16 +3,26 @@
 package io.github.muntashirakon.AppManager.apk;
 
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Parcel;
 
 import androidx.annotation.NonNull;
 import androidx.core.os.ParcelCompat;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.history.JsonDeserializer;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
+
 public class ApplicationInfoApkSource extends ApkSource {
+    public static final String TAG = ApplicationInfoApkSource.class.getSimpleName();
+
     @NonNull
     private final ApplicationInfo mApplicationInfo;
 
@@ -57,6 +67,27 @@ public class ApplicationInfoApkSource extends ApkSource {
         dest.writeParcelable(mApplicationInfo, flags);
         dest.writeInt(mApkFileKey);
     }
+
+    protected ApplicationInfoApkSource(@NonNull JSONObject jsonObject) throws JSONException {
+        PackageManager pm = ContextUtils.getContext().getPackageManager();
+        String file = jsonObject.getString("file");
+        PackageInfo packageInfo = Objects.requireNonNull(pm.getPackageArchiveInfo(file, 0));
+        mApplicationInfo = Objects.requireNonNull(packageInfo.applicationInfo);
+        mApplicationInfo.publicSourceDir = mApplicationInfo.sourceDir = file;
+        mApkFileKey = jsonObject.getInt("apk_file_key");
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("tag", TAG);
+        jsonObject.put("file", mApplicationInfo.publicSourceDir);
+        jsonObject.put("apk_file_key", mApkFileKey);
+        return jsonObject;
+    }
+
+    public static final JsonDeserializer.Creator<ApplicationInfoApkSource> DESERIALIZER = ApplicationInfoApkSource::new;
 
     public static final Creator<ApplicationInfoApkSource> CREATOR = new Creator<ApplicationInfoApkSource>() {
         @Override

@@ -436,7 +436,6 @@
     <string name="input_profile_name">Profilnavn</string>
     <string name="full_stop_tap_to_see_details">. Trykk for å se detaljer.</string>
     <string name="no_matching_package_found">Kunne ikke funne noe slik program</string>
-    <string name="cache">Utelukk hurtiglager</string>
     <string name="failed_packages">Feilede pakker</string>
     <string name="no_tracker_found">Fant ingen sporer</string>
     <string name="clear_app_cache_description">Tøm hurtiglager for alle programmer</string>

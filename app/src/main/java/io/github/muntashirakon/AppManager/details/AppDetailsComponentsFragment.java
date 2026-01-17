@@ -371,6 +371,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                 super(itemView);
                 this.itemView = (MaterialCardView) itemView;
                 imageView = itemView.findViewById(R.id.icon);
+                imageView.setContentDescription(itemView.getContext().getString(R.string.icon));
                 labelView = itemView.findViewById(R.id.label);
                 nameView = itemView.findViewById(R.id.name);
                 processNameView = itemView.findViewById(R.id.process_name);
@@ -472,7 +473,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             holder.toggleSwitch.setOnLongClickListener(v -> {
                 PopupMenu popupMenu = new PopupMenu(activity, holder.toggleSwitch);
                 Menu menu = popupMenu.getMenu();
-                boolean canBlockByIfw = !(item.mainItem instanceof ProviderInfo) && SelfPermissions.canBlockByIFW();
+                boolean canBlockByIfw = !(item.item instanceof ProviderInfo) && SelfPermissions.canBlockByIFW();
                 popupMenu.inflate(R.menu.fragment_app_details_components_selection_actions);
                 menu.findItem(R.id.action_ifw_and_disable).setEnabled(canBlockByIfw);
                 menu.findItem(R.id.action_ifw).setEnabled(canBlockByIfw);
@@ -505,7 +506,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 componentItem = (AppDetailsActivityItem) mAdapterList.get(index);
             }
-            final ActivityInfo activityInfo = (ActivityInfo) componentItem.mainItem;
+            final ActivityInfo activityInfo = (ActivityInfo) componentItem.item;
             final String activityName = componentItem.name;
             final boolean isDisabled = !mIsExternalApk && componentItem.isDisabled();
             // Background color: regular < tracker < disabled < blocked
@@ -625,7 +626,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 serviceItem = (AppDetailsServiceItem) mAdapterList.get(index);
             }
-            final ServiceInfo serviceInfo = (ServiceInfo) serviceItem.mainItem;
+            final ServiceInfo serviceInfo = (ServiceInfo) serviceItem.item;
             final boolean isDisabled = !mIsExternalApk && serviceItem.isDisabled();
             // Background color: regular < tracker < disabled < blocked < running
             if (serviceItem.isRunning()) {
@@ -700,7 +701,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
             }
-            final ActivityInfo activityInfo = (ActivityInfo) componentItem.mainItem;
+            final ActivityInfo activityInfo = (ActivityInfo) componentItem.item;
             // Background color: regular < tracker < disabled < blocked
             if (!mIsExternalApk && componentItem.isBlocked()) {
                 holder.itemView.setStrokeColor(mBlockedIndicatorColor);
@@ -763,7 +764,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             synchronized (mAdapterList) {
                 componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
             }
-            final ProviderInfo providerInfo = (ProviderInfo) componentItem.mainItem;
+            final ProviderInfo providerInfo = (ProviderInfo) componentItem.item;
             final String providerName = providerInfo.name;
             // Background color: regular < tracker < disabled < blocked
             if (!mIsExternalApk && componentItem.isBlocked()) {

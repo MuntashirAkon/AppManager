@@ -136,9 +136,14 @@ public class NoRootAccessibilityService extends BaseAccessibilityService {
 
     private boolean navigateToStorageAndCache(AccessibilityEvent event) {
         String storageSettings;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            storageSettings = getString(event, "storage_settings_for_app");
-        } else storageSettings = getString(event, "storage_label");
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                storageSettings = getString(event, "storage_settings_for_app");
+            } else storageSettings = getString(event, "storage_label");
+        } catch (Resources.NotFoundException e) {
+            // Failed: non-AOSP device
+            return false;
+        }
         SystemClock.sleep(500); // It may take a few moments to initialise the Recycler/List views
         AccessibilityNodeInfo storageNode = findViewByTextRecursive(getRootInActiveWindow(), storageSettings);
         if (storageNode != null) {

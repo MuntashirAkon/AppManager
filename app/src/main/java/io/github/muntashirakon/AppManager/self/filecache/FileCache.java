@@ -100,6 +100,16 @@ public class FileCache implements Closeable {
     }
 
     @NonNull
+    public File getCachedFile(@NonNull byte[] bytes, @Nullable String extension) throws IOException {
+        File tempFile = File.createTempFile("file_", "." + (extension != null ? extension : "tmp"), mCacheDir);
+        mFileCache.add(tempFile);
+        try (OutputStream os = new FileOutputStream(tempFile)) {
+            os.write(bytes);
+        }
+        return tempFile;
+    }
+
+    @NonNull
     public File createCachedFile(@Nullable String extension) throws IOException {
         File tempFile = File.createTempFile("file_", "." + (extension != null ? extension : "tmp"), mCacheDir);
         mFileCache.add(tempFile);

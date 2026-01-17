@@ -15,10 +15,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.os.ParcelCompat;
 
-import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.settings.Prefs;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class InstallerOptions implements Parcelable {
+import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.history.IJsonSerializer;
+import io.github.muntashirakon.AppManager.history.JsonDeserializer;
+import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.utils.JSONUtils;
+
+public class InstallerOptions implements Parcelable, IJsonSerializer {
     @NonNull
     public static InstallerOptions getDefault() {
         return new InstallerOptions();
@@ -33,9 +39,11 @@ public class InstallerOptions implements Parcelable {
     private String mOriginatingPackage;
     @Nullable
     private Uri mOriginatingUri;
+    private boolean mSetOriginatingPackage;
     private int mPackageSource;
     private int mInstallScenario;
     private boolean mRequestUpdateOwnership;
+    private boolean mDisableApkVerification;
     private boolean mSignApkFiles;
     private boolean mForceDexOpt;
     private boolean mBlockTrackers;
@@ -44,8 +52,9 @@ public class InstallerOptions implements Parcelable {
         mUserId = UserHandleHidden.myUserId();
         mInstallLocation = Prefs.Installer.getInstallLocation();
         mInstallerName = Prefs.Installer.getInstallerPackageName();
-        mOriginatingPackage = Prefs.Installer.getOriginatingPackage();
+        mOriginatingPackage = null;
         mOriginatingUri = null;
+        mSetOriginatingPackage = Prefs.Installer.isSetOriginatingPackage();
         mPackageSource = Prefs.Installer.getPackageSource();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             // If the user is always installing apps in the background, we expect that the user does
@@ -55,6 +64,7 @@ public class InstallerOptions implements Parcelable {
                     : PackageManager.INSTALL_SCENARIO_FAST;
         }
         mRequestUpdateOwnership = Prefs.Installer.requestUpdateOwnership();
+        mDisableApkVerification = Prefs.Installer.isDisableApkVerification();
         mSignApkFiles = Prefs.Installer.canSignApk();
         mForceDexOpt = Prefs.Installer.forceDexOpt();
         mBlockTrackers = Prefs.Installer.blockTrackers();
@@ -66,12 +76,14 @@ public class InstallerOptions implements Parcelable {
         mInstallerName = in.readString();
         mOriginatingPackage = in.readString();
         mOriginatingUri = ParcelCompat.readParcelable(in, Uri.class.getClassLoader(), Uri.class);
+        mSetOriginatingPackage = ParcelCompat.readBoolean(in);
         mPackageSource = in.readInt();
         mInstallScenario = in.readInt();
-        mRequestUpdateOwnership = in.readByte() != 0;
-        mSignApkFiles = in.readByte() != 0;
-        mForceDexOpt = in.readByte() != 0;
-        mBlockTrackers = in.readByte() != 0;
+        mRequestUpdateOwnership = ParcelCompat.readBoolean(in);
+        mDisableApkVerification = ParcelCompat.readBoolean(in);
+        mSignApkFiles = ParcelCompat.readBoolean(in);
+        mForceDexOpt = ParcelCompat.readBoolean(in);
+        mBlockTrackers = ParcelCompat.readBoolean(in);
     }
 
     public void copy(@NonNull InstallerOptions options) {
@@ -80,9 +92,11 @@ public class InstallerOptions implements Parcelable {
         mInstallerName = options.mInstallerName;
         mOriginatingPackage = options.mOriginatingPackage;
         mOriginatingUri = options.mOriginatingUri;
+        mSetOriginatingPackage = options.mSetOriginatingPackage;
         mPackageSource = options.mPackageSource;
         mInstallScenario = options.mInstallScenario;
         mRequestUpdateOwnership = options.mRequestUpdateOwnership;
+        mDisableApkVerification = options.mDisableApkVerification;
         mSignApkFiles = options.mSignApkFiles;
         mForceDexOpt = options.mForceDexOpt;
         mBlockTrackers = options.mBlockTrackers;
@@ -95,13 +109,54 @@ public class InstallerOptions implements Parcelable {
         dest.writeString(mInstallerName);
         dest.writeString(mOriginatingPackage);
         dest.writeParcelable(mOriginatingUri, flags);
+        ParcelCompat.writeBoolean(dest, mSetOriginatingPackage);
         dest.writeInt(mPackageSource);
         dest.writeInt(mInstallScenario);
-        dest.writeByte((byte) (mRequestUpdateOwnership ? 1 : 0));
-        dest.writeByte((byte) (mSignApkFiles ? 1 : 0));
-        dest.writeByte((byte) (mForceDexOpt ? 1 : 0));
-        dest.writeByte((byte) (mBlockTrackers ? 1 : 0));
+        ParcelCompat.writeBoolean(dest, mRequestUpdateOwnership);
+        ParcelCompat.writeBoolean(dest, mDisableApkVerification);
+        ParcelCompat.writeBoolean(dest, mSignApkFiles);
+        ParcelCompat.writeBoolean(dest, mForceDexOpt);
+        ParcelCompat.writeBoolean(dest, mBlockTrackers);
     }
+
+    protected InstallerOptions(@NonNull JSONObject jsonObject) throws JSONException {
+        mUserId = jsonObject.getInt("user_id");
+        mInstallLocation = jsonObject.getInt("install_location");
+        mInstallerName = JSONUtils.optString(jsonObject, "installer_name", null);
+        mOriginatingPackage = JSONUtils.optString(jsonObject, "originating_package");
+        String originatingUri = JSONUtils.optString(jsonObject, "originating_uri", null);
+        mOriginatingUri = originatingUri != null ? Uri.parse(originatingUri) : null;
+        mSetOriginatingPackage = jsonObject.optBoolean("set_originating_package", Prefs.Installer.isSetOriginatingPackage());
+        mPackageSource = jsonObject.getInt("package_source");
+        mInstallScenario = jsonObject.getInt("install_scenario");
+        mRequestUpdateOwnership = jsonObject.getBoolean("request_update_ownership");
+        mDisableApkVerification = jsonObject.getBoolean("disable_apk_verification");
+        mSignApkFiles = jsonObject.getBoolean("sign_apk_files");
+        mForceDexOpt = jsonObject.getBoolean("force_dex_opt");
+        mBlockTrackers = jsonObject.getBoolean("block_trackers");
+    }
+
+    @NonNull
+    @Override
+    public JSONObject serializeToJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("user_id", mUserId);
+        jsonObject.put("install_location", mInstallLocation);
+        jsonObject.put("installer_name", mInstallerName);
+        jsonObject.put("originating_package", mOriginatingPackage);
+        jsonObject.put("originating_uri", mOriginatingUri != null ? mOriginatingUri.toString() : null);
+        jsonObject.put("set_originating_package", mSetOriginatingPackage);
+        jsonObject.put("package_source", mPackageSource);
+        jsonObject.put("install_scenario", mInstallScenario);
+        jsonObject.put("request_update_ownership", mRequestUpdateOwnership);
+        jsonObject.put("disable_apk_verification", mDisableApkVerification);
+        jsonObject.put("sign_apk_files", mSignApkFiles);
+        jsonObject.put("force_dex_opt", mForceDexOpt);
+        jsonObject.put("block_trackers", mBlockTrackers);
+        return jsonObject;
+    }
+
+    public static final JsonDeserializer.Creator<InstallerOptions> DESERIALIZER = InstallerOptions::new;
 
     @Override
     public int describeContents() {
@@ -165,6 +220,14 @@ public class InstallerOptions implements Parcelable {
         mOriginatingUri = originatingUri;
     }
 
+    public boolean isSetOriginatingPackage() {
+        return mSetOriginatingPackage;
+    }
+
+    public void setSetOriginatingPackage(boolean setOriginatingPackage) {
+        mSetOriginatingPackage = setOriginatingPackage;
+    }
+
     public int getPackageSource() {
         return mPackageSource;
     }
@@ -187,6 +250,14 @@ public class InstallerOptions implements Parcelable {
 
     public void requestUpdateOwnership(boolean update) {
         mRequestUpdateOwnership = update;
+    }
+
+    public boolean isDisableApkVerification() {
+        return mDisableApkVerification;
+    }
+
+    public void setDisableApkVerification(boolean disableApkVerification) {
+        mDisableApkVerification = disableApkVerification;
     }
 
     public boolean isSignApkFiles() {

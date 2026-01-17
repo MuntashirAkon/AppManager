@@ -21,12 +21,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Queue;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.profiles.struct.AppsProfile;
+import io.github.muntashirakon.AppManager.profiles.struct.BaseProfile;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
@@ -37,6 +36,7 @@ public class ProfileApplierActivity extends BaseActivity {
 
     public static final String EXTRA_PROFILE_ID = "prof";
     public static final String EXTRA_STATE = "state";
+    private static final String EXTRA_NOTIFY = "notify";
 
     @StringDef({ST_SIMPLE, ST_ADVANCED})
     public @interface ShortcutType {
@@ -65,21 +65,48 @@ public class ProfileApplierActivity extends BaseActivity {
             intent.putExtra(EXTRA_SHORTCUT_TYPE, shortcutType);
             if (state != null) {
                 intent.putExtra(EXTRA_STATE, state);
-            } else if (shortcutType.equals(ST_SIMPLE)) {
-                // Shortcut is set to simple but no state set
-                intent.putExtra(EXTRA_STATE, AppsProfile.STATE_ON);
             }
         }
         return intent;
     }
 
+    @NonNull
+    public static Intent getAutomationIntent(@NonNull Context context,
+                                             @NonNull String profileId,
+                                             @Nullable String state) {
+        // Compatibility: Old shortcuts still store profile name instead of profile ID.
+        String realProfileId = ProfileManager.getProfileIdCompat(profileId);
+        Intent intent = new Intent(context, ProfileApplierActivity.class);
+        intent.putExtra(EXTRA_PROFILE_ID, realProfileId);
+        if (state != null) { // State => Automatic trigger
+            intent.putExtra(EXTRA_SHORTCUT_TYPE, ST_SIMPLE);
+            intent.putExtra(EXTRA_STATE, state);
+            // Avoid issuing completion notification
+            intent.putExtra(EXTRA_NOTIFY, false);
+        } else { // Manual trigger
+            intent.putExtra(EXTRA_SHORTCUT_TYPE, ST_ADVANCED);
+        }
+        return intent;
+    }
+
+    @NonNull
+    public static Intent getApplierIntent(@NonNull Context context, @NonNull String profileId) {
+        // Compatibility: Old shortcuts still store profile name instead of profile ID.
+        String realProfileId = ProfileManager.getProfileIdCompat(profileId);
+        Intent intent = new Intent(context, ProfileApplierActivity.class);
+        intent.putExtra(EXTRA_PROFILE_ID, realProfileId);
+        intent.putExtra(EXTRA_SHORTCUT_TYPE, ST_ADVANCED);
+        return intent;
+    }
+
     public static class ProfileApplierInfo {
-        public AppsProfile profile;
+        public BaseProfile profile;
         public String profileId;
         @ShortcutType
         public String shortcutType;
         @Nullable
         public String state;
+        public boolean notify;
     }
 
     private final Queue<Intent> mQueue = new LinkedList<>();
@@ -101,7 +128,7 @@ public class ProfileApplierActivity extends BaseActivity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         synchronized (mQueue) {
             mQueue.add(intent);
         }
@@ -118,9 +145,10 @@ public class ProfileApplierActivity extends BaseActivity {
             return;
         }
         @ShortcutType
-        String shortcutType = getIntent().getStringExtra(EXTRA_SHORTCUT_TYPE);
-        String profileId = getIntent().getStringExtra(EXTRA_PROFILE_ID);
-        String profileState = getIntent().getStringExtra(EXTRA_STATE);
+        String shortcutType = intent.getStringExtra(EXTRA_SHORTCUT_TYPE);
+        String profileId = intent.getStringExtra(EXTRA_PROFILE_ID);
+        String profileState = intent.getStringExtra(EXTRA_STATE);
+        boolean notify = intent.getBooleanExtra(EXTRA_NOTIFY, true);
         if (shortcutType == null || profileId == null) {
             // Invalid shortcut
             return;
@@ -129,6 +157,7 @@ public class ProfileApplierActivity extends BaseActivity {
         info.profileId = profileId;
         info.shortcutType = shortcutType;
         info.state = profileState;
+        info.notify = notify;
         mViewModel.loadProfile(info);
     }
 
@@ -137,14 +166,11 @@ public class ProfileApplierActivity extends BaseActivity {
             next();
             return;
         }
-        String state = info.state != null ? info.state : info.profile.state;
+        info.state = info.state != null ? info.state : info.profile.state;
         switch (info.shortcutType) {
             case ST_SIMPLE:
-                Intent intent = new Intent(this, ProfileApplierService.class);
-                intent.putExtra(ProfileApplierService.EXTRA_PROFILE_ID, info.profileId);
-                intent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, info.profile.name);
-                // There must be a state
-                intent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, Objects.requireNonNull(state));
+                Intent intent = ProfileApplierService.getIntent(this,
+                        ProfileQueueItem.fromProfiledApplierInfo(info), info.notify);
                 ContextCompat.startForegroundService(this, intent);
                 next();
                 break;
@@ -153,18 +179,17 @@ public class ProfileApplierActivity extends BaseActivity {
                         getString(R.string.on),
                         getString(R.string.off)
                 };
-                @AppsProfile.ProfileState final List<String> states = Arrays.asList(AppsProfile.STATE_ON, AppsProfile.STATE_OFF);
+                @BaseProfile.ProfileState final List<String> states = Arrays.asList(BaseProfile.STATE_ON, BaseProfile.STATE_OFF);
                 DialogTitleBuilder titleBuilder = new DialogTitleBuilder(this)
                         .setTitle(getString(R.string.apply_profile, info.profile.name))
                         .setSubtitle(R.string.choose_a_profile_state);
                 new SearchableSingleChoiceDialogBuilder<>(this, states, statesL)
                         .setTitle(titleBuilder.build())
-                        .setSelection(state)
+                        .setSelection(info.state)
                         .setPositiveButton(R.string.ok, (dialog, which, selectedState) -> {
-                            Intent aIntent = new Intent(this, ProfileApplierService.class);
-                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_ID, info.profileId);
-                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, info.profile.name);
-                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, selectedState);
+                            info.state = selectedState;
+                            Intent aIntent = ProfileApplierService.getIntent(this,
+                                    ProfileQueueItem.fromProfiledApplierInfo(info), info.notify);
                             ContextCompat.startForegroundService(this, aIntent);
                         })
                         .setNegativeButton(R.string.cancel, null)
@@ -187,7 +212,7 @@ public class ProfileApplierActivity extends BaseActivity {
             ThreadUtils.postOnBackgroundThread(() -> {
                 Path profilePath = ProfileManager.findProfilePathById(info.profileId);
                 try {
-                    info.profile = AppsProfile.fromPath(profilePath);
+                    info.profile = BaseProfile.fromPath(profilePath);
                     mProfileLiveData.postValue(info);
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();

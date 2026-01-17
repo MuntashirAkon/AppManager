@@ -9,6 +9,8 @@
     <issue id="UnknownNullness" severity="informational" />
 
     <issue id="DuplicateStrings" severity="warning" />
+    <!-- In some cases, the linter produces wrong results for WrongConstant -->
+    <issue id="WrongConstant" severity="warning" />
     <issue id="WrongThreadInterprocedural" severity="warning" />
 
     <issue id="HardcodedText" severity="error" />

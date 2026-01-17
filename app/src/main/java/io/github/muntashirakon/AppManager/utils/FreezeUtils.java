@@ -7,28 +7,60 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.db.AppsDb;
+import io.github.muntashirakon.AppManager.db.entity.FreezeType;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 
 public final class FreezeUtils {
-    @IntDef({FREEZE_DISABLE, FREEZE_SUSPEND, FREEZE_HIDE})
+    @IntDef({FREEZE_DISABLE, FREEZE_SUSPEND, FREEZE_HIDE, FREEZE_ADV_SUSPEND})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface FreezeType {
+    public @interface FreezeMethod {
     }
 
     public static final int FREEZE_DISABLE = 1;
     public static final int FREEZE_SUSPEND = 1 << 1;
     public static final int FREEZE_HIDE = 1 << 2;
+    public static final int FREEZE_ADV_SUSPEND = 1 << 3;
+
+    @WorkerThread
+    public static void storeFreezeMethod(@NonNull String packageName, @FreezeMethod int freezeType) {
+        AppsDb.getInstance().freezeTypeDao().insert(new FreezeType(packageName, freezeType));
+    }
+
+    @WorkerThread
+    public static void deleteFreezeMethod(@NonNull String packageName) {
+        AppsDb.getInstance().freezeTypeDao().delete(packageName);
+    }
+
+    @WorkerThread
+    @FreezeMethod
+    @Nullable
+    public static Integer loadFreezeMethod(@Nullable String packageName) {
+        if (packageName != null) {
+            FreezeType freezeType;
+            freezeType = AppsDb.getInstance().freezeTypeDao().get(packageName);
+            if (freezeType != null) {
+                return freezeType.type;
+            }
+        }
+        // No package-specific freezing method exists
+        return null;
+    }
 
     public static boolean isFrozen(@NonNull ApplicationInfo applicationInfo) {
         // An app is frozen if one of the following operations return true: suspend, disable or hide
@@ -38,22 +70,32 @@ public final class FreezeUtils {
         if (ApplicationInfoCompat.isSuspended(applicationInfo)) {
             return true;
         }
-        return (ApplicationInfoCompat.getPrivateFlags(applicationInfo) & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;
+        return ApplicationInfoCompat.isHidden(applicationInfo);
     }
 
+    @Deprecated
     public static void freeze(@NonNull String packageName, @UserIdInt int userId) throws RemoteException {
         freeze(packageName, userId, Prefs.Blocking.getDefaultFreezingMethod());
     }
 
-    private static void freeze(@NonNull String packageName, @UserIdInt int userId, @FreezeType int freezeType)
+    public static void freeze(@NonNull String packageName, @UserIdInt int userId, @FreezeMethod int freezeType)
             throws RemoteException {
+        if (BuildConfig.APPLICATION_ID.equals(packageName) && userId == UserHandleHidden.myUserId()) {
+            throw new RemoteException("Could not freeze myself.");
+        }
         if (freezeType == FREEZE_HIDE) {
             if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS)) {
                 PackageManagerCompat.hidePackage(packageName, userId, true);
                 return;
             }
             // No permission, fall-through
-        } else if (freezeType == FREEZE_SUSPEND && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        } else if ((freezeType == FREEZE_SUSPEND || freezeType == FREEZE_ADV_SUSPEND) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (freezeType == FREEZE_ADV_SUSPEND) {
+                // Force-stop app
+                if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)) {
+                    PackageManagerCompat.forceStopPackage(packageName, userId);
+                }
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.SUSPEND_APPS)) {
                     PackageManagerCompat.suspendPackages(new String[]{packageName}, userId, true);

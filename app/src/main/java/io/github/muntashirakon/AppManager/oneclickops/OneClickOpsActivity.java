@@ -38,8 +38,10 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.dexopt.DexOptDialog;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.batchops.BatchQueueItem;
+import io.github.muntashirakon.AppManager.batchops.struct.BatchAppOpsOptions;
+import io.github.muntashirakon.AppManager.batchops.struct.BatchComponentOptions;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
-import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.CpuUtils;
@@ -70,10 +72,8 @@ public class OneClickOpsActivity extends BaseActivity {
     protected void onAuthenticated(Bundle savedInstanceState) {
         int op = getIntent().getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
         if (op == BatchOpsManager.OP_CLEAR_CACHE) {
-            Intent intent = new Intent(this, BatchOpsService.class);
-            intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_CLEAR_CACHE);
-            intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
-            ContextCompat.startForegroundService(this, intent);
+            BatchQueueItem item = BatchQueueItem.getOneClickQueue(BatchOpsManager.OP_CLEAR_CACHE, null, null, null);
+            launchService(item);
             finishAndRemoveTask();
             return;
         }
@@ -157,10 +157,6 @@ public class OneClickOpsActivity extends BaseActivity {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_data_from_uninstalled_apps),
                         getString(R.string.clear_data_from_uninstalled_apps_description))
                 .setOnClickListener(v -> {
-                    if (!SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)) {
-                        UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
-                        return;
-                    }
                     if (!wakeLock.isHeld()) {
                         wakeLock.acquire();
                     }
@@ -249,19 +245,15 @@ public class OneClickOpsActivity extends BaseActivity {
                 .setTitle(R.string.filtered_packages)
                 .setPositiveButton(R.string.block, (dialog, which, selectedPackages) -> {
                     progressIndicator.show();
-                    Intent intent = new Intent(this, BatchOpsService.class);
-                    intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedPackages);
-                    intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_BLOCK_TRACKERS);
-                    intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
-                    ContextCompat.startForegroundService(this, intent);
+                    BatchQueueItem item = BatchQueueItem.getOneClickQueue(BatchOpsManager.OP_BLOCK_TRACKERS,
+                            selectedPackages, null, null);
+                    launchService(item);
                 })
                 .setNeutralButton(R.string.unblock, (dialog, which, selectedPackages) -> {
                     progressIndicator.show();
-                    Intent intent = new Intent(this, BatchOpsService.class);
-                    intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedPackages);
-                    intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNBLOCK_TRACKERS);
-                    intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
-                    ContextCompat.startForegroundService(this, intent);
+                    BatchQueueItem item = BatchQueueItem.getOneClickQueue(BatchOpsManager.OP_UNBLOCK_TRACKERS,
+                            selectedPackages, null, null);
+                    launchService(item);
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
@@ -288,30 +280,21 @@ public class OneClickOpsActivity extends BaseActivity {
             selectedPackages.add(component.packageName);
             packageNamesWithComponentCount.add(builder);
         }
+        BatchComponentOptions options = new BatchComponentOptions(signatures);
         new SearchableMultiChoiceDialogBuilder<>(this, selectedPackages, packageNamesWithComponentCount)
                 .addSelections(selectedPackages)
                 .setTitle(R.string.filtered_packages)
                 .setPositiveButton(R.string.block, (dialog1, which1, selectedItems) -> {
                     progressIndicator.show();
-                    Intent intent = new Intent(this, BatchOpsService.class);
-                    intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedItems);
-                    intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_BLOCK_COMPONENTS);
-                    intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
-                    Bundle args = new Bundle();
-                    args.putStringArray(BatchOpsManager.ARG_SIGNATURES, signatures);
-                    intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
-                    ContextCompat.startForegroundService(this, intent);
+                    BatchQueueItem item = BatchQueueItem.getOneClickQueue(BatchOpsManager.OP_BLOCK_COMPONENTS,
+                            selectedItems, null, options);
+                    launchService(item);
                 })
                 .setNeutralButton(R.string.unblock, (dialog1, which1, selectedItems) -> {
                     progressIndicator.show();
-                    Intent intent = new Intent(this, BatchOpsService.class);
-                    intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedItems);
-                    intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNBLOCK_COMPONENTS);
-                    intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
-                    Bundle args = new Bundle();
-                    args.putStringArray(BatchOpsManager.ARG_SIGNATURES, signatures);
-                    intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
-                    ContextCompat.startForegroundService(this, intent);
+                    BatchQueueItem item = BatchQueueItem.getOneClickQueue(BatchOpsManager.OP_UNBLOCK_COMPONENTS,
+                            selectedItems, null, options);
+                    launchService(item);
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
@@ -381,20 +364,15 @@ public class OneClickOpsActivity extends BaseActivity {
             selectedPackages.add(appOp.packageName);
             packagesWithAppOpCount.add(builder1);
         }
+        BatchAppOpsOptions options = new BatchAppOpsOptions(appOpList, mode);
         new SearchableMultiChoiceDialogBuilder<>(this, selectedPackages, packagesWithAppOpCount)
                 .addSelections(selectedPackages)
                 .setTitle(R.string.filtered_packages)
                 .setPositiveButton(R.string.apply, (dialog1, which1, selectedItems) -> {
                     progressIndicator.show();
-                    Intent intent = new Intent(this, BatchOpsService.class);
-                    intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedItems);
-                    intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_SET_APP_OPS);
-                    intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
-                    Bundle args = new Bundle();
-                    args.putIntArray(BatchOpsManager.ARG_APP_OPS, appOpList);
-                    args.putInt(BatchOpsManager.ARG_APP_OP_MODE, mode);
-                    intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
-                    ContextCompat.startForegroundService(this, intent);
+                    BatchQueueItem item = BatchQueueItem.getOneClickQueue(BatchOpsManager.OP_SET_APP_OPS,
+                            selectedItems, null, options);
+                    launchService(item);
                 })
                 .setNegativeButton(R.string.cancel, (dialog1, which1, selectedItems) -> progressIndicator.hide())
                 .show();
@@ -402,16 +380,18 @@ public class OneClickOpsActivity extends BaseActivity {
 
     private void clearData(@NonNull List<String> candidatePackages) {
         CpuUtils.releaseWakeLock(wakeLock);
+        if (candidatePackages.isEmpty()) {
+            UIUtils.displayLongToast(R.string.no_matching_package_found);
+            return;
+        }
         String[] packages = candidatePackages.toArray(new String[0]);
         new SearchableMultiChoiceDialogBuilder<>(this, packages, packages)
                 .setTitle(R.string.filtered_packages)
                 .setPositiveButton(R.string.apply, (dialog1, which1, selectedItems) -> {
                     progressIndicator.show();
-                    Intent intent = new Intent(this, BatchOpsService.class);
-                    intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedItems);
-                    intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNINSTALL);
-                    intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
-                    ContextCompat.startForegroundService(this, intent);
+                    BatchQueueItem item = BatchQueueItem.getOneClickQueue(BatchOpsManager.OP_UNINSTALL,
+                            selectedItems, null, null);
+                    launchService(item);
                 })
                 .setNegativeButton(R.string.cancel, (dialog1, which1, selectedItems) -> progressIndicator.hide())
                 .show();
@@ -430,6 +410,11 @@ public class OneClickOpsActivity extends BaseActivity {
     protected void onDestroy() {
         CpuUtils.releaseWakeLock(wakeLock);
         super.onDestroy();
+    }
+
+    private void launchService(@NonNull BatchQueueItem queueItem) {
+        Intent intent = BatchOpsService.getServiceIntent(this, queueItem);
+        ContextCompat.startForegroundService(this, intent);
     }
 
     @NonNull

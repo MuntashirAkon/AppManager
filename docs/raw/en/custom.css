@@ -182,17 +182,13 @@ a {
     text-decoration: none;
 }
 
-a:visited {
+a:active, a:visited {
     color: #6750A4; /* ?attr/colorPrimary */
 }
 
 a:hover {
     color: #6750A4; /* ?attr/colorPrimary */
     text-decoration: underline;
-}
-
-a:active {
-    color: #6750A4; /* ?attr/colorPrimary */
 }
 
 a:focus {
@@ -227,12 +223,12 @@ a:hover, a:active {
 }
 
 a::-moz-selection {
-    background: #FFF; /* ?attr/colorOnPrimary */
+    background: #FFFFFF; /* ?attr/colorOnPrimary */
     color: #6750A4; /* ?attr/colorPrimary */
 }
 
 a::selection {
-    background: #FFF; /* ?attr/colorOnPrimary */
+    background: #FFFFFF; /* ?attr/colorOnPrimary */
     color: #6750A4; /* ?attr/colorPrimary */
 }
 
@@ -395,11 +391,7 @@ td {
         background-color: #1C1B1F !important; /* ?attr/colorSurface */
     }
 
-    a {
-        color: #D0BCFF !important; /* ?attr/colorPrimary */
-    }
-
-    a:visited {
+    a, a:visited {
         color: #D0BCFF !important; /* ?attr/colorPrimary */
     }
 
@@ -478,15 +470,27 @@ td {
     }
 
     a[href]:after {
-        content: " (" attr(href) ")";
+        content: " <" attr(href) ">";
     }
 
     abbr[title]:after {
         content: " (" attr(title) ")";
     }
 
-    .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after {
+    .ir a:after, a.uri:after, a[href^="javascript:"]:after, a[href^="mailto:"]:after, a[href^="app-manager:"]:after, a[href^="#"]:after {
         content: "";
+    }
+
+    a[href^="#toc:"] {
+        text-decoration: none;
+    }
+
+    a.footnote-ref {
+        text-decoration: none;
+    }
+
+    a.footnote-back {
+        display: none;
     }
 
     pre, blockquote {

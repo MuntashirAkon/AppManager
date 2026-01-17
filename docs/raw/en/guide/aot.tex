@@ -5,11 +5,9 @@ Many root-only features can still be used by enabling ADB over TCP. To do that, 
 platform-tools installed, and an Android phone with developer options \& USB debugging enabled.
 
 \begin{tip}{Root users}
-    If superuser permission has been granted to App Manager, it can already execute privileged code without any problem.
-    \textbf{Therefore, root users don't need to enable ADB over TCP.} If you still want to use ADB over TCP, you must
-    revoke superuser permission for App Manager and restart your device. You may see \textit{working on ADB mode}
-    message without restarting but this isn't entirely true. The server (used as an interface between system and App
-    Manager) is still running in root mode. This is a known issue and will be fixed in a future version of App Manager.
+    If superuser permission has been granted to App Manager, it can already execute privileged code
+    without any problem. \textbf{Therefore, root users do not need to enable ADB over TCP.} But if
+    you insist on using ADB over TCP, you must revoke superuser permission for App Manager.
 \end{tip}
 
 \seealsoinline{\hyperref[sec:faq:adb-over-tcp]{FAQ: ADB over TCP}}
@@ -19,11 +17,12 @@ platform-tools installed, and an Android phone with developer options \& USB deb
 
 \subsubsection{Location of developer options}\label{subsubsec:location-of-developer-options} %%##$location-dev-options-title>>
 %%!!location-dev-options<<
-\textbf{Developer options} is located in Android \textbf{Settings}, either directly near the bottom of the page (in most
-ROMs) or under some other settings such as \textbf{System} (Lineage OS, Asus Zenfone 8.0+), \textbf{System} >
-\textbf{Advanced} (Google Pixel), \textbf{Additional Settings} (Xiaomi MIUI, Oppo ColorOS), \textbf{More Settings} (Vivo
-FuntouchOS), \textbf{More} (ZTE Nubia). Unlike other options, it is not visible until explicitly enabled by the user. If
-developer options is enabled, you can use the search box in Android \textbf{Settings} to locate it as well.
+\textbf{Developer options} is located in Android \textbf{Settings}, either directly near the bottom
+of the page (in most ROMs) or under some other settings, such as \textbf{System} (Google Pixel,
+Lineage OS, Asus Zenfone 8.0+), \textbf{Additional Settings} (Xiaomi MIUI, Oppo ColorOS),
+\textbf{More Settings} (Vivo FuntouchOS), \textbf{More} (ZTE Nubia). Unlike other options, it is not
+visible until explicitly enabled by the user. If it is already enabled, you can use the search box
+in Android \textbf{Settings} to locate it as well.
 %%!!>>
 
 \subsubsection{How to enable developer options} %%##$how-to-enable-dev-options-title>>
@@ -102,12 +101,22 @@ In order to enable ADB over TCP, you have to set up ADB in your PC or Mac. \text
     Windows
     \item Extract the contents of the zip file into any directory (such as \texttt{C:\textbackslash{adb}}) and navigate
     to that directory using \textit{Explorer}
-    \item Open \textbf{Command Prompt} or \textbf{PowerShell} from this directory. You can do it manually from the start
-    menu or by holding \texttt{Shift} and Right clicking within the directory in \textit{File Explorer} and then
-    clicking either on \textit{Open command window here} or on \textit{Open PowerShell window here} (depending on
-    what you have installed). You can now access ADB by typing \texttt{adb} (Command Prompt) or \texttt{./adb}
-    (PowerShell). Do not close this window yet
+    \item Open \textbf{Command Prompt}, \textbf{PowerShell}, or \textbf{Terminal} from this directory.
+    You can do it manually from the start menu or by holding \texttt{Shift} and right clicking within
+    the directory in \textit{File Explorer} and then clicking either on \textit{Open command window here},
+    or \textit{Open PowerShell window here} (depending on what you have installed). You can now
+    access ADB by typing \texttt{adb} (Command Prompt) or \texttt{./adb} (PowerShell).
+    Do not close this window yet.
 \end{enumerate}
+
+\begin{tip}{Tip}
+    If you have \href{https://learn.microsoft.com/en-us/windows/package-manager/winget/}{WinGet}
+    installed, you can install ADB using the following command:
+    \begin{minted}[frame=lines]{bash}
+winget install --id Google.PlatformTools
+    \end{minted}
+    After that, you can simply type \texttt{adb} to access ADB\@.
+\end{tip}
 %%!!>>
 
 \subsubsection{macOS} %%##$setup-adb-mac-title>>
@@ -123,22 +132,19 @@ In order to enable ADB over TCP, you have to set up ADB in your PC or Mac. \text
 \end{enumerate}
 
 \begin{tip}{Tip}
-    If you are not afraid to use command line, here's a one liner:
+    If you have \href{https://brew.sh}{Homebrew} installed, you can install ADB using the following
+    command:
     \begin{minted}[frame=lines]{bash}
-cd ~/Downloads && curl -o platform-tools.zip -L \
-https://dl.google.com/android/repository/platform-tools-latest-darwin.zip && \
-unzip platform-tools.zip && rm platform-tools.zip && cd platform-tools
+brew install --cask android-platform-tools
     \end{minted}
-    After that, you can simply type \texttt{./adb} in the in same \textit{Terminal} window to access ADB\@.
+    After that, you can simply type \texttt{adb} in any \textit{Terminal} window to access ADB\@.
 \end{tip}
 %%!!>>
 
 \subsubsection{Linux} %%##$setup-adb-linux-title>>
 %%!!setup-adb-linux<<
 \begin{enumerate}
-    \item Open your favourite terminal emulator. In most GUI-distros, you can open it by holding \texttt{Control},
-    \texttt{Alter} and \texttt{T} at the same time
-    \item Run the following command:
+    \item In your favourite terminal emulator, run the following command:
     \begin{minted}[frame=lines,autogobble]{bash}
 cd ~/Downloads && curl -o platform-tools.zip -L \
 https://dl.google.com/android/repository/platform-tools-latest-linux.zip && \
@@ -156,6 +162,11 @@ unzip platform-tools.zip && rm platform-tools.zip && cd platform-tools
 Lineage OS (or its derivatives) users can directly enable ADB over TCP using the developer options. To enable that,
 go to the \textbf{Developer options}, scroll down until you find \textbf{ADB over Network}. Now, use the toggle button
 on the right-hand side to enable it and skip to \Sref{subsubsec:adb-mode-in-app-manager}.
+
+\begin{warning}{Warning}
+    You can turn off \textbf{ADB over Network} in developer options, but turning off this option will also stop App
+    Manager's remote server. So, turn it off only when you're not going to use App Manager in ADB over TCP mode.
+\end{warning}
 %%!!>>
 
 \subsubsection{Enable ADB over TCP via PC or Mac}\label{subsubsec:enable-adb-over-tcp-via-pc-or-mac} %%##$enable-aot-via-pc-title>>
@@ -200,18 +211,4 @@ There, you can also verify whether App Manager has correctly detected ADB as ind
 \begin{warning}{Warning}
     ADB over TCP will be disabled after a reboot. In that case, you have to follow \Sref{subsubsec:enable-adb-over-tcp-via-pc-or-mac} again.
 \end{warning}
-
-\begin{warning}{Lineage OS users}
-    You can turn off \textbf{ADB over Network} in developer options, but turning off this option will also stop App
-    Manager's remote server. So, turn it off only when you're not going to use App Manager in ADB over TCP mode.
-\end{warning}
-%%!!>>
-
-\subsection{References}\label{subsec:references} %%##$references-title>>
-%%!!references<<
-\begin{enumerate}
-    \item \href{https://www.xda-developers.com/install-adb-windows-macos-linux}{How to Install ADB on Windows, macOS, and Linux}
-    \item \href{https://developer.android.com/studio/command-line/adb}{Android Debug Bridge (adb)}
-    \item \href{https://www.syncios.com/android/fix-usb-debugging-grey-out.html}{How to fix USB debugging greyed out?}
-\end{enumerate}
 %%!!>>

@@ -248,8 +248,11 @@ public final class UiUtils {
     }
 
     public static boolean isDarkMode(@NonNull Context context) {
-        return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
-                == Configuration.UI_MODE_NIGHT_YES;
+        Configuration conf = context.getResources().getConfiguration();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return conf.isNightModeActive();
+        }
+        return (conf.uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
     }
 
     @SuppressWarnings("deprecation")
@@ -269,8 +272,35 @@ public final class UiUtils {
     }
 
     public static boolean isDarkModeOnSystem() {
-        return (Resources.getSystem().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
-                == Configuration.UI_MODE_NIGHT_YES;
+        Configuration conf = Resources.getSystem().getConfiguration();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return conf.isNightModeActive();
+        }
+        return (conf.uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+    }
+
+    /**
+     * Fixes focus by forcing Android to focus on the current view and reset
+     */
+    public static void fixFocus(@NonNull View view) {
+        if (!view.hasFocus()) {
+            boolean focusable = view.isFocusable();
+            boolean focusableInTouch = view.isFocusableInTouchMode();
+            if (!focusable) {
+                view.setFocusable(true);
+            }
+            if (!focusableInTouch) {
+                view.setFocusableInTouchMode(true);
+            }
+            view.requestFocus();
+            view.post(view::clearFocus);
+            if (!focusable) {
+                view.setFocusable(false);
+            }
+            if (!focusableInTouch) {
+                view.setFocusableInTouchMode(false);
+            }
+        }
     }
 
     @SuppressWarnings("deprecation")

@@ -8,7 +8,7 @@ Requirements
 ============
 
 * **Hardware:** Any computer with 8 GB RAM and 20 GB storage
-* **Operating system:** Linux/macOS (no support for Windows)
+* **Operating system:** Linux/macOS/WSL
 * **Software:** Android Studio/IntelliJ IDEA, Gradle, Latex, pandoc, JDK 17+
 * **Active network connection:** Depending on your development environment,
   you may need at least 20 GB data package.
@@ -44,16 +44,17 @@ Linux|GNU
       sudo pacman -S base-devel
 
 - Install `bundletool-all.jar`_ if you want to build APKS, and make sure it is
-  available as ``bundletool`` command.  A quick way would be to create a file
-  ``bundletool`` in ``/usr/local/bin`` directory with the following content::
+  available as ``bundletool`` command.  A quick way would be to create an alias
+  as follows (assuming you're using ``bash``)::
 
-    #!/usr/bin/env bash
-    exec java -jar "/path/to/bundletool-all.jar" "$@"
+    echo "alias bundletool='java -jar path/to/bundletool.jar'" >> ~/.bashrc
 
   Make sure to replace ``/path/to/bundletool-all.jar`` with the actual path for
-  **bundletool-all.jar**.  Also, make the file executable::
+  **bundletool-all.jar**.
 
-    chmod +x /usr/local/bin/bundletool
+  * For Arch/Artix/Majaro (with ``yay``)::
+
+      yay -S bundletool
 
 
 Clone and Build App Manager

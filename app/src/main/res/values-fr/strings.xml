@@ -34,7 +34,7 @@
     <string name="path_permissions">Autorisations de chemin d\'accès</string>
     <string name="grant_uri_permission">Autoriser l\'accès aux URI</string>
     <string name="flags">Drapeaux</string>
-    <string name="soft_input">Mode saisie douce</string>
+    <string name="soft_input">Mode de saisie logicielle</string>
     <string name="orientation">Orientation</string>
     <string name="no_service">Aucun service</string>
     <string name="service">Services</string>
@@ -95,7 +95,7 @@
     <string name="select_apk">Sélectionner le fichier APK</string>
     <string name="send_crash_report">Envoyer le rapport de plantage</string>
     <string name="tap_to_submit_crash_report">Appuyez pour envoyer le rapport de plantage.</string>
-    <string name="am_crashed">App Manager vient de planté</string>
+    <string name="am_crashed">App Manager vient de planter</string>
     <string name="filter_running_apps">Applications en cours d\'exécution</string>
     <string name="copy">Copier</string>
     <string name="view_missing_signatures">Appuyez pour visualiser ou envoyer des signatures pas encore présantes dans la base de données ou les bibliothèques de App Manager.</string>
@@ -104,7 +104,7 @@
     <string name="no_libs">Aucune bibliothèque</string>
     <string name="sys_config">Configuration du système</string>
     <string name="only_install">Installation seule</string>
-    <string name="app_signing_install_without_data_loss">Si vous avez désactivé la vérification des signaturs, vous pouvez utiliser l\'option <b>Installation seule</b> pour installer l\'application sans perdre de données.</string>
+    <string name="app_signing_install_without_data_loss">Si vous avez désactivé la vérification des signatures, vous pouvez utiliser l\'option <b>Installation seule</b> pour installer l\'application sans perdre de données.</string>
     <string name="app_data_will_be_lost">Les données existantes seront perdues.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Impossible d\'installer l\'application car une application système avec une signature différente possède déjà ce nom de paquet.</string>
     <string name="do_you_want_to_uninstall_and_install">Voulez-vous désinstaller et installer à nouveau l\'application \?</string>
@@ -254,42 +254,52 @@
     <string name="apply_to_system_apps">Appliquer aux applications système</string>
     <plurals name="missing_signatures">
         <item quantity="one">%1$d signature manquante</item>
+        <item quantity="many">%1$d signatures manquantes</item>
         <item quantity="other">%1$d signatures manquantes</item>
     </plurals>
     <plurals name="libraries">
         <item quantity="one">%1$d bibliothèque</item>
+        <item quantity="many">%1$d bibliothèques</item>
         <item quantity="other">%1$d bibliothèques</item>
     </plurals>
     <plurals name="classes">
         <item quantity="one">%1$d classe</item>
+        <item quantity="many">%1$d classes</item>
         <item quantity="other">%1$d classes</item>
     </plurals>
     <plurals name="backup_exists_are_you_sure">
-        <item quantity="one">Une sauvegarde existe déjà. Êtes-vous sûr \?</item>
-        <item quantity="other">Une sauvegarde existe déjà pour plus d\'une application. Êtes-vous sûr \?</item>
+        <item quantity="one">Une sauvegarde existe déjà. Êtes-vous sûr ?</item>
+        <item quantity="many">Une sauvegarde existe déjà pour plus d\'une application. Êtes-vous sûr ?</item>
+        <item quantity="other">Une sauvegarde existe déjà pour plus d\'une application. Êtes-vous sûr ?</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">Impossible de bloquer les composants d\'%1$d application</item>
+        <item quantity="many">Impossible de bloquer les composants de %1$d applications</item>
         <item quantity="other">Impossible de bloquer les composants de %1$d applications</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
         <item quantity="one">Impossible de débloquer les traqueurs d\'%1$d application</item>
+        <item quantity="many">Impossible de débloquer les traqueurs de %1$d applications</item>
         <item quantity="other">Impossible de débloquer les traqueurs de %1$d applications</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
         <item quantity="one">Impossible de supprimer %1$d sauvegarde</item>
+        <item quantity="many">Impossible de supprimer %1$d sauvegardes</item>
         <item quantity="other">Impossible de supprimer %1$d sauvegardes</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
         <item quantity="one">Impossible de restaurer %1$d application</item>
+        <item quantity="many">Impossible de restaurer %1$d applications</item>
         <item quantity="other">Impossible de restaurer %1$d applications</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
         <item quantity="one">Impossible de sauvegarder %1$d application</item>
+        <item quantity="many">Impossible de sauvegarder %1$d applications</item>
         <item quantity="other">Impossible de sauvegarder %1$d applications</item>
     </plurals>
     <plurals name="failed_to_backup_some_apk_files">
         <item quantity="one">Impossible de sauvegarder %1$d application</item>
+        <item quantity="many">Impossible de sauvegarder %1$d applications</item>
         <item quantity="other">Impossible de sauvegarder %1$d applications</item>
     </plurals>
     <string name="backup_options">Options de sauvegarde</string>
@@ -298,7 +308,6 @@
     <string name="backup">Sauvegarder</string>
     <string name="data">Données</string>
     <string name="external_data">Données externes</string>
-    <string name="cache">Exclure le cache</string>
     <string name="blocking_rules">Règles de blocage</string>
     <string name="whats_new">Quoi de neuf</string>
     <string name="features">Fonctionnalités</string>
@@ -330,6 +339,7 @@
     <string name="install">Installer</string>
     <plurals name="no_of_trackers">
         <item quantity="one">%1$d traqueur</item>
+        <item quantity="many">%1$d traqueurs</item>
         <item quantity="other">%1$d traqueurs</item>
     </plurals>
     <string name="manifest_viewer">Visualiseur de fichier manifeste</string>
@@ -345,6 +355,7 @@
     <string name="failed_to_grant_permission">Autorisation impossible</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">Impossible de désactiver les traqueurs d\'%1$d application</item>
+        <item quantity="many">Impossible de désactiver les traqueurs de %1$d applications</item>
         <item quantity="other">Impossible de désactiver les traqueurs de %1$d applications</item>
     </plurals>
     <string name="unknown_op">Opération inconnue</string>
@@ -383,20 +394,24 @@
     <string name="mode">Mode</string>
     <string name="permission_name">Nom de l\'autorisation</string>
     <plurals name="alert_failed_to_force_stop">
-        <item quantity="one">Impossibe de forcer l\'arrêt d\'%1$d application</item>
-        <item quantity="other">Impossibe de forcer l\'arrêt de %1$d applications</item>
+        <item quantity="one">Impossible de forcer l\'arrêt d\'%1$d application</item>
+        <item quantity="many">Impossible de forcer l\'arrêt de %1$d applications</item>
+        <item quantity="other">Impossible de forcer l\'arrêt de %1$d applications</item>
     </plurals>
     <string name="the_operation_was_successful">Terminé</string>
     <plurals name="alert_failed_to_disable_background">
         <item quantity="one">Impossible de désactiver l\'exécution en arrière-plan pour %1$d application</item>
+        <item quantity="many">Impossible de désactiver l\'exécution en arrière-plan pour %1$d applications</item>
         <item quantity="other">Impossible de désactiver l\'exécution en arrière-plan pour %1$d applications</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
         <item quantity="one">Impossible de désinstaller %1$d application</item>
+        <item quantity="many">Impossible de désinstaller %1$d applications</item>
         <item quantity="other">Impossible de désinstaller %1$d applications</item>
     </plurals>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">Impossible d\'effacer les données d\'%1$d application</item>
+        <item quantity="many">Impossible d\'effacer les données de %1$d applications</item>
         <item quantity="other">Impossible d\'effacer les données de %1$d applications</item>
     </plurals>
     <string name="export_blocking_rules">Exporter les règles de blocage</string>
@@ -412,6 +427,7 @@
     <string name="apk_updater">Mise à jour d\'APK</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">Impossible d\'importer %1$d fichier.</item>
+        <item quantity="many">Impossible d\'importe %1$d fichiers.</item>
         <item quantity="other">Impossible d\'importe %1$d fichiers.</item>
     </plurals>
     <string name="the_export_was_successful">Exporté</string>
@@ -423,6 +439,7 @@
     <string name="sort_by_last_used">Dernière utilisation</string>
     <plurals name="no_of_times_opened">
         <item quantity="one">%1$d fois</item>
+        <item quantity="many">%1$d fois</item>
         <item quantity="other">%1$d fois</item>
     </plurals>
     <string name="sort_by_blocked_components">Bloquées en premier</string>
@@ -491,24 +508,28 @@
     <string name="usage_less_than_a_minute">Il y a moins d\'une minute</string>
     <plurals name="usage_hours">
         <item quantity="one">%1$d heure</item>
+        <item quantity="many">%1$d heures</item>
         <item quantity="other">%1$d heures</item>
     </plurals>
     <plurals name="usage_days">
         <item quantity="one">%1$d jour</item>
+        <item quantity="many">%1$d jours</item>
         <item quantity="other">%1$d jours</item>
     </plurals>
     <plurals name="usage_months">
         <item quantity="one">%1$d mois</item>
+        <item quantity="many">%1$d mois</item>
         <item quantity="other">%1$d mois</item>
     </plurals>
     <string name="usage_7_days">Les 7 derniers jours</string>
-    <string name="usage_today">Aujourdh\'ui</string>
-    <string name="usage_weekly">Chaque semaine</string>
+    <string name="usage_today">Aujourd\'hui</string>
+    <string name="usage_weekly">Semaine dernière</string>
     <string name="app_usage">Utilisation de l\'application</string>
     <string name="no_tracker_class">Aucune classe de traqueur</string>
     <string name="no_shared_libs">Aucune bibliothèque partagée</string>
     <plurals name="main_list_date_days">
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> jour</item>
+        <item quantity="many"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> jours</item>
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> jours</item>
     </plurals>
     <string name="all_classes">Toutes les classes</string>
@@ -518,24 +539,24 @@
     <plurals name="other_trackers_and_classes">
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> traqueurs avec les classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
         <item quantity="many"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> traqueurs avec les classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
-        <item quantity="other"/>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> traqueurs avec les classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
     </plurals>
     <plurals name="two_trackers_and_classes">
         <item quantity="one">2 traqueurs avec la classe <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
         <item quantity="many">2 traqueurs avec les classes <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
-        <item quantity="other"/>
+        <item quantity="other">2 traqueurs avec les classes <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
     </plurals>
     <plurals name="tracker_and_classes">
         <item quantity="one">1 traqueur avec la classe <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
         <item quantity="many">1 traqueur avec les classes <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
-        <item quantity="other"/>
+        <item quantity="other">1 traqueur avec les classes <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
     </plurals>
     <string name="toggle_class_listing">Activer/Désactiver l\'affichage en liste des classes</string>
     <string name="class_viewer">Visualiseur de classe</string>
     <string name="word_wrap">Activer/Désactiver la coupure de mots</string>
-    <string name="credits_message">Aux auteurs de:
-\n- Le projet open-source Android
-\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
+    <string name="credits_message">Aux auteurs de :
+\n- Le projet Android open-source
+\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s Libraries</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
@@ -543,6 +564,7 @@
 \n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a>
 \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
 \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
@@ -554,8 +576,8 @@
 \n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nCrédits pour le logo original : <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/eclipse/tm4e">tm4e</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a></string>
     <string name="credits">Crédits</string>
     <string name="third_party">Bibliothèques tierces et icônes</string>
     <string name="license">Licence</string>
@@ -608,6 +630,7 @@
     <string name="batch_ops">Opérations par lots</string>
     <plurals name="verified_with_warning">
         <item quantity="one">Vérifié avec %d avertissement</item>
+        <item quantity="many">Vérifié avec %d avertissements</item>
         <item quantity="other">Vérifié avec %d avertissements</item>
     </plurals>
     <string name="filter">Filtre</string>
@@ -618,6 +641,7 @@
     <string name="pref_import_export_blocking_rules_msg">Importer/exporter des règles, importer des règles depuis Watt ou Blocker.</string>
     <plurals name="no_of_components">
         <item quantity="one">%1$d composant</item>
+        <item quantity="many">%1$d composants</item>
         <item quantity="other">%1$d composants</item>
     </plurals>
     <string name="user_with_id">Utilisateur : <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
@@ -626,7 +650,7 @@
     <string name="restore_latest_msg">Restaurer les applications déjà installées dont les codes de version sont supérieurs au code de version installée.</string>
     <string name="extras">Extras</string>
     <string name="category">Catégories</string>
-    <string name="board_name">Tableau</string>
+    <string name="board_name">Carte mère</string>
     <string name="model">Modèle</string>
     <string name="brand_name">Marque</string>
     <string name="vendor">Vendeur</string>
@@ -668,6 +692,7 @@
     <string name="app_signing_signatures">Signatures</string>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="one">Impossible de définir les opérations d\'application pour %1$d application</item>
+        <item quantity="many">Impossible de définir les opérations d\'application pour %1$d applications</item>
         <item quantity="other">Impossible de définir les opérations d\'application pour %1$d applications</item>
     </plurals>
     <string name="input_app_ops_description_profile">Saisissez les noms ou les constantes d\'opérations d\'application avec des espaces, par exemple <tt>WAKE_LOCK 63 72 CAMERA</tt>. Utilisez <tt>*</tt> pour appliquer toutes les opérations d\'application configurées.</string>
@@ -676,16 +701,17 @@
     <string name="pref_remove_all_rules_msg">Les autorisations seront accordées, les opérations et les composants de l\'application retrouveront leurs valeurs par défaut.</string>
     <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">Schéma de signature</item>
+        <item quantity="many">Schémas de signature</item>
         <item quantity="other">Schémas de signature</item>
     </plurals>
     <string name="orientation_sensor_landscape">Capteur mode paysage</string>
     <string name="text_include_device_info">Inclure les informations de l\'appareil</string>
     <string name="record_log">Journaux d\'enregistrement</string>
     <string name="disable_background_run_description">Défini le mode <i>Ignore</i> pour les opérations d\'application suivantes : <tt>RUN_IN_BACKGROUND</tt> (depuis Android 7.0) et <tt>RUN_ANY_IN_BACKGROUND</tt> (depuis Android 9).</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">Canal Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://x.com/AppManagerNews">Twitter/X</a> • <a href="https://floss.social/@appmanager">Mastodon</a></string>
     <string name="community">Communauté</string>
     <string name="pref_selected_users_msg">Restreindre l\'utilisation d\'App Manager aux seuls utilisateurs sélectionnés.</string>
-    <string name="backup_extras_description">Sauvegarder les permissions d\'application, les options de l\'économiseur de batterie et de l\'utilisation des données, le statut MagiskHide, SSAID, etc.</string>
+    <string name="backup_extras_description">Sauvegardez les autorisations de l\'application, les options d\'économie de batterie et d\'utilisation des données, le statut MagiskHide, SSAID, etc. <font fgcolor="#ff0000">En fonction des autorisations, tous les extras ne peuvent pas être restaurés.</font></string>
     <string name="backup_extras">Extras</string>
     <string name="backup_cache_description">Sauvegarder les dossiers <b>cache</b>, <b>no_cache</b> et <b>no_backup</b>.</string>
     <string name="backup_obb_media_description">Sauvegarder les répertoires OBB et média.</string>
@@ -721,7 +747,7 @@
     <string name="state_waking">Réveil</string>
     <string name="state_trace_stop">Arrêt du traçage</string>
     <string name="orientation_no_sensor">Aucun capteur</string>
-    <string name="backup_rules_description">Sauvegarder les règles configurées dans App Manager.</string>
+    <string name="backup_rules_description">Règles de sauvegarde configurées dans App Manager. <font fgcolor="#ff0000">En fonction des autorisations, toutes les règles ne peuvent pas être réappliquées lors de la restauration.</font></string>
     <string name="alias_pass">Mot de passe de l\'alias</string>
     <string name="choose_an_alias">Choisissez un alias</string>
     <string name="new_alias_password">Nouveau mot de passe d\'alias</string>
@@ -825,6 +851,7 @@
     <string name="hidden">Caché</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">Impossible d\'importer la sauvegarde %1$d</item>
+        <item quantity="many">Impossible d\'importer les sauvegardes %1$d</item>
         <item quantity="other">Impossible d\'importer les sauvegardes %1$d</item>
     </plurals>
     <string name="orientation_right_to_left">De droite à gauche</string>
@@ -859,6 +886,7 @@
     <string name="unable_to_save_log">Impossible d\'enregistrer le journal. Avez-vous entré un nom de fichier valide \?</string>
     <plurals name="toast_log_truncated">
         <item quantity="one">Journal trop grand, affichage de la %d dernière ligne.</item>
+        <item quantity="many">Journal trop grand, affichage des %d dernières lignes.</item>
         <item quantity="other">Journal trop grand, affichage des %d dernières lignes.</item>
     </plurals>
     <string name="toast_invalid_selection">Sélection invalide. Veuillez réessayer s.v.p.</string>
@@ -892,6 +920,7 @@
     <string name="copy_to_clipboard">Copier dans le presse-papier</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">Le fichier %d sera supprimé</item>
+        <item quantity="many">Les fichiers %d seront supprimés</item>
         <item quantity="other">Les fichiers %d seront supprimés</item>
     </plurals>
     <string name="add_filter_ellipsis">Ajout de filtre…</string>
@@ -912,6 +941,7 @@
     <string name="second_degree_tracker_note">Le préfixe ² indique que les trackers sont dans la <a href="https://etip.exodus-privacy.eu.org/">liste d\'attente ETIP</a>, c\'est-à-dire qu\'il s\'agit toujours de trackers réels.</string>
     <plurals name="no_of_splits">
         <item quantity="one">%1$d division</item>
+        <item quantity="many">%1$d divisions</item>
         <item quantity="other">%1$d divisions</item>
     </plurals>
     <string name="launch_mode_single_top">Partie supérieure</string>
@@ -1030,7 +1060,7 @@
     <string name="added_to_queue">Ajouté à la file d\'attente</string>
     <string name="help_uses_permissions_tab">Cliquez sur un élément pour <b>l\'accorder</b> ou <b>le révoquer</b>. Seules les permissions <b>dangereuses</b> et <b>développement</b> peuvent être accordées ou révoquées.</string>
     <string name="notice_saf">Contrairement aux volumes, le répertoire sélectionné sera utilisé pour stocker tous les fichiers en relation avec App Manager, y compris les APK enregistrés et les sauvegardes. Le Storage Access Framework (SAF) étant très lent, ne l\'utilisez qu\'en dernier recours.</string>
-    <string name="backup_volume_dialog_description">Les volumes avec le préfixe <tt>/tree</tt> sont des dossiers sélectionnés à l\'aide de Storage Access Framework (SAF). À l\'exception de ces dossiers, le répertoire par défaut du gestionnaire d\'applications est un sous-dossier nommé <tt>AppManager</tt>.</string>
+    <string name="backup_volume_dialog_description">Les volumes avec le préfixe <tt>/tree</tt> sont des dossiers sélectionnés à l\'aide de Storage Access Framework (SAF). À l\'exception de ces dossiers, le répertoire par défaut d\'App Manager est un sous-dossier nommé <tt>AppManager</tt>.</string>
     <string name="keystore_password_info">Ceci est le mot de passe du KeyStore. Veillez à le stocker dans un endroit sûr si vous souhaitez sauvegarder/restaurer le KeyStore depuis App Manager. <b>Ce message ne s\'affichera plus.</b></string>
     <string name="adb_pair">Appairer</string>
     <string name="identifier">Identifiant</string>
@@ -1047,6 +1077,7 @@
     <string name="pref_thread_count_hint">La valeur doit être comprise entre 0 et %1$d ; si 0, cela correspond au <i>nombre maximum d\'opérations à un instant donné</i>.</string>
     <plurals name="pref_thread_count_msg">
         <item quantity="one">Exécuter au plus %1$d opération en parallèle</item>
+        <item quantity="many">Exécuter au plus %1$d opérations en parallèle</item>
         <item quantity="other">Exécuter au plus %1$d opérations en parallèle</item>
     </plurals>
     <string name="pid">Identifiant du processus</string>
@@ -1061,7 +1092,7 @@
     <string name="search_type_suffix">Suffixe</string>
     <string name="search_type_prefix">Préfixe</string>
     <string name="authenticating">Authentification…</string>
-    <string name="pref_default_blocking_method_description">Méthode à utiliser par défaut dans les endroits où il n\'y a pas d\'option pour sélectionner une méthode de blocage.</string>
+    <string name="pref_default_blocking_method_description">Méthode à utiliser par défaut dans les endroits où il n\'y a pas d\'option pour sélectionner une méthode de blocage.\n<b>Note :</b> \"IFW\" ne fonctionne pas avec les fournisseurs, \"désactiver\" est utilisé à la place.</string>
     <string name="toggle_internet">Utiliser Internet</string>
     <string name="vt_checking">VirusTotal : Vérification…</string>
     <string name="vt_uploading">VirusTotal : Envoi en cours…</string>
@@ -1087,10 +1118,12 @@
     <string name="swap">Échange</string>
     <plurals name="usage_minutes">
         <item quantity="one">%1$d min</item>
+        <item quantity="many">%1$d mins</item>
         <item quantity="other">%1$d mins</item>
     </plurals>
     <plurals name="usage_seconds">
         <item quantity="one">%1$d sec</item>
+        <item quantity="many">%1$d secs</item>
         <item quantity="other">%1$d secs</item>
     </plurals>
     <string name="vt_slowness_warning">En fonction de la vitesse de connexion Internet et de la charge du serveur, ceci peut prendre un moment.</string>
@@ -1107,7 +1140,7 @@
     <string name="failed_to_change_app_op_mode">Impossible de changer le mode de fonctionnement de l\'application.</string>
     <string name="pref_intent_firewall_description">Bloquer les composants en utilisant uniquement le pare-feu Intent. Non recommandé car certaines applications système peuvent contourner les pare-feu.</string>
     <string name="pref_disable_description">Désactivez uniquement les composants. Non recommandé pour les utilisateurs root car les applications peuvent contourner cette méthode. Dans les modes ADB, les applications de test uniquement peuvent être désactivées avec cette méthode.</string>
-    <string name="tracker">Suiveur</string>
+    <string name="tracker">Traqueur</string>
     <string name="shortcut_icon">Icône du raccourci</string>
     <string name="sort_by_installation_date">Date d\'installation</string>
     <string name="vt_confirm_upload_and_scan">Oui, envoyer et scanner</string>
@@ -1138,7 +1171,7 @@
     <string name="open_developer_options_page">Ouvrir la page des options de développeur dans les préférences Android</string>
     <string name="vt_confirm_uploading_file">Ce fichier n\'a pas été trouvé dans la base VirusTotal. Voulez-vous l\'envoyer \?</string>
     <string name="pref_vt_prompt_before_uploading">Afficher une confirmation avec l\'envoyer un fichier.</string>
-    <string name="pref_pure_black_theme_msg">Utilise un arrière-plan complètement noir quand le mode nuit est actif.</string>
+    <string name="pref_pure_black_theme_msg">Utilise un arrière-plan complètement noir quand le thème sombre est actif.</string>
     <string name="pref_pure_black_theme">Thème noir pur</string>
     <string name="apk_checksums">Checksums de l\'APK</string>
     <string name="regenerate_auth_key">Regénérer la clé d\'autorisation</string>
@@ -1159,9 +1192,9 @@
     <string name="backup_apps_cannot_be_backed_up">Les applications suivantes ne sont pas installées et ne peuvent pas être sauvegardées :</string>
     <string name="restart_device">Redémarrez votre appareil</string>
     <string name="import_backups_warning_delete_backups_after_import">Supprimer les sauvegardes après les avoir importées dans App Manager \? Chaque sauvegarde est supprimée individuellement après avoir été importée avec succès. Sélectionnez <b>Non</b> en cas de doute.</string>
-    <string name="endianness_big_endian">Big endian</string>
+    <string name="endianness_big_endian">Big endian (Gros-boutiste)</string>
     <string name="hidden_api_enforcement_policy">Politique d\'application de l\'API masquée</string>
-    <string name="endianness_little_endian">Little endian</string>
+    <string name="endianness_little_endian">Little endian (Petit boutiste)</string>
     <string name="netpolicy_cannot_be_modified_for_core_apps">La stratégie réseau ne peut pas être modifiée pour les applications principales d\'Android.</string>
     <string name="usage_last_used">Dernière utilisation</string>
     <string name="usage_mobile_data">Données mobiles</string>
@@ -1169,10 +1202,10 @@
     <string name="usage_times_opened">Nombre d\'ouvertures</string>
     <string name="pref_reload_apps">Recharger les applications</string>
     <string name="troubleshooting">Problèmes</string>
-    <string name="changelog_type_improve">Améliorer</string>
+    <string name="changelog_type_improve">Amélioré</string>
     <string name="pref_reload_apps_msg">Recharge la liste des applications enregistrées dans la base du Gestionnaire d\'Applications en cas de comportement inattendu.</string>
     <string name="changelog_type_new">Nouveau</string>
-    <string name="changelog_type_fix">Corriger</string>
+    <string name="changelog_type_fix">Corrigé</string>
     <string name="unsupported_split_apk">Non pris en charge</string>
     <string name="view_changelog">Découvrez les nouveautés</string>
     <string name="sort_by_total_size">Taille totale</string>
@@ -1190,17 +1223,17 @@
     <plurals name="alert_failed_to_freeze">
         <item quantity="one">Impossible de geler l\'appli %1$d</item>
         <item quantity="many">Impossible de geler les applis %1$d</item>
-        <item quantity="other"/>
+        <item quantity="other">Impossible de geler les applis %1$d</item>
     </plurals>
     <plurals name="alert_failed_to_unfreeze">
         <item quantity="one">Impossible de dégeler l\'appli %1$d</item>
         <item quantity="many">Impossible de dégeler les applis %1$d</item>
-        <item quantity="other"/>
+        <item quantity="other">Impossible de dégeler les applis %1$d</item>
     </plurals>
     <string name="suspend_app_description">C\'est la méthode de congélation la plus faible. Une application suspendue peut toujours apparaître dans le lanceur mais sera grisée et ne pourra pas être lancée.</string>
     <string name="disable_app_description">Méthode de congélation recommandée. Il désactive l\'application et ainsi que tous ses composants, mais tous les raccourcis seront perdus.</string>
     <string name="hide_app_description">Cette méthode n\'est recommandée que pour une utilisation quotidienne. Une application masquée apparaît comme si elle était désinstallée. Mais l\'application peut réapparaître si elle est réinstallée ou mise à jour.</string>
-    <string name="sort_by_frozen_app">Congelé d\'abord</string>
+    <string name="sort_by_frozen_app">Gelé en premier</string>
     <string name="filter_frozen_apps">Applications gelées</string>
     <string name="pref_appearance_description">Thème, orientation, fonctionnalités, etc.</string>
     <string name="pref_privacy_description">Verrouillage de l\'écran, autorisation, etc.</string>
@@ -1252,7 +1285,6 @@
     <string name="debloat_list_carrier">Opérateur/FAI</string>
     <string name="debloat_list_google">Google</string>
     <string name="debloat_list_misc">Recueil</string>
-    <string name="debloat_list_pending">En attente</string>
     <string name="debloat_removal_safe">Sécurisé</string>
     <string name="debloat_removal_replace">Remplacer</string>
     <string name="debloat_removal_caution">Attention</string>
@@ -1262,12 +1294,211 @@
     <string name="file_group_id">Groupe (GID)</string>
     <string name="file_owner_id">Propriétaire (UID)</string>
     <plurals name="alert_failed_to_unblock_components">
-        <item quantity="one">Impossible de bloquer les composants d\'une application.</item>
-        <item quantity="many">Impossible de bloquer les composants de %1$d applications.</item>
-        <item quantity="other"/>
+        <item quantity="one">Impossible de débloquer les composants pour %1$d application</item>
+        <item quantity="many">Impossible de débloquer les composants pour %1$d applications</item>
+        <item quantity="other">Impossible de débloquer les composants pour %1$d applications</item>
     </plurals>
     <string name="app_can_write_and_execute_in_same_place">Cette application enfreint la <a href="https://en.wikipedia.org/wiki/W%5EX">politique W^X</a> et peut écrire et exécuter dans le même dossier ou la même partie de mémoire. Ceci autorise l\'exécution d\'exécutables arbitraires soit par la modification des exécutables inclus dans l\'application ou en les téléchargeant depuis Internet. Sauf si c\'est le comportement attendu de l\'application (ex. émulateurs de terminal), il est recommendé de trouver une version plus récente de l\'application prévue pour SDK 29 (Android 10) et ultérieur, ou de trouver des alternatives.</string>
     <string name="app_manager_build_expired_message">Pour assurer la sécurité de votre appareil et de vos données, la version d\'App Manager que vous utilisez est arrivée à expiration. Vous devez installer la version la plus récente pour continuer à l\'utiliser, ou désinstaller cette version si aucune autre n\'est disponible.</string>
     <string name="static_shared_library">Librairie statique partagée</string>
     <string name="uninstall_app_again_message">Cette application a été désinstallée sans que les données et la signature soient supprimées. Souhaitez vous la désinstaller complètement \?</string>
+    <string name="sort_by_filename">Nom</string>
+    <string name="install_for_another_user">Installer pour…</string>
+    <string name="title_labs_activity">Laboratoire</string>
+    <string name="action_continue">Continuer</string>
+    <string name="sort_by_file_size">Taille du fichier</string>
+    <string name="filter_apps_with_keystore">Avec KeyStore</string>
+    <string name="filter_apps_with_saf">Avec SAF</string>
+    <string name="title_terminal_emulator">Terminal</string>
+    <string name="optimize_option_check_profiles">Tenir compte des données de profil lors de l\'optimisation DEX</string>
+    <string name="title_perform_runtime_optimization_to_apps">Effectuer l\'optimisation de l\'exécution</string>
+    <string name="batch_ops_runtime_optimization">Optimisation du temps d\'exécution</string>
+    <string name="app_info_tag_open_links">Ouvrir liens</string>
+    <string name="title_domains_supported_by_the_app">Domaines pris en charge</string>
+    <string name="pref_zip_align">Aligner les fichiers APK</string>
+    <string name="redo">Refaire</string>
+    <string name="read_only_file">Fichier en lecture seule</string>
+    <string name="action_replace_all">Tout remplacer</string>
+    <string name="search_option_match_case">Cas de correspondance</string>
+    <string name="search_option_whole_word">Mot entier</string>
+    <string name="search_option_regex">Expression régulière</string>
+    <string name="empty_folder">Vide</string>
+    <string name="backing_up_app">Sauvegarde à %1$s…</string>
+    <string name="restoring_app">Restauration à %1$s…</string>
+    <string name="symbolic_link">Lien symbolique</string>
+    <string name="create_new_symbolic_link">Nouveau lien symbolique</string>
+    <string name="symbolic_link_not_supported">Ce dossier ne prend pas en charge la création d\'un lien symbolique.</string>
+    <string name="invalid_target_path">Chemin invalide</string>
+    <string name="copy_these_paths">Chemins copiés</string>
+    <string name="title_confirm_deletion">Confirmer la suppression</string>
+    <string name="moved_successfully">Déplacé</string>
+    <string name="copied_successfully">Copié.</string>
+    <string name="failed_to_delete_specified_file_after_copying">Impossible de supprimer “%1$s” après l\'avoir copié, probablement dû à des permissions insuffisantes.</string>
+    <string name="title_change_selinux_context">Modifier le contexte de SELinux</string>
+    <string name="export_app_list">Exporter une liste d\'applications</string>
+    <string name="export_option_xml">XML</string>
+    <plurals name="search_results">
+        <item quantity="one">%d résultat</item>
+        <item quantity="many">%d résultats</item>
+        <item quantity="other">%d résultats</item>
+    </plurals>
+    <string name="option_display_dot_files">Fichier de points</string>
+    <string name="class_hierarchy">Hiérarchie</string>
+    <string name="optimize_option_force_dexopt">Effectuer immédiatement l’optimisation DEX</string>
+    <string name="title_code_editor">Éditeur de code</string>
+    <string name="title_audio_player">Lecteur audio</string>
+    <plurals name="alert_failed_to_optimize_apps">
+        <item quantity="one">Impossible d\'optimiser l\'application %1$d</item>
+        <item quantity="many">Impossible d\'optimiser les applications %1$d</item>
+        <item quantity="other">Impossible d\'optimiser les applications %1$d</item>
+    </plurals>
+    <string name="pref_enable_persistent_session_msg">L’exécution du gestionnaire d\'application en arrière-plan réduit le délai d’initialisation. Utile si vous utilisez fréquemment le gestionnaire d\'application.</string>
+    <string name="action_checking">Vérification…</string>
+    <string name="report_not_available">Pas disponible</string>
+    <string name="pref_layout_direction">Orientation de la mise en page</string>
+    <string name="option_display_folders_on_top">Dossier en haut</string>
+    <string name="export_app_list_select_format">Sélectionnez le format d\'exportation de la liste des applications</string>
+    <string name="action_optimize_app">Optimiser</string>
+    <string name="line_separator">Séparateur de lignes</string>
+    <string name="pref_send_notification_to_connected_devices_msg">Définissez s\'il faut envoyer des notifications aux appareils connectés tels que les objets connectés qui se portent sur soi.</string>
+    <string name="installer_options">Options de l\'installateur</string>
+    <string name="debloat_removal_caution_short_description">Soyez prudent</string>
+    <string name="pref_set_home">Définir l\'accueil</string>
+    <string name="xposed_module_info">Informations du Module Xposed</string>
+    <string name="tap_to_open_notification_settings">Appuyez pour masquer</string>
+    <string name="pref_enable_auto_lock">Verrouillage automatique</string>
+    <string name="path_does_not_exist">\"%1$s\" n\'existe pas</string>
+    <string name="path_not_a_folder">“%1$s” n\'est pas un dossier</string>
+    <string name="pref_enable_auto_lock_msg">Verrouiller le gestionnaire d\'application lorsque l\'appareil est verrouillé.</string>
+    <string name="optimize_option_compile_layouts">Compiler les ressources de mise en page</string>
+    <string name="sort_by_data_usage">Utilisation des données</string>
+    <string name="grant_overlay_permission_message">Autoriser App Manager à afficher une fenêtre flottante au-dessus de toutes les autres fenêtres</string>
+    <string name="select_a_dex2oat_compiler_filter">Filtre du compilateur <tt>dex2oat</tt></string>
+    <string name="optimize_option_force_compilation">­Forcer la compilation même si cela n\'est pas nécessaire</string>
+    <plurals name="folder_count">
+        <item quantity="one">%d dossier</item>
+        <item quantity="many">%d dossiers</item>
+        <item quantity="other">%d dossiers</item>
+    </plurals>
+    <string name="browse_files">Parcourir</string>
+    <string name="pref_files_msg">Configurer le gestionnaire de fichiers.</string>
+    <string name="module_name">Nom du module</string>
+    <string name="funding_campaign_text">Nous menons une <b>campagne de financement</b> pour App Manager pour une durée limitée. <a href="https://opencollective.com/app-manager#category-ABOUT">en savoir plus…</a></string>
+    <string name="filter_apps_with_ssaid">Avec SSAID</string>
+    <string name="warning_working_on_system_mode">Avertissement : Travailler sur le système au lieu du mode ADB.</string>
+    <string name="calculating_file_size">Calcul en cours…</string>
+    <string name="grant_required_permission">Accorder l\'autorisation requise</string>
+    <string name="netpolicy_reject_metered_background_data">Rejeter les données d\'arrière-plan sur les réseaux mesurés</string>
+    <string name="netpolicy_reject_metered_data">Rejeter les données sur les réseaux payants</string>
+    <string name="netpolicy_allow_metered_background_data">Autoriser les données en arrière-plan sur les réseaux limités même lorsque la sauvegarde de données est activé</string>
+    <string name="pref_toggle_internet_msg">Activer les fonctionnalités Internet dans App Manager</string>
+    <string name="create_new_file">Nouveau fichier</string>
+    <string name="sort_by_last_modified">Dernière modification</string>
+    <string name="export_option_markdown">Markdown</string>
+    <string name="funding_campaign_dialog_message">Nous menons une <b>campagne de financement</b> pour App Manager pour une durée limitée. Visitez <a href="https://opencollective.com/app-manager#category-ABOUT">opencollective.com/app-manager</a> pour en savoir plus sur la campagne. Cet avis ne sera plus affiché, mais vous pourrez le retrouver dans la page Paramètres pendant toute la campagne.</string>
+    <string name="sort_by_file_type">Type du fichier</string>
+    <string name="adb_incomplete_usb_debugging_title">Débogage USB incomplet</string>
+    <string name="adb_incomplete_usb_debugging_message">Il semble que le débogage USB ne soit pas configuré correctement. Veuillez lire <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">la documentation</a> pour connaître les étapes supplémentaires. Si vous connaissez déjà les étapes, veuillez cliquer sur « Ouvrir » pour ouvrir les options du développeur, ou cliquez sur « Fermer » pour continuer à utiliser le mode sans root.</string>
+    <string name="confirm_uninstallation">Confirmer la désinstallation</string>
+    <string name="grant_accessibility_permission_for_tracking_window_contents">Autorisez App Manager à utiliser la fonctionnalité d’accessibilité pour suivre le contenu de la fenêtre principale.</string>
+    <string name="action_run">Exécuter</string>
+    <plurals name="file_count">
+        <item quantity="one">%d fichier</item>
+        <item quantity="many">%d fichiers</item>
+        <item quantity="other">%d fichiers</item>
+    </plurals>
+    <string name="optimize_option_clear_profile_data">Effacer les données de profil précédentes</string>
+    <string name="title_ui_tracker">Tracker UI</string>
+    <string name="summary_perform_runtime_optimization_to_apps">Optimisez les mises en page DEX et (sous Android 10 et versions ultérieures) pour améliorer les performances des applications.</string>
+    <string name="pref_zip_align_msg">L\'alignement d\'un fichier APK réduit son utilisation de la mémoire car les fichiers de l\'APK sont accessibles directement sans copier les données dans la RAM. Cette étape est requise si <tt>extractNativeLibs</tt> est défini sur <tt>true</tt>.</string>
+    <string name="replacement_text">Remplacement</string>
+    <string name="go_to_path">Aller à…</string>
+    <string name="copy_this_path">Copier le chemin</string>
+    <string name="filter_force_stopped_apps">Applications arrêtées</string>
+    <string name="installing_package">Installation à %1$s…</string>
+    <string name="pref_installer_force_dexopt_description">Effectuez l\'optimisation DEX immédiatement après l\'installation de l\'application sans attendre que le système le fasse lorsqu\'il est inactif.</string>
+    <string name="folder">Dossier</string>
+    <string name="create_new_folder">Nouveau dossier</string>
+    <string name="enter_symbolic_link_name">Nom du lien</string>
+    <string name="enter_target_path">Chemin cible</string>
+    <string name="conflict_detected_while_copying_message">Un élément nommé «%1$s» existe déjà à cet emplacement. Voulez-vous le remplacer ?</string>
+    <string name="change_owner_uid">Changer de propriétaire (UID)</string>
+    <string name="change_mode">Changer le mode</string>
+    <string name="conflict_detected_while_copying">Conflit détecté</string>
+    <string name="copy_keep_both_file">Garder les deux</string>
+    <string name="pref_send_notifications_to_connected_devices">Envoyer des notifications aux appareils connectés</string>
+    <string name="debloat_removal_replace_short_description">Remplacer par une alternative</string>
+    <string name="title_alternatives_to_bloatware">Alternatives</string>
+    <string name="pref_files_display_in_launcher">Afficher \"Fichiers\" dans la liste d\'applications</string>
+    <string name="pref_files_remember_last_path">Se souvenir du dernier chemin ouvert et de sa position</string>
+    <string name="title_description">Description</string>
+    <string name="app_manager_is_running">Le gestionnaire d\'applications est en cours d\'exécution</string>
+    <string name="app_manager_is_unlocked">Le gestionnaire d\'applications est déverrouillé</string>
+    <string name="action_lock_app">Verrouiller</string>
+    <string name="pref_enable_persistent_session">Exécuter App Manager en arrière-plan</string>
+    <string name="profile_modified_are_you_sure">Le profil a été modifié. Annuler toutes vos modifications et quitter ?</string>
+    <string name="apply_profile">Appliquer le profil \"%1$s\"</string>
+    <string name="choose_a_profile_state">Sélectionnez un état de profil</string>
+    <string name="profile_id">ID du profil</string>
+    <string name="copy_profile_id">Copier l\'ID du profil</string>
+    <string name="read_only_file_warning">Les modifications ne peuvent pas être écrites dans le fichier, peut-être parce qu\'il se trouve dans un volume sur lequel App Manager n\'est pas autorisé à écrire. Voulez-vous l\'enregistrer à un autre endroit ?</string>
+    <string name="change_group_gid">Changer de groupe (GID)</string>
+    <string name="invalid_regex">Expression régulière invalide !</string>
+    <string name="value_cannot_be_empty">La valeur ne peut être vide !</string>
+    <string name="date">Date</string>
+    <string name="pref_use_vt">Utiliser VirusTotal</string>
+    <string name="pref_use_log_viewer">Utiliser le Visualiseur de journaux</string>
+    <string name="pref_installer">Utiliser l\'installeur</string>
+    <string name="pref_cat_general">Général</string>
+    <string name="status_remote_server_active">Le serveur distant est actif</string>
+    <string name="status_remote_services_inactive">Les services distants sont inactifs</string>
+    <string name="status_connecting">Connexion…</string>
+    <string name="status_connecting_via_mode">Connexion via %s</string>
+    <string name="status_not_connected_via_mode">Connexion impossible via %s</string>
+    <string name="adb_pairing_searching_for_port">Recherche en cours…</string>
+    <string name="adb_pairing_stop_searching">Arrêter</string>
+    <string name="sensors">Capteurs</string>
+    <string name="tag_sensors_disabled">Capteurs désactivés</string>
+    <string name="apk_source">Source APK</string>
+    <string name="mode_of_op_alternative_custom_command">Si vous obtenez une erreur \"Permission refusée\" avec la commande ci-dessus, lancez la commande suivante à la place :</string>
+    <string name="scan_report_from_pithus">Rapport Pithus</string>
+    <string name="launch_activity_dialog_title">Lancement d\'activité : action requise</string>
+    <string name="select_filter">Sélectionner un filtre</string>
+    <string name="failed_to_copy_specified_file">Impossible de copier \"%1$s\".</string>
+    <string name="apply_recursively">Appliquer aux fichiers joints</string>
+    <string name="size_in_bytes">Taille (octet)</string>
+    <string name="launch_activity_dialog_message">App Manager essaie de lancer l\'activité via l\'<b>Assistant de recherche</b> (usuellement Google Assistant), mais n\'y parvient pas dû à des permissions insuffisantes. Pour ouvrir l\'activité, merci d\'activer l\'<b>Assistant de recherche</b> manuellement (en général via un long clic sur le bouton d\'accueil). Cliquer sur le bouton <b>Fermer</b> lorsque vous avez fini de lancer l\'activité pour retourner sur l\'assistant original.</string>
+    <string name="pref_use_vt_no_internet">VirusTotal a besoin d\'accéder à Internet, ce qui n\'est pas le cas. Merci d\'activer <a href="app-manager://settings/privacy_prefs/toggle_internet">Utiliser Internet</a> d\'abord.</string>
+    <string name="status_remote_server_inactive">Le serveur distant est inactif</string>
+    <string name="status_remote_services_active">Les services distants sont actifs</string>
+    <string name="status_connected_via_mode">Connecté via %s</string>
+    <string name="adb_pairing_pairing_code">Code de couplage</string>
+    <string name="adb_pairing_instruction">Merci d\'accéder aux options développeurs pour activer le débogage sans fil et générer un code de couplage.</string>
+    <string name="adb_pairing_input_pairing_code">Code de couplage</string>
+    <string name="adb_pairing_found_pairing_service_with_port">Service trouvé avec le port %d</string>
+    <string name="adb_pairing_pairing_in_progress">Couplage…</string>
+    <string name="mode_of_op_custom_command_title">Commande personnalisée</string>
+    <string name="mode_of_op_custom_command">S\'il est impossible d\'utiliser l\'un de ces modes, vous pouvez exécuter la commande suivante dans un terminal avec accès privilégié pour lancer App Manager :</string>
+    <string name="adb_pairing_retry_pairing">Réessayer</string>
+    <string name="pref_use_system_font">Utiliser la police système</string>
+    <string name="pref_use_system_font_msg">Utiliser la police Material système par défaut. <font fgcolor="#ff0000">Ceci est une fonctionnalité expérimentale.</font></string>
+    <string name="backup_cache">Cache</string>
+    <string name="add_to_favorites">Ajouter aux favoris</string>
+    <string name="advanced_suspend_app_description">Cela force l\'arrêt et suspend l\'application pour s\'assurer qu\'elle ne tourne pas en arrière-plan. Cette méthode devrait être préférée par rapport à la méthode normale <b>suspendre</b>.</string>
+    <string name="no_history">Historique vide</string>
+    <string name="battery_technology">Technologie</string>
+    <string name="battery_health">Santé</string>
+    <string name="virus_total">VirusTotal</string>
+    <string name="available_memory">Disponible : %s</string>
+    <string name="op_history">Historique</string>
+    <string name="title_confirm_execution">Confirmer l\'exécution</string>
+    <string name="clear_history">Effacer l\'historique</string>
+    <string name="favorites">Favoris</string>
+    <string name="item_remove">Retirer</string>
+    <string name="item_edit">Éditer</string>
+    <string name="remove_filename">Retirer %s</string>
+    <string name="advanced_suspend_app">Suspension avancée</string>
+    <string name="vulkan_version">Version de Vulkan</string>
+    <string name="pref_files_remember_last_path_msg">Lorsque cette option est activée, ouvrir une nouvelle fenêtre ouvre la dernière page ouverte à la place de la page d\'accueil.</string>
+    <string name="title_shortcut_for_frozen_app">Application gelée</string>
 </resources>

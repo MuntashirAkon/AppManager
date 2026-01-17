@@ -16,7 +16,6 @@ import com.reandroid.arsc.chunk.PackageBlock;
 import com.reandroid.arsc.chunk.xml.ResXmlDocument;
 import com.reandroid.arsc.chunk.xml.ResXmlPullParser;
 import com.reandroid.arsc.io.BlockReader;
-import com.reandroid.xml.XMLDocument;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -73,9 +72,8 @@ public class AndroidBinXmlDecoder {
              PrintStream out = new PrintStream(os)) {
             ResXmlDocument resXmlDocument = new ResXmlDocument();
             resXmlDocument.readBytes(reader);
-            try (ResXmlPullParser parser = new ResXmlPullParser()) {
-                parser.setCurrentPackage(getFrameworkPackageBlock());
-                parser.setResXmlDocument(resXmlDocument);
+            resXmlDocument.setPackageBlock(getFrameworkPackageBlock());
+            try (ResXmlPullParser parser = new ResXmlPullParser(resXmlDocument)) {
                 StringBuilder indent = new StringBuilder(10);
                 final String indentStep = "  ";
                 out.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
@@ -123,15 +121,6 @@ public class AndroidBinXmlDecoder {
         }
     }
 
-    public static XMLDocument decodeToXml(@NonNull ByteBuffer byteBuffer) throws IOException {
-        ResXmlDocument xmlBlock = new ResXmlDocument();
-        try (BlockReader reader = new BlockReader(byteBuffer.array())) {
-            xmlBlock.readBytes(reader);
-            xmlBlock.setPackageBlock(getFrameworkPackageBlock());
-            return xmlBlock.decodeToXml();
-        }
-    }
-
     @NonNull
     private static String getNamespacePrefix(String prefix) {
         if (TextUtils.isEmpty(prefix)) {
@@ -141,7 +130,7 @@ public class AndroidBinXmlDecoder {
     }
 
     @NonNull
-    static PackageBlock getFrameworkPackageBlock() throws IOException {
+    public static PackageBlock getFrameworkPackageBlock() {
         if (sFrameworkPackageBlock != null) {
             return sFrameworkPackageBlock;
         }

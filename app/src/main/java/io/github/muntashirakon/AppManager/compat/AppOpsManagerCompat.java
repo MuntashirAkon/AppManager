@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.RequiresPermission;
 import androidx.collection.SparseArrayCompat;
+import androidx.core.os.ParcelCompat;
 
 import com.android.internal.app.IAppOpsService;
 
@@ -131,13 +132,29 @@ public class AppOpsManagerCompat {
      * Control whether an application is allowed to run in the background.
      */
     @RequiresApi(Build.VERSION_CODES.N)
-    public static final int OP_RUN_IN_BACKGROUND = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? AppOpsManagerHidden.OP_RUN_IN_BACKGROUND : 0;
+    public static final int OP_RUN_IN_BACKGROUND;
     /**
      * Run jobs when in background
      */
     @RequiresApi(Build.VERSION_CODES.P)
-    public static final int OP_RUN_ANY_IN_BACKGROUND = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? AppOpsManagerHidden.OP_RUN_ANY_IN_BACKGROUND : 0;
+    public static final int OP_RUN_ANY_IN_BACKGROUND;
     public static final int _NUM_OP = AppOpsManagerHidden._NUM_OP;
+
+    static {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            OP_RUN_IN_BACKGROUND = AppOpsManagerHidden.OP_RUN_IN_BACKGROUND;
+        } else {
+            //noinspection NewApi
+            OP_RUN_IN_BACKGROUND = 0;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            OP_RUN_ANY_IN_BACKGROUND = AppOpsManagerHidden.OP_RUN_ANY_IN_BACKGROUND;
+        } else {
+            //noinspection NewApi
+            OP_RUN_ANY_IN_BACKGROUND = 0;
+        }
+    }
+
     /**
      * Mapping from a permission to the corresponding app op.
      */
@@ -191,7 +208,7 @@ public class AppOpsManagerCompat {
     public static boolean isMiuiOp(int op) {
         try {
             return MiuiUtils.isMiui() && op > AppOpsManagerHidden.MIUI_OP_START;
-        } catch (Exception e) {
+        } catch (Throwable e) {
             return false;
         }
     }
@@ -395,7 +412,9 @@ public class AppOpsManagerCompat {
         }
 
         protected OpEntry(Parcel in) {
-            mOpEntry = AppOpsManagerHidden.OpEntry.CREATOR.createFromParcel(in);
+            mOpEntry = ParcelCompat.readParcelable(in,
+                    AppOpsManagerHidden.OpEntry.class.getClassLoader(),
+                    AppOpsManagerHidden.OpEntry.class);
         }
 
         public static final Creator<OpEntry> CREATOR = new Creator<OpEntry>() {
@@ -611,7 +630,7 @@ public class AppOpsManagerCompat {
 
     @NonNull
     public static List<OpEntry> getConfiguredOpsForPackage(@NonNull AppOpsManagerCompat appOpsManager,
-                                                                               @NonNull String packageName, int uid)
+                                                           @NonNull String packageName, int uid)
             throws RemoteException {
         List<PackageOps> packageOpsList = appOpsManager.getOpsForPackage(uid, packageName, null);
         if (packageOpsList.size() == 1) {

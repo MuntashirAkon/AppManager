@@ -21,14 +21,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,10 +34,12 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.adapters.SelectedArrayAdapter;
+import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.MaterialSpinner;
 import io.github.muntashirakon.widget.RecyclerView;
 
@@ -57,6 +57,7 @@ public class SysConfigActivity extends BaseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         mViewModel = new ViewModelProvider(this).get(SysConfigViewModel.class);
         MaterialSpinner spinner = findViewById(R.id.spinner);
+        UiUtils.applyWindowInsetsAsMargin(spinner, false, false);
         // Make spinner the first item to focus on
         spinner.requestFocus();
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
@@ -75,7 +76,7 @@ public class SysConfigActivity extends BaseActivity {
         });
 
         mAdapter = new SysConfigRecyclerAdapter(this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(this));
         recyclerView.setAdapter(mAdapter);
         // Observe data
         mViewModel.getSysConfigInfoListLiveData().observe(this, sysConfigInfoList -> {
@@ -118,7 +119,7 @@ public class SysConfigActivity extends BaseActivity {
             return new ViewHolder(view);
         }
 
-        void setList(Collection<SysConfigInfo> list) {
+        void setList(List<SysConfigInfo> list) {
             AdapterUtils.notifyDataSetChanged(this, mList, list);
         }
 
