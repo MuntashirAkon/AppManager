@@ -105,6 +105,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
+import io.github.muntashirakon.AppManager.compat.DevicePolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat;
 import io.github.muntashirakon.AppManager.compat.InstallSourceInfoCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
@@ -401,7 +402,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             netPolicyMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY));
         }
         if (installMenu != null) {
-            installMenu.setVisible(Users.getUsersIds().length > 1 && SelfPermissions.canInstallExistingPackages());
+            installMenu.setVisible(Users.getUsersIds().length > 1 && (SelfPermissions.canInstallExistingPackages()) || DevicePolicyManagerCompat.canModifyPermissions());
         }
         if (optimizeMenu != null) {
             optimizeMenu.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N

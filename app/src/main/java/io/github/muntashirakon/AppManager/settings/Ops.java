@@ -37,6 +37,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.adb.AdbPairingService;
 import io.github.muntashirakon.AppManager.adb.AdbUtils;
+import io.github.muntashirakon.AppManager.compat.DevicePolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
@@ -64,7 +65,7 @@ import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 public class Ops {
     public static final String TAG = Ops.class.getSimpleName();
 
-    @StringDef({MODE_AUTO, MODE_ROOT, MODE_ADB_OVER_TCP, MODE_ADB_WIFI, MODE_NO_ROOT})
+    @StringDef({MODE_AUTO, MODE_ROOT, MODE_ADB_OVER_TCP, MODE_ADB_WIFI, MODE_NO_ROOT, MODE_DPC})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Mode {
     }
@@ -74,7 +75,7 @@ public class Ops {
     public static final String MODE_ADB_OVER_TCP = "adb_tcp";
     public static final String MODE_ADB_WIFI = "adb_wifi";
     public static final String MODE_NO_ROOT = "no-root";
-
+    public static final String MODE_DPC = "dpc";
     @IntDef({
             STATUS_SUCCESS,
             STATUS_FAILURE,
@@ -83,6 +84,7 @@ public class Ops {
             STATUS_ADB_PAIRING_REQUIRED,
             STATUS_ADB_CONNECT_REQUIRED,
             STATUS_FAILURE_ADB_NEED_MORE_PERMS,
+            STATUS_FAILURE_DPC_NEED_SETUP
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface Status {
@@ -95,6 +97,7 @@ public class Ops {
     public static final int STATUS_ADB_PAIRING_REQUIRED = 4;
     public static final int STATUS_ADB_CONNECT_REQUIRED = 5;
     public static final int STATUS_FAILURE_ADB_NEED_MORE_PERMS = 6;
+    public static final int STATUS_FAILURE_DPC_NEED_SETUP = 7;
 
     public static int ROOT_UID = 0;
     public static int SHELL_UID = 2000;
@@ -106,6 +109,7 @@ public class Ops {
     private static boolean sIsAdb = false; // UID = 2000
     private static boolean sIsSystem = false; // UID = 1000
     private static boolean sIsRoot = false; // UID = 0
+    private static boolean sIsDeviceOwner = false;
 
     // Security
     private static final Object sSecurityLock = new Object();
@@ -164,6 +168,9 @@ public class Ops {
         return sIsAdb;
     }
 
+    @AnyThread
+    public static boolean isDpc() {return sIsDeviceOwner;}
+
     /**
      * Whether the current App Manager session is authenticated by the user. It does two things:
      * <ol>
@@ -207,6 +214,10 @@ public class Ops {
         if (uid == SHELL_UID) {
             return "ADB";
         }
+        if (isDpc()) {
+            return context.getString(R.string.device_policy_controller);
+        }
+
         return context.getString(R.string.no_root);
     }
 
@@ -243,6 +254,11 @@ public class Ops {
         if (!force && isAMServiceUpAndRunning(context, mode)) {
             // An instance of AMService is already running
             return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
+        }
+        if (MODE_DPC.equals(mode)) {
+            sIsDeviceOwner = DevicePolicyManagerCompat.isOwnerApp();
+            sDirectRoot = sIsSystem = sIsRoot = sIsAdb = false;
+            return sIsDeviceOwner ? STATUS_SUCCESS: STATUS_FAILURE;
         }
         if (MODE_NO_ROOT.equals(mode)) {
             sDirectRoot = false;

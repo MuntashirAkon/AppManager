@@ -1492,4 +1492,10 @@
     <string name="actual_installer">Actual Installer</string>
     <string name="apk_source">APK Source</string>
     <string name="backup_cache">Cache</string>
+    <string name="device_policy_controller">Device Policy Controller</string>
+    <string name="dpc_setup_msg">Use the following command to setup AppManager as DPC</string>
+    <string name="dpc_remove_msg">Click Here To Remove App Manager as DPC</string>
+    <string name="dpc_on_disabled">AM is no longer DPC</string>
+    <string name="dpc_on_enabled">AM is now DPC</string>
+    <string name="dpc_service_description">App Manager DPC Service</string>
 </resources>

@@ -30,6 +30,8 @@ import java.util.List;
 
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 
@@ -278,6 +280,9 @@ public final class PermissionCompat {
     public static int getPermissionFlags(@NonNull String permissionName,
                                          @NonNull String packageName,
                                          @UserIdInt int userId) throws SecurityException {
+        if (Ops.isDpc()) {
+            return FLAG_PERMISSION_NONE;
+        }
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 IPermissionManager permissionManager = getPermissionManager();
@@ -363,6 +368,10 @@ public final class PermissionCompat {
                                        @NonNull String permissionName,
                                        @UserIdInt int userId)
             throws RemoteException {
+        if (!SelfPermissions.canModifyPermissions() && DevicePolicyManagerCompat.canModifyPermissions()) {
+            DevicePolicyManagerCompat.grantPermission(packageName, permissionName);
+            return;
+        }
         IPackageManager pm = PackageManagerCompat.getPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             IPermissionManager permissionManager = getPermissionManager();
@@ -406,6 +415,10 @@ public final class PermissionCompat {
                                         @UserIdInt int userId,
                                         @Nullable String reason) throws RemoteException {
         IPackageManager pm = PackageManagerCompat.getPackageManager();
+        if (!SelfPermissions.canModifyPermissions() && DevicePolicyManagerCompat.canModifyPermissions()) {
+            DevicePolicyManagerCompat.revokePermission(packageName, permissionName);
+            return;
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             IPermissionManager permissionManager = getPermissionManager();
             try {

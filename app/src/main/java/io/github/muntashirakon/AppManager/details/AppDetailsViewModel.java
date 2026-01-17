@@ -67,6 +67,7 @@ import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
+import io.github.muntashirakon.AppManager.compat.DevicePolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
@@ -1392,7 +1393,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             mAppOps.postValue(Collections.emptyList());
             return;
         }
-        boolean canGetGrantRevokeRuntimePermissions = SelfPermissions.checkGetGrantRevokeRuntimePermissions();
+        boolean canGetGrantRevokeRuntimePermissions = SelfPermissions.checkGetGrantRevokeRuntimePermissions() || DevicePolicyManagerCompat.canModifyPermissions();
         synchronized (mAppOpItems) {
             mAppOpItems.clear();
             try {
@@ -1551,7 +1552,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             int appOp = AppOpsManagerCompat.permissionToOpCode(permissionName);
             int permissionFlags;
             boolean appOpAllowed = false;
-            if (!mExternalApk && SelfPermissions.checkGetGrantRevokeRuntimePermissions()) {
+            if (!mExternalApk && (SelfPermissions.checkGetGrantRevokeRuntimePermissions() || DevicePolicyManagerCompat.canModifyPermissions())) {
                 permissionFlags = PermissionCompat.getPermissionFlags(
                         permissionName, packageInfo.packageName, mUserId);
             } else permissionFlags = PermissionCompat.FLAG_PERMISSION_NONE;
