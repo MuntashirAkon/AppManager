@@ -507,8 +507,8 @@
     <string name="critical_exts">关键扩展</string>
     <string name="dsa_affine_y">仿射 y 坐标</string>
     <string name="dsa_affine_x">仿射 x 坐标</string>
-    <string name="rsa_modulus">RSA模数</string>
-    <string name="rsa_exponent">RSA指数</string>
+    <string name="rsa_modulus">RSA 模数</string>
+    <string name="rsa_exponent">RSA 指数</string>
     <string name="format">格式</string>
     <string name="public_key">公钥</string>
     <string name="algorithm">算法</string>
