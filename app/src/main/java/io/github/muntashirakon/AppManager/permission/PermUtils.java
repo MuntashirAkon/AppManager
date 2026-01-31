@@ -449,6 +449,6 @@ public class PermUtils {
 
     public static boolean isModifiable(@NonNull Permission permission) {
         // Non-readonly permissions or permissions with app ops are modifiable
-        return (SelfPermissions.canModifyPermissions() || DevicePolicyManagerCompat.canModifyPermissions()) && (!permission.isReadOnly() || permission.affectsAppOp());
+        return (SelfPermissions.canModifyPermissions() || (DevicePolicyManagerCompat.canModifyPermissions() && !(permission instanceof DevelopmentPermission))) && (!permission.isReadOnly() || permission.affectsAppOp());
     }
 }
