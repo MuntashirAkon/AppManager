@@ -1564,4 +1564,6 @@
     <string name="dpc_on_disabled">AM is no longer DPC</string>
     <string name="dpc_on_enabled">AM is now DPC</string>
     <string name="dpc_service_description">App Manager DPC Service</string>
+    <string name="dpc_short_support_message">App Manager has control of this Resource</string>
+    <string name="dpc_long_support_message">App Manager Dpc Long Support Message</string>
 </resources>

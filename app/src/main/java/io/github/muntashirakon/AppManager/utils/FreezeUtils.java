@@ -19,11 +19,13 @@ import java.lang.annotation.RetentionPolicy;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
+import io.github.muntashirakon.AppManager.compat.DevicePolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.entity.FreezeType;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 
 public final class FreezeUtils {
@@ -87,6 +89,11 @@ public final class FreezeUtils {
             if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS)) {
                 PackageManagerCompat.hidePackage(packageName, userId, true);
                 return;
+            } else if (Ops.isDpc()) {
+                if (DevicePolicyManagerCompat.setApplicationHidden(packageName, true)) {
+                    throw new RemoteException("Failed to hide application with DPC");
+                }
+                return;
             }
             // No permission, fall-through
         } else if ((freezeType == FREEZE_SUSPEND || freezeType == FREEZE_ADV_SUSPEND) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -99,6 +106,11 @@ public final class FreezeUtils {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.SUSPEND_APPS)) {
                     PackageManagerCompat.suspendPackages(new String[]{packageName}, userId, true);
+                    return;
+                } else if (Ops.isDpc()) {
+                    if (!DevicePolicyManagerCompat.setPackageSuspended(packageName, true)) {
+                        throw new RemoteException("Failed to suspend Application");
+                    }
                     return;
                 }
                 // No permission, fall-through
@@ -115,6 +127,12 @@ public final class FreezeUtils {
 
     public static void unfreeze(@NonNull String packageName, @UserIdInt int userId) throws RemoteException {
         // Ignore checking preference, unfreeze for all types
+        if (Ops.isDpc()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                DevicePolicyManagerCompat.setPackageSuspended(packageName, false);
+            }
+            DevicePolicyManagerCompat.setApplicationHidden(packageName, false);
+        }
         if (PackageManagerCompat.isPackageHidden(packageName, userId)) {
             PackageManagerCompat.hidePackage(packageName, userId, false);
         }
