@@ -514,4 +514,53 @@
     <string name="freeze_on_phone_locked">Automātiski iesaldēt lietotni, kad bloķēts tālrunis</string>
     <string name="disable_app_description">Ieteicamā iesaldēšanas metode. Atspējo lietotni un visus tās komponentus. Visi lietotnes īsceļi būs nepieejami.</string>
     <string name="message_shortcut_for_frozen_app">Izskatās, ka saīsnei atbilstošā lietotne ir iesaldēta. Vai vēlaties īslaicīgi atsaldēt un atvērt saīsni?</string>
+    <plurals name="alert_failed_to_clear_data">
+        <item quantity="zero">Nevarēja notīrīt %1$d lietotņu datus</item>
+        <item quantity="one">Nevarēja notīrīt %1$d lietotnes datus</item>
+        <item quantity="other">Nevarēja notīrīt %1$d lietotņu datus</item>
+    </plurals>
+    <plurals name="no_of_splits">
+        <item quantity="zero">%1$d daļas</item>
+        <item quantity="one">%1$d daļa</item>
+        <item quantity="other">%1$d daļas</item>
+    </plurals>
+    <plurals name="alert_failed_to_restore">
+        <item quantity="zero">Nevarēja atjaunot %1$d lietotnes</item>
+        <item quantity="one">Nevarēja atjaunot %1$d lietotni</item>
+        <item quantity="other">Nevarēja atjaunot %1$d lietotnes</item>
+    </plurals>
+    <plurals name="alert_failed_to_delete_backup">
+        <item quantity="zero">Nevarēja izdzēst %1$d dublējumus</item>
+        <item quantity="one">Nevarēja izdzēst %1$d dublējumu</item>
+        <item quantity="other">Nevarēja izdzēst %1$d dublējumus</item>
+    </plurals>
+    <plurals name="missing_signatures">
+        <item quantity="zero">Trūkst %1$d parakstu</item>
+        <item quantity="one">Trūkst %1$d paraksta</item>
+        <item quantity="other">Trūkst %1$d parakstu</item>
+    </plurals>
+    <string name="service">Pakalpojumi</string>
+    <string name="data_received">Saņemto datu apjoms</string>
+    <string name="data_transmitted">Nosūtīto datu apjoms</string>
+    <string name="pref_app_language">Valoda</string>
+    <string name="reinstall">Uzstādīt pa jaunu</string>
+    <string name="yes">Jā</string>
+    <string name="no">Nē</string>
+    <string name="community">Kopiena</string>
+    <string name="pref_cat_appearance">Izskats</string>
+    <string name="pref_cat_advanced">Papildus</string>
+    <string name="file">Datne</string>
+    <string name="file_creation_date">Izveidota</string>
+    <string name="open_as_text">Tekstu</string>
+    <string name="open_as_image">Attēlu</string>
+    <string name="open_as_archive">Arhīvu</string>
+    <string name="open_as_folder">Mapi</string>
+    <string name="action_stop_service">Apturēt</string>
+    <string name="calculating_file_size">Aprēķina…</string>
+    <string name="export_option_xml">XML</string>
+    <string name="action_continue">Turpināt</string>
+    <string name="title_terminal_emulator">Terminālis</string>
+    <string name="title_labs_activity">Laboratorija</string>
+    <string name="action_optimize_app">Optimizēt</string>
+    <string name="debloat_list_google">Google</string>
 </resources>
