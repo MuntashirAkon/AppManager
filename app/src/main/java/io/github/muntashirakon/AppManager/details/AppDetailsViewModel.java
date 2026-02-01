@@ -1224,7 +1224,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
             CharSequence appLabel = packageInfo.applicationInfo.loadLabel(mPackageManager);
             boolean canStartAnyActivity = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.START_ANY_ACTIVITY);
             boolean canStartViaAssist = UserHandleHidden.myUserId() == mUserId &&
-                    SelfPermissions.checkSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS);
+                    (SelfPermissions.checkSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS)
+                            || Ops.isDpc());
             for (ActivityInfo activityInfo : packageInfo.activities) {
                 AppDetailsActivityItem componentItem = new AppDetailsActivityItem(activityInfo);
                 componentItem.label = getComponentLabel(activityInfo, appLabel);
