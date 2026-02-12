@@ -76,6 +76,7 @@ public class Ops {
     public static final String MODE_ADB_OVER_TCP = "adb_tcp";
     public static final String MODE_ADB_WIFI = "adb_wifi";
     public static final String MODE_NO_ROOT = "no-root";
+    public static final String MODE_PLATFORM = "platform";
 
     @IntDef({
             STATUS_SUCCESS,

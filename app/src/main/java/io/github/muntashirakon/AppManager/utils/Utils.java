@@ -680,4 +680,9 @@ public class Utils {
     public static boolean isRoboUnitTest() {
         return "robolectric".equals(Build.FINGERPRINT);
     }
+
+    public static boolean isPlatform() {
+        // noinspection ConstantValue
+        return BuildConfig.FLAVOR.equals("platform");
+    }
 }

@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.ACTION_CONFIRM_INSTALL;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.ACTION_CONFIRM_PRE_APPROVAL;
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_ABORTED;
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_BLOCKED;
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_CONFLICT;
@@ -109,11 +111,14 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     @NonNull
     public static Intent getLaunchableInstance(@NonNull Context context, @NonNull String packageName) {
         Intent intent = new Intent(context, PackageInstallerActivity.class);
-        intent.setData(Uri.parse("package:" + packageName));
+        intent.putExtra(EXTRA_INSTALL_EXISTING, true);
+        intent.putExtra(EXTRA_PACKAGE_NAME, packageName);
         return intent;
     }
 
     private static final String EXTRA_APK_FILE_LINK = "link";
+    public static final String EXTRA_INSTALL_EXISTING = "install_existing";
+    public static final String EXTRA_PACKAGE_NAME = "pkg";
     public static final String ACTION_PACKAGE_INSTALLED = BuildConfig.APPLICATION_ID + ".action.PACKAGE_INSTALLED";
 
     private int mSessionId = -1;
@@ -194,6 +199,10 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             onNewIntent(intent);
             return;
         }
+        if (ACTION_CONFIRM_INSTALL.equals(intent.getAction()) || ACTION_CONFIRM_PRE_APPROVAL.equals(intent.getAction())) {
+            mSessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
+            intent.putExtra(EXTRA_APK_FILE_LINK, ApkSource.getApkSource(new Uri.Builder().build(), ""));
+        }
         mModel = new ViewModelProvider(this).get(PackageInstallerViewModel.class);
         if (!bindService(
                 new Intent(this, PackageInstallerService.class), mServiceConnection, BIND_AUTO_CREATE)) {
@@ -210,6 +219,24 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             }
         }
         mModel.packageInfoLiveData().observe(this, newPackageInfo -> {
+            if (newPackageInfo == null &&
+                    (ACTION_CONFIRM_INSTALL.equals(intent.getAction()) ||
+                            ACTION_CONFIRM_PRE_APPROVAL.equals(intent.getAction()))) {
+                PackageInstallerCompat installerCompat = PackageInstallerCompat.getNewInstance();
+                mDialogHelper.showSessionConfirmationDialog(R.string.install, new InstallerDialogHelper.OnClickButtonsListener() {
+                    @Override
+                    public void triggerInstall() {
+                        installerCompat.setPermissionsResult(mSessionId, true);
+                        finish();
+                    }
+                    @Override
+                    public void triggerCancel() {
+                        installerCompat.setPermissionsResult(mSessionId, false);
+                        finish();
+                    }
+                });
+                return;
+            }
             if (newPackageInfo == null) {
                 mDialogHelper.showParseFailedDialog(v -> triggerCancel());
                 return;

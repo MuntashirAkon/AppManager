@@ -601,6 +601,14 @@
             android:taskAffinity=""
             android:theme="@style/AppTheme.TransparentBackground">
             <intent-filter>
+                <action android:name="android.content.pm.action.CONFIRM_INSTALL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.content.pm.action.CONFIRM_PRE_APPROVAL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -728,7 +736,12 @@
             android:label="@string/interceptor"
             android:taskAffinity=""
             android:windowSoftInputMode="stateUnchanged">
-
+            <intent-filter>
+                <action android:name="android.intent.action.DELETE" />
+                <action android:name="android.intent.action.UNINSTALL_PACKAGE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="package" />
+            </intent-filter>
             <!-- matching any given mime type -->
             <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />

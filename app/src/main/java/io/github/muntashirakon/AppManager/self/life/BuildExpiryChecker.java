@@ -20,9 +20,10 @@ import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public final class BuildExpiryChecker {
-    @IntDef({BUILD_TYPE_DEBUG, BUILD_TYPE_ALPHA, BUILD_TYPE_BETA, BUILD_TYPE_RC, BUILD_TYPE_STABLE})
+    @IntDef({BUILD_TYPE_DEBUG, BUILD_TYPE_ALPHA, BUILD_TYPE_BETA, BUILD_TYPE_RC, BUILD_TYPE_STABLE, BUILD_TYPE_PLATFORM})
     @Retention(RetentionPolicy.SOURCE)
     private @interface BuildType {}
 
@@ -31,12 +32,14 @@ public final class BuildExpiryChecker {
     private static final int BUILD_TYPE_BETA = 2;
     private static final int BUILD_TYPE_RC = 3;
     private static final int BUILD_TYPE_STABLE = 4;
+    private static final int BUILD_TYPE_PLATFORM = 5;
 
     private static final long[] TIME_SPAN_MILLIS = new long[]{
             2L * 30 * 24 * 60 * 60_000, // 2 months
             6L * 30 * 24 * 60 * 60_000, // 6 months
             6L * 30 * 24 * 60 * 60_000, // 6 months
             6L * 30 * 24 * 60 * 60_000, // 6 months
+            18L * 30 * 24 * 60 * 60_000, // 18 months
             18L * 30 * 24 * 60 * 60_000, // 18 months
     };
 
@@ -45,6 +48,7 @@ public final class BuildExpiryChecker {
             30L * 24 * 60 * 60_000, // 1 month
             30L * 24 * 60 * 60_000, // 1 month
             30L * 24 * 60 * 60_000, // 1 month
+            3L * 30 * 24 * 60 * 60_000, // 3 months
             3L * 30 * 24 * 60 * 60_000, // 3 months
     };
 
@@ -69,7 +73,8 @@ public final class BuildExpiryChecker {
                     activity.startActivity(intent);
                     activity.finishAndRemoveTask();
                 });
-        if (getBuildType() == BUILD_TYPE_STABLE) {
+        // Platform
+        if (getBuildType() == BUILD_TYPE_STABLE || getBuildType() == BUILD_TYPE_PLATFORM) {
             builder.setNeutralButton(R.string.action_continue, continueClickListener);
         }
         return builder.create();
@@ -107,6 +112,9 @@ public final class BuildExpiryChecker {
         if (getBuildType() == BUILD_TYPE_DEBUG) {
             return Uri.parse("https://github.com/MuntashirAkon/AppManager/actions/workflows/debug_build.yml");
         }
+        if (getBuildType() == BUILD_TYPE_PLATFORM) { // Rom Builders Should Set this value //TODO: 8FEB26 Link to relevant AM Docs page
+            return Uri.parse(System.getProperty("ro.appmanager.update.url", "https://tharow.net/AppManager"));
+        }
         // TODO: 3/12/22 For Stable builds, check F-Droid too
         return Uri.parse("https://github.com/MuntashirAkon/AppManager/releases");
     }
@@ -115,6 +123,9 @@ public final class BuildExpiryChecker {
     private static int getBuildType() {
         if (BuildConfig.DEBUG) {
             return BUILD_TYPE_DEBUG;
+        }
+        if (Utils.isPlatform()) {
+            return BUILD_TYPE_PLATFORM;
         }
         String[] versionParts = BuildConfig.VERSION_NAME.split("-");
         if (versionParts.length == 1) {
