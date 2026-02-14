@@ -33,13 +33,6 @@ public class MainPreferences extends PreferenceFragment {
         return preferences;
     }
 
-    private static final List<String> MODE_NAMES = Arrays.asList(
-            Ops.MODE_AUTO,
-            Ops.MODE_ROOT,
-            Ops.MODE_ADB_OVER_TCP,
-            Ops.MODE_ADB_WIFI,
-            Ops.MODE_NO_ROOT);
-
     private FragmentActivity mActivity;
     private Preference mModePref;
     private Preference mLocalePref;
@@ -76,7 +69,7 @@ public class MainPreferences extends PreferenceFragment {
         super.onStart();
         if (mModePref != null) {
             mModePref.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op,
-                    mModes[MODE_NAMES.indexOf(Ops.getMode())], Ops.getInferredMode(mActivity)));
+                    mModes[Ops.MODE_NAMES.indexOf(Ops.getMode())], Ops.getInferredMode(mActivity)));
         }
         if (mLocalePref != null) {
             mLocalePref.setSummary(getLanguageName());

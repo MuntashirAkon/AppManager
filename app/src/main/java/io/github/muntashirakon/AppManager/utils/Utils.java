@@ -53,6 +53,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 
 public class Utils {
     public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDirectoryRaw() + "/data/com.termux/files/usr/bin/login";
@@ -679,10 +680,5 @@ public class Utils {
 
     public static boolean isRoboUnitTest() {
         return "robolectric".equals(Build.FINGERPRINT);
-    }
-
-    public static boolean isPlatform() {
-        // noinspection ConstantValue
-        return BuildConfig.FLAVOR.equals("platform");
     }
 }

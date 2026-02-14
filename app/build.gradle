@@ -54,7 +54,7 @@ android {
             resValue "string", "app_name", "AM Debug"
             // Value must be changed manually for platform debug
             // TODO 11FEB26 make debug signingConfig selection automatic.
-            signingConfig = signingConfigs.debug;
+            signingConfig = signingConfigs.platform;
         }
     }
     flavorDimensions "version"

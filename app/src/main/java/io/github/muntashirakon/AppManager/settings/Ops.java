@@ -29,11 +29,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.adb.AdbPairingService;
@@ -66,7 +69,7 @@ import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 public class Ops {
     public static final String TAG = Ops.class.getSimpleName();
 
-    @StringDef({MODE_AUTO, MODE_ROOT, MODE_ADB_OVER_TCP, MODE_ADB_WIFI, MODE_NO_ROOT})
+    @StringDef({MODE_AUTO, MODE_ROOT, MODE_ADB_OVER_TCP, MODE_ADB_WIFI, MODE_NO_ROOT, MODE_PLATFORM})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Mode {
     }
@@ -77,6 +80,14 @@ public class Ops {
     public static final String MODE_ADB_WIFI = "adb_wifi";
     public static final String MODE_NO_ROOT = "no-root";
     public static final String MODE_PLATFORM = "platform";
+
+    public static final List<String> MODE_NAMES = Arrays.asList(
+            Ops.MODE_AUTO,
+            Ops.MODE_ROOT,
+            Ops.MODE_ADB_OVER_TCP,
+            Ops.MODE_ADB_WIFI,
+            Ops.MODE_NO_ROOT,
+            Ops.MODE_PLATFORM);
 
     @IntDef({
             STATUS_SUCCESS,
@@ -165,6 +176,12 @@ public class Ops {
     @AnyThread
     public static boolean isAdb() {
         return sIsAdb;
+    }
+
+    @AnyThread
+    public static boolean isPlatform() {
+        //noinspection ConstantValue
+        return "platform".equals(BuildConfig.FLAVOR);
     }
 
     /**
@@ -261,6 +278,9 @@ public class Ops {
             }
             return STATUS_SUCCESS;
         }
+        if (MODE_PLATFORM.equals(mode)) {
+            return initPermissionsWithSuccess();
+        }
         if (!force && isAMServiceUpAndRunning(context, mode)) {
             // An instance of AMService is already running
             return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
@@ -326,6 +346,9 @@ public class Ops {
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     private static void autoDetectRootSystemOrAdbAndPersist(@NonNull Context context) {
         sIsRoot = sDirectRoot;
+        if (isPlatform()) {
+            setMode(MODE_PLATFORM);
+        }
         if (sDirectRoot) {
             // Root permission was granted
             setMode(MODE_ROOT);

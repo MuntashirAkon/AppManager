@@ -1558,4 +1558,5 @@
     <string name="selected_items_accessibility_description">Selected %d out of %d items</string>
     <string name="adb_local_server_port">ADB local server port</string>
     <string name="waiting_for_wifi">Waiting for Wi-Fi</string>
+    <string name="platform">Platform</string>
 </resources>

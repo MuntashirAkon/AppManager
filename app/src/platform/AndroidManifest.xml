@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:sharedUserId="android.uid.system"
+    android:sharedUserLabel="@string/system"
+    tools:ignore="Deprecated">
 
     <application tools:ignore="MissingApplicationIcon">
         <activity android:name=".apk.installer.PackageUninstallerActivity"
@@ -7,6 +10,7 @@
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:exported="true"
+            android:enabled="false"
             android:label="@string/uninstall">
             <intent-filter>
                 <action android:name="android.intent.action.DELETE" />
@@ -15,6 +19,10 @@
                 <data android:scheme="package" />
             </intent-filter>
         </activity>
+        <service android:name=".ipc.SystemServices" android:enabled="true" android:exported="true"
+            android:permission="android.permission.START_ANY_ACTIVITY" android:process="system"
+            android:isolatedProcess="false">
+        </service>
         <activity
             android:name=".intercept.ActivityInterceptor"
             android:enabled="true"
@@ -23,7 +31,12 @@
             android:taskAffinity=""
             android:windowSoftInputMode="stateUnchanged"
             tools:node="replace">
-
+            <intent-filter>
+                <action android:name="android.intent.action.DELETE" />
+                <action android:name="android.intent.action.UNINSTALL_PACKAGE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="package" />
+            </intent-filter>
             <!-- matching any given mime type -->
             <intent-filter>
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />

@@ -20,7 +20,7 @@ import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.settings.Ops;
 
 public final class BuildExpiryChecker {
     @IntDef({BUILD_TYPE_DEBUG, BUILD_TYPE_ALPHA, BUILD_TYPE_BETA, BUILD_TYPE_RC, BUILD_TYPE_STABLE, BUILD_TYPE_PLATFORM})
@@ -124,7 +124,7 @@ public final class BuildExpiryChecker {
         if (BuildConfig.DEBUG) {
             return BUILD_TYPE_DEBUG;
         }
-        if (Utils.isPlatform()) {
+        if (Ops.isPlatform()) {
             return BUILD_TYPE_PLATFORM;
         }
         String[] versionParts = BuildConfig.VERSION_NAME.split("-");

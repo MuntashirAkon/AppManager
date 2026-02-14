@@ -25,17 +25,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.IPackageInstallerSession;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
+import android.content.pm.PackageInstallerHidden;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.view.View;
+import android.view.WindowHidden;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -47,10 +51,12 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.pm.PackageInfoCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Queue;
 
+import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -199,10 +205,11 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             onNewIntent(intent);
             return;
         }
-        if (ACTION_CONFIRM_INSTALL.equals(intent.getAction()) || ACTION_CONFIRM_PRE_APPROVAL.equals(intent.getAction())) {
-            mSessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
-            intent.putExtra(EXTRA_APK_FILE_LINK, ApkSource.getApkSource(new Uri.Builder().build(), ""));
+        // Take a page out of the official installer hide all other overlays that aren't the system
+        if (SelfPermissions.checkSelfPermission("android.permission.HIDE_NON_SYSTEM_OVERLAY_WINDOWS")) {
+            Refine.<WindowHidden>unsafeCast(getWindow()).addSystemFlags(1 << 19);
         }
+
         mModel = new ViewModelProvider(this).get(PackageInstallerViewModel.class);
         if (!bindService(
                 new Intent(this, PackageInstallerService.class), mServiceConnection, BIND_AUTO_CREATE)) {
@@ -212,31 +219,24 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             mApkQueue.addAll(ApkQueueItem.fromIntent(intent, Utils.getRealReferrer(this)));
 
         }
-        ApkSource apkSource = IntentCompat.getUnwrappedParcelableExtra(intent, EXTRA_APK_FILE_LINK, ApkSource.class);
+        ApkSource apkSource;
+        if (ACTION_CONFIRM_INSTALL.equals(intent.getAction()) || ACTION_CONFIRM_PRE_APPROVAL.equals(intent.getAction())) {
+            mSessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
+            try {
+                Uri uri = Uri.fromFile(new File(Refine.<PackageInstallerHidden.SessionInfo>unsafeCast(PackageManagerCompat.getPackageInstaller().getSessionInfo(mSessionId)).getResolvedBaseApkPath()));
+                apkSource = ApkSource.getApkSource(uri, null);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            apkSource = IntentCompat.getUnwrappedParcelableExtra(intent, EXTRA_APK_FILE_LINK, ApkSource.class);
+        }
         if (apkSource != null) {
             synchronized (mApkQueue) {
                 mApkQueue.add(ApkQueueItem.fromApkSource(apkSource));
             }
         }
         mModel.packageInfoLiveData().observe(this, newPackageInfo -> {
-            if (newPackageInfo == null &&
-                    (ACTION_CONFIRM_INSTALL.equals(intent.getAction()) ||
-                            ACTION_CONFIRM_PRE_APPROVAL.equals(intent.getAction()))) {
-                PackageInstallerCompat installerCompat = PackageInstallerCompat.getNewInstance();
-                mDialogHelper.showSessionConfirmationDialog(R.string.install, new InstallerDialogHelper.OnClickButtonsListener() {
-                    @Override
-                    public void triggerInstall() {
-                        installerCompat.setPermissionsResult(mSessionId, true);
-                        finish();
-                    }
-                    @Override
-                    public void triggerCancel() {
-                        installerCompat.setPermissionsResult(mSessionId, false);
-                        finish();
-                    }
-                });
-                return;
-            }
             if (newPackageInfo == null) {
                 mDialogHelper.showParseFailedDialog(v -> triggerCancel());
                 return;

@@ -26,5 +26,8 @@
         <permission name="android.permission.CHANGE_OVERLAY_PACKAGES" />
         <permission name="android.permission.WRITE_SECURE_SETTINGS" />
         <permission name="android.permission.PACKAGE_VERIFICATION_AGENT" />
+        <permission name="android.permission.READ_INSTALLED_SESSION_PATHS" />
+        <permission name="android.permission.HIDE_NON_SYSTEM_OVERLAY_WINDOWS"/>
+        <permission name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
     </privapp-permissions>
 </permissions>

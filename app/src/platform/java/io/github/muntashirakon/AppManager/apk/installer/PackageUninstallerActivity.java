@@ -43,7 +43,7 @@ public class PackageUninstallerActivity extends BaseActivity {
     @RequiresPermission(anyOf = {Manifest.permission.REQUEST_DELETE_PACKAGES, Manifest.permission.DELETE_PACKAGES})
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
-        this.mPackageName = Objects.requireNonNull(getIntent().getDataString()).replaceFirst("package:", "");
+        this.mPackageName = Objects.requireNonNull(getIntent().getData()).getHost();
         boolean isUninstallFromAllUsers = getIntent().getBooleanExtra(PackageInstallerCompat.EXTRA_UNINSTALL_ALL_USERS, false);
         this.mActivity = this;
         this.mUserId = UserHandleHidden.myUserId();
@@ -58,17 +58,6 @@ public class PackageUninstallerActivity extends BaseActivity {
     }
 
     private void uninstallDialog(boolean isUninstallFromAllUsers) {
-        if (mUserId != UserHandleHidden.myUserId() && !SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.DELETE_PACKAGES)) {
-            // Could be for work profile
-            try {
-                Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
-                uninstallIntent.setData(Uri.parse("package:" + mPackageName));
-                ActivityManagerCompat.startActivity(uninstallIntent, mUserId);
-            } catch (Throwable th) {
-                UIUtils.displayLongToast("Error: " + th.getLocalizedMessage());
-            }
-            return;
-        }
         final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         ScrollableDialogBuilder builder = new ScrollableDialogBuilder(mActivity,
                 isSystemApp ? R.string.uninstall_system_app_message : R.string.uninstall_app_message)

@@ -27,4 +27,3 @@ basement_dist
 *.jks
 *~
 scripts/KeyStore.sh
-/app/platform/*
