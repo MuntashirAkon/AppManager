@@ -150,7 +150,7 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
             return true;
         });
         holder.textView.setTextColor(mCurrentPosition == position
-                ? MaterialColors.getColor(holder.textView, com.google.android.material.R.attr.colorPrimary)
+                ? MaterialColors.getColor(holder.textView, androidx.appcompat.R.attr.colorPrimary)
                 : MaterialColors.getColor(holder.textView, android.R.attr.textColorSecondary));
     }
 

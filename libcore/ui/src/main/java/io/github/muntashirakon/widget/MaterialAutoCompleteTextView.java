@@ -22,7 +22,7 @@ public class MaterialAutoCompleteTextView extends com.google.android.material.te
     }
 
     public MaterialAutoCompleteTextView(@NonNull Context context, @Nullable AttributeSet attributeSet) {
-        this(context, attributeSet, com.google.android.material.R.attr.autoCompleteTextViewStyle);
+        this(context, attributeSet, androidx.appcompat.R.attr.autoCompleteTextViewStyle);
     }
 
     @SuppressLint("RestrictedApi")
@@ -36,7 +36,7 @@ public class MaterialAutoCompleteTextView extends com.google.android.material.te
                 attributeSet,
                 com.google.android.material.R.styleable.MaterialAutoCompleteTextView,
                 defStyleAttr,
-                com.google.android.material.R.style.Widget_AppCompat_AutoCompleteTextView);
+                androidx.appcompat.R.style.Widget_AppCompat_AutoCompleteTextView);
 
         Drawable popupListSelector = attributes.getDrawable(R.styleable.MaterialAutoCompleteTextView_android_dropDownSelector);
         if (popupListSelector != null) {

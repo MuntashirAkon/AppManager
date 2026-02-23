@@ -24,6 +24,11 @@ android {
                 ]
             }
         }
+        externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+            }
+        }
         // Add build time to BuildConfig
         buildConfigField "long", "BUILD_TIME_MILLIS", "${buildTime()}"
     }

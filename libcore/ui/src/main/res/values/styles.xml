@@ -335,12 +335,12 @@
 
     <!-- MultiSelectionActionsView -->
     <style name="Widget.AppTheme.MultiSelectionActionsView" parent="android:Widget">
-        <item name="android:background">@macro/m3_comp_navigation_bar_container_color</item>
+        <item name="android:background">@macro/m3_comp_nav_bar_container_color</item>
         <item name="backgroundTint">@null</item>
-        <item name="elevation">0dp</item>
+        <item name="elevation">@dimen/m3_sys_elevation_level2</item>
         <item name="itemTextAppearanceInactive">?attr/textAppearanceBodyMedium</item>
         <item name="itemTextAppearanceActive">?attr/textAppearanceBodyMedium</item>
-        <item name="itemIconSize">@dimen/m3_comp_navigation_bar_icon_size</item>
+        <item name="itemIconSize">24dp</item>
         <item name="itemIconTint">@color/m3_textfield_indicator_text_color</item>
         <item name="itemTextColor">@color/m3_textfield_indicator_text_color</item>
         <item name="enforceTextAppearance">true</item>

@@ -152,8 +152,8 @@ public class AdvancedSearchView extends SearchView {
     public AdvancedSearchView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(wrap(context, attrs, defStyleAttr, DEF_STYLE_RES), attrs, defStyleAttr);
         context = getContext();
-        mSearchSrcTextView = findViewById(com.google.android.material.R.id.search_src_text);
-        mSearchTypeSelectionButton = findViewById(com.google.android.material.R.id.search_mag_icon);
+        mSearchSrcTextView = findViewById(androidx.appcompat.R.id.search_src_text);
+        mSearchTypeSelectionButton = findViewById(androidx.appcompat.R.id.search_mag_icon);
         mSearchTypeSelectionButton.setImageResource(R.drawable.ic_filter_menu);
         mSearchTypeSelectionButton.setBackground(UiUtils.getDrawable(context, android.R.attr.selectableItemBackgroundBorderless));
         mSearchTypeSelectionButton.setOnClickListener(onClickSearchIcon);

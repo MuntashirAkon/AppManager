@@ -346,7 +346,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
             icon = itemView.findViewById(android.R.id.icon);
             symbolicLinkIcon = itemView.findViewById(R.id.symbolic_link_icon);
             action = itemView.findViewById(android.R.id.button1);
-            action.setContentDescription(itemView.getContext().getString(com.google.android.material.R.string.abc_action_menu_overflow_description));
+            action.setContentDescription(itemView.getContext().getString(androidx.appcompat.R.string.abc_action_menu_overflow_description));
             title = itemView.findViewById(android.R.id.title);
             subtitle = itemView.findViewById(android.R.id.summary);
             action.setIconResource(io.github.muntashirakon.ui.R.drawable.ic_more_vert);

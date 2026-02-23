@@ -543,14 +543,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
     }
 
     private void displayChangelogIfRequired() {
-        if (BuildConfig.DEBUG) {
-            new ScrollableDialogBuilder(this)
-                    .setTitle("Debug Variants Discontinued")
-                    .setMessage("The official debug builds have been discontinued. Consider migrating to the release builds as this build will stop working 2 months after the release date.")
-                    .setNegativeButton(R.string.ok, null)
-                    .show();
-            return;
-        }
         if (!AppPref.getBoolean(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_BOOL)) {
             return;
         }
