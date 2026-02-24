@@ -94,8 +94,8 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.behavior.FreezeUnfreeze;
-import io.github.muntashirakon.AppManager.apk.dexopt.DexOptDialog;
 import io.github.muntashirakon.AppManager.apk.behavior.FreezeUnfreezeShortcutInfo;
+import io.github.muntashirakon.AppManager.apk.dexopt.DexOptDialog;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
@@ -107,6 +107,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchQueueItem;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
+import io.github.muntashirakon.AppManager.compat.DevicePolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat;
 import io.github.muntashirakon.AppManager.compat.InstallSourceInfoCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
@@ -139,6 +140,7 @@ import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
@@ -409,7 +411,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             netPolicyMenu.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N);
         }
         if (installMenu != null) {
-            installMenu.setVisible(Users.getUsersIds().length > 1 && SelfPermissions.canInstallExistingPackages());
+            installMenu.setVisible(Users.getUsersIds().length > 1 && (SelfPermissions.canInstallExistingPackages()) || DevicePolicyManagerCompat.canModifyPermissions());
         }
         if (optimizeMenu != null) {
             optimizeMenu.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
@@ -1321,7 +1323,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (!mIsExternalApk) {
             boolean isStaticSharedLib = ApplicationInfoCompat.isStaticSharedLibrary(mApplicationInfo);
             boolean isFrozen = FreezeUtils.isFrozen(mApplicationInfo);
-            boolean canFreeze = !isStaticSharedLib && SelfPermissions.canFreezeUnfreezePackages();
+            boolean canFreeze = !isStaticSharedLib && (SelfPermissions.canFreezeUnfreezePackages() || Ops.isDpc());
             // Set open
             Intent launchIntent = PackageManagerCompat.getLaunchIntentForPackage(mPackageName, mUserId);
             if (launchIntent != null && !isFrozen) {
@@ -1450,7 +1452,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             }
             if (!isStaticSharedLib && (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)
-                    || accessibilityServiceRunning)) {
+                    || accessibilityServiceRunning || Ops.isDpc())) {
                 // Clear data
                 ActionItem clearDataAction = new ActionItem(R.string.clear_data, R.drawable.ic_clear_data);
                 actionItems.add(clearDataAction);
@@ -1467,6 +1469,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                             UIUtils.displayShortToast(R.string.done);
                                         } else UIUtils.displayShortToast(R.string.failed);
                                     });
+                                });
+                            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && Ops.isDpc()) {
+                                ThreadUtils.postOnBackgroundThread(() -> {
+                                    DevicePolicyManagerCompat.clearApplicationUserData(mPackageName, ((packageName, succeeded) -> {
+                                        ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(succeeded?R.string.done:R.string.failed));
+                                    }));
                                 });
                             } else {
                                 // Use accessibility

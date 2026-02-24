@@ -48,6 +48,7 @@ import io.github.muntashirakon.AppManager.backup.struct.BackupMetadataV5;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.BackupCompat;
 import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
+import io.github.muntashirakon.AppManager.compat.DevicePolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
@@ -483,7 +484,7 @@ class BackupOp implements Closeable {
                 }
                 boolean isGranted = (permissionFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
                 int permFlags;
-                if (SelfPermissions.checkGetGrantRevokeRuntimePermissions()) {
+                if (SelfPermissions.checkGetGrantRevokeRuntimePermissions() || DevicePolicyManagerCompat.canModifyPermissions()) {
                     permFlags = PermissionCompat.getPermissionFlags(info.name, mPackageName, mUserId);
                 } else permFlags = PermissionCompat.FLAG_PERMISSION_NONE;
                 rules.setPermission(permissions[i], isGranted, permFlags);

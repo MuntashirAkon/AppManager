@@ -69,6 +69,7 @@ import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
+import io.github.muntashirakon.AppManager.compat.DevicePolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.OverlayManagerCompact;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
@@ -1223,7 +1224,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
             CharSequence appLabel = packageInfo.applicationInfo.loadLabel(mPackageManager);
             boolean canStartAnyActivity = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.START_ANY_ACTIVITY);
             boolean canStartViaAssist = UserHandleHidden.myUserId() == mUserId &&
-                    SelfPermissions.checkSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS);
+                    (SelfPermissions.checkSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS)
+                            || Ops.isDpc());
             for (ActivityInfo activityInfo : packageInfo.activities) {
                 AppDetailsActivityItem componentItem = new AppDetailsActivityItem(activityInfo);
                 componentItem.label = getComponentLabel(activityInfo, appLabel);
@@ -1453,7 +1455,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             mAppOps.postValue(Collections.emptyList());
             return;
         }
-        boolean canGetGrantRevokeRuntimePermissions = SelfPermissions.checkGetGrantRevokeRuntimePermissions();
+        boolean canGetGrantRevokeRuntimePermissions = SelfPermissions.checkGetGrantRevokeRuntimePermissions() || DevicePolicyManagerCompat.canModifyPermissions();
         synchronized (mAppOpItems) {
             mAppOpItems.clear();
             try {
@@ -1612,7 +1614,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             int appOp = AppOpsManagerCompat.permissionToOpCode(permissionName);
             int permissionFlags;
             boolean appOpAllowed = false;
-            if (!mExternalApk && SelfPermissions.checkGetGrantRevokeRuntimePermissions()) {
+            if (!mExternalApk && (SelfPermissions.checkGetGrantRevokeRuntimePermissions() || DevicePolicyManagerCompat.canModifyPermissions())) {
                 permissionFlags = PermissionCompat.getPermissionFlags(
                         permissionName, packageInfo.packageName, mUserId);
             } else permissionFlags = PermissionCompat.FLAG_PERMISSION_NONE;

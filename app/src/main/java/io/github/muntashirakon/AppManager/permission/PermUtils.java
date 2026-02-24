@@ -31,6 +31,7 @@ import java.util.Map;
 
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
+import io.github.muntashirakon.AppManager.compat.DevicePolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -309,7 +310,11 @@ public class PermUtils {
 
         if (!permission.isReadOnly()) {
             if (permission.isGranted()) {
-                PermissionCompat.grantPermission(applicationInfo.packageName, permission.getName(), userId);
+                if (!SelfPermissions.canModifyPermissions() && DevicePolicyManagerCompat.canModifyPermissions()) {
+                    DevicePolicyManagerCompat.grantPermission(applicationInfo.packageName, permission.getName());
+                } else {
+                    PermissionCompat.grantPermission(applicationInfo.packageName, permission.getName(), userId);
+                }
                 Log.d("PERM", "Granted %s", permission.getName());
             } else {
                 boolean isCurrentlyGranted = PermissionCompat.checkPermission(permission.getName(),
@@ -317,16 +322,25 @@ public class PermUtils {
 
                 if (isCurrentlyGranted) {
                     if (revokeReason == null) {
-                        PermissionCompat.revokePermission(applicationInfo.packageName, permission.getName(), userId);
+                        if (!SelfPermissions.canModifyPermissions() && DevicePolicyManagerCompat.canModifyPermissions()) {
+                            DevicePolicyManagerCompat.revokePermission(applicationInfo.packageName, permission.getName());
+                        } else {
+                            PermissionCompat.revokePermission(applicationInfo.packageName, permission.getName(), userId);
+                        }
+
                     } else {
-                        PermissionCompat.revokePermission(applicationInfo.packageName, permission.getName(), userId, revokeReason);
+                        if (!SelfPermissions.canModifyPermissions() && DevicePolicyManagerCompat.canModifyPermissions()) {
+                            DevicePolicyManagerCompat.revokePermission(applicationInfo.packageName, permission.getName());
+                        } else {
+                            PermissionCompat.revokePermission(applicationInfo.packageName, permission.getName(), userId, revokeReason);
+                        }
                     }
                     Log.d("PERM", "Revoked %s", permission.getName());
                 }
             }
         }
 
-        if (!permission.readOnly) {
+        if (!permission.readOnly && !(!SelfPermissions.canModifyPermissions() && DevicePolicyManagerCompat.canModifyPermissions())) {
             // Flags of the system fixed permissions may also be updated
             updateFlags(applicationInfo, permission, userId);
         }
@@ -435,6 +449,6 @@ public class PermUtils {
 
     public static boolean isModifiable(@NonNull Permission permission) {
         // Non-readonly permissions or permissions with app ops are modifiable
-        return SelfPermissions.canModifyPermissions() && (!permission.isReadOnly() || permission.affectsAppOp());
+        return (SelfPermissions.canModifyPermissions() || (DevicePolicyManagerCompat.canModifyPermissions() && !(permission instanceof DevelopmentPermission))) && (!permission.isReadOnly() || permission.affectsAppOp());
     }
 }
