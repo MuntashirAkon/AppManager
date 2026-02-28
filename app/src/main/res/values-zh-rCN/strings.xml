@@ -269,7 +269,7 @@
     <string name="touchscreen">触摸屏</string>
     <string name="pref_export_msg">导出应用管理器中配置的阻止规则到外部存储。</string>
     <string name="pref_import_msg">导入先前从应用管理器导出的拦截规则。</string>
-    <string name="pref_import_watt_msg">从 Watt 导入阻止规则，每个文件都包含针对单个命名包的规则，诸如 <tt> packagename.xml</tt>等。</string>
+    <string name="pref_import_watt_msg">从 Watt 导入阻止规则，每个含针对单个包规则的文件名称为 <tt>packagename.xml</tt>等。</string>
     <string name="pref_import_blocker_msg">从 Blocker 导入拦截规则，每个文件包含单个软件包的规则。</string>
     <string name="pref_app_theme">应用主题</string>
     <string name="follow_system">跟随系统</string>
@@ -695,7 +695,7 @@
     <string name="backup_rules_description">备份 App Manager 内配置的规则。<font fgcolor="#ff0000">取决于权限，并非所有规则都可以在还原期间被重新应用。</font></string>
     <string name="backup_extras_description">备份应用权限、节电和数据使用选项、MagiskHide 状态、SSAID 等。<font fgcolor="#ff0000">取决于权限，并非所有提取的应用都可以被还原。</font></string>
     <string name="backup_extras">附加</string>
-    <string name="backup_cache_description">备份<b>缓存</b>、<b>no_cache</b> 和 <b>no_backup</b> 文件夹。</string>
+    <string name="backup_cache_description">备份<b>cache</b>、<b>no_cache</b> 和 <b>no_backup</b> 文件夹。</string>
     <string name="backup_obb_media_description">备份 OBB 和媒体文件夹。</string>
     <string name="backup_external_data_description">备份外部数据文件夹。</string>
     <string name="backup_internal_data_description">备份数据文件夹。如果选中，将默认备份内部数据文件夹。</string>
@@ -712,7 +712,7 @@
     <string name="enforcing">强制</string>
     <string name="failed_to_enable_magisk_hide">无法启用 MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">无法禁用 MagiskHide</string>
-    <string name="disable_background_run_description">将<i>忽略</i>模式设置到下列应用操作：<tt>RUN_IN_BACKGROUND</tt>（从 Android 7.0 起）和 <tt>RUN_ANY_IN_BACKGROUND</tt>（从 Android 9 起）。</string>
+    <string name="disable_background_run_description">将<i>忽略</i>模式设置到下列 app ops：<tt>RUN_IN_BACKGROUND</tt>（从 Android 7.0 起）和 <tt>RUN_ANY_IN_BACKGROUND</tt>（从 Android 9 起）。</string>
     <plurals name="no_of_components">
         <item quantity="other">%1$d 个组件</item>
     </plurals>
