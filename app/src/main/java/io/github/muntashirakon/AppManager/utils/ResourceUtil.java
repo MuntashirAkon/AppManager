@@ -6,15 +6,26 @@ import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.util.Log;
+import android.util.TypedValue;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.annotation.XmlRes;
 import androidx.core.content.res.ResourcesCompat;
 
+import java.io.IOException;
+
 public final class ResourceUtil {
+
+    private static final String TAG = ResourceUtil.class.getSimpleName();
+
     public static class ParsedResource {
         @NonNull
         private final String mPackageName;
@@ -135,5 +146,24 @@ public final class ResourceUtil {
         int intStringRes = resources.getIdentifier(stringRes, "string", packageName);
         if (intStringRes == 0) throw new Resources.NotFoundException("String resource ID " + stringRes);
         return this.resources.getString(intStringRes);
+    }
+
+    @SuppressWarnings("NewApi")
+    @NonNull
+    public static AssetFileDescriptor getXmlAssetFd(Resources resources, @XmlRes int id) throws Resources.NotFoundException {
+        Log.d(TAG, "getXmlAssetFd() called with: resources = [" + resources + "], id = [" + id + "]");
+        final TypedValue value = new TypedValue();
+        if (resources == null) {
+            throw new Resources.NotFoundException("Resources Not Init");
+        }
+        try {
+            resources.getValue(id, value, true);
+            if (value.type == TypedValue.TYPE_STRING) {
+                return resources.getAssets().openNonAssetFd(value.assetCookie, value.string.toString());
+            }
+            throw new Resources.NotFoundException("Resource ID #0x" + Integer.toHexString(id) + " type #0x "+Integer.toHexString(value.type) + " is not valid");
+        } catch (IOException e) {
+            throw new Resources.NotFoundException("Resource ID #0x "+ Integer.toHexString(id), e);
+        }
     }
 }
