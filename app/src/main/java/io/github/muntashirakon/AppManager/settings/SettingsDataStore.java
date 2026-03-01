@@ -66,3 +66,18 @@ public class SettingsDataStore extends PreferenceDataStore {
         return (boolean) mAppPref.get(key);
     }
 }
+    @Test(expected=NullPointerException.class)
+    public void testSetBooleanRejectsNullKey() {
+        mService.setBoolean(null, false, 0);
+    }
+
+    @Test(expected=NullPointerException.class)
+    public void testSetLongRejectsNullKey() {
+        mService.setLong(null, 0, 0);
+    }
+
+    @Test(expected=NullPointerException.class)
+    public void testSetStringRejectsNullKey() {
+        mService.setString(null, "value", 0);
+    }
+
