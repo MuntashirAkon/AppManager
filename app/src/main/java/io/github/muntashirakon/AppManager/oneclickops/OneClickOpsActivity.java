@@ -87,6 +87,9 @@ public class OneClickOpsActivity extends BaseActivity {
         setItems();
         // Watch LiveData
         mViewModel.watchTrackerCount().observe(this, this::blockTrackers);
+      case Commands.OP_NUM_INCONSISTENCY:
+        Utils.showToast(R.string.daemon_op_num_inconsistency);
+        break;
         mViewModel.watchComponentCount().observe(this, listPair ->
                 blockComponents(listPair.first, listPair.second));
         mViewModel.watchAppOpsCount().observe(this, listPairPair ->
