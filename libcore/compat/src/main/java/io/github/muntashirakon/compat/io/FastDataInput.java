@@ -354,4 +354,148 @@ public class FastDataInput implements DataInput, Closeable {
         // Callers should read data piecemeal
         throw new UnsupportedOperationException();
     }
-}
+}    // ----- merge primitive array support  ---------------------------------
+
+    /**
+     * Merge two byte arrays.
+     *
+     * @param ab1  first array to merge
+     * @param ab2  second array to merge
+     *
+     * @return merged array
+     */
+    public static byte[] mergeByteArray(byte[] ab1, byte[] ab2)
+        {
+        if (ab1 == null || ab1.length == 0)
+            {
+            return ab2;
+            }
+
+        if (ab2 == null || ab2.length == 0)
+            {
+            return ab1;
+            }
+
+        int nLen1 = ab1.length;
+        int nLen2 = ab2.length;
+
+        byte[] aMerged = Arrays.copyOf(ab1, nLen1 + nLen2);
+        System.arraycopy(ab2, 0, aMerged, nLen1, nLen2);
+        return aMerged;
+        }
+
+    /**
+     * Merge two boolean arrays.
+     *
+     * @param af1  first array to merge
+     * @param af2  second array to merge
+     *
+     * @return the merged array
+     */
+    public static boolean[] mergeBooleanArray(boolean[] af1, boolean[] af2)
+        {
+        if (af1 == null || af1.length == 0)
+            {
+            return af2;
+            }
+
+        if (af2 == null || af2.length == 0)
+            {
+            return af1;
+            }
+
+        int nLen1 = af1.length;
+        int nLen2 = af2.length;
+
+        boolean[] aMerged = Arrays.copyOf(af1, nLen1 + nLen2);
+        System.arraycopy(af2, 0, aMerged, nLen1, nLen2);
+        return aMerged;
+        }
+
+    /**
+     * Merge two double arrays.
+     *
+     * @param adfl1  first array to merge
+     * @param adfl2  second array to merge
+     *
+     * @return the merged array
+     */
+    public static double[] mergeDoubleArray(double[] adfl1, double[] adfl2)
+        {
+        if (adfl1 == null || adfl1.length == 0)
+            {
+            return adfl2;
+            }
+
+        if (adfl2 == null || adfl2.length == 0)
+            {
+            return adfl1;
+            }
+
+        int nLen1 = adfl1.length;
+        int nLen2 = adfl2.length;
+
+        double[] aMerged = Arrays.copyOf(adfl1, nLen1 + nLen2);
+        System.arraycopy(adfl2, 0, aMerged, nLen1, nLen2);
+        return aMerged;
+        }
+
+    /**
+     * Merge two float arrays.
+     *
+     * @param afl1  first array to merge
+     * @param afl2  second array to merge
+     *
+     * @return merged array
+     */
+    public static float[] mergeFloatArray(float[] afl1, float[] afl2)
+        {
+        if (afl1 == null || afl1.length == 0)
+            {
+            return afl2;
+            }
+
+        if (afl2 == null || afl2.length == 0)
+            {
+            return afl1;
+            }
+
+        int nLen1 = afl1.length;
+        int nLen2 = afl2.length;
+
+        float[] aMerged = Arrays.copyOf(afl1, nLen1 + nLen2);
+        System.arraycopy(afl2, 0, aMerged, nLen1, nLen2);
+        return aMerged;
+        }
+
+    /**
+     * Merge two array with type T elements.
+     *
+     * @param a1   first array to merge
+     * @param a2   second array to merge
+     *
+     * @param <T>  type of array element
+     *
+     * @return the merged array
+     */
+    public static <T> T[] mergeArray(T[] a1, T[] a2)
+        {
+        if (a1 == null || a1.length == 0)
+            {
+            return a2;
+            }
+        if (a2 == null || a2.length == 0)
+            {
+            return a1;
+            }
+
+        int nLen1 = a1.length;
+        int nLen2 = a2.length;
+
+        T[] aMerged = (T[]) Arrays.copyOf(a1, nLen1 + nLen2);
+
+        System.arraycopy(a2, 0, aMerged, nLen1, nLen2);
+
+        return (T[]) aMerged;
+        }
+
