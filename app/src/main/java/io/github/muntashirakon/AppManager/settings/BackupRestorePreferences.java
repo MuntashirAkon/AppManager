@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import android.os.Build;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.collection.ArrayMap;
@@ -40,6 +41,7 @@ import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.convert.ImportType;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.batchops.BatchQueueItem;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchBackupImportOptions;
@@ -175,6 +177,11 @@ public class BackupRestorePreferences extends PreferenceFragment {
                                 Prefs.Encryption.setEncryptionMode(encryptionMode);
                                 break;
                             case CryptoUtils.MODE_AES: {
+                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                                    // AES/GCM/NoPadding is not available before SDK 23
+                                    UIUtils.displayLongToast(R.string.aes_unavailable);
+                                    break;
+                                }
                                 DialogFragment fragment = new AESCryptoSelectionDialogFragment();
                                 fragment.show(getParentFragmentManager(), AESCryptoSelectionDialogFragment.TAG);
                                 break;
