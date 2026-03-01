@@ -241,6 +241,7 @@ public class ActivityInterceptor extends BaseActivity {
                 } catch (Exception e) {
                     UIUtils.displayShortToast(e.getMessage());
                     e.printStackTrace();
+    <string name="playlist_loading_message">Playlist loading…</string>
                 }
             }
         }
