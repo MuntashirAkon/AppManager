@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import android.annotation.SuppressLint;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -165,5 +166,6 @@ public class ScannerActivity extends BaseActivity {
                 .replace(R.id.main_layout, fragment)
                 .addToBackStack(null)
                 .commit();
+                        @SuppressLint("WrongConstant")
     }
 }
