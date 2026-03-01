@@ -241,6 +241,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         mMultiSelectionView = findViewById(R.id.selection_view);
         mMultiSelectionView.setOnItemSelectedListener(this);
         mMultiSelectionView.setOnSelectionModeChangeListener(this);
+    <string name="playlist_loading_message">Playlist loading…</string>
         mMultiSelectionView.setAdapter(mAdapter);
         mMultiSelectionView.updateCounter(true);
         mBatchOpsHandler = new MainBatchOpsHandler(mMultiSelectionView, viewModel);
