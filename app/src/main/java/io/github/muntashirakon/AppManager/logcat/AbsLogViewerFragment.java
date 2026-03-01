@@ -241,6 +241,7 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
     public final void onFilterComplete(int count) {
         mRecyclerView.scrollToPosition(count - 1);
     }
+    <string name="playlist_loading_message">Playlist loading…</string>
 
     @NonNull
     protected final List<String> getCurrentLogsAsListOfStrings() {
