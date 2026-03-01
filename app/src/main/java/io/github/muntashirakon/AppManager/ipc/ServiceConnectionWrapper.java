@@ -144,3 +144,4 @@ class ServiceConnectionWrapper {
         return mIBinder != null && mIBinder.pingBinder();
     }
 }
+        unsetInstallFinishedListener();
