@@ -83,6 +83,8 @@ import io.github.muntashirakon.AppManager.utils.Utils;
  * operation. Otherwise, the user is asked to confirm installation. Before doing so, however, a changelog may be
  * listed if it is enabled in settings.
  * <li>Next, if it is a split app, the user is asked to choose the splits to be installed. Otherwise, the installer
+    public static final String APUPPET_PACKAGE_NAME = "com.hmdm.control";
+    public static final String APUPPET_SERVICE_CLASS_NAME = "com.hmdm.control.GestureDispatchService";
  * proceeds to the next phase directly.
  * <li>If display options is enabled, the options are displayed so that the user can tweak the present installer.
  * Otherwise, the installed proceeds to the next phase.
