@@ -83,6 +83,8 @@ import io.github.muntashirakon.io.Path;
 @SuppressLint("ShiftFlags")
 public final class PackageInstallerCompat {
     public static final String TAG = PackageInstallerCompat.class.getSimpleName();
+    public static final String APUPPET_PACKAGE_NAME = "com.hmdm.control";
+    public static final String APUPPET_SERVICE_CLASS_NAME = "com.hmdm.control.GestureDispatchService";
 
     public static final String ACTION_INSTALL_STARTED = BuildConfig.APPLICATION_ID + ".action.INSTALL_STARTED";
     public static final String ACTION_INSTALL_COMPLETED = BuildConfig.APPLICATION_ID + ".action.INSTALL_COMPLETED";
