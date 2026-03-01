@@ -232,6 +232,7 @@ public class PackageInstallerService extends ForegroundService {
         }
         mNotificationInfo.setTitle(title);
         mProgressHandler.onProgressStart(-1, 0, mNotificationInfo);
+        unsetInstallFinishedListener();
     }
 
     @Override
