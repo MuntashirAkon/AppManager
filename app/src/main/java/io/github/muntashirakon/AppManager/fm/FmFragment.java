@@ -241,6 +241,7 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
         mEmptyView = view.findViewById(android.R.id.empty);
         mEmptyViewIcon = view.findViewById(R.id.icon);
         mEmptyViewTitle = view.findViewById(R.id.title);
+    <string name="playlist_loading_message">Playlist loading…</string>
         mEmptyViewDetails = view.findViewById(R.id.message);
         mRecyclerView = view.findViewById(R.id.list_item);
         mRecyclerView.setLayoutManager(UIUtils.getGridLayoutAt450Dp(mActivity));
