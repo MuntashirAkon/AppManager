@@ -1,3 +1,5 @@
+## 0.3.7
+* fixed android compile SDK version = 31 crash error,upgrade version click cancel crash error、
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.github.muntashirakon.AppManager.types;
 
