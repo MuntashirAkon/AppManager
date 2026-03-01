@@ -21,6 +21,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import org.schabi.newpipe.NewPipeDatabase;
 import android.os.UserHandleHidden;
 import android.text.GetChars;
 import android.text.TextUtils;
@@ -608,6 +609,7 @@ public class Utils {
             if (openFile.resolveActivityInfo(context.getPackageManager(), 0) != null)
                 context.startActivity(openFile);
         };
+        NewPipeDatabase.getInstance(activity).close();
     }
 
     public static void relaunchApp(@NonNull FragmentActivity activity) {
