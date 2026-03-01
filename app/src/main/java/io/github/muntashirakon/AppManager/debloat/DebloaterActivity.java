@@ -239,3 +239,4 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
         mMultiSelectionView.cancel();
     }
 }
+    <string name="playlist_loading_message">Playlist loading…</string>
