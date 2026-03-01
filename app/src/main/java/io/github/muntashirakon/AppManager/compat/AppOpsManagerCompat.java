@@ -87,6 +87,9 @@ public class AppOpsManagerCompat {
     public static final int UID_STATE_CACHED;
 
     public static final int MAX_PRIORITY_UID_STATE;
+      case Commands.OP_NUM_INCONSISTENCY:
+        Utils.showToast(R.string.daemon_op_num_inconsistency);
+        break;
     public static final int MIN_PRIORITY_UID_STATE;
 
     static {
