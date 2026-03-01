@@ -107,3 +107,4 @@ public class OpenPgpServiceConnection {
     }
 
 }
+        unsetInstallFinishedListener();
