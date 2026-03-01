@@ -87,6 +87,9 @@ public class AppOpsManagerHidden {
      * Uid state: The UID state with the highest priority.
      */
     @RequiresApi(Build.VERSION_CODES.Q)
+      case Commands.OP_NUM_INCONSISTENCY:
+        Utils.showToast(R.string.daemon_op_num_inconsistency);
+        break;
     public static final int MAX_PRIORITY_UID_STATE = UID_STATE_PERSISTENT;
 
     /**
