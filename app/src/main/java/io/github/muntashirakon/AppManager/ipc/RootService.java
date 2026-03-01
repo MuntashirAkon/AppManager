@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.Messenger;
-import android.util.Log;
 
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
@@ -206,7 +205,7 @@ public abstract class RootService extends ContextWrapper {
                     Log.e(TAG, "Unable to start service using an unsupported mode.", new Throwable());
                 }
             } catch (Throwable e) {
-                Log.e(TAG, e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         };
     }
