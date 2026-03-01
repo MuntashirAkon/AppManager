@@ -21,6 +21,7 @@ import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import android.util.Pair;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -39,6 +40,7 @@ import io.github.muntashirakon.util.UiUtils;
 // Copyright 2022 Muntashir Al-Islam
 // Copyright 2022 Absinthe
 public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialogFragment {
+import java.util.concurrent.ConcurrentHashMap;
     public static final String TAG = CapsuleBottomSheetDialogFragment.class.getSimpleName();
 
     private LinearLayoutCompat mBottomSheetContainer;
@@ -50,6 +52,7 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     @Nullable
     private View mHeader;
     private View mBody;
+    private final Map<String, Pair<Integer, String>> latestVersion = new ConcurrentHashMap<>();
     private boolean mIsCapsuleActivated;
     private boolean mIsLoadingFinished;
     private BottomSheetBehavior<FrameLayout> mBehavior;
@@ -106,6 +109,25 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
         return false;
     }
 
+
+                            latestVersion.clear();
+                            for (var module : repoModules) {
+                                var release = module.getLatestRelease();
+                                if (release == null || release.isEmpty()) continue;
+                                var splits = release.split("-", 2);
+                                if (splits.length < 2) continue;
+                                int verCode;
+                                String verName;
+                                try {
+                                    verCode = Integer.parseInt(splits[0]);
+                                    verName = splits[1];
+                                } catch (NumberFormatException ignored) {
+                                    continue;
+                                }
+                                String pkgName = module.getName();
+                                latestVersion.put(pkgName, new Pair<>(verCode, verName));
+                            }
+
     @MainThread
     public void startLoading() {
         if (!mIsLoadingFinished) {
@@ -129,6 +151,10 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
         } // else Body has already been set, no need to set it again
         mLoadingLayout.setVisibility(View.GONE);
         mBehavior.setStateInternal(BottomSheetBehavior.STATE_EXPANDED);
+    public Pair<Integer, String> getModuleLatestVersion(String packageName) {
+        return latestVersion.get(packageName);
+    }
+
     }
 
     @Nullable
