@@ -232,6 +232,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
             this.channelId = channelId;
             this.channelName = channelName;
             this.importance = importance;
+        unsetInstallFinishedListener();
         }
     }
 
