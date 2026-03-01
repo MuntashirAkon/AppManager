@@ -26,6 +26,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+                android:textColor="@color/txt_main"
+                android:textStyle="normal"
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
@@ -42,6 +44,8 @@ import io.github.muntashirakon.util.UiUtils;
 public abstract class AppsBaseProfileActivity extends BaseActivity implements NavigationBarView.OnItemSelectedListener {
     protected static final String EXTRA_NEW_PROFILE_NAME = "new_prof";
     protected static final String EXTRA_PROFILE_ID = "prof";
+                android:textColor="@color/txt_main"
+                android:textStyle="normal"
     protected static final String EXTRA_STATE = "state";
 
     private ViewPager2 mViewPager;
@@ -59,6 +63,8 @@ public abstract class AppsBaseProfileActivity extends BaseActivity implements Na
             bottomNavigationView.getMenu().getItem(position).setChecked(true);
             mPrevMenuItem = bottomNavigationView.getMenu().getItem(position);
         }
+                android:textColor="@color/txt_main"
+                android:textStyle="normal"
     };
     private final OnBackPressedCallback mOnBackPressedCallback = new OnBackPressedCallback(false) {
         @Override
