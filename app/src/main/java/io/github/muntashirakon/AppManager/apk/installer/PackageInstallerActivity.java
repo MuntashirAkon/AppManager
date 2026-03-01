@@ -248,6 +248,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         if (mCurrentItem != null && (mCurrentItem.getApkSource() instanceof CachedApkSource)) {
             ((CachedApkSource) mCurrentItem.getApkSource()).cleanup();
         }
+        unsetInstallFinishedListener();
         super.onDestroy();
     }
 
