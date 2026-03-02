@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">ro</string>
-    <string name="input_features">Introducere caracteristici</string>
+    <string name="input_features">Caracteristici pentru introducere</string>
     <string name="permissions">Folosește permisiunile</string>
     <string name="service">Servicii</string>
     <string name="no_service">Fără servicii</string>
@@ -12,7 +12,7 @@
     <string name="declared_permission">Permisiuni</string>
     <string name="user_id">ID Utilizator</string>
     <string name="about">Despre</string>
-    <string name="installer_app">Aplicație instalare</string>
+    <string name="installer_app">Aplicație de instalare</string>
     <string name="data_size">Date</string>
     <string name="sdk_min">Minim</string>
     <string name="date_installed">Dată instalare</string>
