@@ -41,7 +41,7 @@ public class FloatingActionButtonGroup extends SpeedDialView {
         layoutParams.setMargins(margin, margin, margin, margin);
         fab.setLayoutParams(layoutParams);
         fab.setUseCompatPadding(false);
-        setMainFabOpenedBackgroundColor(MaterialColors.getColor(this, com.google.android.material.R.attr.colorError));
+        setMainFabOpenedBackgroundColor(MaterialColors.getColor(this, androidx.appcompat.R.attr.colorError));
         setMainFabOpenedIconColor(MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnError));
         setMainFabClosedBackgroundColor(MaterialColors.getColor(this, com.google.android.material.R.attr.colorSecondaryContainer));
         setMainFabClosedIconColor(MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSecondaryContainer));

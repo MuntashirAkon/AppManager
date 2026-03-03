@@ -489,7 +489,7 @@ public class MultiSelectionActionsView extends LinearLayoutCompat implements Men
             ReflowMenuItemView overflowView = getNewOptionItem();
             addView(overflowView, new LinearLayoutCompat.LayoutParams(allocatedWidth, ViewGroup.LayoutParams.MATCH_PARENT));
             // init
-            CharSequence tooltipText = getContext().getString(com.google.android.material.R.string.abc_action_menu_overflow_description);
+            CharSequence tooltipText = getContext().getString(androidx.appcompat.R.string.abc_action_menu_overflow_description);
             overflowView.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_more_horiz));
             overflowView.setTitle(tooltipText);
             overflowView.setContentDescription(tooltipText);

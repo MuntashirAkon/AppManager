@@ -1,49 +1,49 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 ext {
-    compile_sdk = 35
+    compile_sdk = 36
     min_sdk = 21
-    target_sdk = 35
-    build_tools = '35.0.0'
+    target_sdk = 36
+    build_tools = '36.1.0'
 
     // Gradle plugins
-    agp_version = '8.9.2'
+    agp_version = '8.13.2'
 
     // Library dependencies
-    activity_version = "1.10.1" // Draw around the display cutouts
-    androidx_core_version = "1.16.0" // Added temporarily until appcompat migrates to it
+    activity_version = "1.11.0" // API 21-22 support dropped in 1.12.x
+    androidx_core_version = "1.17.0" // Added temporarily until appcompat migrates to it
     annotation_version = "1.9.1"
     apksig_version = "4.4.0" // https://github.com/MuntashirAkon/apksig-android
     appcompat_version = "1.7.1" // https://developer.android.com/jetpack/androidx/releases/appcompat
     arsclib_version = "66051037ef" // https://github.com/MuntashirAkon/ARSCLib
     baksmali_version = "3.0.9" // https://github.com/google/smali/tags
-    biometric_version = "1.4.0-alpha04"
-    bouncycastle_version = "1.81" // https://www.bouncycastle.org/download/bouncy-castle-java
+    biometric_version = "1.4.0-alpha04" // API 21-22 support dropped in 1.4.0-alpha05
+    bouncycastle_version = "1.83" // https://www.bouncycastle.org/download/bouncy-castle-java
     desugar_jdk_version = "2.1.5" // https://github.com/google/desugar_jdk_libs
     documentfile_version = "1.1.0" // AppCompat still includes the buggy implementation of documentfile library (1.0.0)
     duration_picker = "c3c89adf3d" // https://github.com/MuntashirAkon/time-duration-picker
     fastscroll_version = "1.3.0" // https://github.com/zhanghai/AndroidFastScroll
-    gson_version = "2.13.1" // https://github.com/google/gson
+    gson_version = "2.13.2" // https://github.com/google/gson
     hiddenapibypass_version = "6.1" // https://github.com/LSPosed/AndroidHiddenApiBypass
     jadx_version = "1.4.7" // https://github.com/MuntashirAkon/jadx-android
-    jb_annotation_version = "26.0.2" // https://github.com/JetBrains/java-annotations (Compile-only)
-    libadb_version = "3.1.0" // https://github.com/MuntashirAkon/libadb-android
+    jb_annotation_version = "26.1.0" // https://github.com/JetBrains/java-annotations (Compile-only)
+    libadb_version = "3.1.1" // https://github.com/MuntashirAkon/libadb-android
     libsu_version = "6.0.0" // https://github.com/topjohnwu/libsu
-    material_version = "1.12.0" // https://github.com/material-components/material-components-android
+    material_version = "1.13.0" // https://github.com/material-components/material-components-android
     preferences_version = "1.2.1"
     refine_version = "4.0.0" // https://github.com/RikkaApps/HiddenApiRefinePlugin
-    room_version = "2.7.2"
+    room_version = "2.7.2" // API 21-22 support dropped in 2.8.x
     simplemagic_version = "1.17" // https://github.com/j256/simplemagic
     sora_editor_version = "0.22.2" // https://github.com/MuntashirAkon/sora-editor
     speed_dial_version = "3.3.0" // https://github.com/leinardi/FloatingActionButtonSpeedDial
-    splashscreen_version = "1.2.0-rc01"
+    splashscreen_version = "1.2.0"
     sun_security_version = "1.1" // https://github.com/MuntashirAkon/sun-security-android
-    swipe_refresh_version = "1.2.0-beta01"
+    swipe_refresh_version = "1.2.0"
     unapkm_version = "v1.4" // https://github.com/MuntashirAkon/unapkm-android
-    webkit_version = "1.14.0"
-    zstd_version = "1.5.7-4" // https://github.com/luben/zstd-jni
+    webkit_version = "1.14.0" // API 21-22 support dropped in 1.15.x
+    zstd_version = "1.5.7-7" // https://github.com/luben/zstd-jni
 
     // Test dependencies
     junit_version = "4.13.2" // https://github.com/junit-team/junit4
-    robolectric_version = "4.15.1" // https://github.com/robolectric/robolectric
+    robolectric_version = "4.16.1" // https://github.com/robolectric/robolectric
 }
