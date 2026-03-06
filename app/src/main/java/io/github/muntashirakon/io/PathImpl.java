@@ -48,6 +48,7 @@ import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
@@ -188,7 +189,11 @@ class PathImpl extends Path {
             case ContentResolver.SCHEME_CONTENT:
                 if (isDocumentsProvider(context, uri.getAuthority())) { // We can't use DocumentsContract.isDocumentUri() because it expects something that isn't always correct
                     boolean isTreeUri = DocumentsContractCompat.isTreeUri(uri);
-                    documentFile = Objects.requireNonNull(isTreeUri ? DocumentFile.fromTreeUri(context, uri) : DocumentFile.fromSingleUri(context, uri));
+                    documentFile = ExUtils.requireNonNullOrThrow(
+                        isTreeUri ? DocumentFile.fromTreeUri(  context, uri)
+                                  : DocumentFile.fromSingleUri(context, uri),
+                        () -> new IOException("Invalid SAF URI: " + uri)
+                    );
                 } else {
                     // Content provider
                     documentFile = new MediaDocumentFile(null, context, uri);
@@ -211,7 +216,10 @@ class PathImpl extends Path {
                             String[] pathComponents = path.split(File.separator);
                             DocumentFile finalDocumentFile = rootPath.documentFile;
                             for (String pathComponent : pathComponents) {
-                                finalDocumentFile = Objects.requireNonNull(finalDocumentFile.findFile(pathComponent));
+                                    finalDocumentFile = ExUtils.requireNonNullOrThrow(
+                                            finalDocumentFile.findFile(pathComponent),
+                                            () -> new IOException("Invalid VFS path component: " + pathComponent)
+                                    );
                             }
                             documentFile = finalDocumentFile;
                         }

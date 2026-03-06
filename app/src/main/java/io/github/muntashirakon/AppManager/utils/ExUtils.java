@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Contract;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -28,6 +29,18 @@ public class ExUtils {
         void run() throws Throwable;
     }
 
+    @NonNull
+    public static <T> T requireNonNullOrThrow(
+            @Nullable T value,
+            @NonNull Supplier<? extends IOException> exceptionSupplier
+    ) throws IOException {
+        if (value == null) {
+            throw exceptionSupplier.get();
+        }
+        return value;
+    }
+
+    
     @Contract("_ -> fail")
     public static <T> T rethrowAsIOException(@NonNull Throwable e) throws IOException {
         IOException ioException = new IOException(e.getMessage());
