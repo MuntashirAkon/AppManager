@@ -10,6 +10,17 @@ attending discussions, improving documentations and translations, making icon
 for icon packs, adding unrecognised libraries or ad/tracking signatures,
 reviewing the source code, as well as reporting security vulnerabilities.
 
+AI-Generated Contributions
+==========================
+
+To maintain the legal integrity and clear provenance of App Manager's codebase
+under the GPL-3.0-or-later license, we DO NOT accept contributions that are
+generated, in whole part or in part, by Artificial Intelligence (AI) or Large
+Language Models (LLMs). All contributions MUST be the original work of the
+human author(s) submitting the pull or merge request. By submitting a pull or
+merge request, you affirm that the code was authored by you without the use of
+generative AI tools that produce functional code blocks.
+
 Rules
 =====
 
