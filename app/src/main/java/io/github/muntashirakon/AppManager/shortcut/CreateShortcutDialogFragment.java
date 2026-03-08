@@ -187,7 +187,9 @@ public class CreateShortcutDialogFragment extends DialogFragment {
                 .setIntent(shortcutIntent)
                 .build();
 
-        if (!ShortcutManagerCompat.requestPinShortcut(context, shortcutInfoCompat, null)) {
+        boolean shortcutPinned = ShortcutManagerCompat.isRequestPinShortcutSupported(context)
+                && ShortcutManagerCompat.requestPinShortcut(context, shortcutInfoCompat, null);
+        if (!shortcutPinned) {
             new MaterialAlertDialogBuilder(context)
                     .setTitle(context.getString(R.string.error_creating_shortcut))
                     .setMessage(context.getString(R.string.error_verbose_pin_shortcut))

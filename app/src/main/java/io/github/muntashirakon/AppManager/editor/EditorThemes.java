@@ -69,10 +69,10 @@ public final class EditorThemes {
         scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, SurfaceColors.SURFACE_2.getColor(context));
         scheme.setColor(EditorColorScheme.COMPLETION_WND_BACKGROUND, SurfaceColors.SURFACE_1.getColor(context));
         scheme.setColor(EditorColorScheme.HIGHLIGHTED_DELIMITERS_FOREGROUND, Color.RED);
-        int thumbColor = MaterialColors.getColor(context, com.google.android.material.R.attr.colorControlActivated, EditorColor.class.getSimpleName());
+        int thumbColor = MaterialColors.getColor(context, androidx.appcompat.R.attr.colorControlActivated, EditorColor.class.getSimpleName());
         scheme.setColor(EditorColorScheme.SCROLL_BAR_THUMB, thumbColor);
         scheme.setColor(EditorColorScheme.SCROLL_BAR_THUMB_PRESSED, thumbColor);
-        int trackColor = ColorUtils.setAlphaComponent(MaterialColors.getColor(context, com.google.android.material.R.attr.colorControlNormal, EditorColor.class.getSimpleName()), 0x39);
+        int trackColor = ColorUtils.setAlphaComponent(MaterialColors.getColor(context, androidx.appcompat.R.attr.colorControlNormal, EditorColor.class.getSimpleName()), 0x39);
         scheme.setColor(EditorColorScheme.SCROLL_BAR_TRACK, trackColor);
     }
 

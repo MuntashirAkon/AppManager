@@ -53,16 +53,15 @@ public class LogcatHelper {
     @Nullable
     public static String getLastLogLine(@LogBufferId int buffers) {
         Process dumpLogcatProcess = null;
-        BufferedReader reader;
         String result = null;
         try {
             dumpLogcatProcess = ProcessCompat.exec(getLogcatArgs(buffers, true));
-            reader = new BufferedReader(new InputStreamReader(dumpLogcatProcess
-                    .getInputStream()), 8192);
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                result = line;
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(dumpLogcatProcess
+                    .getInputStream()), 8192)) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    result = line;
+                }
             }
         } catch (IOException e) {
             Log.e(TAG, e);

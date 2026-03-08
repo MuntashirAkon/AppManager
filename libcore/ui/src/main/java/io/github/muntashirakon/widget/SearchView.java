@@ -54,9 +54,9 @@ public class SearchView extends androidx.appcompat.widget.SearchView implements 
         super(wrap(context, attrs, defStyleAttr, defStyleRes), attrs, defStyleAttr);
 
         context = getContext();
-        mCloseButton = findViewById(com.google.android.material.R.id.search_close_btn);
-        mSearchSrcTextView = findViewById(com.google.android.material.R.id.search_src_text);
-        mSearchEditFrame = findViewById(com.google.android.material.R.id.search_edit_frame);
+        mCloseButton = findViewById(androidx.appcompat.R.id.search_close_btn);
+        mSearchSrcTextView = findViewById(androidx.appcompat.R.id.search_src_text);
+        mSearchEditFrame = findViewById(androidx.appcompat.R.id.search_edit_frame);
         mElevation = getElevation();
 
         final TintTypedArray a = ThemeEnforcement.obtainTintedStyledAttributes(
