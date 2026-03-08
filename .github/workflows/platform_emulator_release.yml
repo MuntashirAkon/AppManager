@@ -42,7 +42,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew packagePlatformReleaseUniversalApk -Pandroid.injected.signing.store.file=$PWD/app/dev_keystore.jks -Pandroid.injected.signing.store.password='kJCp!Bda#PBdN2RLK%yMK@hatq&69E' -Pandroid.injected.signing.key.alias=key1 -Pandroid.injected.signing.key.password='kJCp!Bda#PBdN2RLK%yMK@hatq&69E'
       - name: Rename the APK file
-        run: mv ./app/build/outputs/apk_from_bundle/platformRelease/app-platform-release-universal-unsigned.apk ./${{ env.APP_NAME }}.apk
+        run: mv ./app/build/outputs/apk_from_bundle/platformRelease/app-platform-release-universal.apk ./${{ env.APP_NAME }}.apk
       - name: Store generated APK file
         uses: actions/upload-artifact@v4
         with:
