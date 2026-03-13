@@ -44,6 +44,7 @@ import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
+import io.github.muntashirakon.AppManager.compat.DevicePolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
@@ -407,7 +408,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             }
             // 2. If the app can be installed, offer it to install again.
             if (FeatureController.isInstallerEnabled()) {
-                if (ApplicationInfoCompat.isSystemApp(info) && SelfPermissions.canInstallExistingPackages()) {
+                if (ApplicationInfoCompat.isSystemApp(info) && (SelfPermissions.canInstallExistingPackages() || DevicePolicyManagerCompat.canModifyPermissions())) {
                     // Install existing app instead of installing as an update
                     mActivity.startActivity(PackageInstallerActivity.getLaunchableInstance(mActivity, item.packageName));
                     return;
