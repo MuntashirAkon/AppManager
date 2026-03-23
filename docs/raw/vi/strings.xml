@@ -26,7 +26,7 @@
     <string name="intro$main$$supported-versions-title">Phiên bản được hỗ trợ</string>
     <string name="intro$main$$official-sources-title">Nguồn chính thức</string>
     <string name="intro$main$$bin-sources-title">Nguồn phân phối tệp nhị phân</string>
-    <string name="intro$main$$source-code-links-title">Liên kết đến mã nguồn</string>
+    <string name="intro$main$$source-code-links-title">Các liên kết đến Mã Nguồn</string>
     <string name="intro$main$$translations-title">Bản dịch</string>
     <string name="intro$main$$contributing-title">Đóng góp</string>
     <string name="intro$main$$buiding-title">Hướng dẫn xây dựng</string>
