@@ -748,8 +748,8 @@
     <string name="patch_level">Nivel del parche</string>
     <string name="backup_skip_signature_checks_description">Para restaurar respaldos que o fallan en la verificación del checksum o tiene firmas diferentes APK diferente a los respaldos anteriores.</string>
     <string name="backup_multiple_description">Crear una copia de respaldo <i>con nombre</i> en lugar del respaldo de base.</string>
-    <string name="backup_rules_description">Back up de reglas configuradas en App Manager.</string>
-    <string name="backup_extras_description">Respaldos de los permisos de las aplicaciones, ahorro de batería, y opciones de uso de datos, estado de MagiskHide, SSAID, etc.</string>
+    <string name="backup_rules_description">Back up de reglas configuradas en App Manager. <font fgcolor="#ff0000">Dependiente de los permisos, no todas las reglas pueden ser reaplicadas durante la restauración.</font></string>
+    <string name="backup_extras_description">Realice copias de seguridad de los permisos de las aplicaciones, las opciones de ahorro de batería y uso de datos, el estado de MagiskHide, SSAID, etc. <font fgcolor="#ff0000">Dependiendo de los permisos, no se pueden restaurar todos los extras.</font></string>
     <string name="backup_extras">Extras</string>
     <string name="backup_cache_description">Respaldar carpetas <b>cache</b>, <b>no_cache</b> y <b>no_backup</b>.</string>
     <string name="backup_external_data_description">Hacer una copia de respaldo de las carpetas de datos externos.</string>
@@ -811,7 +811,7 @@
     <string name="type_int_array">Matriz de enteros</string>
     <string name="type_component_name">Nombre del componente</string>
     <string name="type_null">Sin valor</string>
-    <string name="screen_lock_msg">Bloquear App Manager usando Android bloqueo de pantalla</string>
+    <string name="screen_lock_msg">Bloquear App Manager usando el bloqueo de pantalla de Android</string>
     <string name="screen_lock">Bloqueo de pantalla</string>
     <string name="unlock_app_manager">Desbloquear gestor de aplicaciones</string>
     <string name="sd_card">Tarjeta SD</string>
@@ -997,7 +997,7 @@
     <string name="import_from_oab">Importar desde OAndBackup</string>
     <string name="pref_import_backups_msg">Importe copias de respaldo desde OAndBackup, Swift Backup (3.0–3.2) o Titanium Backup.</string>
     <string name="pref_import_backups">Importar copias de respaldo</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">Canal de Telegram</a> - <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://x.com/AppManagerNews">Twitter/X</a> • <a href="https://floss.social/@appmanager">Mastodon/Fediverso</a></string>
     <string name="community">Comunidad</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">No se ha podido importar la copia de seguridad %1$d</item>
@@ -1042,8 +1042,8 @@
     <string name="pref_block_trackers_msg">Bloquear componentes de rastreo al instalar una aplicación a través de App Manager.</string>
     <string name="next">Siguiente</string>
     <string name="installer_app_installed">Aplicación instalada</string>
-    <string name="staging_apk_files">Preparando…</string>
-    <string name="background">Segundo plano</string>
+    <string name="staging_apk_files">Preparando la instalación…</string>
+    <string name="background">Fondo</string>
     <string name="trim_caches_in_all_apps_description">Borrar archivos de antememoria de todas las aplicaciones, incluyendo los del sistema Android</string>
     <string name="trim_caches_in_all_apps">Recortar antememoria en todas las aplicaciones</string>
     <string name="user_root">Usar root</string>
@@ -1309,6 +1309,24 @@
     <plurals name="alert_failed_to_unblock_components">
         <item quantity="one">No se pudo desbloquear los componentes para %1$d app</item>
         <item quantity="many">No se pudieron desbloquear los componentes para %1$d app</item>
-        <item quantity="other"></item>
+        <item quantity="other">No se pudieron desbloquear los componentes para %1$d app</item>
+    </plurals>
+    <string name="netpolicy_reject_metered_background_data">Rechazar datos de fondo en redes medidas</string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp verificado e identificado como siendo de <xliff:g id="source" example="Google Play">%1$s</xliff:g>.</string>
+    <string name="pref_layout_direction">Dirección de diseño</string>
+    <string name="netpolicy_reject_metered_data">Rechazar datos en redes medidas</string>
+    <string name="netpolicy_allow_metered_background_data">Concede datos de fondo en redes medidas incluso cuando el Ahorro de Datos está activado</string>
+    <string name="pref_toggle_internet_msg">Activa las características de Internet en el Gestor App</string>
+    <string name="warning_working_on_system_mode">Aviso: funciona en los sistemas en vez de en modo ADB.</string>
+    <string name="pref_zip_align">Alinear archivos APK</string>
+    <string name="title_code_editor">Editor de código</string>
+    <string name="redo">Rehacer</string>
+    <string name="read_only_file">Solo leer archivo</string>
+    <string name="read_only_file_warning">Los cambios no pueden ser escritos en el archivo, posiblemente porque está ubicado en un volumen que App Manager no tiene permiso de escritura. ¿Desea guardarlo en un lugar diferente?</string>
+    <string name="line_separator">Separador de línea</string>
+    <plurals name="search_results">
+        <item quantity="one">%d resultado</item>
+        <item quantity="many">%d resultados</item>
+        <item quantity="other">%d resultados</item>
     </plurals>
 </resources>
