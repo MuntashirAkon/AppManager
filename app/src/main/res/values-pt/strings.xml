@@ -237,7 +237,7 @@
     <string name="no_code">Sem código</string>
     <string name="process_name">Nome do processo</string>
     <string name="native_library_dir">Diretório nativo da biblioteca JNI</string>
-    <string name="dev_protected_data_dir">Diretório de dados de proteção do dispositivo</string>
+    <string name="dev_protected_data_dir">Diretório de dados protegido pelo dispositivo</string>
     <string name="search">Procurar</string>
     <string name="menu_apply_rules">Aplicar regras</string>
     <string name="menu_remove_rules">Remover regras</string>
@@ -371,9 +371,9 @@
     <string name="filter">Filtro</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> instalado</string>
     <plurals name="no_of_splits">
-        <item quantity="one">%1$d APK</item>
-        <item quantity="many">%1$d APKs</item>
-        <item quantity="other">%1$d APKs</item>
+        <item quantity="one">%1$d APK dividido</item>
+        <item quantity="many">%1$d APKs divididos</item>
+        <item quantity="other">%1$d APKs divididos</item>
     </plurals>
     <string name="failed_to_parse_some_numbers">Não foi possível analisar alguns números</string>
     <string name="only_works_in_root_or_adb_mode">Funciona somente no modo Root ou ADB</string>
@@ -726,7 +726,7 @@
     <string name="specify_custom_name">Personalizado</string>
     <string name="verified_using_unreliable_hash">Verificado usando hash não confiável</string>
     <string name="working_on_adb_mode">Trabalhando no modo ADB</string>
-    <string name="screen_lock_not_enabled">Por favor, escolha um bloqueio de ecrã nas configurações do Android ou limpe os dados do app.</string>
+    <string name="screen_lock_not_enabled">Por favor, escolha um bloqueio de ecrã nas configurações do Android ou limpe os dados da app.</string>
     <string name="isolated">Isolado</string>
     <string name="last_actions">Últimas ações</string>
     <string name="pref_enable_disable_features_msg">Ativar ou desativar funções no App Manager.</string>
@@ -1008,7 +1008,7 @@
     <string name="unknown_net_policy">Política de rede desconhecida (%1$s - %2$X)</string>
     <string name="port_number_invalid">Número de porta inválido.</string>
     <string name="port_number_empty">O número da porta está vazio.</string>
-    <string name="adb_connect_port_number_description">O número da porta está localizado no <b> endereço IP e porta </b> logo abaixo da seção <b> Nome do dispositivo </b>.</string>
+    <string name="adb_connect_port_number_description">O número da porta pode ser encontrado em <b>endereço IP e porta</b> logo abaixo da seção <b>Nome do dispositivo</b>.</string>
     <string name="port_number">Porta</string>
     <string name="adb_connect">Conectar</string>
     <string name="wireless_debugging">Depuração de erros Wi-Fi</string>
@@ -1027,7 +1027,7 @@
     <string name="import_from_oab">Importar de OAndBackup</string>
     <string name="pref_import_backups_msg">Importar cópias de segurança de OAndBackup, Swift Backup (3.0–3.2) ou Titanium Backup.</string>
     <string name="pref_import_backups">Importar cópias de segurança</string>
-    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://x.com/AppManagerNews">Twitter/X</a> • <a href="https://floss.social/@appmanager">Mastodon/Fediverso</a></string>
     <string name="community">Comunidade</string>
     <string name="added_to_queue">Adicionado à fila</string>
     <string name="minimum_version">Versão mínima: %d</string>
@@ -1049,7 +1049,7 @@
     <string name="keystore_pass_cannot_be_empty">A palavra-passe da KeyStore não pode estar vazia.</string>
     <string name="keystore_password_info">Segue-se a palavra-passe da App Manager KeyStore. Por favor guarde-a num local seguro se fizer uma cópia de segurança/restaurar a App Manager KeyStore. <b>Esta mensagem não será mostrada novamente.</b></string>
     <string name="type_uri_array_list">Lista de URLs</string>
-    <string name="pref_block_trackers_msg">Bloqueia os componentes de rastreio após instalar um Aplicativo usando o gerenciador.</string>
+    <string name="pref_block_trackers_msg">Bloquear componentes de rastreio após instalar uma aplicação usando o App Manager.</string>
     <string name="running_services_logcat_hint">Clique em um item para abrir a tela de registro com o ID de processo correspondente como filtro principal.</string>
     <string name="pid">ID do processo</string>
     <plurals name="pref_thread_count_msg">
@@ -1057,13 +1057,13 @@
         <item quantity="many">Executar no máximo %1$d operações em paralelo</item>
         <item quantity="other">Executar no máximo %1$d operações em paralelo</item>
     </plurals>
-    <string name="pref_thread_count_hint">O valor deve estar entre 0 e %1$d onde 0 significa <i> que o número máximo de operações no dado momento</i>.</string>
+    <string name="pref_thread_count_hint">O valor deve estar entre 0 e %1$d, sendo que 0 significa <i>o número máximo de operações num dado momento</i>.</string>
     <string name="pref_thread_count">Execução paralela</string>
-    <string name="pref_always_on_background_msg">Sempre instalar aplicativos em segundo plano e mostrar notificação quando concluído.</string>
+    <string name="pref_always_on_background_msg">Sempre instalar aplicações em segundo plano e mostrar uma notificação ao concluir.</string>
     <string name="pref_always_on_background">Instalar em segundo plano</string>
     <string name="next">Próximo</string>
-    <string name="installer_app_installed">Aplicativo instalado</string>
-    <string name="staging_apk_files">Aguardando arquivos de aplicativo…</string>
+    <string name="installer_app_installed">Aplicação instalada</string>
+    <string name="staging_apk_files">A preparar a instalação…</string>
     <string name="background">Segundo plano</string>
     <string name="trim_caches_in_all_apps_description">Apaga ficheiros de cache de todas as aplicações, incluindo sistema android</string>
     <string name="trim_caches_in_all_apps">Ajustar caches em todas as aplicações</string>
@@ -1274,7 +1274,7 @@
     <string name="grant_accessibility_permission_for_tracking_window_contents">Permita que o App Manager use o recurso de acessibilidade para rastrear o conteúdo da janela principal.</string>
     <string name="app_manager_build_expired_message">Para garantir a segurança do seu dispositivo e dos seus dados, a versão do App Manager que está a utilizar foi desativada. Tem de atualizá-lo para a versão mais recente para continuar a usá-lo ou desinstalá-lo se não estiver disponível nenhuma atualização.</string>
     <string name="app_manager_build_expired">Atualização necessária</string>
-    <string name="app_can_write_and_execute_in_same_place">A aplicação viola a <a href="https://en.wikipedia.org/wiki/W%5EX">política W^X </a> e é capaz de gravar e executar no mesmo diretório ou na mesma parte da memória. Isto permite a execução de executáveis arbitrários pela modificação de executáveis incorporados na aplicação ou descarregando-os da Internet. A não ser que esse seja o comportamento pretendido da aplicação (por exemplo, emuladores de terminal), recomenda-se encontrar uma versão mais recente da aplicação que tenha como alvo o SDK 29 (Android 10) e posterior, ou encontrar alternativas.</string>
+    <string name="app_can_write_and_execute_in_same_place">A aplicação viola a <a href="https://en.wikipedia.org/wiki/W%5EX">política W^X</a> e é capaz de gravar e executar no mesmo diretório ou na mesma parte da memória. Isto permite a execução de executáveis arbitrários pela modificação de executáveis incorporados na aplicação ou descarregando-os da Internet. A não ser que esse seja o comportamento pretendido da aplicação (por exemplo, emuladores de terminal), recomenda-se encontrar uma versão mais recente da aplicação que tenha como alvo o SDK 29 (Android 10) e posterior, ou encontrar alternativas.</string>
     <string name="filter_apps_with_saf">Com SAF</string>
     <string name="option_display_folders_on_top">Pastas no topo</string>
     <string name="funding_campaign_dialog_message">Estamos a realizar uma <b>campanha de financiamento</b> para o App Manager por um período limitado. Visite <a href="https://opencollective.com/app-manager#category-ABOUT">opencollective.com/app-manager</a> para saber mais sobre a campanha. Este aviso não será mostrado novamente, mas poderá encontrá-lo no ecrã \"Configurações\" durante toda a campanha.</string>
@@ -1404,7 +1404,7 @@
     <string name="replacement_text">Substituição</string>
     <string name="action_replace_all">Substituir todos</string>
     <string name="conflict_detected_while_copying_message">Um item chamado \"%1$s\" já existe nesse local. Deseja substituí-lo?</string>
-    <string name="pref_installer_force_dexopt_description">Realizar a otimização DEX imediatamente após a instalação do aplicativo, sem esperar que o sistema o faça quando estiver ocioso.</string>
+    <string name="pref_installer_force_dexopt_description">Realizar a otimização DEX imediatamente após a instalação da aplicação, sem esperar que o sistema faça-o quando estiver ocioso.</string>
     <string name="symbolic_link_not_supported">Esta pasta não suporta a criação de um link simbólico.</string>
     <string name="failed_to_copy_specified_file">Não foi possível copiar “%1$s”.</string>
     <string name="pref_toggle_internet_msg">Ativar os recursos de Internet no App Manager</string>
@@ -1493,17 +1493,17 @@
     <string name="remember_option_for_this_app">Lembrar para esta app</string>
     <string name="overlay_sdk_version_too_low">Sobreposições não são suportadas.</string>
     <string name="add_to_favorites">Adicionar aos favoritos</string>
-    <string name="advanced_suspend_app_description">Isso forçará a parada e suspenderá o aplicativo para garantir que ele não seja executado em segundo plano. Você deve dar preferência a esse método ao invés do método comum <b>suspend</b> método.</string>
+    <string name="advanced_suspend_app_description">Isso forçará a parada e suspenderá a aplicação para garantir que não seja executada em segundo plano. Esse método deve ser preferido ao invés do método comum de <b>suspensão</b>.</string>
     <string name="item_remove">Remover</string>
     <string name="item_edit">Editar</string>
-    <string name="freeze_prefer_per_app_option">Preferir por opção de aplicativo</string>
+    <string name="freeze_prefer_per_app_option">Preferir opção por cada app</string>
     <string name="no_overlay_permission">Sem permissão para mostrar sobreposições</string>
     <string name="overlay_category">Categoria</string>
     <string name="sort_by_priority">Prioridade</string>
     <string name="overlays">Sobreposições</string>
     <string name="title_overlay">Sobreposição</string>
     <string name="title_shortcut_for_frozen_app">App congelada</string>
-    <string name="message_shortcut_for_frozen_app">O aplicativo correspondente ao atalho parece ter sido congelado. Mostrar temporariamente e abrir o atalho?</string>
+    <string name="message_shortcut_for_frozen_app">A aplicação correspondente ao atalho parece ter sido congelada. Descongelar temporariamente e abrir o atalho?</string>
     <string name="battery_technology">Tecnologia</string>
     <string name="sort_by_overlay_names">Nome da sobreposição</string>
     <string name="no_overlays">Sem sobreposições</string>
