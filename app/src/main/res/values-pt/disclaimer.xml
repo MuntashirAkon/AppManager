@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
     <string name="disclaimer_exit">Sair</string>
-    <string name="disclaimer_agree">Eu concordo</string>
-    <string name="disclaimer_agree_forever">Nunca mostrar novamente</string>
+    <string name="disclaimer_agree">Estou de acordo</string>
+    <string name="disclaimer_agree_forever">Não voltar a mostrar isto</string>
     <string name="disclaimer_footer">© 2020–2024 Muntashir Al-Islam</string>
     <string name="disclaimer_body">O App Manager oferece funções de root que podem eventualmente prejudicar o seu dispositivo, se for utilizado incorretamente. O App Manager não é responsável por quaisquer danos causados pela utilização desta aplicação. Se não estiver totalmente consciente de como o modo root funciona, então deve evitar utilizar essas opções até estar plenamente consciente dos riscos.
 \n
@@ -11,5 +11,5 @@
 \nAo utilizar o App Manager, aceita total responsabilidade pela sua utilização e não aceita compensação por danos, reclamações ou valores monetários devido à utilização indevida.
 \n
 \nAo utilizar esta aplicação, aceita toda a responsabilidade ao utilizá-la e concorda que eu não sou responsável por qualquer ação que faça e que tenha um efeito adverso sobre o seu dispositivo.</string>
-    <string name="disclaimer_header">Aviso</string>
+    <string name="disclaimer_header">Declaração de Responsabilidade</string>
 </resources>
