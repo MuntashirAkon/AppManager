@@ -1,2 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="intro$main$$introduction-chapter-title">Introdução</string>
+    <string name="intro$main$$terminologies-title">Terminologias</string>
+    <string name="intro$main$$supported-versions-title">Versões suportadas</string>
+    <string name="intro$main$$official-sources-title">Fontes oficiais</string>
+    <string name="intro$main$$bin-sources-title">Fontes de Distribuição Binária</string>
+    <string name="intro$main$$source-code-links-title">Links para o código-fonte</string>
+    <string name="intro$main$$translations-title">Traduções</string>
+    <string name="intro$main$$contributing-title">Contribuição</string>
+    <string name="intro$main$$buiding-title">Instruções de construção</string>
+    <string name="intro$main$$submit-patches-title">A enviar patches</string>
+    <string name="intro$main$$donation-title">Doação e Financiamento</string>
+    <string name="intro$main$$contact-title">Contato</string>
+    <string name="intro$main$intro">O App Manager é um gestor de pacotes avançado para Android. Oferece vários recursos e, portanto, requer um utilizador\nmanual para auxiliar os seus utilizadores. Este documento atua como um manual de utilizador para o App Manager no sentido em que visa descrever\ntodas as funcionalidades que o App Manager tem para oferecer. Este documento serve também como orientações ``oficiais\'\' para\nGestor de aplicações e representa o comportamento esperado do Gestor de aplicações. As traduções podem interpretar mal este documento (que é\nEm inglês). Assim sendo, um utilizador capaz deve ler a versão inglesa do documento para obter o máximo\ndisso. Também pode haver outros recursos não oficiais ou de terceiros, como artigos de blogues, vídeos, fóruns e chat\ngrupos. Embora estes recursos possam ser úteis para muitas pessoas, podem não estar atualizados com as últimas\nversão do App Manager. Caso sejam detetados desvios no App Manager em relação a este documento, os mesmos devem ser reportados no\n\\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager Trouble Tracker}.</string>
+    <string name="intro$main$terminologies">\\começar{itemizar}\n \\item \\textbf{AM} --- Nome abreviado para App Manager.\n \\item \\textbf{Bloquear/Desbloquear} --- Utilizado para bloquear ou desbloquear componentes. A forma como os componentes são bloqueados depende\n das preferências do utilizador.\n \\item \\textbf{IFW} --- Forma abreviada de Intent Firewall.\n \\item \\textbf{Ops} --- Nome abreviado para operações, por exemplo, operações de aplicação, operações em lote, operações de 1 clique\n \\item \\textbf{SAF} --- Abreviatura de Storage Access Framework, uma abstração utilizada pelo Android para permitir que as aplicações utilizem ou\n sirvam ficheiros sem se preocupar com o sistema de ficheiros subjacente.\n \\item \\textbf{SSAID} --- Forma abreviada de \\texttt{Settings.Secure.ANDROID\\_ID}. É um identificador de dispositivo atribuído a\n cada aplicação (Android Oreo em diante). É gerado a partir da combinação do certificado de assinatura da aplicação\n e o conjunto SSAID para o pacote \\texttt{android}. Como resultado, é garantido que será o mesmo para uma aplicação, a menos que\n o utilizador escolha formatar o dispositivo. É amplamente utilizado para rastreio.\n \\item \\textbf{Tracker} --- Denota componentes de rastreio em todo o documento e no App Manager, exceto na\n \\hyperref[sec:scanner-page]{página do scanner}. Os rastreadores incluem bibliotecas como relatores de falhas, analíticos,\n perfilizadores, identificadores, publicitários, localizadores etc. Portanto, não são funcionalmente iguais. Não há distinção ou viés\n entre as bibliotecas de código aberto e fechado que promovem o rastreio.\n\\fim{itemizar}</string>
+    <string name="pages$main-page$$section-title">Página Principal</string>
+    <string name="pages$main-page$$apk-updater-title">Atualizador de APK</string>
+    <string name="pages$main-page$$termux-title">Termux</string>
+    <string name="pages$main-page$$debloater-title">Debloater</string>
+    <string name="pages$main-page$$labs-title">Experimental</string>
+    <string name="pages$main-page$$settings-title">Configurações</string>
+    <string name="appendices$changelogs$$chapter-title">Registro de mudanças</string>
+    <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Capítulo}</string>
+    <string name="keywords$see_also">\\newcommand{\\KeywordSeeAlso}{Veja também:}</string>
+</resources>
