@@ -20,42 +20,9 @@
 \n \\end{quotation}</string>
     <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\KeywordEndOfKeyWordInAlert}{.}</string>
     <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Capítulo}</string>
-    <string name="intro$main$intro">App Manager é um gerenciador de pacotes avançado para Android. Oferece inúmeros recursos e, consequentemente, exige um usuário
-\nmanual para auxiliar seus usuários. Este documento funciona como um manual do usuário para o App Manager no sentido de que visa descrever
-\ntodos os recursos que o App Manager tem a oferecer. Este documento também pode ser considerado como as diretrizes ``oficiais\'\' para
-\nApp Manager e representa o comportamento esperado do App Manager. As traduções podem interpretar mal este documento (que é
-\nescrito em inglês). Portanto, todo usuário competente deve ler a versão em inglês do documento para obter o melhor
-\ndo Gerenciador de Aplicativos. Também pode haver outros recursos não oficiais ou de terceiros, como artigos de blog, vídeos, bate-papo
-\ngrupos, etc. Embora esses recursos possam ser úteis para muitas pessoas, eles podem não estar atualizados com o atual
-\nversão do Gerenciador de Aplicativos. Se quaisquer desvios forem detectados no App Manager a partir deste documento, eles devem ser relatados no
-\n\\href{https://github.com/MuntashirAkon/AppManager/issues}{Rastreador de problemas do App Manager}.</string>
-    <string name="intro$main$terminologies">\\begin{itemize}
-\n \\item \\textbf{AM} --- nome curto para o App Manager.
-\n \\item \\textbf{Block/Unblock} --- Usado para bloquear ou desbloquear componentes. Como os componentes são bloqueados depende
-\n das preferências do usuário.
-\n \\item \\textbf{IFW} --- forma curta do Intent de Firewall.
-\n \\item \\textbf{Ops} --- Nome curto para operações, por exemplo: ops do app, ops em lote, ops de 1 clique
-\n \\item \\textbf{SAF} --- Sigla para Storage Access Framework, uma abstração usada pelo Android que permite a apps usarem ou\n servirem arquivos sem se preocupar com o sistema de arquivos subjascente.\n \\item \\textbf{SSAID} --- forma curta de \\texttt{Settings.Secure.ANDROID\\_ID}. É um identificador de dispositivo atribuído a
-\n cada aplicativo (Android Oreo e em diante). É gerado a partir da combinação do certificado de assinatura do aplicativo
-\n e do conjunto SSAID para o pacote \\texttt{android}. Como resultado, é garantido ser o mesmo para um aplicativo, a menos que
-\n o usuário opte por formatar o dispositivo. É amplamente utilizado para rastreamento.
-\n \\item \\textbf{Tracker} --- Denota componentes rastreadores em todo o documento e  no App Manager, exceto no
-\n \\hyperref[sec:scanner-page]{página do scanner}. Os rastreadores incluem bibliotecas como repórteres de acidentes, analíticos,
-\n perfilizadores, identificadores, publicidade, localização etc. Logo, não são iguais em funções. Não há distinção ou viés
-\n entre bibliotecas de código aberto e de código fechado que promovam rastreamento.
-\n\\end{itemize}</string>
-    <string name="intro$main$bin-sources">O App Manager é distribuído usando as seguintes fontes. Fontes não oficiais podem distribuir versões modificadas do App
-\nGerente, e ninguém além de você será responsável pelas consequências do uso de tais distribuições.
-\n\\begin{enumerate}
-\n \\item Official F-Droid repository.\\footnote{For distributing normal releases only}\\\\
-\n \\textit{Link:} \\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}
-\n \\item GitHub repository.\\\\
-\n \\textit{Normal releases:} \\url{https://github.com/MuntashirAkon/AppManager/releases}\\\\
-\n \\textit{Debug releases:} \\url{https://github.com/MuntashirAkon/AppManager/actions}
-\n \\item Telegram.\\\\
-\n \\textit{Normal releases:} \\url{https://t.me/AppManagerChannel}\\\\
-\n \\textit{Debug releases:} \\url{https://t.me/AppManagerDebug}
-\n\\end{enumerate}</string>
+    <string name="intro$main$intro">App Manager é um gerenciador de pacotes avançado para Android. Oferece inúmeros recursos e, consequentemente, exige um usuário \nmanual para auxiliar seus usuários. Este documento funciona como um manual do usuário para o App Manager no sentido de que visa descrever \ntodos os recursos que o App Manager tem a oferecer. Este documento também pode ser considerado como as diretrizes ``oficiais\'\' para \nApp Manager e representa o comportamento esperado do App Manager. As traduções podem interpretar mal este documento (que é \nescrito em inglês). Portanto, todo usuário competente deve ler a versão em inglês do documento para obter o melhor \ndo Gerenciador de Aplicativos. Também pode haver outros recursos não oficiais ou de terceiros, como artigos de blog, vídeos, bate-papo \ngrupos, etc. Embora esses recursos possam ser úteis para muitas pessoas, eles podem não estar atualizados com o atual \nversão do Gerenciador de Aplicativos. Se quaisquer desvios forem detectados no App Manager a partir deste documento, eles devem ser relatados no \n\\href{https://github.com/MuntashirAkon/AppManager/issues}{Rastreador de problemas do App Manager}.</string>
+    <string name="intro$main$terminologies">\\begin{itemize} \n \\item \\textbf{AM} --- Nome curto para o App Manager. \n \\item \\textbf{Block/Unblock} --- Usado para bloquear ou desbloquear componentes. Como os componentes são bloqueados depende \n das preferências do usuário. \n \\item \\textbf{IFW} --- Forma curta do Intent de Firewall. \n \\item \\textbf{Ops} --- Nome curto para operações, por exemplo: ops do app, ops em lote, ops de 1 clique \n\\item \\textbf{SAF} --- Sigla para Storage Access Framework, uma abstração usada pelo Android que permite a apps usarem ou\n servirem arquivos sem se preocupar com o sistema de arquivos subjascente.\n \\item \\textbf{SSAID} --- Forma curta de \\texttt{Settings.Secure.ANDROID\\_ID}. É um identificador de dispositivo atribuído a \n cada aplicativo (Android Oreo e em diante). É gerado a partir da combinação do certificado de assinatura do aplicativo \n e do conjunto SSAID para o pacote \\texttt{android}. Como resultado, é garantido ser o mesmo para um aplicativo, a menos que \n o usuário opte por formatar o dispositivo. É amplamente utilizado para rastreamento. \n \\item \\textbf{Tracker} --- Denota componentes rastreadores em todo o documento e no App Manager, exceto no \n \\hyperref[sec:scanner-page]{página do scanner}. Os rastreadores incluem bibliotecas como repórteres de acidentes, analíticos, \n perfilizadores, identificadores, publicidade, localização etc. Logo, não são iguais em funções. Não há distinção ou viés \n entre bibliotecas de código aberto e de código fechado que promovam rastreamento. \n\\end{itemize}</string>
+    <string name="intro$main$bin-sources">O App Manager é distribuído através das seguintes fontes. Fontes não oficiais podem distribuir versões modificadas do App\nManager, e você será o único responsável pelas consequências do uso de tal distribuição.\n\\begin{enumerate}\n\\item Repositório oficial do F-Droid.\\footnote{Apenas para distribuição de versões normais}\\\\\n\\textit{Link:} \\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}\n\\item Repositório do GitHub.\\\\\n\\textit{Versões normais:} \\url{https://github.com/MuntashirAkon/AppManager/releases}\\\\\n\\textit{Versões de depuração:} \\url{https://github.com/MuntashirAkon/AMInsecureDebugBuilds}\n\\item Telegram.\\\\\n\\textit{Versões normais:} \\url{https://t.me/AppManagerChannel}\\\\\n\\textit{Versões de depuração:} \\url{https://t.me/AppManagerDebug}\n\\end{enumerate}</string>
     <string name="titlepage$user_manual">{\\huge\\bfseries Manual do Usuário\\par}</string>
     <string name="intro$main$supported-versions">Atualmente, as versões suportadas são v3.0.0 -- v3.0.3 (estável), v3.1.0 (alpha e de debug). Verções anteriores do App
 \nManager pode conter vulnerabilidades de segurança e não deve usal-las.</string>
