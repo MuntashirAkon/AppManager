@@ -14,6 +14,7 @@ import androidx.collection.SimpleArrayMap;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,15 +27,15 @@ public final class AdapterUtils {
         private final int mStartPosition;
 
         private SimpleListDiffCallback(@NonNull List<T> oldList, @Nullable List<T> newList) {
-            mOldList = oldList;
-            mNewList = newList;
+            mOldList = new ArrayList<>(oldList);
+            mNewList = newList != null ? new ArrayList<>(newList) : null;
             mStartPosition = 0;
         }
 
 
         private SimpleListDiffCallback(@NonNull List<T> oldList, @Nullable List<T> newList, int startPosition) {
-            mOldList = oldList;
-            mNewList = newList;
+            mOldList = new ArrayList<>(oldList);
+            mNewList = newList != null ? new ArrayList<>(newList) : null;
             mStartPosition = startPosition;
         }
 
