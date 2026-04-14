@@ -443,16 +443,16 @@
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> 用于特性 <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) 资源, 用于特性 <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
     <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) 资源, 用于基础APK</string>
-    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g>拆分，用于基础 APK</string>
+    <string name="unknown_split_for_base_apk">基础 APK 的 <xliff:g id="split_name" example="some_split">%1$s</xliff:g> 拆分</string>
     <string name="touchscreen_finger">手指</string>
     <string name="required">必需的</string>
     <string name="orientation_sensor">根据物理方向传感器确定方向</string>
     <string name="orientation_no_sensor">无传感器</string>
     <string name="orientation_locked">已锁定</string>
     <string name="launch_mode_multiple">多个</string>
-    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English"> %1$s</xliff:g>语言环境，用于基础APK</string>
+    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English"> %1$s</xliff:g> 语言环境，用于基础APK</string>
     <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> 语言环境, 用于特性 <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
-    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g>代码，属于基础APK</string>
+    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> 代码，属于基础APK</string>
     <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> 代码, 用于 <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="touchscreen_stylus">触控笔</string>
     <string name="open_pgp_provider">OpenPGP 提供商</string>
@@ -527,7 +527,7 @@
     <string name="filter_apps_with_backups">有备份</string>
     <string name="sort_by_backup">已备份应用优先</string>
     <string name="failed_to_uninstall_updates">无法卸载更新,它属于 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
-    <string name="update_uninstalled_successfully">用于 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>更新已被卸载.</string>
+    <string name="update_uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 的更新已被卸载.</string>
     <string name="uninstall_updates">卸载更新</string>
     <string name="launch_mode_single_top">栈顶</string>
     <string name="only_install">仅安装</string>
@@ -1441,4 +1441,38 @@
     <string name="preview">预览</string>
     <string name="debloat_removal_unsafe">不安全</string>
     <string name="sort_by_cpu_time">CPU 时间</string>
+    <string name="pref_request_update_ownership">请求“更新所有权”</string>
+    <string name="pref_default_package_source">默认的包来源</string>
+    <string name="pref_set_origin">设置包来源和 URI</string>
+    <string name="pref_request_update_ownership_description">在初始安装期间将安装器应用设为“更新所有者”防止其他安装器在无用户交互的情况下安装应用。</string>
+    <string name="pref_set_origin_description">记录要安装应用的来源，信息由\"应用信息“标签页中的”APK 源“报告</string>
+    <string name="package_source_store">应用商店</string>
+    <string name="package_source_local_file">本地文件</string>
+    <string name="package_source_downloaded_file">下载的文件</string>
+    <string name="package_source_other">其他</string>
+    <string name="pref_disable_apk_verification">禁用包验证</string>
+    <string name="pref_disable_apk_verification_description">请求安装器在安装时跳过运行包验证工具（如 Play Protect）。</string>
+    <string name="adb_data">ADB 数据</string>
+    <string name="adb_data_description">用 ADB 格式备份数据。此操作替代”内部数据“和”外部数据“选项。</string>
+    <string name="filter_unfrozen_apps">解冻应用</string>
+    <string name="goto_previous">上一个</string>
+    <string name="usage_this_week">本周</string>
+    <string name="usage_last_week">上周</string>
+    <string name="bar_chart_content_description">有 %d 个数据点的条形图。</string>
+    <string name="memory_usage_accessibility_description">系统当前在使用 %s 内存，总内存 %s，可用内存为 %s。在已用内存中，应用正在使用 %s，%s 已缓存，%s 用作内存缓冲。</string>
+    <string name="usage_bar_chart_y_axis_label_minute">%.0f 分钟</string>
+    <string name="usage_bar_chart_y_axis_label_hour">%.0f 小时</string>
+    <string name="usage_daily_bar_chart_accessibility_description">%1$s 的使用时长为 %2$.0f 分钟。见 %4$d 根条形图中的第 %3$d 根</string>
+    <string name="usage_weekly_hours_bar_chart_accessibility_description">%1$s 的使用时长为 %2$.l 个小时。见 %4$d 根条形图中的第 %3$d 根</string>
+    <string name="usage_weekly_minutes_bar_chart_accessibility_description">%1$s 的使用时长为 %2$.0f 分钟。见 %4$d 根条形图中第 %3$d 根</string>
+    <string name="usage_bar_chart_tooltip_minutes">%1$s • %2$.0f 分钟</string>
+    <string name="usage_bar_chart_tooltip_hours">%1$s • %2$.1f 小时</string>
+    <string name="modify_last_modification_time">修改上次更改时间</string>
+    <string name="modify_last_access_time">修改上次访问时间</string>
+    <string name="change_id">更改 ID</string>
+    <string name="memory_usage_unavailable">内存使用量当前不可用。</string>
+    <string name="swap_usage_accessibility_description">系统已经给 swap 分配了 %s，当前正使用 %s。</string>
+    <string name="selected_items_accessibility_description">选中了 %d 项，共 %d 项</string>
+    <string name="adb_local_server_port">ADB 本地服务器端口</string>
+    <string name="waiting_for_wifi">正等待 Wi-Fi</string>
 </resources>
