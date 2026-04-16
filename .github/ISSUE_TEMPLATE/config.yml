@@ -1,8 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: 🐜 android-libraries Repo
+  - name: android-libraries Repo
     url: https://github.com/MuntashirAkon/android-libraries
     about: Please send requests for new trackers and libraries to this repository
-  - name: 📗 App Manager Docs
-    url: https://muntashirakon.github.io/AppManager/
+  - name: ADL Repo
+    url: https://github.com/MuntashirAkon/android-debloat-list
+    about: Please open issues related to bloatware in this repository
+  - name: App Manager Docs
+    url: https://muntashir.dev/AppManager/
     about: Please read documentation carefully before submitting an issue

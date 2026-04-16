@@ -3,6 +3,17 @@ description: Ask for help regarding a feature
 labels: [Help Wanted]
 
 body:
+  - type: checkboxes
+    attributes:
+      label: Please check before submitting an issue
+      description: Checking the <a href="https://muntashir.dev/AppManager/">docs</a> before submitting an issue may solve your problem.
+      options:
+        - label: I have searched the issues and haven't found anything relevant
+          required: true
+        - label: I have read the docs
+          required: true
+        - label: I know that generating a report, in whole part or in part, using AI/LLM is prohibited
+          required: true
 
   - type: textarea
     attributes:

@@ -10,8 +10,9 @@ body:
        options:
           - label: This issue is not related to the translated version of the documentation
             required: true
-
           - label: I know technical terms used in the documentation
+            required: true
+          - label: I know that generating a report, in whole part or in part, using AI/LLM is prohibited
             required: true
 
   - type: textarea

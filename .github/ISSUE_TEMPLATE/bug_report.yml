@@ -6,14 +6,14 @@ body:
   - type: checkboxes
     attributes:
        label: Please check before submitting an issue
-       description: Checking the <a href="https://muntashirakon.github.io/AppManager/">docs</a> before submitting an issue may solve your problem.
+       description: Checking the <a href="https://muntashir.dev/AppManager/">docs</a> before submitting an issue may solve your problem.
        options:
           - label: I know what my device, OS and App Manager versions are
             required: true
-            
           - label: I know how to take logs
             required: true
-            
+          - label: I know that generating a report, in whole part or in part, using AI/LLM is prohibited
+            required: true
           - label: I know how to reproduce the issue which may not be specific to my device
             required: false
 

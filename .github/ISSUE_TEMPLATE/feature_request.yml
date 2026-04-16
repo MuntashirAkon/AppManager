@@ -6,21 +6,21 @@ body:
   - type: checkboxes
     attributes:
        label: Please check before submitting an issue
-       description: Checking the <a href="https://muntashirakon.github.io/AppManager/">docs</a> before submitting an issue may solve your problem.
+       description: Checking the <a href="https://muntashir.dev/AppManager/">docs</a> before submitting an issue may solve your problem.
        options:
           - label: I am using the latest version of App Manager
             required: true
-            
           - label: I have searched the issues and haven't found anything relevant
             required: true
-            
           - label: I have read the docs
+            required: true
+          - label: I know that generating a report, in whole part or in part, using AI/LLM is prohibited
             required: true
 
 
   - type: textarea
     attributes:
-        label: Describe a description of the new feature
+        label: Describe the new feature
         description: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
     validations:
         required: true
