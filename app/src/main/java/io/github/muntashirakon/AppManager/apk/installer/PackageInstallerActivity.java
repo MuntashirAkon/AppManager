@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.ACTION_CONFIRM_INSTALL;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.ACTION_CONFIRM_PRE_APPROVAL;
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_ABORTED;
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_BLOCKED;
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_CONFLICT;
@@ -23,17 +25,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.IPackageInstallerSession;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
+import android.content.pm.PackageInstallerHidden;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.view.View;
+import android.view.WindowHidden;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -45,10 +51,12 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.pm.PackageInfoCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Queue;
 
+import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -109,11 +117,14 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     @NonNull
     public static Intent getLaunchableInstance(@NonNull Context context, @NonNull String packageName) {
         Intent intent = new Intent(context, PackageInstallerActivity.class);
-        intent.setData(Uri.parse("package:" + packageName));
+        intent.putExtra(EXTRA_INSTALL_EXISTING, true);
+        intent.putExtra(EXTRA_PACKAGE_NAME, packageName);
         return intent;
     }
 
     private static final String EXTRA_APK_FILE_LINK = "link";
+    public static final String EXTRA_INSTALL_EXISTING = "install_existing";
+    public static final String EXTRA_PACKAGE_NAME = "pkg";
     public static final String ACTION_PACKAGE_INSTALLED = BuildConfig.APPLICATION_ID + ".action.PACKAGE_INSTALLED";
 
     private int mSessionId = -1;
@@ -194,6 +205,11 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             onNewIntent(intent);
             return;
         }
+        // Take a page out of the official installer hide all other overlays that aren't the system
+        if (SelfPermissions.checkSelfPermission("android.permission.HIDE_NON_SYSTEM_OVERLAY_WINDOWS")) {
+            Refine.<WindowHidden>unsafeCast(getWindow()).addSystemFlags(1 << 19);
+        }
+
         mModel = new ViewModelProvider(this).get(PackageInstallerViewModel.class);
         if (!bindService(
                 new Intent(this, PackageInstallerService.class), mServiceConnection, BIND_AUTO_CREATE)) {
@@ -203,7 +219,18 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             mApkQueue.addAll(ApkQueueItem.fromIntent(intent, Utils.getRealReferrer(this)));
 
         }
-        ApkSource apkSource = IntentCompat.getUnwrappedParcelableExtra(intent, EXTRA_APK_FILE_LINK, ApkSource.class);
+        ApkSource apkSource;
+        if (ACTION_CONFIRM_INSTALL.equals(intent.getAction()) || ACTION_CONFIRM_PRE_APPROVAL.equals(intent.getAction())) {
+            mSessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
+            try {
+                Uri uri = Uri.fromFile(new File(Refine.<PackageInstallerHidden.SessionInfo>unsafeCast(PackageManagerCompat.getPackageInstaller().getSessionInfo(mSessionId)).getResolvedBaseApkPath()));
+                apkSource = ApkSource.getApkSource(uri, null);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            apkSource = IntentCompat.getUnwrappedParcelableExtra(intent, EXTRA_APK_FILE_LINK, ApkSource.class);
+        }
         if (apkSource != null) {
             synchronized (mApkQueue) {
                 mApkQueue.add(ApkQueueItem.fromApkSource(apkSource));

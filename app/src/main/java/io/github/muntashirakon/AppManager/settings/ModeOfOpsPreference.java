@@ -41,13 +41,6 @@ import io.github.muntashirakon.view.TextInputLayoutCompat;
 import io.github.muntashirakon.widget.TextInputTextView;
 
 public class ModeOfOpsPreference extends Fragment {
-    private static final List<String> MODE_NAMES = Arrays.asList(
-            Ops.MODE_AUTO,
-            Ops.MODE_ROOT,
-            Ops.MODE_ADB_OVER_TCP,
-            Ops.MODE_ADB_WIFI,
-            Ops.MODE_NO_ROOT);
-
     private MaterialTextView mInferredModeView;
     private MaterialTextView mRemoteServerStatusView;
     private MaterialTextView mRemoteServicesStatusView;
@@ -113,7 +106,7 @@ public class ModeOfOpsPreference extends Fragment {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R || Utils.isTv(requireContext())) {
             disabledItems = Collections.singletonList(Ops.MODE_ADB_WIFI);
         } else disabledItems = null;
-        changeModeView.setOnClickListener(v -> new SearchableSingleChoiceDialogBuilder<>(requireActivity(), MODE_NAMES, mModes)
+        changeModeView.setOnClickListener(v -> new SearchableSingleChoiceDialogBuilder<>(requireActivity(), Ops.MODE_NAMES, mModes)
                 .setTitle(R.string.pref_mode_of_operations)
                 .setSelection(mCurrentMode)
                 .addDisabledItems(disabledItems)
@@ -210,7 +203,7 @@ public class ModeOfOpsPreference extends Fragment {
             TextViewCompat.setCompoundDrawableTintList(mModeOfOpsView, mColorActive);
             mModeOfOpsView.setTextColor(mColorActive);
             mModeOfOpsView.setCompoundDrawablesRelativeWithIntrinsicBounds(mIconProgress, 0, 0, 0);
-            mModeOfOpsView.setText(getString(R.string.status_connecting_via_mode, mModes[MODE_NAMES.indexOf(mCurrentMode)]));
+            mModeOfOpsView.setText(getString(R.string.status_connecting_via_mode, mModes[Ops.MODE_NAMES.indexOf(mCurrentMode)]));
         } else {
             int uid = Users.getSelfOrRemoteUid();
             boolean goodMode = !badInferredMode(mCurrentMode, uid);
@@ -223,14 +216,14 @@ public class ModeOfOpsPreference extends Fragment {
                 CharSequence mode;
                 if (serverActive && uid != Process.myUid()) {
                     mode = "remote service";
-                } else mode = mModes[MODE_NAMES.indexOf(mCurrentMode)];
+                } else mode = mModes[Ops.MODE_NAMES.indexOf(mCurrentMode)];
                 mModeOfOpsView.setText(getString(R.string.status_connected_via_mode, mode));
             } else {
                 mInferredModeView.setTextColor(mColorError);
                 TextViewCompat.setCompoundDrawableTintList(mModeOfOpsView, mColorError);
                 mModeOfOpsView.setTextColor(mColorError);
                 mModeOfOpsView.setCompoundDrawablesRelativeWithIntrinsicBounds(mIconInactive, 0, 0, 0);
-                mModeOfOpsView.setText(getString(R.string.status_not_connected_via_mode, mModes[MODE_NAMES.indexOf(mCurrentMode)]));
+                mModeOfOpsView.setText(getString(R.string.status_not_connected_via_mode, mModes[Ops.MODE_NAMES.indexOf(mCurrentMode)]));
             }
         }
         // Server
