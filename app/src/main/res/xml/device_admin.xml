@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--suppress AndroidElementNotAllowed -->
+<device-admin android:visible="false" xmlns:android="http://schemas.android.com/apk/res/android">
+    <support-transfer-ownership />
+    <headless-system-user device-owner-mode="unsupported"/>
+</device-admin>
