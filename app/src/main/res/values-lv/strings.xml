@@ -563,4 +563,24 @@
     <string name="title_labs_activity">Laboratorija</string>
     <string name="action_optimize_app">Optimizēt</string>
     <string name="debloat_list_google">Google</string>
+    <string name="orientation">Orientācija</string>
+    <string name="read">Lasīt</string>
+    <string name="write">Rakstīt</string>
+    <string name="data_size">Dati</string>
+    <string name="cache_size">Kešatmiņa</string>
+    <string name="obb_size">Obb</string>
+    <string name="sdk_min">Minim. versija</string>
+    <string name="sdk_max">Mērķa versija</string>
+    <string name="stopped">Apturēts</string>
+    <string name="pref_import_export_blocking_rules">Ievietot/izgūt bloķēšanas noteikumus</string>
+    <string name="the_import_was_successful">Ievietoti</string>
+    <string name="pref_import_watt_msg">Ievieto Watt bloķēšanas noteikumus, katra datne satur vienas lietotnes noteikumus, piemēram, <tt>packagename.xml</tt> utt.</string>
+    <string name="pref_import_blocker_msg">Ievieto Blocker bloķēšanas noteikumus, katra datne satur vienas lietotnes noteikumus.</string>
+    <string name="pref_import_export_keystore">Ievietot/izgūt atslēgu krātuvi</string>
+    <string name="pref_import_export_keystore_msg">Ievieto/izgūst Bouncy Castle atslēgu krātuvi (BKS), ko iekšēji izmanto App Manager.</string>
+    <string name="import_keystore">Ievietot atslēgu krātuvi</string>
+    <string name="confirm_import_keystore">Vai tiešām vēlaties aizstāt esošo atslēgu krātuvi? Šo darbību nevar atsaukt.</string>
+    <string name="pref_rules_msg">Nekavējoša bloķēšana, ievietot/izgūt/noņemt noteikumus utt.</string>
+    <string name="pref_import_backups_hint">Atlasiet mapi, kurā atrodas datņu (Swift Backup/Titanium Backup) vai mapju (OAndBackup) dublējumkopijas</string>
+    <string name="import_backups_warning_delete_backups_after_import">Vai dzēst dublējumkopijas pēc to ievietošanas App Manager? Katru dublējumkopiju dzēš atsevišķi pēc tās sekmīgas ievietošanas. Ja neesiet pārliecināti, atlasiet <b>Nē</b>.</string>
 </resources>
