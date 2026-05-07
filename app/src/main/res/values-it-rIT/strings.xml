@@ -1539,13 +1539,13 @@
     <string name="pref_disable_apk_verification">Disabilita verifica pacchetto</string>
     <string name="pref_disable_apk_verification_description">Chiedi al programma di installazione di saltare l\'esecuzione dello strumento di verifica dei pacchetti (ad esempio, Play Protect) durante l\'installazione.</string>
     <string name="adb_data">Dati ADB</string>
-    <string name="adb_data_description">Esegui il backup dei dati in formato ADB. Questa opzione sostituisce le opzioni \"Dati interni\" ed \"Dati esterni\".</string>
+    <string name="adb_data_description">Esegui il backup dei dati in formato ADB. Questa opzione sostituisce le opzioni \"Dati interni\" e \"Dati esterni\".</string>
     <string name="filter_unfrozen_apps">App sbloccate</string>
     <string name="goto_previous">Precedente</string>
     <string name="usage_this_week">Questa settimana</string>
-    <string name="usage_last_week">Settimana scorsa</string>
+    <string name="usage_last_week">Scorsa settimana</string>
     <string name="bar_chart_content_description">Grafico a barre con %d punti dati.</string>
-    <string name="usage_daily_bar_chart_accessibility_description">L\'utilizzo a %1$s è di %2$.0f minuti. Barra %3$d di %4$d</string>
+    <string name="usage_daily_bar_chart_accessibility_description">—L\'utilizzo a %1$s è di %2$.0f minuti. Barra %3$d di %4$d</string>
     <string name="usage_weekly_hours_bar_chart_accessibility_description">L\'utilizzo su %1$s è di %2$.lf ore. Barra %3$d di %4$d</string>
     <string name="usage_weekly_minutes_bar_chart_accessibility_description">L\'utilizzo su %1$s è di %2$.0f minuti. Barra %3$d di %4$d</string>
     <string name="usage_bar_chart_y_axis_label_minute">%.0f min</string>
