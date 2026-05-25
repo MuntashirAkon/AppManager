@@ -40,6 +40,10 @@ public interface IUriGrantsManager extends android.os.IInterface {
 
     ParceledListSlice<UriPermission> getUriPermissions(String packageName, boolean incoming, boolean persistedOnly) throws RemoteException;
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    int checkGrantUriPermission_ignoreNonSystem(
+            int sourceUid, String targetPkg, Uri uri, int modeFlags, int userId) throws RemoteException;
+
     abstract class Stub extends Binder implements IUriGrantsManager {
         public static IUriGrantsManager asInterface(IBinder obj) {
             return HiddenUtil.throwUOE(obj);

@@ -7,6 +7,7 @@ import android.os.IInterface;
 import android.os.Parcelable;
 import android.os.RemoteException;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import java.util.List;
@@ -32,7 +33,10 @@ public interface IAppOpsService extends IInterface {
 
     void setMode(int code, int uid, String packageName, int mode) throws RemoteException;
 
-    // Removed in 22
+    /**
+     * @deprecated Replaced in API 22 (Android Lollipop MR1) with {@link #resetAllModes(int, String)}
+     */
+    @Deprecated
     void resetAllModes() throws RemoteException;
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
@@ -41,8 +45,15 @@ public interface IAppOpsService extends IInterface {
     @RequiresApi(Build.VERSION_CODES.P)
     boolean isOperationActive(int code, int uid, String packageName) throws RemoteException;
 
+    /**
+     * @deprecated Replaced in API 31 (Android S) with {@link #checkOperationRaw(int, int, String, String)}
+     */
+    @Deprecated
     @RequiresApi(Build.VERSION_CODES.Q)
     int checkOperationRaw(int code, int uid, String packageName) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    int checkOperationRaw(int code, int uid, String packageName, @Nullable String attributionTag) throws RemoteException;
 
     abstract class Stub {
         public static IAppOpsService asInterface(android.os.IBinder obj) {

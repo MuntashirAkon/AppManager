@@ -37,7 +37,7 @@ public class AppOpsManagerHidden {
      * The lower the UID state the more important the UID is for the user.
      */
     @RequiresApi(Build.VERSION_CODES.Q)
-    public static final int UID_STATE_FOREGROUND_SERVICE_LOCATION = 300;
+    public static /*final*/ int UID_STATE_FOREGROUND_SERVICE_LOCATION = 300;
 
     /**
      * Uid state: The UID is running a foreground service. The lower the UID
@@ -179,16 +179,10 @@ public class AppOpsManagerHidden {
      * Access all external storage
      */
     public static /*final*/ int OP_MANAGE_EXTERNAL_STORAGE = 92;
-    public static /*final*/ int _NUM_OP = 121;
+    public static /*final*/ int _NUM_OP = 163;
 
     public static /*final*/ int MIUI_OP_START = 10000;
     public static /*final*/ int MIUI_OP_END = 10040;
-
-    /**
-     * This maps each operation to the public string constant for it.
-     * If it doesn't have a public string constant, it maps to null.
-     */
-    private static String[] sOpToString = HiddenUtil.throwUOE();
 
     /**
      * Retrieve the op switch that controls the given operation.
@@ -392,7 +386,7 @@ public class AppOpsManagerHidden {
         }
 
         /**
-         * @deprecated Removed in Android 10 (Q)
+         * @deprecated Replaced in Android 10 (Q) with {@link #getLastAccessTime(int)}
          */
         @RequiresApi(Build.VERSION_CODES.P)
         @Deprecated
@@ -406,7 +400,7 @@ public class AppOpsManagerHidden {
         }
 
         /**
-         * @deprecated Removed in Android 10 (Q)
+         * @deprecated Replaced in Android 10 (Q) with {@link #getLastAccessForegroundTime(int)}
          */
         @RequiresApi(Build.VERSION_CODES.P)
         public long getLastAccessForegroundTime() {
@@ -419,7 +413,7 @@ public class AppOpsManagerHidden {
         }
 
         /**
-         * @deprecated Removed in Android 10 (Q)
+         * @deprecated Replaced in Android 10 (Q) with {@link #getLastAccessBackgroundTime(int)}
          */
         @RequiresApi(Build.VERSION_CODES.P)
         public long getLastAccessBackgroundTime() {
@@ -445,7 +439,7 @@ public class AppOpsManagerHidden {
         }
 
         /**
-         * @deprecated since Android 11 (R)
+         * @deprecated since Android 11 (R). Use {@link #getLastRejectTime(int)} instead.
          */
         @Deprecated
         public long getRejectTime() {
@@ -453,7 +447,7 @@ public class AppOpsManagerHidden {
         }
 
         /**
-         * @deprecated Removed in Android 10 (Q)
+         * @deprecated Replaced in Android 10 (Q) with {@link #getLastRejectTime(int)}
          */
         @RequiresApi(Build.VERSION_CODES.P)
         public long getLastRejectTime() {
@@ -466,7 +460,7 @@ public class AppOpsManagerHidden {
         }
 
         /**
-         * @deprecated Removed in Android 10 (Q)
+         * @deprecated Replaced in Android 10 (Q) with {@link #getLastRejectForegroundTime(int)}
          */
         @RequiresApi(Build.VERSION_CODES.P)
         public long getLastRejectForegroundTime() {
@@ -479,7 +473,7 @@ public class AppOpsManagerHidden {
         }
 
         /**
-         * @deprecated Removed in Android 10 (Q)
+         * @deprecated Replaced in Android 10 (Q) with {@link #getLastRejectBackgroundTime(int)}
          */
         @RequiresApi(Build.VERSION_CODES.P)
         public long getLastRejectBackgroundTime() {
@@ -492,7 +486,7 @@ public class AppOpsManagerHidden {
         }
 
         /**
-         * @deprecated Removed in Android 10 (Q)
+         * @deprecated Replaced in Android 10 (Q) with {@link #getLastRejectTime(int, int, int)}
          */
         @RequiresApi(Build.VERSION_CODES.P)
         public long getLastRejectTimeFor(int uidState) {

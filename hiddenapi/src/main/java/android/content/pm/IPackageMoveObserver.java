@@ -2,6 +2,7 @@
 
 package android.content.pm;
 
-interface IPackageMoveObserver {
-    void packageMoved(String packageName, int returnCode);
+import android.os.IInterface;
+
+public interface IPackageMoveObserver extends IInterface {
 }

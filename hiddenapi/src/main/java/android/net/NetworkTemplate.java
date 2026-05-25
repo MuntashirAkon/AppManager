@@ -12,7 +12,7 @@ import misc.utils.HiddenUtil;
 public class NetworkTemplate implements Parcelable {
 
     // public static final int MATCH_MOBILE_ALL = 1;
-    public static final int MATCH_WIFI = 4;
+    public static /*final*/ int MATCH_WIFI = 4;
 
     /**
      * Template to match {@link ConnectivityManager#TYPE_MOBILE} networks with
@@ -40,10 +40,6 @@ public class NetworkTemplate implements Parcelable {
 
     public NetworkTemplate(int matchRule, @Nullable String subscriberId, @Nullable String networkId) {
         HiddenUtil.throwUOE(matchRule, subscriberId, networkId);
-    }
-
-    private NetworkTemplate(Parcel in) {
-        HiddenUtil.throwUOE(in);
     }
 
     @Override

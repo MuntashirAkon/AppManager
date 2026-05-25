@@ -5,7 +5,7 @@ package android.content.pm;
 import android.content.Intent;
 import android.os.Bundle;
 
-interface IPackageInstallObserver2 {
+public interface IPackageInstallObserver2 {
     void onUserActionRequired(Intent intent);
 
     /**

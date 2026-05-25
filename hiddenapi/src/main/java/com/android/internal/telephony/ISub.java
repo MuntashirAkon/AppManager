@@ -29,14 +29,15 @@ public interface ISub extends IInterface {
     @Deprecated
     List<SubscriptionInfo> getActiveSubscriptionInfoList(String callingPackage) throws RemoteException;
 
+    /**
+     * @deprecated Replaced with {@link #getActiveSubscriptionInfoList(String, String, boolean)} in API 34 (Android 14 r50)
+     */
+    @Deprecated
     @RequiresApi(Build.VERSION_CODES.R)
     List<SubscriptionInfo> getActiveSubscriptionInfoList(String callingPackage, @Nullable String callingFeatureId) throws RemoteException;
 
-    /**
-     * Added in Google Pixel stock ROM
-     */
-    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-    List<SubscriptionInfo> getActiveSubscriptionInfoList(String callingPackage, @Nullable String callingFeatureId, boolean allUsers) throws RemoteException;
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE) // Android 14 r50
+    List<SubscriptionInfo> getActiveSubscriptionInfoList(String callingPackage, @Nullable String callingFeatureId, boolean isForAllProfiles) throws RemoteException;
 
     abstract class Stub {
         public static ISub asInterface(android.os.IBinder obj) {

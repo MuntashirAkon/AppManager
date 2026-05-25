@@ -18,6 +18,8 @@ import misc.utils.HiddenUtil;
 public class IntentHidden {
     @IntDef(flag = true, value = {
             EXTENDED_FLAG_FILTER_MISMATCH,
+            EXTENDED_FLAG_MISSING_CREATOR_OR_INVALID_TOKEN,
+            EXTENDED_FLAG_NESTED_INTENT_KEYS_COLLECTED,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface ExtendedFlags {}
@@ -28,6 +30,18 @@ public class IntentHidden {
      */
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE) // Android 14 r50
     public static final int EXTENDED_FLAG_FILTER_MISMATCH = 1 << 0;
+
+    /**
+     * This flag indicates the creator token of this intent is either missing or invalid.
+     */
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM) // Android 15 r20
+    public static final int EXTENDED_FLAG_MISSING_CREATOR_OR_INVALID_TOKEN = 1 << 1;
+
+    /**
+     * This flag indicates this intent called {@code #collectExtraIntentKeys()}.
+     */
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM) // Android 15 r20
+    public static final int EXTENDED_FLAG_NESTED_INTENT_KEYS_COLLECTED = 1 << 2;
 
 
     /**

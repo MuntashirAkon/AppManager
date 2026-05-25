@@ -59,14 +59,5 @@ public class ResultReceiver implements Parcelable {
         HiddenUtil.throwUOE(out, flags);
     }
 
-    public static final Parcelable.Creator<ResultReceiver> CREATOR
-            = new Parcelable.Creator<ResultReceiver>() {
-        public ResultReceiver createFromParcel(Parcel in) {
-            return HiddenUtil.throwUOE(in);
-        }
-
-        public ResultReceiver[] newArray(int size) {
-            return new ResultReceiver[size];
-        }
-    };
+    public static final Parcelable.Creator<ResultReceiver> CREATOR = HiddenUtil.creator();
 }

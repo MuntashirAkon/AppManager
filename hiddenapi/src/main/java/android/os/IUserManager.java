@@ -14,6 +14,10 @@ import misc.utils.HiddenUtil;
 public interface IUserManager extends IInterface {
     UserInfo getPrimaryUser() throws RemoteException;
 
+    /**
+     * @deprecated Replaced in API 29 (Android 10 r30) with {@link #getUsers(boolean, boolean, boolean)}
+     */
+    @Deprecated
     List<UserInfo> getUsers(boolean excludeDying) throws RemoteException;
 
     // Changed in 10.0.0_r30
@@ -22,8 +26,6 @@ public interface IUserManager extends IInterface {
             throws RemoteException;
 
     List<UserInfo> getProfiles(@UserIdInt int userId, boolean enabledOnly);
-
-    int getManagedProfileBadge(int userId) throws RemoteException;
 
     boolean hasUserRestriction(String restrictionKey, int userHandle) throws RemoteException;
 

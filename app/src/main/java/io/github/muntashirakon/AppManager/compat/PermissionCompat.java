@@ -456,12 +456,9 @@ public final class PermissionCompat {
         } else return pm.getPermissionInfo(permissionName, flags);
     }
 
-    @SuppressWarnings("deprecation")
     @NonNull
     public static PermissionGroupInfo getPermissionGroupInfo(String groupName, int flags) throws RemoteException {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            return getPermissionManager().getPermissionGroupInfo(groupName, flags);
-        } else return PackageManagerCompat.getPackageManager().getPermissionGroupInfo(groupName, flags);
+        return PackageManagerCompat.getPackageManager().getPermissionGroupInfo(groupName, flags);
     }
 
     @SuppressWarnings("deprecation")

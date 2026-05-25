@@ -120,7 +120,7 @@ public interface IOverlayManager extends IInterface {
      */
     boolean setLowestPriority(String packageName, int userId) throws RemoteException;
 
-    public static abstract class Stub {
+    abstract class Stub {
         public static IOverlayManager asInterface(IBinder binder) {
             return HiddenUtil.throwUOE(binder);
         }

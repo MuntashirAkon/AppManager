@@ -42,6 +42,9 @@ public interface IStorageStatsManager extends IInterface {
 
     StorageStats queryStatsForPackage(String volumeUuid, String packageName, int userId, String callingPackage) throws RemoteException;
 
+    @RequiresApi(Build.VERSION_CODES.BAKLAVA)
+    StorageStats queryArtManagedStats(String packageName, int userId, int uid) throws RemoteException;
+
     StorageStats queryStatsForUid(String volumeUuid, int uid, String callingPackage) throws RemoteException;
 
     StorageStats queryStatsForUser(String volumeUuid, int userId, String callingPackage) throws RemoteException;

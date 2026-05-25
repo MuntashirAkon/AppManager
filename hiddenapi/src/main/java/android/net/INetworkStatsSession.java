@@ -45,7 +45,7 @@ public interface INetworkStatsSession extends IInterface {
      * Return network layer usage summary per UID for tagged traffic that matches template.
      */
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    NetworkStats getTaggedSummaryForAllUid(NetworkTemplate template, long start, long end);
+    NetworkStats getTaggedSummaryForAllUid(NetworkTemplate template, long start, long end) throws RemoteException;
 //    /** Return historical network layer stats for specific UID traffic that matches template. */
 //    NetworkStatsHistory getHistoryForUid(NetworkTemplate template, int uid, int set, int tag, int fields) throws RemoteException;
 //    /** Return historical network layer stats for specific UID traffic that matches template. */

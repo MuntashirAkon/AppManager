@@ -47,7 +47,7 @@ public class ConnectivityManagerHidden {
      * Denylist of apps that cannot receive incoming packets except on loopback because they are
      * subject to an always-on VPN which is not currently connected.
      *
-     * @deprecated Removed in Android 14 (Upside Down Cake)
+     * @deprecated Replaced in Android 14 (Upside Down Cake) by {@link #FIREWALL_CHAIN_BACKGROUND}
      */
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     public static final int FIREWALL_CHAIN_LOCKDOWN_VPN = 6;

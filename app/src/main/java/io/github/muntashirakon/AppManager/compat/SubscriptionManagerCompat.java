@@ -35,7 +35,7 @@ public class SubscriptionManagerCompat {
                 try {
                     return sub.getActiveSubscriptionInfoList(callingPackage, null);
                 } catch (NoSuchMethodError e) {
-                    // Google Pixel
+                    // Android 14 r50
                     return sub.getActiveSubscriptionInfoList(callingPackage, null, true);
                 }
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

@@ -18,6 +18,12 @@ public class ApplicationInfoHidden {
     public int privateFlags;
 
     /**
+     * More private/hidden flags. See {@code PRIVATE_FLAG_EXT_...} constants.
+     */
+    @RequiresApi(Build.VERSION_CODES.S)
+    public int privateFlagsExt;
+
+    /**
      * String retrieved from the seinfo tag found in selinux policy. This value can be set through
      * the mac_permissions.xml policy construct. This value is used for setting an SELinux security
      * context on the process as well as its data directory.

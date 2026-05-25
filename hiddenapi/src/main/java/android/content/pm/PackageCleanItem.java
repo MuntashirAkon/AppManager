@@ -7,6 +7,10 @@ import android.os.Parcelable;
 
 import misc.utils.HiddenUtil;
 
+/**
+ * @deprecated Removed in API 28 (Android 9)
+ */
+@Deprecated
 public class PackageCleanItem implements Parcelable {
     public final int userId;
     public final String packageName;

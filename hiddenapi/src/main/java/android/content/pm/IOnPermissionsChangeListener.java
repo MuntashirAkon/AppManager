@@ -4,6 +4,10 @@ package android.content.pm;
 
 import android.os.IInterface;
 
-interface IOnPermissionsChangeListener extends IInterface {
+/**
+ * @deprecated Replaced in API 30 (Android R) with {@link android.permission.IOnPermissionsChangeListener}
+ */
+@Deprecated
+public interface IOnPermissionsChangeListener extends IInterface {
     void onPermissionsChanged(int uid);
 }

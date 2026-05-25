@@ -59,11 +59,17 @@ public interface INotificationManager extends IInterface {
     @RequiresApi(Build.VERSION_CODES.O_MR1)
     void setNotificationListenerAccessGranted(ComponentName listener, boolean enabled) throws RemoteException;
 
+    @RequiresApi(Build.VERSION_CODES.S)
+    void setNotificationListenerAccessGranted(ComponentName listener, boolean enabled, boolean userSet) throws RemoteException;
+
     @RequiresApi(Build.VERSION_CODES.O_MR1)
     void setNotificationAssistantAccessGranted(ComponentName assistant, boolean enabled) throws RemoteException;
 
     @RequiresApi(Build.VERSION_CODES.O_MR1)
     void setNotificationListenerAccessGrantedForUser(ComponentName listener, int userId, boolean enabled) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    void setNotificationListenerAccessGrantedForUser(ComponentName listener, int userId, boolean enabled, boolean userSet) throws RemoteException;
 
     @RequiresApi(Build.VERSION_CODES.O_MR1)
     void setNotificationAssistantAccessGrantedForUser(ComponentName assistant, int userId, boolean enabled) throws RemoteException;

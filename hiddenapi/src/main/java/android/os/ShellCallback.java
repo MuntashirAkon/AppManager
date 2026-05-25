@@ -84,14 +84,5 @@ public class ShellCallback implements Parcelable {
         return HiddenUtil.throwUOE();
     }
 
-    public static final Parcelable.Creator<ShellCallback> CREATOR
-            = new Parcelable.Creator<ShellCallback>() {
-        public ShellCallback createFromParcel(Parcel in) {
-            return HiddenUtil.throwUOE(in);
-        }
-
-        public ShellCallback[] newArray(int size) {
-            return new ShellCallback[size];
-        }
-    };
+    public static final Parcelable.Creator<ShellCallback> CREATOR = HiddenUtil.creator();
 }

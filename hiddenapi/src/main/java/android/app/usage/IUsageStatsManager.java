@@ -8,6 +8,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.IInterface;
+import android.os.PersistableBundle;
 import android.os.RemoteException;
 
 import androidx.annotation.RequiresApi;
@@ -29,8 +30,16 @@ public interface IUsageStatsManager extends IInterface {
         }
     }
 
+    /**
+     * @deprecated Replaced in API 31 (Android S) by {@link #queryUsageStats(int, long, long, String, int)}
+     */
+    @Deprecated
     ParceledListSlice queryUsageStats(int bucketType, long beginTime, long endTime, String callingPackage)
             throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    ParceledListSlice queryUsageStats(int bucketType, long beginTime, long endTime,
+                                      String callingPackage, int userId) throws RemoteException;
 
     ParceledListSlice queryConfigurationStats(int bucketType, long beginTime, long endTime, String callingPackage)
             throws RemoteException;
@@ -52,8 +61,14 @@ public interface IUsageStatsManager extends IInterface {
     UsageEvents queryEventsForPackageForUser(long beginTime, long endTime, int userId, String pkg,
                                              String callingPackage) throws RemoteException;
 
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE) // Android 14 r50
+    UsageEvents queryEventsWithFilter(UsageEventsQuery query, String callingPackage) throws RemoteException;
+
     @RequiresApi(Build.VERSION_CODES.M)
     void setAppInactive(String packageName, boolean inactive, int userId) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    boolean isAppStandbyEnabled() throws RemoteException;
 
     /**
      * @deprecated Replaced in API 30 (Android R) by {@link #isAppInactive(String, int, String)}
@@ -65,6 +80,10 @@ public interface IUsageStatsManager extends IInterface {
     @RequiresApi(Build.VERSION_CODES.R)
     boolean isAppInactive(String packageName, int userId, String callingPackage) throws RemoteException;
 
+    /**
+     * @deprecated Removed in API 30 (Android R)
+     */
+    @Deprecated
     @RequiresApi(Build.VERSION_CODES.M)
     void whitelistAppTemporarily(String packageName, long duration, int userId) throws RemoteException;
 
@@ -86,6 +105,15 @@ public interface IUsageStatsManager extends IInterface {
 
     @RequiresApi(Build.VERSION_CODES.P)
     void setAppStandbyBuckets(ParceledListSlice appBuckets, int userId) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    int getAppMinStandbyBucket(String packageName, String callingPackage, int userId) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    void setEstimatedLaunchTime(String packageName, long estimatedLaunchTime, int userId) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    void setEstimatedLaunchTimes(ParceledListSlice appLaunchTimes, int userId) throws RemoteException;
 
     @RequiresApi(Build.VERSION_CODES.P)
     void registerAppUsageObserver(int observerId, String[] packages, long timeLimitMs, PendingIntent callback,
@@ -120,9 +148,21 @@ public interface IUsageStatsManager extends IInterface {
     @RequiresApi(Build.VERSION_CODES.Q)
     void reportUsageStop(IBinder activity, String token, String callingPackage) throws RemoteException;
 
+    @RequiresApi(Build.VERSION_CODES.S)
+    void reportUserInteraction(String packageName, int userId) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE) // Android 14 r50
+    void reportUserInteractionWithBundle(String packageName, int userId, PersistableBundle eventExtras) throws RemoteException;
+
     @RequiresApi(Build.VERSION_CODES.Q)
     int getUsageSource() throws RemoteException;
 
     @RequiresApi(Build.VERSION_CODES.Q)
     void forceUsageSourceSettingRead() throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    long getLastTimeAnyComponentUsed(String packageName, String callingPackage) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    String getAppStandbyConstant(String key) throws RemoteException;
 }

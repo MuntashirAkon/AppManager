@@ -206,6 +206,7 @@ public interface IBackupManager extends IInterface {
      *
      * @deprecated Replaced by {@link #adbRestore(ParcelFileDescriptor)} in API 26 (Android O)
      */
+    @Deprecated
     void fullRestore(ParcelFileDescriptor fd) throws RemoteException;
 
     /**
