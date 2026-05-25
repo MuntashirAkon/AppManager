@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.settings;
 
+import static io.github.muntashirakon.AppManager.settings.Ops.MODE_NO_ROOT;
+
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.color.MaterialColors;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -29,6 +32,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.DevicePolicyManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
@@ -46,12 +50,14 @@ public class ModeOfOpsPreference extends Fragment {
             Ops.MODE_ROOT,
             Ops.MODE_ADB_OVER_TCP,
             Ops.MODE_ADB_WIFI,
-            Ops.MODE_NO_ROOT);
+            Ops.MODE_NO_ROOT,
+            Ops.MODE_DPC);
 
     private MaterialTextView mInferredModeView;
     private MaterialTextView mRemoteServerStatusView;
     private MaterialTextView mRemoteServicesStatusView;
     private MaterialTextView mModeOfOpsView;
+    private TextInputEditText mDPCCommandView;
     private MainPreferencesViewModel mModel;
     private AlertDialog mModeOfOpsAlertDialog;
     private String[] mModes;
@@ -108,6 +114,7 @@ public class ModeOfOpsPreference extends Fragment {
         mRemoteServerStatusView = view.findViewById(R.id.remote_server_status);
         mRemoteServicesStatusView = view.findViewById(R.id.remote_services_status);
         mModeOfOpsView = view.findViewById(R.id.op_name);
+        mDPCCommandView = view.findViewById(R.id.dpc_command);
         MaterialButton changeModeView = view.findViewById(R.id.action_settings);
         List<String> disabledItems;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R || Utils.isTv(requireContext())) {
@@ -148,6 +155,21 @@ public class ModeOfOpsPreference extends Fragment {
                 Utils.copyToClipboard(requireContext(), "command", command);
             }
         });
+        TextInputLayout customCommand2Layout = TextInputLayoutCompat.fromTextInputEditText(mDPCCommandView);
+        customCommand2Layout.setEndIconOnClickListener(v -> {
+            if (!Ops.isDpc()) {
+                Utils.copyToClipboard(requireContext(), "command", DevicePolicyManagerCompat.DPC_COMMAND);
+            } else { // Clear and reset AM Ops Mode
+                DevicePolicyManagerCompat.clearDeviceOwnerApp();
+                mCurrentMode = Ops.MODE_AUTO;
+                Ops.setMode(mCurrentMode);
+                mModeOfOpsAlertDialog.show();
+                mConnecting = true;
+                updateViews();
+                mModel.setModeOfOps();
+            }
+        });
+
         mModel.loadCustomCommands();
         updateViews();
         // Mode of ops
@@ -232,6 +254,11 @@ public class ModeOfOpsPreference extends Fragment {
                 mModeOfOpsView.setCompoundDrawablesRelativeWithIntrinsicBounds(mIconInactive, 0, 0, 0);
                 mModeOfOpsView.setText(getString(R.string.status_not_connected_via_mode, mModes[MODE_NAMES.indexOf(mCurrentMode)]));
             }
+            if (Ops.isDpc()) {
+                mDPCCommandView.setText(R.string.dpc_remove_msg);
+            } else {
+                mDPCCommandView.setText(DevicePolicyManagerCompat.DPC_COMMAND);
+            }
         }
         // Server
         if (serverRequired) {
@@ -260,7 +287,7 @@ public class ModeOfOpsPreference extends Fragment {
     }
 
     private static boolean requireRemoteServices(@NonNull String mode) {
-        return !Ops.MODE_AUTO.equals(mode) && !Ops.MODE_NO_ROOT.equals(mode);
+        return !Ops.MODE_AUTO.equals(mode) && !MODE_NO_ROOT.equals(mode) && !Ops.MODE_DPC.equals(mode);
     }
 
     private static boolean badInferredMode(@NonNull String mode, int uid) {

@@ -147,6 +147,32 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dpc_setup_msg" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.AppTheme.TextInputLayout.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/padding_small"
+                app:endIconContentDescription="@string/copy"
+                app:endIconDrawable="@drawable/ic_content_copy"
+                app:endIconMode="custom">
+
+                <io.github.muntashirakon.widget.TextInputTextView
+                    android:id="@+id/dpc_command"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:inputType="textMultiLine"
+                    android:textIsSelectable="true"
+                    tools:text="dpm set-device-owner io.github.muntashirakon.AppManager" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>

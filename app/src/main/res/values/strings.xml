@@ -1558,4 +1558,12 @@
     <string name="selected_items_accessibility_description">Selected %d out of %d items</string>
     <string name="adb_local_server_port">ADB local server port</string>
     <string name="waiting_for_wifi">Waiting for Wi-Fi</string>
+    <string name="device_policy_controller">Device Policy Controller</string>
+    <string name="dpc_setup_msg">Use the following command to setup AppManager as DPC</string>
+    <string name="dpc_remove_msg">Click Here To Remove App Manager as DPC</string>
+    <string name="dpc_on_disabled">AM is no longer DPC</string>
+    <string name="dpc_on_enabled">AM is now DPC</string>
+    <string name="dpc_service_description">App Manager DPC Service</string>
+    <string name="dpc_short_support_message">App Manager has control of this Resource</string>
+    <string name="dpc_long_support_message">App Manager Dpc Long Support Message</string>
 </resources>

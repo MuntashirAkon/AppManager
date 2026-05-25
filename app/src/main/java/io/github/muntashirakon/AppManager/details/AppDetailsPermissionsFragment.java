@@ -41,6 +41,7 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
+import io.github.muntashirakon.AppManager.compat.DevicePolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsAppOpItem;
@@ -350,7 +351,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                 if (!TipsPrefs.getInstance().displayInUsesPermissionsTab()) {
                     return 0;
                 }
-                if (SelfPermissions.canModifyPermissions()) {
+                if (SelfPermissions.canModifyPermissions() || DevicePolicyManagerCompat.canModifyPermissions()) {
                     return R.string.help_uses_permissions_tab;
                 } else return 0;
             case PERMISSIONS:

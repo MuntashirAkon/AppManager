@@ -60,6 +60,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
+import io.github.muntashirakon.AppManager.compat.DevicePolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
@@ -953,7 +954,7 @@ public final class PackageInstallerCompat {
         }
         mInstallWatcher = new CountDownLatch(0);
         mInteractionWatcher = new CountDownLatch(0);
-        if (!SelfPermissions.canInstallExistingPackages()) {
+        if (!SelfPermissions.canInstallExistingPackages() || !DevicePolicyManagerCompat.canModifyPermissions()) {
             installCompleted(mSessionId, STATUS_FAILURE_BLOCKED, "android", "STATUS_FAILURE_BLOCKED: Insufficient permission.");
             Log.d(TAG, "InstallExisting: Requires INSTALL_PACKAGES permission.");
             return false;

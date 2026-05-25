@@ -44,6 +44,7 @@ import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -63,7 +64,7 @@ public final class ActivityManagerCompat {
                                               @Nullable ActivityLaunchUserInteractionRequiredCallback callback)
             throws SecurityException {
         // Need two permissions: WRITE_SECURE_SETTINGS and INJECT_EVENTS
-        SelfPermissions.requireSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS);
+        boolean canWriteSecure = SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.WRITE_SECURE_SETTINGS);
         boolean canInjectEvents = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INJECT_EVENTS);
         ContentResolver resolver = context.getContentResolver();
         // Backup assistant value
@@ -72,14 +73,23 @@ public final class ActivityManagerCompat {
             ThreadUtils.postOnBackgroundThread(() -> {
                 try {
                     // Set assistant value to the target activity component
-                    Settings.Secure.putString(resolver, "assistant", activity.flattenToShortString());
+                    if (canWriteSecure) {
+                        Settings.Secure.putString(resolver, "assistant", activity.flattenToShortString());
+                    } else if (Ops.isDpc()) {
+                        DevicePolicyManagerCompat.setSecureSetting("assistant", activity.flattenToShortString());
+                    }
                     // Run it as an assistant by injecting KEYCODE_ASSIST (219)
                     InputManagerCompat.sendKeyEvent(KeyEvent.KEYCODE_ASSIST, false);
                     // Wait until system opens the new assistant (i.e., activity), this is an empirical value
                     SystemClock.sleep(500);
                 } finally {
                     // Restore assistant value
-                    Settings.Secure.putString(resolver, "assistant", assistantComponent);
+                    if (canWriteSecure) {
+                        Settings.Secure.putString(resolver, "assistant", assistantComponent);
+                    } else if (Ops.isDpc()) {
+                        DevicePolicyManagerCompat.setSecureSetting("assistant", assistantComponent);
+                    }
+
                 }
             });
         } else if (callback != null) {
@@ -87,12 +97,20 @@ public final class ActivityManagerCompat {
             ThreadUtils.postOnBackgroundThread(() -> {
                 try {
                     // Set assistant value to the target activity component
-                    Settings.Secure.putString(resolver, "assistant", activity.flattenToShortString());
+                    if (canWriteSecure) {
+                        Settings.Secure.putString(resolver, "assistant", activity.flattenToShortString());
+                    } else if (Ops.isDpc()) {
+                        DevicePolicyManagerCompat.setSecureSetting("assistant", activity.flattenToShortString());
+                    }
                     // Trigger callback
                     callback.onInteraction();
                 } finally {
                     // Restore assistant value
-                    Settings.Secure.putString(resolver, "assistant", assistantComponent);
+                    if (canWriteSecure) {
+                        Settings.Secure.putString(resolver, "assistant", assistantComponent);
+                    } else if (Ops.isDpc()) {
+                        DevicePolicyManagerCompat.setSecureSetting("assistant", assistantComponent);
+                    }
                 }
             });
         } // else do nothing
