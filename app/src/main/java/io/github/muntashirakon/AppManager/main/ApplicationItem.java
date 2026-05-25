@@ -45,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.apk.signing.CertUtils;
 import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
@@ -250,11 +251,7 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
         } else uidOrAppIds = "";
         // Cert short name
         if (sha != null) {
-            try {
-                issuerShortName = "CN=" + (sha.first).split("CN=", 2)[1];
-            } catch (ArrayIndexOutOfBoundsException e) {
-                issuerShortName = sha.first;
-            }
+            issuerShortName = CertUtils.getReadableSubject(sha.first);
             if (TextUtils.isEmpty(sha.second)) {
                 sha = null;
             }

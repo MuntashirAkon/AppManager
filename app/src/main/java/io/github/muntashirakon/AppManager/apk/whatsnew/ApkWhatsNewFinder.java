@@ -12,11 +12,14 @@ import android.os.Build;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PackageInfoCompat;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,9 +28,12 @@ import java.util.List;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.signing.CertUtils;
+import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -48,12 +54,12 @@ public class ApkWhatsNewFinder {
     public static final int CHANGE_INFO = 3;
 
     public static final int VERSION_INFO = 0;
-    public static final int TRACKER_INFO = 1;
-    public static final int SIGNING_CERT_SHA256 = 2;
-    public static final int PERMISSION_INFO = 3;
-    public static final int COMPONENT_INFO = 4;
-    public static final int FEATURE_INFO = 5;
-    public static final int SDK_INFO = 6;
+    public static final int SDK_INFO = 1;
+    public static final int TRACKER_INFO = 2;
+    public static final int SIGNING_CERT_SHA256 = 3;
+    public static final int PERMISSION_INFO = 4;
+    public static final int COMPONENT_INFO = 5;
+    public static final int FEATURE_INFO = 6;
 
     private static final int INFO_COUNT = 7;
 
@@ -129,8 +135,8 @@ public class ApkWhatsNewFinder {
             return changes;
         }
         // Sha256 of signing certificates
-        Set<String> newCertSha256 = new HashSet<>(Arrays.asList(PackageUtils.getSigningCertSha256Checksum(newPkgInfo, true)));
-        Set<String> oldCertSha256 = new HashSet<>(Arrays.asList(PackageUtils.getSigningCertSha256Checksum(oldPkgInfo)));
+        Set<String> newCertSha256 = getReadableSignerInfo(PackageUtils.getSignerInfo(newPkgInfo, true));
+        Set<String> oldCertSha256 = getReadableSignerInfo(PackageUtils.getSignerInfo(oldPkgInfo, false));
         List<Change> certSha256Changes = new ArrayList<>();
         certSha256Changes.add(new Change(CHANGE_INFO, componentInfo[SIGNING_CERT_SHA256]));
         certSha256Changes.addAll(findChanges(newCertSha256, oldCertSha256));
@@ -209,6 +215,25 @@ public class ApkWhatsNewFinder {
         oldInfo.removeAll(mTmpInfo);
         for (String info : oldInfo) changeList.add(new Change(CHANGE_REMOVED, info));
         return changeList;
+    }
+
+    private Set<String> getReadableSignerInfo(@Nullable SignerInfo signerInfo) {
+        Set<String> readableSignerInfo = new HashSet<>();
+        X509Certificate[] x509Certificates = signerInfo == null ? null : signerInfo.getAllSignerCerts();
+        if (x509Certificates != null) {
+            for (X509Certificate cert : x509Certificates) {
+                StringBuilder builder = new StringBuilder();
+                try {
+                    String sha = DigestUtils.getHexDigest(DigestUtils.SHA_256, cert.getEncoded());
+                    builder.append(sha.substring(0, 4)).append(" - ");
+                } catch (CertificateEncodingException e) {
+                    throw new RuntimeException(e);
+                }
+                builder.append(CertUtils.getReadableSubject(cert));
+                readableSignerInfo.add(builder.toString());
+            }
+        }
+        return readableSignerInfo;
     }
 
     public static class Change {
