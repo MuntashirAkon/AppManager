@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.settings;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 
 import androidx.annotation.CallSuper;
@@ -37,7 +38,7 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat {
             requireArguments().remove(PREF_KEY);
             requireArguments().remove(PREF_SECONDARY);
         }
-        // https://github.com/androidx/androidx/blob/androidx-main/preference/preference/res/layout/preference_recyclerview.xml
+        // https://github.com/androidx/androidx/blob/29fe2b988bba2b56c0ff406d4edf1060e9154c82/preference/preference/src/main/java/androidx/preference/PreferenceFragment.java#L548
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setFitsSystemWindows(true);
         recyclerView.setClipToPadding(false);
@@ -48,6 +49,27 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat {
                 UiUtils.applyWindowInsetsAsPadding(recyclerView, false, true, false, true);
             }
         } else UiUtils.applyWindowInsetsAsPaddingNoTop(recyclerView);
+
+        // Use M3 design for preference cards
+        float m3CornerRadius;
+        float m3CornerRadiusInner;
+        TypedValue typedValue = new TypedValue();
+        if (requireContext().getTheme().resolveAttribute(io.github.muntashirakon.ui.R.attr.listItemCornerRadius, typedValue, true)) {
+            m3CornerRadius = typedValue.getDimension(getResources().getDisplayMetrics());
+        } else {
+            throw new RuntimeException("?attr/listItemCornerRadius not defined.");
+        }
+        if (requireContext().getTheme().resolveAttribute(io.github.muntashirakon.ui.R.attr.listItemCornerRadiusInner, typedValue, true)) {
+            m3CornerRadiusInner = typedValue.getDimension(getResources().getDisplayMetrics());
+        } else {
+            throw new RuntimeException("?attr/listItemCornerRadiusInner not defined.");
+        }
+
+        // Apply the decorator with the specific radius
+        recyclerView.addItemDecoration(new M3PreferenceGroupDecoration(m3CornerRadius, m3CornerRadiusInner));
+
+        // Remove old style line dividers
+        setDivider(null);
     }
 
     @CallSuper
@@ -70,7 +92,7 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat {
         return Objects.requireNonNull(findPreference(key));
     }
 
-    protected void enablePrefs(boolean enable, Preference ...prefs) {
+    protected void enablePrefs(boolean enable, Preference... prefs) {
         if (prefs == null) {
             return;
         }

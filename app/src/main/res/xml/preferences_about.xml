@@ -2,56 +2,63 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <io.github.muntashirakon.preference.HyperlinkPreference
-        app:title="@string/app_name"
-        app:summary="@string/copyright_message"
-        app:iconSpaceReserved="false" />
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <io.github.muntashirakon.preference.HyperlinkPreference
+            app:iconSpaceReserved="false"
+            app:summary="@string/copyright_message"
+            app:title="@string/app_name" />
 
-    <Preference
-        app:key="version"
-        app:title="@string/pref_version_changelog"
-        tools:summary="v3.0.0 (410)"
-        app:iconSpaceReserved="false" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="version"
+            app:title="@string/pref_version_changelog"
+            tools:summary="v3.0.0 (410)" />
 
-    <io.github.muntashirakon.preference.HyperlinkPreference
-        app:key="license"
-        app:title="@string/license"
-        app:summary="@string/license_message"
-        app:iconSpaceReserved="false" />
+        <io.github.muntashirakon.preference.HyperlinkPreference
+            app:iconSpaceReserved="false"
+            app:key="license"
+            app:summary="@string/license_message"
+            app:title="@string/license" />
 
-    <io.github.muntashirakon.preference.HyperlinkPreference
-        app:title="@string/source_code"
-        app:summary="@string/source_code_links"
-        app:iconSpaceReserved="false" />
+    </PreferenceCategory>
 
-    <io.github.muntashirakon.preference.HyperlinkPreference
-        app:title="@string/community"
-        app:summary="@string/community_links"
-        app:iconSpaceReserved="false" />
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <io.github.muntashirakon.preference.HyperlinkPreference
+            app:iconSpaceReserved="false"
+            app:summary="@string/source_code_links"
+            app:title="@string/source_code" />
 
-    <Preference
-        app:key="website"
-        app:title="@string/website"
-        app:iconSpaceReserved="false" />
+        <io.github.muntashirakon.preference.HyperlinkPreference
+            app:iconSpaceReserved="false"
+            app:summary="@string/community_links"
+            app:title="@string/community" />
 
-    <Preference
-        app:key="user_manual"
-        app:title="@string/user_manual"
-        app:iconSpaceReserved="false" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="website"
+            app:title="@string/website" />
 
-    <Preference
-        app:key="get_help"
-        app:title="@string/get_help"
-        app:iconSpaceReserved="false" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="user_manual"
+            app:title="@string/user_manual" />
 
-    <Preference
-        app:key="third_party_libraries"
-        app:title="@string/third_party"
-        app:iconSpaceReserved="false" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="get_help"
+            app:title="@string/get_help" />
+    </PreferenceCategory>
 
-    <Preference
-        app:key="credits"
-        app:title="@string/credits"
-        app:iconSpaceReserved="false" />
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="third_party_libraries"
+            app:title="@string/third_party" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="credits"
+            app:title="@string/credits" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -2,32 +2,38 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <Preference
-        app:key="freeze_type"
-        app:title="@string/pref_default_freezing_method"
-        app:iconSpaceReserved="false" />
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="freeze_type"
+            app:title="@string/pref_default_freezing_method" />
 
-    <Preference
-        app:key="default_blocking_method"
-        app:title="@string/pref_default_blocking_method"
-        app:iconSpaceReserved="false" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="default_blocking_method"
+            app:title="@string/pref_default_blocking_method" />
 
-    <SwitchPreferenceCompat
-        app:key="global_blocking_enabled"
-        app:title="@string/pref_global_blocking_enabled"
-        app:summary="@string/pref_global_blocking_enabled_msg"
-        app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="global_blocking_enabled"
+            app:summary="@string/pref_global_blocking_enabled_msg"
+            app:title="@string/pref_global_blocking_enabled" />
 
-    <Preference
-        app:key="import_export_rules"
-        app:title="@string/pref_import_export_blocking_rules"
-        app:summary="@string/pref_import_export_blocking_rules_msg"
-        android:fragment="io.github.muntashirakon.AppManager.settings.ImportExportRulesPreferences"
-        app:iconSpaceReserved="false" />
+    </PreferenceCategory>
 
-    <io.github.muntashirakon.preference.PrimaryButtonPreference
-        app:key="remove_all_rules"
-        app:title="@string/pref_remove_all_rules"
-        app:icon="@drawable/ic_restore"/>
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <Preference
+            android:fragment="io.github.muntashirakon.AppManager.settings.ImportExportRulesPreferences"
+            app:iconSpaceReserved="false"
+            app:key="import_export_rules"
+            app:summary="@string/pref_import_export_blocking_rules_msg"
+            app:title="@string/pref_import_export_blocking_rules" />
+    </PreferenceCategory>
 
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <io.github.muntashirakon.preference.PrimaryButtonPreference
+            app:icon="@drawable/ic_restore"
+            app:key="remove_all_rules"
+            app:title="@string/pref_remove_all_rules" />
+    </PreferenceCategory>
 </PreferenceScreen>

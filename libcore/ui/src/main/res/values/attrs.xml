@@ -5,6 +5,7 @@
     <attr name="listItemPaddingVertical" format="dimension" />
     <attr name="listItemPaddingHorizontal" format="dimension" />
     <attr name="listItemCornerRadius" format="dimension" />
+    <attr name="listItemCornerRadiusInner" format="dimension" />
     <attr name="listItemIndicatorWidth" format="dimension" />
 
     <attr name="materialAlertViewStyle" format="reference" />

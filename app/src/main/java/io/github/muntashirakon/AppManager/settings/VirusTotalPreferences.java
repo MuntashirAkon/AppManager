@@ -36,7 +36,7 @@ public class VirusTotalPreferences extends PreferenceFragment {
         boolean isVtEnabled = FeatureController.isVirusTotalEnabled();
         String apiKey = Prefs.VirusTotal.getApiKey();
         TopSwitchPreference useVtPref = requirePreference("use_vt");
-        DefaultAlertPreference infoNoInternetPref = requirePreference("info_no_internet");
+        Preference infoNoInternetPref = requirePreference("info_no_internet");
         Preference vtApiKeyPref = requirePreference("virus_total_api_key");
         SwitchPreferenceCompat promptBeforeUploadPref = requirePreference("virus_total_prompt_before_uploading");
         DefaultAlertPreference infoPref = requirePreference("info");

@@ -19,8 +19,6 @@ import io.github.muntashirakon.AppManager.self.life.BuildExpiryChecker;
 import io.github.muntashirakon.AppManager.self.life.FundingCampaignChecker;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.preference.InfoAlertPreference;
-import io.github.muntashirakon.preference.WarningAlertPreference;
 
 public class MainPreferences extends PreferenceFragment {
     @NonNull
@@ -52,10 +50,10 @@ public class MainPreferences extends PreferenceFragment {
         MainPreferencesViewModel model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
         mActivity = requireActivity();
         // Expiry notice
-        WarningAlertPreference buildExpiringNotice = requirePreference("app_manager_expiring_notice");
+        Preference buildExpiringNotice = requirePreference("app_manager_expiring_notice");
         buildExpiringNotice.setVisible(!Boolean.FALSE.equals(BuildExpiryChecker.buildExpired()));
         // Funding campaign notice
-        InfoAlertPreference fundingCampaignNotice = requirePreference("funding_campaign_notice");
+        Preference fundingCampaignNotice = requirePreference("funding_campaign_notice");
         fundingCampaignNotice.setVisible(FundingCampaignChecker.campaignRunning());
         // Custom locale
         mLocalePref = requirePreference("custom_locale");

@@ -1,33 +1,39 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
-    <SwitchPreferenceCompat
-        app:key="enable_screen_lock"
-        app:title="@string/screen_lock"
-        app:summary="@string/screen_lock_msg"
-        app:iconSpaceReserved="false" />
 
-    <SwitchPreferenceCompat
-        app:key="enable_persistent_session"
-        app:title="@string/pref_enable_persistent_session"
-        app:summary="@string/pref_enable_persistent_session_msg"
-        app:iconSpaceReserved="false" />
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="enable_screen_lock"
+            app:summary="@string/screen_lock_msg"
+            app:title="@string/screen_lock" />
 
-    <SwitchPreferenceCompat
-        app:key="enable_auto_lock"
-        app:title="@string/pref_enable_auto_lock"
-        app:summary="@string/pref_enable_auto_lock_msg"
-        app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="enable_persistent_session"
+            app:summary="@string/pref_enable_persistent_session_msg"
+            app:title="@string/pref_enable_persistent_session" />
 
-    <SwitchPreferenceCompat
-        app:key="toggle_internet"
-        app:title="@string/toggle_internet"
-        app:summary="@string/pref_toggle_internet_msg"
-        app:persistent="false"
-        app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="enable_auto_lock"
+            app:summary="@string/pref_enable_auto_lock_msg"
+            app:title="@string/pref_enable_auto_lock" />
 
-    <Preference
-        app:key="auth_manager"
-        app:title="@string/auth_manager_title"
-        app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="toggle_internet"
+            app:persistent="false"
+            app:summary="@string/pref_toggle_internet_msg"
+            app:title="@string/toggle_internet" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="auth_manager"
+            app:title="@string/auth_manager_title" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

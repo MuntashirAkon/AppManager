@@ -3,40 +3,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     app:title="@string/backup_restore">
 
-    <Preference
-        app:key="backup_compression_method"
-        app:title="@string/pref_compression_method"
-        tools:summary="Current method: GZip"
-        app:iconSpaceReserved="false" />
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="backup_compression_method"
+            app:title="@string/pref_compression_method"
+            tools:summary="Current method: GZip" />
 
-    <Preference
-        app:key="backup_flags"
-        app:title="@string/backup_options"
-        app:summary="@string/pref_backup_flags_msg"
-        app:iconSpaceReserved="false" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="backup_flags"
+            app:summary="@string/pref_backup_flags_msg"
+            app:title="@string/backup_options" />
 
-    <SwitchPreferenceCompat
-        app:key="backup_android_keystore"
-        app:title="@string/pref_backup_android_keystore"
-        app:summary="@string/pref_backup_android_keystore_msg"
-        app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="backup_android_keystore"
+            app:summary="@string/pref_backup_android_keystore_msg"
+            app:title="@string/pref_backup_android_keystore" />
 
-    <Preference
-        app:key="encryption"
-        app:title="@string/encryption"
-        app:summary="@string/pref_encryption_msg"
-        app:iconSpaceReserved="false" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="encryption"
+            app:summary="@string/pref_encryption_msg"
+            app:title="@string/encryption" />
 
-    <Preference
-        app:key="backup_volume"
-        app:title="@string/backup_volume"
-        app:summary="@string/pref_backup_volume_msg"
-        app:iconSpaceReserved="false" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="backup_volume"
+            app:summary="@string/pref_backup_volume_msg"
+            app:title="@string/backup_volume" />
 
-    <Preference
-        app:key="import_backups"
-        app:title="@string/pref_import_backups"
-        app:summary="@string/pref_import_backups_msg"
-        app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="import_backups"
+            app:summary="@string/pref_import_backups_msg"
+            app:title="@string/pref_import_backups" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

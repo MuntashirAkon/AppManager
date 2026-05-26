@@ -1,32 +1,40 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
-    <io.github.muntashirakon.preference.TopSwitchPreference
-        app:key="use_vt"
-        app:title="@string/pref_use_vt"
-        app:persistent="false"
-        app:iconSpaceReserved="false" />
 
-    <io.github.muntashirakon.preference.WarningAlertPreference
-        app:key="info_no_internet"
-        app:icon="@drawable/ic_caution"
-        app:iconSpaceReserved="false"
-        app:selectable="false"
-        app:summary="@string/pref_use_vt_no_internet" />
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <io.github.muntashirakon.preference.TopSwitchPreference
+            app:iconSpaceReserved="false"
+            app:key="use_vt"
+            app:persistent="false"
+            app:title="@string/pref_use_vt" />
+    </PreferenceCategory>
 
-    <Preference
-        app:key="virus_total_api_key"
-        app:title="@string/pref_vt_apikey"
-        app:iconSpaceReserved="false" />
+    <PreferenceCategory app:key="info_no_internet" app:layout="@layout/m3_preference_category_empty">
+        <io.github.muntashirakon.preference.WarningAlertPreference
+            app:icon="@drawable/ic_caution"
+            app:iconSpaceReserved="false"
+            app:selectable="false"
+            app:summary="@string/pref_use_vt_no_internet" />
+    </PreferenceCategory>
 
-    <SwitchPreferenceCompat
-        app:key="virus_total_prompt_before_uploading"
-        app:title="@string/pref_vt_prompt_before_uploading"
-        app:iconSpaceReserved="false" />
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="virus_total_api_key"
+            app:title="@string/pref_vt_apikey" />
 
-    <io.github.muntashirakon.preference.DefaultAlertPreference
-        app:key="info"
-        app:icon="@drawable/ic_information_circle"
-        app:iconSpaceReserved="false"
-        app:selectable="false"
-        app:summary="@string/pref_vt_apikey_description" />
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="virus_total_prompt_before_uploading"
+            app:title="@string/pref_vt_prompt_before_uploading" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <io.github.muntashirakon.preference.DefaultAlertPreference
+            app:icon="@drawable/ic_information_circle"
+            app:iconSpaceReserved="false"
+            app:key="info"
+            app:selectable="false"
+            app:summary="@string/pref_vt_apikey_description" />
+    </PreferenceCategory>
 </PreferenceScreen>

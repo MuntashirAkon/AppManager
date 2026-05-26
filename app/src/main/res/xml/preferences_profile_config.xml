@@ -2,100 +2,108 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <Preference
-        app:key="profile_id"
-        app:title="@string/profile_id"
-        tools:summary="@tools:sample/lorem[1]"
-        app:iconSpaceReserved="false" />
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="profile_id"
+            app:title="@string/profile_id"
+            tools:summary="@tools:sample/lorem[1]" />
 
-    <Preference
-        app:key="comment"
-        app:title="@string/comment"
-        tools:summary="@tools:sample/lorem[9]"
-        app:iconSpaceReserved="false" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="comment"
+            app:title="@string/comment"
+            tools:summary="@tools:sample/lorem[9]" />
 
-    <Preference
-        app:key="state"
-        app:summary="@string/profile_state_msg"
-        tools:title="State: On"
-        app:iconSpaceReserved="false" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="state"
+            app:summary="@string/profile_state_msg"
+            tools:title="State: On" />
 
-    <Preference
-        app:key="users"
-        app:title="@string/users"
-        tools:summary="Users: Main, Work"
-        app:iconSpaceReserved="false" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="users"
+            app:title="@string/users"
+            tools:summary="Users: Main, Work" />
 
-    <Preference
-        app:key="components"
-        app:title="@string/components"
-        tools:summary="Comma separated list of components"
-        app:iconSpaceReserved="false" />
+    </PreferenceCategory>
 
-    <Preference
-        app:key="app_ops"
-        app:title="@string/app_ops"
-        tools:summary="Comma separated list of app ops"
-        app:iconSpaceReserved="false" />
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="components"
+            app:title="@string/components"
+            tools:summary="Comma separated list of components" />
 
-    <Preference
-        app:key="permissions"
-        app:title="@string/declared_permission"
-        tools:summary="Comma separated list of permissions"
-        app:iconSpaceReserved="false" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="app_ops"
+            app:title="@string/app_ops"
+            tools:summary="Comma separated list of app ops" />
 
-    <Preference
-        app:key="backup_data"
-        app:title="@string/backup_restore"
-        tools:summary="Backup Info"
-        app:iconSpaceReserved="false" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="permissions"
+            app:title="@string/declared_permission"
+            tools:summary="Comma separated list of permissions" />
 
-    <Preference
-        app:key="export_rules"
-        app:title="@string/export_blocking_rules"
-        tools:summary="Allowed flags"
-        app:iconSpaceReserved="false" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="backup_data"
+            app:title="@string/backup_restore"
+            tools:summary="Backup Info" />
 
-    <SwitchPreferenceCompat
-        app:key="freeze"
-        app:title="@string/freeze"
-        app:summary="@string/profile_freeze_msg"
-        app:iconSpaceReserved="false" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="export_rules"
+            app:title="@string/export_blocking_rules"
+            tools:summary="Allowed flags" />
 
-    <SwitchPreferenceCompat
-        app:key="force_stop"
-        app:title="@string/force_stop"
-        app:summary="@string/profile_force_stop_msg"
-        app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="freeze"
+            app:summary="@string/profile_freeze_msg"
+            app:title="@string/freeze" />
 
-    <SwitchPreferenceCompat
-        app:key="clear_cache"
-        app:title="@string/clear_cache"
-        app:summary="@string/profile_clear_cache_msg"
-        app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="force_stop"
+            app:summary="@string/profile_force_stop_msg"
+            app:title="@string/force_stop" />
 
-    <SwitchPreferenceCompat
-        app:key="clear_data"
-        app:title="@string/clear_data"
-        app:summary="@string/profile_clear_data_msg"
-        app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="clear_cache"
+            app:summary="@string/profile_clear_cache_msg"
+            app:title="@string/clear_cache" />
 
-    <SwitchPreferenceCompat
-        app:key="block_trackers"
-        app:title="@string/block_trackers"
-        app:summary="@string/profile_block_trackers_msg"
-        app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="clear_data"
+            app:summary="@string/profile_clear_data_msg"
+            app:title="@string/clear_data" />
 
-    <SwitchPreferenceCompat
-        app:key="save_apk"
-        app:title="@string/save_apk"
-        app:summary="@string/profile_save_apk_msg"
-        app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="block_trackers"
+            app:summary="@string/profile_block_trackers_msg"
+            app:title="@string/block_trackers" />
 
-    <SwitchPreferenceCompat
-        app:key="allow_routine"
-        app:title="@string/allow_routine_ops"
-        app:summary="@string/allow_routine_ops_msg"
-        app:iconSpaceReserved="false" />
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="save_apk"
+            app:summary="@string/profile_save_apk_msg"
+            app:title="@string/save_apk" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="allow_routine"
+            app:summary="@string/allow_routine_ops_msg"
+            app:title="@string/allow_routine_ops" />
+    </PreferenceCategory>
 
 </PreferenceScreen>
