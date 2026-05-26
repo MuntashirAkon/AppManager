@@ -67,7 +67,6 @@ public class ScannerFragment extends Fragment {
     private MaterialCardView mVtContainerView;
     private TextView mVtTitleView;
     private TextView mVtDescriptionView;
-    private TextView pithusDescriptionView;
 
     @Nullable
     @Override
@@ -88,9 +87,6 @@ public class ScannerFragment extends Fragment {
         mVtContainerView.setCardBackgroundColor(cardColor);
         mVtTitleView = view.findViewById(R.id.vt_title);
         mVtDescriptionView = view.findViewById(R.id.vt_description);
-        MaterialCardView pithusContainerView = view.findViewById(R.id.pithus);
-        pithusContainerView.setCardBackgroundColor(cardColor);
-        pithusDescriptionView = view.findViewById(R.id.pithus_description);
         MaterialCardView libsView = view.findViewById(R.id.libs);
         libsView.setCardBackgroundColor(cardColor);
         MaterialCardView apkInfoView = view.findViewById(R.id.apk);
@@ -103,10 +99,6 @@ public class ScannerFragment extends Fragment {
         if (!FeatureController.isVirusTotalEnabled() || Prefs.VirusTotal.getApiKey() == null) {
             mVtContainerView.setVisibility(View.GONE);
             view.findViewById(R.id.vt_disclaimer).setVisibility(View.GONE);
-        }
-        // Pithus
-        if (!FeatureController.isInternetEnabled()) {
-            pithusContainerView.setVisibility(View.GONE);
         }
         // Checksum
         mViewModel.apkChecksumsLiveData().observe(getViewLifecycleOwner(), checksums -> {
@@ -214,15 +206,6 @@ public class ScannerFragment extends Fragment {
             } else {
                 // Successful
                 publishVirusTotalReport(vtFileReport);
-            }
-        });
-        mViewModel.getPithusReportLiveData().observe(getViewLifecycleOwner(), url -> {
-            if (url != null) {
-                // Report available
-                pithusDescriptionView.setText(url);
-            } else {
-                // Report unavailable
-                pithusDescriptionView.setText(R.string.report_not_available);
             }
         });
         // Load summary for the APK file

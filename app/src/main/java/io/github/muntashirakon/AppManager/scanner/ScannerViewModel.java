@@ -84,7 +84,6 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     private final MutableLiveData<String> mVtFileUploadLiveData = new MutableLiveData<>();
     // Null = Failed, NonNull = Result generated
     private final MutableLiveData<VtFileReport> mVtFileReportLiveData = new MutableLiveData<>();
-    private final MutableLiveData<String> mPithusReportLiveData = new MutableLiveData<>();
 
     public ScannerViewModel(@NonNull Application application) {
         super(application);
@@ -170,10 +169,6 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         return mVtFileUploadLiveData;
     }
 
-    public LiveData<String> getPithusReportLiveData() {
-        return mPithusReportLiveData;
-    }
-
     public List<String> getTrackerClasses() {
         return mTrackerClasses;
     }
@@ -237,14 +232,8 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     private void generateApkChecksumsAndFetchScanReports() {
         waitForFile();
         Path file = Paths.getUnprivileged(mApkFile);
-        String pithusReportUrl = null;
         Pair<String, String>[] digests = ExUtils.exceptionAsNull(() -> DigestUtils.getDigests(file));
         mApkChecksumsLiveData.postValue(digests);
-        if (digests != null && FeatureController.isInternetEnabled()) {
-            String sha256 = digests[2].second;
-            pithusReportUrl = ExUtils.exceptionAsNull(() -> Pithus.resolveReport(sha256));
-        }
-        mPithusReportLiveData.postValue(pithusReportUrl);
         if (mVt != null && digests != null && FeatureController.isVirusTotalEnabled()) {
             String md5 = digests[0].second;
             try {
