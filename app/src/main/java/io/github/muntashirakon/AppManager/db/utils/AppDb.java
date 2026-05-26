@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
@@ -436,7 +437,7 @@ public class AppDb {
     @Nullable
     private static PackageUsageInfo findUsage(@NonNull List<PackageUsageInfo> usageInfoList, @NonNull String packageName, @UserIdInt int userId) {
         for (PackageUsageInfo usageInfo : usageInfoList) {
-            if (usageInfo.userId == userId && usageInfo.packageName.equals(packageName)) {
+            if (usageInfo.userId == userId && Objects.equals(usageInfo.packageName, packageName)) {
                 return usageInfo;
             }
         }
