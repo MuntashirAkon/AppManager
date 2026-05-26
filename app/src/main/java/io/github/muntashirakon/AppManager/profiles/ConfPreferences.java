@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.profiles;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.profiles.struct.AppsBaseProfile;
 import io.github.muntashirakon.AppManager.profiles.struct.BaseProfile;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
+import io.github.muntashirakon.AppManager.settings.M3PreferenceGroupDecoration;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -61,6 +63,27 @@ public class ConfPreferences extends PreferenceFragmentCompat {
         recyclerView.setFitsSystemWindows(true);
         recyclerView.setClipToPadding(false);
         UiUtils.applyWindowInsetsAsPadding(recyclerView, false, true);
+
+        // Use M3 design for preference cards
+        float m3CornerRadius;
+        float m3CornerRadiusInner;
+        TypedValue typedValue = new TypedValue();
+        if (requireContext().getTheme().resolveAttribute(io.github.muntashirakon.ui.R.attr.listItemCornerRadius, typedValue, true)) {
+            m3CornerRadius = typedValue.getDimension(getResources().getDisplayMetrics());
+        } else {
+            throw new RuntimeException("?attr/listItemCornerRadius not defined.");
+        }
+        if (requireContext().getTheme().resolveAttribute(io.github.muntashirakon.ui.R.attr.listItemCornerRadiusInner, typedValue, true)) {
+            m3CornerRadiusInner = typedValue.getDimension(getResources().getDisplayMetrics());
+        } else {
+            throw new RuntimeException("?attr/listItemCornerRadiusInner not defined.");
+        }
+
+        // Apply the decorator with the specific radius
+        recyclerView.addItemDecoration(new M3PreferenceGroupDecoration(m3CornerRadius, m3CornerRadiusInner));
+
+        // Remove old style line dividers
+        setDivider(null);
     }
 
     @Override
