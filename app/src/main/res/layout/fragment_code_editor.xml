@@ -141,7 +141,7 @@
             <io.github.rosemoe.sora.widget.SymbolInputView
                 android:id="@+id/symbol_input"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp" />
+                android:layout_height="wrap_content" />
 
         </HorizontalScrollView>
 
