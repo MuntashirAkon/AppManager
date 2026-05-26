@@ -9,8 +9,8 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceGroupAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.shape.AbsoluteCornerSize;
-import com.google.android.material.shape.ShapeAppearanceModel;
+
+import io.github.muntashirakon.util.UiUtils;
 
 @SuppressLint("RestrictedApi")
 public class M3PreferenceGroupDecoration extends RecyclerView.ItemDecoration {
@@ -50,39 +50,19 @@ public class M3PreferenceGroupDecoration extends RecyclerView.ItemDecoration {
         boolean isFirst = isFirstInGroup(adapter, position);
         boolean isLast = isLastInGroup(adapter, position);
 
-        ShapeAppearanceModel.Builder shapeBuilder = cardView.getShapeAppearanceModel().toBuilder();
-
         if (isFirst && isLast) {
             // Standalone preference
-            shapeBuilder
-                    .setTopLeftCornerSize(new AbsoluteCornerSize(mRadius))
-                    .setTopRightCornerSize(new AbsoluteCornerSize(mRadius))
-                    .setBottomLeftCornerSize(new AbsoluteCornerSize(mRadius))
-                    .setBottomRightCornerSize(new AbsoluteCornerSize(mRadius));
+            UiUtils.setCardRadius(cardView, mRadius, mRadius);
         } else if (isFirst) {
             // Top of a preference group
-            shapeBuilder
-                    .setTopLeftCornerSize(new AbsoluteCornerSize(mRadius))
-                    .setTopRightCornerSize(new AbsoluteCornerSize(mRadius))
-                    .setBottomLeftCornerSize(new AbsoluteCornerSize(mRadiusInner))
-                    .setBottomRightCornerSize(new AbsoluteCornerSize(mRadiusInner));
+            UiUtils.setCardRadius(cardView, mRadius, mRadiusInner);
         } else if (isLast) {
             // Bottom of a preference group
-            shapeBuilder
-                    .setTopLeftCornerSize(new AbsoluteCornerSize(mRadiusInner))
-                    .setTopRightCornerSize(new AbsoluteCornerSize(mRadiusInner))
-                    .setBottomLeftCornerSize(new AbsoluteCornerSize(mRadius))
-                    .setBottomRightCornerSize(new AbsoluteCornerSize(mRadius));
+            UiUtils.setCardRadius(cardView, mRadiusInner, mRadius);
         } else {
             // Middle of a preference group
-            shapeBuilder
-                    .setTopLeftCornerSize(new AbsoluteCornerSize(mRadiusInner))
-                    .setTopRightCornerSize(new AbsoluteCornerSize(mRadiusInner))
-                    .setBottomLeftCornerSize(new AbsoluteCornerSize(mRadiusInner))
-                    .setBottomRightCornerSize(new AbsoluteCornerSize(mRadiusInner));
+            UiUtils.setCardRadius(cardView, mRadiusInner, mRadiusInner);
         }
-
-        cardView.setShapeAppearanceModel(shapeBuilder.build());
     }
 
     private boolean isCategoryHeader(@NonNull PreferenceGroupAdapter adapter, int position) {

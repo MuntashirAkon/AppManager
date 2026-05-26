@@ -4,6 +4,8 @@ package io.github.muntashirakon.AppManager.details.info;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.divider.MaterialDivider;
 
 import java.util.ArrayList;
@@ -21,6 +24,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.util.AdapterUtils;
+import io.github.muntashirakon.util.UiUtils;
 
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_GROUP_BEGIN;
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_INLINE;
@@ -30,10 +34,25 @@ import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM
 class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter.ViewHolder> {
     private final Context mContext;
     private final List<ListItem> mAdapterList;
+    private final float mCornerRadius;
+    private final float mCornerRadiusInner;
 
     AppInfoRecyclerAdapter(Context context) {
         mContext = context;
         mAdapterList = new ArrayList<>();
+        // Use M3 design for preference cards
+        DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
+        TypedValue typedValue = new TypedValue();
+        if (mContext.getTheme().resolveAttribute(io.github.muntashirakon.ui.R.attr.listItemCornerRadius, typedValue, true)) {
+            mCornerRadius = typedValue.getDimension(displayMetrics);
+        } else {
+            throw new RuntimeException("?attr/listItemCornerRadius not defined.");
+        }
+        if (mContext.getTheme().resolveAttribute(io.github.muntashirakon.ui.R.attr.listItemCornerRadiusInner, typedValue, true)) {
+            mCornerRadiusInner = typedValue.getDimension(displayMetrics);
+        } else {
+            throw new RuntimeException("?attr/listItemCornerRadiusInner not defined.");
+        }
     }
 
     void setAdapterList(@NonNull List<ListItem> list) {
@@ -79,10 +98,29 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ListItem listItem = mAdapterList.get(position);
+
         // Set title
         holder.title.setText(listItem.getTitle());
         if (listItem.type == LIST_ITEM_GROUP_BEGIN) {
             return;
+        }
+        // At this point, itemView is a MaterialCardView
+        MaterialCardView cardView = (MaterialCardView) holder.itemView;
+        boolean isFirst = isFirstInGroup(position);
+        boolean isLast = isLastInGroup(position);
+
+        if (isFirst && isLast) {
+            // Standalone preference
+            UiUtils.setCardRadius(cardView, mCornerRadius, mCornerRadius);
+        } else if (isFirst) {
+            // Top of a preference group
+            UiUtils.setCardRadius(cardView, mCornerRadius, mCornerRadiusInner);
+        } else if (isLast) {
+            // Bottom of a preference group
+            UiUtils.setCardRadius(cardView, mCornerRadiusInner, mCornerRadius);
+        } else {
+            // Middle of a preference group
+            UiUtils.setCardRadius(cardView, mCornerRadiusInner, mCornerRadiusInner);
         }
         // Set common properties
         holder.subtitle.setText(listItem.getSubtitle());
@@ -111,6 +149,24 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
     @Override
     public int getItemCount() {
         return mAdapterList.size();
+    }
+
+    private boolean isCategoryHeader(int position) {
+        return mAdapterList.get(position).type == LIST_ITEM_GROUP_BEGIN;
+    }
+
+    private boolean isFirstInGroup(int position) {
+        if (position == 0) return true;
+
+        // If the element right above this choice is a section separator, this is the top card.
+        return isCategoryHeader(position - 1);
+    }
+
+    private boolean isLastInGroup(int position) {
+        if (position == getItemCount() - 1) return true;
+
+        // If the element right below this card is a header separator, this is the bottom card.
+        return isCategoryHeader(position + 1);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

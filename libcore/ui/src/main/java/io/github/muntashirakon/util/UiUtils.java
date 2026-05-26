@@ -34,7 +34,10 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.internal.ViewUtils;
+import com.google.android.material.shape.AbsoluteCornerSize;
+import com.google.android.material.shape.ShapeAppearanceModel;
 
 import java.util.Locale;
 
@@ -335,5 +338,15 @@ public final class UiUtils {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.TRANSPARENT);
         window.setNavigationBarColor(Color.TRANSPARENT);
+    }
+
+    public static void setCardRadius(@NonNull MaterialCardView cardView, @Px float topRadius, @Px float bottomRadius) {
+        ShapeAppearanceModel.Builder shapeBuilder = cardView.getShapeAppearanceModel()
+                .toBuilder()
+                .setTopLeftCornerSize(new AbsoluteCornerSize(topRadius))
+                .setTopRightCornerSize(new AbsoluteCornerSize(topRadius))
+                .setBottomLeftCornerSize(new AbsoluteCornerSize(bottomRadius))
+                .setBottomRightCornerSize(new AbsoluteCornerSize(bottomRadius));
+        cardView.setShapeAppearanceModel(shapeBuilder.build());
     }
 }
