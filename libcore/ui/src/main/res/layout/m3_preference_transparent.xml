@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.AppTheme.CardView.ListItem.Transparent"
@@ -19,18 +19,36 @@
 
         <include layout="@layout/m3_preference_image_frame" />
 
-        <TextView
-            android:id="@android:id/text1"
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:minHeight="?attr/listPreferredItemHeightSmall"
-            style="?attr/materialAlertDialogListItemTextStyle"
-            android:gravity="center_vertical"
-            android:ellipsize="marquee"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            tools:text="@tools:sample/lorem/random" />
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@android:id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:ellipsize="marquee"
+                tools:text="@tools:sample/lorem[10]" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@android:id/summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@android:id/title"
+                android:layout_alignLeft="@android:id/title"
+                android:layout_alignStart="@android:id/title"
+                android:layout_gravity="start"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                android:maxLines="10"
+                tools:text="@tools:sample/lorem[10]" />
+
+        </RelativeLayout>
 
         <!-- Preference should place its actual preference widget here. -->
         <androidx.appcompat.widget.LinearLayoutCompat
