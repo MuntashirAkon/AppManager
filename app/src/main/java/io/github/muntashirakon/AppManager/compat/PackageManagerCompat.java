@@ -525,8 +525,16 @@ public final class PackageManagerCompat {
     @RequiresPermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)
     public static void clearApplicationUserData(@NonNull UserPackagePair pair) throws AndroidException {
         IPackageManager pm = getPackageManager();
+        // TODO: 5/25/26 We can use IActivityManager#clearApplicationUserData() instead which is more stable
         ClearDataObserver obs = new ClearDataObserver();
-        pm.clearApplicationUserData(pair.getPackageName(), obs, pair.getUserId());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            try {
+                pm.clearApplicationUserData(pair.getPackageName(), obs, pair.getUserId(), false);
+            } catch (NoSuchMethodError e) {
+                // Fall back to the old API
+                pm.clearApplicationUserData(pair.getPackageName(), obs, pair.getUserId());
+            }
+        } else pm.clearApplicationUserData(pair.getPackageName(), obs, pair.getUserId());
         //noinspection SynchronizationOnLocalVariableOrMethodParameter
         synchronized (obs) {
             while (!obs.isCompleted()) {

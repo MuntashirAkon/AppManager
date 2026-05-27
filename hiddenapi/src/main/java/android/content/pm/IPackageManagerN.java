@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.RemoteException;
+import android.permission.IPermissionManager;
 
 import androidx.annotation.RequiresApi;
 
@@ -15,19 +16,19 @@ import dev.rikka.tools.refine.RefineAs;
 @RefineAs(IPackageManager.class)
 public interface IPackageManagerN {
     /**
-     * @deprecated Removed in API 30 (Android R)
+     * @deprecated Replaced in API 30 (Android R) by {@link IPermissionManager#queryPermissionsByGroup(String, int)}
      */
     @Deprecated
     ParceledListSlice<PermissionInfo> queryPermissionsByGroup(String group, int flags) throws RemoteException;
 
     /**
-     * @deprecated Removed in API 30 (Android R)
+     * @deprecated Replaced in API 30 (Android R) by {@link IPermissionManager#getAllPermissionGroups(int)}
      */
     @Deprecated
     ParceledListSlice<PermissionGroupInfo> getAllPermissionGroups(int flags) throws RemoteException;
 
     /**
-     * @deprecated Removed in API 33 (Android T)
+     * @deprecated Replaced in API 33 (Android T) by {@link #queryIntentActivities(Intent, String, long, int)}
      */
     @Deprecated
     ParceledListSlice<ResolveInfo> queryIntentActivities(Intent intent, String resolvedType, int flags, int userId)
@@ -38,7 +39,7 @@ public interface IPackageManagerN {
             throws RemoteException;
 
     /**
-     * @deprecated Removed in API 33 (Android T)
+     * @deprecated Replaced in API 33 (Android T) by {@link #queryIntentActivityOptions(ComponentName, Intent[], String[], Intent, String, long, int)}
      */
     @Deprecated
     ParceledListSlice<ResolveInfo> queryIntentActivityOptions(ComponentName caller, Intent[] specifics,
@@ -51,7 +52,7 @@ public interface IPackageManagerN {
                                                               String resolvedType, long flags, int userId) throws RemoteException;
 
     /**
-     * @deprecated Removed in API 33 (Android T)
+     * @deprecated Replaced in API 33 (Android T) by {@link #queryIntentReceivers(Intent, String, long, int)}
      */
     @Deprecated
     ParceledListSlice<ResolveInfo> queryIntentReceivers(Intent intent, String resolvedType, int flags, int userId)
@@ -62,7 +63,7 @@ public interface IPackageManagerN {
             throws RemoteException;
 
     /**
-     * @deprecated Removed in API 33 (Android T)
+     * @deprecated Replaced in API 33 (Android T) by {@link #queryIntentServices(Intent, String, long, int)}
      */
     @Deprecated
     ParceledListSlice<ResolveInfo> queryIntentServices(Intent intent, String resolvedType, int flags, int userId)
@@ -73,7 +74,7 @@ public interface IPackageManagerN {
             throws RemoteException;
 
     /**
-     * @deprecated Removed in API 33 (Android T)
+     * @deprecated Replaced in API 33 (Android T) by {@link #queryIntentContentProviders(Intent, String, long, int)}
      */
     @Deprecated
     ParceledListSlice<ResolveInfo> queryIntentContentProviders(Intent intent, String resolvedType, int flags,
@@ -86,13 +87,13 @@ public interface IPackageManagerN {
     ParceledListSlice<ApplicationInfo> getPersistentApplications(int flags) throws RemoteException;
 
     /**
-     * @deprecated Removed in API 26 (Android O)
+     * @deprecated Replaced in API 26 (Android O) by {@link #queryContentProviders(String, int, long, String)}
      */
     @Deprecated
     ParceledListSlice<ProviderInfo> queryContentProviders(String processName, int uid, int flags) throws RemoteException;
 
     /**
-     * @deprecated Removed in API 33 (Android T)
+     * @deprecated Replaced in API 33 (Android T) by {@link #queryContentProviders(String, int, long, String)}
      */
     @Deprecated
     @RequiresApi(Build.VERSION_CODES.O)
@@ -103,7 +104,7 @@ public interface IPackageManagerN {
     ParceledListSlice<ProviderInfo> queryContentProviders(String processName, int uid, long flags, String metaDataKey)
             throws RemoteException;
 
-    ParceledListSlice<InstrumentationInfo> queryInstrumentation(String targetPackage, int flags) throws RemoteException;
+    ParceledListSlice<FeatureInfo> getSystemAvailableFeatures() throws RemoteException;
 
     ParceledListSlice<IntentFilter> getAllIntentFilters(String packageName) throws RemoteException;
 }

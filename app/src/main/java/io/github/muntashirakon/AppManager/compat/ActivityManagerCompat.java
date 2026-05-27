@@ -146,10 +146,7 @@ public final class ActivityManagerCompat {
             throws RemoteException {
         IActivityManager am = getActivityManager();
         int res;
-        IIntentReceiver receiver = new IntentReceiver();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            res = am.broadcastIntentWithFeature(null, null, intent, null, receiver, 0, null, null, null, AppOpsManagerCompat.OP_NONE, null, true, false, userHandle);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             res = am.broadcastIntent(null, intent, null, null, 0, null, null, null, AppOpsManagerCompat.OP_NONE, null, true, false, userHandle);
         } else {
             res = am.broadcastIntent(null, intent, null, null, 0, null, null, null, AppOpsManagerCompat.OP_NONE, true, false, userHandle);
