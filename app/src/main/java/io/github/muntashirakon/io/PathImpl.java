@@ -211,7 +211,10 @@ class PathImpl extends Path {
                             String[] pathComponents = path.split(File.separator);
                             DocumentFile finalDocumentFile = rootPath.documentFile;
                             for (String pathComponent : pathComponents) {
-                                finalDocumentFile = Objects.requireNonNull(finalDocumentFile.findFile(pathComponent));
+                                finalDocumentFile = finalDocumentFile.findFile(pathComponent);
+                                if (finalDocumentFile == null) {
+                                    throw new IllegalArgumentException("Invalid path component: " + pathComponent);
+                                }
                             }
                             documentFile = finalDocumentFile;
                         }
