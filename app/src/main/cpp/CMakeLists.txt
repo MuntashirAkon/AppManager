@@ -6,12 +6,12 @@ set(C_FLAGS "-Werror=format -fdata-sections -ffunction-sections -fno-exceptions 
 set(LINKER_FLAGS "-Wl,--hash-style=both -Wl,--build-id=none")
 
 if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message("Builing Release...")
+    message("Building Release...")
 
     set(C_FLAGS "${C_FLAGS} -O2 -fvisibility=hidden -fvisibility-inlines-hidden")
     set(LINKER_FLAGS "${LINKER_FLAGS} -Wl,-exclude-libs,ALL -Wl,--gc-sections")
 else()
-    message("Builing Debug...")
+    message("Building Debug...")
 
     add_definitions(-DDEBUG)
 endif ()
@@ -24,6 +24,7 @@ set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${LINKER_FLAGS}")
 
 find_library(log-lib log)
 
+# BEGIN libam.so
 add_library(am SHARED
         AhoCorasick.cpp
         io_github_muntashirakon_algo_AhoCorasick.cpp
@@ -36,3 +37,23 @@ if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_custom_command(TARGET am POST_BUILD
             COMMAND ${CMAKE_STRIP} --remove-section=.comment "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libam.so")
 endif ()
+
+# END libam.so
+
+# BEGIN librun_server.so
+add_executable(run_server run_server.c)
+
+# Force the output to be packaged as a .so file
+set_target_properties(run_server PROPERTIES
+        OUTPUT_NAME "run_server"
+        PREFIX "lib"
+        SUFFIX ".so"
+        COMPILE_FLAGS "-fPIE -fPIC"
+        LINK_FLAGS "-pie"
+)
+
+if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_custom_command(TARGET run_server POST_BUILD
+            COMMAND ${CMAKE_STRIP} --remove-section=.comment "$<TARGET_FILE:run_server>")
+endif ()
+# END librun_server.so

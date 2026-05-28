@@ -57,7 +57,6 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
     private final MutableLiveData<Changelog> mChangeLog = new SingleLiveEvent<>();
     private final MutableLiveData<DeviceInfo2> mDeviceInfo = new SingleLiveEvent<>();
     private final MutableLiveData<String> mCustomCommand0 = new SingleLiveEvent<>();
-    private final MutableLiveData<String> mCustomCommand1 = new SingleLiveEvent<>();
     private final MutableLiveData<Integer> mModeOfOpsStatus = new SingleLiveEvent<>();
     private final MutableLiveData<Boolean> mOperationCompletedLiveData = new SingleLiveEvent<>();
     private final MutableLiveData<ArrayMap<String, Uri>> mStorageVolumesLiveData = new SingleLiveEvent<>();
@@ -122,20 +121,14 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
         return mCustomCommand0;
     }
 
-    public MutableLiveData<String> getCustomCommand1() {
-        return mCustomCommand1;
-    }
-
     public void loadCustomCommands() {
         mExecutor.submit(() -> {
             try {
                 ServerConfig.init(getApplication());
-                mCustomCommand0.postValue(ServerConfig.getServerRunnerCommand(0));
-                mCustomCommand1.postValue(ServerConfig.getServerRunnerCommand(1));
+                mCustomCommand0.postValue(ServerConfig.getServerRunnerCommand());
             } catch (Throwable e) {
                 e.printStackTrace();
                 mCustomCommand0.postValue(null);
-                mCustomCommand1.postValue(null);
             }
         });
     }

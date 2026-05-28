@@ -11,6 +11,7 @@ public final class ConfigParams {
     public static final String PARAM_RUN_IN_BACKGROUND = "bgrun";
     public static final String PARAM_TOKEN = "token";
     public static final String PARAM_UID = "uid";
+    public static final String PARAM_CLASSPATH = "clspath";
 
     private boolean mIsDebug;
     private String mAppName;
@@ -18,6 +19,7 @@ public final class ConfigParams {
     private boolean mRunInBackground;
     private String mToken;
     private String mUid;
+    private String mClassPath;
 
     public ConfigParams() {
     }
@@ -41,10 +43,12 @@ public final class ConfigParams {
                 break;
             case PARAM_UID:
                 mUid = value;
+            case PARAM_CLASSPATH:
+                mClassPath = value;
         }
     }
 
-    public boolean isIsDebug() {
+    public boolean isDebug() {
         return mIsDebug;
     }
 
@@ -66,6 +70,10 @@ public final class ConfigParams {
 
     public String getUid() {
         return mUid;
+    }
+
+    public String getClassPath() {
+        return mClassPath;
     }
 
     @NonNull

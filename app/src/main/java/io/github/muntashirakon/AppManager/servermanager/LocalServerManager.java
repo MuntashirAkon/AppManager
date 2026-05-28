@@ -230,7 +230,7 @@ class LocalServerManager {
         try (OutputStream os = Objects.requireNonNull(mAdbStream).openOutputStream()) {
             os.write("id\n".getBytes());
             // ADB may require a fallback method
-            String command = ServerConfig.getServerRunnerAdbCommand();
+            String command = ServerConfig.getServerRunnerCommand();
             Log.d(TAG, "useAdbStartServer: %s", command);
             os.write((command + "\n").getBytes());
         }
@@ -246,7 +246,7 @@ class LocalServerManager {
         if (!Ops.hasRoot()) {
             throw new Exception("Root access denied");
         }
-        String command = ServerConfig.getServerRunnerCommand(0);
+        String command = ServerConfig.getServerRunnerCommand();
         // + "\n" + "supolicy --live 'allow qti_init_shell zygote_exec file execute'";
         Log.d(TAG, "useRootStartServer: %s", command);
         Runner.Result result = Runner.runCommand(command);
@@ -343,8 +343,6 @@ class LocalServerManager {
         Socket socket = new Socket(host, port);
         socket.setSoTimeout(30_000);
         // NOTE: (CWE-319) No need for SSL since it only runs on a random port in localhost with specific authorization.
-        // TODO: 5/8/23 We could use an SSL server with a randomly generated certificate per session without requiring
-        //  any other authorization methods. This session is independent of the application.
         OutputStream os = socket.getOutputStream();
         InputStream is = socket.getInputStream();
         DataTransmission transfer = new DataTransmission(os, is, false);

@@ -2,16 +2,11 @@
 
 package io.github.muntashirakon.AppManager.server;
 
-import android.net.LocalServerSocket;
-import android.net.LocalSocket;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -23,32 +18,16 @@ class Server implements Closeable {
     @NonNull
     private final LifecycleAgent mLifecycleAgent;
     @NonNull
-    private final IServer mServer;
+    private final ServerSocket mServer;
     @NonNull
     private final String mToken;
     @Nullable
     private final DataTransmission.OnReceiveCallback mOnReceiveCallback;
 
+    private Socket mClient;
     private DataTransmission mDataTransmission;
     private boolean mRunning = true;
     boolean mRunInBackground = false;
-
-    /**
-     * Constructor for starting a local server
-     *
-     * @param name              Socket address
-     * @param token             Token for handshaking
-     * @param onReceiveCallback Callback for sending message (received by the calling class)
-     * @throws IOException On failing to create a socket connection
-     */
-    Server(String name, @NonNull String token, @NonNull LifecycleAgent lifecycleAgent,
-           @Nullable DataTransmission.OnReceiveCallback onReceiveCallback)
-            throws IOException {
-        mToken = token;
-        mLifecycleAgent = lifecycleAgent;
-        mServer = new LocalServerImpl(name);
-        mOnReceiveCallback = onReceiveCallback;
-    }
 
     /**
      * Constructor for starting a local server
@@ -63,7 +42,7 @@ class Server implements Closeable {
             throws IOException {
         mToken = token;
         mLifecycleAgent = lifecycleAgent;
-        mServer = new NetSocketServerImpl(port);
+        mServer = new ServerSocket(port);
         mOnReceiveCallback = onReceiveCallback;
     }
 
@@ -75,10 +54,12 @@ class Server implements Closeable {
     void run() throws IOException, RuntimeException {
         while (mRunning) {
             try {
+                FLog.log("Waiting for a new client...");
                 // Allow only one client
-                mServer.accept();
+                mClient = mServer.accept();
+                FLog.log("Connected to 127.0.0.1:" + mClient.getPort());
                 // Prepare input and output streams for data interchange
-                mDataTransmission = new DataTransmission(mServer.getOutputStream(), mServer.getInputStream(),
+                mDataTransmission = new DataTransmission(mClient.getOutputStream(), mClient.getInputStream(),
                         mOnReceiveCallback);
                 // Handshake: check if tokens matched
                 mDataTransmission.shakeHands(mToken, DataTransmission.Role.Server);
@@ -107,6 +88,14 @@ class Server implements Closeable {
                 mRunInBackground = false;
                 mRunning = false;
                 throw e;
+            } finally {
+                if (mClient != null) {
+                    try {
+                        mClient.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }
@@ -125,76 +114,5 @@ class Server implements Closeable {
             mDataTransmission.close();
         }
         mServer.close();
-    }
-
-    private interface IServer extends Closeable {
-        InputStream getInputStream() throws IOException;
-
-        OutputStream getOutputStream() throws IOException;
-
-        void accept() throws IOException;
-
-        @Override
-        void close() throws IOException;
-    }
-
-    private static class LocalServerImpl implements IServer {
-        private final LocalServerSocket mServerSocket;
-        private LocalSocket mLocalSocket;
-
-        public LocalServerImpl(String name) throws IOException {
-            mServerSocket = new LocalServerSocket(name);
-        }
-
-        @Override
-        public InputStream getInputStream() throws IOException {
-            return mLocalSocket.getInputStream();
-        }
-
-        @Override
-        public OutputStream getOutputStream() throws IOException {
-            return mLocalSocket.getOutputStream();
-        }
-
-        @Override
-        public void accept() throws IOException {
-            mLocalSocket = mServerSocket.accept();
-        }
-
-        @Override
-        public void close() throws IOException {
-            mLocalSocket.close();
-            mServerSocket.close();
-        }
-    }
-
-    private static class NetSocketServerImpl implements IServer {
-        private final ServerSocket mServerSocket;
-        private Socket mSocket;
-
-        public NetSocketServerImpl(int port) throws IOException {
-            mServerSocket = new ServerSocket(port);
-        }
-
-        @Override
-        public InputStream getInputStream() throws IOException {
-            return mSocket.getInputStream();
-        }
-
-        @Override
-        public OutputStream getOutputStream() throws IOException {
-            return mSocket.getOutputStream();
-        }
-
-        @Override
-        public void accept() throws IOException {
-            mSocket = mServerSocket.accept();
-        }
-
-        @Override
-        public void close() throws IOException {
-            mSocket.close();
-            mServerSocket.close();
-        }
     }
 }

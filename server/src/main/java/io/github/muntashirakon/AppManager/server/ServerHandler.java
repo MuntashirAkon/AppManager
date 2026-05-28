@@ -11,6 +11,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 
 import io.github.muntashirakon.AppManager.server.common.BaseCaller;
@@ -23,6 +24,7 @@ import io.github.muntashirakon.AppManager.server.common.Shell;
 import io.github.muntashirakon.AppManager.server.common.ShellCaller;
 
 // Copyright 2017 Zheng Li
+// Copyright 2020 Muntashir Al-Islam
 class ServerHandler implements DataTransmission.OnReceiveCallback, Closeable {
     private static final int MSG_TIMEOUT = 1;
     private static final int DEFAULT_TIMEOUT = 1000 * 60; // 1 min
@@ -41,21 +43,16 @@ class ServerHandler implements DataTransmission.OnReceiveCallback, Closeable {
         mConfigParams = mLifecycleAgent.getConfigParams();
         // Set params
         System.out.println("Config params: " + mConfigParams);
-        String path = mConfigParams.getPath();
-        int port = -1;
+        int port;
         try {
-            if (path != null) port = Integer.parseInt(path);
-        } catch (Exception ignore) {
+            port = Integer.parseInt(mConfigParams.getPath());
+        } catch (Exception e) {
+            throw new IOException(e);
         }
         String token = mConfigParams.getToken();
         if (token == null) throw new IOException("Token is not found.");
         mRunInBackground = mConfigParams.isRunInBackground();
-        // Set server
-        if (port == -1) {
-            mServer = new Server(path, token, mLifecycleAgent, this);
-        } else {
-            mServer = new Server(port, token, mLifecycleAgent, this);
-        }
+        mServer = new Server(port, token, mLifecycleAgent, this);
         mServer.mRunInBackground = mRunInBackground;
         // If run in background not requested, stop server on timeout
         if (!mRunInBackground) {
@@ -79,13 +76,32 @@ class ServerHandler implements DataTransmission.OnReceiveCallback, Closeable {
     }
 
     @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        if (!mIsDead) {
+            close();
+        }
+    }
+
+    @Override
     public void close() {
+        if (mIsDead) {
+            return;
+        }
         FLog.log("ServerHandler: Destroying...");
         try {
             if (!mRunInBackground && mHandler != null) {
                 mHandler.removeCallbacksAndMessages(null);
                 mHandler.removeMessages(MSG_TIMEOUT);
                 mHandler.getLooper().quit();
+            }
+            // Delete the temporary jar file.
+            String classPath = mConfigParams.getClassPath();
+            if (classPath != null) {
+                File tempJar = new File(classPath);
+                if (tempJar.exists()) {
+                    tempJar.delete();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

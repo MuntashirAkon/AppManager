@@ -10,7 +10,6 @@ import java.io.File;
 
 import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
@@ -27,7 +26,7 @@ public class Migrations {
             // Delete am database, am.jar
             File internalFilesDir = ContextUtils.getDeContext(context).getFilesDir().getParentFile();
             File[] paths = new File[]{
-                    ServerConfig.getDestJarFile(),
+                    new File(internalFilesDir, "am.jar"),
                     new File(internalFilesDir, "main.jar"),
                     new File(internalFilesDir, "run_server.sh"),
                     context.getDatabasePath("am"),

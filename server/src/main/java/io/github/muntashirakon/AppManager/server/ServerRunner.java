@@ -13,11 +13,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.server.common.ConfigParams;
 import io.github.muntashirakon.AppManager.server.common.Constants;
 import io.github.muntashirakon.AppManager.server.common.FLog;
 
+import static io.github.muntashirakon.AppManager.server.common.ConfigParams.PARAM_CLASSPATH;
 import static io.github.muntashirakon.AppManager.server.common.ConfigParams.PARAM_UID;
 
 /**
@@ -69,6 +71,7 @@ public final class ServerRunner {
                 configParams.put(param[0], param[1]);
             }
             configParams.put(PARAM_UID, "" + Process.myUid());
+            configParams.put(PARAM_CLASSPATH, Objects.requireNonNull(System.getenv("CLASSPATH")));
             // Set server info
             LifecycleAgent.sServerInfo.startArgs = paramsStr;
             LifecycleAgent.sServerInfo.startTime = System.currentTimeMillis();

@@ -140,14 +140,6 @@ public class ModeOfOpsPreference extends Fragment {
                 Utils.copyToClipboard(requireContext(), "command", command);
             }
         });
-        TextInputTextView customCommand1 = view.findViewById(android.R.id.text2);
-        TextInputLayout customCommand1Layout = TextInputLayoutCompat.fromTextInputEditText(customCommand1);
-        customCommand1Layout.setEndIconOnClickListener(v -> {
-            CharSequence command = customCommand1.getText();
-            if (!TextUtils.isEmpty(command)) {
-                Utils.copyToClipboard(requireContext(), "command", command);
-            }
-        });
         mModel.loadCustomCommands();
         updateViews();
         // Mode of ops
@@ -189,7 +181,6 @@ public class ModeOfOpsPreference extends Fragment {
             }
         });
         mModel.getCustomCommand0().observe(getViewLifecycleOwner(), customCommand0::setText);
-        mModel.getCustomCommand1().observe(getViewLifecycleOwner(), customCommand1::setText);
     }
 
     @Override
