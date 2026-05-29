@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.filters;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +36,8 @@ public class FinderActivity extends BaseActivity implements EditFiltersDialogFra
         setContentView(R.layout.activity_finder);
         setSupportActionBar(findViewById(R.id.toolbar));
         mViewModel = new ViewModelProvider(this).get(FinderViewModel.class);
+        Optional.ofNullable(getSupportActionBar())
+                .ifPresent(actionBar -> actionBar.setDisplayHomeAsUpEnabled(true));
         mProgress = findViewById(R.id.progress_linear);
         mRecyclerView = findViewById(R.id.item_list);
         mFilterBtn = findViewById(R.id.floatingActionButton);
@@ -59,6 +62,16 @@ public class FinderActivity extends BaseActivity implements EditFiltersDialogFra
             Optional.ofNullable(getSupportActionBar()).ifPresent(actionBar -> actionBar.setSubtitle(subtitle));
         });
         mViewModel.loadFilteredAppList(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void showFiltersDialog() {
