@@ -430,7 +430,6 @@
     <string name="export_failed">Neizdevās izgūt!</string>
     <string name="import_from_tb">Ievietot Titanium Backup dublējumkopijas</string>
     <string name="pref_import_blocker">Ievietot Blocker noteikumus</string>
-    <string name="scan_report_from_pithus">Pithus atskaite</string>
     <string name="pref_import_msg">Ievietot iepriekš izgūtos App Manager bloķēšanas noteikumus.</string>
     <string name="delete_backup">Dzēst dublējumkopiju</string>
     <plurals name="failed_to_import_files">
@@ -450,7 +449,6 @@
     <string name="backup_volume_unavailable_warning">Atlasītā dublējuma datu nesēja krātuve pašlaik nav pieejams. Ja dublējumu krātuve iestatīta ārējā datu nesējā - SD karte, pārnēsājams datu nesējs, lūdzu, ievietojiet vai pievienojiet to ierīcei vai nu nomainiet dublējuma krātuvi.</string>
     <string name="item_select">Atlasīt</string>
     <string name="export_app_list_select_format">Atlasiet lietotņu saraksta izgūšanas formātu</string>
-    <string name="report_not_available">Nav pieejama</string>
     <string name="select_filter">Atlasiet filtru</string>
     <string name="pref_selected_users">Atlasītie lietotāji</string>
     <string name="keep_data_and_app_signing_signatures">Saglabāt datus un parakstus</string>

@@ -1226,7 +1226,6 @@
     <string name="change_group_gid">變更群組（GID）</string>
     <string name="failed_to_copy_specified_file">無法複製「%1$s」。</string>
     <string name="xposed_module_info">Xposed 模組資訊</string>
-    <string name="scan_report_from_pithus">Pithus 報告</string>
     <string name="conflict_detected_while_copying">偵測到衝突</string>
     <string name="batch_ops_runtime_optimization">執行階段最佳化</string>
     <string name="pref_zip_align">對齊 APK 檔案</string>
@@ -1258,8 +1257,6 @@
     <string name="copy_this_path">複製路徑</string>
     <string name="title_audio_player">音訊播放器</string>
     <string name="unblock_components_dots">解除封鎖元件…</string>
-    <string name="action_checking">正在檢查…</string>
-    <string name="report_not_available">無法使用</string>
     <string name="sort_by_last_modified">最後一次修改時間</string>
     <string name="confirm_uninstallation">確認解除安裝</string>
     <string name="app_info_tag_open_links">開啟連結</string>

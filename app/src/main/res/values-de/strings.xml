@@ -1344,8 +1344,6 @@
     <string name="title_description">Beschreibung</string>
     <string name="module_name">Modulname</string>
     <string name="action_lock_app">Sperren</string>
-    <string name="action_checking">Wird überprüft…</string>
-    <string name="report_not_available">Nicht verfügbar</string>
     <string name="apply_profile">Profil „%1$s“ anwenden</string>
     <string name="size_in_bytes">Größe (Bytes)</string>
     <string name="invalid_regex">Ungültiger regulärer Ausdruck!</string>
@@ -1387,7 +1385,6 @@
     <string name="app_manager_is_unlocked">App Manager ist entsperrt</string>
     <string name="app_manager_is_running">App Manager läuft</string>
     <string name="launch_activity_dialog_title">Starte Aktivität: Aktion benötigt</string>
-    <string name="scan_report_from_pithus">Pithus Bericht</string>
     <string name="profile_modified_are_you_sure">Das Profil wurde verändert. Möchtest du wirklich deine Änderungen zu verwerfen und verlassen?</string>
     <string name="choose_a_profile_state">Wähle einen Profilzustand</string>
     <string name="profile_id">Profil ID</string>

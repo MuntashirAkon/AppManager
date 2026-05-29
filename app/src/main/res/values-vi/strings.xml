@@ -341,7 +341,6 @@
     </plurals>
     <string name="touchscreen_finger">Ngón tay</string>
     <string name="orientation_sensor">Cảm biến</string>
-    <string name="manifest">Manifest</string>
     <string name="reject_time">Thời gian từ chối</string>
     <string name="accept_time">Thời gian chấp nhận</string>
     <string name="pref_import_export_blocking_rules_msg">Nhập/xuất các quy tắc, nhập các quy tắc ngoài từ Watt hoặc Blocker.</string>
@@ -922,7 +921,6 @@
     <string name="launch_mode_single_top">Một hoạt động ở trên</string>
     <string name="launch_mode_single_instance">Một bản sao</string>
     <string name="installer_error_session_commit">Không thể hành động với các tệp APK</string>
-    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> • <a href="https://t.me/AppManagerChannel">Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Cộng đồng</string>
     <string name="native_library_dir">Thư mục thư viện JNI gốc</string>
     <string name="input_key">Nhập mã (ở hệ thập lục phân)</string>
@@ -1351,9 +1349,6 @@
     <string name="path_does_not_exist">“%1$s” không tồn tại</string>
     <string name="pref_enable_auto_lock_msg">Khóa App Manager khi thiết bị đã khóa.</string>
     <string name="path_not_a_folder">“%1$s” không phải là một thư mục</string>
-    <string name="scan_report_from_pithus">Báo cáo Pithus</string>
-    <string name="action_checking">Đang kiểm tra…</string>
-    <string name="report_not_available">Không có sẵn</string>
     <string name="profile_modified_are_you_sure">Hồ sơ đã được sửa đổi. Hủy tất cả thay đổi của bạn và thoát\?</string>
     <string name="apply_profile">Áp dụng hồ sơ “%1$s”</string>
     <string name="copy_profile_id">Sao chép ID hồ sơ</string>
@@ -1367,7 +1362,6 @@
     <string name="date">Ngày tháng</string>
     <string name="size_in_bytes">Kích thước (byte)</string>
     <string name="invalid_regex">Biểu thức chính quy không hợp lệ!</string>
-    <string name="virus_total">VirusTotal</string>
     <string name="pref_use_vt">Sử dụng VirusTotal</string>
     <string name="pref_cat_general">Tổng quan</string>
     <string name="pref_use_log_viewer">Sử dụng Trình xem nhật ký</string>
@@ -1395,7 +1389,6 @@
     <string name="status_connected_via_mode">Đã kết nối qua %s</string>
     <string name="status_not_connected_via_mode">Không thể kết nối qua %s</string>
     <string name="adb_pairing_instruction">Vui lòng điều hướng đến tùy chọn nhà phát triển để bật gỡ lỗi không dây và tạo mã ghép nối.</string>
-    <string name="mode_of_op_alternative_custom_command">Nếu bạn gặp lỗi “quyền bị từ chối” với lệnh trên, thay vào đó hãy chạy lệnh sau:</string>
     <string name="sensors">Cảm biến</string>
     <string name="tag_sensors_disabled">Cảm biến bị vô hiệu hóa</string>
     <string name="pref_use_system_font">Sử dụng phông chữ hệ thống</string>

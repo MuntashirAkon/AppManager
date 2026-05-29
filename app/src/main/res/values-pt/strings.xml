@@ -1424,7 +1424,6 @@
     <string name="tag_sensors_disabled">Sensores desabilitados</string>
     <string name="pref_use_system_font">Usar fonte do sistema</string>
     <string name="pref_use_system_font_msg">Usar a fonte padrão do sistema ao invés da fonte material. <font fgcolor="#ff0000">Este é um recurso experimental.</font></string>
-    <string name="mode_of_op_alternative_custom_command">Se receber um erro de \"permissão negada\" com o comando acima, execute o seguinte comando no lugar:</string>
     <string name="activity_name">Nome da atividade</string>
     <string name="path_not_a_folder">“%1$s” não é uma pasta</string>
     <string name="profile_id">ID do perfil</string>
@@ -1457,16 +1456,13 @@
     <string name="pref_set_home">Definir início</string>
     <string name="title_description">Descrição</string>
     <string name="backup_cache">Cache</string>
-    <string name="scan_report_from_pithus">Relatório Pithus</string>
     <string name="path_does_not_exist">“%1$s” não existe</string>
     <string name="adb_pairing_stop_searching">Parar</string>
     <string name="choose_a_profile_state">Selecionar um estado de perfil</string>
     <string name="pref_enable_auto_lock">Bloqueio automático</string>
     <string name="title_alternatives_to_bloatware">Alternativas</string>
     <string name="pref_zip_align_msg">Alinhar um ficheiro APK reduz seu uso de memória já que os dados dentro do APK podem ser acessados diretamente sem copiar-se para a RAM. Esse passo é necessário se <tt>extractNativeLibs</tt> estiver ajustado como <tt>true</tt>.</string>
-    <string name="action_checking">A verificar…</string>
     <string name="app_manager_is_unlocked">O App Manager está desbloqueado</string>
-    <string name="report_not_available">Não disponível</string>
     <string name="apk_source">Origem do APK</string>
     <string name="launch_activity_dialog_message">O App Manager está a tentar executar a atividade através do <b>assistente de busca</b> (como o Google Assistant), mas é incapaz de o fazer por permissão insuficiente. Para abrir a atividade, por favor ative o <b>assistente de busca</b> manualmente (geralmente ao fazer um clique longo no botão Home). Clique no botão <b>Fechar</b> depois de terminar a execução da atividade para retornar ao assistente original.</string>
     <string name="mode_of_op_custom_command">Se não conseguir usar nenhum dos modos, pode executar o seguinte comando em qualquer shell compatível para abrir o App Manager em modo privilefiado:</string>

@@ -1481,9 +1481,6 @@
     <string name="pref_enable_auto_lock_msg">Блокировка App Manager\'а при заблокированном устройстве.</string>
     <string name="path_does_not_exist">“%1$s” не существует</string>
     <string name="path_not_a_folder">“%1$s” не является папкой</string>
-    <string name="scan_report_from_pithus">Отчет Pithus</string>
-    <string name="action_checking">Проверка…</string>
-    <string name="report_not_available">Не доступно</string>
     <string name="profile_modified_are_you_sure">Профиль был изменен. Отменить все изменения и выйти\?</string>
     <string name="apply_profile">Применить профиль “%1$s”</string>
     <string name="copy_profile_id">Скопировать идентификатор профиля</string>
@@ -1529,7 +1526,6 @@
     <string name="apk_source">Источник APK</string>
     <string name="actual_installer">Фактический установщик</string>
     <string name="pref_use_system_font">Использовать системный шрифт</string>
-    <string name="mode_of_op_alternative_custom_command">Если при выполнении вышеуказанной команды вы получите ошибку «разрешение отклонено», выполните следующую команду:</string>
     <string name="activity_name">Имя активити</string>
     <string name="pref_use_system_font_msg">Использовать системный шрифт по умолчанию вместо material шрифта. <font fgcolor="#ff0000">Это экспериментальная функция.</font></string>
     <string name="backup_cache">Кэш</string>

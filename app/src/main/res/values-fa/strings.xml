@@ -1240,8 +1240,6 @@
     <string name="app_manager_is_unlocked">قفل App Manager باز شده</string>
     <string name="tap_to_open_notification_settings">برای پنهان سازی ضربه بزنید</string>
     <string name="app_manager_is_running">App Manager در حال اجرا است</string>
-    <string name="action_checking">در حال بررسی…</string>
-    <string name="report_not_available">در دسترس نیست</string>
     <string name="screen_time">زمان صفحه</string>
     <string name="filter_frozen_apps">برنامه های منجمد</string>
     <string name="file_open_with_os_default_dialog">بازکردن با پیشفرض سیستم عامل</string>

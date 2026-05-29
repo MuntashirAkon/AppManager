@@ -1542,7 +1542,6 @@
     <string name="title_change_selinux_context">تغيير سياق SELinux</string>
     <string name="apply_recursively">تطبيق على الملفات المرفقة</string>
     <string name="change_owner_uid">تغيير المالك (UID)</string>
-    <string name="report_not_available">غير متاح</string>
     <string name="installer_options">خيارات المثبت</string>
     <string name="debloat_removal_safe_short_description">آمن للإزالة</string>
     <string name="debloat_removal_caution_short_description">كن حذرا</string>
@@ -1567,8 +1566,6 @@
     <string name="pref_enable_auto_lock_msg">قفل App Manager عندما يكون الجهاز مقفلا.</string>
     <string name="path_does_not_exist">\"%1$s\" غير موجود</string>
     <string name="path_not_a_folder">\"%1$s\" ليس مجلدا</string>
-    <string name="scan_report_from_pithus">تقرير بيثوس</string>
-    <string name="action_checking">التحقق…</string>
     <string name="profile_modified_are_you_sure">تم تعديل الملف الشخصي. تجاهل كل التغييرات الخاصة بك والخروج؟</string>
     <string name="apply_profile">تطبيق الملف الشخصي \"%1$s\"</string>
     <string name="copy_profile_id">نسخ معرف الملف السخصي</string>
@@ -1610,7 +1607,6 @@
     <string name="mode_of_op_custom_command_title">أمر مخصص</string>
     <string name="mode_of_op_custom_command">إذا لم تتمكن من استخدام أي من الأوضاع، فيمكنك تشغيل الأمر التالي باستخدام أي طرفية مدعومة لتشغيل App Manager في الوضع المصرح:</string>
     <string name="adb_pairing_retry_pairing">حاول مرَّةً أخرى</string>
-    <string name="mode_of_op_alternative_custom_command">إذا تلقيت خطأ \"تم رفض الإذن\" في الأمر أعلاه، فقم بتشغيل الأمر التالي بدلاً من ذلك:</string>
     <string name="sensors">المستشعرات</string>
     <string name="tag_sensors_disabled">المستشعرات معطلة</string>
     <string name="backup_cache">الملفات المؤقتة</string>

@@ -1353,8 +1353,6 @@
         <item quantity="other">Impossible d\'optimiser les applications %1$d</item>
     </plurals>
     <string name="pref_enable_persistent_session_msg">L’exécution d\'App Manager en arrière-plan réduit le délai d’initialisation. Utile si vous utilisez fréquemment App Manager.</string>
-    <string name="action_checking">Vérification…</string>
-    <string name="report_not_available">Pas disponible</string>
     <string name="pref_layout_direction">Orientation de la mise en page</string>
     <string name="option_display_folders_on_top">Dossier en haut</string>
     <string name="export_app_list_select_format">Sélectionnez le format d\'exportation de la liste des applications</string>
@@ -1460,8 +1458,6 @@
     <string name="sensors">Capteurs</string>
     <string name="tag_sensors_disabled">Capteurs désactivés</string>
     <string name="apk_source">Source de l\'APK</string>
-    <string name="mode_of_op_alternative_custom_command">Si vous obtenez une erreur \"Permission refusée\" avec la commande ci-dessus, lancez la commande suivante à la place :</string>
-    <string name="scan_report_from_pithus">Rapport Pithus</string>
     <string name="launch_activity_dialog_title">Lancement d\'activité : action requise</string>
     <string name="select_filter">Sélectionner un filtre</string>
     <string name="failed_to_copy_specified_file">Impossible de copier \"%1$s\".</string>

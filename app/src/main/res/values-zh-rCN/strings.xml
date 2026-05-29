@@ -1341,17 +1341,14 @@
     <string name="apply_profile">应用配置文件“%1$s”</string>
     <string name="tap_to_open_notification_settings">轻按隐藏</string>
     <string name="change_owner_uid">更改所有者 （UID）</string>
-    <string name="action_checking">检查中…</string>
     <string name="installer_options">安装器选项</string>
     <string name="pref_enable_persistent_session">让 App Manager 在后台运行</string>
-    <string name="scan_report_from_pithus">Pithus 报告</string>
     <string name="pref_set_home">设置主目录</string>
     <string name="module_name">模块名</string>
     <string name="copy_profile_id">复制配置 ID</string>
     <string name="profile_id">配置 ID</string>
     <string name="xposed_module_info">Xposed 模块信息</string>
     <string name="pref_enable_auto_lock">自动锁定</string>
-    <string name="report_not_available">不可用</string>
     <string name="pref_enable_auto_lock_msg">当设备锁定时同时锁定 App Manager 。</string>
     <string name="pref_files_remember_last_path">记住上次打开的路径及其位置</string>
     <string name="change_group_gid">更改组（GID）</string>
@@ -1396,7 +1393,6 @@
     <string name="mode_of_op_custom_command_title">自定义命令</string>
     <string name="mode_of_op_custom_command">如果您无法使用任何模式，您可以在任何受支持的 shell 中运行以下命令，以在特权模式下运行App Manager：</string>
     <string name="finder_title">访达</string>
-    <string name="mode_of_op_alternative_custom_command">如果运行以上命令遇到“permission denied”错误，请运行下列命令：</string>
     <string name="actual_installer">实际安装程序</string>
     <string name="apk_source">APK 源</string>
     <string name="backup_cache">缓存</string>

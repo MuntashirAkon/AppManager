@@ -1344,8 +1344,6 @@
     <string name="create_new_file">Yeni dosya</string>
     <string name="pref_zip_align">APK dosyalarını hizala</string>
     <string name="path_not_a_folder">“%1$s” bir klasör değil</string>
-    <string name="action_checking">Denetleniyor…</string>
-    <string name="report_not_available">Kullanılabilir değil</string>
     <string name="symbolic_link_not_supported">Bu klasör sembolik bağlantı oluşturmayı desteklemiyor.</string>
     <string name="redo">Geri Al</string>
     <plurals name="folder_count">
@@ -1360,7 +1358,6 @@
     <string name="tap_to_open_notification_settings">Gizlemek için dokun</string>
     <string name="action_lock_app">Kilitle</string>
     <string name="path_does_not_exist">“%1$s” mevcut değil</string>
-    <string name="scan_report_from_pithus">Pithus raporu</string>
     <string name="empty_folder">Boş</string>
     <string name="go_to_path">Git…</string>
     <string name="apply_profile">“%1$s” profilini uygula</string>
@@ -1438,7 +1435,6 @@
     <string name="adb_pairing_instruction">Kablosuz hata ayıklamayı etkinleştirmek ve eşleştirme kodu oluşturmak için geliştirici seçeneklerine gidin. Geliştirici seçeneklerini zaten açtıysanız <b>Kılavuz</b> seçeneğine tıklayın.</string>
     <string name="adb_pairing_pairing_code">Eşleştirme kodu</string>
     <string name="adb_pairing_retry_pairing">Yeniden dene</string>
-    <string name="mode_of_op_alternative_custom_command">Yukarıdaki komutla “permission denied” hatası alırsanız, bunun yerine şu komutu çalıştırın:</string>
     <string name="sensors">Sensörler</string>
     <string name="tag_sensors_disabled">Sensörler devre dışı</string>
     <string name="pref_use_system_font_msg">Material yazı tipi yerine sistem öntanımlı yazı tipini kullan. <font fgcolor="#ff0000">Bu deneysel bir özelliktir.</font></string>

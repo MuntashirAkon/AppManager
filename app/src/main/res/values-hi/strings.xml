@@ -963,8 +963,6 @@
 \nलॉग</string>
     <string name="view_logs">लॉग्स देखे</string>
     <string name="share_log">भेजे</string>
-    <string name="action_checking">जाँच की जा रही है…</string>
-    <string name="report_not_available">उपलब्ध नहीं है</string>
     <string name="latest_backup">नवीनतम बैकअप</string>
     <string name="hidden">छिपा हुआ</string>
     <string name="confirm_import_keystore">क्या आप निश्चित रूप से मौजूदा कीस्टोर को बदलना चाहते हैं? इस क्रिया को पूर्ववत नहीं किया जा सकता।</string>

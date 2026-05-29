@@ -1393,8 +1393,6 @@
     <string name="profile_id">ID de perfil</string>
     <string name="copy_profile_id">Copiar ID de perfil</string>
     <string name="launch_activity_dialog_title">Lanzar actividad: acción requerida</string>
-    <string name="action_checking">Comprobando…</string>
-    <string name="report_not_available">No disponible</string>
     <string name="title_alternatives_to_bloatware">Alternativas</string>
     <string name="browse_files">Navegar</string>
     <string name="pref_files_msg">Configura el gestor de archivo.</string>
@@ -1473,12 +1471,10 @@
     <string name="launch_activity_dialog_message">El Administrador de Aplicaciones intenta iniciar la actividad mediante el <b>Asistente de Búsqueda</b> (normalmente el Asistente de Google), pero no puede hacerlo por falta de permisos. Para abrir la actividad, activa el <b>Asistente de Búsqueda</b> manualmente (normalmente haciendo clic largo en el botón Inicio). Pulsa en el botón <b>Cerrar</b> tras iniciar la actividad para volver al asistente original.</string>
     <string name="apply_profile">Aplicar perfil “%1$s”</string>
     <string name="path_not_a_folder">“%1$s” no es una carpeta</string>
-    <string name="scan_report_from_pithus">Informe de Pithus</string>
     <string name="adb_pairing_searching_for_port">Buscando…</string>
     <string name="profile_modified_are_you_sure">El perfil fue modificado. ¿Descarto todos sus cambios y salgo?</string>
     <string name="adb_pairing_instruction">Accede a las opciones de desarrollador para activar la depuración inalámbrica y generar un código de emparejamiento. Pulsa en <b>Manual</b> si ya has abierto las opciones de desarrollador.</string>
     <string name="mode_of_op_custom_command">Si no eres capaz de utilizar cualquiera de los otros modos, puedes ejecutar el siguiente comando en cualquier consola compatible para ejecutar App Manager en modo privilegiado:</string>
-    <string name="mode_of_op_alternative_custom_command">Si obtienes un error de “permiso denegado” con el comando anterior, ejecute en su lugar el comando siguiente:</string>
     <string name="no_overlay_permission">Ningún permiso para mostrar coberturas</string>
     <string name="title_shortcut_for_frozen_app">App congelada</string>
     <string name="sort_by_overlay_names">Nombre de cobertura</string>

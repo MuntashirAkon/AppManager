@@ -1438,9 +1438,6 @@
     <string name="pref_enable_auto_lock_msg">Blocca App Manager quando il dispositivo è bloccato.</string>
     <string name="path_does_not_exist">\"%1$s\" non esiste</string>
     <string name="path_not_a_folder">\"%1$s\" non è una cartella</string>
-    <string name="scan_report_from_pithus">Rapporto Pithus</string>
-    <string name="action_checking">Controllo…</string>
-    <string name="report_not_available">Non disponibile</string>
     <string name="profile_modified_are_you_sure">Il profilo è stato modificato. Annullare tutte le modifiche ed uscire\?</string>
     <string name="apply_profile">Applica profilo “%1$s”</string>
     <string name="copy_profile_id">Copia ID profilo</string>
@@ -1482,7 +1479,6 @@
     <string name="adb_pairing_retry_pairing">Riprova</string>
     <string name="mode_of_op_custom_command_title">Comando personalizzato</string>
     <string name="mode_of_op_custom_command">Se non riesci a utilizzare nessuna delle modalità, puoi eseguire il comando seguente in qualsiasi shell supportata per eseguire App Manager in modalità privilegiata:</string>
-    <string name="mode_of_op_alternative_custom_command">Se ricevi un errore di \"autorizzazione negata\" con il comando precedente, esegui invece il comando seguente:</string>
     <string name="sensors">Sensori</string>
     <string name="tag_sensors_disabled">Sensori disabilitati</string>
     <string name="pref_use_system_font">Usa font di sistema</string>

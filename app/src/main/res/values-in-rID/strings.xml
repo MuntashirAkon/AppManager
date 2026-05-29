@@ -1331,9 +1331,6 @@
     <string name="pref_enable_auto_lock_msg">Kunci App Manager saat perangkat terkunci.</string>
     <string name="path_does_not_exist">“%1$s” tidak ada</string>
     <string name="path_not_a_folder">“%1$s” bukanlah sebuah folder</string>
-    <string name="scan_report_from_pithus">Laporan Pithus</string>
-    <string name="action_checking">Memeriksa…</string>
-    <string name="report_not_available">Tidak tersedia</string>
     <string name="profile_modified_are_you_sure">Profil telah diubah. Apakah Anda ingin membatalkan semua perubahan dan keluar?</string>
     <string name="apply_profile">Terapkan profil “%1$s”</string>
     <string name="choose_a_profile_state">Pilih status profil</string>
@@ -1371,7 +1368,6 @@
     <string name="adb_pairing_retry_pairing">Coba lagi</string>
     <string name="mode_of_op_custom_command_title">Perintah khusus</string>
     <string name="mode_of_op_custom_command">Jika Anda tidak dapat menggunakan salah satu mode, Anda dapat menjalankan perintah berikut di shell yang didukung untuk menjalankan App Manager dalam mode berprivilese:</string>
-    <string name="mode_of_op_alternative_custom_command">Jika Anda mendapatkan kesalahan “permission denied” saat menjalankan perintah di atas, jalankan perintah berikut ini sebagai gantinya:</string>
     <string name="sensors">Sensor</string>
     <string name="tag_sensors_disabled">Sensor dinonaktifkan</string>
     <string name="pref_use_system_font">Gunakan font sistem</string>

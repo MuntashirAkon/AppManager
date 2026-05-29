@@ -1379,9 +1379,6 @@
     <string name="pref_enable_persistent_session">Voer App Manager op de achtergrond uit</string>
     <string name="path_does_not_exist">“%1$s” bestaat niet</string>
     <string name="path_not_a_folder">“%1$s” is geen map</string>
-    <string name="scan_report_from_pithus">Pithus-rapport</string>
-    <string name="action_checking">Controleren…</string>
-    <string name="report_not_available">Niet beschikbaar</string>
     <string name="profile_modified_are_you_sure">Het profiel is gewijzigd. Al uw wijzigingen negeren en afsluiten?</string>
     <string name="apply_profile">Profiel “%1$s” toepassen</string>
     <string name="choose_a_profile_state">Selecteer een profielstatus</string>
@@ -1415,7 +1412,6 @@
     <string name="adb_pairing_found_pairing_service_with_port">Service gevonden met poort %d</string>
     <string name="adb_pairing_pairing_in_progress">Koppelen…</string>
     <string name="adb_pairing_retry_pairing">Opnieuw proberen</string>
-    <string name="mode_of_op_alternative_custom_command">Als u bij de bovenstaande opdracht de foutmelding \'machtiging geweigerd\' krijgt, voer dan de volgende opdracht uit:</string>
     <string name="sensors">Sensoren</string>
     <string name="tag_sensors_disabled">Sensoren uitgeschakeld</string>
     <string name="pref_use_system_font">Gebruik systeemlettertype</string>
