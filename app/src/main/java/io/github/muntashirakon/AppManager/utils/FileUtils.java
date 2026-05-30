@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.system.ErrnoException;
 import android.system.Os;
+import android.system.StructStat;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
@@ -33,6 +34,8 @@ import java.util.zip.ZipEntry;
 
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
+import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.io.FileSystemManager;
 import io.github.muntashirakon.io.IoUtils;
@@ -169,18 +172,12 @@ public final class FileUtils {
     @AnyThread
     @NonNull
     public static File getExternalCachePath(@NonNull Context context) throws FileNotFoundException {
-        return getBestExternalPath(context.getExternalCacheDirs());
+        return getBestExternalDataSubdir(context.getExternalCacheDirs());
     }
 
     @AnyThread
     @NonNull
-    public static File getExternalMediaPath(@NonNull Context context) throws FileNotFoundException {
-        return getBestExternalPath(context.getExternalMediaDirs());
-    }
-
-    @AnyThread
-    @NonNull
-    public static File getBestExternalPath(@Nullable File[] extDirs) throws FileNotFoundException {
+    public static File getBestExternalDataSubdir(@Nullable File[] extDirs) throws FileNotFoundException {
         if (extDirs == null) {
             throw new FileNotFoundException("Shared storage unavailable.");
         }
@@ -192,6 +189,11 @@ public final class FileUtils {
                 continue;
             }
             if (!(extDir.exists() || extDir.mkdirs())) {
+                // Try to recreate this with root
+                if (RunnerUtils.isRootGiven() && forceCreateExternalDataSubDir(extDir)) {
+                    Log.i(TAG, "Root created %s", extDir);
+                    return extDir;
+                }
                 lastReason = extDir + ": permission denied.";
                 Log.w(TAG, "Could not use %s.", extDir);
                 continue;
@@ -205,6 +207,38 @@ public final class FileUtils {
             return extDir;
         }
         throw new FileNotFoundException(lastReason != null ? lastReason : "No available shared storage found.");
+    }
+
+    public static boolean forceCreateExternalDataSubDir(@NonNull File dir) {
+        File parentFile = Objects.requireNonNull(dir.getParentFile());
+        String parent = parentFile.getAbsolutePath();
+        if (!parentFile.exists()) {
+            // Even the parent file doesn't exist which should not happen
+            Log.w(TAG, parent + " doesn't exist.");
+            return false;
+        }
+        String target = dir.getAbsolutePath();
+        String chownTarget;
+        try {
+            StructStat parentStat = Os.stat(parent);
+            chownTarget = parentStat.st_uid + ":" + parentStat.st_gid;
+        } catch (ErrnoException e) {
+            // Fallback to shell
+            Runner.Result result = Runner.runCommand("stat -c '%u:%g' " + parent);
+            String output = result.getOutput();
+            if (result.isSuccessful() && !output.isEmpty()) {
+                chownTarget = output.trim();
+            } else {
+                // Didn't work
+                Log.w(TAG, "Could not retrieve UID:GID from " + parent);
+                return false;
+            }
+        }
+
+        return Runner.runCommand("mkdir " + target).isSuccessful() &&
+                Runner.runCommand("chmod 770 " + target).isSuccessful() &&
+                Runner.runCommand("chown " + chownTarget + " " + target).isSuccessful() &&
+                Runner.runCommand("restorecon " + target).isSuccessful();
     }
 
     @AnyThread
