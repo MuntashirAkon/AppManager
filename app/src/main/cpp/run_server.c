@@ -72,70 +72,112 @@ int copy_file(const char *src, const char *dst) {
 int main(int argc, char *argv[]) {
     if (argc < 8) {
         fprintf(stderr,
-                "USAGE: %s <port> <token> <jar_name> <AppID> <user_id> <bgrun(1|0)> <debug(1|0)> [extra_args...]\n",
+                "USAGE: %s <port> <token> <am_jar_name> <main_jar_name> <app_id> <user_id> <debug(1|0)> [extra_args...]\n",
                 argv[0]);
         return 1;
     }
 
     const char *port = argv[1];
     const char *token = argv[2];
-    const char *jar_name = argv[3];
-    const char *app_id = argv[4];
-    const char *user_id = argv[5];
-    const char *bgrun = argv[6];
+    const char *am_jar_name = argv[3];
+    const char *main_jar_name = argv[4];
+    const char *app_id = argv[5];
+    const char *user_id = argv[6];
     const char *debug = argv[7];
+    const char *bgrun = "1";
 
     // Validate Paths
-    if (!is_safe_string(jar_name) || !is_safe_string(app_id) || !is_safe_string(user_id)) {
+    if (!is_safe_string(am_jar_name) || !is_safe_string(main_jar_name) || !is_safe_string(app_id) ||
+        !is_safe_string(user_id)) {
         fprintf(stderr, "Error! Invalid characters in arguments.\n");
         return 1;
     }
 
     // Validate debug and bgrun
-    if ((strcmp(bgrun, "0") != 0 && strcmp(bgrun, "1") != 0) ||
-        (strcmp(debug, "0") != 0 && strcmp(debug, "1") != 0)) {
-        fprintf(stderr, "Error! bgrun and debug must be either 0 or 1.\n");
+    if ((strcmp(debug, "0") != 0 && strcmp(debug, "1") != 0)) {
+        fprintf(stderr, "Error! debug must be either 0 or 1.\n");
         return 1;
     }
 
     // /data/local/tmp/am.jar
     char exec_jar_path[512];
-    if (snprintf(exec_jar_path, sizeof(exec_jar_path), "%s/%s", TMP_PATH, jar_name) >=
+    if (snprintf(exec_jar_path, sizeof(exec_jar_path), "%s/%s", TMP_PATH, am_jar_name) >=
         sizeof(exec_jar_path)) {
         fprintf(stderr, "Error! Buffer overflow on exec_jar_path.\n");
         return 1;
     }
 
+    // /data/local/tmp/main.jar
+    char main_jar_path[512];
+    if (snprintf(main_jar_path, sizeof(main_jar_path), "%s/%s", TMP_PATH, main_jar_name) >=
+        sizeof(main_jar_path)) {
+        fprintf(stderr, "Error! Buffer overflow on main_jar_path.\n");
+        return 1;
+    }
+
     // Prioritized list of fallback source paths
-    char fallbacks[4][512];
-    snprintf(fallbacks[0], sizeof(fallbacks[0]), "/sdcard/Android/data/%s/cache/%s", app_id,
-             jar_name);
-    snprintf(fallbacks[1], sizeof(fallbacks[1]), "/storage/emulated/%s/Android/data/%s/cache/%s",
-             user_id, app_id, jar_name);
-    snprintf(fallbacks[2], sizeof(fallbacks[2]), "/sdcard/AppManager/%s", jar_name);
-    snprintf(fallbacks[3], sizeof(fallbacks[3]), "/storage/emulated/%s/AppManager/%s", user_id,
-             jar_name);
+    char am_jar_fallbacks[4][512];
+    snprintf(am_jar_fallbacks[0], sizeof(am_jar_fallbacks[0]), "/sdcard/Android/data/%s/cache/%s",
+             app_id,
+             am_jar_name);
+    snprintf(am_jar_fallbacks[1], sizeof(am_jar_fallbacks[1]),
+             "/storage/emulated/%s/Android/data/%s/cache/%s",
+             user_id, app_id, am_jar_name);
+    snprintf(am_jar_fallbacks[2], sizeof(am_jar_fallbacks[2]), "/sdcard/AppManager/%s",
+             am_jar_name);
+    snprintf(am_jar_fallbacks[3], sizeof(am_jar_fallbacks[3]), "/storage/emulated/%s/AppManager/%s",
+             user_id,
+             am_jar_name);
+
+    char main_jar_fallbacks[4][512];
+    snprintf(main_jar_fallbacks[0], sizeof(main_jar_fallbacks[0]), "/sdcard/Android/data/%s/cache/%s",
+             app_id,
+             main_jar_name);
+    snprintf(main_jar_fallbacks[1], sizeof(main_jar_fallbacks[1]),
+             "/storage/emulated/%s/Android/data/%s/cache/%s",
+             user_id, app_id, main_jar_name);
+    snprintf(main_jar_fallbacks[2], sizeof(main_jar_fallbacks[2]), "/sdcard/AppManager/%s",
+             main_jar_name);
+    snprintf(main_jar_fallbacks[3], sizeof(main_jar_fallbacks[3]), "/storage/emulated/%s/AppManager/%s",
+             user_id,
+             main_jar_name);
 
     uid_t uid = getuid();
     gid_t gid = getgid();
     printf("Starting %s as %d:%d...\n", SERVER_NAME, uid, gid);
 
     // Copy am.jar as /data/local/tmp/am.jar
-    const char *resolved_jar_path = NULL;
+    const char *resolved_am_jar_path = NULL;
     for (int i = 0; i < 4; i++) {
-        if (copy_file(fallbacks[i], exec_jar_path) == 0) {
-            resolved_jar_path = fallbacks[i];
+        if (copy_file(am_jar_fallbacks[i], exec_jar_path) == 0) {
+            resolved_am_jar_path = am_jar_fallbacks[i];
             break;
         }
     }
-
-    if (resolved_jar_path == NULL) {
-        fprintf(stderr, "Error! %s could not be found or copied.\n", jar_name);
+    if (resolved_am_jar_path == NULL) {
+        fprintf(stderr, "Error! %s could not be found or copied.\n", am_jar_name);
         return 1;
     }
-
     // Fix ownership
     if (chown(exec_jar_path, uid, gid) != 0) {
+        fprintf(stderr, "Warning: chown failed: %s\n", strerror(errno));
+        // Although it failed, still proceed
+    }
+
+    // Copy main.jar as /data/local/tmp/main.jar
+    const char *resolved_main_jar_path = NULL;
+    for (int i = 0; i < 4; i++) {
+        if (copy_file(main_jar_fallbacks[i], main_jar_path) == 0) {
+            resolved_main_jar_path = main_jar_fallbacks[i];
+            break;
+        }
+    }
+    if (resolved_main_jar_path == NULL) {
+        fprintf(stderr, "Error! %s could not be found or copied.\n", main_jar_name);
+        return 1;
+    }
+    // Fix ownership
+    if (chown(main_jar_path, uid, gid) != 0) {
         fprintf(stderr, "Warning: chown failed: %s\n", strerror(errno));
         // Although it failed, still proceed
     }
@@ -149,7 +191,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    printf("Resolved Jar path: %s\n", resolved_jar_path);
+    printf("Resolved Jar path: %s\n", resolved_am_jar_path);
     printf("Args: %s\n", args_buf);
 
     // Execute app_process
@@ -217,6 +259,7 @@ int main(int argc, char *argv[]) {
 
     // Cleanup
     unlink(exec_jar_path);
+    unlink(main_jar_path);
     free(exec_argv);
     exit(1);
 }

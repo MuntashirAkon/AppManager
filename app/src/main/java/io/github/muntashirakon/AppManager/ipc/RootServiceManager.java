@@ -52,11 +52,12 @@ import java.util.concurrent.Executor;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
+import io.github.muntashirakon.AppManager.server.common.Constants;
 import io.github.muntashirakon.AppManager.server.common.IRootServiceManager;
+import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 /**
  * Runs in the non-root (client) process.
@@ -167,27 +168,13 @@ public class RootServiceManager implements Handler.Callback {
                 Log.e(TAG, JVMTI_ERROR);
             }
 
-            String mainJarName = "main.jar";
-            Context ctx = ContextUtils.getContext();
-            Context de = ContextUtils.getDeContext(ctx);
-            File mainJar;
-            try {
-                mainJar = new File(FileUtils.getExternalCachePath(de), mainJarName);
-            } catch (IOException e) {
-                throw new IllegalStateException("External directory unavailable.", e);
-            }
-            File stagingMainJar = new File(PACKAGE_STAGING_DIRECTORY, mainJarName);
-            // Dump main.jar as trampoline
-            try (InputStream in = context.getResources().getAssets().open("main.jar");
-                 OutputStream out = new FileOutputStream(mainJar)) {
-                Utils.pump(in, out);
-            }
-            FileUtils.chmod644(mainJar);
+            ServerConfig.init(context);
+            File extMainJar = new File(FileUtils.getExternalCachePath(context), Constants.MAIN_JAR_NAME);
+            File stagingMainJar = new File(PACKAGE_STAGING_DIRECTORY, Constants.MAIN_JAR_NAME);
 
             StringBuilder env = new StringBuilder();
             String params = getParams(env);
-
-            String cmd = getRunnerScript(env, mainJar, stagingMainJar, name, action, params);
+            String cmd = getRunnerScript(env, extMainJar, stagingMainJar, name, action, params);
             Log.d(TAG, cmd);
             // Write command to stdin
             byte[] bytes = cmd.getBytes(StandardCharsets.UTF_8);
@@ -235,36 +222,28 @@ public class RootServiceManager implements Handler.Callback {
         // We cannot readlink /proc/self/exe on old kernels
         @SuppressLint("RestrictedApi")
         String execFile = "/system/bin/app_process" + (Utils.isProcess64Bit() ? "64" : "32");
-        String packageStagingCommand;
         env.append(CLASSPATH_ENV).append("=");
         if (Ops.hasRoot()) {
             // Avoid using the package staging directory
             env.append(mainJar);
-            packageStagingCommand = "";
         } else if (!Ops.isSystem()) {
             // Use package staging directory
+            // Already copied by the server
             env.append(stagingMainJar);
-            packageStagingCommand = PackageUtils.ensurePackageStagingDirectoryCommand() +
-                    // Copy to main.jar to package staging directory
-                    String.format(Locale.ROOT, " && cp %s %s && ", mainJar, PACKAGE_STAGING_DIRECTORY) +
-                    // Change permission of the main.jar
-                    String.format(Locale.ROOT, "chmod 755 %s && chown shell:shell %s && ", stagingMainJar, stagingMainJar);
         } else {
             // System can't use package staging directory
             env.append(mainJar);
-            packageStagingCommand = "";
         }
         env.append(" ");
-        return (packageStagingCommand +
-                String.format(Locale.ROOT, "(%s %s %s /system/bin %s %s '%s' %d %s 2>&1)&",
-                        env,                            // Environments
-                        execFile,                       // Executable
-                        debugParams,                    // Debug parameters
-                        getNiceNameArg(action),         // Process name
-                        IPCMAIN_CLASSNAME,              // Java command
-                        serviceName.flattenToString(),  // args[0]
-                        Process.myUid(),                // args[1]
-                        action));                       // args[2]
+        return String.format(Locale.ROOT, "(%s %s %s /system/bin %s %s '%s' %d %s 2>&1)&",
+                env,                            // Environments
+                execFile,                       // Executable
+                debugParams,                    // Debug parameters
+                getNiceNameArg(action),         // Process name
+                IPCMAIN_CLASSNAME,              // Java command
+                serviceName.flattenToString(),  // args[0]
+                Process.myUid(),                // args[1]
+                action);                       // args[2]
     }
 
     @NonNull

@@ -44,14 +44,26 @@ public final class ServerConfig {
     public static void init(@NonNull Context context) throws IOException {
         // Setup paths
         boolean force = BuildConfig.DEBUG;
-        File externalCachePath = FileUtils.getExternalCachePath(context);
-        File externalCacheJar = new File(externalCachePath, Constants.JAR_NAME);
-        AssetsUtils.copyFile(context, Constants.JAR_NAME, externalCacheJar, force);
+        try {
+            File externalCachePath = FileUtils.getExternalCachePath(context);
+            File externalCacheAmJar = new File(externalCachePath, Constants.JAR_NAME);
+            File externalCacheMainJar = new File(externalCachePath, Constants.MAIN_JAR_NAME);
+            AssetsUtils.copyFile(context, Constants.JAR_NAME, externalCacheAmJar, force);
+            AssetsUtils.copyFile(context, Constants.MAIN_JAR_NAME, externalCacheMainJar, force);
+            FileUtils.chmod644(externalCacheAmJar);
+            FileUtils.chmod644(externalCacheMainJar);
+        } catch (Exception e) {
+            throw new IllegalStateException("External directory unavailable.", e);
+        }
 
         try {
             File amPath = getAppManagerStoragePath();
             File externalAmJar = new File(amPath, Constants.JAR_NAME);
+            File externalMainJar = new File(amPath, Constants.MAIN_JAR_NAME);
             AssetsUtils.copyFile(context, Constants.JAR_NAME, externalAmJar, force);
+            AssetsUtils.copyFile(context, Constants.MAIN_JAR_NAME, externalMainJar, force);
+            FileUtils.chmod644(externalAmJar);
+            FileUtils.chmod644(externalMainJar);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -77,20 +89,20 @@ public final class ServerConfig {
         if (executable.exists()) {
             int port = getLocalServerPort();
             String token = getLocalToken();
-            String jarName = Constants.JAR_NAME;
+            String amJarName = Constants.JAR_NAME;
+            String mainJarName = Constants.MAIN_JAR_NAME;
             String appId = BuildConfig.APPLICATION_ID;
             int currentUserId = UserHandleHidden.myUserId();
-            int bgrun = 1;
             int debug = BuildConfig.DEBUG ? 1 : 0;
 
-            return String.format(Locale.ROOT, "%s %d %s %s %s %d %d %d",
+            return String.format(Locale.ROOT, "%s %d %s %s %s %s %d %d",
                     executable.getAbsolutePath(),
                     port,
                     token,
-                    jarName,
+                    amJarName,
+                    mainJarName,
                     appId,
                     currentUserId,
-                    bgrun,
                     debug
             );
         }
