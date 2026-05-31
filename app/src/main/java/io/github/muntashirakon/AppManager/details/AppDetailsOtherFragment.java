@@ -118,19 +118,10 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (activity.searchView != null) {
-            activity.searchView.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public boolean onQueryTextChange(String searchQuery, int type) {
+    public void search(String searchQuery, int type) {
         if (viewModel != null) {
             viewModel.setSearchQuery(searchQuery, type, mNeededProperty);
         }
-        return true;
     }
 
     private void refreshDetails() {

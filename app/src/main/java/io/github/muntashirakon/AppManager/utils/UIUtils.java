@@ -277,11 +277,9 @@ public class UIUtils {
     }
 
     @NonNull
-    public static AdvancedSearchView setupAdvancedSearchView(@NonNull ActionBar actionBar,
-                                                             @Nullable AdvancedSearchView.OnQueryTextListener queryTextListener) {
+    public static AdvancedSearchView setupAdvancedSearchView(@NonNull ActionBar actionBar) {
         AdvancedSearchView searchView = new AdvancedSearchView(actionBar.getThemedContext());
         searchView.setId(R.id.action_search);
-        searchView.setOnQueryTextListener(queryTextListener);
         // Set layout params
         ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);

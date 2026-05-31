@@ -156,7 +156,7 @@ public class AppDetailsActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
-            searchView = UIUtils.setupAdvancedSearchView(actionBar, null);
+            searchView = UIUtils.setupAdvancedSearchView(actionBar);
         }
         mViewPager = findViewById(R.id.pager);
         TabLayout tabLayout = findViewById(R.id.tab_layout);

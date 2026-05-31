@@ -38,13 +38,14 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.editor.CodeEditorActivity;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
+import io.github.muntashirakon.AppManager.misc.SearchViewDebouncer;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 
-public class ClassListingFragment extends Fragment implements AdvancedSearchView.OnQueryTextListener, MenuProvider {
+public class ClassListingFragment extends Fragment implements MenuProvider {
     private TextView mEmptyView;
     private boolean mTrackerClassesOnly;
     private ClassListingAdapter mClassListingAdapter;
@@ -53,6 +54,7 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
     private List<String> mTrackerClasses;
     private ScannerViewModel mViewModel;
     private ScannerActivity mActivity;
+    private SearchViewDebouncer mSearchDebouncer;
 
     @Nullable
     @Override
@@ -109,23 +111,15 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
     }
 
     @Override
-    public boolean onQueryTextChange(String newText, @AdvancedSearchView.SearchType int type) {
-        if (mClassListingAdapter != null) {
-            mClassListingAdapter.filter(newText, type);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query, int type) {
-        return false;
-    }
-
-    @Override
     public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_class_lister_actions, menu);
         AdvancedSearchView searchView = (AdvancedSearchView) menu.findItem(R.id.action_search).getActionView();
-        Objects.requireNonNull(searchView).setOnQueryTextListener(this);
+        mSearchDebouncer = new SearchViewDebouncer(SearchViewDebouncer.DELAY_STANDARD);
+        mSearchDebouncer.bindAdvanced(Objects.requireNonNull(searchView), (query, type) -> {
+            if (mClassListingAdapter != null) {
+                mClassListingAdapter.filter(query, type);
+            }
+        });
     }
 
     @Override
@@ -136,6 +130,14 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
             setAdapterList();
         } else return false;
         return true;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mSearchDebouncer != null) {
+            mSearchDebouncer.unbind();
+        }
     }
 
     private void showProgress(boolean willShow) {

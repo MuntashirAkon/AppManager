@@ -201,27 +201,20 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (activity.searchView != null) {
-            if (!activity.searchView.isShown()) {
-                activity.searchView.setVisibility(View.VISIBLE);
-            }
-            activity.searchView.setOnQueryTextListener(this);
-            if (viewModel != null) {
-                int sortOrder = viewModel.getSortOrder(mNeededProperty);
-                String searchQuery = viewModel.getSearchQuery();
-                if (sortOrder != mSortOrder || !Objects.equals(searchQuery, mSearchQuery)) {
-                    viewModel.filterAndSortItems(mNeededProperty);
-                }
+        if (viewModel != null) {
+            int sortOrder = viewModel.getSortOrder(mNeededProperty);
+            String searchQuery = viewModel.getSearchQuery();
+            if (sortOrder != mSortOrder || !Objects.equals(searchQuery, mSearchQuery)) {
+                viewModel.filterAndSortItems(mNeededProperty);
             }
         }
     }
 
     @Override
-    public boolean onQueryTextChange(String searchQuery, int type) {
+    public void search(String searchQuery, int type) {
         if (viewModel != null) {
             viewModel.setSearchQuery(searchQuery, type, mNeededProperty);
         }
-        return true;
     }
 
     private void updateBlockMenuItem(int status) {

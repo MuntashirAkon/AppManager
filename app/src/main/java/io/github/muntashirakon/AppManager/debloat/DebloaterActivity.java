@@ -30,7 +30,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.batchops.BatchQueueItem;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchFreezeOptions;
 import io.github.muntashirakon.AppManager.batchops.struct.IBatchOpOptions;
-import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
+import io.github.muntashirakon.AppManager.misc.SearchViewDebouncer;
 import io.github.muntashirakon.AppManager.profiles.AddToProfileDialogFragment;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
@@ -40,13 +40,13 @@ import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.RecyclerView;
 
 public class DebloaterActivity extends BaseActivity implements MultiSelectionView.OnSelectionChangeListener,
-        MultiSelectionActionsView.OnItemSelectedListener, AdvancedSearchView.OnQueryTextListener,
-        MultiSelectionView.OnSelectionModeChangeListener {
+        MultiSelectionActionsView.OnItemSelectedListener, MultiSelectionView.OnSelectionModeChangeListener {
     DebloaterViewModel viewModel;
 
     private LinearProgressIndicator mProgressIndicator;
     private MultiSelectionView mMultiSelectionView;
     private DebloaterRecyclerViewAdapter mAdapter;
+    private SearchViewDebouncer mSearchDebouncer;
 
     private final StoragePermission mStoragePermission = StoragePermission.init(this);
     private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
@@ -78,7 +78,12 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowCustomEnabled(true);
-            UIUtils.setupAdvancedSearchView(actionBar, this);
+            mSearchDebouncer = new SearchViewDebouncer(SearchViewDebouncer.DELAY_STANDARD);
+            mSearchDebouncer.bindAdvanced(UIUtils.setupAdvancedSearchView(actionBar), (query, type) -> {
+                if (viewModel != null) {
+                    viewModel.setQuery(query, type);
+                }
+            });
         }
         viewModel = new ViewModelProvider(this).get(DebloaterViewModel.class);
 
@@ -114,6 +119,14 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mBatchOpsBroadCastReceiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mSearchDebouncer != null) {
+            mSearchDebouncer.unbind();
+        }
     }
 
     @Override
@@ -181,17 +194,6 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
             dialog.show(getSupportFragmentManager(), AddToProfileDialogFragment.TAG);
         } else return false;
         return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText, int type) {
-        viewModel.setQuery(newText, type);
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query, int type) {
-        return false;
     }
 
     private void showFreezeUnfreezeDialog(int freezeType) {

@@ -25,6 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
+import io.github.muntashirakon.AppManager.misc.SearchViewDebouncer;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
@@ -32,8 +33,7 @@ import io.github.muntashirakon.widget.MaterialAlertView;
 import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
-public abstract class AppDetailsFragment extends Fragment implements AdvancedSearchView.OnQueryTextListener,
-        SwipeRefreshLayout.OnRefreshListener, MenuProvider {
+public abstract class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, MenuProvider {
     @IntDef(value = {
             APP_INFO,
             ACTIVITIES,
@@ -108,6 +108,7 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
     protected TextView emptyView;
     @Nullable
     protected AppDetailsViewModel viewModel;
+    private SearchViewDebouncer mSearchDebouncer;
 
     protected int colorQueryStringHighlight;
 
@@ -119,6 +120,7 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
         viewModel = new ViewModelProvider(activity).get(AppDetailsViewModel.class);
         packageManager = activity.getPackageManager();
         colorQueryStringHighlight = ColorCodes.getQueryStringHighlightColor(activity);
+        mSearchDebouncer = new SearchViewDebouncer(SearchViewDebouncer.DELAY_STANDARD);
     }
 
     @Nullable
@@ -153,6 +155,21 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
     public void onResume() {
         super.onResume();
         swipeRefresh.setEnabled(true);
+        AdvancedSearchView searchView = activity.searchView;
+        if (searchView != null) {
+            if (this instanceof AppDetailsComponentsFragment || this instanceof AppDetailsPermissionsFragment) {
+                if (!searchView.isShown()) {
+                    searchView.setVisibility(View.VISIBLE);
+                }
+                if (mSearchDebouncer != null) {
+                    mSearchDebouncer.bindAdvanced(searchView, this::search);
+                }
+            } else {
+                if (searchView.isShown()) {
+                    searchView.setVisibility(View.GONE);
+                }
+            }
+        }
     }
 
     @CallSuper
@@ -170,8 +187,14 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
         super.onDestroyView();
     }
 
+    @CallSuper
     @Override
-    public boolean onQueryTextSubmit(String query, int type) {
-        return false;
+    public void onDestroy() {
+        super.onDestroy();
+        if (mSearchDebouncer != null) {
+            mSearchDebouncer.unbind();
+        }
     }
+
+    protected abstract void search(String query, int type);
 }

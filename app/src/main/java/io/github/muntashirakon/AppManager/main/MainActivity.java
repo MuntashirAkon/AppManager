@@ -68,6 +68,7 @@ import io.github.muntashirakon.AppManager.filters.FinderActivity;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.HelpActivity;
 import io.github.muntashirakon.AppManager.misc.LabsActivity;
+import io.github.muntashirakon.AppManager.misc.SearchViewDebouncer;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
 import io.github.muntashirakon.AppManager.profiles.AddToProfileDialogFragment;
 import io.github.muntashirakon.AppManager.profiles.ProfilesActivity;
@@ -93,8 +94,8 @@ import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
-public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQueryTextListener,
-        SwipeRefreshLayout.OnRefreshListener, MultiSelectionActionsView.OnItemSelectedListener,
+public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,
+        MultiSelectionActionsView.OnItemSelectedListener,
         MultiSelectionView.OnSelectionModeChangeListener {
     private static final String PACKAGE_NAME_APK_UPDATER = "com.apkupdater";
     private static final String ACTIVITY_NAME_APK_UPDATER = "com.apkupdater.activity.MainActivity";
@@ -105,6 +106,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
 
     private MainRecyclerAdapter mAdapter;
     private AdvancedSearchView mSearchView;
+    private SearchViewDebouncer mSearchDebouncer;
     private LinearProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
     private MultiSelectionView mMultiSelectionView;
@@ -205,16 +207,18 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
             actionBar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
-            AdvancedSearchView searchView = new AdvancedSearchView(actionBar.getThemedContext());
-            searchView.setId(R.id.action_search);
-            searchView.setOnQueryTextListener(this);
+            mSearchView = new AdvancedSearchView(actionBar.getThemedContext());
+            mSearchView.setId(R.id.action_search);
             // Set layout params
             ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.gravity = Gravity.CENTER;
-            actionBar.setCustomView(searchView, layoutParams);
-            mSearchView = searchView;
+            actionBar.setCustomView(mSearchView, layoutParams);
             mSearchView.setIconifiedByDefault(false);
+            mSearchDebouncer = new SearchViewDebouncer(SearchViewDebouncer.DELAY_STANDARD);
+            mSearchDebouncer.bindAdvanced(mSearchView, (query, type) -> {
+                if (viewModel != null) viewModel.setSearchQuery(query, type);
+            });
             // Check for market://search/?q=<query>
             Uri marketUri = getIntent().getData();
             if (marketUri != null && "market".equals(marketUri.getScheme()) && "search".equals(marketUri.getHost())) {
@@ -556,6 +560,14 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         unregisterReceiver(mBatchOpsBroadCastReceiver);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mSearchDebouncer != null) {
+            mSearchDebouncer.unbind();
+        }
+    }
+
     private void displayChangelogIfRequired() {
         if (!AppPref.getBoolean(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_BOOL)) {
             return;
@@ -640,16 +652,5 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
     void showProgressIndicator(boolean show) {
         if (show) mProgressIndicator.show();
         else mProgressIndicator.hide();
-    }
-
-    @Override
-    public boolean onQueryTextChange(String searchQuery, @AdvancedSearchView.SearchType int type) {
-        if (viewModel != null) viewModel.setSearchQuery(searchQuery, type);
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query, int type) {
-        return false;
     }
 }

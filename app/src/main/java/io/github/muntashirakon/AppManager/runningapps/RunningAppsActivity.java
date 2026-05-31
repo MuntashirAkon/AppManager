@@ -37,7 +37,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchQueueItem;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
-import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
+import io.github.muntashirakon.AppManager.misc.SearchViewDebouncer;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -49,8 +49,7 @@ import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class RunningAppsActivity extends BaseActivity implements MultiSelectionView.OnSelectionChangeListener,
-        MultiSelectionActionsView.OnItemSelectedListener, AdvancedSearchView.OnQueryTextListener,
-        MultiSelectionView.OnSelectionModeChangeListener {
+        MultiSelectionActionsView.OnItemSelectedListener, MultiSelectionView.OnSelectionModeChangeListener {
 
     @IntDef(value = {
             SORT_BY_PID,
@@ -100,6 +99,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     private LinearProgressIndicator mProgressIndicator;
     @Nullable
     private MultiSelectionView mMultiSelectionView;
+    private SearchViewDebouncer mSearchDebouncer;
     @Nullable
     private Menu mSelectionMenu;
     private Timer mTimer;
@@ -123,7 +123,12 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
-            UIUtils.setupAdvancedSearchView(actionBar, this);
+            mSearchDebouncer = new SearchViewDebouncer(SearchViewDebouncer.DELAY_STANDARD);
+            mSearchDebouncer.bindAdvanced(UIUtils.setupAdvancedSearchView(actionBar), (query, type) -> {
+                if (model != null) {
+                    model.setQuery(query, type);
+                }
+            });
         }
         model = new ViewModelProvider(this).get(RunningAppsViewModel.class);
         mProgressIndicator = findViewById(R.id.progress_linear);
@@ -315,17 +320,11 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query, int type) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText, int type) {
-        if (model != null) {
-            model.setQuery(newText, type);
-            return true;
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mSearchDebouncer != null) {
+            mSearchDebouncer.unbind();
         }
-        return false;
     }
 
     @Override

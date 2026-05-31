@@ -654,12 +654,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if (mActivity.searchView != null) mActivity.searchView.setVisibility(View.GONE);
-    }
-
-    @Override
     public void onRefresh() {
         mSwipeRefresh.setRefreshing(false);
         refreshDetails();

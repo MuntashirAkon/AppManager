@@ -98,7 +98,6 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
                 alertView.show();
             } else alertView.hide();
         });
-
     }
 
     @Override
@@ -134,11 +133,10 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
     }
 
     @Override
-    public boolean onQueryTextChange(String newText, int type) {
+    protected void search(String query, int type) {
         if (viewModel != null) {
-            viewModel.setSearchQuery(newText, type, OVERLAYS);
+            viewModel.setSearchQuery(query, type, OVERLAYS);
         }
-        return true;
     }
 
     private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> {
