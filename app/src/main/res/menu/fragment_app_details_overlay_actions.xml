@@ -9,6 +9,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_create_overlay"
+        android:icon="@drawable/ic_add"
+        android:title="@string/action_create_overlay"
+        app:showAsAction="never" />
+
+    <item
         android:icon="@drawable/ic_sort"
         android:title="@string/sort"
         app:showAsAction="never">
