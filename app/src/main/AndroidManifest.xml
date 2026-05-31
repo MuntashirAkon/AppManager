@@ -728,7 +728,71 @@
             android:label="@string/interceptor"
             android:taskAffinity=""
             android:windowSoftInputMode="stateUnchanged">
+            <!-- DEFAULT category + scheme. This must be located on top -->
+            <intent-filter>
+                <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <action android:name="android.intent.action.CREATE_DOCUMENT" />
+                <action android:name="android.intent.action.OPEN_DOCUMENT" />
+                <action android:name="android.intent.action.OPEN_DOCUMENT_TREE" />
+                <action android:name="android.intent.action.INSERT" />
+                <action android:name="android.intent.action.INSERT_OR_EDIT" />
+                <action android:name="android.intent.action.CALL_BUTTON" />
+                <action android:name="android.intent.action.DIAL" />
+                <!-- Used by camera to view photo taken -->
+                <action android:name="android.provider.action.REVIEW" />
+                <action android:name="android.provider.action.REVIEW_SECURE" />
+                <action android:name="com.android.camera.action.REVIEW" />
+                <action android:name="com.android.camera.action.SPLIT_SCREEN_REVIEW" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:scheme="about" />
+                <data android:scheme="javascript" />
+                <data android:scheme="mailto" />
+                <data android:scheme="geo" />
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+
+                <data android:scheme="rtsp" />
+                <data android:scheme="rtmp" />
+                <data android:scheme="ftp" />
+                <data android:scheme="sftp" />
+
+                <data android:scheme="skype" />
+                <data android:scheme="sms" />
+                <data android:scheme="smsto" />
+                <data android:scheme="mms" />
+                <data android:scheme="mmsto" />
+                <data android:scheme="zxing" />
+                <data android:scheme="spotify" />
+                <data android:scheme="tel" />
+                <data android:scheme="voicemail" />
+                <data android:scheme="view-source" />
+                <data android:scheme="sqlite" />
+
+                <!-- Intercept Alipay links -->
+                <data android:scheme="alipays" />
+
+                <!-- Intercept Google play links -->
+                <data android:scheme="market" />
+                <data android:scheme="store" />
+                <data android:scheme="android" />
+
+                <!-- Intercept WeChat links -->
+                <data android:scheme="weixin" />
+
+                <!-- Intercept WhatsApp links -->
+                <data android:scheme="whatsapp" />
+                <data android:scheme="whatsapp-sheet" />
+                <data android:scheme="whatsapp-consumer" />
+            </intent-filter>
             <!-- matching any given mime type -->
             <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
