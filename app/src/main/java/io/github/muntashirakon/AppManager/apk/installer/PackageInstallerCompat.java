@@ -89,6 +89,9 @@ public final class PackageInstallerCompat {
     // For rootless installer to prevent PackageInstallerService from hanging
     public static final String ACTION_INSTALL_INTERACTION_BEGIN = BuildConfig.APPLICATION_ID + ".action.INSTALL_INTERACTION_BEGIN";
     public static final String ACTION_INSTALL_INTERACTION_END = BuildConfig.APPLICATION_ID + ".action.INSTALL_INTERACTION_END";
+    public static final String ACTION_CONFIRM_PRE_APPROVAL = "android.content.pm.action.CONFIRM_PRE_APPROVAL";
+    public static final String ACTION_CONFIRM_INSTALL = "android.content.pm.action.CONFIRM_INSTALL";
+    public static final String EXTRA_UNINSTALL_ALL_USERS = "android.intent.extra.UNINSTALL_ALL_USERS";
 
     @IntDef({
             STATUS_SUCCESS,
@@ -812,6 +815,15 @@ public final class PackageInstallerCompat {
             BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{mPackageName});
         }
         return mFinalStatus == PackageInstaller.STATUS_SUCCESS;
+    }
+    public void setPermissionsResult(int sessionId, boolean accepted) {
+        try {
+            mPackageInstaller = PackageManagerCompat.getPackageInstaller();
+            mPackageInstaller.setPermissionsResult(sessionId, accepted);
+        } catch (RemoteException e) {
+            callFinish(STATUS_FAILURE_SESSION_COMMIT);
+            Log.e(TAG, "SetPermissionsResult: failed to set permission result for given session", e);
+        }
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

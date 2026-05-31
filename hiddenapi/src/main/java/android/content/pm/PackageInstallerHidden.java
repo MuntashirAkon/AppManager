@@ -54,4 +54,10 @@ public class PackageInstallerHidden {
         @RequiresApi(Build.VERSION_CODES.P)
         public String installerPackageName;
     }
+
+    public static class SessionInfo {
+        public String getResolvedBaseApkPath() {
+            return HiddenUtil.throwUOE();
+        }
+    }
 }

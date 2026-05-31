@@ -152,7 +152,17 @@
     <uses-permission
         android:name="android.permission.WRITE_SECURE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.PACKAGE_VERIFICATION_AGENT"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.READ_INSTALL_SESSIONS" />
+    <uses-permission android:name="android.permission.READ_INSTALLED_SESSION_PATHS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.HIDE_NON_SYSTEM_OVERLAY_WINDOWS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="com.termux.permission.RUN_COMMAND" />
 
     <application
@@ -601,6 +611,14 @@
             android:taskAffinity=""
             android:theme="@style/AppTheme.TransparentBackground">
             <intent-filter>
+                <action android:name="android.content.pm.action.CONFIRM_INSTALL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.content.pm.action.CONFIRM_PRE_APPROVAL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -728,7 +746,12 @@
             android:label="@string/interceptor"
             android:taskAffinity=""
             android:windowSoftInputMode="stateUnchanged">
-
+            <intent-filter>
+                <action android:name="android.intent.action.DELETE" />
+                <action android:name="android.intent.action.UNINSTALL_PACKAGE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="package" />
+            </intent-filter>
             <!-- matching any given mime type -->
             <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />

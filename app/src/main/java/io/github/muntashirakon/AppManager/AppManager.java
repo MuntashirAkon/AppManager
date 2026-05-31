@@ -15,6 +15,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.lsposed.hiddenapibypass.HiddenApiBypass;
 
 import java.security.Security;
+import java.util.Objects;
 
 import dalvik.system.ZipPathValidator;
 import io.github.muntashirakon.AppManager.misc.AMExceptionHandler;
@@ -48,7 +49,8 @@ public class AppManager extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && !Utils.isRoboUnitTest()) {
+        //noinspection ConstantValue Don't use the HiddenApiBypass in Platform as we are whilelisted and it caused infighting if enabled
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && !Utils.isRoboUnitTest() && !Objects.equals(BuildConfig.FLAVOR, "platform")) {
             HiddenApiBypass.addHiddenApiExemptions("L");
         }
     }
