@@ -16,6 +16,8 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -44,20 +46,35 @@ import io.github.muntashirakon.util.AccessibilityUtils;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
-class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
+class FmAdapter extends MultiSelectionView.Adapter<FmItem, FmAdapter.ViewHolder> {
     private static final List<String> DEX_EXTENSIONS = Arrays.asList("dex", "jar");
 
-    private final List<FmItem> mAdapterList = Collections.synchronizedList(new ArrayList<>());
     private final FmViewModel mViewModel;
     private final FmActivity mFmActivity;
 
+    private static final DiffUtil.ItemCallback<FmItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<FmItem>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull FmItem oldItem, @NonNull FmItem newItem) {
+            return Objects.equals(oldItem.path, newItem.path);
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull FmItem oldItem, @NonNull FmItem newItem) {
+            return oldItem.isDirectory == newItem.isDirectory
+                    && oldItem.getSize() == newItem.getSize()
+                    && oldItem.getLastModified() == newItem.getLastModified()
+                    && Objects.equals(oldItem.getName(), newItem.getName());
+        }
+    };
+
     public FmAdapter(FmViewModel viewModel, FmActivity activity) {
+        super(DIFF_CALLBACK);
         mViewModel = viewModel;
         mFmActivity = activity;
     }
 
     public void setFmList(List<FmItem> list) {
-        AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
+        submitList(list != null ? new ArrayList<>(list) : null);
         notifySelectionChange();
     }
 
@@ -73,15 +90,17 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        FmItem item = mAdapterList.get(position);
+        FmItem item = getItem(position);
         holder.itemView.setTag(item.path);
         holder.title.setText(item.getName());
         // Load attributes
         cacheAndLoadAttributes(holder, item);
         if (item.isDirectory) {
             holder.itemView.setOnClickListener(v -> {
+                int currentPos = holder.getBindingAdapterPosition();
+                if (currentPos == RecyclerView.NO_POSITION) return;
                 if (isInSelectionMode()) {
-                    toggleSelection(position);
+                    toggleSelection(currentPos);
                     AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
                     return;
                 }
@@ -89,8 +108,10 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
             });
         } else {
             holder.itemView.setOnClickListener(v -> {
+                int currentPos = holder.getBindingAdapterPosition();
+                if (currentPos == RecyclerView.NO_POSITION) return;
                 if (isInSelectionMode()) {
-                    toggleSelection(position);
+                    toggleSelection(currentPos);
                     AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
                     return;
                 }
@@ -105,33 +126,37 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
         holder.itemView.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.transparent));
         // Set selections
         holder.icon.setOnClickListener(v -> {
-            toggleSelection(position);
-            AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
+            int currentPos = holder.getBindingAdapterPosition();
+            if (currentPos != RecyclerView.NO_POSITION) {
+                toggleSelection(currentPos);
+                AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
+            }
         });
         // Set actions
-        PopupMenu popupMenu = getPopupMenu(holder.action, item, position);
+        PopupMenu popupMenu = getPopupMenu(holder.action, item, holder);
         holder.action.setOnClickListener(v -> popupMenu.show());
         holder.itemView.setOnLongClickListener(v -> {
+            int currentPos = holder.getBindingAdapterPosition();
+            if (currentPos == RecyclerView.NO_POSITION) return false;
             // Long click listener: Select/deselect an app.
             // 1) Turn selection mode on if this is the first item in the selection list
             // 2) Select between last selection position and this position (inclusive) if selection mode is on
             Path lastSelectedItem = mViewModel.getLastSelectedItem();
             int lastSelectedItemPosition = -1;
             if (lastSelectedItem != null) {
-                int i = 0;
-                for (FmItem fmItem : mAdapterList) {
-                    if (fmItem.path.equals(lastSelectedItem)) {
+                List<FmItem> currentList = getCurrentList();
+                for (int i = 0; i < currentList.size(); i++) {
+                    if (currentList.get(i).path.equals(lastSelectedItem)) {
                         lastSelectedItemPosition = i;
                         break;
                     }
-                    ++i;
                 }
             }
             if (lastSelectedItemPosition >= 0) {
                 // Select from last selection to this selection
-                selectRange(lastSelectedItemPosition, position);
+                selectRange(lastSelectedItemPosition, currentPos);
             } else {
-                toggleSelection(position);
+                toggleSelection(currentPos);
                 AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
             }
             return true;
@@ -180,29 +205,24 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
 
     @Override
     public long getItemId(int position) {
-        return mAdapterList.get(position).hashCode();
-    }
-
-    @Override
-    public int getItemCount() {
-        return mAdapterList.size();
+        return getItem(position).hashCode();
     }
 
     @Override
     protected boolean select(int position) {
-        mViewModel.setSelectedItem(mAdapterList.get(position).path, true);
+        mViewModel.setSelectedItem(getItem(position).path, true);
         return true;
     }
 
     @Override
     protected boolean deselect(int position) {
-        mViewModel.setSelectedItem(mAdapterList.get(position).path, false);
+        mViewModel.setSelectedItem(getItem(position).path, false);
         return true;
     }
 
     @Override
     protected boolean isSelected(int position) {
-        return mViewModel.isSelected(mAdapterList.get(position).path);
+        return mViewModel.isSelected(getItem(position).path);
     }
 
     @Override
@@ -218,10 +238,10 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
 
     @Override
     protected int getTotalItemCount() {
-        return mAdapterList.size();
+        return getCurrentList().size();
     }
 
-    private PopupMenu getPopupMenu(@NonNull View anchor, @NonNull FmItem item, int position) {
+    private PopupMenu getPopupMenu(@NonNull View anchor, @NonNull FmItem item, @NonNull ViewHolder holder) {
         PopupMenu popupMenu = new PopupMenu(anchor.getContext(), anchor);
         popupMenu.setForceShowIcon(true);
         popupMenu.inflate(R.menu.fragment_fm_item_actions);
@@ -299,9 +319,12 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
             return true;
         });
         selectAction.setOnMenuItemClickListener(menuItem -> {
-            select(position);
-            notifySelectionChange();
-            notifyItemChanged(position, AdapterUtils.STUB);
+            int currentPos = holder.getBindingAdapterPosition();
+            if (currentPos != RecyclerView.NO_POSITION) {
+                select(currentPos);
+                notifySelectionChange();
+                notifyItemChanged(currentPos, AdapterUtils.STUB);
+            }
             return true;
         });
         boolean isVfs = mViewModel.getOptions().isVfs();

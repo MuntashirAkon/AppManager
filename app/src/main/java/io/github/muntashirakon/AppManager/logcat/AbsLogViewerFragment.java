@@ -51,7 +51,7 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
         LogViewerViewModel.LogLinesAvailableInterface,
         MultiSelectionActionsView.OnItemSelectedListener,
         MultiSelectionView.OnSelectionModeChangeListener,
-        LogViewerActivity.SearchingInterface, Filter.FilterListener{
+        LogViewerActivity.SearchingInterface, Filter.FilterListener {
     public static final String TAG = AbsLogViewerFragment.class.getSimpleName();
 
     protected RecyclerView mRecyclerView;
@@ -210,7 +210,7 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
             mActivity.displayLogViewerSettings();
         } else if (id == R.id.action_show_saved_filters) {
             mViewModel.loadFilters();
-        }  else if (id == R.id.action_share) {
+        } else if (id == R.id.action_share) {
             displaySaveDebugLogsDialog(true, false);
         } else if (id == R.id.action_export) {
             displaySaveDebugLogsDialog(false, false);
@@ -244,9 +244,10 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
 
     @NonNull
     protected final List<String> getCurrentLogsAsListOfStrings() {
-        List<String> result = new ArrayList<>(mLogListAdapter.getItemCount());
-        for (int i = 0; i < mLogListAdapter.getItemCount(); i++) {
-            result.add(mLogListAdapter.getItem(i).getOriginalLine());
+        List<LogLine> currentList = mLogListAdapter.getCurrentList();
+        List<String> result = new ArrayList<>(currentList.size());
+        for (LogLine logLine : currentList) {
+            result.add(logLine.getOriginalLine());
         }
         return result;
     }

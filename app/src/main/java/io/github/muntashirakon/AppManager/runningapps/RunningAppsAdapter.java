@@ -23,6 +23,8 @@ import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -30,6 +32,7 @@ import com.google.android.material.color.MaterialColors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
@@ -49,29 +52,40 @@ import io.github.muntashirakon.util.AccessibilityUtils;
 import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
-public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectionView.ViewHolder> {
+public class RunningAppsAdapter extends MultiSelectionView.Adapter<ProcessItem, MultiSelectionView.ViewHolder> {
     private static final int VIEW_TYPE_MEMORY_INFO = 1;
     private static final int VIEW_TYPE_PROCESS_INFO = 2;
 
     private final RunningAppsActivity mActivity;
     private final RunningAppsViewModel mModel;
     private final int mQueryStringHighlightColor;
-    private final Object mLock = new Object();
-    @NonNull
-    private final List<ProcessItem> mProcessItems = new ArrayList<>();
     private ProcMemoryInfo mProcMemoryInfo;
 
+    private static final DiffUtil.ItemCallback<ProcessItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<ProcessItem>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull ProcessItem oldItem, @NonNull ProcessItem newItem) {
+            return oldItem.pid == newItem.pid && Objects.equals(oldItem.name, newItem.name);
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull ProcessItem oldItem, @NonNull ProcessItem newItem) {
+            return oldItem.getMemory() == newItem.getMemory()
+                    && oldItem.getVirtualMemory() == newItem.getVirtualMemory()
+                    && Objects.equals(oldItem.state, newItem.state)
+                    && Objects.equals(oldItem.state_extra, newItem.state_extra)
+                    && Objects.equals(oldItem.context, newItem.context);
+        }
+    };
+
     RunningAppsAdapter(@NonNull RunningAppsActivity activity) {
-        super();
+        super(DIFF_CALLBACK);
         mActivity = activity;
         mModel = activity.model;
         mQueryStringHighlightColor = ColorCodes.getQueryStringHighlightColor(activity);
     }
 
     void setDefaultList(@NonNull List<ProcessItem> processItems) {
-        synchronized (mLock) {
-            AdapterUtils.notifyDataSetChanged(this, 1, mProcessItems, processItems);
-        }
+        submitList(new ArrayList<>(processItems));
         notifySelectionChange();
     }
 
@@ -145,7 +159,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         }
         holder.mMemoryShortInfoView.setText(UIUtils.getStyledKeyValue(context, R.string.memory,
                 fUsedMemory + "/" + fTotalMemory + " (" +
-                context.getString(R.string.available_memory, fAvailableMemory) + ")"));
+                        context.getString(R.string.available_memory, fAvailableMemory) + ")"));
         // Set color info
         Spannable memInfo = UIUtils.charSequenceToSpannable(context.getString(R.string.memory_chart_info,
                 fAppMemory, fCachedMemory, fBuffers, fFreeMemory));
@@ -181,10 +195,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
     }
 
     private void onBindViewHolder(@NonNull BodyViewHolder holder, int position) {
-        ProcessItem processItem;
-        synchronized (mLock) {
-            processItem = mProcessItems.get(position);
-        }
+        ProcessItem processItem = getItem(position - 1);
         ApplicationInfo applicationInfo;
         if (processItem instanceof AppProcessItem) {
             applicationInfo = ((AppProcessItem) processItem).packageInfo.applicationInfo;
@@ -283,25 +294,32 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         });
         // Set selections
         holder.icon.setOnClickListener(v -> {
-            toggleSelection(position);
-            AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
+            int currentPos = holder.getBindingAdapterPosition();
+            if (currentPos != RecyclerView.NO_POSITION) {
+                toggleSelection(currentPos);
+                AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
+            }
         });
         holder.itemView.setOnLongClickListener(v -> {
+            int currentPos = holder.getBindingAdapterPosition();
+            if (currentPos == RecyclerView.NO_POSITION) return false;
             ProcessItem lastSelectedItem = mModel.getLastSelectedItem();
-            int lastSelectedItemPosition = lastSelectedItem == null ? -1 : mProcessItems.indexOf(lastSelectedItem);
+            int lastSelectedItemPosition = lastSelectedItem == null ? -1 : getCurrentList().indexOf(lastSelectedItem);
             if (lastSelectedItemPosition >= 0) {
                 // Select from last selection to this selection
-                selectRange(lastSelectedItemPosition + 1, position);
+                selectRange(lastSelectedItemPosition + 1, currentPos);
             } else {
-                toggleSelection(position);
+                toggleSelection(currentPos);
                 AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
             }
             return true;
         });
         // Open process details
         holder.itemView.setOnClickListener(v -> {
+            int currentPos = holder.getBindingAdapterPosition();
+            if (currentPos == RecyclerView.NO_POSITION) return;
             if (isInSelectionMode()) {
-                toggleSelection(position);
+                toggleSelection(currentPos);
                 AccessibilityUtils.requestAccessibilityFocus(holder.itemView);
             } else {
                 mModel.requestDisplayProcessDetails(processItem);
@@ -315,9 +333,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         if (position == 0) {
             return mProcMemoryInfo != null ? mProcMemoryInfo.hashCode() : View.NO_ID;
         }
-        synchronized (mLock) {
-            return mProcessItems.get(position).hashCode();
-        }
+        return getItem(position - 1).hashCode();
     }
 
     @Override
@@ -325,10 +341,8 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         if (position == 0) {
             return false;
         }
-        synchronized (mLock) {
-            mModel.select(mProcessItems.get(position));
-            return true;
-        }
+        mModel.select(getItem(position - 1));
+        return true;
     }
 
     @Override
@@ -336,10 +350,8 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         if (position == 0) {
             return false;
         }
-        synchronized (mLock) {
-            mModel.deselect(mProcessItems.get(position));
-            return true;
-        }
+        mModel.deselect(getItem(position - 1));
+        return true;
     }
 
     @Override
@@ -347,9 +359,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         if (position == 0) {
             return false;
         }
-        synchronized (mLock) {
-            return mModel.isSelected(mProcessItems.get(position));
-        }
+        return mModel.isSelected(getItem(position - 1));
     }
 
     @Override
@@ -380,9 +390,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
 
     @Override
     public int getItemCount() {
-        synchronized (mLock) {
-            return mProcessItems.size();
-        }
+        return getCurrentList().size() + 1;
     }
 
     private static void setColors(@NonNull View v, @NonNull Spannable text, @NonNull @AttrRes int[] colors) {

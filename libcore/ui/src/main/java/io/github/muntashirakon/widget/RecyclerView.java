@@ -146,13 +146,4 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
             AdapterUtils.fixTextSelectionInView(holder);
         }
     }
-
-    public abstract static class Adapter<VH extends ViewHolder> extends androidx.recyclerview.widget.RecyclerView.Adapter<VH> {
-        @CallSuper
-        @Override
-        public void onViewAttachedToWindow(@NonNull VH holder) {
-            super.onViewAttachedToWindow(holder);
-            AdapterUtils.fixTextSelectionInView(holder);
-        }
-    }
 }

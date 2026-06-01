@@ -29,6 +29,8 @@ import androidx.core.view.OnApplyWindowInsetsListener;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.customview.view.AbsSavedState;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
@@ -87,7 +89,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
     private int mSelectionBottomPadding;
     private boolean mInSelectionMode = false;
     @Nullable
-    private Adapter<?> mAdapter;
+    private Adapter<?, ?> mAdapter;
     @Nullable
     private OnSelectionChangeListener mSelectionChangeListener;
     @Nullable
@@ -304,7 +306,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         return mSelectionBottomPadding;
     }
 
-    public void setAdapter(@NonNull Adapter<?> adapter) {
+    public void setAdapter(@NonNull Adapter<?, ?> adapter) {
         mAdapter = adapter;
         // Set listeners
         adapter.setOnLayoutChangeListener((v, rect, oldRect) -> toggleSelectionActions(rect.height()));
@@ -349,7 +351,6 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         mSelectionBottomPadding = 0;
         mInSelectionMode = false;
         if (mAdapter != null) {
-            //noinspection PointlessNullCheck
             if (mAdapter.mRecyclerView != null
                     && mAdapter.mRecyclerView.getFitsSystemWindows()
                     && mLastInsets != null) {
@@ -452,7 +453,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         setLayoutParams(params);
     }
 
-    public abstract static class Adapter<VH extends ViewHolder> extends RecyclerView.Adapter<VH> implements View.OnLayoutChangeListener {
+    public abstract static class Adapter<T, VH extends ViewHolder> extends ListAdapter<T, VH> implements View.OnLayoutChangeListener {
         private interface OnSelectionChangeListener {
             @UiThread
             void onSelectionChange();
@@ -472,8 +473,8 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         private RecyclerView mRecyclerView;
         private int mDefaultBottomPadding;
 
-        public Adapter() {
-            setHasStableIds(true);
+        public Adapter(@NonNull DiffUtil.ItemCallback<T> diffCallback) {
+            super(diffCallback);
         }
 
         @AnyThread

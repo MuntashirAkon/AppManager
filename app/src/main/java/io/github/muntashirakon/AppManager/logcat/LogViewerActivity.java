@@ -55,6 +55,7 @@ import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
 import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
 import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
+import io.github.muntashirakon.AppManager.misc.SearchViewDebouncer;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
@@ -73,8 +74,8 @@ import io.github.muntashirakon.widget.SearchView;
 
 // Copyright 2012 Nolan Lawson
 // Copyright 2021 Muntashir Al-Islam
-public class LogViewerActivity extends BaseActivity implements SearchView.OnQueryTextListener,
-        LogViewerRecyclerAdapter.ViewHolder.OnSearchByClickListener, SearchView.OnSuggestionListener {
+public class LogViewerActivity extends BaseActivity implements SearchView.OnSuggestionListener,
+        LogViewerRecyclerAdapter.ViewHolder.OnSearchByClickListener {
     public static final String TAG = LogViewerActivity.class.getSimpleName();
 
     public interface SearchingInterface {
@@ -97,6 +98,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     @Nullable
     private AlertDialog mLoadingDialog;
     private SearchView mSearchView;
+    private SearchViewDebouncer mSearchDebouncer;
     @Nullable
     private SearchCriteria mSearchCriteria;
     private boolean mDynamicallyEnteringSearchQuery;
@@ -144,7 +146,15 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowCustomEnabled(true);
-            mSearchView = UIUtils.setupSearchView(actionBar, this);
+            mSearchView = UIUtils.setupSearchView(actionBar);
+            mSearchDebouncer = new SearchViewDebouncer(SearchViewDebouncer.DELAY_STANDARD);
+            mSearchDebouncer.bind(mSearchView, query -> {
+                if (!mDynamicallyEnteringSearchQuery) {
+                    search(new SearchCriteria(query));
+                    populateSuggestionsAdapter(query);
+                }
+                mDynamicallyEnteringSearchQuery = false;
+            });
             mSearchView.setOnSuggestionListener(this);
         }
 
@@ -313,6 +323,9 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     public void onDestroy() {
         CpuUtils.releaseWakeLock(mWakeLock);
         super.onDestroy();
+        if (mSearchDebouncer != null) {
+            mSearchDebouncer.unbind();
+        }
         mExecutor.shutdownNow();
     }
 
@@ -383,21 +396,6 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
             showSearchByDialog(logLine);
             return true;
         }
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        if (!mDynamicallyEnteringSearchQuery) {
-            search(new SearchCriteria(newText));
-            populateSuggestionsAdapter(newText);
-        }
-        mDynamicallyEnteringSearchQuery = false;
         return false;
     }
 

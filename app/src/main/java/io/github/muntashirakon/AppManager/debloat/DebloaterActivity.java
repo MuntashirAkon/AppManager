@@ -103,7 +103,7 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
 
         viewModel.getDebloatObjectListLiveData().observe(this, debloatObjects -> {
             mProgressIndicator.hide();
-            mAdapter.setAdapterList(debloatObjects);
+            mAdapter.submitList(debloatObjects);
         });
         viewModel.loadPackages();
     }
