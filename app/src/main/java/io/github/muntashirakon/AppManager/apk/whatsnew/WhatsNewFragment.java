@@ -50,7 +50,7 @@ public class WhatsNewFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         WhatsNewRecyclerAdapter adapter = new WhatsNewRecyclerAdapter(requireContext(), newPkgInfo.packageName);
         recyclerView.setAdapter(adapter);
-        viewModel.getChangesLiveData().observe(getViewLifecycleOwner(), adapter::setAdapterList);
+        viewModel.getChangesLiveData().observe(getViewLifecycleOwner(), adapter::submitList);
         viewModel.loadChanges(newPkgInfo, oldPkgInfo);
     }
 }

@@ -51,7 +51,7 @@ public class FinderActivity extends BaseActivity implements EditFiltersDialogFra
         // Watch livedata
         mViewModel.getFilteredAppListLiveData().observe(this, list -> {
             ProgressIndicatorCompat.setVisibility(mProgress, false);
-            mAdapter.setDefaultList(list);
+            mAdapter.submitList(list);
         });
         mViewModel.getLastUpdateTimeLiveData().observe(this, time -> {
             CharSequence subtitle;

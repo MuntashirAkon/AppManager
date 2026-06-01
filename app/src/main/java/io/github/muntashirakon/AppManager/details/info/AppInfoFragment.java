@@ -1911,7 +1911,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         showProgressIndicator(false);
                     }
                     if (isDetached()) return;
-                    mAdapter.setAdapterList(mListItems);
+                    mAdapter.submitList(mListItems);
                 });
             }
         });

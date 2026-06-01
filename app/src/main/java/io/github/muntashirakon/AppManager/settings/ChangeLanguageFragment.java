@@ -16,9 +16,9 @@ import android.widget.FrameLayout;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.collection.ArraySet;
 import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.color.MaterialColors;
@@ -29,23 +29,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.misc.SearchViewDebouncer;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SearchView;
 
 public class ChangeLanguageFragment extends Fragment {
-    private SearchView mSearchView;
     private RecyclerView mRecyclerView;
     private FrameLayout mViewContainer;
     @Nullable
     private SearchableRecyclerViewAdapter<String> mAdapter;
+    private SearchViewDebouncer mSearchDouncer;
     private String mCurrentLang;
     private boolean mIsTextSelectable;
 
@@ -59,17 +58,11 @@ public class ChangeLanguageFragment extends Fragment {
         }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false));
         mViewContainer = view.findViewById(io.github.muntashirakon.ui.R.id.container);
-        mSearchView = view.findViewById(io.github.muntashirakon.ui.R.id.action_search);
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (mAdapter != null) mAdapter.setFilteredItems(newText);
-                return true;
+        SearchView searchView = view.findViewById(io.github.muntashirakon.ui.R.id.action_search);
+        mSearchDouncer = new SearchViewDebouncer(SearchViewDebouncer.DELAY_STANDARD);
+        mSearchDouncer.bind(searchView, query -> {
+            if (mAdapter != null) {
+                mAdapter.setFilteredItems(query);
             }
         });
         view.setFitsSystemWindows(true);
@@ -105,6 +98,13 @@ public class ChangeLanguageFragment extends Fragment {
         int layoutId = MaterialAttributes.resolveInteger(requireContext(), androidx.appcompat.R.attr.singleChoiceItemLayout,
                 com.google.android.material.R.layout.mtrl_alert_select_dialog_singlechoice);
         mAdapter = new SearchableRecyclerViewAdapter<>(Arrays.asList(languageNames), Arrays.asList(languages), layoutId);
+        mAdapter.setOnSelectionChangedListener((masterIndex, rawItem, isSelected) -> {
+            if (rawItem != null && isSelected) {
+                mCurrentLang = rawItem;
+                Prefs.Appearance.setLanguage(mCurrentLang);
+                AppearanceUtils.applyConfigurationChangesToActivities();
+            }
+        });
         mAdapter.setSelectedIndex(localeIndex, false);
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -113,6 +113,14 @@ public class ChangeLanguageFragment extends Fragment {
     public void onStart() {
         super.onStart();
         requireActivity().setTitle(R.string.choose_language);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mSearchDouncer != null) {
+            mSearchDouncer.unbind();
+        }
     }
 
     @NonNull
@@ -130,97 +138,134 @@ public class ChangeLanguageFragment extends Fragment {
         return localesL;
     }
 
-    private void triggerSingleChoiceClickListener(int index, boolean isChecked) {
-        if (mAdapter == null) {
-            return;
-        }
-        String selectedItem = mAdapter.mItems.get(index);
-        if (selectedItem != null && isChecked) {
-            mCurrentLang = selectedItem;
-            Prefs.Appearance.setLanguage(mCurrentLang);
-            AppearanceUtils.applyConfigurationChangesToActivities();
+    static class SingleChoiceItem<E> {
+        final int id;
+        @NonNull
+        final CharSequence name;
+        @NonNull
+        final E rawItem;
+        boolean isSelected;
+        boolean isDisabled;
+
+        SingleChoiceItem(int id, @NonNull CharSequence name, @NonNull E rawItem) {
+            this.id = id;
+            this.name = name;
+            this.rawItem = rawItem;
+            this.isSelected = false;
+            this.isDisabled = false;
         }
     }
 
-    class SearchableRecyclerViewAdapter<T> extends RecyclerView.Adapter<SearchableRecyclerViewAdapter<T>.ViewHolder> {
+    public interface OnSelectionChangedListener<E> {
+        void onSelectionChanged(int masterIndex, E rawItem, boolean isSelected);
+    }
+
+    private static class ChoiceItemCallback<E> extends DiffUtil.ItemCallback<SingleChoiceItem<E>> {
+        @Override
+        public boolean areItemsTheSame(@NonNull SingleChoiceItem<E> oldItem, @NonNull SingleChoiceItem<E> newItem) {
+            return oldItem.id == newItem.id && Objects.equals(oldItem.rawItem, newItem.rawItem);
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull SingleChoiceItem<E> oldItem, @NonNull SingleChoiceItem<E> newItem) {
+            return oldItem.isSelected == newItem.isSelected
+                    && oldItem.isDisabled == newItem.isDisabled
+                    && Objects.equals(oldItem.name.toString(), newItem.name.toString());
+        }
+    }
+
+    static class SearchableRecyclerViewAdapter<T> extends RecyclerView.ListAdapter<SingleChoiceItem<T>, SearchableRecyclerViewAdapter.ViewHolder> {
         @NonNull
-        private final List<CharSequence> mItemNames;
-        @NonNull
-        private final List<T> mItems;
-        @NonNull
-        private final ArrayList<Integer> mFilteredItems = new ArrayList<>();
-        private int mSelectedItem = -1;
-        private final Set<Integer> mDisabledItems = new ArraySet<>();
+        final List<SingleChoiceItem<T>> mMasterList = new ArrayList<>();
         @LayoutRes
         private final int mLayoutId;
+        @Nullable
+        private String mCurrentQuery = null;
+        @Nullable
+        private T mSelectedRawItem = null;
+        @Nullable
+        private OnSelectionChangedListener<T> mOnSelectionChangedListener;
+        private boolean mIsTextSelectable;
 
         SearchableRecyclerViewAdapter(@NonNull List<CharSequence> itemNames, @NonNull List<T> items, int layoutId) {
-            mItemNames = itemNames;
-            mItems = items;
+            super(new ChoiceItemCallback<>());
             mLayoutId = layoutId;
-            synchronized (mFilteredItems) {
-                for (int i = 0; i < items.size(); ++i) {
-                    mFilteredItems.add(i);
-                }
+
+            int size = Math.min(itemNames.size(), items.size());
+            for (int i = 0; i < size; ++i) {
+                mMasterList.add(new SingleChoiceItem<>(i, itemNames.get(i), items.get(i)));
             }
+            dispatchFilteredList();
+        }
+
+        public void setOnSelectionChangedListener(@Nullable OnSelectionChangedListener<T> listener) {
+            mOnSelectionChangedListener = listener;
+        }
+
+        public void setTextSelectable(boolean selectable) {
+            mIsTextSelectable = selectable;
         }
 
         void setFilteredItems(String constraint) {
-            constraint = TextUtils.isEmpty(constraint) ? null : constraint.toLowerCase(Locale.ROOT);
-            Locale locale = Locale.getDefault();
-            synchronized (mFilteredItems) {
-                int previousCount = mFilteredItems.size();
-                mFilteredItems.clear();
-                for (int i = 0; i < mItems.size(); ++i) {
-                    if (constraint == null
-                            || mItemNames.get(i).toString().toLowerCase(locale).contains(constraint)
-                            || mItems.get(i).toString().toLowerCase(Locale.ROOT).contains(constraint)) {
-                        mFilteredItems.add(i);
-                    }
-                }
-                AdapterUtils.notifyDataSetChanged(this, previousCount, mFilteredItems.size());
+            mCurrentQuery = TextUtils.isEmpty(constraint) ? null : constraint.toLowerCase(Locale.ROOT);
+            dispatchFilteredList();
+        }
+
+        private void dispatchFilteredList() {
+            if (mCurrentQuery == null) {
+                submitList(new ArrayList<>(mMasterList));
+                return;
             }
+
+            Locale locale = Locale.getDefault();
+            List<SingleChoiceItem<T>> filteredList = new ArrayList<>();
+            for (SingleChoiceItem<T> item : mMasterList) {
+                if (item.name.toString().toLowerCase(locale).contains(mCurrentQuery)
+                        || item.rawItem.toString().toLowerCase(Locale.ROOT).contains(mCurrentQuery)) {
+                    filteredList.add(item);
+                }
+            }
+            submitList(filteredList);
         }
 
         @Nullable
         T getSelection() {
-            if (mSelectedItem >= 0) {
-                return mItems.get(mSelectedItem);
-            }
-            return null;
+            return mSelectedRawItem;
         }
 
         void setSelection(@Nullable T selectedItem, boolean triggerListener) {
-            if (selectedItem != null) {
-                int index = mItems.indexOf(selectedItem);
-                if (index != -1) {
-                    setSelectedIndex(index, triggerListener);
-                }
-            }
-        }
+            if (Objects.equals(mSelectedRawItem, selectedItem)) return;
 
-        void setSelectedIndex(int selectedIndex, boolean triggerListener) {
-            if (selectedIndex == mSelectedItem) {
-                // Do nothing
-                return;
-            }
-            updateSelection(false, triggerListener);
-            mSelectedItem = selectedIndex;
-            updateSelection(true, triggerListener);
-            mRecyclerView.setSelection(selectedIndex);
-        }
-
-        void addDisabledItems(@Nullable List<T> disabledItems) {
-            if (disabledItems != null) {
-                for (T item : disabledItems) {
-                    int index = mItems.indexOf(item);
-                    if (index != -1) {
-                        synchronized (mDisabledItems) {
-                            mDisabledItems.add(index);
-                        }
+            mSelectedRawItem = selectedItem;
+            for (SingleChoiceItem<T> item : mMasterList) {
+                boolean targetSelectionState = Objects.equals(item.rawItem, selectedItem);
+                if (item.isSelected != targetSelectionState) {
+                    item.isSelected = targetSelectionState;
+                    if (triggerListener && mOnSelectionChangedListener != null) {
+                        mOnSelectionChangedListener.onSelectionChanged(item.id, item.rawItem, targetSelectionState);
                     }
                 }
             }
+            dispatchFilteredList();
+        }
+
+        void setSelectedIndex(int selectedIndex, boolean triggerListener) {
+            SingleChoiceItem<T> targetItem = (selectedIndex >= 0 && selectedIndex < mMasterList.size())
+                    ? mMasterList.get(selectedIndex) : null;
+            setSelection(targetItem != null ? targetItem.rawItem : null, triggerListener);
+        }
+
+        void addDisabledItems(@Nullable List<T> disabledItems) {
+            if (disabledItems == null) return;
+            for (T item : disabledItems) {
+                for (SingleChoiceItem<T> wrapper : mMasterList) {
+                    if (Objects.equals(wrapper.rawItem, item)) {
+                        wrapper.isDisabled = true;
+                        break;
+                    }
+                }
+            }
+            dispatchFilteredList();
         }
 
         @NonNull
@@ -232,56 +277,32 @@ public class ChangeLanguageFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            Integer index;
-            synchronized (mFilteredItems) {
-                index = mFilteredItems.get(position);
-            }
-            final AtomicBoolean selected = new AtomicBoolean(mSelectedItem == index);
-            holder.item.setText(mItemNames.get(index));
+            SingleChoiceItem<T> itemWrapper = getItem(position);
+
+            holder.item.setText(itemWrapper.name);
             holder.item.setTextIsSelectable(mIsTextSelectable);
-            synchronized (mDisabledItems) {
-                holder.item.setEnabled(!mDisabledItems.contains(index));
-            }
-            holder.item.setChecked(selected.get());
+            holder.item.setEnabled(!itemWrapper.isDisabled);
+            holder.item.setChecked(itemWrapper.isSelected);
+
             holder.item.setOnClickListener(v -> {
-                if (selected.get()) {
+                if (itemWrapper.isSelected) {
                     // Already selected, do nothing
                     return;
                 }
-                // Unselect the previous and select this one
-                updateSelection(false, true);
-                mSelectedItem = index;
-                // Update selection manually
-                selected.set(!selected.get());
-                holder.item.setChecked(selected.get());
-                triggerSingleChoiceClickListener(index, selected.get());
+                mSelectedRawItem = itemWrapper.rawItem;
+                for (SingleChoiceItem<T> target : mMasterList) {
+                    boolean wasSelected = target.isSelected;
+                    target.isSelected = (target.id == itemWrapper.id);
+                    if (wasSelected != target.isSelected && mOnSelectionChangedListener != null) {
+                        // Trigger only if this item wasn't selected before
+                        mOnSelectionChangedListener.onSelectionChanged(target.id, target.rawItem, target.isSelected);
+                    }
+                }
+                dispatchFilteredList();
             });
         }
 
-        @Override
-        public int getItemCount() {
-            synchronized (mFilteredItems) {
-                return mFilteredItems.size();
-            }
-        }
-
-        private void updateSelection(boolean selected, boolean triggerListener) {
-            if (mSelectedItem < 0) {
-                return;
-            }
-            int position;
-            synchronized (mFilteredItems) {
-                position = mFilteredItems.indexOf(mSelectedItem);
-            }
-            if (position >= 0) {
-                notifyItemChanged(position, AdapterUtils.STUB);
-            }
-            if (triggerListener) {
-                triggerSingleChoiceClickListener(mSelectedItem, selected);
-            }
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
+        static class ViewHolder extends RecyclerView.ViewHolder {
             CheckedTextView item;
 
             @SuppressLint("RestrictedApi")

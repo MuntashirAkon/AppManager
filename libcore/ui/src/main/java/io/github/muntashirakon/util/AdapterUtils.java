@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.collection.SimpleArrayMap;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,13 +23,6 @@ public final class AdapterUtils {
         private final List<T> mOldList;
         private final List<T> mNewList;
         private final int mStartPosition;
-
-        private SimpleListDiffCallback(@NonNull List<T> oldList, @Nullable List<T> newList) {
-            mOldList = oldList;
-            mNewList = newList;
-            mStartPosition = 0;
-        }
-
 
         private SimpleListDiffCallback(@NonNull List<T> oldList, @Nullable List<T> newList, int startPosition) {
             mOldList = oldList;
@@ -74,56 +66,6 @@ public final class AdapterUtils {
         public Object getChangePayload(int oldItemPosition, int newItemPosition) {
             return AdapterUtils.STUB;
         }
-    }
-
-    private static class SimpleArrayMapDiffCallback<K, V> extends DiffUtil.Callback {
-        private final SimpleArrayMap<K, V> mOldList;
-        private final SimpleArrayMap<K, V> mNewList;
-
-        private SimpleArrayMapDiffCallback(@NonNull SimpleArrayMap<K, V> oldList, @Nullable SimpleArrayMap<K, V> newList) {
-            mOldList = oldList;
-            mNewList = newList;
-        }
-
-        @Override
-        public int getOldListSize() {
-            return mOldList.size();
-        }
-
-        @Override
-        public int getNewListSize() {
-            return mNewList != null ? mNewList.size() : 0;
-        }
-
-        @Override
-        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            if (mNewList == null) {
-                return false;
-            }
-            return Objects.equals(mOldList.keyAt(oldItemPosition), mNewList.keyAt(newItemPosition));
-        }
-
-        @Override
-        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            return false;
-        }
-
-        @Nullable
-        @Override
-        public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-            return AdapterUtils.STUB;
-        }
-    }
-
-    public static <T, V> void notifyDataSetChanged(@NonNull RecyclerView.Adapter<?> adapter,
-                                                   @NonNull SimpleArrayMap<T, V> baseList,
-                                                   @Nullable SimpleArrayMap<T, V> newList) {
-        DiffUtil.DiffResult result = DiffUtil.calculateDiff(new SimpleArrayMapDiffCallback<>(baseList, newList));
-        baseList.clear();
-        if (newList != null) {
-            baseList.putAll(newList);
-        }
-        result.dispatchUpdatesTo(adapter);
     }
 
     public static <T> void notifyDataSetChanged(@NonNull RecyclerView.Adapter<?> adapter,

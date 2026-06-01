@@ -30,7 +30,9 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -44,9 +46,9 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
+import io.github.muntashirakon.AppManager.misc.SearchViewDebouncer;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -139,6 +141,7 @@ public class OpenWithDialogFragment extends DialogFragment {
     private SearchView mSearchView;
     private OpenWithViewModel mViewModel;
     private MatchingActivitiesRecyclerViewAdapter mAdapter;
+    private SearchViewDebouncer mSearchDebouncer;
 
     @NonNull
     @Override
@@ -151,18 +154,8 @@ public class OpenWithDialogFragment extends DialogFragment {
         mAdapter.setIntent(getIntent(mPath, mCustomType));
         mDialogView = View.inflate(requireActivity(), R.layout.dialog_open_with, null);
         mSearchView = mDialogView.findViewById(io.github.muntashirakon.ui.R.id.action_search);
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                mAdapter.setFilteredItems(newText);
-                return true;
-            }
-        });
+        mSearchDebouncer = new SearchViewDebouncer(SearchViewDebouncer.DELAY_STANDARD);
+        mSearchDebouncer.bind(mSearchView, query -> mAdapter.setFilteredItems(query));
         RecyclerView matchingActivitiesView = mDialogView.findViewById(R.id.intent_matching_activities);
         matchingActivitiesView.setLayoutManager(new LinearLayoutManager(requireContext()));
         matchingActivitiesView.setAdapter(mAdapter);
@@ -260,6 +253,9 @@ public class OpenWithDialogFragment extends DialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (mSearchDebouncer != null) {
+            mSearchDebouncer.unbind();
+        }
         if (mCloseActivity) {
             requireActivity().finish();
         }
@@ -280,20 +276,36 @@ public class OpenWithDialogFragment extends DialogFragment {
         return intent;
     }
 
-    private static class MatchingActivitiesRecyclerViewAdapter extends RecyclerView.Adapter<MatchingActivitiesRecyclerViewAdapter.ViewHolder> {
-        @NonNull
-        private final List<ResolvedActivityInfo> mMatchingActivities = new ArrayList<>();
-        @NonNull
-        private final ArrayList<Integer> mFilteredItems = new ArrayList<>();
+    private static class MatchingActivitiesRecyclerViewAdapter
+            extends ListAdapter<ResolvedActivityInfo, MatchingActivitiesRecyclerViewAdapter.ViewHolder> {
+
         private final Activity mActivity;
         private final OpenWithViewModel mViewModel;
         private final ImageLoader mImageLoader = ImageLoader.getInstance();
 
+        private final List<ResolvedActivityInfo> mAllResolvedActivities = new ArrayList<>();
+        @Nullable private String mConstraint;
         private Intent mIntent;
-        @Nullable
-        private String mConstraint;
+
+        private static final DiffUtil.ItemCallback<ResolvedActivityInfo> DIFF_CALLBACK =
+                new DiffUtil.ItemCallback<ResolvedActivityInfo>() {
+                    @Override
+                    public boolean areItemsTheSame(@NonNull ResolvedActivityInfo oldItem, @NonNull ResolvedActivityInfo newItem) {
+                        // Check by component name
+                        return Objects.equals(oldItem.packageName, newItem.packageName)
+                                && Objects.equals(oldItem.name, newItem.name);
+                    }
+
+                    @Override
+                    public boolean areContentsTheSame(@NonNull ResolvedActivityInfo oldItem, @NonNull ResolvedActivityInfo newItem) {
+                        return Objects.equals(oldItem.label, newItem.label)
+                                && Objects.equals(oldItem.appLabel, newItem.appLabel)
+                                && Objects.equals(oldItem.shortName, newItem.shortName);
+                    }
+                };
 
         public MatchingActivitiesRecyclerViewAdapter(OpenWithViewModel viewModel, Activity activity) {
+            super(DIFF_CALLBACK);
             mViewModel = viewModel;
             mActivity = activity;
         }
@@ -307,45 +319,44 @@ public class OpenWithDialogFragment extends DialogFragment {
         }
 
         public void setDefaultList(@Nullable List<ResolvedActivityInfo> matchingActivities) {
-            mMatchingActivities.clear();
+            mAllResolvedActivities.clear();
             if (matchingActivities != null) {
-                mMatchingActivities.addAll(matchingActivities);
+                mAllResolvedActivities.addAll(matchingActivities);
             }
-            filterItems();
+            dispatchFilteredList();
         }
 
         void setFilteredItems(@Nullable String constraint) {
             mConstraint = TextUtils.isEmpty(constraint) ? null : constraint.toLowerCase(Locale.getDefault());
-            filterItems();
+            dispatchFilteredList();
         }
 
-        private void filterItems() {
-            synchronized (mFilteredItems) {
-                int lastCount = mFilteredItems.size();
-                mFilteredItems.clear();
-                for (int i = 0; i < mMatchingActivities.size(); ++i) {
-                    if (mConstraint == null || mMatchingActivities.get(i).matches(mConstraint)) {
-                        mFilteredItems.add(i);
-                    }
-                }
-                AdapterUtils.notifyDataSetChanged(this, lastCount, mFilteredItems.size());
+        private void dispatchFilteredList() {
+            if (mConstraint == null) {
+                submitList(new ArrayList<>(mAllResolvedActivities));
+                return;
             }
+
+            List<ResolvedActivityInfo> filteredList = new ArrayList<>();
+            for (ResolvedActivityInfo info : mAllResolvedActivities) {
+                if (info.matches(mConstraint)) {
+                    filteredList.add(info);
+                }
+            }
+            submitList(filteredList);
         }
 
         @NonNull
         @Override
-        public MatchingActivitiesRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(io.github.muntashirakon.ui.R.layout.m3_preference_transparent, parent, false);
-            return new MatchingActivitiesRecyclerViewAdapter.ViewHolder(view);
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(io.github.muntashirakon.ui.R.layout.m3_preference_transparent, parent, false);
+            return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull MatchingActivitiesRecyclerViewAdapter.ViewHolder holder, int position) {
-            int index;
-            synchronized (mFilteredItems) {
-                index = mFilteredItems.get(position);
-            }
-            ResolvedActivityInfo resolvedInfo = mMatchingActivities.get(index);
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            ResolvedActivityInfo resolvedInfo = getItem(position);
             holder.title.setText(resolvedInfo.label);
             String activityName = resolvedInfo.name;
             String summary = resolvedInfo.appLabel + "\n" + resolvedInfo.shortName;
@@ -369,13 +380,6 @@ public class OpenWithDialogFragment extends DialogFragment {
                 mViewModel.openIntent(intent);
                 return true;
             });
-        }
-
-        @Override
-        public int getItemCount() {
-            synchronized (mFilteredItems) {
-                return mFilteredItems.size();
-            }
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {

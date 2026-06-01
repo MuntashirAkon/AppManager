@@ -596,7 +596,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                             recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
                             ChangelogRecyclerAdapter adapter = new ChangelogRecyclerAdapter();
                             recyclerView.setAdapter(adapter);
-                            adapter.setAdapterList(changelog.getChangelogItems());
+                            adapter.submitList(changelog.getChangelogItems());
                             new AlertDialogBuilder(this, true)
                                     .setTitle(R.string.changelog)
                                     .setView(recyclerView)

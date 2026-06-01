@@ -15,31 +15,57 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.color.MaterialColors;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.io.Paths;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolder> {
+class FmPathListAdapter extends ListAdapter<FmPathListAdapter.PathPartItem, FmPathListAdapter.PathHolder> {
     private final FmViewModel mViewModel;
-    private final List<String> mPathParts = Collections.synchronizedList(new ArrayList<>());
+    private final List<String> mPathPartsCache = new ArrayList<>();
     @Nullable
     private String mAlternativeRootName = null;
     private int mCurrentPosition = -1;
     @Nullable
     private Uri mCurrentUri;
 
+    static class PathPartItem {
+        final int id;
+        @NonNull final String partName;
+        boolean isCurrent;
+
+        PathPartItem(int id, @NonNull String partName, boolean isCurrent) {
+            this.id = id;
+            this.partName = partName;
+            this.isCurrent = isCurrent;
+        }
+    }
+
+    private static final DiffUtil.ItemCallback<PathPartItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<PathPartItem>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull PathPartItem oldItem, @NonNull PathPartItem newItem) {
+            return oldItem.id == newItem.id;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull PathPartItem oldItem, @NonNull PathPartItem newItem) {
+            return oldItem.isCurrent == newItem.isCurrent
+                    && Objects.equals(oldItem.partName, newItem.partName);
+        }
+    };
+
     FmPathListAdapter(FmViewModel viewModel) {
+        super(DIFF_CALLBACK);
         mViewModel = viewModel;
     }
 
@@ -57,12 +83,24 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
         // 2. Otherwise, alter pathParts and set (length - 1) as the currentPosition
         if (lastPathStr != null && lastPathStr.startsWith(currentPathStr)) {
             // Case 1
-            setCurrentPosition(paths.size() - 1);
+            mCurrentPosition = paths.size() - 1;
+            dispatchUpdatedSnapshot(mPathPartsCache);
         } else {
             // Case 2
             mCurrentPosition = paths.size() - 1;
-            AdapterUtils.notifyDataSetChanged(this, mPathParts, paths);
+            mPathPartsCache.clear();
+            mPathPartsCache.addAll(paths);
+            dispatchUpdatedSnapshot(mPathPartsCache);
         }
+    }
+
+    private void dispatchUpdatedSnapshot(@NonNull List<String> pathStrings) {
+        // We take snapshots of path to avoid loss of path parts
+        List<PathPartItem> snapshots = new ArrayList<>();
+        for (int i = 0; i < pathStrings.size(); i++) {
+            snapshots.add(new PathPartItem(i, pathStrings.get(i), i == mCurrentPosition));
+        }
+        submitList(snapshots);
     }
 
     public void setAlternativeRootName(@Nullable String alternativeRootName) {
@@ -79,16 +117,7 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
     }
 
     public Uri calculateUri(int position) {
-        return FmUtils.uriFromPathParts(Objects.requireNonNull(mCurrentUri), mPathParts, position);
-    }
-
-    private void setCurrentPosition(int currentPosition) {
-        int lastPosition = mCurrentPosition;
-        mCurrentPosition = currentPosition;
-        if (lastPosition >= 0) {
-            notifyItemChanged(lastPosition, AdapterUtils.STUB);
-        }
-        notifyItemChanged(currentPosition, AdapterUtils.STUB);
+        return FmUtils.uriFromPathParts(Objects.requireNonNull(mCurrentUri), mPathPartsCache, position);
     }
 
     @NonNull
@@ -100,15 +129,20 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
 
     @Override
     public void onBindViewHolder(@NonNull PathHolder holder, int position) {
-        String actualPathPart = mPathParts.get(position);
+        PathPartItem pathPartItem = getItem(position);
+        String actualPathPart = pathPartItem.partName;
         String pathPart;
         if (position == 0) {
             pathPart = mAlternativeRootName != null ? mAlternativeRootName : actualPathPart;
-        } else pathPart = "» " + actualPathPart;
+        } else {
+            pathPart = "» " + actualPathPart;
+        }
         holder.textView.setText(pathPart);
         if (position == 0 && pathPart.equals("/")) {
             holder.itemView.setContentDescription(holder.itemView.getContext().getString(R.string.root));
-        } else holder.itemView.setContentDescription(actualPathPart);
+        } else {
+            holder.itemView.setContentDescription(actualPathPart);
+        }
         holder.itemView.setOnClickListener(v -> {
             if (mCurrentPosition != position) {
                 mViewModel.loadFiles(calculateUri(position));
@@ -149,14 +183,9 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
             popupMenu.show();
             return true;
         });
-        holder.textView.setTextColor(mCurrentPosition == position
+        holder.textView.setTextColor(pathPartItem.isCurrent
                 ? MaterialColors.getColor(holder.textView, androidx.appcompat.R.attr.colorPrimary)
                 : MaterialColors.getColor(holder.textView, android.R.attr.textColorSecondary));
-    }
-
-    @Override
-    public int getItemCount() {
-        return mPathParts.size();
     }
 
     public static class PathHolder extends RecyclerView.ViewHolder {

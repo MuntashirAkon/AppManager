@@ -102,7 +102,7 @@ public class AboutPreferences extends PreferenceFragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
             ChangelogRecyclerAdapter adapter = new ChangelogRecyclerAdapter();
             recyclerView.setAdapter(adapter);
-            adapter.setAdapterList(changelog.getChangelogItems());
+            adapter.submitList(changelog.getChangelogItems());
             new AlertDialogBuilder(requireActivity(), true)
                     .setTitle(R.string.changelog)
                     .setView(recyclerView)

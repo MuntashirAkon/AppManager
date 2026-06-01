@@ -13,17 +13,17 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.divider.MaterialDivider;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.UiUtils;
 
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_GROUP_BEGIN;
@@ -31,15 +31,53 @@ import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_REGULAR;
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_REGULAR_ACTION;
 
-class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter.ViewHolder> {
+class AppInfoRecyclerAdapter extends ListAdapter<ListItem, AppInfoRecyclerAdapter.ViewHolder> {
     private final Context mContext;
-    private final List<ListItem> mAdapterList;
     private final float mCornerRadius;
     private final float mCornerRadiusInner;
 
+    private static final DiffUtil.ItemCallback<ListItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<ListItem>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull ListItem oldItem, @NonNull ListItem newItem) {
+            // Check only type and title
+            if (oldItem.type != newItem.type) {
+                return false;
+            }
+            return Objects.equals(oldItem.getTitle(), newItem.getTitle());
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull ListItem oldItem, @NonNull ListItem newItem) {
+            // Check text content changes
+            if (!Objects.equals(oldItem.getSubtitle(), newItem.getSubtitle())) {
+                return false;
+            }
+
+            // Check text formatting changes
+            if (oldItem.isSelectable() != newItem.isSelectable() || oldItem.isMonospace() != newItem.isMonospace()) {
+                return false;
+            }
+
+            // Check Action/Button changes (Only applicable for LIST_ITEM_REGULAR_ACTION)
+            if (oldItem.type == ListItem.LIST_ITEM_REGULAR_ACTION) {
+                if (oldItem.getActionIconRes() != newItem.getActionIconRes()) {
+                    return false;
+                }
+                if (!Objects.equals(oldItem.getActionContentDescription(), newItem.getActionContentDescription())) {
+                    return false;
+                }
+                if (oldItem.getActionContentDescriptionRes() != newItem.getActionContentDescriptionRes()) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    };
+
     AppInfoRecyclerAdapter(Context context) {
+        super(DIFF_CALLBACK);
         mContext = context;
-        mAdapterList = new ArrayList<>();
         // Use M3 design for preference cards
         DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
         TypedValue typedValue = new TypedValue();
@@ -55,14 +93,10 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
         }
     }
 
-    void setAdapterList(@NonNull List<ListItem> list) {
-        AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
-    }
-
     @Override
     @ListItem.ListItemType
     public int getItemViewType(int position) {
-        return mAdapterList.get(position).type;
+        return getItem(position).type;
     }
 
     @NonNull
@@ -72,10 +106,6 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
         switch (viewType) {
             case LIST_ITEM_GROUP_BEGIN:
                 view = LayoutInflater.from(parent.getContext()).inflate(io.github.muntashirakon.ui.R.layout.m3_preference_category, parent, false);
-                break;
-            default:
-            case LIST_ITEM_REGULAR:
-                view = LayoutInflater.from(parent.getContext()).inflate(io.github.muntashirakon.ui.R.layout.m3_preference, parent, false);
                 break;
             case LIST_ITEM_REGULAR_ACTION: {
                 view = LayoutInflater.from(parent.getContext()).inflate(io.github.muntashirakon.ui.R.layout.m3_preference, parent, false);
@@ -91,13 +121,17 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
                 layoutCompat.addView(action);
                 break;
             }
+            case LIST_ITEM_REGULAR:
+            default:
+                view = LayoutInflater.from(parent.getContext()).inflate(io.github.muntashirakon.ui.R.layout.m3_preference, parent, false);
+                break;
         }
         return new ViewHolder(view, viewType);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ListItem listItem = mAdapterList.get(position);
+        ListItem listItem = getItem(position);
 
         // Set title
         holder.title.setText(listItem.getTitle());
@@ -146,13 +180,8 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return mAdapterList.size();
-    }
-
     private boolean isCategoryHeader(int position) {
-        return mAdapterList.get(position).type == LIST_ITEM_GROUP_BEGIN;
+        return getItem(position).type == LIST_ITEM_GROUP_BEGIN;
     }
 
     private boolean isFirstInGroup(int position) {
@@ -163,7 +192,7 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
     }
 
     private boolean isLastInGroup(int position) {
-        if (position == getItemCount() - 1) return true;
+        if (position == getCurrentList().size() - 1) return true;
 
         // If the element right below this card is a header separator, this is the bottom card.
         return isCategoryHeader(position + 1);
@@ -191,12 +220,12 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
                     actionDivider = itemView.findViewById(R.id.divider);
                     actionIcon = itemView.findViewById(android.R.id.button1);
                     break;
-                default:
-                    break;
                 case LIST_ITEM_INLINE:
                     title = itemView.findViewById(android.R.id.title);
                     subtitle = itemView.findViewById(android.R.id.text1);
                     itemView.findViewById(android.R.id.summary).setVisibility(View.GONE);
+                    break;
+                default:
                     break;
             }
         }

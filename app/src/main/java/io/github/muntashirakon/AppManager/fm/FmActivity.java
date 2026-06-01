@@ -42,7 +42,9 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
@@ -64,7 +66,6 @@ import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Paths;
-import io.github.muntashirakon.util.AdapterUtils;
 
 public class FmActivity extends BaseActivity {
     public static class Options implements Parcelable {
@@ -386,16 +387,31 @@ public class FmActivity extends BaseActivity {
         }
     }
 
-    public static class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecyclerViewAdapter.ViewHolder> {
-        private final List<FmDrawerItem> mAdapterItems = new ArrayList<>();
+    public static class DrawerRecyclerViewAdapter extends ListAdapter<FmDrawerItem, DrawerRecyclerViewAdapter.ViewHolder> {
         private final FmActivity mFmActivity;
 
+        private static final DiffUtil.ItemCallback<FmDrawerItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<FmDrawerItem>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull FmDrawerItem oldItem, @NonNull FmDrawerItem newItem) {
+                return oldItem.id == newItem.id && oldItem.type == newItem.type;
+            }
+
+            @Override
+            public boolean areContentsTheSame(@NonNull FmDrawerItem oldItem, @NonNull FmDrawerItem newItem) {
+                return Objects.equals(oldItem.name, newItem.name)
+                        && oldItem.iconRes == newItem.iconRes
+                        && Objects.equals(oldItem.icon, newItem.icon)
+                        && Objects.equals(oldItem.options, newItem.options);
+            }
+        };
+
         public DrawerRecyclerViewAdapter(@NonNull FmActivity activity) {
+            super(DIFF_CALLBACK);
             mFmActivity = activity;
         }
 
         public void setAdapterItems(@NonNull List<FmDrawerItem> adapterItems) {
-            AdapterUtils.notifyDataSetChanged(this, mAdapterItems, adapterItems);
+            submitList(new ArrayList<>(adapterItems));
         }
 
         @NonNull
@@ -404,14 +420,16 @@ public class FmActivity extends BaseActivity {
             int layoutId;
             if (viewType == FmDrawerItem.ITEM_TYPE_LABEL) {
                 layoutId = R.layout.item_title_action;
-            } else layoutId = R.layout.item_fm_drawer;
+            } else {
+                layoutId = R.layout.item_fm_drawer;
+            }
             View v = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
             return new ViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            FmDrawerItem item = mAdapterItems.get(position);
+            FmDrawerItem item = getItem(position);
             holder.labelView.setText(item.name);
             if (item.type == FmDrawerItem.ITEM_TYPE_LABEL) {
                 getLabelView(holder, item);
@@ -421,9 +439,7 @@ public class FmActivity extends BaseActivity {
         }
 
         public void getLabelView(@NonNull ViewHolder holder, FmDrawerItem item) {
-            if (holder.actionView == null) {
-                return;
-            }
+            if (holder.actionView == null) return;
             if (item.id == -1) {
                 // Favorites
                 holder.actionView.setVisibility(View.GONE);
@@ -437,7 +453,9 @@ public class FmActivity extends BaseActivity {
                             .putExtra("android.provider.extra.SHOW_ADVANCED", true);
                     mFmActivity.mAddDocumentProvider.launch(intent);
                 });
-            } else holder.actionView.setVisibility(View.GONE);
+            } else {
+                holder.actionView.setVisibility(View.GONE);
+            }
         }
 
         public void getView(@NonNull ViewHolder holder, @NonNull FmDrawerItem item) {
@@ -445,7 +463,9 @@ public class FmActivity extends BaseActivity {
             if (holder.iconView != null) {
                 if (item.icon != null) {
                     holder.iconView.setImageDrawable(item.icon);
-                } else holder.iconView.setImageResource(item.iconRes);
+                } else {
+                    holder.iconView.setImageResource(item.iconRes);
+                }
             }
             holder.itemView.setOnClickListener(v -> {
                 Options options = item.options;
@@ -514,15 +534,10 @@ public class FmActivity extends BaseActivity {
             });
         }
 
-        @Override
-        public int getItemCount() {
-            return mAdapterItems.size();
-        }
-
         @FmDrawerItem.DrawerItemType
         @Override
         public int getItemViewType(int position) {
-            return mAdapterItems.get(position).type;
+            return getItem(position).type;
         }
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -537,7 +552,6 @@ public class FmActivity extends BaseActivity {
                 iconView = itemView.findViewById(R.id.item_icon);
                 labelView = itemView.findViewById(R.id.item_title);
                 actionView = itemView.findViewById(R.id.item_action);
-
             }
         }
     }

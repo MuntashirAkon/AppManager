@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.details;
 
 import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ConfigurationInfo;
@@ -30,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.pm.PackageInfoCompat;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -53,7 +53,6 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Paths;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.LocalizedString;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.RecyclerView;
@@ -148,27 +147,46 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
         }
     }
 
+    static class ItemCallback extends DiffUtil.ItemCallback<AppDetailsItem<?>> {
+        @Override
+        public boolean areItemsTheSame(@NonNull AppDetailsItem<?> oldItem, @NonNull AppDetailsItem<?> newItem) {
+            return Objects.equals(oldItem.name, newItem.name);
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull AppDetailsItem<?> oldItem, @NonNull AppDetailsItem<?> newItem) {
+            if (oldItem instanceof AppDetailsFeatureItem && newItem instanceof AppDetailsFeatureItem) {
+                AppDetailsFeatureItem oldFeature = (AppDetailsFeatureItem) oldItem;
+                AppDetailsFeatureItem newFeature = (AppDetailsFeatureItem) newItem;
+                return oldFeature.required == newFeature.required && oldFeature.available == newFeature.available;
+            }
+            if (oldItem instanceof AppDetailsLibraryItem && newItem instanceof AppDetailsLibraryItem) {
+                AppDetailsLibraryItem<?> oldLib = (AppDetailsLibraryItem<?>) oldItem;
+                AppDetailsLibraryItem<?> newLib = (AppDetailsLibraryItem<?>) newItem;
+                return oldLib.size == newLib.size && Objects.equals(oldLib.type, newLib.type) && Objects.equals(oldLib.path, newLib.path);
+            }
+            return Objects.equals(oldItem.item, newItem.item);
+        }
+    }
+
     @UiThread
-    private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> {
-        @NonNull
-        private final List<AppDetailsItem<?>> mAdapterList;
+    class AppDetailsRecyclerAdapter extends RecyclerView.ListAdapter<AppDetailsItem<?>, AppDetailsRecyclerAdapter.ViewHolder> {
         @OtherProperty
         private int mRequestedProperty;
 
         AppDetailsRecyclerAdapter() {
-            mAdapterList = new ArrayList<>();
+            super(new ItemCallback());
         }
 
         @UiThread
         void setDefaultList(@NonNull List<AppDetailsItem<?>> list) {
             ThreadUtils.postOnBackgroundThread(() -> {
-                mRequestedProperty = mNeededProperty;
+                int neededProperty = mNeededProperty;
                 ThreadUtils.postOnMainThread(() -> {
                     if (isDetached()) return;
                     ProgressIndicatorCompat.setVisibility(progressIndicator, false);
-                    synchronized (mAdapterList) {
-                        AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
-                    }
+                    mRequestedProperty = neededProperty;
+                    submitList(new ArrayList<>(list));
                 });
             });
         }
@@ -221,7 +239,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            @SuppressLint("InflateParams") final View view;
+            final View view;
             switch (mRequestedProperty) {
                 default:
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_details_primary, parent, false);
@@ -263,23 +281,8 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
             }
         }
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public int getItemCount() {
-            synchronized (mAdapterList) {
-                return mAdapterList.size();
-            }
-        }
-
         private void getSharedLibsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
-            AppDetailsLibraryItem<?> item;
-            synchronized (mAdapterList) {
-                item = (AppDetailsLibraryItem<?>) mAdapterList.get(index);
-            }
+            AppDetailsLibraryItem<?> item = (AppDetailsLibraryItem<?>) getItem(index);
             holder.textView1.setText(item.name);
             holder.chipType.setText(item.type);
             switch (item.type) {
@@ -333,10 +336,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
 
         private void getFeaturesView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             MaterialCardView view = holder.itemView;
-            final AppDetailsFeatureItem item;
-            synchronized (mAdapterList) {
-                item = (AppDetailsFeatureItem) mAdapterList.get(index);
-            }
+            final AppDetailsFeatureItem item = (AppDetailsFeatureItem) getItem(index);
             FeatureInfo featureInfo = item.item;
             // Set background
             if (item.required && !item.available) {
@@ -368,10 +368,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
 
         private void getConfigurationView(@NonNull ViewHolder holder, int index) {
             MaterialCardView view = holder.itemView;
-            final ConfigurationInfo configurationInfo;
-            synchronized (mAdapterList) {
-                configurationInfo = (ConfigurationInfo) mAdapterList.get(index).item;
-            }
+            final ConfigurationInfo configurationInfo = (ConfigurationInfo) getItem(index).item;
             view.setStrokeColor(Color.TRANSPARENT);
             // GL ES version
             holder.textView1.setText(String.format(Locale.ROOT, "%s %s",
@@ -389,10 +386,7 @@ public class AppDetailsOtherFragment extends AppDetailsFragment {
 
         private void getSignatureView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             TextView textView = holder.textView1;
-            AppDetailsItem<?> item;
-            synchronized (mAdapterList) {
-                item = mAdapterList.get(index);
-            }
+            AppDetailsItem<?> item = getItem(index);
             final X509Certificate signature = (X509Certificate) item.item;
             final SpannableStringBuilder builder = new SpannableStringBuilder();
             if (index == 0) {

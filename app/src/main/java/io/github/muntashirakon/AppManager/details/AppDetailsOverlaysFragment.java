@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.UiThread;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.materialswitch.MaterialSwitch;
@@ -23,6 +24,7 @@ import com.google.android.material.materialswitch.MaterialSwitch;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
@@ -36,7 +38,6 @@ import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialAlertView;
 import io.github.muntashirakon.widget.RecyclerView;
@@ -139,29 +140,46 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
         }
     }
 
-    private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> {
+    static class ItemCallback extends DiffUtil.ItemCallback<AppDetailsOverlayItem> {
+        @Override
+        public boolean areItemsTheSame(@NonNull AppDetailsOverlayItem oldItem, @NonNull AppDetailsOverlayItem newItem) {
+            return Objects.equals(oldItem.name, newItem.name);
+        }
 
-        @NonNull
-        private final List<AppDetailsItem<?>> mAdapterList;
+        @Override
+        public boolean areContentsTheSame(@NonNull AppDetailsOverlayItem oldItem, @NonNull AppDetailsOverlayItem newItem) {
+            return oldItem.isEnabled() == newItem.isEnabled()
+                    && oldItem.isMutable() == newItem.isMutable()
+                    && oldItem.isFabricated() == newItem.isFabricated()
+                    && Objects.equals(oldItem.getReadableState(), newItem.getReadableState())
+                    && Objects.equals(oldItem.getCategory(), newItem.getCategory())
+                    && oldItem.getPriority() == newItem.getPriority();
+        }
+    }
+
+    private @UiThread
+    class AppDetailsRecyclerAdapter extends RecyclerView.ListAdapter<AppDetailsOverlayItem, AppDetailsRecyclerAdapter.ViewHolder> {
         @Nullable
         private String mConstraint;
+
+        AppDetailsRecyclerAdapter() {
+            super(new ItemCallback());
+        }
 
         @UiThread
         void setDefaultList(List<AppDetailsItem<?>> list) {
             ThreadUtils.postOnBackgroundThread(() -> {
                 mConstraint = viewModel == null ? null : viewModel.getSearchQuery();
+                ArrayList<AppDetailsOverlayItem> items = new ArrayList<>(list.size());
+                for (AppDetailsItem<?> item : list) {
+                    items.add((AppDetailsOverlayItem) item);
+                }
                 ThreadUtils.postOnMainThread(() -> {
                     if (isDetached()) return;
                     ProgressIndicatorCompat.setVisibility(progressIndicator, false);
-                    synchronized (mAdapterList) {
-                        AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
-                    }
+                    submitList(items);
                 });
             });
-        }
-
-        AppDetailsRecyclerAdapter() {
-            mAdapterList = new ArrayList<>();
         }
 
         @NonNull
@@ -176,10 +194,7 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
         @Override
         @RequiresApi(Build.VERSION_CODES.O)
         public void onBindViewHolder(@NonNull ViewHolder holder, int index) {
-            AppDetailsOverlayItem overlayItem;
-            synchronized (mAdapterList) {
-                overlayItem = (AppDetailsOverlayItem) mAdapterList.get(index);
-            }
+            AppDetailsOverlayItem overlayItem = getItem(index);
             String overlayName = overlayItem.name;
 
             if (mConstraint != null && overlayName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
@@ -211,17 +226,31 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
             holder.itemView.setClickable(false);
             if (overlayItem.isMutable()) {
                 holder.toggleSwitch.setClickable(true);
-                holder.toggleSwitch.setOnClickListener((v) -> ThreadUtils.postOnBackgroundThread(() -> {
-                    try {
-                        // TODO: 2/18/25 Move to ViewModel
-                        if (overlayItem.setEnabled(overlayManager, !overlayItem.isEnabled())) {
-                            ThreadUtils.postOnMainThread(() -> notifyItemChanged(index, AdapterUtils.STUB));
-                        } else throw new Exception("Error Changing Overlay State " + overlayItem);
-                    } catch (Exception e) {
-                        Log.e(TAG, "Couldn't Change Overlay State", e);
-                        ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed));
-                    }
-                }));
+                holder.toggleSwitch.setOnClickListener(v -> {
+                    int currentPos = holder.getBindingAdapterPosition();
+                    if (currentPos == RecyclerView.NO_POSITION) return;
+
+                    ThreadUtils.postOnBackgroundThread(() -> {
+                        try {
+                            // TODO: Move to ViewModel
+                            boolean targetState = !overlayItem.isEnabled();
+                            if (overlayItem.setEnabled(overlayManager, targetState)) {
+                                List<AppDetailsOverlayItem> currentListSnapshot = new ArrayList<>(getCurrentList());
+                                currentListSnapshot.set(currentPos, overlayItem);
+                                ThreadUtils.postOnMainThread(() -> submitList(currentListSnapshot));
+                            } else {
+                                throw new Exception("Error Changing Overlay State " + overlayItem);
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Couldn't Change Overlay State", e);
+                            // On failure, flip the checked layout switch back to match the unchanged state
+                            ThreadUtils.postOnMainThread(() -> {
+                                holder.toggleSwitch.setChecked(overlayItem.isEnabled());
+                                UIUtils.displayShortToast(R.string.failed);
+                            });
+                        }
+                    });
+                });
                 holder.toggleSwitch.setVisibility(View.VISIBLE);
             } else {
                 holder.toggleSwitch.setOnClickListener(null);
@@ -235,18 +264,6 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
             }
             holder.itemView.setStrokeColor(Color.TRANSPARENT);
 
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public int getItemCount() {
-            synchronized (mAdapterList) {
-                return mAdapterList.size();
-            }
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {

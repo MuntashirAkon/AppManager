@@ -516,10 +516,11 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     }
 
     private void showFiltersDialog(List<LogFilter> filters) {
-        LogFilterAdapter logFilterAdapter = new LogFilterAdapter(filters);
+        LogFilterAdapter logFilterAdapter = new LogFilterAdapter();
         RecyclerView recyclerView = new RecyclerView(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(logFilterAdapter);
+        logFilterAdapter.submitList(filters);
 
         DialogTitleBuilder builder = new DialogTitleBuilder(this)
                 .setTitle(R.string.saved_filters)

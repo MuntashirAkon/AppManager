@@ -71,7 +71,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         mAdapter = new WhatsNewRecyclerAdapter(requireContext(), mNewPkgInfo.packageName);
         recyclerView.setAdapter(mAdapter);
-        viewModel.getChangesLiveData().observe(this, mAdapter::setAdapterList);
+        viewModel.getChangesLiveData().observe(this, mAdapter::submitList);
         viewModel.loadChanges(mNewPkgInfo, mOldPkgInfo);
     }
 

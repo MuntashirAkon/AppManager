@@ -16,10 +16,12 @@ import io.github.muntashirakon.AppManager.db.entity.OpHistory;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
 public class OpHistoryItem {
+    public final long id;
     private final OpHistory opHistory;
     public final JSONObject jsonData;
 
     public OpHistoryItem(@NonNull OpHistory opHistory) throws JSONException {
+        this.id = opHistory.id;
         this.opHistory = opHistory;
         jsonData = new JSONObject(opHistory.serializedData);
     }

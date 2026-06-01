@@ -21,13 +21,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
@@ -35,7 +35,6 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.adapters.SelectedArrayAdapter;
@@ -82,7 +81,7 @@ public class SysConfigActivity extends BaseActivity {
         mViewModel.getSysConfigInfoListLiveData().observe(this, sysConfigInfoList -> {
             Optional.ofNullable(getSupportActionBar())
                     .ifPresent(actionBar -> actionBar.setSubtitle(mType));
-            mAdapter.setList(sysConfigInfoList);
+            mAdapter.submitList(sysConfigInfoList);
             mProgressIndicator.hide();
         });
 
@@ -98,14 +97,43 @@ public class SysConfigActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class SysConfigRecyclerAdapter extends RecyclerView.Adapter<SysConfigRecyclerAdapter.ViewHolder> {
-        private final List<SysConfigInfo> mList = new ArrayList<>();
+    public static class SysConfigRecyclerAdapter extends RecyclerView.ListAdapter<SysConfigInfo, SysConfigRecyclerAdapter.ViewHolder> {
         private final SysConfigActivity mActivity;
         private final PackageManager mPm;
         private final int mCardColor0;
         private final int mCardColor1;
 
-        SysConfigRecyclerAdapter(SysConfigActivity activity) {
+        private static final DiffUtil.ItemCallback<SysConfigInfo> DIFF_CALLBACK = new DiffUtil.ItemCallback<SysConfigInfo>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull SysConfigInfo oldItem, @NonNull SysConfigInfo newItem) {
+                // type and name should be enough here
+                return Objects.equals(oldItem.type, newItem.type) && Objects.equals(oldItem.name, newItem.name);
+            }
+
+            @Override
+            public boolean areContentsTheSame(@NonNull SysConfigInfo oldItem, @NonNull SysConfigInfo newItem) {
+                if (oldItem.isPackage != newItem.isPackage
+                        || oldItem.perUser != newItem.perUser
+                        || oldItem.targetSdk != newItem.targetSdk
+                        || oldItem.version != newItem.version
+                        || !Objects.equals(oldItem.filename, newItem.filename)) {
+                    return false;
+                }
+                // Run structural array checks
+                return Arrays.equals(oldItem.actors, newItem.actors)
+                        && Arrays.equals(oldItem.classNames, newItem.classNames)
+                        && Arrays.equals(oldItem.whitelist, newItem.whitelist)
+                        && Arrays.equals(oldItem.packages, newItem.packages)
+                        && Arrays.equals(oldItem.gids, newItem.gids)
+                        && Arrays.equals(oldItem.permissions, newItem.permissions)
+                        && Arrays.equals(oldItem.dependencies, newItem.dependencies)
+                        && Arrays.equals(oldItem.userTypes, newItem.userTypes)
+                        && Arrays.equals(oldItem.targetSdks, newItem.targetSdks);
+            }
+        };
+
+        SysConfigRecyclerAdapter(@NonNull SysConfigActivity activity) {
+            super(DIFF_CALLBACK);
             mActivity = activity;
             mPm = activity.getPackageManager();
             mCardColor0 = ColorCodes.getListItemColor0(activity);
@@ -119,17 +147,11 @@ public class SysConfigActivity extends BaseActivity {
             return new ViewHolder(view);
         }
 
-        void setList(List<SysConfigInfo> list) {
-            AdapterUtils.notifyDataSetChanged(this, mList, list);
-        }
-
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.icon.setImageDrawable(null);
-
             holder.itemView.setCardBackgroundColor(position % 2 == 0 ? mCardColor1 : mCardColor0);
 
-            SysConfigInfo info = mList.get(position);
+            SysConfigInfo info = getItem(position);
             if (info.isPackage) {
                 holder.icon.setVisibility(View.VISIBLE);
                 try {
@@ -152,15 +174,12 @@ public class SysConfigActivity extends BaseActivity {
                 });
             } else {
                 holder.icon.setVisibility(View.GONE);
+                holder.icon.setImageDrawable(null);
+                holder.icon.setOnClickListener(null);
                 holder.title.setText(info.name);
                 holder.packageName.setVisibility(View.GONE);
             }
             setSubtitle(holder, info);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mList.size();
         }
 
         private void setSubtitle(@NonNull ViewHolder holder, @NonNull SysConfigInfo info) {
@@ -194,33 +213,36 @@ public class SysConfigActivity extends BaseActivity {
                 case SysConfigType.TYPE_ASSIGN_PERMISSION: {
                     // TODO: Display permission info
                     sb.append(getStyledKeyValue(context, "Permissions", ""));
-                    if (info.permissions.length == 0) {
+                    if (info.permissions == null || info.permissions.length == 0) {
                         sb.append(" None");
-                    }
-                    for (String permissionName : info.permissions) {
-                        sb.append("\n- ").append(permissionName);
+                    } else {
+                        for (String permissionName : info.permissions) {
+                            sb.append("\n- ").append(permissionName);
+                        }
                     }
                 }
                 break;
                 case SysConfigType.TYPE_SPLIT_PERMISSION: {
                     sb.append(getStyledKeyValue(context, "Target SDK", String.valueOf(info.targetSdk))).append("\n");
                     sb.append(getStyledKeyValue(context, "Permissions", ""));
-                    if (info.permissions.length == 0) {
+                    if (info.permissions == null || info.permissions.length == 0) {
                         sb.append(" None");
-                    }
-                    for (String permissionName : info.permissions) {
-                        sb.append("\n- ").append(permissionName);
+                    } else {
+                        for (String permissionName : info.permissions) {
+                            sb.append("\n- ").append(permissionName);
+                        }
                     }
                 }
                 break;
                 case SysConfigType.TYPE_LIBRARY: {
                     sb.append(getStyledKeyValue(context, "Filename", info.filename)).append("\n");
                     sb.append(getStyledKeyValue(context, "Dependencies", ""));
-                    if (info.dependencies.length == 0) {
+                    if (info.dependencies == null || info.dependencies.length == 0) {
                         sb.append(" None");
-                    }
-                    for (String dependencyName : info.dependencies) {
-                        sb.append("\n- ").append(dependencyName);
+                    } else {
+                        for (String dependencyName : info.dependencies) {
+                            sb.append("\n- ").append(dependencyName);
+                        }
                     }
                 }
                 break;
@@ -232,100 +254,109 @@ public class SysConfigActivity extends BaseActivity {
                 break;
                 case SysConfigType.TYPE_DEFAULT_ENABLED_VR_APP: {
                     sb.append(getStyledKeyValue(context, "Components", Arrays.toString(info.classNames)));
-                    if (info.classNames.length == 0) {
+                    if (info.classNames == null || info.classNames.length == 0) {
                         sb.append(" None");
-                    }
-                    for (String className : info.classNames) {
-                        sb.append("\n- ").append(className);
+                    } else {
+                        for (String className : info.classNames) {
+                            sb.append("\n- ").append(className);
+                        }
                     }
                 }
                 break;
                 case SysConfigType.TYPE_COMPONENT_OVERRIDE: {
                     sb.append(getStyledKeyValue(context, "Components", ""));
-                    if (info.classNames.length == 0) {
+                    if (info.classNames == null || info.classNames.length == 0) {
                         sb.append(" None");
-                    }
-                    for (int i = 0; i < info.classNames.length; ++i) {
-                        sb.append("\n- ")
-                                .append(info.classNames[i])
-                                .append(" = ")
-                                .append(info.whitelist[i] ? "Enabled" : "Disabled");
+                    } else {
+                        for (int i = 0; i < info.classNames.length; ++i) {
+                            sb.append("\n- ")
+                                    .append(info.classNames[i])
+                                    .append(" = ")
+                                    .append(info.whitelist != null && info.whitelist[i] ? "Enabled" : "Disabled");
+                        }
                     }
                 }
                 break;
                 case SysConfigType.TYPE_BACKUP_TRANSPORT_WHITELISTED_SERVICE: {
                     sb.append(getStyledKeyValue(context, "Services", ""));
-                    if (info.classNames.length == 0) {
+                    if (info.classNames == null || info.classNames.length == 0) {
                         sb.append(" None");
-                    }
-                    for (String className : info.classNames) {
-                        sb.append("\n- ").append(className);
+                    } else {
+                        for (String className : info.classNames) {
+                            sb.append("\n- ").append(className);
+                        }
                     }
                 }
                 break;
                 case SysConfigType.TYPE_DISABLED_UNTIL_USED_PREINSTALLED_CARRIER_ASSOCIATED_APP: {
                     sb.append(getStyledKeyValue(context, "Associated packages", ""));
-                    if (info.packages.length == 0) {
+                    if (info.packages == null || info.packages.length == 0) {
                         sb.append(" None");
-                    }
-                    for (int i = 0; i < info.packages.length; ++i) {
-                        // TODO Display package labels
-                        sb.append("\n- ")
-                                .append("Package")
-                                .append(LangUtils.getSeparatorString())
-                                .append(info.packages[i])
-                                .append(", Target SDK")
-                                .append(LangUtils.getSeparatorString())
-                                .append(String.valueOf(info.targetSdks[i]));
+                    } else {
+                        for (int i = 0; i < info.packages.length; ++i) {
+                            // TODO Display package labels
+                            sb.append("\n- ")
+                                    .append("Package")
+                                    .append(LangUtils.getSeparatorString())
+                                    .append(info.packages[i])
+                                    .append(", Target SDK")
+                                    .append(LangUtils.getSeparatorString())
+                                    .append(String.valueOf(info.targetSdks != null ? info.targetSdks[i] : ""));
+                        }
                     }
                 }
                 break;
                 case SysConfigType.TYPE_PRIVAPP_PERMISSIONS:
                 case SysConfigType.TYPE_OEM_PERMISSIONS: {
                     sb.append(getStyledKeyValue(context, "Permissions", ""));
-                    if (info.permissions.length == 0) {
+                    if (info.permissions == null || info.permissions.length == 0) {
                         sb.append(" None");
-                    }
-                    for (int i = 0; i < info.permissions.length; ++i) {
-                        sb.append("\n- ")
-                                .append(info.permissions[i])
-                                .append(" = ")
-                                .append(info.whitelist[i] ? "Granted" : "Revoked");
+                    } else {
+                        for (int i = 0; i < info.permissions.length; ++i) {
+                            sb.append("\n- ")
+                                    .append(info.permissions[i])
+                                    .append(" = ")
+                                    .append(info.whitelist != null && info.whitelist[i] ? "Granted" : "Revoked");
+                        }
                     }
                 }
                 break;
                 case SysConfigType.TYPE_ALLOW_ASSOCIATION: {
                     sb.append(getStyledKeyValue(context, "Associated packages", ""));
-                    if (info.packages.length == 0) {
+                    if (info.packages == null || info.packages.length == 0) {
                         sb.append(" None");
-                    }
-                    for (String packageName : info.packages) {
-                        // TODO Display package labels
-                        sb.append("\n- ").append(packageName);
+                    } else {
+                        for (String packageName : info.packages) {
+                            // TODO Display package labels
+                            sb.append("\n- ").append(packageName);
+                        }
                     }
                 }
                 break;
                 case SysConfigType.TYPE_INSTALL_IN_USER_TYPE: {
                     sb.append(getStyledKeyValue(context, "User types", ""));
-                    if (info.userTypes.length == 0) {
+                    if (info.userTypes == null || info.userTypes.length == 0) {
                         sb.append(" None");
-                    }
-                    for (int i = 0; i < info.userTypes.length; ++i) {
-                        sb.append("\n- ")
-                                .append(info.userTypes[i])
-                                .append(" = ")
-                                .append(info.whitelist[i] ? "Whitelisted" : "Blacklisted");
+                    } else {
+                        for (int i = 0; i < info.userTypes.length; ++i) {
+                            sb.append("\n- ")
+                                    .append(info.userTypes[i])
+                                    .append(" = ")
+                                    .append(info.whitelist != null && info.whitelist[i] ? "Whitelisted" : "Blacklisted");
+                        }
                     }
                 }
                 break;
                 case SysConfigType.TYPE_NAMED_ACTOR: {
-                    for (int i = 0; i < info.actors.length; ++i) {
-                        sb.append("Actor")
-                                .append(LangUtils.getSeparatorString())
-                                .append(info.actors[i])
-                                .append(", Package")
-                                .append(LangUtils.getSeparatorString())
-                                .append(info.packages[i]).append("\n");
+                    if (info.actors != null) {
+                        for (int i = 0; i < info.actors.length; ++i) {
+                            sb.append("Actor")
+                                    .append(LangUtils.getSeparatorString())
+                                    .append(info.actors[i])
+                                    .append(", Package")
+                                    .append(LangUtils.getSeparatorString())
+                                    .append(info.packages != null ? info.packages[i] : "").append("\n");
+                        }
                     }
                 }
                 break;

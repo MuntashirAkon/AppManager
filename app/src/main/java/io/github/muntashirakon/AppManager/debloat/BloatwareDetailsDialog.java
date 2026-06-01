@@ -24,22 +24,21 @@ import androidx.core.graphics.ColorUtils;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textview.MaterialTextView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
@@ -180,7 +179,7 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
             return;
         }
         mSuggestionContainer.setVisibility(View.VISIBLE);
-        mAdapter.setList(suggestionObjects);
+        mAdapter.submitList(suggestionObjects);
     }
 
     @NonNull
@@ -254,14 +253,26 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
         }
     }
 
-    private class SuggestionsAdapter extends RecyclerView.Adapter<SuggestionsAdapter.SuggestionViewHolder> {
-        private final List<SuggestionObject> mSuggestions = Collections.synchronizedList(new ArrayList<>());
+    static class SuggestionsAdapter extends RecyclerView.ListAdapter<SuggestionObject, SuggestionsAdapter.SuggestionViewHolder> {
+        private static final DiffUtil.ItemCallback<SuggestionObject> DIFF_CALLBACK = new DiffUtil.ItemCallback<SuggestionObject>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull SuggestionObject oldItem, @NonNull SuggestionObject newItem) {
+                // Uniquely identified by server-supplied suggestion identifier
+                return Objects.equals(oldItem.suggestionId, newItem.suggestionId);
+            }
+
+            @Override
+            public boolean areContentsTheSame(@NonNull SuggestionObject oldItem, @NonNull SuggestionObject newItem) {
+                return Objects.equals(oldItem.packageName, newItem.packageName)
+                        && Objects.equals(oldItem.getLabel(), newItem.getLabel())
+                        && Objects.equals(oldItem.getReason(), newItem.getReason())
+                        && Objects.equals(oldItem.getRepo(), newItem.getRepo())
+                        && Arrays.equals(oldItem.getUsers(), newItem.getUsers()); // Deep primitive array structural check
+            }
+        };
 
         public SuggestionsAdapter() {
-        }
-
-        public void setList(@NonNull List<SuggestionObject> suggestions) {
-            AdapterUtils.notifyDataSetChanged(this, mSuggestions, suggestions);
+            super(DIFF_CALLBACK);
         }
 
         @NonNull
@@ -273,7 +284,7 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
 
         @Override
         public void onBindViewHolder(@NonNull SuggestionViewHolder holder, int position) {
-            SuggestionObject suggestion = mSuggestions.get(position);
+            SuggestionObject suggestion = getItem(position);
             holder.labelView.setText(suggestion.getLabel());
             holder.packageNameView.setText(suggestion.packageName);
             int[] users = suggestion.getUsers();
@@ -281,9 +292,8 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
                 MaterialButton appInfoButton = holder.marketOrAppInfoButton;
                 appInfoButton.setIconResource(io.github.muntashirakon.ui.R.drawable.ic_information);
                 appInfoButton.setOnClickListener(v -> {
-                    Intent appDetailsIntent = AppDetailsActivity.getIntent(requireContext(), suggestion.packageName,
-                            users[0]);
-                    startActivity(appDetailsIntent);
+                    Intent appDetailsIntent = AppDetailsActivity.getIntent(v.getContext(), suggestion.packageName, users[0]);
+                    v.getContext().startActivity(appDetailsIntent);
                 });
             } else {
                 MaterialButton marketButton = holder.marketOrAppInfoButton;
@@ -292,7 +302,7 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
                     Intent appDetailsIntent = suggestion.getMarketLink();
                     appDetailsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     try {
-                        startActivity(appDetailsIntent);
+                        v.getContext().startActivity(appDetailsIntent);
                     } catch (Throwable th) {
                         UIUtils.displayLongToast("Error: " + th.getMessage());
                     }
@@ -306,16 +316,11 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
         }
 
         @Override
-        public int getItemCount() {
-            return mSuggestions.size();
-        }
-
-        @Override
         public long getItemId(int position) {
-            return mSuggestions.get(position).hashCode();
+            return getItem(position).suggestionId.hashCode();
         }
 
-        private class SuggestionViewHolder extends RecyclerView.ViewHolder {
+        static class SuggestionViewHolder extends RecyclerView.ViewHolder {
             final TextView labelView;
             final TextView packageNameView;
             final TextView repoView;

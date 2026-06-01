@@ -277,6 +277,18 @@ public class UIUtils {
     }
 
     @NonNull
+    public static SearchView setupSearchView(@NonNull ActionBar actionBar) {
+        SearchView searchView = new SearchView(actionBar.getThemedContext());
+        searchView.setId(R.id.action_search);
+        // Set layout params
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.END;
+        actionBar.setCustomView(searchView, layoutParams);
+        return searchView;
+    }
+
+    @NonNull
     public static AdvancedSearchView setupAdvancedSearchView(@NonNull ActionBar actionBar) {
         AdvancedSearchView searchView = new AdvancedSearchView(actionBar.getThemedContext());
         searchView.setId(R.id.action_search);

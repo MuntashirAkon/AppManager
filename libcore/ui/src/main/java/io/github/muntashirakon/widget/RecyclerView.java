@@ -11,6 +11,8 @@ import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
+import androidx.recyclerview.widget.AsyncDifferConfig;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import io.github.muntashirakon.ui.R;
@@ -125,6 +127,23 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
         if (layoutManager instanceof LinearLayoutManager) {
             LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
             linearLayoutManager.scrollToPositionWithOffset(position, 0);
+        }
+    }
+
+    public abstract static class ListAdapter<T, VH extends ViewHolder> extends androidx.recyclerview.widget.ListAdapter<T, VH> {
+        protected ListAdapter(@NonNull DiffUtil.ItemCallback<T> diffCallback) {
+            super(diffCallback);
+        }
+
+        protected ListAdapter(@NonNull AsyncDifferConfig<T> config) {
+            super(config);
+        }
+
+        @CallSuper
+        @Override
+        public void onViewAttachedToWindow(@NonNull VH holder) {
+            super.onViewAttachedToWindow(holder);
+            AdapterUtils.fixTextSelectionInView(holder);
         }
     }
 

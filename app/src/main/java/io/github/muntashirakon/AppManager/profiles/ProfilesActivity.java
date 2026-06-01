@@ -14,8 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -25,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -38,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
@@ -52,12 +52,11 @@ import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 
 public class ProfilesActivity extends BaseActivity implements NewProfileDialogFragment.OnCreateNewProfileInterface {
-    private static final String TAG = "ProfilesActivity";
+    private static final String TAG = ProfilesActivity.class.getSimpleName();
 
     private ProfilesAdapter mAdapter;
     private ProfilesViewModel mModel;
@@ -135,7 +134,7 @@ public class ProfilesActivity extends BaseActivity implements NewProfileDialogFr
         });
         mModel.getProfilesLiveData().observe(this, profiles -> {
             mProgressIndicator.hide();
-            mAdapter.setDefaultList(profiles);
+            mAdapter.setMasterMap(profiles);
         });
         mProgressIndicator.show();
         mModel.loadProfiles();
@@ -167,48 +166,75 @@ public class ProfilesActivity extends BaseActivity implements NewProfileDialogFr
         startActivity(intent);
     }
 
-    static class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapter.ViewHolder> implements Filterable {
-        private Filter mFilter;
-        private String mConstraint;
-        private BaseProfile[] mDefaultList;
-        private BaseProfile[] mAdapterList;
-        private HashMap<BaseProfile, CharSequence> mAdapterMap;
+    static class ProfileItem {
+        @NonNull
+        final BaseProfile profile;
+        @NonNull
+        final CharSequence description;
+
+        ProfileItem(@NonNull BaseProfile profile, @NonNull CharSequence description) {
+            this.profile = profile;
+            this.description = description;
+        }
+    }
+
+    static class ProfilesAdapter extends RecyclerView.ListAdapter<ProfileItem, ProfilesAdapter.ViewHolder> {
         private final ProfilesActivity mActivity;
         private final int mQueryStringHighlightColor;
+        private final List<ProfileItem> mMasterList = new ArrayList<>();
+        @Nullable
+        private String mConstraint;
 
-        static class ViewHolder extends RecyclerView.ViewHolder {
-            TextView title;
-            TextView summary;
-
-            public ViewHolder(@NonNull View itemView) {
-                super(itemView);
-                title = itemView.findViewById(android.R.id.title);
-                summary = itemView.findViewById(android.R.id.summary);
-                itemView.findViewById(R.id.icon_frame).setVisibility(View.GONE);
+        private static final DiffUtil.ItemCallback<ProfileItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<ProfileItem>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull ProfileItem oldItem, @NonNull ProfileItem newItem) {
+                return Objects.equals(oldItem.profile.profileId, newItem.profile.profileId);
             }
-        }
+
+            @Override
+            public boolean areContentsTheSame(@NonNull ProfileItem oldItem, @NonNull ProfileItem newItem) {
+                return Objects.equals(oldItem.profile.name, newItem.profile.name)
+                        && oldItem.profile.type == newItem.profile.type
+                        && Objects.equals(oldItem.description.toString(), newItem.description.toString());
+            }
+        };
 
         ProfilesAdapter(@NonNull ProfilesActivity activity) {
+            super(DIFF_CALLBACK);
             mActivity = activity;
             mQueryStringHighlightColor = ColorCodes.getQueryStringHighlightColor(activity);
         }
 
-        void setDefaultList(@NonNull HashMap<BaseProfile, CharSequence> list) {
-            mDefaultList = list.keySet().toArray(new BaseProfile[0]);
-            int previousCount = getItemCount();
-            mAdapterList = mDefaultList;
-            mAdapterMap = list;
-            AdapterUtils.notifyDataSetChanged(this, previousCount, mAdapterList.length);
+        void setMasterMap(@NonNull HashMap<BaseProfile, CharSequence> map) {
+            mMasterList.clear();
+            for (Map.Entry<BaseProfile, CharSequence> entry : map.entrySet()) {
+                mMasterList.add(new ProfileItem(entry.getKey(), entry.getValue()));
+            }
+            dispatchFilteredList();
         }
 
-        @Override
-        public int getItemCount() {
-            return mAdapterList == null ? 0 : mAdapterList.length;
+        void setFilterConstraint(@Nullable String constraint) {
+            mConstraint = TextUtils.isEmpty(constraint) ? null : constraint.toLowerCase(Locale.ROOT);
+            dispatchFilteredList();
+        }
+
+        private void dispatchFilteredList() {
+            if (mConstraint == null || mConstraint.isEmpty()) {
+                submitList(new ArrayList<>(mMasterList));
+                return;
+            }
+            List<ProfileItem> filteredList = new ArrayList<>();
+            for (ProfileItem item : mMasterList) {
+                if (item.profile.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
+                    filteredList.add(item);
+                }
+            }
+            submitList(filteredList);
         }
 
         @Override
         public long getItemId(int position) {
-            return mAdapterList[position].hashCode();
+            return getItem(position).profile.profileId.hashCode();
         }
 
         @NonNull
@@ -220,15 +246,15 @@ public class ProfilesActivity extends BaseActivity implements NewProfileDialogFr
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            BaseProfile profile = mAdapterList[position];
+            ProfileItem profileItem = getItem(position);
+            BaseProfile profile = profileItem.profile;
             if (mConstraint != null && profile.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 holder.title.setText(UIUtils.getHighlightedText(profile.name, mConstraint, mQueryStringHighlightColor));
             } else {
                 holder.title.setText(profile.name);
             }
-            CharSequence value = mAdapterMap.get(profile);
-            holder.summary.setText(value != null ? value : "");
+            holder.summary.setText(profileItem.description);
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = ProfileManager.getProfileIntent(mActivity, profile.type, profile.profileId);
                 mActivity.startActivity(intent);
@@ -306,44 +332,16 @@ public class ProfilesActivity extends BaseActivity implements NewProfileDialogFr
             });
         }
 
-        @Override
-        public Filter getFilter() {
-            if (mFilter == null)
-                mFilter = new Filter() {
-                    @Override
-                    protected FilterResults performFiltering(CharSequence charSequence) {
-                        String constraint = charSequence.toString().toLowerCase(Locale.ROOT);
-                        mConstraint = constraint;
-                        FilterResults filterResults = new FilterResults();
-                        if (constraint.isEmpty()) {
-                            filterResults.count = 0;
-                            filterResults.values = null;
-                            return filterResults;
-                        }
+        static class ViewHolder extends RecyclerView.ViewHolder {
+            TextView title;
+            TextView summary;
 
-                        List<BaseProfile> list = new ArrayList<>(mDefaultList.length);
-                        for (BaseProfile item : mDefaultList) {
-                            if (item.name.toLowerCase(Locale.ROOT).contains(constraint))
-                                list.add(item);
-                        }
-
-                        filterResults.count = list.size();
-                        filterResults.values = list.toArray(new BaseProfile[0]);
-                        return filterResults;
-                    }
-
-                    @Override
-                    protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                        int previousCount = mAdapterList != null ? mAdapterList.length : 0;
-                        if (filterResults.values == null) {
-                            mAdapterList = mDefaultList;
-                        } else {
-                            mAdapterList = (BaseProfile[]) filterResults.values;
-                        }
-                        AdapterUtils.notifyDataSetChanged(ProfilesAdapter.this, previousCount, mAdapterList.length);
-                    }
-                };
-            return mFilter;
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                title = itemView.findViewById(android.R.id.title);
+                summary = itemView.findViewById(android.R.id.summary);
+                itemView.findViewById(R.id.icon_frame).setVisibility(View.GONE);
+            }
         }
     }
 }

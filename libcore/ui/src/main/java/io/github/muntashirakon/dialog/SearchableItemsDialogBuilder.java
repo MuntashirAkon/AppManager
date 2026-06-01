@@ -5,6 +5,7 @@ package io.github.muntashirakon.dialog;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
-import androidx.collection.ArraySet;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
@@ -29,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
+import java.util.Objects;
 
 import io.github.muntashirakon.ui.R;
 import io.github.muntashirakon.util.AdapterUtils;
@@ -53,6 +55,19 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
 
     public interface OnItemClickListener<T> {
         void onClick(DialogInterface dialog, int which, T item);
+    }
+
+    static class SearchableItem<E extends CharSequence> {
+        final int id;
+        @NonNull
+        final E rawItem;
+        boolean isDisabled;
+
+        SearchableItem(int id, @NonNull E rawItem) {
+            this.id = id;
+            this.rawItem = rawItem;
+            this.isDisabled = false;
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -93,8 +108,8 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
         recyclerView.setAdapter(mAdapter);
     }
 
-    public SearchableItemsDialogBuilder<T> setOnItemClickListener(@Nullable OnItemClickListener<T>
-                                                                          onItemClickListener) {
+    public SearchableItemsDialogBuilder<T> setOnItemClickListener(
+            @Nullable OnItemClickListener<T> onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
         return this;
     }
@@ -195,54 +210,70 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
 
     private void triggerItemClickListener(int index) {
         if (mDialog != null && mOnItemClickListener != null) {
-            mOnItemClickListener.onClick(mDialog, index, mAdapter.mItems.get(index));
+            mOnItemClickListener.onClick(mDialog, index, mAdapter.mMasterList.get(index).rawItem);
         }
     }
 
-    class SearchableRecyclerViewAdapter extends RecyclerView.Adapter<SearchableRecyclerViewAdapter.ViewHolder> {
+    private static class ItemCallback<E extends CharSequence> extends DiffUtil.ItemCallback<SearchableItem<E>> {
+        @Override
+        public boolean areItemsTheSame(@NonNull SearchableItem<E> oldItem, @NonNull SearchableItem<E> newItem) {
+            return oldItem.id == newItem.id && Objects.equals(oldItem.rawItem, newItem.rawItem);
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull SearchableItem<E> oldItem, @NonNull SearchableItem<E> newItem) {
+            return oldItem.isDisabled == newItem.isDisabled;
+        }
+    }
+
+    class SearchableRecyclerViewAdapter extends ListAdapter<SearchableItem<T>, SearchableRecyclerViewAdapter.ViewHolder> {
         @NonNull
-        private final List<T> mItems;
-        @NonNull
-        private final ArrayList<Integer> mFilteredItems = new ArrayList<>();
-        private final Set<Integer> mDisabledItems = new ArraySet<>();
+        final List<SearchableItem<T>> mMasterList = new ArrayList<>();
         @LayoutRes
         private final int mLayoutId;
+        @Nullable
+        private String mCurrentQuery = null;
 
         SearchableRecyclerViewAdapter(@NonNull List<T> items, int layoutId) {
-            mItems = items;
+            super(new ItemCallback<>());
             mLayoutId = layoutId;
-            synchronized (mFilteredItems) {
-                for (int i = 0; i < mItems.size(); ++i) {
-                    mFilteredItems.add(i);
-                }
+            for (int i = 0; i < items.size(); ++i) {
+                mMasterList.add(new SearchableItem<>(i, items.get(i)));
             }
+            dispatchFilteredList();
         }
 
         void setFilteredItems(CharSequence constraint) {
-            Locale locale = Locale.getDefault();
-            synchronized (mFilteredItems) {
-                int previousCount = mFilteredItems.size();
-                mFilteredItems.clear();
-                for (int i = 0; i < mItems.size(); ++i) {
-                    if (mItems.get(i).toString().toLowerCase(locale).contains(constraint)) {
-                        mFilteredItems.add(i);
-                    }
-                }
-                AdapterUtils.notifyDataSetChanged(this, previousCount, mFilteredItems.size());
+            mCurrentQuery = TextUtils.isEmpty(constraint) ? null : constraint.toString().toLowerCase(Locale.ROOT);
+            dispatchFilteredList();
+        }
+
+        private void dispatchFilteredList() {
+            if (mCurrentQuery == null) {
+                submitList(new ArrayList<>(mMasterList));
+                return;
             }
+            Locale locale = Locale.getDefault();
+            List<SearchableItem<T>> filteredList = new ArrayList<>();
+            for (SearchableItem<T> item : mMasterList) {
+                if (item.rawItem.toString().toLowerCase(locale).contains(mCurrentQuery)) {
+                    filteredList.add(item);
+                }
+            }
+            submitList(filteredList);
         }
 
         void addDisabledItems(@Nullable List<T> disabledItems) {
-            if (disabledItems != null) {
-                for (T item : disabledItems) {
-                    int index = mItems.indexOf(item);
-                    if (index != -1) {
-                        synchronized (mDisabledItems) {
-                            mDisabledItems.add(index);
-                        }
+            if (disabledItems == null) return;
+            for (T item : disabledItems) {
+                for (SearchableItem<T> wrapper : mMasterList) {
+                    if (Objects.equals(wrapper.rawItem, item)) {
+                        wrapper.isDisabled = true;
+                        break;
                     }
                 }
             }
+            dispatchFilteredList();
         }
 
         @NonNull
@@ -254,16 +285,11 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            Integer index;
-            synchronized (mFilteredItems) {
-                index = mFilteredItems.get(position);
-            }
-            holder.item.setText(mItems.get(index));
+            SearchableItem<T> item = getItem(position);
+            holder.item.setText(item.rawItem);
             holder.item.setTextIsSelectable(mIsTextSelectable);
-            synchronized (mDisabledItems) {
-                holder.item.setEnabled(!mDisabledItems.contains(index));
-            }
-            holder.itemView.setOnClickListener(v -> triggerItemClickListener(index));
+            holder.item.setEnabled(!item.isDisabled);
+            holder.itemView.setOnClickListener(v -> triggerItemClickListener(item.id));
             // Set background colors if set (position starts at 1, so the situation is reversed)
             setBackgroundColor(holder.itemView, position % 2 == 0 ? mListBackgroundColorOdd : mListBackgroundColorEven);
         }
@@ -271,12 +297,7 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
         private void setBackgroundColor(View view, @Nullable Integer color) {
             if (view instanceof MaterialCardView) {
                 MaterialCardView card = (MaterialCardView) view;
-                if (color != null) {
-                    card.setCardBackgroundColor(color);
-                } else {
-                    // Reset background
-                    card.setCardBackgroundColor(null);
-                }
+                card.setCardBackgroundColor(color != null ? color : 0);
             } else {
                 if (color != null) {
                     view.setBackgroundColor(color);
@@ -284,13 +305,6 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
                     // Reset background
                     view.setBackground(null);
                 }
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            synchronized (mFilteredItems) {
-                return mFilteredItems.size();
             }
         }
 

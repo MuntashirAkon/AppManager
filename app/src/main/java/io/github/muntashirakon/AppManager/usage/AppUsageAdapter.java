@@ -9,9 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -27,96 +28,91 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 
-class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class AppUsageAdapter extends RecyclerView.ListAdapter<AppUsageAdapter.UsageListItem, RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_HEADER = 1;
     private static final int VIEW_TYPE_LIST_ITEM = 2;
 
-    @GuardedBy("mAdapterList")
-    private final List<PackageUsageInfo> mAdapterList = new ArrayList<>();
     private final AppUsageActivity mActivity;
 
-    static class ListHeaderViewHolder extends RecyclerView.ViewHolder {
-        final MaterialTextView screenTimeView;
-        final MaterialTextView usageIntervalView;
-        final MaterialButton previousButton;
-        final MaterialButton nextButton;
-        final BarChartView barChartView;
+    abstract static class UsageListItem {
+        static final class Header extends UsageListItem {
+            @Override
+            public boolean equals(Object obj) {
+                return obj instanceof Header;
+            }
 
-        public ListHeaderViewHolder(@NonNull View itemView) {
-            super(itemView);
-            screenTimeView = itemView.findViewById(R.id.screen_time);
-            usageIntervalView = itemView.findViewById(R.id.time);
-            previousButton = itemView.findViewById(R.id.action_previous);
-            nextButton = itemView.findViewById(R.id.action_next);
-            barChartView = itemView.findViewById(R.id.bar_chart);
+            @Override
+            public int hashCode() {
+                return VIEW_TYPE_HEADER;
+            }
+        }
+
+        static final class Item extends UsageListItem {
+            @NonNull
+            final PackageUsageInfo usageInfo;
+
+            Item(@NonNull PackageUsageInfo usageInfo) {
+                this.usageInfo = usageInfo;
+            }
         }
     }
 
-    static class ListItemViewHolder extends RecyclerView.ViewHolder {
-        ImageView appIcon;
-        MaterialTextView appLabel;
-        MaterialTextView badge;
-        MaterialTextView packageName;
-        MaterialTextView lastUsageDate;
-        MaterialTextView mobileDataUsage;
-        MaterialTextView wifiDataUsage;
-        MaterialTextView screenTime;
-        MaterialTextView percentUsage;
-        LinearProgressIndicator usageIndicator;
-
-        public ListItemViewHolder(@NonNull View itemView) {
-            super(itemView);
-            appIcon = itemView.findViewById(R.id.icon);
-            appIcon.setClipToOutline(true);
-            badge = itemView.findViewById(R.id.badge);
-            appLabel = itemView.findViewById(R.id.label);
-            packageName = itemView.findViewById(R.id.package_name);
-            lastUsageDate = itemView.findViewById(R.id.date);
-            mobileDataUsage = itemView.findViewById(R.id.data_usage);
-            wifiDataUsage = itemView.findViewById(R.id.wifi_usage);
-            screenTime = itemView.findViewById(R.id.screen_time);
-            percentUsage = itemView.findViewById(R.id.percent_usage);
-            usageIndicator = itemView.findViewById(R.id.progress_linear);
+    private static final DiffUtil.ItemCallback<UsageListItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<UsageListItem>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull UsageListItem oldItem, @NonNull UsageListItem newItem) {
+            if (oldItem instanceof UsageListItem.Header && newItem instanceof UsageListItem.Header) {
+                return true;
+            }
+            if (oldItem instanceof UsageListItem.Item && newItem instanceof UsageListItem.Item) {
+                return Objects.equals(((UsageListItem.Item) oldItem).usageInfo.packageName,
+                        ((UsageListItem.Item) newItem).usageInfo.packageName);
+            }
+            return false;
         }
-    }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull UsageListItem oldItem, @NonNull UsageListItem newItem) {
+            if (oldItem instanceof UsageListItem.Header && newItem instanceof UsageListItem.Header) {
+                // Always rebind the header
+                return false;
+            }
+            if (oldItem instanceof UsageListItem.Item && newItem instanceof UsageListItem.Item) {
+                PackageUsageInfo oldInfo = ((UsageListItem.Item) oldItem).usageInfo;
+                PackageUsageInfo newInfo = ((UsageListItem.Item) newItem).usageInfo;
+                return oldInfo.screenTime == newInfo.screenTime
+                        && oldInfo.timesOpened == newInfo.timesOpened
+                        && oldInfo.lastUsageTime == newInfo.lastUsageTime
+                        && Objects.equals(oldInfo.appLabel, newInfo.appLabel);
+            }
+            return false;
+        }
+    };
 
     AppUsageAdapter(@NonNull AppUsageActivity activity) {
+        super(DIFF_CALLBACK);
         mActivity = activity;
     }
 
-    void setDefaultList(List<PackageUsageInfo> list) {
-        synchronized (mAdapterList) {
-            notifyItemChanged(0, AdapterUtils.STUB);
-            AdapterUtils.notifyDataSetChanged(this, 1, mAdapterList, list);
+    void setDefaultList(@Nullable List<PackageUsageInfo> list) {
+        List<UsageListItem> combinedList = new ArrayList<>();
+        combinedList.add(new UsageListItem.Header()); // Consumes position 0 natively
+
+        if (list != null) {
+            for (PackageUsageInfo info : list) {
+                combinedList.add(new UsageListItem.Item(info));
+            }
         }
+        submitList(combinedList);
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
+        if (getItem(position) instanceof UsageListItem.Header) {
             return VIEW_TYPE_HEADER;
         }
         return VIEW_TYPE_LIST_ITEM;
-    }
-
-    @Override
-    public int getItemCount() {
-        synchronized (mAdapterList) {
-            return mAdapterList.size();
-        }
-    }
-
-    @Override
-    public long getItemId(int position) {
-        if (position == 0) {
-            return 0;
-        }
-        synchronized (mAdapterList) {
-            return Objects.hashCode(mAdapterList.get(position));
-        }
     }
 
     @NonNull
@@ -136,12 +132,15 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (position == 0) {
+        UsageListItem item = getItem(position);
+        if (item instanceof UsageListItem.Header) {
             onBindViewHolder((ListHeaderViewHolder) holder);
-        } else onBindViewHolder((ListItemViewHolder) holder, position);
+        } else if (item instanceof UsageListItem.Item) {
+            onBindViewHolder((ListItemViewHolder) holder, ((UsageListItem.Item) item).usageInfo);
+        }
     }
 
-    public void onBindViewHolder(@NonNull ListHeaderViewHolder holder) {
+    private void onBindViewHolder(@NonNull ListHeaderViewHolder holder) {
         int intervalType = mActivity.viewModel.getCurrentInterval();
         long duration = mActivity.viewModel.getTotalScreenTime();
         long date = mActivity.viewModel.getCurrentDate();
@@ -162,11 +161,7 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         UsageDataProcessor.updateChartWithAppUsage(holder.barChartView, mActivity.viewModel.getPackageUsageEntries(), intervalType, date);
     }
 
-    public void onBindViewHolder(@NonNull ListItemViewHolder holder, int position) {
-        final PackageUsageInfo usageInfo;
-        synchronized (mAdapterList) {
-            usageInfo = mAdapterList.get(position);
-        }
+    private void onBindViewHolder(@NonNull ListItemViewHolder holder, @NonNull PackageUsageInfo usageInfo) {
         final int percentUsage = getUsagePercent(usageInfo.screenTime);
         // Set label (or package name on failure)
         holder.appLabel.setText(usageInfo.appLabel);
@@ -227,5 +222,50 @@ class AppUsageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     int getUsagePercent(long screenTime) {
         return (int) (screenTime * 100. / mActivity.viewModel.getTotalScreenTime());
+    }
+
+    static class ListHeaderViewHolder extends RecyclerView.ViewHolder {
+        final MaterialTextView screenTimeView;
+        final MaterialTextView usageIntervalView;
+        final MaterialButton previousButton;
+        final MaterialButton nextButton;
+        final BarChartView barChartView;
+
+        public ListHeaderViewHolder(@NonNull View itemView) {
+            super(itemView);
+            screenTimeView = itemView.findViewById(R.id.screen_time);
+            usageIntervalView = itemView.findViewById(R.id.time);
+            previousButton = itemView.findViewById(R.id.action_previous);
+            nextButton = itemView.findViewById(R.id.action_next);
+            barChartView = itemView.findViewById(R.id.bar_chart);
+        }
+    }
+
+    static class ListItemViewHolder extends RecyclerView.ViewHolder {
+        ImageView appIcon;
+        MaterialTextView appLabel;
+        MaterialTextView badge;
+        MaterialTextView packageName;
+        MaterialTextView lastUsageDate;
+        MaterialTextView mobileDataUsage;
+        MaterialTextView wifiDataUsage;
+        MaterialTextView screenTime;
+        MaterialTextView percentUsage;
+        LinearProgressIndicator usageIndicator;
+
+        public ListItemViewHolder(@NonNull View itemView) {
+            super(itemView);
+            appIcon = itemView.findViewById(R.id.icon);
+            appIcon.setClipToOutline(true);
+            badge = itemView.findViewById(R.id.badge);
+            appLabel = itemView.findViewById(R.id.label);
+            packageName = itemView.findViewById(R.id.package_name);
+            lastUsageDate = itemView.findViewById(R.id.date);
+            mobileDataUsage = itemView.findViewById(R.id.data_usage);
+            wifiDataUsage = itemView.findViewById(R.id.wifi_usage);
+            screenTime = itemView.findViewById(R.id.screen_time);
+            percentUsage = itemView.findViewById(R.id.percent_usage);
+            usageIndicator = itemView.findViewById(R.id.progress_linear);
+        }
     }
 }

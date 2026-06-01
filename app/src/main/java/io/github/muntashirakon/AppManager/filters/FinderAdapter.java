@@ -8,29 +8,38 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.UiThread;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.textview.MaterialTextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
-import io.github.muntashirakon.util.AdapterUtils;
+import io.github.muntashirakon.widget.RecyclerView;
 
-public class FinderAdapter extends RecyclerView.Adapter<FinderAdapter.ViewHolder> {
-    private final List<FilterItem.FilteredItemInfo<FilterableAppInfo>> mAdapterList = new ArrayList<>();
+public class FinderAdapter extends RecyclerView.ListAdapter<FilterItem.FilteredItemInfo<FilterableAppInfo>, FinderAdapter.ViewHolder> {
+    private static final DiffUtil.ItemCallback<FilterItem.FilteredItemInfo<FilterableAppInfo>> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<FilterItem.FilteredItemInfo<FilterableAppInfo>>() {
+                @Override
+                public boolean areItemsTheSame(@NonNull FilterItem.FilteredItemInfo<FilterableAppInfo> oldItem,
+                                               @NonNull FilterItem.FilteredItemInfo<FilterableAppInfo> newItem) {
+                    return Objects.equals(oldItem.info.getPackageName(), newItem.info.getPackageName());
+                }
 
-    @UiThread
-    public void setDefaultList(List<FilterItem.FilteredItemInfo<FilterableAppInfo>> list) {
-        synchronized (mAdapterList) {
-            AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
-        }
+                @Override
+                public boolean areContentsTheSame(@NonNull FilterItem.FilteredItemInfo<FilterableAppInfo> oldItem,
+                                                  @NonNull FilterItem.FilteredItemInfo<FilterableAppInfo> newItem) {
+                    return Objects.equals(oldItem.info.getAppLabel(), newItem.info.getAppLabel())
+                            && Objects.equals(oldItem.info.getApplicationInfo(), newItem.info.getApplicationInfo());
+                }
+            };
+
+    public FinderAdapter() {
+        super(DIFF_CALLBACK);
     }
 
     @NonNull
@@ -42,11 +51,9 @@ public class FinderAdapter extends RecyclerView.Adapter<FinderAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        FilterItem.FilteredItemInfo<FilterableAppInfo> itemInfo;
-        synchronized (mAdapterList) {
-            itemInfo = mAdapterList.get(position);
-        }
+        FilterItem.FilteredItemInfo<FilterableAppInfo> itemInfo = getItem(position);
         FilterableAppInfo appInfo = itemInfo.info;
+        holder.icon.setImageDrawable(null);
         ImageLoader.getInstance().displayImage(appInfo.getPackageName(), appInfo.getApplicationInfo(), holder.icon);
         holder.label.setText(appInfo.getAppLabel());
         holder.pkg.setText(appInfo.getPackageName());
@@ -56,13 +63,6 @@ public class FinderAdapter extends RecyclerView.Adapter<FinderAdapter.ViewHolder
         holder.item3.setVisibility(View.GONE);
         holder.toggleBtn.setVisibility(View.GONE);
         holder.itemView.setStrokeColor(Color.TRANSPARENT);
-    }
-
-    @Override
-    public int getItemCount() {
-        synchronized (mAdapterList) {
-            return mAdapterList.size();
-        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -87,6 +87,4 @@ public class FinderAdapter extends RecyclerView.Adapter<FinderAdapter.ViewHolder
             toggleBtn = itemView.findViewById(R.id.toggle_button);
         }
     }
-
-
 }

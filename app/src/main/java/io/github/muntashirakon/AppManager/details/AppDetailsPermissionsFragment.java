@@ -25,6 +25,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -366,10 +367,37 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
         viewModel.triggerPackageChange();
     }
 
+    static class ItemCallback extends DiffUtil.ItemCallback<AppDetailsItem<?>> {
+        @Override
+        public boolean areItemsTheSame(@NonNull AppDetailsItem<?> oldItem, @NonNull AppDetailsItem<?> newItem) {
+            return Objects.equals(oldItem.getClass(), newItem.getClass())
+                    && Objects.equals(oldItem.name, newItem.name);
+        }
+
+        @SuppressLint("DiffUtilEquals")
+        @Override
+        public boolean areContentsTheSame(@NonNull AppDetailsItem<?> oldItem, @NonNull AppDetailsItem<?> newItem) {
+            if (oldItem instanceof AppDetailsAppOpItem && newItem instanceof AppDetailsAppOpItem) {
+                AppDetailsAppOpItem oldOp = (AppDetailsAppOpItem) oldItem;
+                AppDetailsAppOpItem newOp = (AppDetailsAppOpItem) newItem;
+                return oldOp.getMode() == newOp.getMode()
+                        && oldOp.isAllowed() == newOp.isAllowed()
+                        && oldOp.isRunning() == newOp.isRunning()
+                        && oldOp.getDuration() == newOp.getDuration()
+                        && oldOp.getTime() == newOp.getTime()
+                        && oldOp.getRejectTime() == newOp.getRejectTime();
+            }
+            if (oldItem instanceof AppDetailsPermissionItem && newItem instanceof AppDetailsPermissionItem) {
+                AppDetailsPermissionItem oldPerm = (AppDetailsPermissionItem) oldItem;
+                AppDetailsPermissionItem newPerm = (AppDetailsPermissionItem) newItem;
+                return oldPerm.isGranted() == newPerm.isGranted() && oldPerm.modifiable == newPerm.modifiable;
+            }
+            return Objects.equals(oldItem.item, newItem.item);
+        }
+    }
+
     @UiThread
-    private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> {
-        @NonNull
-        private final List<AppDetailsItem<?>> mAdapterList;
+    class AppDetailsRecyclerAdapter extends RecyclerView.ListAdapter<AppDetailsItem<?>, AppDetailsRecyclerAdapter.ViewHolder> {
         @PermissionProperty
         private int mRequestedProperty;
         @Nullable
@@ -377,21 +405,22 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
         private boolean mCanModifyAppOpMode;
 
         AppDetailsRecyclerAdapter() {
-            mAdapterList = new ArrayList<>();
+            super(new ItemCallback());
         }
 
         @UiThread
         void setDefaultList(@NonNull List<AppDetailsItem<?>> list) {
             ThreadUtils.postOnBackgroundThread(() -> {
-                mRequestedProperty = mNeededProperty;
-                mConstraint = viewModel == null ? null : viewModel.getSearchQuery();
-                mCanModifyAppOpMode = SelfPermissions.canModifyAppOpMode();
+                int neededProperty = mNeededProperty;
+                String query = viewModel == null ? null : viewModel.getSearchQuery();
+                boolean canModify = SelfPermissions.canModifyAppOpMode();
                 ThreadUtils.postOnMainThread(() -> {
                     if (isDetached()) return;
                     ProgressIndicatorCompat.setVisibility(progressIndicator, false);
-                    synchronized (mAdapterList) {
-                        AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
-                    }
+                    mRequestedProperty = neededProperty;
+                    mConstraint = query;
+                    mCanModifyAppOpMode = canModify;
+                    submitList(new ArrayList<>(list));
                 });
             });
         }
@@ -496,23 +525,8 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             }
         }
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public int getItemCount() {
-            synchronized (mAdapterList) {
-                return mAdapterList.size();
-            }
-        }
-
         private void getAppOpsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
-            AppDetailsAppOpItem item;
-            synchronized (mAdapterList) {
-                item = (AppDetailsAppOpItem) mAdapterList.get(index);
-            }
+            AppDetailsAppOpItem item = (AppDetailsAppOpItem) getItem(index);
             final String opStr = item.name;
             PermissionInfo permissionInfo = item.permissionInfo;
             // Set op name
@@ -616,7 +630,9 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                 // TODO: 22/5/23 Perform using a ViewModel
                 ThreadUtils.postOnBackgroundThread(() -> {
                     if (viewModel != null && viewModel.setAppOpMode(item)) {
-                        ThreadUtils.postOnMainThread(() -> notifyItemChanged(index, AdapterUtils.STUB));
+                        int currentPos = holder.getBindingAdapterPosition();
+                        if (currentPos == RecyclerView.NO_POSITION) return;
+                        ThreadUtils.postOnMainThread(() -> notifyItemChanged(currentPos, AdapterUtils.STUB));
                     } else {
                         ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(isAllowed
                                 ? R.string.failed_to_enable_op : R.string.failed_to_disable_op));
@@ -630,10 +646,12 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                         .setSelection(item.getMode())
                         .setOnSingleChoiceClickListener((dialog, which, item1, isChecked) -> {
                             int opMode = modes.get(which);
+                            int currentPos = holder.getBindingAdapterPosition();
+                            if (currentPos == RecyclerView.NO_POSITION) return;
                             // TODO: 22/5/23 Perform using a ViewModel
                             ThreadUtils.postOnBackgroundThread(() -> {
                                 if (viewModel != null && viewModel.setAppOpMode(item, opMode)) {
-                                    ThreadUtils.postOnMainThread(() -> notifyItemChanged(index, AdapterUtils.STUB));
+                                    ThreadUtils.postOnMainThread(() -> notifyItemChanged(currentPos, AdapterUtils.STUB));
                                 } else {
                                     ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(
                                             R.string.failed_to_change_app_op_mode));
@@ -647,10 +665,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
         }
 
         private void getUsesPermissionsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
-            AppDetailsPermissionItem permissionItem;
-            synchronized (mAdapterList) {
-                permissionItem = (AppDetailsPermissionItem) mAdapterList.get(index);
-            }
+            AppDetailsPermissionItem permissionItem = (AppDetailsPermissionItem) getItem(index);
             @NonNull PermissionInfo permissionInfo = permissionItem.item;
             final String permName = permissionInfo.name;
             // Set permission name
@@ -693,18 +708,22 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                 holder.toggleSwitch.setVisibility(View.VISIBLE);
                 holder.toggleSwitch.setChecked(permissionItem.isGranted());
                 // TODO: 22/5/23 Perform using a ViewModel
-                holder.itemView.setOnClickListener(v -> ThreadUtils.postOnBackgroundThread(() -> {
-                    try {
-                        if (Objects.requireNonNull(viewModel).togglePermission(permissionItem)) {
-                            ThreadUtils.postOnMainThread(() -> notifyItemChanged(index, AdapterUtils.STUB));
-                        } else throw new Exception("Couldn't grant permission: " + permName);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(permissionItem.isGranted()
-                                ? R.string.failed_to_grant_permission
-                                : R.string.failed_to_revoke_permission));
-                    }
-                }));
+                holder.itemView.setOnClickListener(v -> {
+                    int currentPos = holder.getBindingAdapterPosition();
+                    if (currentPos == RecyclerView.NO_POSITION) return;
+                    ThreadUtils.postOnBackgroundThread(() -> {
+                        try {
+                            if (Objects.requireNonNull(viewModel).togglePermission(permissionItem)) {
+                                ThreadUtils.postOnMainThread(() -> notifyItemChanged(currentPos, AdapterUtils.STUB));
+                            } else throw new Exception("Couldn't grant permission: " + permName);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(permissionItem.isGranted()
+                                    ? R.string.failed_to_grant_permission
+                                    : R.string.failed_to_revoke_permission));
+                        }
+                    });
+                });
             } else {
                 holder.toggleSwitch.setVisibility(View.GONE);
                 holder.itemView.setOnClickListener(null);
@@ -744,10 +763,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
         }
 
         private void getPermissionsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
-            AppDetailsDefinedPermissionItem permissionItem;
-            synchronized (mAdapterList) {
-                permissionItem = (AppDetailsDefinedPermissionItem) mAdapterList.get(index);
-            }
+            AppDetailsDefinedPermissionItem permissionItem = (AppDetailsDefinedPermissionItem) getItem(index);
             PermissionInfo permissionInfo = permissionItem.item;
             // Internal or external
             holder.chipType.setText(permissionItem.isExternal ? R.string.external : R.string.internal);

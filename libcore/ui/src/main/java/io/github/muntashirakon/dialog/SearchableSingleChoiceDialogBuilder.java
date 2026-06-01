@@ -21,8 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
-import androidx.collection.ArraySet;
 import androidx.core.widget.TextViewCompat;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.color.MaterialColors;
@@ -33,8 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Objects;
 
 import io.github.muntashirakon.ui.R;
 import io.github.muntashirakon.util.AdapterUtils;
@@ -61,6 +60,24 @@ public class SearchableSingleChoiceDialogBuilder<T> {
 
     public interface OnSingleChoiceClickListener<T> {
         void onClick(DialogInterface dialog, int which, T item, boolean isChecked);
+    }
+
+    static class SingleChoiceItem<E> {
+        final int id;
+        @NonNull
+        final CharSequence name;
+        @NonNull
+        final E rawItem;
+        boolean isSelected;
+        boolean isDisabled;
+
+        SingleChoiceItem(int id, @NonNull CharSequence name, @NonNull E rawItem) {
+            this.id = id;
+            this.name = name;
+            this.rawItem = rawItem;
+            this.isSelected = false;
+            this.isDisabled = false;
+        }
     }
 
     public SearchableSingleChoiceDialogBuilder(@NonNull Context context, @NonNull List<T> items, @ArrayRes int itemNames) {
@@ -97,8 +114,7 @@ public class SearchableSingleChoiceDialogBuilder<T> {
         if (items.size() < 6) {
             mSearchView.setVisibility(View.GONE);
         }
-        mBuilder = new MaterialAlertDialogBuilder(context)
-                .setView(view);
+        mBuilder = new MaterialAlertDialogBuilder(context).setView(view);
         @SuppressLint({"RestrictedApi", "PrivateResource"})
         int layoutId = MaterialAttributes.resolveInteger(context, androidx.appcompat.R.attr.singleChoiceItemLayout,
                 com.google.android.material.R.layout.mtrl_alert_select_dialog_singlechoice);
@@ -111,8 +127,8 @@ public class SearchableSingleChoiceDialogBuilder<T> {
         return this;
     }
 
-    public SearchableSingleChoiceDialogBuilder<T> setOnSingleChoiceClickListener(@Nullable OnSingleChoiceClickListener<T>
-                                                                                         onSingleChoiceClickListener) {
+    public SearchableSingleChoiceDialogBuilder<T> setOnSingleChoiceClickListener(
+            @Nullable OnSingleChoiceClickListener<T> onSingleChoiceClickListener) {
         mOnSingleChoiceClickListener = onSingleChoiceClickListener;
         return this;
     }
@@ -244,145 +260,137 @@ public class SearchableSingleChoiceDialogBuilder<T> {
 
     private void triggerSingleChoiceClickListener(int index, boolean isChecked) {
         if (mDialog != null && mOnSingleChoiceClickListener != null) {
-            mOnSingleChoiceClickListener.onClick(mDialog, index, mAdapter.mItems.get(index), isChecked);
+            mOnSingleChoiceClickListener.onClick(mDialog, index, mAdapter.mMasterList.get(index).rawItem, isChecked);
         }
     }
 
-    class SearchableRecyclerViewAdapter extends RecyclerView.Adapter<SearchableRecyclerViewAdapter.ViewHolder> {
+    private static class ChoiceItemCallback<E> extends DiffUtil.ItemCallback<SingleChoiceItem<E>> {
+        @Override
+        public boolean areItemsTheSame(@NonNull SingleChoiceItem<E> oldItem, @NonNull SingleChoiceItem<E> newItem) {
+            return oldItem.id == newItem.id && Objects.equals(oldItem.rawItem, newItem.rawItem);
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull SingleChoiceItem<E> oldItem, @NonNull SingleChoiceItem<E> newItem) {
+            return oldItem.isSelected == newItem.isSelected
+                    && oldItem.isDisabled == newItem.isDisabled
+                    && Objects.equals(oldItem.name.toString(), newItem.name.toString());
+        }
+    }
+
+    class SearchableRecyclerViewAdapter extends RecyclerView.ListAdapter<SingleChoiceItem<T>, SearchableRecyclerViewAdapter.ViewHolder> {
         @NonNull
-        private final List<CharSequence> mItemNames;
-        @NonNull
-        private final List<T> mItems;
-        @NonNull
-        private final ArrayList<Integer> mFilteredItems = new ArrayList<>();
-        private int mSelectedItem = -1;
-        private final Set<Integer> mDisabledItems = new ArraySet<>();
+        final List<SingleChoiceItem<T>> mMasterList = new ArrayList<>();
         @LayoutRes
         private final int mLayoutId;
+        @Nullable
+        private String mCurrentQuery = null;
+        @Nullable
+        private T mSelectedRawItem = null;
 
         SearchableRecyclerViewAdapter(@NonNull List<CharSequence> itemNames, @NonNull List<T> items, int layoutId) {
-            mItemNames = itemNames;
-            mItems = items;
+            super(new ChoiceItemCallback<>());
             mLayoutId = layoutId;
-            synchronized (mFilteredItems) {
-                for (int i = 0; i < items.size(); ++i) {
-                    mFilteredItems.add(i);
-                }
+            int size = Math.min(itemNames.size(), items.size());
+            for (int i = 0; i < size; ++i) {
+                mMasterList.add(new SingleChoiceItem<>(i, itemNames.get(i), items.get(i)));
             }
+            dispatchFilteredList();
         }
 
         void setFilteredItems(String constraint) {
-            constraint = TextUtils.isEmpty(constraint) ? null : constraint.toLowerCase(Locale.ROOT);
-            Locale locale = Locale.getDefault();
-            synchronized (mFilteredItems) {
-                int previousCount = mFilteredItems.size();
-                mFilteredItems.clear();
-                for (int i = 0; i < mItems.size(); ++i) {
-                    if (constraint == null
-                            || mItemNames.get(i).toString().toLowerCase(locale).contains(constraint)
-                            || mItems.get(i).toString().toLowerCase(Locale.ROOT).contains(constraint)) {
-                        mFilteredItems.add(i);
-                    }
-                }
-                AdapterUtils.notifyDataSetChanged(this, previousCount, mFilteredItems.size());
+            mCurrentQuery = TextUtils.isEmpty(constraint) ? null : constraint.toLowerCase(Locale.ROOT);
+            dispatchFilteredList();
+        }
+
+        private void dispatchFilteredList() {
+            if (mCurrentQuery == null) {
+                submitList(new ArrayList<>(mMasterList));
+                return;
             }
+            Locale locale = Locale.getDefault();
+            List<SingleChoiceItem<T>> filteredList = new ArrayList<>();
+            for (SingleChoiceItem<T> item : mMasterList) {
+                if (item.name.toString().toLowerCase(locale).contains(mCurrentQuery)
+                        || item.rawItem.toString().toLowerCase(Locale.ROOT).contains(mCurrentQuery)) {
+                    filteredList.add(item);
+                }
+            }
+            submitList(filteredList);
         }
 
         @Nullable
         T getSelection() {
-            if (mSelectedItem >= 0) {
-                return mItems.get(mSelectedItem);
-            }
-            return null;
+            return mSelectedRawItem;
         }
 
         void setSelection(@Nullable T selectedItem) {
-            if (selectedItem != null) {
-                int index = mItems.indexOf(selectedItem);
-                if (index != -1) {
-                    setSelectedIndex(index);
+            if (Objects.equals(mSelectedRawItem, selectedItem)) {
+                return;
+            }
+            mSelectedRawItem = selectedItem;
+            for (SingleChoiceItem<T> item : mMasterList) {
+                boolean targetSelectionState = Objects.equals(item.rawItem, selectedItem);
+                if (item.isSelected != targetSelectionState) {
+                    item.isSelected = targetSelectionState;
+                    triggerSingleChoiceClickListener(item.id, targetSelectionState);
                 }
             }
+            dispatchFilteredList();
         }
 
         void setSelectedIndex(int selectedIndex) {
-            if (selectedIndex == mSelectedItem) {
-                // Do nothing
-                return;
+            SingleChoiceItem<T> targetItem = (selectedIndex >= 0 && selectedIndex < mMasterList.size())
+                    ? mMasterList.get(selectedIndex) : null;
+            setSelection(targetItem != null ? targetItem.rawItem : null);
+            if (selectedIndex >= 0) {
+                mRecyclerView.setSelection(selectedIndex);
             }
-            updateSelection(false);
-            mSelectedItem = selectedIndex;
-            updateSelection(true);
-            mRecyclerView.setSelection(selectedIndex);
         }
 
         void addDisabledItems(@Nullable List<T> disabledItems) {
-            if (disabledItems != null) {
-                for (T item : disabledItems) {
-                    int index = mItems.indexOf(item);
-                    if (index != -1) {
-                        synchronized (mDisabledItems) {
-                            mDisabledItems.add(index);
-                        }
+            if (disabledItems == null) return;
+            for (T item : disabledItems) {
+                for (SingleChoiceItem<T> wrapper : mMasterList) {
+                    if (Objects.equals(wrapper.rawItem, item)) {
+                        wrapper.isDisabled = true;
+                        break;
                     }
                 }
             }
+            dispatchFilteredList();
         }
 
         @NonNull
         @Override
-        public SearchableRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
-            return new SearchableRecyclerViewAdapter.ViewHolder(view);
+            return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull SearchableRecyclerViewAdapter.ViewHolder holder, int position) {
-            Integer index;
-            synchronized (mFilteredItems) {
-                index = mFilteredItems.get(position);
-            }
-            final AtomicBoolean selected = new AtomicBoolean(mSelectedItem == index);
-            holder.item.setText(mItemNames.get(index));
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            SingleChoiceItem<T> item = getItem(position);
+            holder.item.setText(item.name);
             holder.item.setTextIsSelectable(mIsTextSelectable);
-            synchronized (mDisabledItems) {
-                holder.item.setEnabled(!mDisabledItems.contains(index));
-            }
-            holder.item.setChecked(selected.get());
+            holder.item.setEnabled(!item.isDisabled);
+            holder.item.setChecked(item.isSelected);
             holder.item.setOnClickListener(v -> {
-                if (selected.get()) {
+                if (item.isSelected) {
                     // Already selected, do nothing
                     return;
                 }
-                // Unselect the previous and select this one
-                updateSelection(false);
-                mSelectedItem = index;
-                // Update selection manually
-                selected.set(!selected.get());
-                holder.item.setChecked(selected.get());
-                triggerSingleChoiceClickListener(index, selected.get());
+                mSelectedRawItem = item.rawItem;
+                for (SingleChoiceItem<T> target : mMasterList) {
+                    boolean wasSelected = target.isSelected;
+                    target.isSelected = (target.id == item.id);
+                    if (wasSelected != target.isSelected) {
+                        // Trigger only if this item wasn't selected before
+                        triggerSingleChoiceClickListener(target.id, target.isSelected);
+                    }
+                }
+                dispatchFilteredList();
             });
-        }
-
-        @Override
-        public int getItemCount() {
-            synchronized (mFilteredItems) {
-                return mFilteredItems.size();
-            }
-        }
-
-        private void updateSelection(boolean selected) {
-            if (mSelectedItem < 0) {
-                return;
-            }
-            int position;
-            synchronized (mFilteredItems) {
-                position = mFilteredItems.indexOf(mSelectedItem);
-            }
-            if (position >= 0) {
-                notifyItemChanged(position, AdapterUtils.STUB);
-            }
-            triggerSingleChoiceClickListener(mSelectedItem, selected);
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {

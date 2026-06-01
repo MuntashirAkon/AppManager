@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.details;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PathPermission;
@@ -29,6 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -68,7 +68,6 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialAlertView;
 import io.github.muntashirakon.widget.RecyclerView;
@@ -292,10 +291,29 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         }
     }
 
+    static class ItemCallback extends DiffUtil.ItemCallback<AppDetailsComponentItem> {
+        @Override
+        public boolean areItemsTheSame(@NonNull AppDetailsComponentItem oldItem, @NonNull AppDetailsComponentItem newItem) {
+            return Objects.equals(oldItem.name, newItem.name);
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull AppDetailsComponentItem oldItem, @NonNull AppDetailsComponentItem newItem) {
+            boolean isRunning;
+            if (oldItem instanceof AppDetailsServiceItem && newItem instanceof AppDetailsServiceItem) {
+                isRunning = ((AppDetailsServiceItem) oldItem).isRunning() == ((AppDetailsServiceItem) newItem).isRunning();
+            } else isRunning = true;
+            return isRunning &
+                    oldItem.isBlocked() == newItem.isBlocked()
+                    && oldItem.isDisabled() == newItem.isDisabled()
+                    && oldItem.isTracker() == newItem.isTracker()
+                    && Objects.equals(oldItem.label, newItem.label);
+        }
+    }
+
+
     @UiThread
-    private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> {
-        @NonNull
-        private final List<AppDetailsItem<?>> mAdapterList;
+    private class AppDetailsRecyclerAdapter extends RecyclerView.ListAdapter<AppDetailsComponentItem, AppDetailsRecyclerAdapter.ViewHolder> {
         @ComponentProperty
         private int mRequestedProperty;
         @Nullable
@@ -309,7 +327,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         private final int mRunningIndicatorColor;
 
         AppDetailsRecyclerAdapter() {
-            mAdapterList = new ArrayList<>();
+            super(new ItemCallback());
             mBlockedIndicatorColor = ColorCodes.getComponentBlockedIndicatorColor(activity);
             mBlockedExternallyIndicatorColor = ColorCodes.getComponentExternallyBlockedIndicatorColor(activity);
             mTrackerIndicatorColor = ColorCodes.getComponentTrackerIndicatorColor(activity);
@@ -330,12 +348,14 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                     mConstraint = null;
                     mUserId = UserHandleHidden.myUserId();
                 }
+                ArrayList<AppDetailsComponentItem> items = new ArrayList<>(list.size());
+                for (AppDetailsItem<?> item : list) {
+                    items.add((AppDetailsComponentItem) item);
+                }
                 ThreadUtils.postOnMainThread(() -> {
                     if (isDetached()) return;
                     ProgressIndicatorCompat.setVisibility(progressIndicator, false);
-                    synchronized (mAdapterList) {
-                        AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
-                    }
+                    submitList(items);
                 });
             });
         }
@@ -413,27 +433,14 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
 
         @Override
         public void onBindViewHolder(@NonNull AppDetailsRecyclerAdapter.ViewHolder holder, int position) {
-            Context context = holder.itemView.getContext();
             if (mRequestedProperty == SERVICES) {
-                getServicesView(context, holder, position);
+                getServicesView(holder, position);
             } else if (mRequestedProperty == RECEIVERS) {
                 getReceiverView(holder, position);
             } else if (mRequestedProperty == PROVIDERS) {
                 getProviderView(holder, position);
             } else if (mRequestedProperty == ACTIVITIES) {
                 getActivityView(holder, position);
-            }
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public int getItemCount() {
-            synchronized (mAdapterList) {
-                return mAdapterList.size();
             }
         }
 
@@ -495,10 +502,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         }
 
         private void getActivityView(@NonNull ViewHolder holder, int index) {
-            final AppDetailsActivityItem componentItem;
-            synchronized (mAdapterList) {
-                componentItem = (AppDetailsActivityItem) mAdapterList.get(index);
-            }
+            final AppDetailsActivityItem componentItem = (AppDetailsActivityItem) getItem(index);
             final ActivityInfo activityInfo = (ActivityInfo) componentItem.item;
             final String activityName = componentItem.name;
             final boolean isDisabled = !mIsExternalApk && componentItem.isDisabled();
@@ -614,11 +618,8 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             }
         }
 
-        private void getServicesView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
-            final AppDetailsServiceItem serviceItem;
-            synchronized (mAdapterList) {
-                serviceItem = (AppDetailsServiceItem) mAdapterList.get(index);
-            }
+        private void getServicesView(@NonNull ViewHolder holder, int index) {
+            final AppDetailsServiceItem serviceItem = (AppDetailsServiceItem) getItem(index);
             final ServiceInfo serviceInfo = (ServiceInfo) serviceItem.item;
             final boolean isDisabled = !mIsExternalApk && serviceItem.isDisabled();
             // Background color: regular < tracker < disabled < blocked < running
@@ -690,10 +691,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         }
 
         private void getReceiverView(@NonNull ViewHolder holder, int index) {
-            final AppDetailsComponentItem componentItem;
-            synchronized (mAdapterList) {
-                componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
-            }
+            final AppDetailsComponentItem componentItem = getItem(index);
             final ActivityInfo activityInfo = (ActivityInfo) componentItem.item;
             // Background color: regular < tracker < disabled < blocked
             if (!mIsExternalApk && componentItem.isBlocked()) {
@@ -753,10 +751,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         }
 
         private void getProviderView(@NonNull ViewHolder holder, int index) {
-            final AppDetailsComponentItem componentItem;
-            synchronized (mAdapterList) {
-                componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
-            }
+            final AppDetailsComponentItem componentItem = getItem(index);
             final ProviderInfo providerInfo = (ProviderInfo) componentItem.item;
             final String providerName = providerInfo.name;
             // Background color: regular < tracker < disabled < blocked

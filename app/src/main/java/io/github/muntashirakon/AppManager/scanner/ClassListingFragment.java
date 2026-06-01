@@ -15,8 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +24,7 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.android.material.card.MaterialCardView;
 
@@ -41,7 +40,6 @@ import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.SearchViewDebouncer;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 
@@ -145,21 +143,32 @@ public class ClassListingFragment extends Fragment implements MenuProvider {
         mEmptyView.setText(willShow ? R.string.loading : R.string.no_tracker_class);
     }
 
-    static class ClassListingAdapter extends RecyclerView.Adapter<ClassListingAdapter.ViewHolder> implements Filterable {
-        private Filter mFilter;
-        private String mConstraint;
-        @AdvancedSearchView.SearchType
-        private int mFilterType = AdvancedSearchView.SEARCH_TYPE_CONTAINS;
-        private List<String> mDefaultList;
+    static class ClassListingAdapter extends RecyclerView.ListAdapter<String, ClassListingAdapter.ViewHolder> {
         private final Activity mActivity;
         private final ScannerViewModel mViewModel;
-        @NonNull
-        private final List<String> mAdapterList = new ArrayList<>();
         private final int mCardColor0;
         private final int mCardColor1;
         private final int mQueryStringHighlightColor;
+        private List<String> mDefaultList = new ArrayList<>();
+        @Nullable
+        private String mConstraint;
+        @AdvancedSearchView.SearchType
+        private int mFilterType = AdvancedSearchView.SEARCH_TYPE_CONTAINS;
+
+        private static final DiffUtil.ItemCallback<String> DIFF_CALLBACK = new DiffUtil.ItemCallback<String>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull String oldItem, @NonNull String newItem) {
+                return Objects.equals(oldItem, newItem);
+            }
+
+            @Override
+            public boolean areContentsTheSame(@NonNull String oldItem, @NonNull String newItem) {
+                return Objects.equals(oldItem, newItem);
+            }
+        };
 
         ClassListingAdapter(@NonNull Activity activity, @NonNull ScannerViewModel viewModel) {
+            super(DIFF_CALLBACK);
             mActivity = activity;
             mViewModel = viewModel;
             mCardColor0 = ColorCodes.getListItemColor0(activity);
@@ -174,31 +183,32 @@ public class ClassListingFragment extends Fragment implements MenuProvider {
         }
 
         void filter() {
-            if (!TextUtils.isEmpty(mConstraint)) {
-                filter(mConstraint, mFilterType);
-            } else {
-                AdapterUtils.notifyDataSetChanged(this, mAdapterList, mDefaultList);
-            }
+            dispatchFilteredList(mConstraint, mFilterType);
         }
 
         void filter(String query, @AdvancedSearchView.SearchType int filterType) {
-            mConstraint = query;
-            mFilterType = filterType;
-            getFilter().filter(mConstraint);
+            dispatchFilteredList(query, filterType);
         }
 
-        @Override
-        public int getItemCount() {
-            synchronized (mAdapterList) {
-                return mAdapterList.size();
+        private void dispatchFilteredList(@Nullable String query, @AdvancedSearchView.SearchType int filterType) {
+            mConstraint = query;
+            mFilterType = filterType;
+            if (TextUtils.isEmpty(mConstraint)) {
+                submitList(new ArrayList<>(mDefaultList));
+                return;
             }
+            String constraint = mFilterType == SEARCH_TYPE_REGEX ? mConstraint : mConstraint.toLowerCase(Locale.ROOT);
+            List<String> matchingResults = AdvancedSearchView.matches(
+                    constraint,
+                    mDefaultList,
+                    (AdvancedSearchView.ChoiceGenerator<String>) object -> mFilterType == SEARCH_TYPE_REGEX ? object : object.toLowerCase(Locale.ROOT),
+                    mFilterType);
+            submitList(matchingResults);
         }
 
         @Override
         public long getItemId(int position) {
-            synchronized (mAdapterList) {
-                return mDefaultList.indexOf(mAdapterList.get(position));
-            }
+            return mDefaultList.indexOf(getItem(position));
         }
 
         @NonNull
@@ -210,10 +220,7 @@ public class ClassListingFragment extends Fragment implements MenuProvider {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            String className;
-            synchronized (mAdapterList) {
-                className = mAdapterList.get(position);
-            }
+            String className = getItem(position);
             TextView textView = holder.classNameView;
             textView.setTypeface(Typeface.MONOSPACE);
             if (mConstraint != null && className.toLowerCase(Locale.ROOT).contains(mConstraint)) {
@@ -233,48 +240,6 @@ public class ClassListingFragment extends Fragment implements MenuProvider {
                     UIUtils.displayLongToast(e.toString());
                 }
             });
-        }
-
-        @Override
-        public Filter getFilter() {
-            if (mFilter == null)
-                mFilter = new Filter() {
-                    @Override
-                    protected FilterResults performFiltering(CharSequence charSequence) {
-                        String constraint = mFilterType == SEARCH_TYPE_REGEX ? charSequence.toString()
-                                : charSequence.toString().toLowerCase(Locale.ROOT);
-                        FilterResults filterResults = new FilterResults();
-                        if (constraint.isEmpty()) {
-                            filterResults.count = 0;
-                            filterResults.values = null;
-                            return filterResults;
-                        }
-
-                        List<String> list = AdvancedSearchView.matches(
-                                constraint,
-                                mDefaultList,
-                                (AdvancedSearchView.ChoiceGenerator<String>) object -> mFilterType == SEARCH_TYPE_REGEX ? object
-                                        : object.toLowerCase(Locale.ROOT),
-                                mFilterType);
-
-                        filterResults.count = list.size();
-                        filterResults.values = list;
-                        return filterResults;
-                    }
-
-                    @Override
-                    protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                        synchronized (mAdapterList) {
-                            if (filterResults.values == null) {
-                                AdapterUtils.notifyDataSetChanged(ClassListingAdapter.this, mAdapterList, mDefaultList);
-                            } else {
-                                //noinspection unchecked
-                                AdapterUtils.notifyDataSetChanged(ClassListingAdapter.this, mAdapterList, (List<String>) filterResults.values);
-                            }
-                        }
-                    }
-                };
-            return mFilter;
         }
 
         public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -10,20 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.android.material.textview.MaterialTextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.RecyclerView;
 
-class WhatsNewRecyclerAdapter extends RecyclerView.Adapter<WhatsNewRecyclerAdapter.ViewHolder> {
-    private final List<ApkWhatsNewFinder.Change> mAdapterList = new ArrayList<>();
+class WhatsNewRecyclerAdapter extends RecyclerView.ListAdapter<ApkWhatsNewFinder.Change, WhatsNewRecyclerAdapter.ViewHolder> {
     private final int mColorAdd;
     private final int mColorRemove;
     private final int mColorNeutral;
@@ -31,17 +29,28 @@ class WhatsNewRecyclerAdapter extends RecyclerView.Adapter<WhatsNewRecyclerAdapt
     private final Typeface mTypefaceMedium;
     private final String mPackageName;
 
+    private static final DiffUtil.ItemCallback<ApkWhatsNewFinder.Change> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<ApkWhatsNewFinder.Change>() {
+                @Override
+                public boolean areItemsTheSame(@NonNull ApkWhatsNewFinder.Change oldItem, @NonNull ApkWhatsNewFinder.Change newItem) {
+                    return oldItem.changeType == newItem.changeType && Objects.equals(oldItem.value, newItem.value);
+                }
+
+                @Override
+                public boolean areContentsTheSame(@NonNull ApkWhatsNewFinder.Change oldItem, @NonNull ApkWhatsNewFinder.Change newItem) {
+                    // Nothing to do
+                    return true;
+                }
+            };
+
     WhatsNewRecyclerAdapter(Context context, @NonNull String packageName) {
+        super(DIFF_CALLBACK);
         mPackageName = packageName;
         mColorAdd = ColorCodes.getWhatsNewPlusIndicatorColor(context);
         mColorRemove = ColorCodes.getWhatsNewMinusIndicatorColor(context);
         mColorNeutral = UIUtils.getTextColorPrimary(context);
         mTypefaceNormal = Typeface.create("sans-serif", Typeface.NORMAL);
         mTypefaceMedium = Typeface.create("sans-serif-medium", Typeface.NORMAL);
-    }
-
-    void setAdapterList(List<ApkWhatsNewFinder.Change> list) {
-        AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
     }
 
     @NonNull
@@ -59,19 +68,20 @@ class WhatsNewRecyclerAdapter extends RecyclerView.Adapter<WhatsNewRecyclerAdapt
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ApkWhatsNewFinder.Change change = mAdapterList.get(position);
-        if (change.value.startsWith(mPackageName)) {
-            change.value = change.value.replaceFirst(mPackageName, "");
+        ApkWhatsNewFinder.Change change = getItem(position);
+        String displayValue = change.value;
+        if (displayValue.startsWith(mPackageName)) {
+            displayValue = displayValue.replaceFirst(mPackageName, "");
         }
         switch (change.changeType) {
             case ApkWhatsNewFinder.CHANGE_ADD:
                 holder.changeSign.setText("+");
                 holder.changeSign.setTextColor(mColorAdd);
-                holder.textView.setText(change.value);
+                holder.textView.setText(displayValue);
                 holder.textView.setTextColor(mColorAdd);
                 break;
             case ApkWhatsNewFinder.CHANGE_INFO:
-                holder.textView.setText(change.value);
+                holder.textView.setText(displayValue);
                 holder.textView.setTextColor(mColorNeutral);
                 holder.textView.setTypeface(mTypefaceMedium);
                 holder.textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
@@ -79,20 +89,15 @@ class WhatsNewRecyclerAdapter extends RecyclerView.Adapter<WhatsNewRecyclerAdapt
             case ApkWhatsNewFinder.CHANGE_REMOVED:
                 holder.changeSign.setText("-");
                 holder.changeSign.setTextColor(mColorRemove);
-                holder.textView.setText(change.value);
+                holder.textView.setText(displayValue);
                 holder.textView.setTextColor(mColorRemove);
                 break;
         }
     }
 
     @Override
-    public int getItemCount() {
-        return mAdapterList.size();
-    }
-
-    @Override
     public int getItemViewType(int position) {
-        return mAdapterList.get(position).changeType;
+        return getItem(position).changeType;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

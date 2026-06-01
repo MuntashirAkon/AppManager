@@ -34,6 +34,7 @@ import androidx.core.os.BundleCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.color.MaterialColors;
@@ -58,7 +59,6 @@ import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.adapters.SelectedArrayAdapter;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.view.TextInputLayoutCompat;
 import io.github.muntashirakon.widget.MaterialSpinner;
 import io.github.muntashirakon.widget.RecyclerView;
@@ -329,28 +329,71 @@ public class EditFilterOptionFragment extends DialogFragment {
                 .show();
     }
 
-    private static class FilterOptionFlagsAdapter extends RecyclerView.Adapter<FilterOptionFlagsAdapter.ViewHolder> {
+    private static class FilterOptionFlagsAdapter extends RecyclerView.ListAdapter<FilterOptionFlagsAdapter.FlagItem, FilterOptionFlagsAdapter.ViewHolder> {
         @LayoutRes
         private final int mLayoutId;
         private final View.OnClickListener mItemClickListener;
-        private final List<Integer> mFlags = Collections.synchronizedList(new ArrayList<>());
-        private Map<Integer, CharSequence> mFlagMap;
+        @NonNull
+        private Map<Integer, CharSequence> mFlagMap = Collections.emptyMap();
         private int mFlag;
 
+        static class FlagItem {
+            final int bitValue;
+            @NonNull
+            final CharSequence name;
+            final boolean isChecked;
+
+            FlagItem(int bitValue, @NonNull CharSequence name, boolean isChecked) {
+                this.bitValue = bitValue;
+                this.name = name;
+                this.isChecked = isChecked;
+            }
+        }
+
+        private static final DiffUtil.ItemCallback<FlagItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<FlagItem>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull FlagItem oldItem, @NonNull FlagItem newItem) {
+                return oldItem.bitValue == newItem.bitValue;
+            }
+
+            @Override
+            public boolean areContentsTheSame(@NonNull FlagItem oldItem, @NonNull FlagItem newItem) {
+                return oldItem.isChecked == newItem.isChecked
+                        && Objects.equals(oldItem.name.toString(), newItem.name.toString());
+            }
+        };
+
         public FilterOptionFlagsAdapter(@LayoutRes int layoutId, View.OnClickListener itemClickListener) {
+            super(DIFF_CALLBACK);
             mLayoutId = layoutId;
-            mFlagMap = Collections.emptyMap();
             mItemClickListener = itemClickListener;
         }
 
         public void setFlagMap(@NonNull Map<Integer, CharSequence> flagMap) {
             mFlagMap = flagMap;
-            AdapterUtils.notifyDataSetChanged(this, mFlags, new ArrayList<>(flagMap.keySet()));
+            dispatchUpdatedSnapshot();
         }
 
         public void setFlag(int flag) {
+            if (mFlag == flag) {
+                return;
+            }
             mFlag = flag;
-            notifyItemRangeChanged(0, mFlags.size(), AdapterUtils.STUB);
+            dispatchUpdatedSnapshot();
+        }
+
+        private void dispatchUpdatedSnapshot() {
+            if (mFlagMap.isEmpty()) {
+                submitList(null);
+                return;
+            }
+            List<FlagItem> snapshots = new ArrayList<>(mFlagMap.size());
+            for (Map.Entry<Integer, CharSequence> entry : mFlagMap.entrySet()) {
+                int bitValue = entry.getKey();
+                boolean isChecked = (mFlag & bitValue) != 0;
+                snapshots.add(new FlagItem(bitValue, entry.getValue(), isChecked));
+            }
+            submitList(snapshots);
         }
 
         public int getFlag() {
@@ -366,27 +409,23 @@ public class EditFilterOptionFragment extends DialogFragment {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            int flag = mFlags.get(position);
-            CharSequence flagName = mFlagMap.get(flag);
-            holder.item.setText(flagName);
-            holder.item.setChecked((mFlag & flag) != 0);
+            FlagItem itemWrapper = getItem(position);
+            int flagValue = itemWrapper.bitValue;
+            holder.item.setText(itemWrapper.name);
+            holder.item.setChecked(itemWrapper.isChecked);
             holder.item.setOnClickListener(v -> {
-                if ((mFlag & flag) != 0) {
-                    // Already selected, deselect
-                    mFlag &= ~flag;
-                    holder.item.setChecked(false);
+                if ((mFlag & flagValue) != 0) {
+                    mFlag &= ~flagValue;
                 } else {
-                    // Not yet selected, select
-                    mFlag |= flag;
-                    holder.item.setChecked(true);
+                    mFlag |= flagValue;
                 }
-                mItemClickListener.onClick(v);
+                // Re-evaluate
+                dispatchUpdatedSnapshot();
+                // Trigger click listener
+                if (mItemClickListener != null) {
+                    mItemClickListener.onClick(v);
+                }
             });
-        }
-
-        @Override
-        public int getItemCount() {
-            return mFlags.size();
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {

@@ -19,6 +19,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -30,6 +31,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
@@ -40,7 +42,6 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 
@@ -75,7 +76,7 @@ public class OpHistoryActivity extends BaseActivity {
                 .show());
         mViewModel.getOpHistoriesLiveData().observe(this, opHistories -> {
             mProgressIndicator.hide();
-            mAdapter.setDefaultList(opHistories);
+            mAdapter.submitList(opHistories);
         });
         mViewModel.getClearHistoryLiveData().observe(this, cleared ->
                 UIUtils.displayShortToast(cleared ? R.string.done : R.string.failed));
@@ -104,53 +105,30 @@ public class OpHistoryActivity extends BaseActivity {
         return true;
     }
 
-    static class OpHistoryAdapter extends RecyclerView.Adapter<OpHistoryAdapter.ViewHolder> {
-        private final List<OpHistoryItem> mAdapterList = new ArrayList<>();
+    static class OpHistoryAdapter extends RecyclerView.ListAdapter<OpHistoryItem, OpHistoryAdapter.ViewHolder> {
         private final OpHistoryActivity mActivity;
         private final int mColorSuccess;
         private final int mColorFailure;
 
-        static class ViewHolder extends RecyclerView.ViewHolder {
-            MaterialCardView itemView;
-            TextView type;
-            TextView title;
-            TextView execTime;
-            Button execBtn;
-
-            public ViewHolder(@NonNull View itemView) {
-                super(itemView);
-                this.itemView = (MaterialCardView) itemView;
-                type = itemView.findViewById(R.id.type);
-                title = itemView.findViewById(android.R.id.title);
-                execTime = itemView.findViewById(android.R.id.summary);
-                execBtn = itemView.findViewById(R.id.item_action);
+        private static final DiffUtil.ItemCallback<OpHistoryItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<OpHistoryItem>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull OpHistoryItem oldItem, @NonNull OpHistoryItem newItem) {
+                return oldItem.id == newItem.id;
             }
-        }
+
+            @Override
+            public boolean areContentsTheSame(@NonNull OpHistoryItem oldItem, @NonNull OpHistoryItem newItem) {
+                return Objects.equals(oldItem.getType(), newItem.getType())
+                        && oldItem.getStatus() == newItem.getStatus()
+                        && Objects.equals(oldItem.getTimestamp(), newItem.getTimestamp());
+            }
+        };
 
         OpHistoryAdapter(@NonNull OpHistoryActivity activity) {
+            super(DIFF_CALLBACK);
             mActivity = activity;
             mColorSuccess = ColorCodes.getSuccessColor(activity);
             mColorFailure = ColorCodes.getFailureColor(activity);
-        }
-
-        void setDefaultList(@NonNull List<OpHistoryItem> list) {
-            synchronized (mAdapterList) {
-                AdapterUtils.notifyDataSetChanged(this, mAdapterList, list);
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            synchronized (mAdapterList) {
-                return mAdapterList.size();
-            }
-        }
-
-        @Override
-        public long getItemId(int position) {
-            synchronized (mAdapterList) {
-                return mAdapterList.get(position).hashCode();
-            }
         }
 
         @NonNull
@@ -163,10 +141,7 @@ public class OpHistoryActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            OpHistoryItem history;
-            synchronized (mAdapterList) {
-                history = mAdapterList.get(position);
-            }
+            final OpHistoryItem history = getItem(position);
             holder.itemView.setStrokeColor(history.getStatus() ? mColorSuccess : mColorFailure);
             holder.type.setText(history.getLocalizedType(mActivity));
             holder.title.setText(history.getLabel(mActivity));
@@ -190,6 +165,23 @@ public class OpHistoryActivity extends BaseActivity {
                     .setPositiveButton(R.string.yes, (dialog, which) ->
                             mActivity.mViewModel.getServiceLauncherIntent(history))
                     .show());
+        }
+
+        static class ViewHolder extends RecyclerView.ViewHolder {
+            MaterialCardView itemView;
+            TextView type;
+            TextView title;
+            TextView execTime;
+            Button execBtn;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                this.itemView = (MaterialCardView) itemView;
+                type = itemView.findViewById(R.id.type);
+                title = itemView.findViewById(android.R.id.title);
+                execTime = itemView.findViewById(android.R.id.summary);
+                execBtn = itemView.findViewById(R.id.item_action);
+            }
         }
     }
 

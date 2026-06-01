@@ -8,39 +8,51 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.entity.LogFilter;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 // Copyright 2012 Nolan Lawson
-public class LogFilterAdapter extends RecyclerView.Adapter<LogFilterAdapter.ViewHolder> {
-
+// Copyright 2026 Muntashir Al-Islam
+public class LogFilterAdapter extends ListAdapter<LogFilter, LogFilterAdapter.ViewHolder> {
     private OnClickListener mListener;
-    private final List<LogFilter> mItems;
+    private static final DiffUtil.ItemCallback<LogFilter> DIFF_CALLBACK = new DiffUtil.ItemCallback<LogFilter>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull LogFilter oldItem, @NonNull LogFilter newItem) {
+            return Objects.equals(oldItem.id, newItem.id);
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull LogFilter oldItem, @NonNull LogFilter newItem) {
+            return Objects.equals(oldItem.name, newItem.name);
+        }
+    };
 
     public void setOnItemClickListener(OnClickListener listener) {
         mListener = listener;
     }
 
-    public LogFilterAdapter(@NonNull List<LogFilter> items) {
-        mItems = items;
+    public LogFilterAdapter() {
+        super(DIFF_CALLBACK);
     }
 
     public void add(@NonNull LogFilter filter) {
-        int previousSize = mItems.size();
-        mItems.add(filter);
-        Collections.sort(mItems, LogFilter.COMPARATOR);
-        int currentSize = mItems.size();
-        AdapterUtils.notifyDataSetChanged(this, previousSize, currentSize);
+        List<LogFilter> currentList = new ArrayList<>(getCurrentList());
+        currentList.add(filter);
+        Collections.sort(currentList, LogFilter.COMPARATOR);
+        submitList(currentList);
     }
 
     @NonNull
@@ -52,23 +64,20 @@ public class LogFilterAdapter extends RecyclerView.Adapter<LogFilterAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final LogFilter logFilter = mItems.get(position);
+        final LogFilter logFilter = getItem(position);
         holder.textView.setText(logFilter.name);
         holder.itemView.setOnClickListener(v -> {
-            if (mListener != null) {
-                mListener.onClick(holder.itemView, position, logFilter);
+            int currentPos = holder.getBindingAdapterPosition();
+            if (mListener != null && currentPos != RecyclerView.NO_POSITION) {
+                mListener.onClick(holder.itemView, currentPos, logFilter);
             }
         });
         holder.actionButton.setOnClickListener(v -> {
             ThreadUtils.postOnBackgroundThread(() -> AppsDb.getInstance().logFilterDao().delete(logFilter));
-            mItems.remove(position);
-            notifyItemRemoved(position);
+            List<LogFilter> updatedList = new ArrayList<>(getCurrentList());
+            updatedList.remove(logFilter);
+            submitList(updatedList);
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return mItems.size();
     }
 
     public interface OnClickListener {
