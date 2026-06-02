@@ -416,7 +416,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     private void filterItemsByFlags() {
         synchronized (mApplicationItems) {
             List<ApplicationItem> candidateApplicationItems = new ArrayList<>();
-            List<FilterOption> profileFilterOptions = new ArrayList<>();
+            FilterItem profileFilterItem = null;
             if (mFilterProfileName != null) {
                 String profileId = ProfileManager.getProfileIdCompat(mFilterProfileName);
                 Path profilePath = ProfileManager.findProfilePathById(profileId);
@@ -424,15 +424,13 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                     BaseProfile profile = BaseProfile.fromPath(profilePath);
                     if (profile instanceof AppsProfile) {
                         AppsProfile appsProfile = (AppsProfile) profile;
+                        profileFilterItem = new FilterItem();
                         PackageNameOption option = new PackageNameOption();
                         option.setKeyValue("eq_any", TextUtils.join("\n", appsProfile.packages));
-                        profileFilterOptions.add(option);
+                        profileFilterItem.addFilterOption(option);
                     } else if (profile instanceof AppsFilterProfile) {
                         AppsFilterProfile filterProfile = (AppsFilterProfile) profile;
-                        FilterItem filterItem = filterProfile.getFilterItem();
-                        for (int i = 0; i < filterItem.getSize(); ++i) {
-                            profileFilterOptions.add(filterItem.getFilterOptionAt(i));
-                        }
+                        profileFilterItem = filterProfile.getFilterItem();
                     }
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
@@ -447,7 +445,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 }
             }
             // Other filters
-            if (profileFilterOptions.isEmpty() && mFilterFlags == MainListOptions.FILTER_NO_FILTER) {
+            if (profileFilterItem == null && mFilterFlags == MainListOptions.FILTER_NO_FILTER) {
                 if (!TextUtils.isEmpty(mSearchQuery)) {
                     filterItemsByQuery(candidateApplicationItems);
                 } else {
@@ -456,11 +454,10 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
             } else {
                 List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
                 FilterItem filterItem = MainListOptions.getFilterItemFromFlags(mFilterFlags);
-                for (FilterOption filterOption : profileFilterOptions) {
-                    filterItem.addFilterOption(filterOption);
-                }
+                boolean needUsage = (profileFilterItem != null && profileFilterItem.getTimesUsageInfoUsed() > 0) || (filterItem.getTimesUsageInfoUsed() > 0);
+                boolean needRunning = (profileFilterItem != null && profileFilterItem.getTimesRunningOptionUsed() > 0) || (filterItem.getTimesRunningOptionUsed() > 0);
                 Map<String, PackageUsageInfo> packageUsageInfoList = new HashMap<>();
-                if (filterItem.getTimesUsageInfoUsed() > 0) {
+                if (needUsage) {
                     boolean hasUsageAccess = FeatureController.isUsageAccessEnabled() && SelfPermissions.checkUsageStatsPermission();
                     if (hasUsageAccess) {
                         TimeInterval interval = UsageUtils.getLastWeek();
@@ -490,7 +487,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                     }
                 }
                 HashSet<String> runningPackages = new HashSet<>();
-                if (filterItem.getTimesRunningOptionUsed() > 0) {
+                if (needRunning) {
                     for (ActivityManager.RunningAppProcessInfo info : ActivityManagerCompat.getRunningAppProcesses()) {
                         if (info.pkgList != null) {
                             runningPackages.addAll(Arrays.asList(info.pkgList));
@@ -501,15 +498,19 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                     item.setPackageUsageInfo(packageUsageInfoList.get(item.packageName));
                     item.setRunning(runningPackages.contains(item.packageName));
                 }
-                List<FilterItem.FilteredItemInfo<ApplicationItem>> result = filterItem.getFilteredList(candidateApplicationItems);
-                for (FilterItem.FilteredItemInfo<ApplicationItem> item : result) {
-                    if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_SPLITS) != 0 && !item.info.hasSplits) {
+                List<ApplicationItem> result = filterItem.getFilteredAppInfoList(candidateApplicationItems);
+                if (profileFilterItem != null) {
+                    // Filter profile
+                    result = profileFilterItem.getFilteredAppInfoList(result);
+                }
+                for (ApplicationItem item : result) {
+                    if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_SPLITS) != 0 && !item.hasSplits) {
                         continue;
                     }
-                    if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_SAF) != 0 && !item.info.usesSaf) {
+                    if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_SAF) != 0 && !item.usesSaf) {
                         continue;
                     }
-                    filteredApplicationItems.add(item.info);
+                    filteredApplicationItems.add(item);
                 }
                 if (!TextUtils.isEmpty(mSearchQuery)) {
                     filterItemsByQuery(filteredApplicationItems);

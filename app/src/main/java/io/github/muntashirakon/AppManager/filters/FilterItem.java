@@ -211,6 +211,19 @@ public class FilterItem implements IJsonSerializer, Parcelable {
         return filteredFilterableAppInfo;
     }
 
+    public <T extends IFilterableAppInfo> List<T> getFilteredAppInfoList(@NonNull List<T> allFilterableAppInfo) {
+        List<T> filteredFilterableAppInfo = new ArrayList<>();
+        ExprEvaluator evaluator = new ExprEvaluator(mFilterOptions);
+        String expr = TextUtils.isEmpty(mExpr) ? "true" : mExpr;
+        for (T info : allFilterableAppInfo) {
+            evaluator.setInfo(info);
+            if (evaluator.evaluate(expr)) {
+                filteredFilterableAppInfo.add(info);
+            }
+        }
+        return filteredFilterableAppInfo;
+    }
+
     private void incrementUsage(FilterOption filterOption, boolean increment) {
         boolean requireCountUpdate;
         if (filterOption instanceof DataUsageOption) {
