@@ -65,6 +65,7 @@ import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.AccessibilityUtils;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class MainRecyclerAdapter extends MultiSelectionView.Adapter<ApplicationItem, MainRecyclerAdapter.ViewHolder>
@@ -107,7 +108,11 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<ApplicationI
         if (mActivity.viewModel == null) return;
         String oldSearchQuery = mSearchQuery;
         mSearchQuery = mActivity.viewModel.getSearchQuery();
-        submitList(list != null ? new ArrayList<>(list) : null);
+        submitListWithScrollState(
+                list != null ? new ArrayList<>(list) : null,
+                AdapterUtils.isStartingSearch(oldSearchQuery, mSearchQuery),
+                AdapterUtils.isClearingSearch(oldSearchQuery, mSearchQuery)
+        );
         if (!Objects.equals(oldSearchQuery, mSearchQuery)) {
             notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
         }

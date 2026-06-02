@@ -162,7 +162,7 @@ public final class DataTransmission implements Closeable {
     public void shakeHands(@NonNull String token, Role role) throws IOException {
         Objects.requireNonNull(token);
         if (role == Role.Client) {
-            Log.e("DataTransmission", "shakeHands: Client protocol: " + PROTOCOL_VERSION);
+            Log.i("DataTransmission", "shakeHands: Client protocol: " + PROTOCOL_VERSION);
             // Send protocol version and client challenge (Nonce_C)
             sendMessage(PROTOCOL_VERSION.getBytes(StandardCharsets.UTF_8));
             byte[] nonceC = AuthUtils.generateNonce();

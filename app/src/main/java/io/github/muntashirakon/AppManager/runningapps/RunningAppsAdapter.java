@@ -90,7 +90,11 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<ProcessItem, 
     void setDefaultList(@NonNull List<ProcessItem> processItems) {
         String oldSearchQuery = mSearchQuery;
         mSearchQuery = mModel.getQuery();
-        submitList(new ArrayList<>(processItems));
+        submitListWithScrollState(
+                new ArrayList<>(processItems),
+                AdapterUtils.isStartingSearch(oldSearchQuery, mSearchQuery),
+                AdapterUtils.isClearingSearch(oldSearchQuery, mSearchQuery)
+        );
         if (!Objects.equals(oldSearchQuery, mSearchQuery)) {
             notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
         }

@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -81,6 +82,10 @@ class LocalServerManager {
             if (mSession == null || !mSession.isRunning()) {
                 try {
                     mSession = createSession();
+                } catch (SocketTimeoutException e) {
+                    // Server is running, but is not responsive
+                    // TODO: 6/1/26 Force connect by removing the old connection
+                    throw new IOException(e);
                 } catch (Exception e) {
                     if (!Ops.isDirectRoot() && !Ops.isAdb()) {
                         // Do not bother attempting to create a new session
@@ -341,8 +346,7 @@ class LocalServerManager {
         String host = ServerConfig.getLocalServerHost(mContext);
         int port = ServerConfig.getLocalServerPort();
         Socket socket = new Socket(host, port);
-        socket.setSoTimeout(30_000);
-        // NOTE: (CWE-319) No need for SSL since it only runs on a random port in localhost with specific authorization.
+        socket.setSoTimeout(10_000);
         OutputStream os = socket.getOutputStream();
         InputStream is = socket.getInputStream();
         DataTransmission transfer = new DataTransmission(os, is, false);

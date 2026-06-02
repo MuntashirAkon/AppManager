@@ -422,7 +422,11 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                     mRequestedProperty = neededProperty;
                     mConstraint = query;
                     mCanModifyAppOpMode = canModify;
-                    submitList(new ArrayList<>(list));
+                    submitListWithScrollState(
+                            new ArrayList<>(list),
+                            AdapterUtils.isStartingSearch(oldConstraint, mConstraint),
+                            AdapterUtils.isClearingSearch(oldConstraint, mConstraint)
+                    );
                     if (!Objects.equals(oldConstraint, mConstraint)) {
                         notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
                     }

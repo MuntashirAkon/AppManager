@@ -35,6 +35,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.util.AccessibilityUtils;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<DebloatObject, DebloaterRecyclerViewAdapter.ViewHolder> {
@@ -93,7 +94,11 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
         if (mSearchQuery != null) {
             mSearchQuery = mSearchQuery.toLowerCase(Locale.ROOT);
         }
-        submitList(new ArrayList<>(debloatObjects));
+        submitListWithScrollState(
+                new ArrayList<>(debloatObjects),
+                AdapterUtils.isStartingSearch(oldSearchQuery, mSearchQuery),
+                AdapterUtils.isClearingSearch(oldSearchQuery, mSearchQuery)
+        );
         if (!Objects.equals(oldSearchQuery, mSearchQuery)) {
             notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
         }

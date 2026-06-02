@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.util;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -13,6 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 public final class AdapterUtils {
     public static final Object STUB = new Object();
     public static final Object PAYLOAD_HIGHLIGHT_CHANGED = new Object();
+
+    public static boolean isStartingSearch(@Nullable String oldQuery, @Nullable String newQuery) {
+        return TextUtils.isEmpty(oldQuery) && !TextUtils.isEmpty(newQuery);
+    }
+
+    public static boolean isClearingSearch(@Nullable String oldQuery, @Nullable String newQuery) {
+        return !TextUtils.isEmpty(oldQuery) && TextUtils.isEmpty(newQuery);
+    }
 
     public static void setVisible(@NonNull View v, boolean visible) {
         if (visible && v.getVisibility() != View.VISIBLE) {

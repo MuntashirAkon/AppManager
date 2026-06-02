@@ -53,6 +53,7 @@ import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 
@@ -185,6 +186,8 @@ public class ProfilesActivity extends BaseActivity implements NewProfileDialogFr
         private final List<ProfileItem> mMasterList = new ArrayList<>();
         @Nullable
         private String mConstraint;
+        private boolean isStartingSearch = false;
+        private boolean isClearingSearch = false;
 
         private static final DiffUtil.ItemCallback<ProfileItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<ProfileItem>() {
             @Override
@@ -211,12 +214,16 @@ public class ProfilesActivity extends BaseActivity implements NewProfileDialogFr
             for (Map.Entry<BaseProfile, CharSequence> entry : map.entrySet()) {
                 mMasterList.add(new ProfileItem(entry.getKey(), entry.getValue()));
             }
+            isStartingSearch = false;
+            isClearingSearch = false;
             dispatchFilteredList();
         }
 
         void setFilterConstraint(@Nullable String constraint) {
             String oldConstraint = mConstraint;
             mConstraint = TextUtils.isEmpty(constraint) ? null : constraint.toLowerCase(Locale.ROOT);
+            isStartingSearch = AdapterUtils.isStartingSearch(oldConstraint, mConstraint);
+            isClearingSearch = AdapterUtils.isClearingSearch(oldConstraint, mConstraint);
             dispatchFilteredList();
             if (!Objects.equals(oldConstraint, mConstraint)) {
                 notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
@@ -225,7 +232,7 @@ public class ProfilesActivity extends BaseActivity implements NewProfileDialogFr
 
         private void dispatchFilteredList() {
             if (mConstraint == null || mConstraint.isEmpty()) {
-                submitList(new ArrayList<>(mMasterList));
+                submitListWithScrollState(new ArrayList<>(mMasterList), isStartingSearch, isClearingSearch);
                 return;
             }
             List<ProfileItem> filteredList = new ArrayList<>();
@@ -234,7 +241,7 @@ public class ProfilesActivity extends BaseActivity implements NewProfileDialogFr
                     filteredList.add(item);
                 }
             }
-            submitList(filteredList);
+            submitListWithScrollState(filteredList, isStartingSearch, isClearingSearch);
         }
 
         @Override

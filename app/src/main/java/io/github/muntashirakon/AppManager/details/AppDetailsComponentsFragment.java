@@ -70,6 +70,7 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialAlertView;
 import io.github.muntashirakon.widget.RecyclerView;
@@ -358,7 +359,11 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                 ThreadUtils.postOnMainThread(() -> {
                     if (isDetached()) return;
                     ProgressIndicatorCompat.setVisibility(progressIndicator, false);
-                    submitList(items);
+                    submitListWithScrollState(
+                            items,
+                            AdapterUtils.isStartingSearch(oldConstraint, mConstraint),
+                            AdapterUtils.isClearingSearch(oldConstraint, mConstraint)
+                    );
                     if (!Objects.equals(oldConstraint, mConstraint)) {
                         notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
                     }

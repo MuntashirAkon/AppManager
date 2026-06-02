@@ -41,6 +41,7 @@ import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.SearchViewDebouncer;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 
@@ -195,8 +196,10 @@ public class ClassListingFragment extends Fragment implements MenuProvider {
             String oldConstraint = mConstraint;
             mConstraint = query;
             mFilterType = filterType;
+            boolean isStartingSearch = AdapterUtils.isStartingSearch(oldConstraint, mConstraint);
+            boolean isClearingSearch = AdapterUtils.isClearingSearch(oldConstraint, mConstraint);
             if (TextUtils.isEmpty(mConstraint)) {
-                submitList(new ArrayList<>(mDefaultList));
+                submitListWithScrollState(new ArrayList<>(mDefaultList), isStartingSearch, isClearingSearch);
                 return;
             }
             String constraint = mFilterType == SEARCH_TYPE_REGEX ? mConstraint : mConstraint.toLowerCase(Locale.ROOT);
@@ -205,7 +208,7 @@ public class ClassListingFragment extends Fragment implements MenuProvider {
                     mDefaultList,
                     (AdvancedSearchView.ChoiceGenerator<String>) object -> mFilterType == SEARCH_TYPE_REGEX ? object : object.toLowerCase(Locale.ROOT),
                     mFilterType);
-            submitList(matchingResults);
+            submitListWithScrollState(matchingResults, isStartingSearch, isClearingSearch);
             if (!Objects.equals(oldConstraint, mConstraint)) {
                 notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
             }

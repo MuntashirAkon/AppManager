@@ -30,6 +30,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.customview.view.AbsSavedState;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.Transition;
@@ -475,6 +476,8 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         @Nullable
         private RecyclerView mRecyclerView;
         private int mDefaultBottomPadding;
+        @Nullable
+        private Parcelable mPreFilterScrollState;
 
         public Adapter(@NonNull DiffUtil.ItemCallback<T> diffCallback) {
             super(diffCallback);
@@ -657,6 +660,47 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
             super.onDetachedFromRecyclerView(recyclerView);
             recyclerView.removeOnLayoutChangeListener(this);
             mRecyclerView = null;
+        }
+
+        /**
+         * Modified submitList that handles structural viewport anchoring.
+         *
+         * @param list         The new filtered or unfiltered list
+         * @param saveState    True if the user is just starting to type a search query
+         * @param restoreState True if the user just cleared the search query
+         */
+        public void submitListWithScrollState(@Nullable List<T> list, boolean saveState, boolean restoreState) {
+            RecyclerView.LayoutManager layoutManager = mRecyclerView != null ? mRecyclerView.getLayoutManager() : null;
+            // Save historical state if entering a search
+            if (saveState && layoutManager != null) {
+                mPreFilterScrollState = layoutManager.onSaveInstanceState();
+            }
+            // Check if the user is currently at the exact top of the list
+            boolean isCurrentlyAtTop;
+            if (layoutManager instanceof LinearLayoutManager) {
+                int firstVisibleItem = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+                // Check offset to ensure they haven't scrolled down slightly
+                View topView = layoutManager.findViewByPosition(firstVisibleItem);
+                int topOffset = topView != null ? topView.getTop() : 0;
+                isCurrentlyAtTop = (firstVisibleItem == 0 && topOffset >= 0);
+            } else isCurrentlyAtTop = false;
+            // Submit the diff
+            super.submitList(list, () -> {
+                if (layoutManager != null) {
+                    if (isCurrentlyAtTop) {
+                        // The user was at the top.
+                        layoutManager.scrollToPosition(0);
+                        // If they were also clearing a search, discard the historical state
+                        if (restoreState) {
+                            mPreFilterScrollState = null;
+                        }
+                    } else if (restoreState && mPreFilterScrollState != null) {
+                        // Restore them to their deep historical position
+                        layoutManager.onRestoreInstanceState(mPreFilterScrollState);
+                        mPreFilterScrollState = null;
+                    } // else do nothing
+                }
+            });
         }
 
         @Override

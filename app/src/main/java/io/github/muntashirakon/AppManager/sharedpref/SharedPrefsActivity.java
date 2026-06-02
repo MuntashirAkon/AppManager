@@ -40,6 +40,7 @@ import io.github.muntashirakon.AppManager.misc.SearchViewDebouncer;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 
@@ -247,6 +248,8 @@ public class SharedPrefsActivity extends BaseActivity implements EditPrefItemFra
         private final List<SharedPrefPair> mMasterList = new ArrayList<>();
         @Nullable
         private String mConstraint;
+        private boolean isStartingSearch = false;
+        private boolean isClearingSearch = false;
 
         static class SharedPrefPair {
             @NonNull
@@ -284,12 +287,16 @@ public class SharedPrefsActivity extends BaseActivity implements EditPrefItemFra
             for (Map.Entry<String, Object> entry : list.entrySet()) {
                 mMasterList.add(new SharedPrefPair(entry.getKey(), entry.getValue()));
             }
+            isStartingSearch = false;
+            isClearingSearch = false;
             dispatchFilteredList();
         }
 
         void setFilterConstraint(@Nullable String constraint) {
             String oldConstraint = mConstraint;
             mConstraint = TextUtils.isEmpty(constraint) ? null : constraint.toLowerCase(Locale.ROOT);
+            isStartingSearch = AdapterUtils.isStartingSearch(oldConstraint, mConstraint);
+            isClearingSearch = AdapterUtils.isClearingSearch(oldConstraint, mConstraint);
             dispatchFilteredList();
             if (!Objects.equals(oldConstraint, mConstraint)) {
                 notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
@@ -298,7 +305,7 @@ public class SharedPrefsActivity extends BaseActivity implements EditPrefItemFra
 
         private void dispatchFilteredList() {
             if (mConstraint == null || mConstraint.isEmpty()) {
-                submitList(new ArrayList<>(mMasterList));
+                submitListWithScrollState(new ArrayList<>(mMasterList), isStartingSearch, isClearingSearch);
                 return;
             }
 
@@ -308,7 +315,7 @@ public class SharedPrefsActivity extends BaseActivity implements EditPrefItemFra
                     filteredList.add(pair);
                 }
             }
-            submitList(filteredList);
+            submitListWithScrollState(filteredList, isStartingSearch, isClearingSearch);
         }
 
         @NonNull
