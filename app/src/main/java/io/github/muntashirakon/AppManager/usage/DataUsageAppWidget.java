@@ -7,7 +7,6 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.format.Formatter;
 import android.widget.RemoteViews;
@@ -15,23 +14,17 @@ import android.widget.RemoteViews;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.app.PendingIntentCompat;
 
-import com.google.android.material.color.MaterialColors;
-
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
-import io.github.muntashirakon.util.UiUtils;
 
 public class DataUsageAppWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         if (!FeatureController.isUsageAccessEnabled() || !SelfPermissions.checkUsageStatsPermission()) {
             return;
         }
-        // Fetch colors
-        context = AppearanceUtils.getThemedWidgetContext(context, false);
         // Fetch data
         TimeInterval interval = UsageUtils.getToday();
         SparseArrayCompat<AppUsageStatsManager.DataUsage> mobileData = AppUsageStatsManager.getMobileData(interval);
@@ -59,15 +52,6 @@ public class DataUsageAppWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.data_usage, String.format("↑ %1$s ↓ %2$s",
                 Formatter.formatShortFileSize(context, totalTx),
                 Formatter.formatShortFileSize(context, totalRx)));
-        // Set colors
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            boolean isNight = UiUtils.isDarkMode(context);
-            int colorSurface = MaterialColors.getColor(context, com.google.android.material.R.attr.colorSurface, "colorSurface");
-            int colorSurfaceInverse = MaterialColors.getColor(context, com.google.android.material.R.attr.colorSurfaceInverse, "colorSurfaceInverse");
-            if (isNight) {
-                views.setColorInt(R.id.widget_background, "setBackgroundColor", colorSurfaceInverse, colorSurface);
-            } else views.setColorInt(R.id.widget_background, "setBackgroundColor", colorSurface, colorSurfaceInverse);
-        }
         // Get PendingIntent for App Usage page
         Intent appUsageIntent = new Intent(context, AppUsageActivity.class);
         PendingIntent appUsagePendingIntent = PendingIntentCompat.getActivity(context, 0,

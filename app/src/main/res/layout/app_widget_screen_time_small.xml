@@ -32,7 +32,7 @@
             android:paddingStart="0dp"
             android:paddingEnd="16dp"
             android:text="@string/screen_time"
-            android:textColor="?android:attr/textColorSecondary" />
+            android:textColor="@color/widget_text_secondary" />
 
         <TextView
             android:id="@+id/screen_time"
@@ -46,7 +46,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="@color/widget_text_primary"
             android:textSize="27sp"
             android:textStyle="bold"
             tools:targetApi="o"

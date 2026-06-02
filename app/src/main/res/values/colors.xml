@@ -2,4 +2,16 @@
 <resources>
     <color name="fm_icon_background">@color/m3_sys_color_light_on_surface_variant</color>
     <color name="fm_symbolic_link">#f37785</color>
+
+    <color name="widget_text_primary">#1b1b1b</color>
+    <color name="widget_text_secondary">#565e71</color>
+
+    <color name="widget_screen_time_app1_bg">#1b1b1b</color>
+    <color name="widget_screen_time_app1_fg">#ffffff</color>
+
+    <color name="widget_screen_time_app2_bg">#565e71</color>
+    <color name="widget_screen_time_app2_fg">#ffffff</color>
+
+    <color name="widget_screen_time_app3_bg">#d4e3ff</color>
+    <color name="widget_screen_time_app3_fg">#1b1b1b</color>
 </resources>

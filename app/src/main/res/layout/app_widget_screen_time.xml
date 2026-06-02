@@ -29,7 +29,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@string/screen_time"
-            android:textColor="?android:attr/textColorSecondary" />
+            android:textColor="@color/widget_text_secondary" />
 
         <TextView
             android:id="@+id/screen_time"
@@ -44,7 +44,7 @@
             android:gravity="center_vertical"
             android:maxLines="1"
             android:text="2h 30m"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="@color/widget_text_primary"
             android:textSize="27sp"
             android:textStyle="bold"
             tools:ignore="HardcodedText"
@@ -67,11 +67,11 @@
                     android:layout_marginHorizontal="4sp"
                     android:layout_marginTop="64sp"
                     android:background="@drawable/circle_background"
-                    android:backgroundTint="#d4e3ff"
+                    android:backgroundTint="@color/widget_screen_time_app3_bg"
                     android:gravity="center"
                     android:maxLines="1"
                     android:text="20m"
-                    android:textColor="#1b1b1b"
+                    android:textColor="@color/widget_screen_time_app3_fg"
                     android:textSize="@dimen/font_size_medium"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
@@ -83,11 +83,11 @@
                     android:layout_marginHorizontal="2sp"
                     android:layout_marginTop="32sp"
                     android:background="@drawable/circle_background"
-                    android:backgroundTint="#565e71"
+                    android:backgroundTint="@color/widget_screen_time_app2_bg"
                     android:gravity="center"
                     android:maxLines="1"
                     android:text="45m"
-                    android:textColor="#f9f9f9"
+                    android:textColor="@color/widget_screen_time_app2_fg"
                     android:textSize="@dimen/font_size_medium"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
@@ -99,11 +99,11 @@
                     android:layout_marginHorizontal="0sp"
                     android:layout_marginTop="0sp"
                     android:background="@drawable/circle_background"
-                    android:backgroundTint="#1b1b1b"
+                    android:backgroundTint="@color/widget_screen_time_app1_bg"
                     android:gravity="center"
                     android:maxLines="1"
                     android:text="~1h"
-                    android:textColor="#f9f9f9"
+                    android:textColor="@color/widget_screen_time_app1_fg"
                     android:textSize="@dimen/font_size_medium"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
@@ -124,7 +124,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="Signal"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:textColor="@color/widget_text_secondary"
                     android:textSize="@dimen/font_size_medium"
                     tools:ignore="HardcodedText" />
 
@@ -136,7 +136,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="App Manager"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:textColor="@color/widget_text_secondary"
                     android:textSize="@dimen/font_size_medium"
                     tools:ignore="HardcodedText" />
 
@@ -148,7 +148,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="K-9 Mail"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:textColor="@color/widget_text_secondary"
                     android:textSize="@dimen/font_size_medium"
                     tools:ignore="HardcodedText" />
 

@@ -1,0 +1,14 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources>
+    <color name="widget_text_primary">@android:color/system_neutral1_800</color>
+    <color name="widget_text_secondary">@android:color/system_neutral2_700</color>
+
+    <color name="widget_screen_time_app1_bg">@android:color/system_neutral1_900</color>
+    <color name="widget_screen_time_app1_fg">@android:color/system_neutral1_100</color>
+
+    <color name="widget_screen_time_app2_bg">@android:color/system_accent2_600</color>
+    <color name="widget_screen_time_app2_fg">@android:color/system_accent2_50</color>
+
+    <color name="widget_screen_time_app3_bg">@android:color/system_accent1_200</color>
+    <color name="widget_screen_time_app3_fg">@android:color/system_accent1_900</color>
+</resources>

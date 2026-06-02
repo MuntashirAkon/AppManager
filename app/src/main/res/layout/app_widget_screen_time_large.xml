@@ -29,7 +29,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@string/screen_time"
-            android:textColor="?android:attr/textColorSecondary" />
+            android:textColor="@color/widget_text_secondary" />
 
         <TextView
             android:id="@+id/screen_time"
@@ -43,7 +43,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="@color/widget_text_primary"
             android:textSize="27sp"
             android:textStyle="bold"
             tools:targetApi="o"
@@ -61,7 +61,7 @@
                 android:layout_height="16dp"
                 android:layout_margin="4dp"
                 android:background="@drawable/circle_background"
-                android:backgroundTint="#d4e3ff" />
+                android:backgroundTint="@color/widget_screen_time_app3_bg" />
 
             <TextView
                 android:id="@+id/app3_label"
@@ -70,7 +70,7 @@
                 android:layout_margin="4dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="?android:attr/textColorSecondary"
+                android:textColor="@color/widget_text_secondary"
                 android:textSize="@dimen/font_size_medium"
                 tools:text="K-9 Mail" />
 
@@ -88,7 +88,7 @@
                 android:layout_height="16dp"
                 android:layout_margin="4dp"
                 android:background="@drawable/circle_background"
-                android:backgroundTint="#565e71" />
+                android:backgroundTint="@color/widget_screen_time_app2_bg" />
 
             <TextView
                 android:id="@+id/app2_label"
@@ -97,7 +97,7 @@
                 android:layout_margin="4dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="?android:attr/textColorSecondary"
+                android:textColor="@color/widget_text_secondary"
                 android:textSize="@dimen/font_size_medium"
                 tools:text="App Manager" />
 
@@ -115,7 +115,7 @@
                 android:layout_height="16dp"
                 android:layout_margin="4dp"
                 android:background="@drawable/circle_background"
-                android:backgroundTint="#1b1b1b" />
+                android:backgroundTint="@color/widget_screen_time_app1_bg" />
 
             <TextView
                 android:id="@+id/app1_label"
@@ -124,7 +124,7 @@
                 android:layout_margin="4dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="?android:attr/textColorSecondary"
+                android:textColor="@color/widget_text_secondary"
                 android:textSize="@dimen/font_size_medium"
                 tools:text="Signal" />
 
@@ -167,10 +167,10 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/circle_background"
-                    android:backgroundTint="#1b1b1b"
+                    android:backgroundTint="@color/widget_screen_time_app1_bg"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textColor="#f9f9f9"
+                    android:textColor="@color/widget_screen_time_app1_fg"
                     android:textSize="@dimen/font_size_large"
                     android:textStyle="bold"
                     tools:text="~1h" />
@@ -184,10 +184,10 @@
                     android:layout_marginEnd="25dp"
                     android:layout_marginBottom="95dp"
                     android:background="@drawable/circle_background"
-                    android:backgroundTint="#565e71"
+                    android:backgroundTint="@color/widget_screen_time_app2_bg"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textColor="#f9f9f9"
+                    android:textColor="@color/widget_screen_time_app2_fg"
                     android:textSize="@dimen/font_size_large"
                     android:textStyle="bold"
                     tools:text="45m" />
@@ -201,10 +201,10 @@
                     android:layout_marginEnd="55dp"
                     android:layout_marginBottom="155dp"
                     android:background="@drawable/circle_background"
-                    android:backgroundTint="#d4e3ff"
+                    android:backgroundTint="@color/widget_screen_time_app3_bg"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textColor="#1b1b1b"
+                    android:textColor="@color/widget_screen_time_app3_fg"
                     android:textSize="@dimen/font_size_large"
                     android:textStyle="bold"
                     tools:text="20m" />

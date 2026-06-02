@@ -7,10 +7,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Size;
 import android.view.View;
@@ -18,8 +15,6 @@ import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.PendingIntentCompat;
-
-import com.google.android.material.color.MaterialColors;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,16 +26,12 @@ import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
-import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
-import io.github.muntashirakon.util.UiUtils;
 
 public class ScreenTimeAppWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         if (!FeatureController.isUsageAccessEnabled() || !SelfPermissions.checkUsageStatsPermission()) {
             return;
         }
-        // Fetch colors
-        context = AppearanceUtils.getThemedWidgetContext(context, false);
         // Fetch screens time
         int[] userIds = Users.getUsersIds();
         List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
@@ -96,24 +87,6 @@ public class ScreenTimeAppWidget extends AppWidgetProvider {
             PackageUsageInfo item1 = packageUsageInfoList.get(0);
             views.setTextViewText(R.id.app1_label, item1.appLabel);
             views.setTextViewText(R.id.app1_time, DateUtils.getFormattedDurationSingle(item1.screenTime, false));
-        }
-        // Set colors
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            boolean isNight = UiUtils.isDarkMode(context);
-            int colorSurface = MaterialColors.getColor(context, com.google.android.material.R.attr.colorSurface, "colorSurface");
-            int colorSurfaceInverse = MaterialColors.getColor(context, com.google.android.material.R.attr.colorSurfaceInverse, "colorSurfaceInverse");
-            ColorStateList color1 = ColorStateList.valueOf(MaterialColors.harmonizeWithPrimary(context, Color.parseColor("#1b1b1b")));
-            ColorStateList color2 = ColorStateList.valueOf(MaterialColors.harmonizeWithPrimary(context, Color.parseColor("#565e71")));
-            ColorStateList color3 = ColorStateList.valueOf(MaterialColors.harmonizeWithPrimary(context, Color.parseColor("#d4e3ff")));
-            views.setColorStateList(R.id.app1_time, "setBackgroundTintList", color1);
-            views.setColorStateList(R.id.app1_circle, "setBackgroundTintList", color1);
-            views.setColorStateList(R.id.app2_time, "setBackgroundTintList", color2);
-            views.setColorStateList(R.id.app2_circle, "setBackgroundTintList", color2);
-            views.setColorStateList(R.id.app3_time, "setBackgroundTintList", color3);
-            views.setColorStateList(R.id.app3_circle, "setBackgroundTintList", color3);
-            if (isNight) {
-                views.setColorInt(R.id.widget_background, "setBackgroundColor", colorSurfaceInverse, colorSurface);
-            } else views.setColorInt(R.id.widget_background, "setBackgroundColor", colorSurface, colorSurfaceInverse);
         }
         // Get PendingIntent for App Usage page
         Intent appUsageIntent = new Intent(context, AppUsageActivity.class);

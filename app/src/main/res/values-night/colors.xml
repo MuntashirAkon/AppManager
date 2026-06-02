@@ -1,0 +1,14 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources>
+    <color name="widget_text_primary">#ffffff</color>
+    <color name="widget_text_secondary">#a5adc4</color>
+
+    <color name="widget_screen_time_app1_bg">#d4e3ff</color>
+    <color name="widget_screen_time_app1_fg">#1b1b1b</color>
+
+    <color name="widget_screen_time_app2_bg">#565e71</color>
+    <color name="widget_screen_time_app2_fg">#1b1b1b</color>
+
+    <color name="widget_screen_time_app3_bg">#1b1b1b</color>
+    <color name="widget_screen_time_app3_fg">#ffffff</color>
+</resources>

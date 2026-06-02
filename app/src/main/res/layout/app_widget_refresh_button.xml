@@ -13,6 +13,6 @@
         android:layout_margin="@dimen/app_widget_background_padding"
         android:contentDescription="@string/refresh"
         android:src="@drawable/ic_refresh"
-        android:tint="?android:attr/textColorSecondary"
+        android:tint="@color/widget_text_secondary"
         tools:ignore="UseAppTint" />
 </FrameLayout>

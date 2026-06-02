@@ -32,7 +32,7 @@
             android:paddingStart="0dp"
             android:paddingEnd="16dp"
             android:text="@string/data_usage_msg"
-            android:textColor="?android:attr/textColorSecondary" />
+            android:textColor="@color/widget_text_secondary" />
 
         <TextView
             android:id="@+id/data_usage"
@@ -47,7 +47,7 @@
             android:gravity="center_vertical"
             android:maxLines="1"
             android:text="↑ 28 MB ↓ 1.2 GB"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="@color/widget_text_primary"
             android:textSize="27sp"
             android:textStyle="bold"
             tools:ignore="HardcodedText"
