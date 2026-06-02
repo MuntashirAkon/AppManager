@@ -677,7 +677,12 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         synchronized (mApplicationItems) {
             boolean isInserted = false;
             for (int i = 0; i < mApplicationItems.size(); ++i) {
-                if (item.equals(mApplicationItems.get(i))) {
+                ApplicationItem oldItem = mApplicationItems.get(i);
+                if (item.equals(oldItem)) {
+                    if (oldItem.getItemVersion() == item.getItemVersion()) {
+                        // Just changing the item version is enough
+                        item.incItemVersion();
+                    }
                     mApplicationItems.set(i, item);
                     isInserted = true;
                     if (mSelectedPackageApplicationItemMap.containsKey(item.packageName)) {

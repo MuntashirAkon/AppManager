@@ -40,11 +40,12 @@ import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.transition.MaterialSharedAxis;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
 import io.github.muntashirakon.ui.R;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.util.UiUtils;
 
 @SuppressLint("RestrictedApi")
@@ -454,6 +455,8 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
     }
 
     public abstract static class Adapter<T, VH extends ViewHolder> extends ListAdapter<T, VH> implements View.OnLayoutChangeListener {
+        private static final Object PAYLOAD_SELECTION_CHANGED = new Object();
+
         private interface OnSelectionChangeListener {
             @UiThread
             void onSelectionChange();
@@ -543,13 +546,13 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
             }
             if (isSelected(position)) {
                 if (deselect(position)) {
-                    notifyItemChanged(position, AdapterUtils.STUB);
+                    notifyItemChanged(position, PAYLOAD_SELECTION_CHANGED);
                     notifySelectionChange();
                 }
             } else {
                 if (select(position)) {
                     notifySelectionChange();
-                    notifyItemChanged(position, AdapterUtils.STUB);
+                    notifyItemChanged(position, PAYLOAD_SELECTION_CHANGED);
                 }
             }
         }
@@ -570,7 +573,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
             notifySelectionChange();
             int selSize = (selEnd - selStart) + 1;
             if (selSize > 0) {
-                notifyItemRangeChanged(selStart, selSize, AdapterUtils.STUB);
+                notifyItemRangeChanged(selStart, selSize, PAYLOAD_SELECTION_CHANGED);
             }
         }
 
@@ -579,7 +582,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         public void deselectAll() {
             for (int position = 0; position < getItemCount(); ++position) {
                 if (isSelectable(position) && isSelected(position) && deselect(position)) {
-                    notifyItemChanged(position, AdapterUtils.STUB);
+                    notifyItemChanged(position, PAYLOAD_SELECTION_CHANGED);
                 }
             }
             notifySelectionChange();
@@ -594,7 +597,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
                 select(position);
             }
             notifySelectionChange();
-            notifyItemRangeChanged(beginPosition, endPosition - beginPosition + 1, AdapterUtils.STUB);
+            notifyItemRangeChanged(beginPosition, endPosition - beginPosition + 1, PAYLOAD_SELECTION_CHANGED);
         }
 
         @Override
@@ -654,6 +657,21 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
             super.onDetachedFromRecyclerView(recyclerView);
             recyclerView.removeOnLayoutChangeListener(this);
             mRecyclerView = null;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull VH holder, int position, @NonNull List<Object> payloads) {
+            if (!payloads.isEmpty()) {
+                for (Object payload : payloads) {
+                    if (Objects.equals(payload, PAYLOAD_SELECTION_CHANGED)) {
+                        // onBindViewHolder takes care of it.
+                        onBindViewHolder(holder, position);
+                    }
+                }
+                // We assume that all the other payloads have been taken care of by the subclass
+                return;
+            }
+            super.onBindViewHolder(holder, position, payloads);
         }
 
         @CallSuper

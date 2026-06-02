@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.details;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModeNames;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
+import static io.github.muntashirakon.util.AdapterUtils.PAYLOAD_HIGHLIGHT_CHANGED;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -412,6 +413,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
         void setDefaultList(@NonNull List<AppDetailsItem<?>> list) {
             ThreadUtils.postOnBackgroundThread(() -> {
                 int neededProperty = mNeededProperty;
+                String oldConstraint = mConstraint;
                 String query = viewModel == null ? null : viewModel.getSearchQuery();
                 boolean canModify = SelfPermissions.canModifyAppOpMode();
                 ThreadUtils.postOnMainThread(() -> {
@@ -421,6 +423,9 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                     mConstraint = query;
                     mCanModifyAppOpMode = canModify;
                     submitList(new ArrayList<>(list));
+                    if (!Objects.equals(oldConstraint, mConstraint)) {
+                        notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
+                    }
                 });
             });
         }
@@ -508,6 +513,58 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
         }
 
         @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+            if (!payloads.isEmpty()) {
+                for (Object payload : payloads) {
+                    if (Objects.equals(payload, PAYLOAD_HIGHLIGHT_CHANGED)) {
+                        updateTextHighlights(holder, position);
+                        return;
+                    }
+                }
+            }
+            super.onBindViewHolder(holder, position, payloads);
+        }
+
+        public void updateTextHighlights(@NonNull AppDetailsRecyclerAdapter.ViewHolder holder, int position) {
+            switch (mRequestedProperty) {
+                case APP_OPS: {
+                    AppDetailsAppOpItem item = (AppDetailsAppOpItem) getItem(position);
+                    // Set op name
+                    SpannableStringBuilder opName = new SpannableStringBuilder(item.getOp() + " - ");
+                    if (item.name.equals(String.valueOf(item.getOp()))) {
+                        opName.append(getString(R.string.unknown_op));
+                    } else {
+                        // Highlight searched query
+                        opName.append(UIUtils.getHighlightedText(item.name, mConstraint, colorQueryStringHighlight));
+                    }
+                    holder.textView1.setText(opName);
+                    break;
+                }
+                case USES_PERMISSIONS: {
+                    AppDetailsPermissionItem item = (AppDetailsPermissionItem) getItem(position);
+                    holder.textView1.setText(UIUtils.getHighlightedText(item.name, mConstraint, colorQueryStringHighlight));
+                    break;
+                }
+                case PERMISSIONS: {
+                    AppDetailsDefinedPermissionItem permissionItem = (AppDetailsDefinedPermissionItem) getItem(position);
+                    PermissionInfo permissionInfo = permissionItem.item;
+                    // Name
+                    if (mConstraint != null && permissionInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
+                        // Highlight searched query
+                        holder.textView2.setText(UIUtils.getHighlightedText(permissionInfo.name, mConstraint, colorQueryStringHighlight));
+                    } else {
+                        holder.textView2.setText(permissionInfo.name.startsWith(mPackageName) ?
+                                permissionInfo.name.replaceFirst(mPackageName, "") : permissionInfo.name);
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+
+
+        @Override
         public void onBindViewHolder(@NonNull AppDetailsRecyclerAdapter.ViewHolder holder, int position) {
             Context context = holder.itemView.getContext();
             switch (mRequestedProperty) {
@@ -533,10 +590,10 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             SpannableStringBuilder opName = new SpannableStringBuilder(item.getOp() + " - ");
             if (item.name.equals(String.valueOf(item.getOp()))) {
                 opName.append(getString(R.string.unknown_op));
-            } else if (mConstraint != null && opStr.toLowerCase(Locale.ROOT).contains(mConstraint)) {
+            } else {
                 // Highlight searched query
                 opName.append(UIUtils.getHighlightedText(opStr, mConstraint, colorQueryStringHighlight));
-            } else opName.append(opStr);
+            }
             holder.textView1.setText(opName);
             // Set op mode, running and duration
             StringBuilder opRunningInfo = new StringBuilder()
@@ -669,10 +726,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             @NonNull PermissionInfo permissionInfo = permissionItem.item;
             final String permName = permissionInfo.name;
             // Set permission name
-            if (mConstraint != null && permName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
-                // Highlight searched query
-                holder.textView1.setText(UIUtils.getHighlightedText(permName, mConstraint, colorQueryStringHighlight));
-            } else holder.textView1.setText(permName);
+            holder.textView1.setText(UIUtils.getHighlightedText(permName, mConstraint, colorQueryStringHighlight));
             // Set others
             // Description
             CharSequence description = permissionInfo.loadDescription(packageManager);

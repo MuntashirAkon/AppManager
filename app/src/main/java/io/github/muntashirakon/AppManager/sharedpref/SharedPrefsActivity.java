@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.sharedpref;
 
+import static io.github.muntashirakon.util.AdapterUtils.PAYLOAD_HIGHLIGHT_CHANGED;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -286,8 +288,12 @@ public class SharedPrefsActivity extends BaseActivity implements EditPrefItemFra
         }
 
         void setFilterConstraint(@Nullable String constraint) {
+            String oldConstraint = mConstraint;
             mConstraint = TextUtils.isEmpty(constraint) ? null : constraint.toLowerCase(Locale.ROOT);
             dispatchFilteredList();
+            if (!Objects.equals(oldConstraint, mConstraint)) {
+                notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
+            }
         }
 
         private void dispatchFilteredList() {
@@ -313,14 +319,28 @@ public class SharedPrefsActivity extends BaseActivity implements EditPrefItemFra
         }
 
         @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+            if (!payloads.isEmpty()) {
+                for (Object payload : payloads) {
+                    if (Objects.equals(payload, PAYLOAD_HIGHLIGHT_CHANGED)) {
+                        updateTextHighlights(holder, getItem(position));
+                        return;
+                    }
+                }
+            }
+            super.onBindViewHolder(holder, position, payloads);
+        }
+
+        private void updateTextHighlights(@NonNull ViewHolder holder, @NonNull SharedPrefPair item) {
+            // Highlight searched query
+            holder.itemName.setText(UIUtils.getHighlightedText(item.key, mConstraint, mQueryStringHighlightColor));
+        }
+
+        @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             SharedPrefPair pair = getItem(position);
-            if (mConstraint != null && pair.key.toLowerCase(Locale.ROOT).contains(mConstraint)) {
-                // Highlight searched query
-                holder.itemName.setText(UIUtils.getHighlightedText(pair.key, mConstraint, mQueryStringHighlightColor));
-            } else {
-                holder.itemName.setText(pair.key);
-            }
+            // Highlight searched query
+            holder.itemName.setText(UIUtils.getHighlightedText(pair.key, mConstraint, mQueryStringHighlightColor));
             String strValue = (pair.value != null) ? pair.value.toString() : "";
             holder.itemValue.setText(strValue.length() > REASONABLE_STR_SIZE ?
                     strValue.substring(0, REASONABLE_STR_SIZE) : strValue);

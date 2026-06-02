@@ -1,5 +1,7 @@
 package io.github.muntashirakon.AppManager.details;
 
+import static io.github.muntashirakon.util.AdapterUtils.PAYLOAD_HIGHLIGHT_CHANGED;
+
 import android.content.om.IOverlayManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -23,7 +25,6 @@ import com.google.android.material.materialswitch.MaterialSwitch;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
@@ -169,6 +170,7 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
         @UiThread
         void setDefaultList(List<AppDetailsItem<?>> list) {
             ThreadUtils.postOnBackgroundThread(() -> {
+                String oldConstraint = mConstraint;
                 mConstraint = viewModel == null ? null : viewModel.getSearchQuery();
                 ArrayList<AppDetailsOverlayItem> items = new ArrayList<>(list.size());
                 for (AppDetailsItem<?> item : list) {
@@ -178,6 +180,9 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
                     if (isDetached()) return;
                     ProgressIndicatorCompat.setVisibility(progressIndicator, false);
                     submitList(items);
+                    if (!Objects.equals(oldConstraint, mConstraint)) {
+                        notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
+                    }
                 });
             });
         }
@@ -192,15 +197,30 @@ public class AppDetailsOverlaysFragment extends AppDetailsFragment {
         }
 
         @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+            if (!payloads.isEmpty()) {
+                for (Object payload : payloads) {
+                    if (Objects.equals(payload, PAYLOAD_HIGHLIGHT_CHANGED)) {
+                        updateTextHighlights(holder, getItem(position));
+                        return;
+                    }
+                }
+            }
+            super.onBindViewHolder(holder, position, payloads);
+        }
+
+        private void updateTextHighlights(@NonNull ViewHolder holder, @NonNull AppDetailsOverlayItem item) {
+            // Highlight searched query
+            holder.overlayName.setText(UIUtils.getHighlightedText(item.name, mConstraint, colorQueryStringHighlight));
+        }
+
+        @Override
         @RequiresApi(Build.VERSION_CODES.O)
         public void onBindViewHolder(@NonNull ViewHolder holder, int index) {
             AppDetailsOverlayItem overlayItem = getItem(index);
             String overlayName = overlayItem.name;
-
-            if (mConstraint != null && overlayName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
-                // Highlight searched query
-                holder.overlayName.setText(UIUtils.getHighlightedText(overlayName, mConstraint, colorQueryStringHighlight));
-            } else holder.overlayName.setText(overlayName);
+            // Highlight searched query
+            holder.overlayName.setText(UIUtils.getHighlightedText(overlayName, mConstraint, colorQueryStringHighlight));
             holder.packageName.setText(overlayItem.getPackageName());
             if (overlayItem.getCategory() != null) {
                 holder.overlayCategory.setVisibility(View.VISIBLE);

@@ -269,7 +269,9 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
         // Set observer
         viewModel.getApplicationItems().observe(this, applicationItems -> {
-            if (mAdapter != null) mAdapter.setDefaultList(applicationItems);
+            if (mAdapter != null) {
+                mAdapter.setDefaultList(applicationItems);
+            }
             showProgressIndicator(false);
         });
         viewModel.getOperationStatus().observe(this, status -> {

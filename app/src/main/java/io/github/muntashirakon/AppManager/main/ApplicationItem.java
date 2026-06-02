@@ -81,6 +81,8 @@ import io.github.muntashirakon.io.Path;
  * Stores an application info
  */
 public class ApplicationItem extends PackageItemInfo implements IFilterableAppInfo {
+    private long itemVersion = 0;
+
     /**
      * Version name
      */
@@ -231,6 +233,9 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
     }
 
     public void generateOtherInfo() {
+        // Increment ApplicationItem version
+        incItemVersion();
+
         isStopped = (flags & ApplicationInfo.FLAG_STOPPED) != 0;
         isSystem = (flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         isPersistent = (flags & ApplicationInfo.FLAG_PERSISTENT) != 0;
@@ -288,6 +293,14 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
                 backupFlagsStr.append("rules");
             }
         }
+    }
+
+    public void incItemVersion() {
+        ++itemVersion;
+    }
+
+    public long getItemVersion() {
+        return itemVersion;
     }
 
     @WorkerThread
@@ -388,6 +401,8 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
             // Update dynamic info
             isStopped = (mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0;
             isDisabled = FreezeUtils.isFrozen(mApplicationInfo);
+            // Increment ApplicationItem version
+            incItemVersion();
         } catch (RemoteException | PackageManager.NameNotFoundException ignore) {
         }
     }

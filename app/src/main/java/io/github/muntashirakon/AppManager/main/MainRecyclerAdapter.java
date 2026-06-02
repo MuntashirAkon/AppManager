@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.main;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayLongToast;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayShortToast;
+import static io.github.muntashirakon.util.AdapterUtils.PAYLOAD_HIGHLIGHT_CHANGED;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
@@ -86,13 +88,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<ApplicationI
 
         @Override
         public boolean areContentsTheSame(@NonNull ApplicationItem oldItem, @NonNull ApplicationItem newItem) {
-            return oldItem.isSelected == newItem.isSelected
-                    && oldItem.isInstalled == newItem.isInstalled
-                    && oldItem.isDisabled == newItem.isDisabled
-                    && oldItem.isStopped == newItem.isStopped
-                    && Objects.equals(oldItem.lastUpdateTime, newItem.lastUpdateTime)
-                    && Objects.equals(oldItem.label, newItem.label)
-                    && Objects.equals(oldItem.versionTag, newItem.versionTag);
+            return oldItem.getItemVersion() == newItem.getItemVersion();
         }
     };
 
@@ -109,8 +105,12 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<ApplicationI
     @UiThread
     void setDefaultList(List<ApplicationItem> list) {
         if (mActivity.viewModel == null) return;
+        String oldSearchQuery = mSearchQuery;
         mSearchQuery = mActivity.viewModel.getSearchQuery();
         submitList(list != null ? new ArrayList<>(list) : null);
+        if (!Objects.equals(oldSearchQuery, mSearchQuery)) {
+            notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
+        }
         notifySelectionChange();
     }
 
@@ -159,6 +159,25 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<ApplicationI
     }
 
     @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (!payloads.isEmpty()) {
+            for (Object payload : payloads) {
+                if (Objects.equals(payload, PAYLOAD_HIGHLIGHT_CHANGED)) {
+                    updateTextHighlights(holder, getItem(position));
+                }
+            }
+        }
+        // Handle other stuff
+        super.onBindViewHolder(holder, position, payloads);
+    }
+
+    private void updateTextHighlights(@NonNull ViewHolder holder, @NonNull ApplicationItem item) {
+        String query = mSearchQuery;
+        holder.label.setText(UIUtils.getHighlightedText(item.label, query, mQueryStringHighlight));
+        holder.packageName.setText(UIUtils.getHighlightedText(item.packageName, query, mQueryStringHighlight));
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final ApplicationItem item = getItem(position);
         MaterialCardView cardView = holder.itemView;
@@ -182,7 +201,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<ApplicationI
             // 1) Turn selection mode on if this is the first item in the selection list
             // 2) Select between last selection position and this position (inclusive) if selection mode is on
             ApplicationItem lastSelectedItem = mActivity.viewModel.getLastSelectedPackage();
-            int lastSelectedItemPosition = lastSelectedItem == null ? -1 : getCurrentList().indexOf(lastSelectedItem);
+            int lastSelectedItemPosition = lastSelectedItem == null ? -1 : indexOf(lastSelectedItem);
             if (lastSelectedItemPosition >= 0) {
                 // Select from last selection to this selection
                 selectRange(lastSelectedItemPosition, currentPos);
@@ -364,6 +383,19 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<ApplicationI
             sectionsArr[i] = String.valueOf(sSections.charAt(i));
         }
         return sectionsArr;
+    }
+
+    private int indexOf(@Nullable ApplicationItem item) {
+        if (item == null) {
+            return -1;
+        }
+        List<ApplicationItem> list = getCurrentList();
+        for (int i = 0; i < list.size(); ++i) {
+            if (Objects.equals(list.get(i), item)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private void handleClick(@NonNull ApplicationItem item) {

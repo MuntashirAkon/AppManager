@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.runningapps;
 
+import static io.github.muntashirakon.util.AdapterUtils.PAYLOAD_HIGHLIGHT_CHANGED;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -60,6 +62,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<ProcessItem, 
     private final RunningAppsViewModel mModel;
     private final int mQueryStringHighlightColor;
     private ProcMemoryInfo mProcMemoryInfo;
+    private String mSearchQuery;
 
     private static final DiffUtil.ItemCallback<ProcessItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<ProcessItem>() {
         @Override
@@ -85,7 +88,12 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<ProcessItem, 
     }
 
     void setDefaultList(@NonNull List<ProcessItem> processItems) {
+        String oldSearchQuery = mSearchQuery;
+        mSearchQuery = mModel.getQuery();
         submitList(new ArrayList<>(processItems));
+        if (!Objects.equals(oldSearchQuery, mSearchQuery)) {
+            notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
+        }
         notifySelectionChange();
     }
 
@@ -109,6 +117,35 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<ProcessItem, 
         }
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_running_app, parent, false);
         return new BodyViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MultiSelectionView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (!payloads.isEmpty()) {
+            if (position == 0) {
+                onBindViewHolder((HeaderViewHolder) holder);
+                return;
+            }
+            for (Object payload : payloads) {
+                if (Objects.equals(payload, PAYLOAD_HIGHLIGHT_CHANGED)) {
+                    updateTextHighlights((BodyViewHolder) holder, getItem(position - 1));
+                }
+            }
+        }
+        // Handle other stuff
+        super.onBindViewHolder(holder, position, payloads);
+    }
+
+    private void updateTextHighlights(@NonNull BodyViewHolder holder, @NonNull ProcessItem item) {
+        String query = mSearchQuery;
+        ApplicationInfo applicationInfo;
+        if (item instanceof AppProcessItem) {
+            applicationInfo = ((AppProcessItem) item).packageInfo.applicationInfo;
+        } else applicationInfo = null;
+        holder.processName.setText(UIUtils.getHighlightedText(item.name, query, mQueryStringHighlightColor));
+        if (applicationInfo != null) {
+            holder.packageName.setText(UIUtils.getHighlightedText(applicationInfo.packageName, query, mQueryStringHighlightColor));
+        }
     }
 
     @Override
@@ -205,11 +242,11 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<ProcessItem, 
         holder.icon.setTag(processName);
         ImageLoader.getInstance().displayImage(processName, applicationInfo, holder.icon);
         // Set process name
-        holder.processName.setText(UIUtils.getHighlightedText(processName, mModel.getQuery(), mQueryStringHighlightColor));
+        holder.processName.setText(UIUtils.getHighlightedText(processName, mSearchQuery, mQueryStringHighlightColor));
         // Set package name
         AdapterUtils.setVisible(holder.packageName, applicationInfo != null);
         if (applicationInfo != null) {
-            holder.packageName.setText(UIUtils.getHighlightedText(applicationInfo.packageName, mModel.getQuery(), mQueryStringHighlightColor));
+            holder.packageName.setText(UIUtils.getHighlightedText(applicationInfo.packageName, mSearchQuery, mQueryStringHighlightColor));
         }
         // Set process IDs
         holder.processIds.setText(mActivity.getString(R.string.pid_and_ppid, processItem.pid, processItem.ppid));

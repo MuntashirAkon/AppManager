@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.details;
 
+import static io.github.muntashirakon.util.AdapterUtils.PAYLOAD_HIGHLIGHT_CHANGED;
+
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -339,6 +341,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             ThreadUtils.postOnBackgroundThread(() -> {
                 mRequestedProperty = mNeededProperty;
                 mCanStartAnyActivity = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.START_ANY_ACTIVITY);
+                String oldConstraint = mConstraint;
                 if (viewModel != null) {
                     mCanModifyComponentStates = !mIsExternalApk && SelfPermissions.canModifyAppComponentStates(mUserId, viewModel.getPackageName(), viewModel.isTestOnlyApp());
                     mConstraint = viewModel.getSearchQuery();
@@ -356,6 +359,9 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                     if (isDetached()) return;
                     ProgressIndicatorCompat.setVisibility(progressIndicator, false);
                     submitList(items);
+                    if (!Objects.equals(oldConstraint, mConstraint)) {
+                        notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
+                    }
                 });
             });
         }
@@ -432,7 +438,31 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull AppDetailsRecyclerAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+            if (!payloads.isEmpty()) {
+                for (Object payload : payloads) {
+                    if (Objects.equals(payload, PAYLOAD_HIGHLIGHT_CHANGED)) {
+                        updateTextHighlights(holder, position);
+                        return;
+                    }
+                }
+            }
+            super.onBindViewHolder(holder, position, payloads);
+        }
+
+        public void updateTextHighlights(@NonNull ViewHolder holder, int position) {
+            AppDetailsComponentItem item = getItem(position);
+            if (mConstraint != null && item.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
+                // Highlight searched query
+                holder.nameView.setText(UIUtils.getHighlightedText(item.name, mConstraint, colorQueryStringHighlight));
+            } else {
+                holder.nameView.setText(item.name.startsWith(mPackageName) ?
+                        item.name.replaceFirst(mPackageName, "") : item.name);
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             if (mRequestedProperty == SERVICES) {
                 getServicesView(holder, position);
             } else if (mRequestedProperty == RECEIVERS) {

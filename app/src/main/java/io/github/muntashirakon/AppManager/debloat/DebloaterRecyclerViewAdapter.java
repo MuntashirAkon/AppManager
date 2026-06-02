@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.debloat;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
+import static io.github.muntashirakon.util.AdapterUtils.PAYLOAD_HIGHLIGHT_CHANGED;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.FragmentActivity;
@@ -24,9 +26,13 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.textview.MaterialTextView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.util.AccessibilityUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
@@ -43,10 +49,13 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
     private final int mRemovalCautionColor;
     @ColorInt
     private final int mColorSurface;
+    private final int mQueryStringHighlightColor;
     @NonNull
     private final DebloaterViewModel mViewModel;
     @NonNull
     private final Drawable mDefaultIcon;
+    @Nullable
+    private String mSearchQuery;
 
     private static final DiffUtil.ItemCallback<DebloatObject> DIFF_CALLBACK = new DiffUtil.ItemCallback<DebloatObject>() {
         @Override
@@ -73,8 +82,22 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
         mRemovalUnsafeColor = ColorCodes.getRemovalUnsafeIndicatorColor(activity);
         mColorSurface = MaterialColors.getColor(activity, com.google.android.material.R.attr.colorSurface,
                 DebloaterRecyclerViewAdapter.class.getCanonicalName());
+        mQueryStringHighlightColor = ColorCodes.getQueryStringHighlightColor(activity);
         mViewModel = activity.viewModel;
         mDefaultIcon = activity.getPackageManager().getDefaultActivityIcon();
+    }
+
+    public void setDefaultList(List<DebloatObject> debloatObjects) {
+        String oldSearchQuery = mSearchQuery;
+        mSearchQuery = mViewModel.getQueryString();
+        if (mSearchQuery != null) {
+            mSearchQuery = mSearchQuery.toLowerCase(Locale.ROOT);
+        }
+        submitList(new ArrayList<>(debloatObjects));
+        if (!Objects.equals(oldSearchQuery, mSearchQuery)) {
+            notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
+        }
+        notifySelectionChange();
     }
 
     @NonNull
@@ -82,6 +105,24 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_debloater, parent, false);
         return new ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (!payloads.isEmpty()) {
+            for (Object payload : payloads) {
+                if (Objects.equals(payload, PAYLOAD_HIGHLIGHT_CHANGED)) {
+                    updateTextHighlights(holder, getItem(position));
+                }
+            }
+        }
+        // Handle other stuff
+        super.onBindViewHolder(holder, position, payloads);
+    }
+
+    private void updateTextHighlights(@NonNull ViewHolder holder, @NonNull DebloatObject debloatObject) {
+        holder.labelView.setText(UIUtils.getHighlightedText(debloatObject.getLabelOrPackageName().toString(), mSearchQuery, mQueryStringHighlightColor));
+        holder.packageNameView.setText(UIUtils.getHighlightedText(debloatObject.packageName, mSearchQuery, mQueryStringHighlightColor));
     }
 
     @Override
@@ -117,13 +158,12 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
         if (!TextUtils.isEmpty(warning)) {
             sb.append(" — ").append(warning);
         }
-        CharSequence label = debloatObject.getLabelOrPackageName();
         holder.iconView.setImageDrawable(icon);
         holder.listTypeView.setText(debloatObject.type);
-        holder.packageNameView.setText(debloatObject.packageName);
+        holder.labelView.setText(UIUtils.getHighlightedText(debloatObject.getLabelOrPackageName().toString(), mSearchQuery, mQueryStringHighlightColor));
+        holder.packageNameView.setText(UIUtils.getHighlightedText(debloatObject.packageName, mSearchQuery, mQueryStringHighlightColor));
         holder.descriptionView.setText(sb);
         holder.itemView.setStrokeColor(removalColor);
-        holder.labelView.setText(label);
         holder.itemView.setOnLongClickListener(v -> {
             int currentPos = holder.getBindingAdapterPosition();
             if (currentPos != RecyclerView.NO_POSITION) {

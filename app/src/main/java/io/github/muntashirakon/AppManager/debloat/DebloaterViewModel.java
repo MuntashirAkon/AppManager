@@ -70,6 +70,10 @@ public class DebloaterViewModel extends AndroidViewModel {
         loadPackages();
     }
 
+    public String getQueryString() {
+        return mQueryString;
+    }
+
     public LiveData<List<DebloatObject>> getDebloatObjectListLiveData() {
         return mDebloatObjectListLiveData;
     }

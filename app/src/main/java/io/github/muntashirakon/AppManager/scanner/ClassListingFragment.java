@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.scanner;
 
 import static io.github.muntashirakon.AppManager.misc.AdvancedSearchView.SEARCH_TYPE_REGEX;
+import static io.github.muntashirakon.util.AdapterUtils.PAYLOAD_HIGHLIGHT_CHANGED;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -191,6 +192,7 @@ public class ClassListingFragment extends Fragment implements MenuProvider {
         }
 
         private void dispatchFilteredList(@Nullable String query, @AdvancedSearchView.SearchType int filterType) {
+            String oldConstraint = mConstraint;
             mConstraint = query;
             mFilterType = filterType;
             if (TextUtils.isEmpty(mConstraint)) {
@@ -204,6 +206,9 @@ public class ClassListingFragment extends Fragment implements MenuProvider {
                     (AdvancedSearchView.ChoiceGenerator<String>) object -> mFilterType == SEARCH_TYPE_REGEX ? object : object.toLowerCase(Locale.ROOT),
                     mFilterType);
             submitList(matchingResults);
+            if (!Objects.equals(oldConstraint, mConstraint)) {
+                notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
+            }
         }
 
         @Override
@@ -219,16 +224,30 @@ public class ClassListingFragment extends Fragment implements MenuProvider {
         }
 
         @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+            if (!payloads.isEmpty()) {
+                for (Object payload : payloads) {
+                    if (Objects.equals(payload, PAYLOAD_HIGHLIGHT_CHANGED)) {
+                        updateTextHighlights(holder, getItem(position));
+                        return;
+                    }
+                }
+            }
+            super.onBindViewHolder(holder, position, payloads);
+        }
+
+        private void updateTextHighlights(@NonNull ViewHolder holder, @NonNull String item) {
+            // Highlight searched query
+            holder.classNameView.setText(UIUtils.getHighlightedText(item, mConstraint, mQueryStringHighlightColor));
+        }
+
+        @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             String className = getItem(position);
             TextView textView = holder.classNameView;
             textView.setTypeface(Typeface.MONOSPACE);
-            if (mConstraint != null && className.toLowerCase(Locale.ROOT).contains(mConstraint)) {
-                // Highlight searched query
-                textView.setText(UIUtils.getHighlightedText(className, mConstraint, mQueryStringHighlightColor));
-            } else {
-                textView.setText(className);
-            }
+            // Highlight searched query
+            textView.setText(UIUtils.getHighlightedText(className, mConstraint, mQueryStringHighlightColor));
             holder.itemView.setCardBackgroundColor(position % 2 == 0 ? mCardColor1 : mCardColor0);
             holder.itemView.setOnClickListener(v -> {
                 try {

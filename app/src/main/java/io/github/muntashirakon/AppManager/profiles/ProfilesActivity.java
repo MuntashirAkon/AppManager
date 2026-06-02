@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.profiles;
 
 import static io.github.muntashirakon.AppManager.profiles.ProfileApplierActivity.ST_ADVANCED;
 import static io.github.muntashirakon.AppManager.profiles.ProfileApplierActivity.ST_SIMPLE;
+import static io.github.muntashirakon.util.AdapterUtils.PAYLOAD_HIGHLIGHT_CHANGED;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -214,8 +215,12 @@ public class ProfilesActivity extends BaseActivity implements NewProfileDialogFr
         }
 
         void setFilterConstraint(@Nullable String constraint) {
+            String oldConstraint = mConstraint;
             mConstraint = TextUtils.isEmpty(constraint) ? null : constraint.toLowerCase(Locale.ROOT);
             dispatchFilteredList();
+            if (!Objects.equals(oldConstraint, mConstraint)) {
+                notifyItemRangeChanged(0, getItemCount(), PAYLOAD_HIGHLIGHT_CHANGED);
+            }
         }
 
         private void dispatchFilteredList() {
@@ -245,15 +250,29 @@ public class ProfilesActivity extends BaseActivity implements NewProfileDialogFr
         }
 
         @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+            if (!payloads.isEmpty()) {
+                for (Object payload : payloads) {
+                    if (Objects.equals(payload, PAYLOAD_HIGHLIGHT_CHANGED)) {
+                        updateTextHighlights(holder, getItem(position));
+                        return;
+                    }
+                }
+            }
+            super.onBindViewHolder(holder, position, payloads);
+        }
+
+        private void updateTextHighlights(@NonNull ViewHolder holder, @NonNull ProfileItem item) {
+            // Highlight searched query
+            holder.title.setText(UIUtils.getHighlightedText(item.profile.name, mConstraint, mQueryStringHighlightColor));
+        }
+
+        @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             ProfileItem profileItem = getItem(position);
             BaseProfile profile = profileItem.profile;
-            if (mConstraint != null && profile.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
-                // Highlight searched query
-                holder.title.setText(UIUtils.getHighlightedText(profile.name, mConstraint, mQueryStringHighlightColor));
-            } else {
-                holder.title.setText(profile.name);
-            }
+            // Highlight searched query
+            holder.title.setText(UIUtils.getHighlightedText(profile.name, mConstraint, mQueryStringHighlightColor));
             holder.summary.setText(profileItem.description);
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = ProfileManager.getProfileIntent(mActivity, profile.type, profile.profileId);

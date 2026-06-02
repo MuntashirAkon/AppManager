@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public final class AdapterUtils {
     public static final Object STUB = new Object();
+    public static final Object PAYLOAD_HIGHLIGHT_CHANGED = new Object();
 
     public static void setVisible(@NonNull View v, boolean visible) {
         if (visible && v.getVisibility() != View.VISIBLE) {
