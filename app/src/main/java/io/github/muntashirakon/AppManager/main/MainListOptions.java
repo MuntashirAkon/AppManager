@@ -58,6 +58,7 @@ public class MainListOptions extends ListOptions {
             SORT_BY_OPEN_COUNT,
             SORT_BY_SCREEN_TIME,
             SORT_BY_LAST_USAGE_TIME,
+            SORT_BY_INSTALLER_APP
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface SortOrder {
@@ -81,6 +82,7 @@ public class MainListOptions extends ListOptions {
     public static final int SORT_BY_OPEN_COUNT = 15;
     public static final int SORT_BY_SCREEN_TIME = 16;
     public static final int SORT_BY_LAST_USAGE_TIME = 17;
+    public static final int SORT_BY_INSTALLER_APP = 18;
 
     @IntDef(flag = true, value = {
             FILTER_NO_FILTER,
@@ -311,6 +313,7 @@ public class MainListOptions extends ListOptions {
             put(SORT_BY_TRACKERS, R.string.trackers);
             put(SORT_BY_LAST_ACTION, R.string.last_actions);
             put(SORT_BY_INSTALLATION_DATE, R.string.sort_by_installation_date);
+            put(SORT_BY_INSTALLER_APP, R.string.sort_by_installer_app);
             if (FeatureController.isUsageAccessEnabled()) {
                 put(SORT_BY_TOTAL_SIZE, R.string.sort_by_total_size);
                 put(SORT_BY_DATA_USAGE, R.string.sort_by_data_usage);
