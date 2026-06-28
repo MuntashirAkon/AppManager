@@ -1,0 +1,9 @@
+App Manager v4.1.0 brings massive performance boosts and new features!
+
+• Added full support for ADB data backups
+• Introduced filter-based profiles with custom expressions
+• Added bar charts for screen time in App Usage
+• Expanded system-level installer options
+• Various M3 UI, accessibility, and file manager improvements
+• Up to 1000x speedup in library scanning
+• Fixed a low-severity vulnerability in ADB mode

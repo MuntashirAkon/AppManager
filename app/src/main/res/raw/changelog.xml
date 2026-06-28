@@ -1,6 +1,129 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><!DOCTYPE changelog SYSTEM "https://raw.githubusercontent.com/MuntashirAkon/AppManager/master/schema/changlelog.dtd">
 <changelog>
     <release
+        type="release"
+        version="v4.1.0"
+        code="450"
+        date="28 June 2026">
+        <note subtext="true">App Manager debug builds have been discontinued until further notice.</note>
+
+        <title type="medium">Main page</title>
+        <new>Add "Unfrozen apps" filter</new>
+        <improve title="Batch ops">
+            Enable "Uninstall" option for apps uninstalled without clearing data
+        </improve>
+        <improve>Replace most of the filter implementation with Finder-based filters</improve>
+        <note subtext="true">
+            This change brings semi-realtime updates instead of relying heavily on the cache.
+        </note>
+        <improve>Use a spinner for profile selection instead of an input box</improve>
+        <fix>Fix virtual keyboard (IME) logic when returning from the app details page</fix>
+        <fix>Fix checking inactive apps for non-default users</fix>
+
+        <title type="medium">App Details Page</title>
+        <new>Allow managing some permissions directly in no-root mode</new>
+        <note subtext="true">
+            Battery optimization and net policy settings can now redirect to the system settings pages.
+        </note>
+        <improve>Open "Open by default" settings natively via the "Open links" dialog</improve>
+        <improve>Display "running" tag for apps running without any services</improve>
+        <fix>Fix freezing an app with "Remember for this app" turned on</fix>
+
+        <title type="medium">App Usage page</title>
+        <new>Display bar chart for screen time in the details dialog</new>
+        <new>Add next/previous button to browse usage in other weeks/days</new>
+        <improve>
+            Simplify time interval handling (replaced "Today" with "Daily", removed "Yesterday")
+        </improve>
+        <fix>Fix mirroring next and previous buttons in RTL languages</fix>
+        <fix>Fix retrieving data usage in root mode</fix>
+        <fix>Make the usage details dialog scrollable</fix>
+
+        <title type="medium">Backup/restore</title>
+        <new>Add support for ADB backup</new>
+        <note subtext="true">
+            A new "ADB data" backup option has been added which supersedes standard internal/external
+            data backups. It creates package-specific [tt].ab[/tt] files safely encrypted by App
+            Manager without requiring manual ADB backup passwords.
+        </note>
+        <improve>
+            Use cache directory instead of the backup directory for storing unencrypted backups securely
+        </improve>
+        <improve>
+            Back up randomized icon instead of the actual icon to prevent partial hash matching attacks
+        </improve>
+        <improve>Make KeyStore backup optional in Android 12 onwards</improve>
+
+        <title type="medium">Profile page</title>
+        <new>Add a filter-based profile option</new>
+        <note subtext="true">
+            A filter-based profile makes it easy to apply the configurations to the dynamically
+            filtered applications at the time of running the profile. Besides the default ``and''
+            based filtering, custom expressions can also be used.
+        </note>
+
+        <title type="medium">Debloater</title>
+        <new>Add "Frozen apps" and "Unfrozen apps" filters</new>
+        <improve>Display unsafe bloatware (filtered out by default)</improve>
+        <improve>Sort apps by app label rather than package name</improve>
+        <fix>Fix listing uninstalled system apps</fix>
+
+        <title type="medium">Installer</title>
+        <new>Add user control for some installer options</new>
+        <note subtext="true">
+            Added support for configuring options like "Request update ownership", "Default package
+            source", and "Set package origin/URI".
+        </note>
+        <new>Add option to temporarily disable apk verification during installation</new>
+
+        <title type="medium">Settings page</title>
+        <new>Add option to change ADB local server port</new>
+        <new>Add option to disable terminal emulator in enable/disable features setting</new>
+        <improve>Add dual pane support for "Language" and "About the device"</improve>
+
+        <title type="medium">Interceptor</title>
+        <improve>Intercept some popular Chinese apps</improve>
+        <fix>Add workaround for parsing flags in Android &lt; 15</fix>
+
+        <title type="medium">File Manager</title>
+        <new>Add option to view, generate, and verify file checksums from properties</new>
+
+        <title type="medium">Freeze/unfreeze</title>
+        <fix>Avoid freezing App Manager itself</fix>
+        <fix>Fix "Tap to freeze" notifications not working if issued for multiple apps</fix>
+
+        <title type="medium">Others</title>
+        <improve title="1-click ops">Improve performance of "back up apps with changes"</improve>
+        <improve>Adopted M3-style preferences across the app</improve>
+        <improve>Enable changing languages from Android Settings in Android 13 onwards</improve>
+        <improve>Improve the performance of tracker and library scanner</improve>
+        <note subtext="true">
+            Adopted the native (C++) implementation of the Aho-Corasick algorithm, yielding up to
+            1000x speedup in library scanning via parallel processing.
+        </note>
+        <improve>Improve accessibility in various places</improve>
+        <note subtext="true">
+            Accessibility improved across the Running Apps page, Log Viewer, File Manager, Debloater,
+            multi-selection panels, and general Action content descriptions.
+        </note>
+        <improve>Improve readability of signer info in What's New dialog and Main page</improve>
+        <improve>Use debouncer for realtime searching/filtering</improve>
+        <note subtext="true">
+            Introduces a 200 ms delay for queries, improving performance and power consumption.
+        </note>
+        <improve>Updated translations and dependencies</improve>
+        <fix title="Security">
+            Use HMAC-based mutual challenge-response authentication for connecting ADB
+        </fix>
+        <fix>Fix copying text that exceeds 1 MB</fix>
+        <note subtext="true">
+            If the text being copied exceeds 1 MB, it is stored in a temporary file and the file URI
+            is copied instead.
+        </note>
+        <fix>Fix resolving intent triggered via [tt]am start -d &lt;link&gt;[/tt]</fix>
+        <fix>Prevent symbols from being cropped in Editor if system font size is large</fix>
+    </release>
+    <release
         type="stable release"
         version="v4.0.5"
         code="445"

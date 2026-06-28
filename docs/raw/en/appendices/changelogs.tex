@@ -1,6 +1,75 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
 \chapter{Changelogs}\label{ch:changelogs} %%##$chapter-title>>
 
+\section{v4.1.0 (450)}\label{sec:v4.1.0-(450)}
+
+App Manager v4.1.0 comes with massive performance boosts, newly added ADB backup support, UI
+enhancements, and various other improvements. Visit \href{app-manager://settings/about/version}{Settings > About > Version/Changelog} for details.
+
+\subsection{ADB data backup}
+App Manager now offers full support for ADB backups. A new ``ADB data'' backup option has been added
+which supersedes standard internal/external data backups. It creates package-specific \texttt{.ab}
+files safely encrypted by App Manager without requiring manual ADB backup passwords. Additionally,
+KeyStore backups are now made optional for Android 12 onwards since KeyStore can no longer be backed
+up.
+
+\begin{tip}{Password prompt}
+When ADB backup is triggered by App Manager, the Android system may ask you to enter a password. You
+must leave the password field empty and click ``OK'' to proceed.
+\end{tip}
+
+\subsection{Introducing filter-based profiles}
+A filter-based profile makes it easy to apply the configurations to the dynamically filtered
+applications at the time of running the profile. Besides the default ``and'' based filtering, custom
+expressions can also be used.
+
+\begin{tip}{Custom expressions}
+For each profile, each filter item has an unique ID which can be used to refer the filter items in
+the custom expression field in the ``Filters'' dialog. Supported operators are \texttt{\&} (and),
+\texttt{|} (or), and parenthesis.
+\end{tip}
+
+\subsection{Barchart in App Usage}
+The App Usage page now displays a visual bar chart for screen time directly in the details dialog.
+Next and previous buttons have been added to easily browse usage statistics across different days
+and weeks. Time interval handling has also been simplified by replacing ``Today'' with ``Daily''
+and removing ``Yesterday''.
+
+\paragraph{Known limitation} App Manager retrieves usage history from the system. Therefore, the
+length of the usage history varies across devices and is much less than a typical digital wellbeing
+application which maintains its own database.
+
+\subsection{Expanded installer options}
+Users now have greater control over per-session installer options. Added support for configuring
+system-level options such as ``Request update ownership'', ``Default package source'', and
+``Set package origin/URI''. In addition, there is a new option to temporarily disable APK
+verification during installation.
+
+\subsection{Massive performance improvements}
+The performance of the tracker and library scanner has been significantly improved. By adopting the
+native (C++) implementation of the Aho-Corasick algorithm, library scanning now yields up to 1000x
+speedups via parallel processing. Furthermore, a 200 ms debouncer has been introduced for realtime
+searching and filtering, greatly improving overall performance and reducing power consumption. On
+the main page, most of the filter implementations have been replaced with Finder-based filters.
+This change brings semi-realtime updates instead of relying heavily on the cache (especially for
+force-stop and freeze operations).
+
+\subsection{UI and Accessibility improvements}
+The app has adopted Material 3 (M3) style preferences across the board. Accessibility has been
+vastly improved in various places, including the Running Apps page, Log Viewer, File Manager,
+Debloater, multi-selection panels, and general Action content descriptions. Support has also been
+added to change the app language directly from Android Settings in Android 13 onwards.
+
+\subsection{Others}
+\begin{itemize}
+    \item Fixed a low severity privilege escalation vulnerability in ADB mode (thanks to 签到型CTFer et al).
+    \item Added option to view, generate, and verify file checksums from file properties in the File Manager.
+    \item Allow managing certain permissions (such as battery optimization and network policy) directly in no-root mode by redirecting to the native system settings.
+    \item Added ``Frozen apps'' and ``Unfrozen apps'' filters in the Main and Debloater pages.
+    \item Added dual pane support for ``Language'' and ``About the device'' in the Settings page.
+    \item Display ``running'' tag for apps running without any active services.
+\end{itemize}
+
 \section{v4.0.5 (445)}\label{sec:v4.0.5-(445)}
 \begin{itemize}
     \item Added option to allow installing the existing applications in the installer page

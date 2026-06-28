@@ -487,7 +487,7 @@ function deploy(bool $force = false): void {
     // Ignore .DS_Store files
     file_put_contents(DIST_DIR . '/' . '.gitignore', '*.DS_Store');
     // Commit changes
-    system('cd ' . DIST_DIR . ' && git init && git add -A && git commit && git push -f ' . DIST_REPO . ' master:' . DIST_BRANCH);
+    system('cd ' . DIST_DIR . ' && git init && git add -A && git commit -s -m "Update docs" && git push -f ' . DIST_REPO . ' master:' . DIST_BRANCH);
     // Delete dist dir
     system('rm -rf ' . DIST_DIR);
 }
