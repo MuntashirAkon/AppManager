@@ -244,7 +244,9 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
         }
         for (int userId : userIds) {
             canReadLogs |= (PermissionCompat.checkPermission(Manifest.permission.READ_LOGS, packageName, userId) == PackageManager.PERMISSION_GRANTED);
-            isAppInactive |= UsageStatsManagerCompat.isAppInactive(packageName, userId);
+            if (SelfPermissions.checkCrossUserPermission(userId, false)) {
+                isAppInactive |= UsageStatsManagerCompat.isAppInactive(packageName, userId);
+            } else isAppInactive = false;
         }
         allowClearingUserData = (flags & ApplicationInfo.FLAG_ALLOW_CLEAR_USER_DATA) != 0;
         // UID
