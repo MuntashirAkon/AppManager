@@ -78,6 +78,14 @@ public class SearchableSingleChoiceDialogBuilder<T> {
             this.isSelected = false;
             this.isDisabled = false;
         }
+
+        SingleChoiceItem(@NonNull SingleChoiceItem<E> other) {
+            this.id = other.id;
+            this.name = other.name;
+            this.rawItem = other.rawItem;
+            this.isSelected = other.isSelected;
+            this.isDisabled = other.isDisabled;
+        }
     }
 
     public SearchableSingleChoiceDialogBuilder(@NonNull Context context, @NonNull List<T> items, @ArrayRes int itemNames) {
@@ -329,11 +337,14 @@ public class SearchableSingleChoiceDialogBuilder<T> {
                 return;
             }
             mSelectedRawItem = selectedItem;
-            for (SingleChoiceItem<T> item : mMasterList) {
+            for (int i = 0; i < mMasterList.size(); i++) {
+                SingleChoiceItem<T> item = mMasterList.get(i);
                 boolean targetSelectionState = Objects.equals(item.rawItem, selectedItem);
                 if (item.isSelected != targetSelectionState) {
-                    item.isSelected = targetSelectionState;
-                    triggerSingleChoiceClickListener(item.id, targetSelectionState);
+                    SingleChoiceItem<T> newItem = new SingleChoiceItem<>(item);
+                    newItem.isSelected = targetSelectionState;
+                    mMasterList.set(i, newItem);
+                    triggerSingleChoiceClickListener(newItem.id, targetSelectionState);
                 }
             }
             dispatchFilteredList();
@@ -350,15 +361,22 @@ public class SearchableSingleChoiceDialogBuilder<T> {
 
         void addDisabledItems(@Nullable List<T> disabledItems) {
             if (disabledItems == null) return;
+            boolean listUpdated = false;
             for (T item : disabledItems) {
-                for (SingleChoiceItem<T> wrapper : mMasterList) {
-                    if (Objects.equals(wrapper.rawItem, item)) {
-                        wrapper.isDisabled = true;
+                for (int i = 0; i < mMasterList.size(); i++) {
+                    SingleChoiceItem<T> wrapper = mMasterList.get(i);
+                    if (Objects.equals(wrapper.rawItem, item) && !wrapper.isDisabled) {
+                        SingleChoiceItem<T> newItem = new SingleChoiceItem<>(wrapper);
+                        newItem.isDisabled = true;
+                        mMasterList.set(i, newItem);
+                        listUpdated = true;
                         break;
                     }
                 }
             }
-            dispatchFilteredList();
+            if (listUpdated) {
+                dispatchFilteredList();
+            }
         }
 
         @NonNull
@@ -380,16 +398,7 @@ public class SearchableSingleChoiceDialogBuilder<T> {
                     // Already selected, do nothing
                     return;
                 }
-                mSelectedRawItem = item.rawItem;
-                for (SingleChoiceItem<T> target : mMasterList) {
-                    boolean wasSelected = target.isSelected;
-                    target.isSelected = (target.id == item.id);
-                    if (wasSelected != target.isSelected) {
-                        // Trigger only if this item wasn't selected before
-                        triggerSingleChoiceClickListener(target.id, target.isSelected);
-                    }
-                }
-                dispatchFilteredList();
+                setSelection(item.rawItem);
             });
         }
 
