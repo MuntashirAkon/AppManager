@@ -122,6 +122,11 @@
         </note>
         <fix>Fix resolving intent triggered via [tt]am start -d &lt;link&gt;[/tt]</fix>
         <fix>Prevent symbols from being cropped in Editor if system font size is large</fix>
+
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v4.0.5...v4.1.0"]v4.0.5...v4.1.0[/a]
+        </note>
     </release>
     <release
         type="stable release"
