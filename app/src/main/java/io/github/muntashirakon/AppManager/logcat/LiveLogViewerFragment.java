@@ -130,10 +130,6 @@ public class LiveLogViewerFragment extends AbsLogViewerFragment implements LogVi
             mLogListAdapter.removeFirst(numItemsToRemove);
             Log.d(TAG, "Truncating %d lines from log list to avoid out of memory errors", numItemsToRemove);
         }
-
-        if (mAutoscrollToBottom) {
-            mRecyclerView.scrollToPosition(mLogListAdapter.getItemCount() - 1);
-        }
     }
 
     @Override

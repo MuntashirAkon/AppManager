@@ -28,7 +28,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logcat.helper.PreferenceHelper;
@@ -44,7 +43,6 @@ import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
-import io.github.muntashirakon.util.AdapterUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public abstract class AbsLogViewerFragment extends Fragment implements MenuProvider,
@@ -60,29 +58,11 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
     protected LogViewerActivity mActivity;
     protected LogViewerRecyclerAdapter mLogListAdapter;
 
-    protected boolean mAutoscrollToBottom = true;
     @Nullable
     protected volatile SearchCriteria mSearchCriteria;
 
     protected final StoragePermission mStoragePermission = StoragePermission.init(this);
-    protected final RecyclerView.OnScrollListener mRecyclerViewScrollListener = new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-        }
 
-        @Override
-        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-            // Update what the first viewable item is
-            final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-            if (layoutManager != null) {
-                // Stop autoscroll if the bottom of the list isn't visible anymore
-                mAutoscrollToBottom = layoutManager.findLastCompletelyVisibleItemPosition() ==
-                        (mLogListAdapter.getItemCount() - 1);
-            }
-        }
-    };
     private final OnBackPressedCallback mOnBackPressedCallback = new OnBackPressedCallback(false) {
         @Override
         public void handleOnBackPressed() {
@@ -123,19 +103,10 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
         mMultiSelectionView.setOnSelectionModeChangeListener(this);
         mMultiSelectionView.hide();
         mRecyclerView.setAdapter(mLogListAdapter);
-        mRecyclerView.addOnScrollListener(mRecyclerViewScrollListener);
         mActivity.addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
         // Observers
         mViewModel.getExpandLogsLiveData().observe(getViewLifecycleOwner(), expanded -> {
-            int oldFirstVisibleItem = ((LinearLayoutManager) Objects.requireNonNull(mRecyclerView.getLayoutManager())).findFirstVisibleItemPosition();
             mLogListAdapter.setCollapseMode(!expanded);
-            mLogListAdapter.notifyItemRangeChanged(0, mLogListAdapter.getItemCount(), AdapterUtils.STUB);
-            // Scroll to bottom or the first visible item
-            if (mAutoscrollToBottom) {
-                mRecyclerView.scrollToPosition(mLogListAdapter.getItemCount() - 1);
-            } else if (oldFirstVisibleItem != -1) {
-                mRecyclerView.scrollToPosition(oldFirstVisibleItem);
-            }
             mActivity.supportInvalidateOptionsMenu();
         });
         mViewModel.observeLogLevelLiveData().observe(getViewLifecycleOwner(), logLevel ->
@@ -151,9 +122,6 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
     @CallSuper
     @Override
     public void onDestroy() {
-        if (mRecyclerView != null) {
-            mRecyclerView.removeOnScrollListener(mRecyclerViewScrollListener);
-        }
         super.onDestroy();
     }
 
@@ -239,7 +207,7 @@ public abstract class AbsLogViewerFragment extends Fragment implements MenuProvi
 
     @Override
     public final void onFilterComplete(int count) {
-        mRecyclerView.scrollToPosition(count - 1);
+        // Nothing to do
     }
 
     @NonNull

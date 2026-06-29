@@ -3,6 +3,8 @@
 package io.github.muntashirakon.AppManager.logcat;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,11 +21,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.util.ObjectsCompat;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -103,14 +106,12 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogLine
     private static final DiffUtil.ItemCallback<LogLine> DIFF_CALLBACK = new DiffUtil.ItemCallback<LogLine>() {
         @Override
         public boolean areItemsTheSame(@NonNull LogLine oldItem, @NonNull LogLine newItem) {
-            return oldItem.getOriginalLine().hashCode() == newItem.getOriginalLine().hashCode();
+            return oldItem == newItem;
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull LogLine oldItem, @NonNull LogLine newItem) {
-            return oldItem.isExpanded() == newItem.isExpanded()
-                    && oldItem.getLogLevel() == newItem.getLogLevel()
-                    && ObjectsCompat.equals(oldItem.getLogOutput(), newItem.getLogOutput());
+            return true;
         }
     };
 
@@ -121,6 +122,14 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogLine
     private final Object mLock = new Object();
     @GuardedBy("mLock")
     private final List<LogLine> mMasterList = new ArrayList<>();
+    @GuardedBy("mLock")
+    private final List<LogLine> mVisibleList = new ArrayList<>();
+    @GuardedBy("mLock")
+    private SearchCriteria mCurrentSearchCriteria = null;
+    @GuardedBy("mLock")
+    private boolean mIsUpdateScheduled = false;
+    @GuardedBy("mLock")
+    private boolean mHasPendingUpdate = false;
 
     private ViewHolder.OnSearchByClickListener mSearchByClickListener;
     private ArrayFilter mFilter;
@@ -128,8 +137,103 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogLine
     private int mLogLevelLimit = Prefs.LogViewer.getLogLevel();
     private final Set<LogLine> mSelectedLogLines = new LinkedHashSet<>();
 
+    private RecyclerView mAttachedRecyclerView;
+    private final Handler mMainHandler = new Handler(Looper.getMainLooper());
+    private boolean mAutoScroll = true;
+    private final RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                mAutoScroll = isUserAtBottom();
+            }
+        }
+
+        @Override
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+            if (dy < 0) {
+                // User manually scrolled up
+                mAutoScroll = false;
+            } else if (dy > 0 && isUserAtBottom()) {
+                // User scrolled down to the bottom
+                mAutoScroll = true;
+            }
+        }
+    };
+
     public LogViewerRecyclerAdapter() {
         super(DIFF_CALLBACK);
+        setHasStableIds(true);
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mAttachedRecyclerView = recyclerView;
+        mAttachedRecyclerView.addOnScrollListener(mScrollListener);
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        if (mAttachedRecyclerView != null) {
+            mAttachedRecyclerView.removeOnScrollListener(mScrollListener);
+        }
+        mAttachedRecyclerView = null;
+    }
+
+    private boolean isUserAtBottom() {
+        if (mAttachedRecyclerView == null || mAttachedRecyclerView.getLayoutManager() == null) {
+            return false;
+        }
+        LinearLayoutManager layoutManager = (LinearLayoutManager) mAttachedRecyclerView.getLayoutManager();
+        int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+        int totalItems = layoutManager.getItemCount();
+        return totalItems == 0 || lastVisibleItem >= totalItems - 2;
+    }
+
+    private void scheduleMainThreadUpdate() {
+        synchronized (mLock) {
+            if (mIsUpdateScheduled) {
+                // A diff is currently running. Flag that we need another update
+                // once the current one finishes, then bail out.
+                mHasPendingUpdate = true;
+                return;
+            }
+            mIsUpdateScheduled = true;
+            mHasPendingUpdate = false;
+        }
+
+        Runnable updateTask = () -> {
+            List<LogLine> snapshot;
+            synchronized (mLock) {
+                snapshot = new ArrayList<>(mVisibleList);
+            }
+            // DiffUtil processes this snapshot on a background thread
+            submitList(snapshot, () -> {
+                boolean shouldRunAgain = false;
+                synchronized (mLock) {
+                    mIsUpdateScheduled = false; // Only release the lock after rendering completes
+                    if (mHasPendingUpdate) {
+                        shouldRunAgain = true;
+                    }
+                }
+                if (mAutoScroll && mAttachedRecyclerView != null) {
+                    int newCount = getItemCount();
+                    if (newCount > 0) {
+                        mAttachedRecyclerView.scrollToPosition(newCount - 1);
+                    }
+                }
+                // If logs arrived while we were diffing, trigger the next batched update immediately
+                if (shouldRunAgain) {
+                    scheduleMainThreadUpdate();
+                }
+            });
+        };
+        if (mAttachedRecyclerView != null) {
+            mAttachedRecyclerView.post(updateTask);
+        } else {
+            mMainHandler.post(updateTask);
+        }
     }
 
     /**
@@ -139,32 +243,30 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogLine
      */
     @GuardedBy("mLock")
     public void add(LogLine object, boolean notify) {
-        synchronized (mLock) {
-            mMasterList.add(object);
-            if (notify) {
-                dispatchUpdate();
-            }
-        }
+        addWithFilter(object, null, notify);
     }
 
     @GuardedBy("mLock")
     public void readAll(LogLine object, boolean notify) {
-        synchronized (mLock) {
-            mMasterList.add(object);
-            if (notify) {
-                dispatchUpdate();
-            }
-        }
+        addWithFilter(object, null, notify);
     }
 
-    public void addWithFilter(@NonNull LogLine object, @Nullable SearchCriteria searchCriteria, boolean notify) {
+    public void addWithFilter(@NonNull LogLine object, @Nullable SearchCriteria ignoredCriteria, boolean notify) {
         synchronized (mLock) {
             mMasterList.add(object);
-            if (notify) {
-                if (mFilter == null) {
-                    mFilter = new ArrayFilter();
+            boolean matches = false;
+            if (object.getLogLevel() >= mLogLevelLimit) {
+                if (mCurrentSearchCriteria == null || mCurrentSearchCriteria.isEmpty()) {
+                    matches = true;
+                } else if (mCurrentSearchCriteria.matches(object)) {
+                    matches = true;
                 }
-                mFilter.filter(searchCriteria != null ? searchCriteria.toString() : null);
+            }
+            if (matches) {
+                mVisibleList.add(object);
+            }
+            if (notify) {
+                scheduleMainThreadUpdate();
             }
         }
     }
@@ -180,7 +282,10 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogLine
         synchronized (mLock) {
             if (index >= 0 && index <= mMasterList.size()) {
                 mMasterList.add(index, object);
-                dispatchUpdate();
+                if (mFilter == null) {
+                    mFilter = new ArrayFilter();
+                }
+                mFilter.filter(mCurrentSearchCriteria != null ? mCurrentSearchCriteria.query : null);
             }
         }
     }
@@ -194,7 +299,8 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogLine
     public void remove(LogLine object) {
         synchronized (mLock) {
             mMasterList.remove(object);
-            dispatchUpdate();
+            mVisibleList.remove(object);
+            scheduleMainThreadUpdate();
         }
     }
 
@@ -202,8 +308,10 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogLine
         StopWatch stopWatch = new StopWatch("removeFirst()");
         synchronized (mLock) {
             if (mMasterList.size() >= n) {
-                mMasterList.subList(0, n).clear();
-                dispatchUpdate();
+                List<LogLine> toRemove = mMasterList.subList(0, n);
+                mVisibleList.removeAll(new HashSet<>(toRemove));
+                toRemove.clear();
+                scheduleMainThreadUpdate();
             }
         }
         stopWatch.log();
@@ -213,7 +321,8 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogLine
     public void clear() {
         synchronized (mLock) {
             mMasterList.clear();
-            submitList(null);
+            mVisibleList.clear();
+            scheduleMainThreadUpdate();
         }
     }
 
@@ -244,12 +353,8 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogLine
             for (LogLine logLine : mMasterList) {
                 logLine.setExpanded(!isCollapsed);
             }
-            dispatchUpdate();
+            scheduleMainThreadUpdate();
         }
-    }
-
-    private void dispatchUpdate() {
-        submitList(new ArrayList<>(mMasterList));
     }
 
     @Override
@@ -427,7 +532,9 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogLine
 
     @Override
     public long getItemId(int position) {
-        return getItem(position).getOriginalLine().hashCode();
+        LogLine item = getItemSafe(position);
+        // identityHashCode guarantees uniqueness even if log texts are identical
+        return item != null ? System.identityHashCode(item) : RecyclerView.NO_ID;
     }
 
     public int getLogLevelLimit() {
@@ -435,7 +542,13 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogLine
     }
 
     public void setLogLevelLimit(int logLevelLimit) {
-        mLogLevelLimit = logLevelLimit;
+        synchronized (mLock) {
+            mLogLevelLimit = logLevelLimit;
+        }
+        if (mFilter == null) {
+            mFilter = new ArrayFilter();
+        }
+        mFilter.filter(mCurrentSearchCriteria != null ? mCurrentSearchCriteria.query : null);
     }
 
     /**
@@ -463,7 +576,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogLine
         if (lastItem != null) {
             List<LogLine> visibleList = getCurrentList();
             for (int i = 0; i < visibleList.size(); i++) {
-                if (visibleList.get(i).equals(lastItem)) {
+                if (visibleList.get(i) == lastItem) {
                     return i;
                 }
             }
@@ -481,16 +594,14 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogLine
         @Override
         protected FilterResults performFiltering(CharSequence prefix) {
             FilterResults results = new FilterResults();
-            List<LogLine> valuesCopy;
-            synchronized (mLock) {
-                valuesCopy = new ArrayList<>(mMasterList);
-            }
-
             SearchCriteria searchCriteria = new SearchCriteria(prefix != null ? prefix.toString() : null);
-            ArrayList<LogLine> allValues = performFilteringOnList(valuesCopy, searchCriteria);
-
-            results.values = allValues;
-            results.count = allValues.size();
+            List<LogLine> filtered;
+            synchronized (mLock) {
+                mCurrentSearchCriteria = searchCriteria;
+                filtered = performFilteringOnList(mMasterList, searchCriteria);
+            }
+            results.values = filtered;
+            results.count = filtered.size();
             return results;
         }
 
@@ -521,7 +632,13 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogLine
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            submitList((List<LogLine>) results.values);
+            synchronized (mLock) {
+                mVisibleList.clear();
+                if (results.values != null) {
+                    mVisibleList.addAll((List<LogLine>) results.values);
+                }
+                scheduleMainThreadUpdate();
+            }
         }
     }
 
