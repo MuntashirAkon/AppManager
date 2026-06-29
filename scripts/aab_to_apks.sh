@@ -42,18 +42,20 @@ SUPPORTED_DPIS=(ldpi mdpi tvdpi hdpi xhdpi xxhdpi xxxhdpi)
 SUPPORTED_ARCHS=(armeabi_v7a arm64_v8a x86 x86_64)
 
 if [[ -f $(which secret) ]]; then
-  echo "Using secret (https://github.com/angt/secret) for secrets...";
-  KEYSTORE_PASS=$(secret show android_keystore)
-  if [[ "$KEYSTORE_PASS" == "" ]]; then
-    echo "android_keystore does not exists."
+  echo "Using secret (https://github.com/angt/secret) for secrets..."
+
+  eval "$(secret agent bash -c '
+    printf "KEYSTORE_PASS=%q\n" "$(secret show android_keystore)"
+    printf "KEY_ALIAS_PASS=%q\n" "$(secret show android_keystore_alias_key0)"
+  ')"
+
+  if [[ -z "$KEYSTORE_PASS" ]]; then
+    echo "android_keystore does not exist."
+  elif [[ -z "$KEY_ALIAS_PASS" ]]; then
+    echo "android_keystore_alias_key0 does not exist."
   else
-    KEY_ALIAS_PASS=$(secret show android_keystore_alias_key0)
-    if [[ "$KEY_ALIAS_PASS" == "" ]]; then
-      echo "android_keystore_alias_key0 does not exists."
-    else
-      KEYSTORE=~/keystores/android_keystore.jks
-      KEY_ALIAS=key0
-    fi
+    KEYSTORE=~/keystores/android_keystore.jks
+    KEY_ALIAS=key0
   fi
 fi
 
