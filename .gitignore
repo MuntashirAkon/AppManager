@@ -1,16 +1,13 @@
 .gradle/
 .idea/
-crowdin.properties
 local.properties
 .DS_Store
 build/
-app/preRelease/
 app/release/
 app/debug/
-app/libs/am-common.jar
 toybox/src/main/jniLibs
-app/src/main/assets/am.jar
-app/src/main/assets/main.jar
+app/src/*/assets/am.jar
+app/src/*/assets/main.jar
 pids
 logs
 node_modules
@@ -26,4 +23,3 @@ basement_dist
 *.iml
 *.jks
 *~
-scripts/KeyStore.sh
