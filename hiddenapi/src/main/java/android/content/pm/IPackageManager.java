@@ -391,6 +391,9 @@ public interface IPackageManager extends IInterface {
     @Deprecated
     ParceledListSlice<PackageInfo> getInstalledPackages(int flags, int userId) throws RemoteException;
 
+    /**
+     * @deprecated Replaced in API 37 (Android Cinnamon Bun) by {@link IPackageManagerV37#getInstalledPackages(long, int)}
+     */
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     ParceledListSlice<PackageInfo> getInstalledPackages(long flags, int userId) throws RemoteException;
 

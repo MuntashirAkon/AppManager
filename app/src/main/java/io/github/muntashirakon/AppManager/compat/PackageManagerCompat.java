@@ -21,6 +21,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageInstaller;
 import android.content.pm.IPackageManager;
 import android.content.pm.IPackageManagerN;
+import android.content.pm.IPackageManagerV37;
 import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageInfo;
@@ -67,6 +68,7 @@ import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import misc.utils.VersionCodes;
 
 public final class PackageManagerCompat {
     public static final String TAG = PackageManagerCompat.class.getSimpleName();
@@ -171,6 +173,11 @@ public final class PackageManagerCompat {
                                                                   int flags,
                                                                   @UserIdInt int userId) {
         try {
+            if (Build.VERSION.SDK_INT >= VersionCodes.CINNAMON_BUN) {
+                return Refine.<IPackageManagerV37>unsafeCast(pm)
+                        .getInstalledPackages(flags, userId)
+                        .getList();
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 return pm.getInstalledPackages((long) flags, userId).getList();
             }
