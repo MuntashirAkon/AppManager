@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace 'io.github.muntashirakon.AppManager.docs'
+    namespace = 'io.github.muntashirakon.AppManager.docs'
     compileSdk compile_sdk
     buildToolsVersion = build_tools
 
@@ -17,7 +17,7 @@ android {
     }
 
     compileOptions {
-        encoding "UTF-8"
+        encoding = "UTF-8"
     }
 }
 
@@ -26,15 +26,32 @@ interface InjectedExecOps {
     @Inject
     ExecOperations getExecOps()
 }
-
 tasks.register('buildDocs') {
     def injected = project.objects.newInstance(InjectedExecOps)
     doLast {
         println("=== docs: start ===")
         String buildExec = "${rootProject.projectDir.absolutePath}/scripts/make_docs.sh"
+        boolean isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
+
+        if (isWindows) {
+            // Change Windows CRLF to LF
+            File scriptFile = new File(buildExec)
+            if (scriptFile.exists()) {
+                scriptFile.text = scriptFile.text.replace("\r\n", "\n")
+            }
+        }
+
         injected.execOps.exec {
             workingDir = project.rootDir
-            executable = buildExec
+            if (isWindows) {
+                //On Windows, Bash is intercepted by WSL (Ubuntu by default);
+                //Use clean formatting and relative paths.
+                executable = "bash"
+                args = ["scripts/make_docs.sh"]
+            } else {
+                // macOS/Linux
+                executable = buildExec
+            }
         }
         println("=== docs: finish ===")
     }

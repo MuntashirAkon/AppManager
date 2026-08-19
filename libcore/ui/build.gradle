@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'io.github.muntashirakon.ui'
+    namespace = 'io.github.muntashirakon.ui'
     compileSdk compile_sdk
     buildToolsVersion = build_tools
 
@@ -17,7 +17,7 @@ android {
     }
 
     compileOptions {
-        encoding "UTF-8"
+        encoding = "UTF-8"
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }

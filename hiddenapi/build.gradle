@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'io.github.muntashirakon.hiddenapi'
+    namespace = 'io.github.muntashirakon.hiddenapi'
     compileSdk compile_sdk
     buildToolsVersion = build_tools
 

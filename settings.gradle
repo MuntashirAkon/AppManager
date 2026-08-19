@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 include ':app'
-include ':docs'
 include ':hiddenapi'
 include ':libcore:compat'
 include ':libcore:io'
@@ -8,5 +7,6 @@ include ':libcore:ui'
 include ':libopenpgp'
 include ':libserver'
 include ':server'
+include ':docs'
 rootProject.name = "AppManager"
 gradle.ext.appManagerRoot = settingsDir

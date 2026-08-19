@@ -3,7 +3,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    namespace 'org.openintents.openpgp'
+    namespace = 'org.openintents.openpgp'
     compileSdk compile_sdk
     buildToolsVersion = build_tools
 
@@ -13,12 +13,12 @@ android {
     }
 
     compileOptions {
-        encoding "UTF-8"
+        encoding = "UTF-8"
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     buildFeatures {
-        aidl true
+        aidl = true
     }
 }
 

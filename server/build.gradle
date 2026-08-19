@@ -11,7 +11,7 @@ plugins {
 }
 
 android {
-    namespace 'io.github.muntashirakon.AppManager.server'
+    namespace = 'io.github.muntashirakon.AppManager.server'
     compileSdk compile_sdk
     buildToolsVersion = build_tools
 
@@ -21,7 +21,7 @@ android {
     }
 
     compileOptions {
-        encoding "UTF-8"
+        encoding = "UTF-8"
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -68,7 +68,11 @@ android.libraryVariants.configureEach { variant ->
             String libserverClassDir = libServerCompileTask.get().destinationDirectory.get().asFile.absolutePath + "/${serverPkg}/common"
 
             String androidJar = "${android.sdkDirectory.path}/platforms/android-${target_sdk}/android.jar"
-            String d8Path = "${android.sdkDirectory.path}/build-tools/${android.buildToolsVersion}/d8"
+            // Get OS Name and Determine whether the os is Windows
+            boolean isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
+            // Modify the File Name according to OS type
+            String d8Executable = isWindows ? "d8.bat" : "d8"
+            String d8Path = "${android.sdkDirectory.path}/build-tools/${android.buildToolsVersion}/${d8Executable}"
 
             println("Creating am.jar...")
             def amArgs = ['--release', '--min-api', min_sdk, '--output', amJar.absolutePath, '--lib', androidJar]

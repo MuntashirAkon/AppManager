@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace 'io.github.muntashirakon.AppManager'
+    namespace = 'io.github.muntashirakon.AppManager'
     compileSdk compile_sdk
     buildToolsVersion = build_tools
 
@@ -51,19 +51,19 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
-            signingConfig signingConfigs.debug
+            signingConfig = signingConfigs.debug
             resValue "string", "app_name", "AM Debug"
         }
     }
     lint {
-        checkReleaseBuilds false
-        abortOnError false
-        checkDependencies true
+        checkReleaseBuilds = false
+        abortOnError = false
+        checkDependencies = true
     }
     compileOptions {
-        encoding "UTF-8"
+        encoding = "UTF-8"
         // Flag to enable support for the new language APIs
-        coreLibraryDesugaringEnabled true
+        coreLibraryDesugaringEnabled = true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -76,7 +76,7 @@ android {
         abi {
             reset()
             include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
-            universalApk true
+            universalApk = true
         }
     }
     aaptOptions {
@@ -91,12 +91,12 @@ android {
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
     dependenciesInfo {
-        includeInApk false
-        includeInBundle false
+        includeInApk = false
+        includeInBundle = false
     }
     packagingOptions {
         jniLibs {
-            useLegacyPackaging true
+            useLegacyPackaging = true
         }
         resources {
             excludes += ['META-INF/*.version']
@@ -104,8 +104,8 @@ android {
         }
     }
     buildFeatures {
-        aidl true
-        buildConfig true
+        aidl = true
+        buildConfig = true
     }
 }
 
@@ -203,7 +203,7 @@ android.applicationVariants.configureEach { variant ->
 }
 
 def buildTime() {
-    var commitTime = "git show --no-patch --format=%ct000".execute([], project.rootDir).text.trim()
+    var commitTime = ["git", "show", "--no-patch", "--format=%ct000"].execute([], project.rootDir).text.trim()
     if (isDigitsOnly(commitTime)) {
         return Long.parseLong(commitTime)
     }
