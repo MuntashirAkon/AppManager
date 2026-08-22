@@ -200,6 +200,11 @@ android.applicationVariants.configureEach { variant ->
     tasks.named("merge${buildTypeCap}Assets").configure { mergeTask ->
         mergeTask.dependsOn(":server:create${buildTypeCap}ServerJars")
     }
+    tasks.matching {
+        it.name == "generate${buildTypeCap}LintReportModel" || it.name == "lintAnalyze${buildTypeCap}"
+    }.configureEach {
+        dependsOn(":server:create${buildTypeCap}ServerJars")
+    }
 }
 
 def buildTime() {
