@@ -1126,6 +1126,22 @@
                 <category android:name="android.intent.category.APP_MUSIC" />
             </intent-filter>
         </activity>
+        <activity-alias
+            android:name=".intercept.BrowserInterceptor"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/interceptor"
+            android:targetActivity=".intercept.ActivityInterceptor">
+            <intent-filter android:order="100">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+            </intent-filter>
+        </activity-alias>
         <activity
             android:name=".misc.HelpActivity"
             android:enableOnBackInvokedCallback="true"

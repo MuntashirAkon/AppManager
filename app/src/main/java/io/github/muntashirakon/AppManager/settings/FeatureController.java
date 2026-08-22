@@ -213,6 +213,7 @@ public class FeatureController {
                 break;
             case FEAT_INTERCEPTOR:
                 modifyState(key, ActivityInterceptor.class, enabled);
+                setComponentEnabledState(new ComponentName(mPackageName, ActivityInterceptor.ALIAS_BROWSER), enabled);
                 break;
             case FEAT_MANIFEST:
                 modifyState(key, ManifestViewerActivity.class, enabled);
@@ -250,15 +251,18 @@ public class FeatureController {
     private void modifyState(@FeatureFlags int key, @Nullable Class<? extends AppCompatActivity> clazz, boolean enabled) {
         ComponentName cn = getComponentName(key, clazz);
         if (cn == null) return;
-        int state = enabled ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
-        mPm.setComponentEnabledSetting(cn, state, PackageManager.DONT_KILL_APP);
+        setComponentEnabledState(cn, enabled);
     }
 
     private void modifyState(@FeatureFlags int key, @Nullable String name, boolean enabled) {
         ComponentName cn = getComponentName(key, name);
         if (cn == null) return;
+        setComponentEnabledState(cn, enabled);
+    }
+
+    private void setComponentEnabledState(@NonNull ComponentName componentName, boolean enabled) {
         int state = enabled ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
-        mPm.setComponentEnabledSetting(cn, state, PackageManager.DONT_KILL_APP);
+        mPm.setComponentEnabledSetting(componentName, state, PackageManager.DONT_KILL_APP);
     }
 
     @Nullable

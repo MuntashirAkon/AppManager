@@ -81,6 +81,7 @@ import io.github.muntashirakon.widget.MaterialAutoCompleteTextView;
 // Copyright 2012 Intrications
 public class ActivityInterceptor extends BaseActivity {
     public static final String TAG = ActivityInterceptor.class.getSimpleName();
+    public static final String ALIAS_BROWSER = BuildConfig.APPLICATION_ID + ".intercept.BrowserInterceptor";
 
     public static final String EXTRA_PACKAGE_NAME = BuildConfig.APPLICATION_ID + ".intent.extra.PACKAGE_NAME";
     public static final String EXTRA_CLASS_NAME = BuildConfig.APPLICATION_ID + ".intent.extra.CLASS_NAME";
