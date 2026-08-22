@@ -71,12 +71,12 @@
     </string-array>
     <string-array name="whats_new_titles">
         <item>@string/version</item>
+        <item>@string/sdk</item>
         <item>@string/trackers</item>
         <item>@string/app_signing_signatures</item>
         <item>@string/declared_permission</item>
         <item>@string/components</item>
         <item>@string/features</item>
-        <item>@string/sdk</item>
     </string-array>
     <string-array name="sys_config_names">
         <!-- Must be aligned with SysConfigType -->
