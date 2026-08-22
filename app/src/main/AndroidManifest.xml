@@ -324,6 +324,12 @@
                 <data android:pathPattern="/.*\..*\.SMALI" />
                 <data android:pathPattern="/.*\..*\.smali" />
                 <data android:pathPattern="/.*\..*\.smali?.*" />
+                <data android:pathPattern="/.*\.BAT" />
+                <data android:pathPattern="/.*\.bat" />
+                <data android:pathPattern="/.*\.bat?.*" />
+                <data android:pathPattern="/.*\..*\.BAT" />
+                <data android:pathPattern="/.*\..*\.bat" />
+                <data android:pathPattern="/.*\..*\.bat?.*" />
                 <data android:pathPattern="/.*\.CSS" />
                 <data android:pathPattern="/.*\.css" />
                 <data android:pathPattern="/.*\.css?.*" />
