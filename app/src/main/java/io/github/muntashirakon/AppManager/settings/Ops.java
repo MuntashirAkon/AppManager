@@ -222,6 +222,12 @@ public class Ops {
         // Backward compatibility for v2.6.0
         if (mode.equals("adb")) {
             mode = MODE_ADB_OVER_TCP;
+            AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, mode);
+        }
+        if (!isValidMode(mode)) {
+            // Reset mode
+            mode = MODE_AUTO;
+            AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, mode);
         }
         if ((MODE_ADB_OVER_TCP.equals(mode) || MODE_ADB_WIFI.equals(mode))
                 && !SelfPermissions.checkSelfPermission(Manifest.permission.INTERNET)) {
@@ -232,8 +238,24 @@ public class Ops {
     }
 
     @NoOps
-    public static void setMode(@NonNull String newMode) {
+    public static void setMode(@Mode @NonNull String newMode) {
+        if (!isValidMode(newMode)) {
+            throw new IllegalArgumentException("Unknown mode of operation: " + newMode);
+        }
         AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, newMode);
+    }
+
+    private static boolean isValidMode(@NonNull String mode) {
+        switch (mode) {
+            case MODE_AUTO:
+            case MODE_ROOT:
+            case MODE_ADB_OVER_TCP:
+            case MODE_ADB_WIFI:
+            case MODE_NO_ROOT:
+                return true;
+            default:
+                return false;
+        }
     }
 
     @WorkerThread
