@@ -269,22 +269,19 @@ public class Ops {
             return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
         }
         if (MODE_NO_ROOT.equals(mode)) {
-            sDirectRoot = false;
-            sIsAdb = sIsSystem = sIsRoot = false;
-            // Also, stop existing services if any
-            if (LocalServices.alive()) {
-                LocalServices.stopServices();
-            }
-            if (LocalServer.alive(context)) {
-                // We don't care about its results
-                ThreadUtils.postOnBackgroundThread(() -> ExUtils.exceptionAsIgnored(() ->
-                        LocalServer.getInstance().closeBgServer()));
-            }
+            fallbackToNoRoot(context);
             return STATUS_SUCCESS;
+        }
+        if (MODE_ADB_OVER_TCP.equals(mode) || MODE_ADB_WIFI.equals(mode)) {
+            sDirectRoot = false;
         }
         if (!force && isAMServiceUpAndRunning(context, mode)) {
             // An instance of AMService is already running
             return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
+        }
+        if (force && LocalServices.alive()) {
+            // Stop previous services
+            LocalServices.stopServices();
         }
         try {
             switch (mode) {
@@ -301,8 +298,14 @@ public class Ops {
                     sIsSystem = sIsAdb = false;
                     sIsRoot = true;
                     LocalServices.bindServicesIfNotAlready();
+                    if (!LocalServices.alive() || Users.getSelfOrRemoteUid() != ROOT_UID) {
+                        throw new RemoteException("Root service did not start as root.");
+                    }
                     return initPermissionsWithSuccess();
                 case MODE_ADB_WIFI:
+                    sDirectRoot = false;
+                    sIsRoot = sIsSystem = false;
+                    sIsAdb = true;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         if (!Utils.isWifiActive(context.getApplicationContext())) {
                             throw new Exception("Wifi not enabled.");
@@ -316,17 +319,18 @@ public class Ops {
                         }
                     } // else fallback to ADB over TCP
                 case MODE_ADB_OVER_TCP:
+                    sDirectRoot = false;
                     sIsRoot = sIsSystem = false;
                     sIsAdb = true;
                     ServerConfig.setAdbPort(findAdbPort(context, 10, AdbUtils.getAdbPortOrDefault()));
                     LocalServer.restart();
                     LocalServices.bindServicesIfNotAlready();
-                    return checkRootOrIncompleteUsbDebuggingInAdb();
+                    return checkRootOrIncompleteUsbDebuggingInAdb(context);
             }
         } catch (Throwable e) {
             Log.e(TAG, e);
             // Fallback to no-root mode for this session, this does not modify the user preference
-            sIsAdb = sIsSystem = sIsRoot = false;
+            fallbackToNoRoot(context);
             ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.failed_to_use_the_current_mode_of_operation));
         }
         return STATUS_FAILURE;
@@ -349,7 +353,6 @@ public class Ops {
         sIsRoot = sDirectRoot;
         if (sDirectRoot) {
             // Root permission was granted
-            setMode(MODE_ROOT);
             // Disable remote server
             ExUtils.exceptionAsIgnored(() -> {
                 if (LocalServer.alive(context)) {
@@ -361,6 +364,7 @@ public class Ops {
             if (LocalServices.alive()) {
                 if (Users.getSelfOrRemoteUid() == ROOT_UID) {
                     // Service is already running in root mode
+                    setMode(MODE_ROOT);
                     return;
                 }
                 // Service is running in ADB/other mode, but we need root
@@ -371,6 +375,7 @@ public class Ops {
                 LocalServices.bindServices();
                 if (LocalServices.alive() && Users.getSelfOrRemoteUid() == ROOT_UID) {
                     // Service is running in root
+                    setMode(MODE_ROOT);
                     return;
                 }
             } catch (RemoteException e) {
@@ -383,43 +388,50 @@ public class Ops {
             } else {
                 Log.w(TAG, "Could not start ADB over TCP via root.");
             }
+            // Root was granted but could not provide a usable root session
+            sDirectRoot = false;
             sIsRoot = false;
             // Fall-through, in case we can use other options
         }
         // Root was not working/granted, but check for AM service just in case
         if (LocalServices.alive()) {
-            setMode(MODE_ADB_OVER_TCP);
             int uid = Users.getSelfOrRemoteUid();
             if (uid == ROOT_UID) {
                 sIsSystem = sIsAdb = false;
                 sIsRoot = true;
+                setMode(MODE_ADB_OVER_TCP);
                 return;
             }
             if (uid == SYSTEM_UID) {
                 sIsRoot = sIsAdb = false;
                 sIsSystem = true;
+                setMode(MODE_ADB_OVER_TCP);
                 return;
             }
             if (uid == SHELL_UID) {
-                sIsRoot = sIsSystem = false;
-                sIsAdb = true;
-                ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
+                if (checkRootOrIncompleteUsbDebuggingInAdb(context) == STATUS_SUCCESS) {
+                    setMode(MODE_ADB_OVER_TCP);
+                    return;
+                }
+                // A live shell service without the required permission is not a usable ADB session
+                setMode(MODE_NO_ROOT);
                 return;
             }
+            LocalServices.stopServices();
         }
         // Root not granted
         if (!SelfPermissions.checkSelfPermission(Manifest.permission.INTERNET)) {
             // INTERNET permission is not granted
-            setMode(MODE_NO_ROOT);
             // Skip checking for ADB
-            sIsAdb = false;
+            fallbackToNoRoot(context);
+            setMode(MODE_NO_ROOT);
             return;
         }
         // Check for ADB
         if (!AdbUtils.isAdbdRunning()) {
             // ADB not running. In auto mode, we do not attempt to enable it either
+            fallbackToNoRoot(context);
             setMode(MODE_NO_ROOT);
-            sIsAdb = sIsSystem = sIsRoot = false;
             return;
         }
         sIsAdb = true; // First enable ADB if not already
@@ -432,11 +444,16 @@ public class Ops {
         }
         sIsAdb = LocalServices.alive();
         if (sIsAdb) {
-            // No need to return anything here because we're in auto-mode.
-            // Any message produced by the method below is just a helpful message.
-            checkRootOrIncompleteUsbDebuggingInAdb();
+            int status = checkRootOrIncompleteUsbDebuggingInAdb(context);
+            if (status == STATUS_SUCCESS) {
+                // This backend was established through ADB even if adbd itself runs as root or
+                // system on this device.
+                setMode(MODE_ADB_OVER_TCP);
+                return;
+            }
         }
-        setMode(getWorkingUid() != Process.myUid() ? MODE_ADB_OVER_TCP : MODE_NO_ROOT);
+        fallbackToNoRoot(context);
+        setMode(MODE_NO_ROOT);
     }
 
     @UiThread
@@ -468,22 +485,16 @@ public class Ops {
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     @Status
     public static int autoConnectWirelessDebugging(@NonNull Context context) {
-        boolean lastAdb = sIsAdb;
-        boolean lastSystem = sIsSystem;
-        boolean lastRoot = sIsRoot;
         sIsAdb = true;
         sIsSystem = sIsRoot = false;
         try {
             ServerConfig.setAdbPort(findAdbPort(context, 5, ServerConfig.getAdbPort()));
             LocalServer.restart();
             LocalServices.bindServicesIfNotAlready();
-            return checkRootOrIncompleteUsbDebuggingInAdb();
+            return checkRootOrIncompleteUsbDebuggingInAdb(context);
         } catch (RemoteException | IOException | AdbPairingRequiredException e) {
             Log.e(TAG, "Could not auto-connect to adbd", e);
-            // Go back to the last mode
-            sIsAdb = lastAdb;
-            sIsSystem = lastSystem;
-            sIsRoot = lastRoot;
+            fallbackToNoRoot(context);
             if (e instanceof AdbPairingRequiredException) {
                 // Only pairing is required
                 return STATUS_ADB_PAIRING_REQUIRED;
@@ -495,23 +506,20 @@ public class Ops {
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     @Status
     public static int connectAdb(@NonNull Context context, int port, @Status int returnCodeOnFailure) {
-        if (port < 0) return returnCodeOnFailure;
-        boolean lastAdb = sIsAdb;
-        boolean lastSystem = sIsSystem;
-        boolean lastRoot = sIsRoot;
+        if (port < 0) {
+            fallbackToNoRoot(context);
+            return returnCodeOnFailure;
+        }
         sIsAdb = true;
         sIsSystem = sIsRoot = false;
         try {
             ServerConfig.setAdbPort(port);
             LocalServer.restart();
             LocalServices.bindServicesIfNotAlready();
-            return checkRootOrIncompleteUsbDebuggingInAdb();
+            return checkRootOrIncompleteUsbDebuggingInAdb(context);
         } catch (RemoteException | IOException | AdbPairingRequiredException e) {
             Log.e(TAG, "Could not connect to adbd using port " + port, e);
-            // Go back to the last mode
-            sIsAdb = lastAdb;
-            sIsSystem = lastSystem;
-            sIsRoot = lastRoot;
+            fallbackToNoRoot(context);
             return returnCodeOnFailure;
         }
     }
@@ -557,7 +565,7 @@ public class Ops {
                     ContextCompat.startForegroundService(activity, adbPairingServiceIntent);
                     callback.pairAdb();
                 })
-                .setNegativeButton(R.string.cancel, (dialog, which) -> callback.onStatusReceived(STATUS_FAILURE))
+                .setNegativeButton(R.string.cancel, (dialog, which) -> callback.connectAdb(-1))
                 .setPositiveButton(R.string.go, (dialog, which) -> {
                     Intent developerOptionsIntent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
                             .putExtra(":settings:fragment_args_key", "toggle_adb_wireless")
@@ -583,10 +591,11 @@ public class Ops {
                 return connectAdb(context, findAdbPort(context, 7, ServerConfig.getAdbPort()),
                         STATUS_ADB_CONNECT_REQUIRED);
             }
+            fallbackToNoRoot(context);
         } catch (Exception e) {
             ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed));
             Log.e(TAG, e);
-            // Failed, fall-through
+            fallbackToNoRoot(context);
         }
         return STATUS_FAILURE;
     }
@@ -659,9 +668,6 @@ public class Ops {
     @WorkerThread
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     private static boolean isAMServiceUpAndRunning(@NonNull Context context, @Mode @NonNull String mode) {
-        boolean lastAdb = sIsAdb;
-        boolean lastSystem = sIsSystem;
-        boolean lastRoot = sIsRoot;
         // At this point, we have already checked MODE_AUTO, and MODE_NO_ROOT has lower priority.
         sIsRoot = MODE_ROOT.equals(mode);
         sIsAdb = !sIsRoot; // Because the rests are ADB
@@ -691,20 +697,18 @@ public class Ops {
             }
             if (sIsAdb) {
                 // AM service is running as ADB
-                return checkRootOrIncompleteUsbDebuggingInAdb() == STATUS_SUCCESS;
+                return checkRootOrIncompleteUsbDebuggingInAdb(context) == STATUS_SUCCESS;
             }
             // All checks are failed, stop services
             LocalServices.stopServices();
         }
-        // Checks are failed, revert everything
-        sIsAdb = lastAdb;
-        sIsSystem = lastSystem;
-        sIsRoot = lastRoot;
+        // Checks failed
+        sIsAdb = sIsSystem = sIsRoot = false;
         return false;
     }
 
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
-    private static int checkRootOrIncompleteUsbDebuggingInAdb() {
+    private static int checkRootOrIncompleteUsbDebuggingInAdb(@NonNull Context context) {
         // ADB already granted and AM service is running
         int uid = Users.getSelfOrRemoteUid();
         if (uid == ROOT_UID) {
@@ -720,16 +724,30 @@ public class Ops {
         } else if (uid == SHELL_UID) { // ADB mode
             if (!SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS)) {
                 // USB debugging is incomplete, revert back to no-root
-                sIsAdb = sIsSystem = sIsRoot = false;
+                fallbackToNoRoot(context);
                 return STATUS_FAILURE_ADB_NEED_MORE_PERMS;
             }
             ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
         } else {
             // No-root mode
-            sIsAdb = sIsSystem = sIsRoot = false;
+            fallbackToNoRoot(context);
             return STATUS_FAILURE;
         }
         return initPermissionsWithSuccess();
+    }
+
+    @WorkerThread
+    @NoOps
+    static void fallbackToNoRoot(@NonNull Context context) {
+        if (LocalServices.alive()) {
+            LocalServices.stopServices();
+        }
+        if (LocalServer.alive(context)) {
+            ExUtils.exceptionAsIgnored(() -> LocalServer.getInstance().closeBgServer());
+        }
+        sDirectRoot = false;
+        sIsAdb = sIsSystem = sIsRoot = false;
+        setWorkingUid(Process.myUid());
     }
 
     @WorkerThread

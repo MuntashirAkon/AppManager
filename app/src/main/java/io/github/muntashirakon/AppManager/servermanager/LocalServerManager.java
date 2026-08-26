@@ -83,9 +83,14 @@ class LocalServerManager {
                 try {
                     mSession = createSession();
                 } catch (SocketTimeoutException e) {
-                    // Server is running, but is not responsive
-                    // TODO: 6/1/26 Force connect by removing the old connection
-                    throw new IOException(e);
+                    Log.i(TAG, "Server is running but not responsive. Stopping the server...");
+                    try {
+                        stopServer();
+                    } catch (Exception ex) {
+                        throw new IOException(ex);
+                    }
+                    // Successfully stopped the server.
+                    // We try to start server again below.
                 } catch (Exception e) {
                     if (!Ops.isDirectRoot() && !Ops.isAdb()) {
                         // Do not bother attempting to create a new session
@@ -191,6 +196,7 @@ class LocalServerManager {
     private volatile AdbStream mAdbStream;
     private volatile CountDownLatch mAdbConnectionWatcher = new CountDownLatch(1);
     private volatile boolean mAdbServerStarted;
+    private volatile boolean mAdbServerStopped;
     private final Runnable mAdbOutputThread = () -> {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(mAdbStream).openInputStream()))) {
             String s;
@@ -202,6 +208,10 @@ class LocalServerManager {
                     break;
                 } else if (s.startsWith("Error!")) {
                     mAdbServerStarted = false;
+                    mAdbConnectionWatcher.countDown();
+                    break;
+                } else if (s.startsWith("Stopped!")) {
+                    mAdbServerStopped = true;
                     mAdbConnectionWatcher.countDown();
                     break;
                 }
@@ -283,7 +293,7 @@ class LocalServerManager {
     @WorkerThread
     @NoOps(used = true)
     private void stopServer() throws Exception {
-        String command = "killall " + Constants.SERVER_NAME;
+        String command = "killall " + Constants.SERVER_NAME + " && echo Stopped!";
         if (Ops.isAdb()) {
             if (mAdbStream == null || Objects.requireNonNull(mAdbStream).isClosed()) {
                 // ADB shell not running
@@ -299,7 +309,7 @@ class LocalServerManager {
                 Log.d(TAG, "stopServer (ADB): Opening shell...");
                 mAdbStream = manager.openStream("shell:");
                 mAdbConnectionWatcher = new CountDownLatch(1);
-                mAdbServerStarted = false;
+                mAdbServerStopped = false;
                 new Thread(mAdbOutputThread).start();
             }
             Log.d(TAG, "stopServer (ADB): Shell opened.");
@@ -310,7 +320,7 @@ class LocalServerManager {
                 os.write((command + "\n").getBytes());
             }
 
-            if (!mAdbConnectionWatcher.await(1, TimeUnit.MINUTES) || !mAdbServerStarted) {
+            if (!mAdbConnectionWatcher.await(1, TimeUnit.MINUTES) || !mAdbServerStopped) {
                 throw new Exception("Server wasn't stopped.");
             }
             Log.d(TAG, "useAdbStartServer: Server has stopped.");
