@@ -47,10 +47,12 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
+import io.github.muntashirakon.AppManager.servermanager.WifiWaitService;
 import io.github.muntashirakon.AppManager.session.SessionMonitoringService;
 import io.github.muntashirakon.AppManager.users.Owners;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -243,6 +245,10 @@ public class Ops {
             throw new IllegalArgumentException("Unknown mode of operation: " + newMode);
         }
         AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, newMode);
+        if (!MODE_ADB_WIFI.equals(newMode)) {
+            Context context = ContextUtils.getContext();
+            context.stopService(new Intent(context, WifiWaitService.class));
+        }
     }
 
     private static boolean isValidMode(@NonNull String mode) {

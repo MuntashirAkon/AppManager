@@ -1392,8 +1392,12 @@
         <service
             android:name=".servermanager.WifiWaitService"
             android:exported="false"
-            android:foregroundServiceType="dataSync|specialUse"
-            tools:targetApi="30" />
+            android:foregroundServiceType="specialUse"
+            tools:targetApi="30">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Wait for Wi-Fi after boot and restore the user-configured wireless ADB connection" />
+        </service>
         <service
             android:name=".adb.AdbPairingService"
             android:exported="false"
