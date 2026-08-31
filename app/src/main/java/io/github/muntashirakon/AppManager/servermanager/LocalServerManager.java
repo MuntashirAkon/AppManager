@@ -18,9 +18,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -127,12 +130,10 @@ class LocalServerManager {
     }
 
     /**
-     * Stop ADB and then close client session
+     * Close the client session.
      */
     void stop() {
-        IoUtils.closeQuietly(mAdbStream);
         IoUtils.closeQuietly(mSession);
-        mAdbStream = null;
         mSession = null;
     }
 
@@ -192,68 +193,81 @@ class LocalServerManager {
         }
     }
 
-    @Nullable
-    private volatile AdbStream mAdbStream;
-    private volatile CountDownLatch mAdbConnectionWatcher = new CountDownLatch(1);
-    private volatile boolean mAdbServerStarted;
-    private volatile boolean mAdbServerStopped;
-    private final Runnable mAdbOutputThread = () -> {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(mAdbStream).openInputStream()))) {
-            String s;
-            while ((s = reader.readLine()) != null) {
-                Log.d(TAG, "RESPONSE: %s", s);
-                if (s.startsWith("Success!")) {
-                    mAdbServerStarted = true;
-                    mAdbConnectionWatcher.countDown();
-                    break;
-                } else if (s.startsWith("Error!")) {
-                    mAdbServerStarted = false;
-                    mAdbConnectionWatcher.countDown();
-                    break;
-                } else if (s.startsWith("Stopped!")) {
-                    mAdbServerStopped = true;
-                    mAdbConnectionWatcher.countDown();
-                    break;
-                }
-            }
-        } catch (Throwable e) {
-            Log.e(TAG, "useAdbStartServer: unable to read from shell.", e);
-        }
-    };
-
     @WorkerThread
     private void useAdbStartServer() throws Exception {
-        if (mAdbStream == null || Objects.requireNonNull(mAdbStream).isClosed()) {
-            // ADB shell not running
-            String adbHost = ServerConfig.getAdbHost(mContext);
-            int adbPort = ServerConfig.getAdbPort();
-            AdbConnectionManager manager = AdbConnectionManager.getInstance();
-            Log.d(TAG, "useAdbStartServer: Connecting using host=%s, port=%d", adbHost, adbPort);
-            manager.setTimeout(10, TimeUnit.SECONDS);
-            if (!manager.isConnected() && !manager.connect(adbHost, adbPort)) {
-                throw new IOException("Could not connect to ADB.");
-            }
-
-            Log.d(TAG, "useAdbStartServer: Opening shell...");
-            mAdbStream = manager.openStream("shell:");
-            mAdbConnectionWatcher = new CountDownLatch(1);
-            mAdbServerStarted = false;
-            new Thread(mAdbOutputThread).start();
-        }
-        Log.d(TAG, "useAdbStartServer: Shell opened.");
-
-        try (OutputStream os = Objects.requireNonNull(mAdbStream).openOutputStream()) {
-            os.write("id\n".getBytes());
+        try (AdbStream adbStream = openAdbShell();
+             InputStream is = adbStream.openInputStream();
+             OutputStream os = adbStream.openOutputStream()) {
             // ADB may require a fallback method
             String command = ServerConfig.getServerRunnerCommand();
             Log.d(TAG, "useAdbStartServer: %s", command);
-            os.write((command + "\n").getBytes());
-        }
-
-        if (!mAdbConnectionWatcher.await(1, TimeUnit.MINUTES) || !mAdbServerStarted) {
-            throw new Exception("Server wasn't started.");
+            executeAdbCommand(is, os, command, "Success!", 1, TimeUnit.MINUTES);
         }
         Log.d(TAG, "useAdbStartServer: Server has started.");
+    }
+
+    @WorkerThread
+    @NonNull
+    private AdbStream openAdbShell() throws Exception {
+        String adbHost = ServerConfig.getAdbHost(mContext);
+        int adbPort = ServerConfig.getAdbPort();
+        AdbConnectionManager manager = AdbConnectionManager.getInstance();
+        Log.d(TAG, "Connecting to ADB using host=%s, port=%d", adbHost, adbPort);
+        manager.setTimeout(10, TimeUnit.SECONDS);
+        // Wireless debugging can select a different port when it is re-enabled.
+        manager.disconnect();
+        if (!manager.connect(adbHost, adbPort)) {
+            throw new IOException("Could not connect to ADB.");
+        }
+        Log.d(TAG, "Opening ADB shell...");
+        return manager.openStream("shell:");
+    }
+
+    @WorkerThread
+    static void executeAdbCommand(@NonNull InputStream inputStream,
+                                  @NonNull OutputStream outputStream,
+                                  @NonNull String command,
+                                  @NonNull String successPrefix,
+                                  long timeout,
+                                  @NonNull TimeUnit timeoutUnit) throws IOException, InterruptedException {
+        CountDownLatch commandWatcher = new CountDownLatch(1);
+        AtomicBoolean commandSucceeded = new AtomicBoolean(false);
+        AtomicReference<Throwable> readFailure = new AtomicReference<>();
+        Thread outputThread = new Thread(() -> {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+                String response;
+                while ((response = reader.readLine()) != null) {
+                    Log.d(TAG, "RESPONSE: %s", response);
+                    if (response.startsWith(successPrefix)) {
+                        commandSucceeded.set(true);
+                        break;
+                    }
+                    if (response.startsWith("Error!")) {
+                        readFailure.set(new IOException(response));
+                        break;
+                    }
+                }
+            } catch (Throwable e) {
+                readFailure.set(e);
+            } finally {
+                commandWatcher.countDown();
+            }
+        }, "am-adb-command-output");
+        outputThread.start();
+        try {
+            outputStream.write("id\n".getBytes(StandardCharsets.UTF_8));
+            outputStream.write((command + "\n").getBytes(StandardCharsets.UTF_8));
+            outputStream.flush();
+            if (!commandWatcher.await(timeout, timeoutUnit)) {
+                throw new SocketTimeoutException("Timed out waiting for ADB command: " + command);
+            }
+            if (!commandSucceeded.get()) {
+                Throwable failure = readFailure.get();
+                throw new IOException("ADB command did not produce " + successPrefix, failure);
+            }
+        } finally {
+            outputThread.interrupt();
+        }
     }
 
     @WorkerThread
@@ -293,37 +307,15 @@ class LocalServerManager {
     @WorkerThread
     @NoOps(used = true)
     private void stopServer() throws Exception {
-        String command = "killall " + Constants.SERVER_NAME + " && echo Stopped!";
+        String command = "killall " + Constants.SERVER_NAME + "; echo Stopped!";
         if (Ops.isAdb()) {
-            if (mAdbStream == null || Objects.requireNonNull(mAdbStream).isClosed()) {
-                // ADB shell not running
-                String adbHost = ServerConfig.getAdbHost(mContext);
-                int adbPort = ServerConfig.getAdbPort();
-                AdbConnectionManager manager = AdbConnectionManager.getInstance();
-                Log.d(TAG, "stopServer (ADB): Connecting using host=%s, port=%d", adbHost, adbPort);
-                manager.setTimeout(10, TimeUnit.SECONDS);
-                if (!manager.isConnected() && !manager.connect(adbHost, adbPort)) {
-                    throw new IOException("Could not connect to ADB.");
-                }
-
-                Log.d(TAG, "stopServer (ADB): Opening shell...");
-                mAdbStream = manager.openStream("shell:");
-                mAdbConnectionWatcher = new CountDownLatch(1);
-                mAdbServerStopped = false;
-                new Thread(mAdbOutputThread).start();
-            }
-            Log.d(TAG, "stopServer (ADB): Shell opened.");
-
-            try (OutputStream os = Objects.requireNonNull(mAdbStream).openOutputStream()) {
-                os.write("id\n".getBytes());
+            try (AdbStream adbStream = openAdbShell();
+                 InputStream is = adbStream.openInputStream();
+                 OutputStream os = adbStream.openOutputStream()) {
                 Log.d(TAG, "stopServer (ADB): %s", command);
-                os.write((command + "\n").getBytes());
+                executeAdbCommand(is, os, command, "Stopped!", 1, TimeUnit.MINUTES);
             }
-
-            if (!mAdbConnectionWatcher.await(1, TimeUnit.MINUTES) || !mAdbServerStopped) {
-                throw new Exception("Server wasn't stopped.");
-            }
-            Log.d(TAG, "useAdbStartServer: Server has stopped.");
+            Log.d(TAG, "stopServer (ADB): Server has stopped.");
         } else if (Ops.isDirectRoot()) {
             if (!Ops.hasRoot()) {
                 throw new Exception("Root access denied");
@@ -332,10 +324,10 @@ class LocalServerManager {
             Runner.Result result = Runner.runCommand(command);
             Log.d(TAG, "stopServer (root): %s", result.getOutput());
             if (!result.isSuccessful()) {
-                throw new Exception("Could not start server.");
+                throw new Exception("Could not stop server.");
             }
             SystemClock.sleep(3000);
-            Log.e(TAG, "useRootStartServer: Server has started.");
+            Log.d(TAG, "stopServer (root): Server has stopped.");
         } else throw new Exception("Neither root nor ADB mode is enabled.");
     }
 
