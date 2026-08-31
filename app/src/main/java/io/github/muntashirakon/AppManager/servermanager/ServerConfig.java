@@ -131,16 +131,24 @@ public final class ServerConfig {
     }
 
     @AnyThread
-    @IntRange(from = 0, to = 65535)
+    @IntRange(from = 1, to = 65535)
     @NoOps
     public static int getAdbPort() {
-        return sPreferences.getInt("adb_port", DEFAULT_ADB_PORT);
+        int port = sPreferences.getInt("adb_port", DEFAULT_ADB_PORT);
+        return isValidAdbPort(port) ? port : DEFAULT_ADB_PORT;
     }
 
     @AnyThread
     @NoOps
-    public static void setAdbPort(@IntRange(from = 0, to = 65535) int port) {
+    public static void setAdbPort(@IntRange(from = 1, to = 65535) int port) {
+        if (!isValidAdbPort(port)) {
+            throw new IllegalArgumentException("Invalid ADB port: " + port);
+        }
         sPreferences.edit().putInt("adb_port", port).apply();
+    }
+
+    public static boolean isValidAdbPort(int port) {
+        return port >= 1 && port <= 65535;
     }
 
     @AnyThread
