@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
@@ -138,10 +139,7 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
     }
 
     public void setModeOfOps() {
-        mExecutor.submit(() -> {
-            int status = Ops.init(getApplication(), true);
-            mModeOfOpsStatus.postValue(status);
-        });
+        submitModeOperation(() -> Ops.init(getApplication(), true));
     }
 
     public LiveData<Boolean> getOperationCompletedLiveData() {
@@ -243,31 +241,51 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
 
     @RequiresApi(Build.VERSION_CODES.R)
     public void autoConnectWirelessDebugging() {
-        mExecutor.submit(() -> {
-            int status = Ops.autoConnectWirelessDebugging(getApplication());
-            mModeOfOpsStatus.postValue(status);
-        });
+        submitModeOperation(() -> Ops.autoConnectWirelessDebugging(getApplication()));
     }
 
     @Override
     public void connectAdb(int port) {
-        mExecutor.submit(() -> {
-            int status = Ops.connectAdb(getApplication(), port, Ops.STATUS_FAILURE);
-            mModeOfOpsStatus.postValue(status);
-        });
+        submitModeOperation(() -> Ops.connectAdb(getApplication(), port, Ops.STATUS_FAILURE));
     }
 
     @Override
     @RequiresApi(Build.VERSION_CODES.R)
     public void pairAdb() {
-        mExecutor.submit(() -> {
-            int status = Ops.pairAdb(getApplication());
-            mModeOfOpsStatus.postValue(status);
-        });
+        submitModeOperation(() -> Ops.pairAdb(getApplication()));
     }
 
     @Override
     public void onStatusReceived(int status) {
         mModeOfOpsStatus.postValue(status);
+    }
+
+    private void submitModeOperation(@NonNull ModeOperation operation) {
+        try {
+            mExecutor.execute(() -> {
+                int status;
+                try {
+                    status = operation.run();
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    Ops.fallbackToNoRoot(getApplication());
+                    status = Ops.STATUS_FAILURE;
+                }
+                mModeOfOpsStatus.postValue(status);
+            });
+        } catch (RejectedExecutionException e) {
+            mModeOfOpsStatus.postValue(Ops.STATUS_FAILURE);
+        }
+    }
+
+    @Override
+    protected void onCleared() {
+        mExecutor.shutdownNow();
+        super.onCleared();
+    }
+
+    private interface ModeOperation {
+        @Ops.Status
+        int run();
     }
 }
