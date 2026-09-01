@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.adb;
 import static io.github.muntashirakon.AppManager.types.ForegroundService.FOREGROUND_SERVICE_TYPE_SPECIAL_USE;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -54,6 +55,7 @@ public class AdbPairingService extends Service {
     private NotificationCompat.Builder mNotificationBuilder;
     private boolean mStartedSearching = false;
     private volatile boolean mPairingSucceeded = false;
+    @Nullable
     private AdbMdns mAdbMdnsPairing;
     private volatile AdbConnectionManager.PairingSession mPairingSession;
     private int mSearchGeneration;
@@ -170,9 +172,21 @@ public class AdbPairingService extends Service {
                 .clearActions()
                 .addAction(stopAction);
         ServiceCompat.startForeground(this, 1, mNotificationBuilder.build(), FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
-        mAdbMdnsPairing.start();
+        try {
+            mAdbMdnsPairing.start();
+        } catch (RuntimeException e) {
+            Log.e(TAG, "Could not start ADB pairing discovery.", e);
+            mHandler.removeCallbacks(mPairingTimeout);
+            stopSearching();
+            mAdbMdnsPairing = null;
+            if (mPairingSession != null) {
+                mPairingSession.cancel();
+            }
+            stopSelf();
+        }
     }
 
+    @SuppressLint("MissingPermission") // Already checked notification permission
     @MainThread
     private void inputPairingCode(int port) {
         Intent inputIntent = new Intent(this, getClass())
@@ -193,6 +207,7 @@ public class AdbPairingService extends Service {
         }
     }
 
+    @SuppressLint("MissingPermission") // Already checked notification permission
     @MainThread
     private void startPairing(int port, String code) {
         mNotificationBuilder.setContentText(getString(R.string.adb_pairing_pairing_in_progress))
@@ -252,7 +267,11 @@ public class AdbPairingService extends Service {
         mStartedSearching = false;
         ++mSearchGeneration;
         if (mAdbMdnsPairing != null) {
-            mAdbMdnsPairing.stop();
+            try {
+                mAdbMdnsPairing.stop();
+            } catch (RuntimeException e) {
+                Log.w(TAG, "Could not stop ADB pairing discovery.", e);
+            }
         }
     }
 
