@@ -71,29 +71,27 @@ public class AdbUtils {
             }
             resolveHostAndPort.countDown();
         });
-        adbMdnsTcp.start();
-
-        AdbMdns adbMdnsTls;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            adbMdnsTls = new AdbMdns(context, AdbMdns.SERVICE_TYPE_TLS_CONNECT, (hostAddress, port) -> {
-                if (hostAddress != null) {
-                    atomicHostAddress.set(hostAddress.getHostAddress());
-                    atomicPort.set(port);
-                }
-                resolveHostAndPort.countDown();
-            });
-            adbMdnsTls.start();
-        } else adbMdnsTls = null;
-
+        AdbMdns adbMdnsTls = null;
         try {
+            adbMdnsTcp.start();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                adbMdnsTls = new AdbMdns(context, AdbMdns.SERVICE_TYPE_TLS_CONNECT, (hostAddress, port) -> {
+                    if (hostAddress != null) {
+                        atomicHostAddress.set(hostAddress.getHostAddress());
+                        atomicPort.set(port);
+                    }
+                    resolveHostAndPort.countDown();
+                });
+                adbMdnsTls.start();
+            }
             if (!resolveHostAndPort.await(timeout, unit)) {
                 throw new InterruptedException("Timed out while trying to find a valid host address and port");
             }
+        } catch (RuntimeException e) {
+            throw new IOException("Could not start ADB service discovery", e);
         } finally {
-            adbMdnsTcp.stop();
-            if (adbMdnsTls != null) {
-                adbMdnsTls.stop();
-            }
+            stopDiscovery(adbMdnsTcp);
+            stopDiscovery(adbMdnsTls);
         }
 
         String host = atomicHostAddress.get();
@@ -102,6 +100,16 @@ public class AdbUtils {
             throw new IOException("Could not find any valid host address or port");
         }
         return new Pair<>(host, port);
+    }
+
+    private static void stopDiscovery(AdbMdns adbMdns) {
+        if (adbMdns == null) {
+            return;
+        }
+        try {
+            adbMdns.stop();
+        } catch (RuntimeException ignored) {
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
