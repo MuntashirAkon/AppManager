@@ -20,6 +20,7 @@ import org.robolectric.annotation.LooperMode;
 import org.robolectric.util.ReflectionHelpers;
 
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.test.shadows.ShadowOpsDependencies;
 import io.github.muntashirakon.test.shadows.ShadowOpsDependencies.ShadowAdb;
 import io.github.muntashirakon.test.shadows.ShadowOpsDependencies.ShadowPermissions;
@@ -193,5 +194,18 @@ public class OpsTest {
         assertFalse(ShadowServices.alive);
         assertFalse(Ops.isAdb());
         assertEquals(Process.myUid(), Ops.getWorkingUid());
+    }
+
+    @Test
+    public void connectRejectsPortsOutsideTcpRange() {
+        ServerConfig.setAdbPort(5555);
+
+        assertEquals(Ops.STATUS_FAILURE, Ops.connectAdb(mContext, 0, Ops.STATUS_FAILURE));
+        assertEquals(Ops.STATUS_FAILURE, Ops.connectAdb(mContext, 65536, Ops.STATUS_FAILURE));
+
+        assertEquals(5555, ServerConfig.getAdbPort());
+        assertEquals(0, ShadowServices.bindCalls);
+        assertThrows(IllegalArgumentException.class, () -> ServerConfig.setAdbPort(0));
+        assertThrows(IllegalArgumentException.class, () -> ServerConfig.setAdbPort(65536));
     }
 }
