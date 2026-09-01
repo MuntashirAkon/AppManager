@@ -13,6 +13,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
+import android.net.Network;
 import android.net.NetworkCapabilities;
 
 import org.junit.Before;
@@ -22,6 +23,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
+import org.robolectric.shadows.ShadowNetwork;
 import org.robolectric.shadows.ShadowNetworkCapabilities;
 
 import io.github.muntashirakon.AppManager.settings.Ops;
@@ -69,6 +71,17 @@ public class WifiWaitServiceTest {
         assertTrue(WifiWaitService.isRetryableStatus(Ops.STATUS_FAILURE));
         assertFalse(WifiWaitService.isRetryableStatus(Ops.STATUS_ADB_PAIRING_REQUIRED));
         assertFalse(WifiWaitService.isRetryableStatus(Ops.STATUS_FAILURE_ADB_NEED_MORE_PERMS));
+    }
+
+    @Test
+    public void retryableResultUsesWifiThatReplacedAttemptedNetwork() {
+        Network attempted = ShadowNetwork.newInstance(101);
+        Network replacement = ShadowNetwork.newInstance(102);
+
+        assertTrue(WifiWaitService.shouldTryReplacementNetwork(attempted, replacement, true));
+        assertFalse(WifiWaitService.shouldTryReplacementNetwork(attempted, attempted, true));
+        assertFalse(WifiWaitService.shouldTryReplacementNetwork(attempted, replacement, false));
+        assertFalse(WifiWaitService.shouldTryReplacementNetwork(attempted, null, true));
     }
 
     @Test

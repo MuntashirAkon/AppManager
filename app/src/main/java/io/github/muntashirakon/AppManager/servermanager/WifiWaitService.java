@@ -218,17 +218,25 @@ public class WifiWaitService extends Service {
 
     private void handleConnectionResult(@NonNull Network network, @NonNull ConnectionResult result) {
         boolean retry;
+        Network replacementNetwork;
         synchronized (mStateLock) {
             if (mDestroyed) {
                 return;
             }
             mConnecting = false;
             mConnectionTask = null;
+            replacementNetwork = shouldTryReplacementNetwork(network, mWifiNetwork,
+                    result == ConnectionResult.RETRY) ? mWifiNetwork : null;
             retry = result == ConnectionResult.RETRY && network.equals(mWifiNetwork)
                     && ++mRetryCount <= MAX_RETRY_ATTEMPTS;
         }
         if (!isWirelessAdbMode() || result == ConnectionResult.MODE_CHANGED) {
             finishService();
+        } else if (replacementNetwork != null) {
+            // The callback may have delivered a new Wi-Fi network while the previous connection
+            // attempt was still running. Try it immediately instead of stopping the service with
+            // the stale attempt's result.
+            connectAdbWifi(replacementNetwork);
         } else if (retry) {
             mHandler.postDelayed(mRetryRunnable, RETRY_DELAY_MILLIS);
         } else {
@@ -237,6 +245,12 @@ public class WifiWaitService extends Service {
             }
             finishService();
         }
+    }
+
+    static boolean shouldTryReplacementNetwork(@NonNull Network attemptedNetwork,
+                                               @Nullable Network currentNetwork,
+                                               boolean retryable) {
+        return retryable && currentNetwork != null && !attemptedNetwork.equals(currentNetwork);
     }
 
     private boolean isWirelessAdbMode() {
