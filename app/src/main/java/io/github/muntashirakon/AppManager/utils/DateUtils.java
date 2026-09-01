@@ -9,8 +9,10 @@ import androidx.annotation.NonNull;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.io.Paths;
 
 public final class DateUtils {
     @NonNull
@@ -41,6 +43,22 @@ public final class DateUtils {
         String date = getLongDateFormat(context).format(dateTime);
         String time = getTimeFormat(context).format(dateTime);
         return date + " " + time;
+    }
+
+    @NonNull
+    public static String formatDateTimeForFilename(@NonNull Context context, long millis) {
+        return sanitizeDateTimeForFilename(formatDateTime(context, millis));
+    }
+
+    @NonNull
+    public static String formatLongDateTimeForFilename(@NonNull Context context, long millis) {
+        return sanitizeDateTimeForFilename(formatLongDateTime(context, millis));
+    }
+
+    @NonNull
+    private static String sanitizeDateTimeForFilename(@NonNull String dateTime) {
+        return Objects.requireNonNull(Paths.sanitizeFilename(dateTime, "-",
+                Paths.SANITIZE_FLAG_FAT_ILLEGAL_CHARS | Paths.SANITIZE_FLAG_UNIX_RESERVED));
     }
 
     public static String getFormattedDuration(@NonNull Context context, long millis) {

@@ -459,7 +459,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 UIUtils.displayLongToast("Error: " + th.getLocalizedMessage());
             }
         } else if (itemId == R.id.action_export_blocking_rules) {
-            final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(mActivity, System.currentTimeMillis()) + ".am.tsv";
+            final String fileName = "app_manager_rules_export-"
+                    + DateUtils.formatDateTimeForFilename(mActivity, System.currentTimeMillis()) + ".am.tsv";
             mExport.launch(fileName, uri -> {
                 if (uri == null || mMainModel == null) {
                     // Back button pressed.

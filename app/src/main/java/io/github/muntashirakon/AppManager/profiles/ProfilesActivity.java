@@ -326,7 +326,9 @@ public class ProfilesActivity extends BaseActivity implements NewProfileDialogFr
                                 .show();
                     } else if (id == R.id.action_export) {
                         mActivity.mProfileId = profile.profileId;
-                        mActivity.mExportProfile.launch(profile.name + ".am.json");
+                        String filename = Paths.sanitizeFilename(profile.name + ".am.json", "_",
+                                Paths.SANITIZE_FLAG_FAT_ILLEGAL_CHARS | Paths.SANITIZE_FLAG_UNIX_RESERVED);
+                        mActivity.mExportProfile.launch(filename);
                     } else if (id == R.id.action_copy) {
                         Utils.copyToClipboard(mActivity, profile.name, profile.profileId);
                     } else if (id == R.id.action_shortcut) {

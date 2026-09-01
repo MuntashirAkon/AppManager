@@ -447,7 +447,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             DexOptDialog dialog = DexOptDialog.getInstance(viewModel.getSelectedPackages().keySet().toArray(new String[0]));
             dialog.show(getSupportFragmentManager(), DexOptDialog.TAG);
         } else if (id == R.id.action_export_blocking_rules) {
-            final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(this, System.currentTimeMillis()) + ".am.tsv";
+            final String fileName = "app_manager_rules_export-"
+                    + DateUtils.formatDateTimeForFilename(this, System.currentTimeMillis()) + ".am.tsv";
             mBatchExportRules.launch(fileName);
         } else if (id == R.id.action_export_app_list) {
             List<Integer> exportTypes = Arrays.asList(ListExporter.EXPORT_TYPE_CSV,
@@ -460,7 +461,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                         if (!isChecked) {
                             return;
                         }
-                        String filename = "app_manager_app_list-" + DateUtils.formatLongDateTime(this, System.currentTimeMillis()) + ".am";
+                        String filename = "app_manager_app_list-"
+                                + DateUtils.formatLongDateTimeForFilename(this, System.currentTimeMillis()) + ".am";
                         switch (item1) {
                             case ListExporter.EXPORT_TYPE_CSV:
                                 mExportAppListCsv.launch(filename + ".csv");
