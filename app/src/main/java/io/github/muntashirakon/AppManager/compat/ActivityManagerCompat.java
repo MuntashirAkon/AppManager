@@ -7,6 +7,8 @@ import android.annotation.UserIdInt;
 import android.app.ActivityManager;
 import android.app.ActivityManagerNative;
 import android.app.IActivityManager;
+import android.app.SearchManager;
+import android.app.SearchManagerHidden;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -21,7 +23,6 @@ import android.os.SystemClock;
 import android.os.UserHandleHidden;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
@@ -38,6 +39,7 @@ import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
@@ -54,27 +56,29 @@ public final class ActivityManagerCompat {
         void onInteraction();
     }
 
-    @RequiresPermission(allOf = {
-            Manifest.permission.WRITE_SECURE_SETTINGS,
-            ManifestCompat.permission.INJECT_EVENTS
-    })
+    @RequiresPermission(Manifest.permission.WRITE_SECURE_SETTINGS)
     @MainThread
-    public static boolean startActivityViaAssist(@NonNull Context context, @NonNull ComponentName activity,
-                                              @Nullable ActivityLaunchUserInteractionRequiredCallback callback)
+    public static boolean startActivityViaAssist(@NonNull Context context, @NonNull Intent intent,
+                                                 @Nullable ActivityLaunchUserInteractionRequiredCallback callback)
             throws SecurityException {
-        // Need two permissions: WRITE_SECURE_SETTINGS and INJECT_EVENTS
         SelfPermissions.requireSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS);
-        boolean canInjectEvents = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INJECT_EVENTS);
+        ComponentName activity = intent.getComponent();
+        if (activity == null) {
+            throw new IllegalArgumentException("Intent must have an explicit component");
+        }
+        SearchManager searchManager = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                ? (SearchManager) context.getSystemService(Context.SEARCH_SERVICE) : null;
         ContentResolver resolver = context.getContentResolver();
         // Backup assistant value
         String assistantComponent = Settings.Secure.getString(resolver, "assistant");
-        if (canInjectEvents) {
+        if (searchManager != null) {
             ThreadUtils.postOnBackgroundThread(() -> {
                 try {
                     // Set assistant value to the target activity component
                     Settings.Secure.putString(resolver, "assistant", activity.flattenToShortString());
-                    // Run it as an assistant by injecting KEYCODE_ASSIST (219)
-                    InputManagerCompat.sendKeyEvent(KeyEvent.KEYCODE_ASSIST, false);
+                    // The arguments are delivered as extras of the ACTION_ASSIST intent for legacy assistants.
+                    SearchManagerHidden searchManagerHidden = Refine.unsafeCast(searchManager);
+                    searchManagerHidden.launchAssist(intent.getExtras());
                     // Wait until system opens the new assistant (i.e., activity), this is an empirical value
                     SystemClock.sleep(500);
                 } finally {
@@ -82,21 +86,20 @@ public final class ActivityManagerCompat {
                     Settings.Secure.putString(resolver, "assistant", assistantComponent);
                 }
             });
-        } else if (callback != null) {
-            // Cannot launch event by default, use callback
+            return true;
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M && callback != null) {
+            // Android 5.x has no API to trigger Assist, so request user interaction.
             ThreadUtils.postOnBackgroundThread(() -> {
                 try {
-                    // Set assistant value to the target activity component
                     Settings.Secure.putString(resolver, "assistant", activity.flattenToShortString());
-                    // Trigger callback
                     callback.onInteraction();
                 } finally {
-                    // Restore assistant value
                     Settings.Secure.putString(resolver, "assistant", assistantComponent);
                 }
             });
-        } // else do nothing
-        return canInjectEvents;
+        }
+        return false;
     }
 
     @SuppressWarnings("deprecation")

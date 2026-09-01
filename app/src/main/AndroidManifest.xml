@@ -64,9 +64,6 @@
         android:name="android.permission.GRANT_RUNTIME_PERMISSIONS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission
-        android:name="android.permission.INJECT_EVENTS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
         android:name="com.android.permission.INSTALL_EXISTING_PACKAGES"
         tools:ignore="ProtectedPermissions" />
     <uses-permission

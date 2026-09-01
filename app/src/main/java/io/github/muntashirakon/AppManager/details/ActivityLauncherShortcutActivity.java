@@ -57,7 +57,6 @@ public class ActivityLauncherShortcutActivity extends BaseActivity {
 
     private Intent mIntent;
     private String mPackageName;
-    private ComponentName mComponentName;
     private int mUserId;
     private boolean mCanLaunchViaAssist;
     private boolean mIsLaunchViaAssist;
@@ -88,9 +87,9 @@ public class ActivityLauncherShortcutActivity extends BaseActivity {
         mIntent = new Intent(intent);
         mPackageName = Objects.requireNonNull(mIntent.getStringExtra(EXTRA_PKG));
         String className = Objects.requireNonNull(mIntent.getStringExtra(EXTRA_CLS));
-        mComponentName = new ComponentName(mPackageName, className);
+        ComponentName cn = new ComponentName(mPackageName, className);
         mIntent.setAction(null);
-        mIntent.setComponent(mComponentName);
+        mIntent.setComponent(cn);
         mUserId = mIntent.getIntExtra(EXTRA_USR, UserHandleHidden.myUserId());
         mCanLaunchViaAssist = SelfPermissions.checkSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS);
         mIsLaunchViaAssist = mIntent.getBooleanExtra(EXTRA_AST, false) && mCanLaunchViaAssist;
@@ -149,7 +148,7 @@ public class ActivityLauncherShortcutActivity extends BaseActivity {
     }
 
     private void launchActivityViaAssist() {
-        boolean launched = ActivityManagerCompat.startActivityViaAssist(ContextUtils.getContext(), mComponentName, () -> {
+        boolean launched = ActivityManagerCompat.startActivityViaAssist(ContextUtils.getContext(), mIntent, () -> {
             CountDownLatch waitForInteraction = new CountDownLatch(1);
             ThreadUtils.postOnMainThread(() -> new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.launch_activity_dialog_title)

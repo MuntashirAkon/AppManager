@@ -1444,8 +1444,6 @@
     <string name="choose_a_profile_state">Select a profile state</string>
     <string name="profile_id">Profile ID</string>
     <string name="copy_profile_id">Copy profile ID</string>
-    <string name="launch_activity_dialog_title">Launch activity: action required</string>
-    <string name="launch_activity_dialog_message">App Manager is trying to launch the activity via <b>Search assistant</b> (usually Google Assistant), but it\'s unable to do so due to insufficient permission. To open the activity, please activate <b>Search assistant</b> manually (which is usually done by long clicking on the Home button). Click on the <b>Close</b> button after you\'ve finished launching the activity to revert back to the original assistant.</string>
     <string name="finder_title">Finder</string>
     <string name="select_filter">Select a filter</string>
     <string name="size_in_bytes">Size (bytes)</string>
@@ -1566,4 +1564,6 @@
     <string name="adb_pairing_title">Pair App Manager using Wi-Fi</string>
     <string name="manual_wireless_debugging_instructions">App Manager was unable to connect automatically using wireless debugging. Click <b>Pair</b> if you haven\'t paired App Manager using Wi-Fi or if the authorization was revoked. Otherwise click <b>Connect</b> to manually enter the port number. You can also use the button at the top to navigate to the wireless debugging setting.</string>
     <string name="manual_wireless_debugging_title">Connect using Wireless Debugging</string>
+    <string name="launch_activity_dialog_title">Launch activity: action required</string>
+    <string name="launch_activity_dialog_message">Android 5.x cannot trigger the <b>Search assistant</b> automatically. To open the activity, activate the Search assistant manually (usually by long-pressing the Home button). Tap <b>Close</b> after the activity opens to restore the original assistant.</string>
 </resources>

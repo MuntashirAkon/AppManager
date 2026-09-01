@@ -603,7 +603,10 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                             UIUtils.displayLongToast(e.getLocalizedMessage());
                         }
                     } else if (componentItem.canLaunchAssist) {
-                        ActivityManagerCompat.startActivityViaAssist(ContextUtils.getContext(), cn, () -> {
+                        Intent intent = new Intent(Intent.ACTION_ASSIST)
+                                .setComponent(cn)
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        ActivityManagerCompat.startActivityViaAssist(ContextUtils.getContext(), intent, () -> {
                             CountDownLatch waitForInteraction = new CountDownLatch(1);
                             ThreadUtils.postOnMainThread(() -> new MaterialAlertDialogBuilder(holder.itemView.getContext())
                                     .setTitle(R.string.launch_activity_dialog_title)
