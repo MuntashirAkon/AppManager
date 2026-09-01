@@ -10,6 +10,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.After;
 import org.junit.Test;
 
+import java.net.SocketTimeoutException;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 
 public class AdbConnectionManagerTest {
@@ -40,5 +42,18 @@ public class AdbConnectionManagerTest {
 
         assertFalse(first.await(1, TimeUnit.SECONDS).success);
         assertNull(second.await(1, TimeUnit.MILLISECONDS));
+    }
+
+    @Test
+    public void timedOutPairingAttemptIsCancelled() throws Exception {
+        FutureTask<Boolean> pairingTask = new FutureTask<>(() -> true);
+
+        try {
+            AdbConnectionManager.awaitPairingAttempt(pairingTask, 1, TimeUnit.MILLISECONDS);
+        } catch (SocketTimeoutException expected) {
+            assertTrue(pairingTask.isCancelled());
+            return;
+        }
+        throw new AssertionError("Expected the pairing attempt to time out");
     }
 }
