@@ -13,6 +13,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
+import android.os.Process;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.system.StructStat;
@@ -212,33 +213,45 @@ public final class FileUtils {
     public static boolean forceCreateExternalDataSubDir(@NonNull File dir) {
         File parentFile = Objects.requireNonNull(dir.getParentFile());
         String parent = parentFile.getAbsolutePath();
-        if (!parentFile.exists()) {
-            // Even the parent file doesn't exist which should not happen
-            Log.w(TAG, parent + " doesn't exist.");
-            return false;
-        }
         String target = dir.getAbsolutePath();
         String chownTarget;
-        try {
-            StructStat parentStat = Os.stat(parent);
-            chownTarget = parentStat.st_uid + ":" + parentStat.st_gid;
-        } catch (ErrnoException e) {
-            // Fallback to shell
-            Runner.Result result = Runner.runCommand("stat -c '%u:%g' " + parent);
-            String output = result.getOutput();
-            if (result.isSuccessful() && !output.isEmpty()) {
-                chownTarget = output.trim();
-            } else {
-                // Didn't work
-                Log.w(TAG, "Could not retrieve UID:GID from " + parent);
-                return false;
+        boolean createParent = !parentFile.exists();
+        if (createParent) {
+            // Some rooted Android ROMs cannot create the package directory under Android/data.
+            int uid = Process.myUid();
+            chownTarget = uid + ":" + uid;
+        } else {
+            try {
+                StructStat parentStat = Os.stat(parent);
+                chownTarget = parentStat.st_uid + ":" + parentStat.st_gid;
+            } catch (ErrnoException e) {
+                // Fallback to shell
+                Runner.Result result = Runner.runCommand(new String[]{"stat", "-c", "%u:%g", parent});
+                String output = result.getOutput();
+                if (result.isSuccessful() && !output.isEmpty()) {
+                    chownTarget = output.trim();
+                } else {
+                    // Didn't work
+                    Log.w(TAG, "Could not retrieve UID:GID from " + parent);
+                    return false;
+                }
             }
         }
 
-        return Runner.runCommand("mkdir " + target).isSuccessful() &&
-                Runner.runCommand("chmod 770 " + target).isSuccessful() &&
-                Runner.runCommand("chown " + chownTarget + " " + target).isSuccessful() &&
-                Runner.runCommand("restorecon " + target).isSuccessful();
+        // If the package directory is absent, fix the whole newly-created hierarchy so the app
+        // can traverse it. Otherwise preserve the package directory's existing metadata.
+        String metadataTarget = createParent ? parent : target;
+        if (!Runner.runCommand(new String[]{"mkdir", "-p", target}).isSuccessful()
+                || !Runner.runCommand(new String[]{"chmod", "-R", "770", metadataTarget}).isSuccessful()
+                || !Runner.runCommand(new String[]{"chown", "-R", chownTarget, metadataTarget}).isSuccessful()) {
+            return false;
+        }
+        if (!Runner.runCommand(new String[]{"restorecon", "-R", metadataTarget}).isSuccessful()) {
+            // Emulated storage may reject restorecon even though vold/FUSE already supplies the
+            // correct label
+            Log.w(TAG, "Could not restore SELinux context for %s", metadataTarget);
+        }
+        return true;
     }
 
     @AnyThread
