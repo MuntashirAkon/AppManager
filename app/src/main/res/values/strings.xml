@@ -1476,6 +1476,13 @@
     <string name="adb_pairing_retry_pairing">Retry</string>
     <string name="adb_pairing_notifications_required_title">Notifications required</string>
     <string name="adb_pairing_notifications_required_message">Wireless debugging pairing requires notifications so that App Manager can securely ask for the pairing code. Enable notifications, then try pairing again.</string>
+    <string name="adb_pairing_split_screen_title">Pair using split screen</string>
+    <string name="adb_pairing_split_screen_message">App Manager and the Wireless debugging pairing dialog must remain visible at the same time. Keep this window open while App Manager opens Developer options beside it.</string>
+    <string name="adb_pairing_enable_split_screen_message">This device cannot use notification-based pairing. Enable split-screen or freeform mode for App Manager, keep App Manager open in that mode, and then try pairing again.</string>
+    <string name="adb_pairing_unavailable_title">Wireless pairing unavailable</string>
+    <string name="adb_pairing_unavailable_message">This device supports neither notification-based pairing nor the multi-window mode required to enter a pairing code. As an alternative, you can use ADB over TCP if it has already been enabled.</string>
+    <string name="adb_pairing_code_or_port_empty">Pairing code and port cannot be empty.</string>
+    <string name="adb_pairing_code_invalid">The pairing code must contain six digits.</string>
     <string name="mode_of_op_custom_command_title">Custom command</string>
     <string name="mode_of_op_custom_command">If you are unable to use any of the modes, you can run the following command in any supported shell to run App Manager in privileged mode:</string>
     <string name="sensors">Sensors</string>

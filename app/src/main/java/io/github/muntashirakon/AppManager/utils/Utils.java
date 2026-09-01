@@ -578,6 +578,13 @@ public class Utils {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK);
     }
 
+    public static boolean isVrHeadset(@NonNull Context context) {
+        int uiModeType = context.getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_TYPE_MASK;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+                && uiModeType == Configuration.UI_MODE_TYPE_VR_HEADSET;
+    }
+
     public static boolean canDisplayNotification(@NonNull Context context) {
         // Notifications can be displayed in all supported devices except Android TV (O+)
         return Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !isTv(context);

@@ -7,11 +7,16 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Process;
 import android.os.RemoteException;
 import android.provider.Settings;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.EditText;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
@@ -22,6 +27,7 @@ import androidx.annotation.RequiresApi;
 import androidx.annotation.StringDef;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -33,6 +39,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
 import io.github.muntashirakon.AppManager.R;
@@ -56,6 +63,8 @@ import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.adb.android.AdbMdns;
 import io.github.muntashirakon.adb.AdbPairingRequiredException;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
@@ -596,10 +605,25 @@ public class Ops {
     @NoOps
     public static void pairAdbInput(@NonNull FragmentActivity activity,
                                     @NonNull AdbConnectionInterface callback) {
+        if (!isAdbPairingNotificationAvailable(activity)) {
+            if (isMultiWindowPairingAvailable(activity)) {
+                showMultiWindowPairingInstructions(activity, callback);
+            } else {
+                // No way to pair ADB
+                new MaterialAlertDialogBuilder(activity)
+                        .setTitle(R.string.adb_pairing_unavailable_title)
+                        .setMessage(R.string.adb_pairing_unavailable_message)
+                        .setPositiveButton(R.string.close, (dialog, which) -> callback.connectAdb(-1))
+                        .setOnCancelListener(dialog -> callback.connectAdb(-1))
+                        .show();
+            }
+            return;
+        }
         if (!canUseAdbPairingNotification(activity)) {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.adb_pairing_notifications_required_title)
                     .setMessage(R.string.adb_pairing_notifications_required_message)
+                    .setCancelable(false)
                     .setPositiveButton(R.string.open, (dialog, which) -> {
                         Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                                 .putExtra(Settings.EXTRA_APP_PACKAGE, activity.getPackageName());
@@ -629,7 +653,8 @@ public class Ops {
     }
 
     static boolean canUseAdbPairingNotification(@NonNull Context context) {
-        if (!NotificationManagerCompat.from(context).areNotificationsEnabled()
+        if (!isAdbPairingNotificationAvailable(context)
+                || !NotificationManagerCompat.from(context).areNotificationsEnabled()
                 || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
                 && !SelfPermissions.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS))) {
             return false;
@@ -641,6 +666,152 @@ public class Ops {
             return channel == null || channel.getImportance() != NotificationManager.IMPORTANCE_NONE;
         }
         return true;
+    }
+
+    static boolean isAdbPairingNotificationAvailable(@NonNull Context context) {
+        return Utils.canDisplayNotification(context) && !Utils.isVrHeadset(context);
+    }
+
+    static boolean isMultiWindowPairingAvailable(@NonNull FragmentActivity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && activity.isInMultiWindowMode()) {
+            return true;
+        }
+        PackageManager packageManager = activity.getPackageManager();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                && packageManager.hasSystemFeature(PackageManager.FEATURE_FREEFORM_WINDOW_MANAGEMENT)) {
+            return true;
+        }
+        // Use system resource
+        Resources resources = Resources.getSystem();
+        int resourceId = resources.getIdentifier("config_supportsMultiWindow", "bool", "android");
+        return resourceId != 0 && resources.getBoolean(resourceId);
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    @UiThread
+    private static void showMultiWindowPairingInstructions(@NonNull FragmentActivity activity,
+                                                           @NonNull AdbConnectionInterface callback) {
+        boolean alreadyInMultiWindow = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                && activity.isInMultiWindowMode();
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
+                .setTitle(R.string.adb_pairing_split_screen_title)
+                .setMessage(alreadyInMultiWindow
+                        ? R.string.adb_pairing_split_screen_message
+                        : R.string.adb_pairing_enable_split_screen_message)
+                .setCancelable(false)
+                .setNegativeButton(R.string.cancel, (dialog, which) -> callback.connectAdb(-1));
+        if (alreadyInMultiWindow) {
+            builder.setPositiveButton(R.string.action_continue, (dialog, which) ->
+                    startMultiWindowPairing(activity, callback));
+        } else {
+            // Entering multi-window would destroy an already-open pairing dialog. Let the user
+            // enter it first, then retry pairing.
+            builder.setPositiveButton(R.string.close, (dialog, which) -> callback.connectAdb(-1));
+        }
+        builder.show();
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    @UiThread
+    private static void startMultiWindowPairing(@NonNull FragmentActivity activity,
+                                                @NonNull AdbConnectionInterface callback) {
+        AdbConnectionManager.PairingSession session = AdbConnectionManager.beginPairingSession();
+        View view = View.inflate(activity, R.layout.dialog_adb_pairing, null);
+        EditText pairingCodeInput = view.findViewById(R.id.adb_pairing_code);
+        EditText portInput = view.findViewById(R.id.port_number);
+        AtomicBoolean pairingStarted = new AtomicBoolean(false);
+        AtomicBoolean dialogActive = new AtomicBoolean(true);
+        AtomicBoolean discoveryStarted = new AtomicBoolean(false);
+        AdbMdns pairingDiscovery = new AdbMdns(activity.getApplication(),
+                AdbMdns.SERVICE_TYPE_TLS_PAIRING, (hostAddress, port) -> {
+            if (port > 0 && dialogActive.get()) {
+                ThreadUtils.postOnMainThread(() -> {
+                    if (dialogActive.get()) {
+                        portInput.setText(String.valueOf(port));
+                    }
+                });
+            }
+        });
+
+        AlertDialog pairingDialog = new MaterialAlertDialogBuilder(activity)
+                .setTitle(R.string.adb_pairing_title)
+                .setView(view)
+                .setCancelable(false)
+                .setPositiveButton(R.string.adb_pair, null)
+                .setNegativeButton(R.string.cancel, null)
+                .create();
+        pairingDialog.setOnShowListener(ignored -> {
+            pairingDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(button -> {
+                Editable rawCode = pairingCodeInput.getText();
+                Editable rawPort = portInput.getText();
+                if (TextUtils.isEmpty(rawCode) || TextUtils.isEmpty(rawPort)) {
+                    UIUtils.displayShortToast(R.string.adb_pairing_code_or_port_empty);
+                    return;
+                }
+                final int port;
+                try {
+                    port = Integer.parseInt(rawPort.toString().trim());
+                    if (!ServerConfig.isValidAdbPort(port)) {
+                        throw new NumberFormatException("Port out of range");
+                    }
+                } catch (NumberFormatException e) {
+                    UIUtils.displayShortToast(R.string.port_number_invalid);
+                    return;
+                }
+                String pairingCode = rawCode.toString().trim();
+                if (!pairingCode.matches("[0-9]{6}")) {
+                    UIUtils.displayShortToast(R.string.adb_pairing_code_invalid);
+                    return;
+                }
+                pairingStarted.set(true);
+                pairingDialog.dismiss();
+                ThreadUtils.postOnBackgroundThread(() -> {
+                    try {
+                        AdbConnectionManager.getInstance().pairAndReport(session,
+                                ServerConfig.getAdbHost(activity.getApplicationContext()),
+                                port, pairingCode);
+                        ThreadUtils.postOnMainThread(() ->
+                                UIUtils.displayShortToast(R.string.paired_successfully));
+                    } catch (Exception e) {
+                        session.cancel();
+                        Log.e(TAG, "Split-screen ADB pairing failed.", e);
+                        ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed));
+                    }
+                });
+            });
+            pairingDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(button -> {
+                session.cancel();
+                pairingDialog.dismiss();
+            });
+        });
+        pairingDialog.setOnDismissListener(dialog -> {
+            dialogActive.set(false);
+            if (discoveryStarted.get()) {
+                pairingDiscovery.stop();
+            }
+            if (!pairingStarted.get()) {
+                session.cancel();
+            }
+        });
+        pairingDialog.show();
+        try {
+            pairingDiscovery.start();
+            discoveryStarted.set(true);
+        } catch (RuntimeException e) {
+            Log.w(TAG, "Could not discover the ADB pairing port.", e);
+        }
+        callback.pairAdb();
+
+        Intent developerOptionsIntent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
+                .putExtra(":settings:fragment_args_key", "toggle_adb_wireless")
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
+        try {
+            activity.startActivity(developerOptionsIntent);
+        } catch (RuntimeException e) {
+            Log.e(TAG, "Could not open Developer options for split-screen pairing.", e);
+            pairingDialog.dismiss();
+            UIUtils.displayShortToast(R.string.failed);
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.R)

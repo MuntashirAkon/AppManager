@@ -41,8 +41,11 @@ it will ask you to either connect or pair ADB\@. Select \textit{pair} and a new 
 It will ask you to navigate to the \textbf{Wireless debugging} page.
 
 \begin{tip}{Note}
-    As of v4.0.0, pairing is done using a notification prompt. So, if you have disabled notification
-    for App Manager, you must enable it first.
+    Pairing normally uses a notification prompt. If notifications are supported but disabled for
+    App Manager, enable them first. On devices without usable notifications, App Manager can instead
+    keep its pairing dialog visible beside Developer options using split-screen or freeform windows.
+    These windowing features may have to be enabled in the device's system or developer settings.
+    Put App Manager in multi-window mode before retrying pairing.
 \end{tip}
 
 In the \textbf{Wireless debugging} page, select \textbf{Pair device with pairing code}. At this, a
@@ -51,6 +54,16 @@ also be visible almost instantly. Insert the pairing code in the input box in th
 and click \textit{pair}. If the pairing is successful, App Manager will display notification with
 the message ``paired'', and the dialog in the \textbf{Wireless debugging} page will be dismissed
 automatically. You will also be able to see App Manager listed as an ADB client in the same page.
+
+If App Manager offers split-screen pairing, keep both windows open, enter the code shown by Android
+in App Manager's pairing dialog, and use the automatically discovered port. The port can also be
+entered manually if service discovery is unavailable. Do not switch either app to full screen while
+the pairing-code dialog is open because Android closes that dialog when another app is launched.
+
+As an alternative, App Manager's ADB key can first be authorized through ADB over TCP. After App
+Manager has connected and the authorization prompt has been accepted, the same key can be used by
+Wireless debugging without code-based pairing. Enabling ADB over TCP commonly requires an existing
+USB or ADB connection, and the legacy TCP transport should only be used on a trusted network.
 
 \begin{tip}{Notice}
     If you do not use App Manager in ADB mode for a while, App Manager might be removed from the
