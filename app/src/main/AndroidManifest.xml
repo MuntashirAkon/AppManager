@@ -1401,8 +1401,12 @@
         <service
             android:name=".adb.AdbPairingService"
             android:exported="false"
-            android:foregroundServiceType="dataSync|specialUse"
-            tools:targetApi="r" />
+            android:foregroundServiceType="specialUse"
+            tools:targetApi="r">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Discover and pair with this device's wireless ADB daemon using a user-provided pairing code" />
+        </service>
 
         <receiver
             android:name=".servermanager.ServerStatusChangeReceiver"

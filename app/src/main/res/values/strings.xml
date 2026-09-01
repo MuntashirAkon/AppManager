@@ -1474,6 +1474,8 @@
     <string name="adb_pairing_found_pairing_service_with_port">Found a service with port %d</string>
     <string name="adb_pairing_pairing_in_progress">Pairing…</string>
     <string name="adb_pairing_retry_pairing">Retry</string>
+    <string name="adb_pairing_notifications_required_title">Notifications required</string>
+    <string name="adb_pairing_notifications_required_message">Wireless debugging pairing requires notifications so that App Manager can securely ask for the pairing code. Enable notifications, then try pairing again.</string>
     <string name="mode_of_op_custom_command_title">Custom command</string>
     <string name="mode_of_op_custom_command">If you are unable to use any of the modes, you can run the following command in any supported shell to run App Manager in privileged mode:</string>
     <string name="sensors">Sensors</string>

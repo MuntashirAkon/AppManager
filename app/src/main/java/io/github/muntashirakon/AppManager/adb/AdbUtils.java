@@ -6,6 +6,9 @@ import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.Uri;
 import android.os.Build;
 import android.os.SystemClock;
@@ -30,6 +33,26 @@ import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.adb.android.AdbMdns;
 
 public class AdbUtils {
+    /**
+     * Returns whether the device is connected to any Wi-Fi network. The Wi-Fi network does not
+     * need to provide Internet access: local-only and captive-portal networks can still expose
+     * wireless debugging.
+     */
+    public static boolean isWifiConnected(@NonNull Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) {
+            return false;
+        }
+        for (Network network : cm.getAllNetworks()) {
+            NetworkCapabilities capabilities = cm.getNetworkCapabilities(network);
+            if (capabilities != null && capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @WorkerThread
     @NonNull
     public static Pair<String, Integer> getLatestAdbDaemon(@NonNull Context context, long timeout, @NonNull TimeUnit unit)

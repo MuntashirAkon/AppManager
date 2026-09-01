@@ -3,6 +3,8 @@
 package io.github.muntashirakon.AppManager.settings;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -21,8 +23,8 @@ import androidx.annotation.StringDef;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.ContextCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -30,9 +32,8 @@ import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.ReentrantLock;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
@@ -40,7 +41,6 @@ import io.github.muntashirakon.AppManager.adb.AdbPairingService;
 import io.github.muntashirakon.AppManager.adb.AdbUtils;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
-import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
@@ -56,7 +56,6 @@ import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.adb.AdbPairingRequiredException;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
@@ -110,6 +109,7 @@ public class Ops {
     private static boolean sIsAdb = false; // UID = 2000
     private static boolean sIsSystem = false; // UID = 1000
     private static boolean sIsRoot = false; // UID = 0
+    private static final ReentrantLock sTransitionLock = new ReentrantLock(true);
 
     // Security
     private static final Object sSecurityLock = new Object();
@@ -248,6 +248,7 @@ public class Ops {
         if (!MODE_ADB_WIFI.equals(newMode)) {
             Context context = ContextUtils.getContext();
             context.stopService(new Intent(context, WifiWaitService.class));
+            context.stopService(new Intent(context, AdbPairingService.class));
         }
     }
 
@@ -268,6 +269,16 @@ public class Ops {
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     @Status
     public static int init(@NonNull Context context, boolean force) {
+        sTransitionLock.lock();
+        try {
+            return initLocked(context, force);
+        } finally {
+            sTransitionLock.unlock();
+        }
+    }
+
+    @Status
+    private static int initLocked(@NonNull Context context, boolean force) {
         String mode = getMode();
         sDirectRoot = hasRoot();
         if (MODE_AUTO.equals(mode)) {
@@ -313,7 +324,7 @@ public class Ops {
                     sIsRoot = sIsSystem = false;
                     sIsAdb = true;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        if (!Utils.isWifiActive(context.getApplicationContext())) {
+                        if (!AdbUtils.isWifiConnected(context)) {
                             throw new Exception("Wifi not enabled.");
                         }
                         if (AdbUtils.enableWirelessDebugging(context)) {
@@ -491,6 +502,16 @@ public class Ops {
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     @Status
     public static int autoConnectWirelessDebugging(@NonNull Context context) {
+        sTransitionLock.lock();
+        try {
+            return autoConnectWirelessDebuggingLocked(context);
+        } finally {
+            sTransitionLock.unlock();
+        }
+    }
+
+    @Status
+    private static int autoConnectWirelessDebuggingLocked(@NonNull Context context) {
         sIsAdb = true;
         sIsSystem = sIsRoot = false;
         try {
@@ -498,7 +519,7 @@ public class Ops {
             LocalServer.restart();
             LocalServices.bindServicesIfNotAlready();
             return checkRootOrIncompleteUsbDebuggingInAdb(context);
-        } catch (RemoteException | IOException | AdbPairingRequiredException e) {
+        } catch (RemoteException | IOException | AdbPairingRequiredException | RuntimeException e) {
             Log.e(TAG, "Could not auto-connect to adbd", e);
             fallbackToNoRoot(context);
             if (e instanceof AdbPairingRequiredException) {
@@ -512,7 +533,17 @@ public class Ops {
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     @Status
     public static int connectAdb(@NonNull Context context, int port, @Status int returnCodeOnFailure) {
-        if (port < 0) {
+        sTransitionLock.lock();
+        try {
+            return connectAdbLocked(context, port, returnCodeOnFailure);
+        } finally {
+            sTransitionLock.unlock();
+        }
+    }
+
+    @Status
+    private static int connectAdbLocked(@NonNull Context context, int port, @Status int returnCodeOnFailure) {
+        if (!ServerConfig.isValidAdbPort(port)) {
             fallbackToNoRoot(context);
             return returnCodeOnFailure;
         }
@@ -523,7 +554,7 @@ public class Ops {
             LocalServer.restart();
             LocalServices.bindServicesIfNotAlready();
             return checkRootOrIncompleteUsbDebuggingInAdb(context);
-        } catch (RemoteException | IOException | AdbPairingRequiredException e) {
+        } catch (RemoteException | IOException | AdbPairingRequiredException | RuntimeException e) {
             Log.e(TAG, "Could not connect to adbd using port " + port, e);
             fallbackToNoRoot(context);
             return returnCodeOnFailure;
@@ -545,7 +576,11 @@ public class Ops {
                         return;
                     }
                     try {
-                        callback.connectAdb(Integer.decode(inputText.toString().trim()));
+                        int port = Integer.parseInt(inputText.toString().trim());
+                        if (!ServerConfig.isValidAdbPort(port)) {
+                            throw new NumberFormatException("Port out of range");
+                        }
+                        callback.connectAdb(port);
                     } catch (NumberFormatException e) {
                         UIUtils.displayShortToast(R.string.port_number_invalid);
                         callback.connectAdb(-1);
@@ -561,28 +596,68 @@ public class Ops {
     @NoOps
     public static void pairAdbInput(@NonNull FragmentActivity activity,
                                     @NonNull AdbConnectionInterface callback) {
+        if (!canUseAdbPairingNotification(activity)) {
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.adb_pairing_notifications_required_title)
+                    .setMessage(R.string.adb_pairing_notifications_required_message)
+                    .setPositiveButton(R.string.open, (dialog, which) -> {
+                        Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                                .putExtra(Settings.EXTRA_APP_PACKAGE, activity.getPackageName());
+                        activity.startActivity(intent);
+                        callback.connectAdb(-1);
+                    })
+                    .setNegativeButton(R.string.cancel, (dialog, which) -> callback.connectAdb(-1))
+                    .show();
+            return;
+        }
         new MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.adb_pairing_title)
                 .setMessage(R.string.adb_pairing_instruction)
                 .setCancelable(false)
                 .setNeutralButton(R.string.action_manual, (dialog, which) -> {
-                    Intent adbPairingServiceIntent = new Intent(activity, AdbPairingService.class)
-                            .setAction(AdbPairingService.ACTION_START_PAIRING);
-                    ContextCompat.startForegroundService(activity, adbPairingServiceIntent);
-                    callback.pairAdb();
+                    startAdbPairing(activity, callback);
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> callback.connectAdb(-1))
                 .setPositiveButton(R.string.go, (dialog, which) -> {
                     Intent developerOptionsIntent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
                             .putExtra(":settings:fragment_args_key", "toggle_adb_wireless")
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    Intent adbPairingServiceIntent = new Intent(activity, AdbPairingService.class)
-                            .setAction(AdbPairingService.ACTION_START_PAIRING);
                     activity.startActivity(developerOptionsIntent);
-                    ContextCompat.startForegroundService(activity, adbPairingServiceIntent);
-                    callback.pairAdb();
+                    startAdbPairing(activity, callback);
                 })
                 .show();
+    }
+
+    static boolean canUseAdbPairingNotification(@NonNull Context context) {
+        if (!NotificationManagerCompat.from(context).areNotificationsEnabled()
+                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && !SelfPermissions.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS))) {
+            return false;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager manager = context.getSystemService(NotificationManager.class);
+            NotificationChannel channel = manager != null
+                    ? manager.getNotificationChannel(AdbPairingService.CHANNEL_ID) : null;
+            return channel == null || channel.getImportance() != NotificationManager.IMPORTANCE_NONE;
+        }
+        return true;
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private static void startAdbPairing(@NonNull FragmentActivity activity,
+                                        @NonNull AdbConnectionInterface callback) {
+        AdbConnectionManager.PairingSession session = AdbConnectionManager.beginPairingSession();
+        try {
+            Intent intent = new Intent(activity, AdbPairingService.class)
+                    .setAction(AdbPairingService.ACTION_START_SEARCHING);
+            ContextCompat.startForegroundService(activity, intent);
+            callback.pairAdb();
+        } catch (RuntimeException e) {
+            AdbConnectionManager.endPairingSession(session);
+            Log.e(TAG, "Could not start ADB pairing.", e);
+            UIUtils.displayShortToast(R.string.failed);
+            callback.connectAdb(-1);
+        }
     }
 
     @WorkerThread
@@ -590,9 +665,24 @@ public class Ops {
     @RequiresApi(Build.VERSION_CODES.R)
     @Status
     public static int pairAdb(@NonNull Context context) {
+        sTransitionLock.lock();
+        try {
+            return pairAdbLocked(context);
+        } finally {
+            sTransitionLock.unlock();
+        }
+    }
+
+    @Status
+    private static int pairAdbLocked(@NonNull Context context) {
+        AdbConnectionManager.PairingSession session = null;
         try {
             AdbConnectionManager conn = AdbConnectionManager.getInstance();
-            int status = pairAdbInternal(context, conn);
+            session = AdbConnectionManager.getPairingSession();
+            if (session == null) {
+                session = AdbConnectionManager.beginPairingSession();
+            }
+            int status = pairAdbInternal(context, session);
             if (status == STATUS_ADB_CONNECT_REQUIRED) {
                 return connectAdb(context, findAdbPort(context, 7, ServerConfig.getAdbPort()),
                         STATUS_ADB_CONNECT_REQUIRED);
@@ -602,6 +692,14 @@ public class Ops {
             ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed));
             Log.e(TAG, e);
             fallbackToNoRoot(context);
+        } finally {
+            if (session != null) {
+                try {
+                    AdbConnectionManager.endPairingSession(session);
+                } catch (RuntimeException e) {
+                    Log.w(TAG, "Could not close pairing session.", e);
+                }
+            }
         }
         return STATUS_FAILURE;
     }
@@ -611,38 +709,34 @@ public class Ops {
     @NoOps
     @RequiresApi(Build.VERSION_CODES.R)
     @Status
-    private static int pairAdbInternal(@NonNull Context context, @NonNull AdbConnectionManager conn) {
-        AtomicReference<CountDownLatch> observerObserver = new AtomicReference<>(new CountDownLatch(1));
-        AtomicReference<Exception> pairingError = new AtomicReference<>();
-        Observer<Exception> observer = e -> {
-            pairingError.set(e);
-            observerObserver.get().countDown();
-        };
-        ThreadUtils.postOnMainThread(() -> conn.getPairingObserver().observeForever(observer));
-        while (true) {
-            boolean success;
-            try {
-                success = observerObserver.get().await(1, TimeUnit.HOURS);
-            } catch (InterruptedException ignore) {
-                success = false;
-            }
-            if (success) {
-                if (pairingError.get() != null) {
-                    if (ServiceHelper.checkIfServiceIsRunning(context, AdbPairingService.class)) {
-                        observerObserver.set(new CountDownLatch(1));
-                        continue;
-                    }
-                    success = false;
+    private static int pairAdbInternal(@NonNull Context context,
+                                       @NonNull AdbConnectionManager.PairingSession session) {
+        long deadline = android.os.SystemClock.elapsedRealtime() + TimeUnit.MINUTES.toMillis(10);
+        try {
+            while (true) {
+                long remaining = deadline - android.os.SystemClock.elapsedRealtime();
+                if (remaining <= 0) {
+                    break;
+                }
+                AdbConnectionManager.PairingResult result = session.await(remaining, TimeUnit.MILLISECONDS);
+                if (result == null) {
+                    break;
+                }
+                if (result.success) {
+                    return STATUS_ADB_CONNECT_REQUIRED;
+                }
+                if (result.error instanceof InterruptedException) {
+                    break;
                 }
             }
-            ThreadUtils.postOnMainThread(() -> conn.getPairingObserver().removeObserver(observer));
-            if (success) {
-                return STATUS_ADB_CONNECT_REQUIRED;
-            } else {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            if (AdbConnectionManager.getPairingSession() == session) {
                 context.stopService(new Intent(context, AdbPairingService.class));
-                return STATUS_FAILURE;
             }
         }
+        return STATUS_FAILURE;
     }
 
     @UiThread
@@ -683,7 +777,7 @@ public class Ops {
             try {
                 LocalServer.getInstance();
                 LocalServices.bindServicesIfNotAlready();
-            } catch (RemoteException | IOException | AdbPairingRequiredException e) {
+            } catch (RemoteException | IOException | AdbPairingRequiredException | RuntimeException e) {
                 Log.e(TAG, e);
                 // fall-through, because the remote service may still be alive
             }
@@ -745,15 +839,20 @@ public class Ops {
     @WorkerThread
     @NoOps
     static void fallbackToNoRoot(@NonNull Context context) {
-        if (LocalServices.alive()) {
-            LocalServices.stopServices();
+        sTransitionLock.lock();
+        try {
+            if (LocalServices.alive()) {
+                LocalServices.stopServices();
+            }
+            if (LocalServer.alive(context)) {
+                ExUtils.exceptionAsIgnored(() -> LocalServer.getInstance().closeBgServer());
+            }
+            sDirectRoot = false;
+            sIsAdb = sIsSystem = sIsRoot = false;
+            setWorkingUid(Process.myUid());
+        } finally {
+            sTransitionLock.unlock();
         }
-        if (LocalServer.alive(context)) {
-            ExUtils.exceptionAsIgnored(() -> LocalServer.getInstance().closeBgServer());
-        }
-        sDirectRoot = false;
-        sIsAdb = sIsSystem = sIsRoot = false;
-        setWorkingUid(Process.myUid());
     }
 
     @WorkerThread
