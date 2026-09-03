@@ -26,6 +26,8 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
 
     private String mPackageName;
     private CharSequence mAppLabel;
+    private String mOperationId;
+    private int mSessionId = -1;
     private int mConfirmNotificationId = 0;
 
     public void setPackageName(String packageName) {
@@ -36,11 +38,24 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
         mAppLabel = appLabel;
     }
 
+    public void setOperationId(@NonNull String operationId) {
+        mOperationId = operationId;
+    }
+
+    public void setSessionId(int sessionId) {
+        mSessionId = sessionId;
+    }
+
     @Override
     public void onReceive(Context nullableContext, @NonNull Intent intent) {
         Context context = nullableContext != null ? nullableContext : ContextUtils.getContext();
         int status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, -1);
         int sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
+        if (!mOperationId.equals(intent.getStringExtra(PackageInstallerCompat.EXTRA_OPERATION_ID))
+                || (mSessionId != -1 && mSessionId != sessionId)) {
+            Log.w(TAG, "Ignoring callback for another operation/session.");
+            return;
+        }
         Log.d(TAG, "Session ID: %d", sessionId);
         switch (status) {
             case PackageInstaller.STATUS_PENDING_USER_ACTION:
@@ -48,6 +63,7 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                 // Send broadcast first
                 Intent broadcastIntent2 = new Intent(PackageInstallerCompat.ACTION_INSTALL_INTERACTION_BEGIN);
                 broadcastIntent2.setPackage(context.getPackageName());
+                broadcastIntent2.putExtra(PackageInstallerCompat.EXTRA_OPERATION_ID, mOperationId);
                 broadcastIntent2.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, mPackageName);
                 broadcastIntent2.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                 context.sendBroadcast(broadcastIntent2);
@@ -60,6 +76,7 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                 intent2.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, mPackageName);
                 intent2.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                 intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                PackageInstallerCompat.setOperationIdentity(intent2, mOperationId, "confirmation_activity");
                 boolean appInForeground = Utils.isAppInForeground();
                 if (appInForeground) {
                     // Open activity directly and issue a silent notification
@@ -71,6 +88,7 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                 broadcastCancel.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, mPackageName);
                 broadcastCancel.putExtra(PackageInstaller.EXTRA_STATUS, PackageInstallerCompat.STATUS_FAILURE_ABORTED);
                 broadcastCancel.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
+                PackageInstallerCompat.setOperationIdentity(broadcastCancel, mOperationId, "confirmation_cancel");
                 // Ask user for permission
                 mConfirmNotificationId = NotificationUtils.displayInstallConfirmNotification(context, builder -> builder
                         .setAutoCancel(false)
@@ -83,21 +101,25 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                         .setSubText(context.getString(R.string.package_installer))
                         // A neat way to find the title is to check for sessionId
                         .setContentText(context.getString(sessionId == -1 ? R.string.confirm_uninstallation : R.string.confirm_installation))
-                        .setContentIntent(PendingIntentCompat.getActivity(context, 0, intent2,
+                        .setContentIntent(PendingIntentCompat.getActivity(context,
+                                PackageInstallerCompat.getOperationRequestCode(mOperationId), intent2,
                                 PendingIntent.FLAG_UPDATE_CURRENT, false))
-                        .setDeleteIntent(PendingIntentCompat.getBroadcast(context, 0, broadcastCancel,
+                        .setDeleteIntent(PendingIntentCompat.getBroadcast(context,
+                                PackageInstallerCompat.getOperationRequestCode(mOperationId), broadcastCancel,
                                 PendingIntent.FLAG_UPDATE_CURRENT, false))
                         .build());
                 break;
             case PackageInstaller.STATUS_SUCCESS:
                 Log.d(TAG, "Install success!");
                 NotificationUtils.cancelInstallConfirmNotification(context, mConfirmNotificationId);
-                PackageInstallerCompat.sendCompletedBroadcast(context, mPackageName, PackageInstallerCompat.STATUS_SUCCESS, sessionId);
+                PackageInstallerCompat.sendCompletedBroadcast(context, mOperationId, mPackageName,
+                        PackageInstallerCompat.STATUS_SUCCESS, sessionId);
                 break;
             default:
                 NotificationUtils.cancelInstallConfirmNotification(context, mConfirmNotificationId);
                 Intent broadcastError = new Intent(PackageInstallerCompat.ACTION_INSTALL_COMPLETED);
                 broadcastError.setPackage(context.getPackageName());
+                broadcastError.putExtra(PackageInstallerCompat.EXTRA_OPERATION_ID, mOperationId);
                 String statusMessage = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE);
                 broadcastError.putExtra(PackageInstaller.EXTRA_STATUS_MESSAGE, statusMessage);
                 broadcastError.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, mPackageName);

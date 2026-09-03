@@ -117,12 +117,14 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     private static final String EXTRA_APK_FILE_LINK = "link";
     private static final String STATE_SESSION_ID = "session_id";
     private static final String STATE_PACKAGE_NAME = "package_name";
+    private static final String STATE_OPERATION_ID = "operation_id";
     public static final String ACTION_PACKAGE_INSTALLED = BuildConfig.APPLICATION_ID + ".action.PACKAGE_INSTALLED";
 
     private int mSessionId = -1;
     @Nullable
     private ApkQueueItem mCurrentItem;
     private String mPackageName;
+    private String mOperationId;
     /**
      * Whether this activity is currently dealing with an apk
      */
@@ -162,6 +164,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
                 // User did some interaction and the installer screen is closed now
                 Intent broadcastIntent = new Intent(PackageInstallerCompat.ACTION_INSTALL_INTERACTION_END);
                 broadcastIntent.setPackage(getPackageName());
+                broadcastIntent.putExtra(PackageInstallerCompat.EXTRA_OPERATION_ID, mOperationId);
                 broadcastIntent.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, mPackageName);
                 broadcastIntent.putExtra(PackageInstaller.EXTRA_SESSION_ID, mSessionId);
                 getApplicationContext().sendBroadcast(broadcastIntent);
@@ -220,6 +223,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         if (savedInstanceState != null) {
             mSessionId = savedInstanceState.getInt(STATE_SESSION_ID, -1);
             mPackageName = savedInstanceState.getString(STATE_PACKAGE_NAME);
+            mOperationId = savedInstanceState.getString(STATE_OPERATION_ID);
         }
         Log.d(TAG, "On create, intent: %s", intent);
         mModel = new ViewModelProvider(this).get(PackageInstallerViewModel.class);
@@ -394,6 +398,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(STATE_SESSION_ID, mSessionId);
         outState.putString(STATE_PACKAGE_NAME, mPackageName);
+        outState.putString(STATE_OPERATION_ID, mOperationId);
         super.onSaveInstanceState(outState);
     }
 
@@ -444,15 +449,19 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         if (ACTION_PACKAGE_INSTALLED.equals(intent.getAction())) {
             mSessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
             mPackageName = intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME);
+            mOperationId = intent.getStringExtra(PackageInstallerCompat.EXTRA_OPERATION_ID);
             Intent confirmIntent = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_INTENT, Intent.class);
             try {
-                if (mPackageName == null || confirmIntent == null)
+                if (mPackageName == null || mOperationId == null || confirmIntent == null)
                     throw new Exception("Empty confirmation intent.");
                 Log.d(TAG, "Requesting user confirmation for package %s", mPackageName);
                 mConfirmIntentLauncher.launch(confirmIntent);
             } catch (Exception e) {
                 e.printStackTrace();
-                PackageInstallerCompat.sendCompletedBroadcast(this, mPackageName, PackageInstallerCompat.STATUS_FAILURE_INCOMPATIBLE_ROM, mSessionId);
+                if (mPackageName != null && mOperationId != null) {
+                    PackageInstallerCompat.sendCompletedBroadcast(this, mOperationId, mPackageName,
+                            PackageInstallerCompat.STATUS_FAILURE_INCOMPATIBLE_ROM, mSessionId);
+                }
                 if (!hasNext() && !mIsDealingWithApk) {
                     // No APKs left, this maybe a solo call
                     finish();
