@@ -25,35 +25,41 @@ public class AppDetailsPermissionItem extends AppDetailsItem<PermissionInfo> {
     public final Permission permission;
     public final boolean isDangerous; // AKA Runtime
     public final boolean modifiable;
+    private final boolean mOverlayModifiable;
     public final int flags;
     public final int protectionFlags;
-    private volatile Boolean mOverlayGranted;
+    private volatile Boolean mEffectiveGranted;
     @Nullable
     public final PermissionUserAction settingItem;
 
     public AppDetailsPermissionItem(@NonNull PermissionInfo permissionInfo, @NonNull Permission permission,
-                                    int flags, boolean modifiable,
+                                    int flags, boolean modifiable, boolean overlayModifiable,
                                     @Nullable PermissionUserAction settingItem) {
         super(permissionInfo);
         this.permission = permission;
         this.isDangerous = PermissionInfoCompat.getProtection(permissionInfo) == PermissionInfo.PROTECTION_DANGEROUS;
         this.protectionFlags = PermissionInfoCompat.getProtectionFlags(permissionInfo);
         this.modifiable = modifiable;
+        mOverlayModifiable = overlayModifiable;
         this.flags = flags;
         this.settingItem = settingItem;
     }
 
     public void setInitialOverlayState(@Nullable Boolean granted) {
-        mOverlayGranted = granted;
+        mEffectiveGranted = granted;
     }
 
     public boolean hasOverlayState() {
-        return mOverlayGranted != null;
+        return mOverlayModifiable && mEffectiveGranted != null;
+    }
+
+    public boolean isOverlayModifiable() {
+        return mOverlayModifiable;
     }
 
     public boolean isGranted() {
-        if (mOverlayGranted != null) {
-            return mOverlayGranted;
+        if (mEffectiveGranted != null) {
+            return mEffectiveGranted;
         }
         if (!permission.isReadOnly()) {
             return permission.isGrantedIncludingAppOp();
@@ -64,8 +70,8 @@ public class AppDetailsPermissionItem extends AppDetailsItem<PermissionInfo> {
         return permission.isGranted();
     }
 
-    public void setOverlayGranted(boolean granted) {
-        mOverlayGranted = granted;
+    public void setEffectiveGranted(boolean granted) {
+        mEffectiveGranted = granted;
     }
 
     /**

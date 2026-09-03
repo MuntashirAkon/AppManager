@@ -788,11 +788,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                     if (currentPos == RecyclerView.NO_POSITION) return;
                     ThreadUtils.postOnBackgroundThread(() -> {
                         try {
-                            boolean wasGranted = permissionItem.isGranted();
                             if (Objects.requireNonNull(viewModel).togglePermission(permissionItem)) {
-                                if (permissionItem.hasOverlayState()) {
-                                    permissionItem.setOverlayGranted(!wasGranted);
-                                }
                                 ThreadUtils.postOnMainThread(() -> notifyItemChanged(currentPos, AdapterUtils.STUB));
                             } else throw new Exception("Couldn't grant permission: " + permName);
                         } catch (Exception e) {
