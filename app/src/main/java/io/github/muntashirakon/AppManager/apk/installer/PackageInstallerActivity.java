@@ -17,7 +17,6 @@ import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerC
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_SUCCESS;
 
 import android.Manifest;
-import android.annotation.UserIdInt;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -43,11 +42,12 @@ import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.pm.PackageInfoCompat;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Queue;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -115,6 +115,8 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     }
 
     private static final String EXTRA_APK_FILE_LINK = "link";
+    private static final String STATE_SESSION_ID = "session_id";
+    private static final String STATE_PACKAGE_NAME = "package_name";
     public static final String ACTION_PACKAGE_INSTALLED = BuildConfig.APPLICATION_ID + ".action.PACKAGE_INSTALLED";
 
     private int mSessionId = -1;
@@ -125,14 +127,20 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
      * Whether this activity is currently dealing with an apk
      */
     private boolean mIsDealingWithApk = false;
-    @UserIdInt
-    private int mLastUserId;
     private InstallerDialogHelper mDialogHelper;
     private PackageInstallerViewModel mModel;
     @Nullable
     private PackageInstallerService mService;
+    private boolean mServiceBound;
     private InstallerDialogFragment mInstallerDialogFragment;
     private boolean initiated = false;
+    private final PackageInstallerService.OnInstallFinished mInstallFinishedListener =
+            installResult -> {
+                if (isFinishing()) return;
+                mModel.setInstallResult(installResult);
+                showInstallationFinishedDialog(installResult.getPackageName(), installResult.getStatus(),
+                        installResult.getBlockingPackage(), installResult.getStatusMessage());
+            };
     private final View.OnClickListener mAppInfoClickListener = v -> {
         assert mCurrentItem != null;
         try {
@@ -148,8 +156,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             goToNext();
         }
     };
-    private final InstallerOptions mInstallerOptions = InstallerOptions.getDefault();
-    private final Queue<ApkQueueItem> mApkQueue = new LinkedList<>();
+    private InstallerOptions mInstallerOptions;
     private final ActivityResultLauncher<Intent> mConfirmIntentLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 // User did some interaction and the installer screen is closed now
@@ -170,6 +177,26 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mService = ((ForegroundService.Binder) service).getService();
+            if (mModel != null && mModel.isCurrentItemSubmitted()) {
+                ApkQueueItem currentItem = mModel.getCurrentQueueItem();
+                if (currentItem == null) {
+                    return;
+                }
+                mCurrentItem = currentItem;
+                if (mService.hasOperation(currentItem.getOperationId())) {
+                    setInstallFinishedListener();
+                } else {
+                    String packageName = currentItem.getPackageName();
+                    mModel.setInstallResult(new PackageInstallResult(currentItem.getOperationId(),
+                            packageName != null ? packageName : "Unknown Package",
+                            STATUS_FAILURE_ABORTED, null, null));
+                    if (mDialogHelper != null) {
+                        PackageInstallResult installResult = Objects.requireNonNull(mModel.getInstallResult());
+                        showInstallationFinishedDialog(installResult.getPackageName(), installResult.getStatus(),
+                                installResult.getBlockingPackage(), installResult.getStatusMessage());
+                    }
+                }
+            }
         }
 
         @Override
@@ -190,41 +217,60 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             triggerCancel();
             return;
         }
+        if (savedInstanceState != null) {
+            mSessionId = savedInstanceState.getInt(STATE_SESSION_ID, -1);
+            mPackageName = savedInstanceState.getString(STATE_PACKAGE_NAME);
+        }
         Log.d(TAG, "On create, intent: %s", intent);
+        mModel = new ViewModelProvider(this).get(PackageInstallerViewModel.class);
         if (ACTION_PACKAGE_INSTALLED.equals(intent.getAction())) {
             onNewIntent(intent);
             return;
         }
-        mModel = new ViewModelProvider(this).get(PackageInstallerViewModel.class);
         if (!bindService(
                 new Intent(this, PackageInstallerService.class), mServiceConnection, BIND_AUTO_CREATE)) {
             throw new RuntimeException("Unable to bind PackageInstallerService");
         }
-        synchronized (mApkQueue) {
-            mApkQueue.addAll(ApkQueueItem.fromIntent(intent, Utils.getRealReferrer(this)));
-
+        mServiceBound = true;
+        mInstallerOptions = mModel.getInstallerOptions();
+        if (!mModel.isQueueInitialized()) {
+            mModel.initializeQueue(getQueueItems(intent));
         }
-        ApkSource apkSource = IntentCompat.getUnwrappedParcelableExtra(intent, EXTRA_APK_FILE_LINK, ApkSource.class);
-        if (apkSource != null) {
-            synchronized (mApkQueue) {
-                mApkQueue.add(ApkQueueItem.fromApkSource(apkSource));
-            }
+        // Init fragment before observing retained LiveData.
+        Fragment restoredFragment = getSupportFragmentManager()
+                .findFragmentByTag(InstallerDialogFragment.TAG);
+        mInstallerDialogFragment = restoredFragment instanceof InstallerDialogFragment
+                ? (InstallerDialogFragment) restoredFragment
+                : new InstallerDialogFragment();
+        mInstallerDialogFragment.setCancelable(false);
+        mInstallerDialogFragment.setFragmentStartedCallback(this::init);
+        if (!mInstallerDialogFragment.isAdded()) {
+            mInstallerDialogFragment.showNow(getSupportFragmentManager(), InstallerDialogFragment.TAG);
         }
         mModel.packageParseResultLiveData().observe(this, packageResult -> {
+            if (mDialogHelper == null || mCurrentItem == null || mModel.isCurrentItemSubmitted()) {
+                return;
+            }
             if (packageResult == null) {
                 mDialogHelper.showParseFailedDialog(v -> triggerCancel());
+                return;
+            }
+            if (!mCurrentItem.getOperationId().equals(packageResult.getOperationId())) {
                 return;
             }
             // TODO: Resolve dependencies
             mDialogHelper.onParseSuccess(packageResult.getAppLabel(), getVersionInfoWithTrackers(packageResult),
                     packageResult.getAppIcon(), v -> displayInstallerOptions((dialog1, which, options) -> {
                         if (options != null) {
-                            mInstallerOptions.copy(options);
+                            mModel.updateInstallerOptions(options);
                         }
                     }));
             displayChangesOrInstallationPrompt();
         });
         mModel.packageUninstalledLiveData().observe(this, success -> {
+            if (mModel.isCurrentItemSubmitted()) {
+                return;
+            }
             if (success) {
                 install();
             } else {
@@ -232,23 +278,16 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
                         null, false);
             }
         });
-        // Init fragment
-        mInstallerDialogFragment = new InstallerDialogFragment();
-        mInstallerDialogFragment.setCancelable(false);
-        mInstallerDialogFragment.setFragmentStartedCallback(this::init);
-        mInstallerDialogFragment.showNow(getSupportFragmentManager(), InstallerDialogFragment.TAG);
     }
 
     @Override
     protected void onDestroy() {
-        if (mService != null) {
-            unbindService(mServiceConnection);
-        }
         unsetInstallFinishedListener();
-        // Delete remaining cached file
-        if (mCurrentItem != null && (mCurrentItem.getApkSource() instanceof CachedApkSource)) {
-            ((CachedApkSource) mCurrentItem.getApkSource()).cleanup();
+        if (mServiceBound) {
+            unbindService(mServiceConnection);
+            mServiceBound = false;
         }
+        mService = null;
         super.onDestroy();
     }
 
@@ -260,7 +299,26 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         initiated = true;
         mDialogHelper = new InstallerDialogHelper(fragment, dialog);
         mDialogHelper.initProgress(v -> triggerCancel());
-        goToNext();
+        resumeOrStartQueue();
+    }
+
+    private void resumeOrStartQueue() {
+        mCurrentItem = mModel.getCurrentQueueItem();
+        if (mCurrentItem == null) {
+            startNextQueueItem();
+            return;
+        }
+        mIsDealingWithApk = true;
+        PackageInstallResult installResult = mModel.getInstallResult();
+        if (installResult != null) {
+            showInstallationFinishedDialog(installResult.getPackageName(), installResult.getStatus(),
+                    installResult.getBlockingPackage(), installResult.getStatusMessage());
+        } else if (mModel.isCurrentItemSubmitted()) {
+            showInstallProgress();
+            setInstallFinishedListener();
+        } else if (mModel.getCurrentPackage() == null) {
+            mModel.getPackageInfo(mCurrentItem);
+        }
     }
 
     @UiThread
@@ -334,7 +392,8 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.clear();
+        outState.putInt(STATE_SESSION_ID, mSessionId);
+        outState.putString(STATE_PACKAGE_NAME, mPackageName);
         super.onSaveInstanceState(outState);
     }
 
@@ -355,7 +414,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         int userId = mInstallerOptions.getUserId();
         mCurrentItem.setInstallerOptions(mInstallerOptions);
         mCurrentItem.setSelectedSplits(mModel.getSelectedSplitsForInstallation());
-        mLastUserId = userId == UserHandleHidden.USER_ALL ? UserHandleHidden.myUserId() : userId;
+        int lastUserId = userId == UserHandleHidden.USER_ALL ? UserHandleHidden.myUserId() : userId;
         boolean canDisplayNotification = Utils.canDisplayNotification(this);
         boolean alwaysOnBackground = canDisplayNotification && Prefs.Installer.installInBackground();
         Intent intent = new Intent(this, PackageInstallerService.class);
@@ -364,13 +423,11 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             // For unprivileged mode, use accessibility service if enabled
             mMultiplexer.enableInstall(true);
         }
+        mModel.markCurrentItemSubmitted(lastUserId);
         ContextCompat.startForegroundService(this, intent);
         if (!alwaysOnBackground && mService != null) {
             setInstallFinishedListener();
-            mDialogHelper.showInstallProgressDialog(canDisplayNotification ? v -> {
-                unsetInstallFinishedListener();
-                goToNext();
-            } : null);
+            showInstallProgress();
         } else {
             unsetInstallFinishedListener();
             // For some reason, the service is empty
@@ -383,7 +440,6 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Log.d(TAG, "New intent called: %s", intent);
-        setIntent(intent);
         // Check for action first
         if (ACTION_PACKAGE_INSTALLED.equals(intent.getAction())) {
             mSessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
@@ -405,9 +461,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             return;
         }
         // New APK files added
-        synchronized (mApkQueue) {
-            mApkQueue.addAll(ApkQueueItem.fromIntent(intent, Utils.getRealReferrer(this)));
-        }
+        mModel.enqueue(getQueueItems(intent));
         UIUtils.displayShortToast(R.string.added_to_queue);
     }
 
@@ -489,16 +543,19 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
      * Closes the current APK and start the next
      */
     private void goToNext() {
+        mModel.finishCurrentQueueItem();
         mCurrentItem = null;
         mMultiplexer.enableInstall(false);
         mMultiplexer.enableUninstall(false);
+        startNextQueueItem();
+    }
+
+    private void startNextQueueItem() {
         if (hasNext()) {
             mIsDealingWithApk = true;
             mDialogHelper.initProgress(v -> goToNext());
-            synchronized (mApkQueue) {
-                mCurrentItem = Objects.requireNonNull(mApkQueue.poll());
-                mModel.getPackageInfo(mCurrentItem);
-            }
+            mCurrentItem = Objects.requireNonNull(mModel.startNextQueueItem());
+            mModel.getPackageInfo(mCurrentItem);
         } else {
             mIsDealingWithApk = false;
             mDialogHelper.dismiss();
@@ -507,9 +564,26 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     }
 
     private boolean hasNext() {
-        synchronized (mApkQueue) {
-            return !mApkQueue.isEmpty();
+        return mModel.hasPendingItems();
+    }
+
+    @NonNull
+    private List<ApkQueueItem> getQueueItems(@NonNull Intent intent) {
+        List<ApkQueueItem> items = new ArrayList<>(
+                ApkQueueItem.fromIntent(intent, Utils.getRealReferrer(this)));
+        ApkSource apkSource = IntentCompat.getUnwrappedParcelableExtra(intent, EXTRA_APK_FILE_LINK, ApkSource.class);
+        if (apkSource != null) {
+            items.add(ApkQueueItem.fromApkSource(apkSource));
         }
+        return items;
+    }
+
+    private void showInstallProgress() {
+        boolean canDisplayNotification = Utils.canDisplayNotification(this);
+        mDialogHelper.showInstallProgressDialog(canDisplayNotification ? v -> {
+            unsetInstallFinishedListener();
+            goToNext();
+        } : null);
     }
 
     @NonNull
@@ -555,7 +629,8 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
                     }
                 } : null, displayOpenAndAppInfo ? v -> {
                     try {
-                        Intent appDetailsIntent = AppDetailsActivity.getIntent(this, packageName, mLastUserId, true);
+                        Intent appDetailsIntent = AppDetailsActivity.getIntent(this, packageName,
+                                mModel.getLastUserId(), true);
                         appDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(appDetailsIntent);
                     } finally {
@@ -603,17 +678,14 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     }
 
     public void setInstallFinishedListener() {
-        if (mService != null) {
-            mService.setOnInstallFinished((packageName, status, blockingPackage, statusMessage) -> {
-                if (isFinishing()) return;
-                showInstallationFinishedDialog(packageName, status, blockingPackage, statusMessage);
-            });
+        if (mService != null && mCurrentItem != null) {
+            mService.setOnInstallFinished(mCurrentItem.getOperationId(), mInstallFinishedListener);
         }
     }
 
     public void unsetInstallFinishedListener() {
-        if (mService != null) {
-            mService.setOnInstallFinished(null);
+        if (mService != null && mCurrentItem != null) {
+            mService.removeOnInstallFinished(mCurrentItem.getOperationId(), mInstallFinishedListener);
         }
     }
 }

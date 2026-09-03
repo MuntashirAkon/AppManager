@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Parcel;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.SavedStateHandle;
 
 import org.junit.After;
 import org.junit.Before;
@@ -34,9 +35,11 @@ import org.robolectric.shadows.ShadowLooper;
 import org.robolectric.shadows.ShadowPackageManager;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkSource;
@@ -119,6 +122,102 @@ public class PackageInstallerViewModelTest {
         assertSame(latestResult, mViewModel.getCurrentPackage());
         assertNotNull(blockingSource.resolvedApk);
         assertTrue(blockingSource.resolvedApk.isClosed());
+    }
+
+    @Test
+    public void queueAndWorkflowStateSurviveViewModelRecreation() {
+        SavedStateHandle savedStateHandle = new SavedStateHandle();
+        PackageInstallerViewModel firstViewModel = new PackageInstallerViewModel(
+                RuntimeEnvironment.getApplication(), savedStateHandle);
+        ApkQueueItem firstItem = queueItem(getResourceFile("oandbackups/org.billthefarmer.editor/base.apk"));
+        ApkQueueItem secondItem = queueItem(getResourceFile("oandbackups/ademar.textlauncher/base.apk"));
+        firstViewModel.initializeQueue(Arrays.asList(firstItem, secondItem));
+
+        assertSame(firstItem, firstViewModel.startNextQueueItem());
+        firstViewModel.markCurrentItemSubmitted(10);
+        firstViewModel.setInstallResult(new PackageInstallResult(firstItem.getOperationId(),
+                "example.package", 1, "blocking.package", "message"));
+
+        PackageInstallerViewModel restoredViewModel = new PackageInstallerViewModel(
+                RuntimeEnvironment.getApplication(), savedStateHandle);
+        ApkQueueItem ignoredDuplicate = queueItem(
+                getResourceFile("oandbackups/dnsfilter.android/base.apk"));
+        restoredViewModel.initializeQueue(Arrays.asList(ignoredDuplicate));
+
+        assertEquals(firstItem.getOperationId(),
+                Objects.requireNonNull(restoredViewModel.getCurrentQueueItem()).getOperationId());
+        assertEquals(1, restoredViewModel.getPendingItems().size());
+        assertEquals(secondItem.getOperationId(), restoredViewModel.getPendingItems().get(0).getOperationId());
+        assertTrue(restoredViewModel.isCurrentItemSubmitted());
+        assertEquals(10, restoredViewModel.getLastUserId());
+        PackageInstallResult result = Objects.requireNonNull(restoredViewModel.getInstallResult());
+        assertEquals("example.package", result.getPackageName());
+        assertEquals("blocking.package", result.getBlockingPackage());
+
+        restoredViewModel.finishCurrentQueueItem();
+        assertEquals(secondItem.getOperationId(),
+                Objects.requireNonNull(restoredViewModel.startNextQueueItem()).getOperationId());
+        assertFalse(restoredViewModel.hasPendingItems());
+        firstViewModel.onCleared();
+        restoredViewModel.onCleared();
+    }
+
+    @Test
+    public void queueItemOperationIdSurvivesParcelAndJson() throws Exception {
+        ApkQueueItem item = queueItem(getResourceFile("oandbackups/org.billthefarmer.editor/base.apk"));
+        Parcel parcel = Parcel.obtain();
+        try {
+            item.writeToParcel(parcel, 0);
+            parcel.setDataPosition(0);
+            assertEquals(item.getOperationId(),
+                    ApkQueueItem.CREATOR.createFromParcel(parcel).getOperationId());
+        } finally {
+            parcel.recycle();
+        }
+        JSONObject serializedItem = item.serializeToJson();
+        assertEquals(item.getOperationId(),
+                ApkQueueItem.DESERIALIZER.deserialize(serializedItem).getOperationId());
+        serializedItem.remove("operation_id");
+        assertNotNull(ApkQueueItem.DESERIALIZER.deserialize(serializedItem).getOperationId());
+    }
+
+    @Test
+    public void staleActivityCannotRemoveReplacementServiceListener() {
+        PackageInstallerService service = new PackageInstallerService();
+        AtomicInteger oldListenerCalls = new AtomicInteger();
+        AtomicInteger replacementListenerCalls = new AtomicInteger();
+        PackageInstallerService.OnInstallFinished oldListener =
+                installResult -> oldListenerCalls.incrementAndGet();
+        PackageInstallerService.OnInstallFinished replacementListener =
+                installResult -> replacementListenerCalls.incrementAndGet();
+
+        service.setOnInstallFinished("operation", oldListener);
+        service.setOnInstallFinished("operation", replacementListener);
+        service.removeOnInstallFinished("operation", oldListener);
+        service.finishInstallation("operation", "example.package", 1, "Example", null, null);
+        ShadowLooper.idleMainLooper();
+
+        assertEquals(0, oldListenerCalls.get());
+        assertEquals(1, replacementListenerCalls.get());
+    }
+
+    @Test
+    public void packageInstallResultSurvivesParcel() {
+        PackageInstallResult result = new PackageInstallResult(
+                "operation", "example.package", 1, "blocking.package", "message");
+        Parcel parcel = Parcel.obtain();
+        try {
+            result.writeToParcel(parcel, 0);
+            parcel.setDataPosition(0);
+            PackageInstallResult restoredResult = PackageInstallResult.CREATOR.createFromParcel(parcel);
+            assertEquals(result.getOperationId(), restoredResult.getOperationId());
+            assertEquals(result.getPackageName(), restoredResult.getPackageName());
+            assertEquals(result.getStatus(), restoredResult.getStatus());
+            assertEquals(result.getBlockingPackage(), restoredResult.getBlockingPackage());
+            assertEquals(result.getStatusMessage(), restoredResult.getStatusMessage());
+        } finally {
+            parcel.recycle();
+        }
     }
 
     @NonNull

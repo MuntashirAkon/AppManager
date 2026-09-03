@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.history.IJsonSerializer;
@@ -66,6 +67,8 @@ public class ApkQueueItem implements Parcelable, IJsonSerializer {
         return new ApkQueueItem(apkSource.toCachedSource());
     }
 
+    @NonNull
+    private final String mOperationId;
     @Nullable
     private String mPackageName;
     @Nullable
@@ -83,17 +86,20 @@ public class ApkQueueItem implements Parcelable, IJsonSerializer {
     private ArrayList<String> mSelectedSplits;
 
     private ApkQueueItem(@NonNull String packageName, boolean installExisting) {
+        mOperationId = UUID.randomUUID().toString();
         mPackageName = Objects.requireNonNull(packageName);
         mInstallExisting = installExisting;
         assert installExisting;
     }
 
     private ApkQueueItem(@NonNull ApkSource apkSource) {
+        mOperationId = UUID.randomUUID().toString();
         mApkSource = Objects.requireNonNull(apkSource);
         mInstallExisting = false;
     }
 
     protected ApkQueueItem(@NonNull Parcel in) {
+        mOperationId = Objects.requireNonNull(in.readString());
         mPackageName = in.readString();
         mAppLabel = in.readString();
         mInstallExisting = in.readByte() != 0;
@@ -103,6 +109,11 @@ public class ApkQueueItem implements Parcelable, IJsonSerializer {
         mInstallerOptions = ParcelCompat.readParcelable(in, InstallerOptions.class.getClassLoader(), InstallerOptions.class);
         mSelectedSplits = new ArrayList<>();
         in.readStringList(mSelectedSplits);
+    }
+
+    @NonNull
+    public String getOperationId() {
+        return mOperationId;
     }
 
     @Nullable
@@ -171,6 +182,7 @@ public class ApkQueueItem implements Parcelable, IJsonSerializer {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(mOperationId);
         dest.writeString(mPackageName);
         dest.writeString(mAppLabel);
         dest.writeByte((byte) (mInstallExisting ? 1 : 0));
@@ -182,6 +194,8 @@ public class ApkQueueItem implements Parcelable, IJsonSerializer {
     }
 
     protected ApkQueueItem(@NonNull JSONObject jsonObject) throws JSONException {
+        String operationId = JSONUtils.optString(jsonObject, "op_id", null);
+        mOperationId = operationId != null ? operationId : UUID.randomUUID().toString();
         mPackageName = JSONUtils.optString(jsonObject, "package_name", null);
         mAppLabel = JSONUtils.optString(jsonObject, "app_label", null);
         mInstallExisting = jsonObject.optBoolean("install_existing", false);
@@ -199,6 +213,7 @@ public class ApkQueueItem implements Parcelable, IJsonSerializer {
     @Override
     public JSONObject serializeToJson() throws JSONException {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("op_id", mOperationId);
         jsonObject.put("package_name", mPackageName);
         jsonObject.put("app_label", mAppLabel);
         jsonObject.put("install_existing", mInstallExisting);

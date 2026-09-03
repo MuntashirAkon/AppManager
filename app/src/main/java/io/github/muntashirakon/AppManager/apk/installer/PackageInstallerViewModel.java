@@ -21,9 +21,12 @@ import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.SavedStateHandle;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -40,7 +43,26 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.IoUtils;
 
 public class PackageInstallerViewModel extends AndroidViewModel {
+    private static final String STATE_QUEUE_INITIALIZED = "queue_initialized";
+    private static final String STATE_PENDING_ITEMS = "pending_items";
+    private static final String STATE_CURRENT_ITEM = "current_item";
+    private static final String STATE_CURRENT_ITEM_SUBMITTED = "current_item_submitted";
+    private static final String STATE_INSTALL_RESULT = "install_result";
+    private static final String STATE_LAST_USER_ID = "last_user_id";
+    private static final String STATE_INSTALLER_OPTIONS = "installer_options";
+
     private final PackageManager mPm;
+    private final SavedStateHandle mSavedStateHandle;
+    private final ArrayDeque<ApkQueueItem> mPendingItems = new ArrayDeque<>();
+    private boolean mQueueInitialized;
+    @Nullable
+    private ApkQueueItem mCurrentItem;
+    private boolean mCurrentItemSubmitted;
+    @Nullable
+    private PackageInstallResult mInstallResult;
+    private int mLastUserId;
+    @NonNull
+    private final InstallerOptions mInstallerOptions;
     @Nullable
     private PackageParseResult mCurrentPackage;
     @Nullable
@@ -51,8 +73,26 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     private final Set<String> mSelectedSplits = new HashSet<>();
 
     public PackageInstallerViewModel(@NonNull Application application) {
+        this(application, new SavedStateHandle());
+    }
+
+    public PackageInstallerViewModel(@NonNull Application application, @NonNull SavedStateHandle savedStateHandle) {
         super(application);
         mPm = application.getPackageManager();
+        mSavedStateHandle = savedStateHandle;
+        mQueueInitialized = Boolean.TRUE.equals(savedStateHandle.get(STATE_QUEUE_INITIALIZED));
+        ArrayList<ApkQueueItem> pendingItems = savedStateHandle.get(STATE_PENDING_ITEMS);
+        if (pendingItems != null) {
+            mPendingItems.addAll(pendingItems);
+        }
+        mCurrentItem = savedStateHandle.get(STATE_CURRENT_ITEM);
+        mCurrentItemSubmitted = Boolean.TRUE.equals(savedStateHandle.get(STATE_CURRENT_ITEM_SUBMITTED));
+        Integer lastUserId = savedStateHandle.get(STATE_LAST_USER_ID);
+        mLastUserId = lastUserId != null ? lastUserId : UserHandleHidden.myUserId();
+        InstallerOptions installerOptions = savedStateHandle.get(STATE_INSTALLER_OPTIONS);
+        mInstallerOptions = installerOptions != null ? installerOptions : InstallerOptions.getDefault();
+        mSavedStateHandle.set(STATE_INSTALLER_OPTIONS, mInstallerOptions);
+        mInstallResult = savedStateHandle.get(STATE_INSTALL_RESULT);
     }
 
     @Override
@@ -74,6 +114,104 @@ public class PackageInstallerViewModel extends AndroidViewModel {
 
     public LiveData<Boolean> packageUninstalledLiveData() {
         return mPackageUninstalledLiveData;
+    }
+
+    public synchronized boolean isQueueInitialized() {
+        return mQueueInitialized;
+    }
+
+    public synchronized void initializeQueue(@NonNull Collection<ApkQueueItem> initialItems) {
+        if (mQueueInitialized) {
+            return;
+        }
+        mQueueInitialized = true;
+        mPendingItems.addAll(initialItems);
+        persistQueueState();
+    }
+
+    public synchronized void enqueue(@NonNull Collection<ApkQueueItem> items) {
+        mPendingItems.addAll(items);
+        persistQueueState();
+    }
+
+    @Nullable
+    public synchronized ApkQueueItem getCurrentQueueItem() {
+        return mCurrentItem;
+    }
+
+    @Nullable
+    public synchronized ApkQueueItem startNextQueueItem() {
+        if (mCurrentItem != null) {
+            return mCurrentItem;
+        }
+        mCurrentItem = mPendingItems.poll();
+        mCurrentItemSubmitted = false;
+        mInstallResult = null;
+        persistQueueState();
+        persistInstallResult();
+        return mCurrentItem;
+    }
+
+    public synchronized void finishCurrentQueueItem() {
+        mPackageInfoGeneration.incrementAndGet();
+        if (mPackageInfoResult != null) {
+            mPackageInfoResult.cancel(true);
+            mPackageInfoResult = null;
+        }
+        if (mCurrentPackage != null) {
+            IoUtils.closeQuietly(mCurrentPackage.apkFile);
+            mCurrentPackage = null;
+        }
+        mSelectedSplits.clear();
+        mCurrentItem = null;
+        mCurrentItemSubmitted = false;
+        mInstallResult = null;
+        persistQueueState();
+        persistInstallResult();
+    }
+
+    public synchronized boolean hasPendingItems() {
+        return !mPendingItems.isEmpty();
+    }
+
+    @NonNull
+    synchronized ArrayList<ApkQueueItem> getPendingItems() {
+        return new ArrayList<>(mPendingItems);
+    }
+
+    public synchronized void markCurrentItemSubmitted(int lastUserId) {
+        mCurrentItemSubmitted = true;
+        mLastUserId = lastUserId;
+        persistQueueState();
+        mSavedStateHandle.set(STATE_LAST_USER_ID, lastUserId);
+    }
+
+    public synchronized boolean isCurrentItemSubmitted() {
+        return mCurrentItemSubmitted;
+    }
+
+    public synchronized int getLastUserId() {
+        return mLastUserId;
+    }
+
+    @NonNull
+    public synchronized InstallerOptions getInstallerOptions() {
+        return mInstallerOptions;
+    }
+
+    public synchronized void updateInstallerOptions(@NonNull InstallerOptions installerOptions) {
+        mInstallerOptions.copy(installerOptions);
+        mSavedStateHandle.set(STATE_INSTALLER_OPTIONS, mInstallerOptions);
+    }
+
+    public synchronized void setInstallResult(@NonNull PackageInstallResult installResult) {
+        mInstallResult = installResult;
+        persistInstallResult();
+    }
+
+    @Nullable
+    public synchronized PackageInstallResult getInstallResult() {
+        return mInstallResult;
     }
 
     @AnyThread
@@ -161,7 +299,8 @@ public class PackageInstallerViewModel extends AndroidViewModel {
             throwIfInterrupted();
             boolean isSignatureDifferent = installedPackageInfo != null
                     && PackageUtils.isSignatureDifferent(newPackageInfo, installedPackageInfo);
-            return new PackageParseResult(newPackageInfo, installedPackageInfo, apkSource, apkFile,
+            return new PackageParseResult(apkQueueItem.getOperationId(), newPackageInfo, installedPackageInfo,
+                    apkSource, apkFile,
                     packageName, appLabel, appIcon, isSignatureDifferent, trackerCount);
         } catch (Throwable th) {
             IoUtils.closeQuietly(apkFile);
@@ -187,6 +326,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         apkQueueItem.setApkSource(result.apkSource);
         apkQueueItem.setPackageName(result.packageName);
         apkQueueItem.setAppLabel(result.appLabel);
+        persistQueueState();
         if (oldPackage != null && oldPackage.apkFile != result.apkFile) {
             IoUtils.closeQuietly(oldPackage.apkFile);
         }
@@ -228,6 +368,8 @@ public class PackageInstallerViewModel extends AndroidViewModel {
 
     public static final class PackageParseResult {
         @NonNull
+        private final String operationId;
+        @NonNull
         private final PackageInfo newPackageInfo;
         @Nullable
         private final PackageInfo installedPackageInfo;
@@ -244,12 +386,13 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         private final boolean isSignatureDifferent;
         private final int trackerCount;
 
-        private PackageParseResult(@NonNull PackageInfo newPackageInfo,
+        private PackageParseResult(@NonNull String operationId, @NonNull PackageInfo newPackageInfo,
                                    @Nullable PackageInfo installedPackageInfo,
                                    @NonNull ApkSource apkSource, @NonNull ApkFile apkFile,
                                    @NonNull String packageName, @NonNull String appLabel,
                                    @NonNull Drawable appIcon, boolean isSignatureDifferent,
                                    int trackerCount) {
+            this.operationId = operationId;
             this.newPackageInfo = newPackageInfo;
             this.installedPackageInfo = installedPackageInfo;
             this.apkSource = apkSource;
@@ -259,6 +402,11 @@ public class PackageInstallerViewModel extends AndroidViewModel {
             this.appIcon = appIcon;
             this.isSignatureDifferent = isSignatureDifferent;
             this.trackerCount = trackerCount;
+        }
+
+        @NonNull
+        public String getOperationId() {
+            return operationId;
         }
 
         @NonNull
@@ -302,6 +450,21 @@ public class PackageInstallerViewModel extends AndroidViewModel {
 
         public int getTrackerCount() {
             return trackerCount;
+        }
+    }
+
+    private synchronized void persistQueueState() {
+        mSavedStateHandle.set(STATE_QUEUE_INITIALIZED, mQueueInitialized);
+        mSavedStateHandle.set(STATE_PENDING_ITEMS, new ArrayList<>(mPendingItems));
+        mSavedStateHandle.set(STATE_CURRENT_ITEM, mCurrentItem);
+        mSavedStateHandle.set(STATE_CURRENT_ITEM_SUBMITTED, mCurrentItemSubmitted);
+    }
+
+    private synchronized void persistInstallResult() {
+        if (mInstallResult != null) {
+            mSavedStateHandle.set(STATE_INSTALL_RESULT, mInstallResult);
+        } else {
+            mSavedStateHandle.remove(STATE_INSTALL_RESULT);
         }
     }
 
