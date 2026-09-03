@@ -3,17 +3,19 @@
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.app.Application;
-import android.os.FileObserver;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import org.json.JSONException;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.Future;
@@ -23,18 +25,24 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class ProfilesViewModel extends AndroidViewModel {
     private final MutableLiveData<HashMap<BaseProfile, CharSequence>> mProfilesLiveData = new MutableLiveData<>();
+    private final BroadcastReceiver mProfilesChangedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            loadProfiles();
+        }
+    };
     private Future<?> mProfileResult;
-    private FileObserver mFileObserver;
 
     public ProfilesViewModel(@NonNull Application application) {
         super(application);
+        ContextCompat.registerReceiver(application, mProfilesChangedReceiver,
+                new IntentFilter(ProfileManager.ACTION_PROFILES_CHANGED),
+                ContextCompat.RECEIVER_NOT_EXPORTED);
     }
 
     @Override
     protected void onCleared() {
-        if (mFileObserver != null) {
-            mFileObserver.stopWatching();
-        }
+        getApplication().unregisterReceiver(mProfilesChangedReceiver);
         super.onCleared();
     }
 
@@ -50,37 +58,11 @@ public class ProfilesViewModel extends AndroidViewModel {
             synchronized (mProfilesLiveData) {
                 try {
                     HashMap<BaseProfile, CharSequence> profiles = ProfileManager.getProfileSummaries(getApplication());
-                    setUpObserverAndStart();
                     mProfilesLiveData.postValue(profiles);
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
-    }
-
-    private void setUpObserverAndStart() {
-        if (mFileObserver != null) {
-            mFileObserver.startWatching();
-            return;
-        }
-        File profilePath = ProfileManager.getProfilesDir().getFile();
-        if (profilePath != null && !profilePath.exists()) {
-            // Do not set up observer yet
-            return;
-        }
-        int mask = FileObserver.CREATE
-                | FileObserver.DELETE
-                | FileObserver.DELETE_SELF
-                | FileObserver.MOVED_TO
-                | FileObserver.MODIFY
-                | FileObserver.MOVED_FROM;
-        mFileObserver = new FileObserver(profilePath, mask) {
-            @Override
-            public void onEvent(int event, @Nullable String path) {
-                loadProfiles();
-            }
-        };
-        mFileObserver.startWatching();
     }
 }

@@ -106,6 +106,7 @@ public class ProfilesActivity extends BaseActivity implements NewProfileDialogFr
                     try (OutputStream os = innerProfilePath.openOutputStream()) {
                         newProfile.write(os);
                     }
+                    ProfileManager.sendProfilesChangedBroadcast();
                     UIUtils.displayShortToast(R.string.the_import_was_successful);
                     // Load imported profile
                     startActivity(ProfileManager.getProfileIntent(this, newProfile.type, newProfile.profileId));

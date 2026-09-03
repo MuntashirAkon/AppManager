@@ -327,9 +327,10 @@ public class AppsProfileViewModel extends AndroidViewModel {
                     Path profilePath = ProfileManager.requireProfilePathById(mProfile.profileId);
                     try (OutputStream os = profilePath.openOutputStream()) {
                         mProfile.write(os);
-                        mToast.postValue(new Pair<>(R.string.saved_successfully, exitOnSave));
-                        setModified(false);
                     }
+                    ProfileManager.sendProfilesChangedBroadcast();
+                    mToast.postValue(new Pair<>(R.string.saved_successfully, exitOnSave));
+                    setModified(false);
                 } catch (IOException e) {
                     e.printStackTrace();
                     mToast.postValue(new Pair<>(R.string.saving_failed, false));

@@ -79,6 +79,7 @@ public class AddToProfileDialogFragment extends DialogFragment {
                 .setNegativeButton(R.string.cancel, null)
                 .setPositiveButton(R.string.add, (dialog, which, selectedItems) -> ThreadUtils.postOnBackgroundThread(() -> {
                     boolean isSuccess = true;
+                    boolean isChanged = false;
                     for (AppsProfile profile : selectedItems) {
                         Path profilePath = ProfileManager.findProfilePathById(profile.profileId);
                         if (profilePath == null) {
@@ -88,10 +89,14 @@ public class AddToProfileDialogFragment extends DialogFragment {
                         try (OutputStream os = profilePath.openOutputStream()) {
                             profile.appendPackages(packages);
                             profile.write(os);
+                            isChanged = true;
                         } catch (Throwable e) {
                             isSuccess = false;
                             e.printStackTrace();
                         }
+                    }
+                    if (isChanged) {
+                        ProfileManager.sendProfilesChangedBroadcast();
                     }
                     if (isSuccess) {
                         ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.done));

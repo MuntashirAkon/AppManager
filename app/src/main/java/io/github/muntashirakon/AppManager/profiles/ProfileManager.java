@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.profiles.struct.BaseProfile;
 import io.github.muntashirakon.AppManager.profiles.struct.ProfileApplierResult;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
@@ -29,7 +30,15 @@ import io.github.muntashirakon.io.Paths;
 public class ProfileManager {
     public static final String TAG = "ProfileManager";
 
+    public static final String ACTION_PROFILES_CHANGED = BuildConfig.APPLICATION_ID + ".action.PROFILES_CHANGED";
     public static final String PROFILE_EXT = ".am.json";
+
+    public static void sendProfilesChangedBroadcast() {
+        Context context = ContextUtils.getContext();
+        Intent intent = new Intent(ACTION_PROFILES_CHANGED);
+        intent.setPackage(context.getPackageName());
+        context.sendBroadcast(intent);
+    }
 
     @NonNull
     public static Intent getProfileIntent(@NonNull Context context, @BaseProfile.ProfileType int type, @NonNull String profileId) {
@@ -85,7 +94,14 @@ public class ProfileManager {
 
     public static boolean deleteProfile(@NonNull String profileId) {
         Path profilePath = findProfilePathById(profileId);
-        return profilePath == null || !profilePath.exists() || profilePath.delete();
+        if (profilePath == null || !profilePath.exists()) {
+            return true;
+        }
+        boolean deleted = profilePath.delete();
+        if (deleted) {
+            sendProfilesChangedBroadcast();
+        }
+        return deleted;
     }
 
     @NonNull
