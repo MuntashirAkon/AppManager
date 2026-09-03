@@ -31,6 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +40,7 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 
 @RunWith(RobolectricTestRunner.class)
+@Config(sdk = 30)
 public class PackageManagerPermissionControllerTest {
     private static final String PACKAGE_NAME = "sample.package";
     private static final String PERMISSION_NAME = "android.permission.TEST";

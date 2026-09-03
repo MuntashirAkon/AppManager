@@ -17,10 +17,12 @@ import android.os.Build;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 
 @RunWith(RobolectricTestRunner.class)
+@Config(sdk = 30)
 public class PermissionMutationTest {
     private static final String PERMISSION_NAME = "android.permission.TEST";
     private static final int APP_OP = 42;

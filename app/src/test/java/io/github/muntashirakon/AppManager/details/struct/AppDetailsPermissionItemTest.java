@@ -11,11 +11,13 @@ import android.content.pm.PermissionInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.permission.ReadOnlyPermission;
 
 @RunWith(RobolectricTestRunner.class)
+@Config(sdk = 30)
 public class AppDetailsPermissionItemTest {
     @Test
     public void overlayCanRecordFirstToggleWithoutInitialOverride() {
