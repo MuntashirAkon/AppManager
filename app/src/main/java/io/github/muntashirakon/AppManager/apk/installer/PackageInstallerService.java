@@ -139,25 +139,6 @@ public class PackageInstallerService extends ForegroundService {
             public void onStartInstall(int sessionId, String packageName) {
             }
 
-            // MIUI-begin: MIUI 12.5+ workaround
-            @Override
-            public void onAnotherAttemptInMiui(@Nullable ApkFile apkFile) {
-                if (apkFile != null) {
-                    installer.install(apkFile, selectedSplitIds, options, mProgressHandler);
-                }
-            }
-            // MIUI-end
-
-            // HyperOS-begin: HyperOS 2.0+ workaround
-            @Override
-            public void onSecondAttemptInHyperOsWithoutInstaller(@Nullable ApkFile apkFile) {
-                if (apkFile != null) {
-                    options.setInstallerName("com.android.shell");
-                    installer.install(apkFile, selectedSplitIds, options, mProgressHandler);
-                }
-            }
-            // HyerOS-end
-
             @Override
             public void onFinishedInstall(int sessionId, String packageName, int result,
                                           @Nullable String blockingPackage, @Nullable String statusMessage) {
