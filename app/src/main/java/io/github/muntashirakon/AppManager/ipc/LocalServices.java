@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.misc.NoOps;
+import io.github.muntashirakon.AppManager.permission.PermissionOverrideManager;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.FileSystemManager;
@@ -47,6 +48,8 @@ public class LocalServices {
             getFileSystemManager();
             // Update UID
             Ops.setWorkingUid(getAmService().getUid());
+            // A reconnect can follow a phone restart that cleared volatile firewall rules.
+            PermissionOverrideManager.reconcileAll();
         }
     }
 

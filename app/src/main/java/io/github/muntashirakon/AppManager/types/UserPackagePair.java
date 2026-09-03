@@ -9,6 +9,8 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
+import java.util.Objects;
+
 public final class UserPackagePair extends Pair<String, Integer> implements Parcelable {
     public UserPackagePair(String packageName, @UserIdInt int userId) {
         super(packageName, userId);
@@ -21,6 +23,19 @@ public final class UserPackagePair extends Pair<String, Integer> implements Parc
     @UserIdInt
     public int getUserId() {
         return super.second;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof Pair)) return false;
+        Pair<?, ?> other = (Pair<?, ?>) object;
+        return Objects.equals(first, other.first) && Objects.equals(second, other.second);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPackageName(), getUserId());
     }
 
     @NonNull

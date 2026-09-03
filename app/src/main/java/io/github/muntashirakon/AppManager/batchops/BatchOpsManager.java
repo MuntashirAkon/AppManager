@@ -8,6 +8,7 @@ import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -57,9 +58,10 @@ import io.github.muntashirakon.AppManager.batchops.struct.IBatchOpOptions;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Logger;
+import io.github.muntashirakon.AppManager.permission.PermissionChangeResult;
+import io.github.muntashirakon.AppManager.permission.PermissionControllerRegistry;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.NotificationInfo;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
@@ -672,6 +674,9 @@ public class BatchOpsManager {
         List<UserPackagePair> failedPackages = new ArrayList<>();
         float lastProgress = mProgressHandler != null ? mProgressHandler.getLastProgress() : 0;
         int max = info.size();
+        PermissionControllerRegistry permissionControllers =
+                PermissionControllerRegistry.getInstance();
+        AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat();
         UserPackagePair pair;
         if (permissions.length == 1 && permissions[0].equals("*")) {
             // Wildcard detected
@@ -679,13 +684,17 @@ public class BatchOpsManager {
                 updateProgress(lastProgress, i + 1);
                 pair = info.getPair(i);
                 try {
-                    permissions = PackageUtils.getPermissionsForPackage(pair.getPackageName(), pair.getUserId());
+                    PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(
+                            pair.getPackageName(), PackageManager.GET_PERMISSIONS
+                                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES,
+                            pair.getUserId());
+                    permissions = packageInfo.requestedPermissions;
                     if (permissions == null) continue;
                     for (String permission : permissions) {
-                        if (isGrant) {
-                            PermissionCompat.grantPermission(pair.getPackageName(), permission, pair.getUserId());
-                        } else {
-                            PermissionCompat.revokePermission(pair.getPackageName(), permission, pair.getUserId());
+                        PermissionChangeResult result = permissionControllers.trySetGrantedForBatch(
+                                packageInfo, permission, pair.getUserId(), appOpsManager, isGrant);
+                        if (!result.isSuccessful()) {
+                            throw new IllegalStateException(result.getMessage(), result.getCause());
                         }
                     }
                 } catch (Throwable e) {
@@ -697,16 +706,29 @@ public class BatchOpsManager {
             for (int i = 0; i < max; ++i) {
                 updateProgress(lastProgress, i + 1);
                 pair = info.getPair(i);
+                PackageInfo packageInfo;
+                try {
+                    packageInfo = PackageManagerCompat.getPackageInfo(pair.getPackageName(),
+                            PackageManager.GET_PERMISSIONS
+                                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES,
+                            pair.getUserId());
+                } catch (Throwable e) {
+                    log("====> op=GRANT_OR_REVOKE_PERMISSIONS, pkg=" + pair, e);
+                    failedPackages.add(pair);
+                    continue;
+                }
                 for (String permission : permissions) {
                     try {
-                        if (isGrant) {
-                            PermissionCompat.grantPermission(pair.getPackageName(), permission, pair.getUserId());
-                        } else {
-                            PermissionCompat.revokePermission(pair.getPackageName(), permission, pair.getUserId());
+                        PermissionChangeResult result = permissionControllers.trySetGrantedForBatch(
+                                packageInfo, permission, pair.getUserId(), appOpsManager, isGrant);
+                        if (!result.isSuccessful()) {
+                            throw new IllegalStateException(result.getMessage(), result.getCause());
                         }
                     } catch (Throwable e) {
                         log("====> op=GRANT_OR_REVOKE_PERMISSIONS, pkg=" + pair, e);
-                        failedPackages.add(pair);
+                        if (!failedPackages.contains(pair)) {
+                            failedPackages.add(pair);
+                        }
                     }
                 }
             }

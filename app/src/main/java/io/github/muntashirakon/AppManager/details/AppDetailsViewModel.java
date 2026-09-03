@@ -89,6 +89,9 @@ import io.github.muntashirakon.AppManager.misc.AdvancedSearchView.ChoiceGenerato
 import io.github.muntashirakon.AppManager.permission.DevelopmentPermission;
 import io.github.muntashirakon.AppManager.permission.PermUtils;
 import io.github.muntashirakon.AppManager.permission.Permission;
+import io.github.muntashirakon.AppManager.permission.PermissionControllerRegistry;
+import io.github.muntashirakon.AppManager.permission.PermissionState;
+import io.github.muntashirakon.AppManager.permission.SpecialPermissionController;
 import io.github.muntashirakon.AppManager.permission.PermissionException;
 import io.github.muntashirakon.AppManager.permission.ReadOnlyPermission;
 import io.github.muntashirakon.AppManager.permission.RuntimePermission;
@@ -1633,7 +1636,15 @@ public class AppDetailsViewModel extends AndroidViewModel {
             } else {
                 permission = new ReadOnlyPermission(permissionName, isGranted, appOp, appOpAllowed, permissionFlags);
             }
-            AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionInfo, permission, flags);
+            AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionInfo, permission, flags,
+                    PermUtils.isModifiable(permission),
+                    SpecialPermissionController.getInstance().getUserAction(permissionName));
+            PermissionState state = PermissionControllerRegistry.getInstance().getOverlayState(
+                    packageInfo.packageName, mUserId, permissionName);
+            if (state == PermissionState.GRANTED || state == PermissionState.DENIED) {
+                // There is an overlay state
+                appDetailsItem.setInitialOverlayState(state.isGranted());
+            }
             appDetailsItem.name = permissionName;
             return appDetailsItem;
         } catch (Throwable th) {

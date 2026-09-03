@@ -3,6 +3,8 @@
 package io.github.muntashirakon.AppManager;
 
 import android.app.Application;
+
+import io.github.muntashirakon.AppManager.permission.PermissionOverrideManager;
 import android.content.Context;
 import android.os.Build;
 import android.sun.security.provider.JavaKeyStoreProvider;
@@ -37,6 +39,7 @@ public class AppManager extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        PermissionOverrideManager.reconcileAll();
         Thread.setDefaultUncaughtExceptionHandler(new AMExceptionHandler(this));
         AppearanceUtils.init(this);
         Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);

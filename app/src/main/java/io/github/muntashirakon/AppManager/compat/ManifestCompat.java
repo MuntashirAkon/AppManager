@@ -46,6 +46,8 @@ public final class ManifestCompat {
         @RequiresApi(Build.VERSION_CODES.P)
         public static final String MANAGE_SENSORS = "android.permission.MANAGE_SENSORS";
         public static final String MANAGE_USERS = "android.permission.MANAGE_USERS";
+        @RequiresApi(Build.VERSION_CODES.O)
+        public static final String NETWORK_SETTINGS = "android.permission.NETWORK_SETTINGS";
         public static final String READ_PRIVILEGED_PHONE_STATE = "android.permission.READ_PRIVILEGED_PHONE_STATE";
         public static final String REAL_GET_TASKS = "android.permission.REAL_GET_TASKS";
         public static final String REVOKE_RUNTIME_PERMISSIONS = "android.permission.REVOKE_RUNTIME_PERMISSIONS";

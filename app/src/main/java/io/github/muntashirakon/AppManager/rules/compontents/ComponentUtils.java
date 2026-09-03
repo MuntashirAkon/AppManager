@@ -7,7 +7,7 @@ import android.app.AppOpsManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageInfo;
-import android.os.RemoteException;
+import android.content.pm.PackageManager;
 import android.util.Xml;
 
 import androidx.annotation.NonNull;
@@ -30,8 +30,10 @@ import java.util.stream.Collectors;
 
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
-import io.github.muntashirakon.AppManager.compat.PermissionCompat;
+import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.permission.PackageManagerPermissionController;
+import io.github.muntashirakon.AppManager.permission.PermissionOverrideManager;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
@@ -44,6 +46,8 @@ import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
 public final class ComponentUtils {
+    public static final String TAG = ComponentUtils.class.getSimpleName();
+
     public static boolean isTracker(String componentName) {
         return StaticDataset.getSearchableTrackerSignatures().search(componentName).length > 0;
     }
@@ -161,6 +165,8 @@ public final class ComponentUtils {
 
     @WorkerThread
     public static void removeAllRules(@NonNull String packageName, int userHandle) {
+        // Reset overlays
+        PermissionOverrideManager.removeNow(packageName, userHandle);
         int uid = PackageUtils.getAppUid(new UserPackagePair(packageName, userHandle));
         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
             // Remove all blocking rules
@@ -184,12 +190,27 @@ public final class ComponentUtils {
                 e.printStackTrace();
             }
             // Grant configured permissions
+            PackageInfo packageInfo = null;
+            try {
+                packageInfo = PackageManagerCompat.getPackageInfo(packageName,
+                        PackageManager.GET_PERMISSIONS
+                                | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES,
+                        userHandle);
+            } catch (Throwable e) {
+                Log.e(TAG, "Cannot resolve package %s for user %d", e, packageName, userHandle);
+            }
+            PackageManagerPermissionController permissionController =
+                    PackageManagerPermissionController.getInstance();
             for (PermissionRule entry : cb.getAll(PermissionRule.class)) {
                 try {
-                    PermissionCompat.grantPermission(packageName, entry.name, userHandle);
+                    if (packageInfo == null) {
+                        throw new IllegalStateException("Package is not installed for the user");
+                    }
+                    permissionController.setPlatformGranted(packageInfo, entry.name, userHandle,
+                            true);
                     cb.removeEntry(entry);
-                } catch (RemoteException e) {
-                    Log.e("ComponentUtils", "Cannot revoke permission %s for package %s", e, entry.name,
+                } catch (Throwable e) {
+                    Log.e(TAG, "Cannot grant permission %s for package %s", e, entry.name,
                             packageName);
                 }
             }
