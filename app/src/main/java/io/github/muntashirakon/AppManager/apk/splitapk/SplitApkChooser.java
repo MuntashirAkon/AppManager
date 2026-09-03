@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.apk.splitapk;
 
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerViewModel;
+import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerViewModel.PackageParseResult;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 
@@ -59,10 +61,7 @@ public class SplitApkChooser extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ApkFile apkFile = mViewModel.getApkFile();
-        if (apkFile == null) {
-            throw new IllegalArgumentException("ApkFile cannot be empty.");
-        }
+        ApkFile apkFile = Objects.requireNonNull(mViewModel.getCurrentPackage()).getApkFile();
         if (!apkFile.isSplit()) {
             throw new RuntimeException("Apk file does not contain any split.");
         }
@@ -106,8 +105,10 @@ public class SplitApkChooser extends Fragment {
         try {
             HashSet<String> splitNames = new HashSet<>();
             // See if the app has been installed
-            if (mViewModel.getInstalledPackageInfo() != null) {
-                ApplicationInfo info = mViewModel.getInstalledPackageInfo().applicationInfo;
+            PackageParseResult currentPackage = Objects.requireNonNull(mViewModel.getCurrentPackage());
+            PackageInfo installedPackageInfo = currentPackage.getInstalledPackageInfo();
+            if (installedPackageInfo != null) {
+                ApplicationInfo info = installedPackageInfo.applicationInfo;
                 try (ApkFile installedApkFile = ApkSource.getApkSource(info).resolve()) {
                     for (ApkFile.Entry apkEntry : installedApkFile.getEntries()) {
                         splitNames.add(apkEntry.name);

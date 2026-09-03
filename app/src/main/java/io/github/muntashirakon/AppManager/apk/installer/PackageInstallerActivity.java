@@ -55,6 +55,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.apk.ApkSource;
 import io.github.muntashirakon.AppManager.apk.CachedApkSource;
+import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerViewModel.PackageParseResult;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewFragment;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
@@ -137,7 +138,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         try {
             ApkSource apkSource = mCurrentItem.getApkSource();
             if (apkSource == null) {
-                apkSource = mModel.getApkSource();
+                apkSource = getCurrentPackage().getApkSource();
             }
             Intent appDetailsIntent = AppDetailsActivity.getIntent(this, apkSource, true);
             appDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -209,14 +210,14 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
                 mApkQueue.add(ApkQueueItem.fromApkSource(apkSource));
             }
         }
-        mModel.packageInfoLiveData().observe(this, newPackageInfo -> {
-            if (newPackageInfo == null) {
+        mModel.packageParseResultLiveData().observe(this, packageResult -> {
+            if (packageResult == null) {
                 mDialogHelper.showParseFailedDialog(v -> triggerCancel());
                 return;
             }
             // TODO: Resolve dependencies
-            mDialogHelper.onParseSuccess(mModel.getAppLabel(), getVersionInfoWithTrackers(newPackageInfo),
-                    mModel.getAppIcon(), v -> displayInstallerOptions((dialog1, which, options) -> {
+            mDialogHelper.onParseSuccess(packageResult.getAppLabel(), getVersionInfoWithTrackers(packageResult),
+                    packageResult.getAppIcon(), v -> displayInstallerOptions((dialog1, which, options) -> {
                         if (options != null) {
                             mInstallerOptions.copy(options);
                         }
@@ -227,7 +228,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             if (success) {
                 install();
             } else {
-                showInstallationFinishedDialog(mModel.getPackageName(), getString(R.string.failed_to_uninstall_app),
+                showInstallationFinishedDialog(getCurrentPackage().getPackageName(), getString(R.string.failed_to_uninstall_app),
                         null, false);
             }
         });
@@ -266,7 +267,8 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     private void displayChangesOrInstallationPrompt() {
         // This dialog either calls triggerInstall() or triggerCancel()
         boolean displayChanges;
-        PackageInfo installedPackageInfo = mModel.getInstalledPackageInfo();
+        PackageParseResult currentPackage = getCurrentPackage();
+        PackageInfo installedPackageInfo = currentPackage.getInstalledPackageInfo();
         int actionRes;
         if (installedPackageInfo == null) {
             // App not installed or data not cleared
@@ -276,7 +278,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             // App is installed or the app is uninstalled without clearing data, or the app is uninstalled,
             // but it's a system app
             long installedVersionCode = PackageInfoCompat.getLongVersionCode(installedPackageInfo);
-            long thisVersionCode = PackageInfoCompat.getLongVersionCode(mModel.getNewPackageInfo());
+            long thisVersionCode = PackageInfoCompat.getLongVersionCode(currentPackage.getNewPackageInfo());
             displayChanges = Prefs.Installer.displayChanges();
             if (installedVersionCode < thisVersionCode) {
                 // Needs update
@@ -290,8 +292,8 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             }
         }
         if (displayChanges) {
-            WhatsNewFragment dialogFragment = WhatsNewFragment.getInstance(mModel.getNewPackageInfo(),
-                    mModel.getInstalledPackageInfo());
+            WhatsNewFragment dialogFragment = WhatsNewFragment.getInstance(currentPackage.getNewPackageInfo(),
+                    currentPackage.getInstalledPackageInfo());
             mDialogHelper.showWhatsNewDialog(actionRes, dialogFragment, new InstallerDialogHelper.OnClickButtonsListener() {
                 @Override
                 public void triggerInstall() {
@@ -309,9 +311,10 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     }
 
     private void displayInstallationPrompt(int actionRes, boolean splitOnly) {
-        if (mModel.getApkFile().isSplit()) {
-            SplitApkChooser fragment = SplitApkChooser.getNewInstance(getVersionInfoWithTrackers(
-                    mModel.getNewPackageInfo()), getString(actionRes));
+        PackageParseResult currentPackage = getCurrentPackage();
+        if (currentPackage.getApkFile().isSplit()) {
+            SplitApkChooser fragment = SplitApkChooser.getNewInstance(
+                    getVersionInfoWithTrackers(currentPackage), getString(actionRes));
             mDialogHelper.showApkChooserDialog(actionRes, fragment, this, mAppInfoClickListener);
             return;
         }
@@ -323,7 +326,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     }
 
     private void displayInstallerOptions(InstallerOptionsFragment.OnClickListener clickListener) {
-        PackageInfo packageInfo = mModel.getNewPackageInfo();
+        PackageInfo packageInfo = getCurrentPackage().getNewPackageInfo();
         InstallerOptionsFragment dialog = InstallerOptionsFragment.getInstance(packageInfo.packageName,
                 ApplicationInfoCompat.isTestOnly(packageInfo.applicationInfo), mInstallerOptions, clickListener);
         dialog.show(getSupportFragmentManager(), InstallerOptionsFragment.TAG);
@@ -337,7 +340,8 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
 
     @UiThread
     private void install() {
-        if (mModel.getApkFile().hasObb() && !SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES)) {
+        if (getCurrentPackage().getApkFile().hasObb()
+                && !SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES)) {
             // Need to request permissions if not given
             mStoragePermission.request(granted -> {
                 if (granted) launchInstallerService();
@@ -386,7 +390,8 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             mPackageName = intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME);
             Intent confirmIntent = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_INTENT, Intent.class);
             try {
-                if (mPackageName == null || confirmIntent == null) throw new Exception("Empty confirmation intent.");
+                if (mPackageName == null || confirmIntent == null)
+                    throw new Exception("Empty confirmation intent.");
                 Log.d(TAG, "Requesting user confirmation for package %s", mPackageName);
                 mConfirmIntentLauncher.launch(confirmIntent);
             } catch (Exception e) {
@@ -410,7 +415,9 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     @Override
     public void triggerInstall() {
         // Calls install(), reinstall() (which in terms called install()) and triggerCancel()
-        if (mModel.getInstalledPackageInfo() == null) {
+        PackageParseResult currentPackage = getCurrentPackage();
+        PackageInfo installedPackageInfo = currentPackage.getInstalledPackageInfo();
+        if (installedPackageInfo == null) {
             // App not installed
             install();
             return;
@@ -427,8 +434,8 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
                 PackageInstallerActivity.this.triggerCancel();
             }
         };
-        long installedVersionCode = PackageInfoCompat.getLongVersionCode(mModel.getInstalledPackageInfo());
-        long thisVersionCode = PackageInfoCompat.getLongVersionCode(mModel.getNewPackageInfo());
+        long installedVersionCode = PackageInfoCompat.getLongVersionCode(installedPackageInfo);
+        long thisVersionCode = PackageInfoCompat.getLongVersionCode(currentPackage.getNewPackageInfo());
         if (installedVersionCode > thisVersionCode && !SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES)) {
             // Need to uninstall and install again
             SpannableStringBuilder builder = new SpannableStringBuilder()
@@ -438,13 +445,13 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             mDialogHelper.showDowngradeReinstallWarning(builder, reinstallListener, mAppInfoClickListener);
             return;
         }
-        if (!mModel.isSignatureDifferent()) {
+        if (!currentPackage.isSignatureDifferent()) {
             // Signature is either matched or the app isn't installed
             install();
             return;
         }
         // Signature is different
-        ApplicationInfo info = mModel.getInstalledPackageInfo().applicationInfo;  // Installed package info is never null here.
+        ApplicationInfo info = installedPackageInfo.applicationInfo;
         boolean isSystem = ApplicationInfoCompat.isSystemApp(info);
         SpannableStringBuilder builder = new SpannableStringBuilder();
         if (isSystem) {
@@ -506,11 +513,17 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     }
 
     @NonNull
-    private String getVersionInfoWithTrackers(@NonNull final PackageInfo newPackageInfo) {
+    private PackageParseResult getCurrentPackage() {
+        return Objects.requireNonNull(mModel.getCurrentPackage());
+    }
+
+    @NonNull
+    private String getVersionInfoWithTrackers(@NonNull PackageParseResult packageResult) {
         Resources res = getApplication().getResources();
+        PackageInfo newPackageInfo = packageResult.getNewPackageInfo();
         long newVersionCode = PackageInfoCompat.getLongVersionCode(newPackageInfo);
         String newVersionName = newPackageInfo.versionName;
-        int trackers = mModel.getTrackerCount();
+        int trackers = packageResult.getTrackerCount();
         StringBuilder sb = new StringBuilder(res.getString(R.string.version_name_with_code, newVersionName, newVersionCode));
         if (trackers > 0) {
             sb.append(", ").append(res.getQuantityString(R.plurals.no_of_trackers, trackers, trackers));
@@ -604,4 +617,3 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         }
     }
 }
-
