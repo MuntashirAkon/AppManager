@@ -35,6 +35,7 @@ import org.robolectric.shadows.ShadowLooper;
 import org.robolectric.shadows.ShadowPackageManager;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
@@ -194,8 +195,11 @@ public class PackageInstallerViewModelTest {
         ApkQueueItem restoredItem = ApkQueueItem.DESERIALIZER.deserialize(serializedItem);
         assertEquals(item.getOperationId(), restoredItem.getOperationId());
         assertTrue(restoredItem.isTestOnly());
-        serializedItem.remove("operation_id");
-        assertNotNull(ApkQueueItem.DESERIALIZER.deserialize(serializedItem).getOperationId());
+        serializedItem.remove("op_id");
+        serializedItem.remove("test_only");
+        ApkQueueItem legacyItem = ApkQueueItem.DESERIALIZER.deserialize(serializedItem);
+        assertNotNull(legacyItem.getOperationId());
+        assertFalse(legacyItem.isTestOnly());
     }
 
     @Test

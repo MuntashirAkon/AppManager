@@ -29,6 +29,7 @@ import io.github.muntashirakon.AppManager.history.JsonDeserializer;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
 public class InstallerOptions implements Parcelable, IJsonSerializer {
@@ -51,6 +52,7 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
                                                             @Nullable String packageName,
                                                             boolean isTestOnly) {
         int requestedUserId = requestedOptions.getUserId();
+        int currentUserId = UserHandleHidden.myUserId();
         boolean canTargetRequestedUser;
         try {
             canTargetRequestedUser = requestedUserId != UserHandleHidden.USER_NULL
@@ -58,7 +60,10 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
         } catch (IllegalArgumentException ignore) {
             canTargetRequestedUser = false;
         }
-        int currentUserId = UserHandleHidden.myUserId();
+        if (canTargetRequestedUser && requestedUserId >= 0 && requestedUserId != currentUserId
+                && !ArrayUtils.contains(Users.getAllUserIds(), requestedUserId)) {
+            canTargetRequestedUser = false;
+        }
         int effectiveUserId = canTargetRequestedUser ? requestedUserId : currentUserId;
         return resolveEffectiveOptions(requestedOptions, currentUserId,
                 canTargetRequestedUser,
@@ -132,6 +137,18 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
         }
     }
 
+    @SuppressLint("InlinedApi")
+    public static int normalizeInstallScenario(int installScenario) {
+        switch (installScenario) {
+            case PackageManager.INSTALL_SCENARIO_DEFAULT:
+            case PackageManager.INSTALL_SCENARIO_FAST:
+            case PackageManager.INSTALL_SCENARIO_BULK:
+                return installScenario;
+            default:
+                return PackageManager.INSTALL_SCENARIO_DEFAULT;
+        }
+    }
+
     @UserIdInt
     private int mUserId;
     private int mInstallLocation;
@@ -180,7 +197,7 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
         mOriginatingUri = ParcelCompat.readParcelable(in, Uri.class.getClassLoader(), Uri.class);
         mSetOriginatingPackage = ParcelCompat.readBoolean(in);
         setPackageSource(in.readInt());
-        mInstallScenario = in.readInt();
+        setInstallScenario(in.readInt());
         mRequestUpdateOwnership = ParcelCompat.readBoolean(in);
         mDisableApkVerification = ParcelCompat.readBoolean(in);
         mSignApkFiles = ParcelCompat.readBoolean(in);
@@ -196,7 +213,7 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
         mOriginatingUri = options.mOriginatingUri;
         mSetOriginatingPackage = options.mSetOriginatingPackage;
         setPackageSource(options.mPackageSource);
-        mInstallScenario = options.mInstallScenario;
+        setInstallScenario(options.mInstallScenario);
         mRequestUpdateOwnership = options.mRequestUpdateOwnership;
         mDisableApkVerification = options.mDisableApkVerification;
         mSignApkFiles = options.mSignApkFiles;
@@ -228,9 +245,10 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
         mOriginatingPackage = JSONUtils.optString(jsonObject, "originating_package");
         String originatingUri = JSONUtils.optString(jsonObject, "originating_uri", null);
         mOriginatingUri = originatingUri != null ? Uri.parse(originatingUri) : null;
-        mSetOriginatingPackage = jsonObject.optBoolean("set_originating_package", Prefs.Installer.isSetOriginatingPackage());
+        mSetOriginatingPackage = jsonObject.optBoolean("set_originating_package",
+                Prefs.Installer.isSetOriginatingPackage());
         setPackageSource(jsonObject.getInt("package_source"));
-        mInstallScenario = jsonObject.getInt("install_scenario");
+        setInstallScenario(jsonObject.getInt("install_scenario"));
         mRequestUpdateOwnership = jsonObject.getBoolean("request_update_ownership");
         mDisableApkVerification = jsonObject.getBoolean("disable_apk_verification");
         mSignApkFiles = jsonObject.getBoolean("sign_apk_files");
@@ -343,7 +361,7 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
     }
 
     public void setInstallScenario(int installScenario) {
-        mInstallScenario = installScenario;
+        mInstallScenario = normalizeInstallScenario(installScenario);
     }
 
     public boolean requestUpdateOwnership() {

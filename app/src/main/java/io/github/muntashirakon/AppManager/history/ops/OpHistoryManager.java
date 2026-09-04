@@ -95,7 +95,17 @@ public final class OpHistoryManager {
                 return BatchOpsService.getServiceIntent(context, batchQueueItem);
             }
             case HISTORY_TYPE_INSTALLER: {
-                ApkQueueItem apkQueueItem = ApkQueueItem.DESERIALIZER.deserialize(item.jsonData);
+                ApkQueueItem apkQueueItem;
+                try {
+                    apkQueueItem = ApkQueueItem.DESERIALIZER.deserialize(item.jsonData);
+                    apkQueueItem.validateForReplay();
+                } catch (JSONException e) {
+                    throw (JSONException) new JSONException("Cannot replay installer history: "
+                            + e.getMessage()).initCause(e);
+                } catch (RuntimeException e) {
+                    throw (JSONException) new JSONException("Cannot replay installer history: invalid saved data.")
+                            .initCause(e);
+                }
                 Intent intent = new Intent(context, PackageInstallerService.class);
                 IntentCompat.putWrappedParcelableExtra(intent, PackageInstallerService.EXTRA_QUEUE_ITEM, apkQueueItem);
                 return intent;

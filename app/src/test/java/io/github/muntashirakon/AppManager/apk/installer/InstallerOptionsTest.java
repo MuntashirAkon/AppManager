@@ -71,9 +71,11 @@ public class InstallerOptionsTest {
 
         options.setInstallLocation(99);
         options.setPackageSource(99);
+        options.setInstallScenario(99);
 
         assertEquals(PackageInfo.INSTALL_LOCATION_AUTO, options.getInstallLocation());
         assertEquals(PackageInstaller.PACKAGE_SOURCE_UNSPECIFIED, options.getPackageSource());
+        assertEquals(PackageManager.INSTALL_SCENARIO_DEFAULT, options.getInstallScenario());
     }
 
     @Test

@@ -42,6 +42,7 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
+import io.github.muntashirakon.lifecycle.SingleLiveEvent;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 
@@ -83,10 +84,9 @@ public class OpHistoryActivity extends BaseActivity {
         mViewModel.getServiceLauncherIntentLiveData().observe(this, intent -> {
             if (intent != null) {
                 ContextCompat.startForegroundService(this, intent);
-            } else {
-                UIUtils.displayShortToast(R.string.failed);
             }
         });
+        mViewModel.getServiceLauncherErrorLiveData().observe(this, UIUtils::displayShortToast);
         OpHistoryManager.getHistoryAddedLiveData().observe(this, opHistory -> {
             // New history added
             mProgressIndicator.show();
@@ -189,6 +189,7 @@ public class OpHistoryActivity extends BaseActivity {
         private final MutableLiveData<List<OpHistoryItem>> mOpHistoriesLiveData = new MutableLiveData<>();
         private final MutableLiveData<Boolean> mClearHistoryLiveData = new MutableLiveData<>();
         private final MutableLiveData<Intent> mServiceLauncherIntentLiveData = new MutableLiveData<>();
+        private final MutableLiveData<String> mServiceLauncherErrorLiveData = new SingleLiveEvent<>();
         private Future<?> mOpHistoriesResult;
 
         public OpHistoryViewModel(@NonNull Application application) {
@@ -205,6 +206,10 @@ public class OpHistoryActivity extends BaseActivity {
 
         public MutableLiveData<Intent> getServiceLauncherIntentLiveData() {
             return mServiceLauncherIntentLiveData;
+        }
+
+        public LiveData<String> getServiceLauncherErrorLiveData() {
+            return mServiceLauncherErrorLiveData;
         }
 
         public void loadOpHistories() {
@@ -245,7 +250,7 @@ public class OpHistoryActivity extends BaseActivity {
                     mServiceLauncherIntentLiveData.postValue(intent);
                 } catch (JSONException e) {
                     Log.w(TAG, e.getMessage(), e);
-                    mServiceLauncherIntentLiveData.postValue(null);
+                    mServiceLauncherErrorLiveData.postValue(e.getMessage());
                 }
             });
         }

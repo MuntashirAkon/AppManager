@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -209,7 +210,7 @@ public class ApkQueueItem implements Parcelable, IJsonSerializer {
 
     protected ApkQueueItem(@NonNull JSONObject jsonObject) throws JSONException {
         String operationId = JSONUtils.optString(jsonObject, "op_id", null);
-        mOperationId = operationId != null ? operationId : UUID.randomUUID().toString();
+        mOperationId = !TextUtils.isEmpty(operationId) ? operationId : UUID.randomUUID().toString();
         mPackageName = JSONUtils.optString(jsonObject, "package_name", null);
         mAppLabel = JSONUtils.optString(jsonObject, "app_label", null);
         mInstallExisting = jsonObject.optBoolean("install_existing", false);
@@ -222,6 +223,25 @@ public class ApkQueueItem implements Parcelable, IJsonSerializer {
         JSONObject installerOptions = jsonObject.optJSONObject("installer_options");
         mInstallerOptions = installerOptions != null ? InstallerOptions.DESERIALIZER.deserialize(installerOptions) : null;
         mSelectedSplits = JSONUtils.getArray(jsonObject.optJSONArray("selected_splits"));
+    }
+
+    public void validateForReplay() throws JSONException {
+        if (mInstallExisting) {
+            if (TextUtils.isEmpty(mPackageName)) {
+                throw new JSONException("Package name is missing.");
+            }
+        } else {
+            if (mApkSource == null) {
+                throw new JSONException("APK source is missing.");
+            }
+            if (mSelectedSplits == null || mSelectedSplits.isEmpty()) {
+                throw new JSONException("Selected APK splits are missing.");
+            }
+        }
+        if (mInstallerOptions != null) {
+            setInstallerOptions(InstallerOptions.resolveEffectiveOptions(mInstallerOptions,
+                    mPackageName, mTestOnly));
+        }
     }
 
     @NonNull
