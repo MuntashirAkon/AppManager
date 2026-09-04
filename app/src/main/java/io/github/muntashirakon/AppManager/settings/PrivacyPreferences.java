@@ -76,8 +76,6 @@ public class PrivacyPreferences extends PreferenceFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setEnterTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, true));
-        setReturnTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, false));
     }
 
     @Override
