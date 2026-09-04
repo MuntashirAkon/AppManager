@@ -56,8 +56,10 @@ import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.N
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.progress.QueuedProgressHandler;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -150,7 +152,12 @@ public class PackageInstallerService extends ForegroundService {
                 if (success) {
                     // Block trackers if requested
                     if (options.isBlockTrackers()) {
-                        ComponentUtils.blockTrackingComponents(new UserPackagePair(packageName, options.getUserId()));
+                        try {
+                            blockTrackers(packageName, options.getUserId(), apkQueueItem.isTestOnly());
+                        } catch (Exception e) {
+                            // Tracker blocking is optional
+                            Log.w(TAG, "Could not finish tracker blocking for " + packageName, e);
+                        }
                     }
                     // Perform force dex optimization if requested
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && options.isForceDexOpt()) {
@@ -197,6 +204,24 @@ public class PackageInstallerService extends ForegroundService {
                 if (apkSource instanceof CachedApkSource) {
                     ((CachedApkSource) apkSource).cleanup();
                 }
+            }
+        }
+    }
+
+    private static void blockTrackers(@NonNull String packageName, int requestedUserId,
+                                      boolean isTestOnly) {
+        int[] userIds = requestedUserId == UserHandleHidden.USER_ALL
+                ? Users.getAllUserIds()
+                : new int[]{requestedUserId};
+        for (int userId : userIds) {
+            if (!SelfPermissions.canModifyAppComponentStates(userId, packageName, isTestOnly)) {
+                Log.w(TAG, "Skipping tracker blocking for user %d: capability is no longer available.", userId);
+                continue;
+            }
+            try {
+                ComponentUtils.blockTrackingComponents(new UserPackagePair(packageName, userId));
+            } catch (Exception e) {
+                Log.w(TAG, "Could not block trackers for " + packageName + " for user " + userId, e);
             }
         }
     }
