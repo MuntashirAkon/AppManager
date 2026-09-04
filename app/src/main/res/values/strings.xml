@@ -865,6 +865,13 @@
     <string name="has_net_policy">Net policy</string>
     <string name="net_policy">Net policy</string>
     <string name="initializing">Initializing…</string>
+    <string name="determining_working_mode">Determining working mode…</string>
+    <string name="enabling_wireless_debugging">Enabling wireless debugging…</string>
+    <string name="wireless_debugging_setup_required">Wireless debugging setup required…</string>
+    <string name="connecting_to_adb">Connecting to ADB…</string>
+    <string name="pairing_with_adb">Pairing with ADB…</string>
+    <string name="incomplete_usb_debugging">USB debugging setup incomplete…</string>
+    <string name="launching">Launching…</string>
     <string name="add_to_profile">Add to profile</string>
     <string name="add">Add</string>
     <string name="os_version">OS version</string>

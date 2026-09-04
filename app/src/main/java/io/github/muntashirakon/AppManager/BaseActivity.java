@@ -7,17 +7,22 @@ import android.app.KeyguardManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.biometric.BiometricPrompt;
 import androidx.biometric.BiometricPrompt.AuthenticationResult;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,6 +55,7 @@ public abstract class BaseActivity extends PerProcessActivity {
 
     @Nullable
     private AlertDialog mAlertDialog;
+    private View mAlertDialogView;
     @Nullable
     private SecurityAndOpsViewModel mViewModel;
     private boolean mDisplayLoader = true;
@@ -138,12 +144,18 @@ public abstract class BaseActivity extends PerProcessActivity {
                         super.onAuthenticationFailed();
                     }
                 });
-        mAlertDialog = UIUtils.getProgressDialog(this, getString(R.string.initializing), true);
+        mAlertDialogView = getLayoutInflater().inflate(R.layout.dialog_progress_circular, null);
+        mAlertDialog = new MaterialAlertDialogBuilder(this)
+                .setCancelable(false)
+                .setView(mAlertDialogView)
+                .create();
+        setProgressText(R.string.authenticating);
         Log.d(TAG, "Waiting to be authenticated.");
         mViewModel.authenticationStatus().observe(this, status -> {
             switch (status) {
                 case Ops.STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING:
                     Log.d(TAG, "Try auto-connecting to wireless debugging.");
+                    setProgressText(R.string.enabling_wireless_debugging);
                     mDisplayLoader = false;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         mViewModel.autoConnectWirelessDebugging();
@@ -151,6 +163,7 @@ public abstract class BaseActivity extends PerProcessActivity {
                     } // fall-through
                 case Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED:
                     Log.d(TAG, "Display wireless debugging chooser (pair or connect)");
+                    setProgressText(R.string.wireless_debugging_setup_required);
                     mDisplayLoader = false;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         Ops.connectWirelessDebugging(this, mViewModel);
@@ -158,21 +171,25 @@ public abstract class BaseActivity extends PerProcessActivity {
                     } // fall-through
                 case Ops.STATUS_ADB_CONNECT_REQUIRED:
                     Log.d(TAG, "Display connect dialog.");
+                    setProgressText(R.string.connecting_to_adb);
                     mDisplayLoader = false;
                     Ops.connectAdbInput(this, mViewModel);
                     return;
                 case Ops.STATUS_ADB_PAIRING_REQUIRED:
                     Log.d(TAG, "Display pairing dialog.");
+                    setProgressText(R.string.pairing_with_adb);
                     mDisplayLoader = false;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         Ops.pairAdbInput(this, mViewModel);
                         return;
                     } // fall-through
                 case Ops.STATUS_FAILURE_ADB_NEED_MORE_PERMS:
+                    setProgressText(R.string.incomplete_usb_debugging);
                     Ops.displayIncompleteUsbDebuggingMessage(this);
                 case Ops.STATUS_SUCCESS:
                 case Ops.STATUS_FAILURE:
                     Log.d(TAG, "Authentication completed.");
+                    setProgressText(R.string.launching);
                     mViewModel.setAuthenticating(false);
                     if (mAlertDialog != null) mAlertDialog.dismiss();
                     Ops.setAuthenticated(this, true);
@@ -230,9 +247,20 @@ public abstract class BaseActivity extends PerProcessActivity {
     private void handleMigrationAndModeOfOp() {
         // Authentication was successful
         Log.d(TAG, "Authenticated");
+        setProgressText(R.string.initializing);
         // Set mode of operation
         if (mViewModel != null) {
+            setProgressText(R.string.determining_working_mode);
             mViewModel.setModeOfOps();
+        }
+    }
+
+    private void setProgressText(@StringRes int text) {
+        if (mAlertDialogView != null) {
+            TextView textView = mAlertDialogView.findViewById(android.R.id.text1);
+            if (textView != null) {
+                textView.setText(text);
+            }
         }
     }
 
