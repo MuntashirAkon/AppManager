@@ -124,10 +124,12 @@ public class InstallerPreferences extends PreferenceFragment {
             return true;
         });
         // Set installer app
+        boolean canSetInstallerApp = SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES);
         mInstallerAppPref = Objects.requireNonNull(findPreference("installer_installer_app"));
-        mInstallerAppPref.setEnabled(SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES));
+        mInstallerAppPref.setEnabled(canSetInstallerApp);
         mInstallerApp = Prefs.Installer.getInstallerPackageName();
-        mInstallerAppPref.setSummary(PackageUtils.getPackageLabel(mPm, mInstallerApp));
+        mInstallerAppPref.setSummary(PackageUtils.getPackageLabel(mPm,
+                canSetInstallerApp ? mInstallerApp : BuildConfig.APPLICATION_ID));
         mInstallerAppPref.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(requireActivity())
                     .setTitle(R.string.installer_app)
