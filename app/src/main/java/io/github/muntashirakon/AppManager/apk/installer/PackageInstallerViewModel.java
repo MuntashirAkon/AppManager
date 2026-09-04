@@ -36,6 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkSource;
+import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -328,6 +329,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         apkQueueItem.setApkSource(result.apkSource);
         apkQueueItem.setPackageName(result.packageName);
         apkQueueItem.setAppLabel(result.appLabel);
+        apkQueueItem.setTestOnly(ApplicationInfoCompat.isTestOnly(result.newPackageInfo.applicationInfo));
         persistQueueState();
         if (oldPackage != null && oldPackage.apkFile != result.apkFile) {
             IoUtils.closeQuietly(oldPackage.apkFile);

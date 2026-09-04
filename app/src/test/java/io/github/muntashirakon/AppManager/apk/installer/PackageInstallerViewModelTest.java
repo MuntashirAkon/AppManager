@@ -179,18 +179,21 @@ public class PackageInstallerViewModelTest {
     @Test
     public void queueItemOperationIdSurvivesParcelAndJson() throws Exception {
         ApkQueueItem item = queueItem(getResourceFile("oandbackups/org.billthefarmer.editor/base.apk"));
+        item.setTestOnly(true);
         Parcel parcel = Parcel.obtain();
         try {
             item.writeToParcel(parcel, 0);
             parcel.setDataPosition(0);
-            assertEquals(item.getOperationId(),
-                    ApkQueueItem.CREATOR.createFromParcel(parcel).getOperationId());
+            ApkQueueItem restoredItem = ApkQueueItem.CREATOR.createFromParcel(parcel);
+            assertEquals(item.getOperationId(), restoredItem.getOperationId());
+            assertTrue(restoredItem.isTestOnly());
         } finally {
             parcel.recycle();
         }
         JSONObject serializedItem = item.serializeToJson();
-        assertEquals(item.getOperationId(),
-                ApkQueueItem.DESERIALIZER.deserialize(serializedItem).getOperationId());
+        ApkQueueItem restoredItem = ApkQueueItem.DESERIALIZER.deserialize(serializedItem);
+        assertEquals(item.getOperationId(), restoredItem.getOperationId());
+        assertTrue(restoredItem.isTestOnly());
         serializedItem.remove("operation_id");
         assertNotNull(ApkQueueItem.DESERIALIZER.deserialize(serializedItem).getOperationId());
     }
