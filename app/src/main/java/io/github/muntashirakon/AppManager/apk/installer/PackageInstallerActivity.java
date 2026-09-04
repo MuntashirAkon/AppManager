@@ -420,8 +420,11 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     @UiThread
     private void launchInstallerService() {
         assert mCurrentItem != null;
-        int userId = mInstallerOptions.getUserId();
-        mCurrentItem.setInstallerOptions(mInstallerOptions);
+        PackageInfo packageInfo = getCurrentPackage().getNewPackageInfo();
+        InstallerOptions effectiveOptions = InstallerOptions.resolveEffectiveOptions(mInstallerOptions,
+                packageInfo.packageName, ApplicationInfoCompat.isTestOnly(packageInfo.applicationInfo));
+        int userId = effectiveOptions.getUserId();
+        mCurrentItem.setInstallerOptions(effectiveOptions);
         mCurrentItem.setSelectedSplits(mModel.getSelectedSplitsForInstallation());
         int lastUserId = userId == UserHandleHidden.USER_ALL ? UserHandleHidden.myUserId() : userId;
         boolean canDisplayNotification = Utils.canDisplayNotification(this);

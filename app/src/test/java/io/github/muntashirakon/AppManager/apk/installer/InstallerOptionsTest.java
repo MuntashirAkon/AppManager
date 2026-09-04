@@ -21,6 +21,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
@@ -166,6 +167,44 @@ public class InstallerOptionsTest {
         returnedOptions.setPackageSource(PackageInstaller.PACKAGE_SOURCE_OTHER);
         assertEquals(PackageInstaller.PACKAGE_SOURCE_STORE,
                 storeItem.getInstallerOptions().getPackageSource());
+    }
+
+    @Test
+    public void unavailableCapabilitiesAreRemovedFromEffectiveSnapshot() throws Exception {
+        InstallerOptions requested = InstallerOptions.getDefault();
+        requested.setUserId(10);
+        requested.setInstallerName("custom.installer");
+        requested.setDisableApkVerification(true);
+        requested.setSignApkFiles(true);
+        requested.setBlockTrackers(true);
+        String requestedJson = requested.serializeToJson().toString();
+
+        InstallerOptions effective = InstallerOptions.resolveEffectiveOptions(requested, 0,
+                false, false, false, false, false);
+
+        assertEquals(0, effective.getUserId());
+        assertEquals(BuildConfig.APPLICATION_ID, effective.getInstallerName());
+        assertEquals(false, effective.isDisableApkVerification());
+        assertEquals(false, effective.isSignApkFiles());
+        assertEquals(false, effective.isBlockTrackers());
+        assertEquals(requestedJson, requested.serializeToJson().toString());
+    }
+
+    @Test
+    public void trackerCapabilityIsReevaluatedForSelectedUser() {
+        InstallerOptions requested = InstallerOptions.getDefault();
+        requested.setUserId(10);
+        requested.setBlockTrackers(true);
+
+        InstallerOptions allowed = InstallerOptions.resolveEffectiveOptions(requested, 0,
+                true, true, true, true, true);
+        InstallerOptions unavailable = InstallerOptions.resolveEffectiveOptions(requested, 0,
+                true, true, true, true, false);
+
+        assertEquals(10, allowed.getUserId());
+        assertEquals(true, allowed.isBlockTrackers());
+        assertEquals(10, unavailable.getUserId());
+        assertEquals(false, unavailable.isBlockTrackers());
     }
 
     private static ApkQueueItem queueItem(String originatingPackage) throws Exception {

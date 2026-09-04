@@ -129,6 +129,7 @@ public class InstallerOptionsFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         mPackageName = Objects.requireNonNull(requireArguments().getString(ARG_PACKAGE_NAME));
         mIsTestOnly = requireArguments().getBoolean(ARG_TEST_ONLY_APP, true);
+        mOptions = InstallerOptions.resolveEffectiveOptions(mOptions, mPackageName, mIsTestOnly);
         mDialogView = View.inflate(requireActivity(), R.layout.dialog_installer_options, null);
         mUserSelectionSpinner = mDialogView.findViewById(R.id.user);
         mInstallLocationSpinner = mDialogView.findViewById(R.id.install_location);
@@ -145,7 +146,7 @@ public class InstallerOptionsFragment extends DialogFragment {
         mPm = requireContext().getPackageManager();
         boolean canInstallForOtherUsers = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS_FULL);
         int selectedUser = getSelectedUserId(canInstallForOtherUsers);
-        boolean canBlockTrackers = SelfPermissions.canModifyAppComponentStates(selectedUser, mPackageName, mIsTestOnly);
+        mOptions.setUserId(selectedUser);
         initUserSpinner(canInstallForOtherUsers);
         initInstallLocationSpinner();
         initPackageSourceSpinner();
@@ -163,8 +164,7 @@ public class InstallerOptionsFragment extends DialogFragment {
         forceDexOptSwitch.setVisibility(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? View.VISIBLE : View.GONE);
         forceDexOptSwitch.setChecked(mOptions.isForceDexOpt());
         forceDexOptSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> mOptions.setForceDexOpt(isChecked));
-        mBlockTrackersSwitch.setChecked(canBlockTrackers && mOptions.isBlockTrackers());
-        mBlockTrackersSwitch.setEnabled(canBlockTrackers);
+        updateBlockTrackersAvailability(selectedUser);
         mBlockTrackersSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> mOptions.setBlockTrackers(isChecked));
         return new MaterialAlertDialogBuilder(requireActivity())
                 .setTitle(R.string.installer_options)
@@ -172,7 +172,8 @@ public class InstallerOptionsFragment extends DialogFragment {
                 .setCancelable(false)
                 .setPositiveButton(R.string.ok, (dialog, which) -> {
                     Bundle result = new Bundle();
-                    result.putParcelable(RESULT_INSTALLER_OPTIONS, InstallerOptions.copyOf(mOptions));
+                    result.putParcelable(RESULT_INSTALLER_OPTIONS,
+                            InstallerOptions.resolveEffectiveOptions(mOptions, mPackageName, mIsTestOnly));
                     getParentFragmentManager().setFragmentResult(REQUEST_KEY, result);
                 })
                 .setNegativeButton(R.string.cancel, null)
@@ -223,13 +224,20 @@ public class InstallerOptionsFragment extends DialogFragment {
         mUserSelectionSpinner.setAdapter(userAdapter);
         mUserSelectionSpinner.setSelection(selectedUserPosition);
         mUserSelectionSpinner.setOnItemClickListener((parent, view, position, id) -> {
-            mOptions.setUserId(userIds[position]);
-            // Update block trackers option
-            boolean canBlockTrackers = SelfPermissions.canModifyAppComponentStates(selectedUser, mPackageName, mIsTestOnly);
-            mBlockTrackersSwitch.setChecked(canBlockTrackers && mOptions.isBlockTrackers());
-            mBlockTrackersSwitch.setEnabled(canBlockTrackers);
+            int selectedUserId = userIds[position];
+            mOptions.setUserId(selectedUserId);
+            updateBlockTrackersAvailability(selectedUserId);
         });
         mUserSelectionSpinner.setEnabled(canInstallForOtherUsers);
+    }
+
+    private void updateBlockTrackersAvailability(int selectedUserId) {
+        boolean canBlockTrackers = InstallerOptions.canBlockTrackers(selectedUserId, mPackageName, mIsTestOnly);
+        if (!canBlockTrackers) {
+            mOptions.setBlockTrackers(false);
+        }
+        mBlockTrackersSwitch.setChecked(mOptions.isBlockTrackers());
+        mBlockTrackersSwitch.setEnabled(canBlockTrackers);
     }
 
     private void initInstallLocationSpinner() {

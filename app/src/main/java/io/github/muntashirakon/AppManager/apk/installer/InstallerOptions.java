@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.content.pm.PackageInfo;
@@ -22,9 +23,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.history.IJsonSerializer;
 import io.github.muntashirakon.AppManager.history.JsonDeserializer;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
 public class InstallerOptions implements Parcelable, IJsonSerializer {
@@ -36,6 +40,71 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
     @NonNull
     public static InstallerOptions copyOf(@NonNull InstallerOptions options) {
         return new InstallerOptions(options);
+    }
+
+    /**
+     * Returns a snapshot containing only options that can be honored with the current privileges.
+     * The requested options are not modified.
+     */
+    @NonNull
+    public static InstallerOptions resolveEffectiveOptions(@NonNull InstallerOptions requestedOptions,
+                                                            @Nullable String packageName,
+                                                            boolean isTestOnly) {
+        int requestedUserId = requestedOptions.getUserId();
+        boolean canTargetRequestedUser;
+        try {
+            canTargetRequestedUser = requestedUserId != UserHandleHidden.USER_NULL
+                    && SelfPermissions.checkCrossUserPermission(requestedUserId, true);
+        } catch (IllegalArgumentException ignore) {
+            canTargetRequestedUser = false;
+        }
+        int currentUserId = UserHandleHidden.myUserId();
+        int effectiveUserId = canTargetRequestedUser ? requestedUserId : currentUserId;
+        return resolveEffectiveOptions(requestedOptions, currentUserId,
+                canTargetRequestedUser,
+                SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES),
+                SelfPermissions.isSystemOrRootOrShell(), Signer.canSign(),
+                canBlockTrackers(effectiveUserId, packageName, isTestOnly));
+    }
+
+    @NonNull
+    static InstallerOptions resolveEffectiveOptions(@NonNull InstallerOptions requestedOptions,
+                                                     @UserIdInt int currentUserId,
+                                                     boolean canTargetRequestedUser,
+                                                     boolean canSetInstallerName,
+                                                     boolean canDisableVerification,
+                                                     boolean canSignApks,
+                                                     boolean canBlockTrackers) {
+        InstallerOptions effectiveOptions = copyOf(requestedOptions);
+        if (!canTargetRequestedUser) {
+            effectiveOptions.setUserId(currentUserId);
+        }
+        if (!canSetInstallerName) {
+            effectiveOptions.setInstallerName(BuildConfig.APPLICATION_ID);
+        }
+        if (!canDisableVerification) {
+            effectiveOptions.setDisableApkVerification(false);
+        }
+        if (!canSignApks) {
+            effectiveOptions.setSignApkFiles(false);
+        }
+        if (!canBlockTrackers) {
+            effectiveOptions.setBlockTrackers(false);
+        }
+        return effectiveOptions;
+    }
+
+    public static boolean canBlockTrackers(@UserIdInt int userId, @Nullable String packageName,
+                                           boolean isTestOnly) {
+        if (userId != UserHandleHidden.USER_ALL) {
+            return SelfPermissions.canModifyAppComponentStates(userId, packageName, isTestOnly);
+        }
+        for (int targetUserId : Users.getAllUserIds()) {
+            if (!SelfPermissions.canModifyAppComponentStates(targetUserId, packageName, isTestOnly)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static int normalizeInstallLocation(int installLocation) {

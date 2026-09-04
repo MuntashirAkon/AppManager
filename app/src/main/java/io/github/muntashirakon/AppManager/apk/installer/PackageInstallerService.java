@@ -128,9 +128,11 @@ public class PackageInstallerService extends ForegroundService {
             return;
         }
         InstallerOptions queuedOptions = apkQueueItem.getInstallerOptions();
-        final InstallerOptions options = queuedOptions != null
+        InstallerOptions requestedOptions = queuedOptions != null
                 ? queuedOptions
                 : InstallerOptions.getDefault();
+        final InstallerOptions options = InstallerOptions.resolveEffectiveOptions(requestedOptions,
+                apkQueueItem.getPackageName(), apkQueueItem.isTestOnly());
         List<String> selectedSplitIds = Objects.requireNonNull(apkQueueItem.getSelectedSplits());
         // Install package
         PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
