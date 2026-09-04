@@ -160,9 +160,10 @@ public class InstallerPreferences extends PreferenceFragment {
             return true;
         });
         // Disable verification
+        boolean canDisableVerification = SelfPermissions.isSystemOrRootOrShell();
         SwitchPreferenceCompat disableVerification = Objects.requireNonNull(findPreference("installer_disable_verification"));
-        disableVerification.setEnabled(SelfPermissions.isSystemOrRootOrShell());
-        disableVerification.setChecked(Prefs.Installer.isDisableApkVerification());
+        disableVerification.setEnabled(canDisableVerification);
+        disableVerification.setChecked(canDisableVerification && Prefs.Installer.isDisableApkVerification());
         // Update ownership
         SwitchPreferenceCompat updateOwnership = Objects.requireNonNull(findPreference("installer_update_ownership"));
         updateOwnership.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE);
