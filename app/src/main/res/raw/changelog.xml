@@ -2,6 +2,36 @@
 <changelog>
     <release
         type="release"
+        version="v4.1.1"
+        code="451"
+        date="4 September 2026">
+        <new>Added option to revoke internet permission in Android 14 onwards via eBPF rules</new>
+        <note subtext="true">
+            To block the internet for an app, go to "Uses permission" of the app and revoke the
+            internet permission.[br/]
+            The eBPF rules are lost after a reboot. App Manager attempts to restore the rules right
+            after a reboot. However, in ADB mode, it might take a while to connect to wireless
+            debugging depending on the availability of a Wi-Fi connection. This might allow
+            applications that start after a reboot to use internet.
+        </note>
+        <new title="Editor">Added support for editing [tt].bat[/tt] files</new>
+
+        <improve title="Installer">Improved installation reliability and performance</improve>
+        <improve title="Permissions">Improved permission management</improve>
+        <improve title="ADB">Improved ADB pairing, connections, and mode handling</improve>
+        <improve>Improved settings transitions and startup messages</improve>
+
+        <fix>Fixed displaying profiles after creating a profile for the first time</fix>
+        <fix>Fixed intercepting browser URLs</fix>
+        <fix>Fixed listing applications on Android 17</fix>
+        <fix>Fixed title ordering in What's New dialog</fix>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v4.1.0...v4.1.1"]v4.1.0...v4.1.1[/a]
+        </note>
+    </release>
+    <release
+        type="release"
         version="v4.1.0"
         code="450"
         date="28 June 2026">

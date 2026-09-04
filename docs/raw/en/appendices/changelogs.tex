@@ -1,6 +1,34 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
 \chapter{Changelogs}\label{ch:changelogs} %%##$chapter-title>>
 
+\section{v4.1.1 (451)}\label{sec:v4.1.1-(451)}
+
+App Manager v4.1.1 improves permissions, installation, ADB connectivity, and several other parts of the application.
+Visit \href{app-manager://settings/about/version}{Settings > About > Version/Changelog} for details.
+
+\subsection{Revoke Internet Permission}
+App Manager can now block internet for individual applications utilizing the eBPF rules in root or ADB mode.
+To block internet for an application, go to the ``Uses permissions'' tab and click on the toggle button
+next to \texttt{android.permission.INTERNET} to revoke the permisson.
+
+\paragraph{Known Limitation} The eBPF rules are lost after a reboot. App Manager attempts to restore
+the rules right after a reboot. However, in ADB mode, it might take a while to connect to wireless
+debugging depending on the availability of a Wi-Fi connection. This might allow applications that
+start after a reboot to use internet.
+
+\subsection{Others}
+\begin{itemize}
+    \item Added support for editing \texttt{.bat} files
+    \item Improved installation reliability and performance
+    \item Improved permission management
+    \item Improved ADB pairing, connections, and mode handling
+    \item Improved settings transitions and startup messages
+    \item Fixed displaying profiles after creating a profile for the first time
+    \item Fixed intercepting browser URLs
+    \item Fixed listing applications on Android 17
+    \item Fixed title ordering in What's New dialog.
+\end{itemize}
+
 \section{v4.1.0 (450)}\label{sec:v4.1.0-(450)}
 
 App Manager v4.1.0 comes with massive performance boosts, newly added ADB backup support, UI

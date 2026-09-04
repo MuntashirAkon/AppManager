@@ -1,0 +1,8 @@
+- Added option to revoke internet permission in Android 14+
+- Fixed intercepting browser URLs
+- Fixed listing applications on Android 17
+- Fixed title ordering in What's New dialog
+- Improved installation reliability and performance
+- Improved permission management and ADB connectivity
+- Added support for editing .bat files
+- Improved settings transitions and startup messages.

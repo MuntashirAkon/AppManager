@@ -14,8 +14,8 @@ android {
         applicationId 'io.github.muntashirakon.AppManager'
         minSdk min_sdk
         targetSdk target_sdk
-        versionCode 450
-        versionName "4.1.0"
+        versionCode 451
+        versionName "4.1.1"
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += [
