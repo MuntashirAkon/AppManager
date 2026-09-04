@@ -62,7 +62,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     private PackageInstallResult mInstallResult;
     private int mLastUserId;
     @NonNull
-    private final InstallerOptions mInstallerOptions;
+    private InstallerOptions mInstallerOptions;
     @Nullable
     private PackageParseResult mCurrentPackage;
     @Nullable
@@ -90,7 +90,9 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         Integer lastUserId = savedStateHandle.get(STATE_LAST_USER_ID);
         mLastUserId = lastUserId != null ? lastUserId : UserHandleHidden.myUserId();
         InstallerOptions installerOptions = savedStateHandle.get(STATE_INSTALLER_OPTIONS);
-        mInstallerOptions = installerOptions != null ? installerOptions : InstallerOptions.getDefault();
+        mInstallerOptions = installerOptions != null
+                ? InstallerOptions.copyOf(installerOptions)
+                : InstallerOptions.getDefault();
         mSavedStateHandle.set(STATE_INSTALLER_OPTIONS, mInstallerOptions);
         mInstallResult = savedStateHandle.get(STATE_INSTALL_RESULT);
     }
@@ -196,11 +198,11 @@ public class PackageInstallerViewModel extends AndroidViewModel {
 
     @NonNull
     public synchronized InstallerOptions getInstallerOptions() {
-        return mInstallerOptions;
+        return InstallerOptions.copyOf(mInstallerOptions);
     }
 
     public synchronized void updateInstallerOptions(@NonNull InstallerOptions installerOptions) {
-        mInstallerOptions.copy(installerOptions);
+        mInstallerOptions = InstallerOptions.copyOf(installerOptions);
         mSavedStateHandle.set(STATE_INSTALLER_OPTIONS, mInstallerOptions);
     }
 

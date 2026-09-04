@@ -611,7 +611,7 @@ public final class PackageInstallerCompat {
     public boolean install(@NonNull ApkFile apkFile, @NonNull List<String> selectedSplitIds,
                            @NonNull InstallerOptions options, @Nullable ProgressHandler progressHandler) {
         ThreadUtils.ensureWorkerThread();
-        InstallerOptions attemptOptions = copyOptions(options);
+        InstallerOptions attemptOptions = InstallerOptions.copyOf(options);
         boolean disableVerification = options.isDisableApkVerification();
         PackageVerifierSettingsCoordinator.acquire(disableVerification);
         try {
@@ -725,7 +725,7 @@ public final class PackageInstallerCompat {
     public boolean install(@NonNull Path[] apkFiles, @NonNull String packageName, @NonNull InstallerOptions options,
                            @Nullable ProgressHandler progressHandler) {
         ThreadUtils.ensureWorkerThread();
-        InstallerOptions attemptOptions = copyOptions(options);
+        InstallerOptions attemptOptions = InstallerOptions.copyOf(options);
         boolean disableVerification = options.isDisableApkVerification();
         PackageVerifierSettingsCoordinator.acquire(disableVerification);
         try {
@@ -1175,13 +1175,6 @@ public final class PackageInstallerCompat {
             Log.e(TAG, "Could not close package installer session.", e);
         }
         mSession = null;
-    }
-
-    @NonNull
-    static InstallerOptions copyOptions(@NonNull InstallerOptions options) {
-        InstallerOptions copy = InstallerOptions.getDefault();
-        copy.copy(options);
-        return copy;
     }
 
     static void applyRetryOptions(@NonNull PackageInstallerRetryPolicy.Action retryAction,

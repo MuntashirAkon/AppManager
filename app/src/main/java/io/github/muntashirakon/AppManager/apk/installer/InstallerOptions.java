@@ -2,7 +2,10 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
+import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -30,6 +33,36 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
         return new InstallerOptions();
     }
 
+    @NonNull
+    public static InstallerOptions copyOf(@NonNull InstallerOptions options) {
+        return new InstallerOptions(options);
+    }
+
+    public static int normalizeInstallLocation(int installLocation) {
+        switch (installLocation) {
+            case PackageInfo.INSTALL_LOCATION_AUTO:
+            case PackageInfo.INSTALL_LOCATION_INTERNAL_ONLY:
+            case PackageInfo.INSTALL_LOCATION_PREFER_EXTERNAL:
+                return installLocation;
+            default:
+                return PackageInfo.INSTALL_LOCATION_AUTO;
+        }
+    }
+
+    @SuppressLint("InlinedApi")
+    public static int normalizePackageSource(int packageSource) {
+        switch (packageSource) {
+            case PackageInstaller.PACKAGE_SOURCE_UNSPECIFIED:
+            case PackageInstaller.PACKAGE_SOURCE_OTHER:
+            case PackageInstaller.PACKAGE_SOURCE_STORE:
+            case PackageInstaller.PACKAGE_SOURCE_LOCAL_FILE:
+            case PackageInstaller.PACKAGE_SOURCE_DOWNLOADED_FILE:
+                return packageSource;
+            default:
+                return PackageInstaller.PACKAGE_SOURCE_UNSPECIFIED;
+        }
+    }
+
     @UserIdInt
     private int mUserId;
     private int mInstallLocation;
@@ -50,12 +83,12 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
 
     private InstallerOptions() {
         mUserId = UserHandleHidden.myUserId();
-        mInstallLocation = Prefs.Installer.getInstallLocation();
+        setInstallLocation(Prefs.Installer.getInstallLocation());
         mInstallerName = Prefs.Installer.getInstallerPackageName();
         mOriginatingPackage = null;
         mOriginatingUri = null;
         mSetOriginatingPackage = Prefs.Installer.isSetOriginatingPackage();
-        mPackageSource = Prefs.Installer.getPackageSource();
+        setPackageSource(Prefs.Installer.getPackageSource());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             // If the user is always installing apps in the background, we expect that the user does
             // want to install an app quite fast.
@@ -72,12 +105,12 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
 
     protected InstallerOptions(@NonNull Parcel in) {
         mUserId = in.readInt();
-        mInstallLocation = in.readInt();
+        setInstallLocation(in.readInt());
         mInstallerName = in.readString();
         mOriginatingPackage = in.readString();
         mOriginatingUri = ParcelCompat.readParcelable(in, Uri.class.getClassLoader(), Uri.class);
         mSetOriginatingPackage = ParcelCompat.readBoolean(in);
-        mPackageSource = in.readInt();
+        setPackageSource(in.readInt());
         mInstallScenario = in.readInt();
         mRequestUpdateOwnership = ParcelCompat.readBoolean(in);
         mDisableApkVerification = ParcelCompat.readBoolean(in);
@@ -86,14 +119,14 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
         mBlockTrackers = ParcelCompat.readBoolean(in);
     }
 
-    public void copy(@NonNull InstallerOptions options) {
+    private InstallerOptions(@NonNull InstallerOptions options) {
         mUserId = options.mUserId;
-        mInstallLocation = options.mInstallLocation;
+        setInstallLocation(options.mInstallLocation);
         mInstallerName = options.mInstallerName;
         mOriginatingPackage = options.mOriginatingPackage;
         mOriginatingUri = options.mOriginatingUri;
         mSetOriginatingPackage = options.mSetOriginatingPackage;
-        mPackageSource = options.mPackageSource;
+        setPackageSource(options.mPackageSource);
         mInstallScenario = options.mInstallScenario;
         mRequestUpdateOwnership = options.mRequestUpdateOwnership;
         mDisableApkVerification = options.mDisableApkVerification;
@@ -121,13 +154,13 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
 
     protected InstallerOptions(@NonNull JSONObject jsonObject) throws JSONException {
         mUserId = jsonObject.getInt("user_id");
-        mInstallLocation = jsonObject.getInt("install_location");
+        setInstallLocation(jsonObject.getInt("install_location"));
         mInstallerName = JSONUtils.optString(jsonObject, "installer_name", null);
         mOriginatingPackage = JSONUtils.optString(jsonObject, "originating_package");
         String originatingUri = JSONUtils.optString(jsonObject, "originating_uri", null);
         mOriginatingUri = originatingUri != null ? Uri.parse(originatingUri) : null;
         mSetOriginatingPackage = jsonObject.optBoolean("set_originating_package", Prefs.Installer.isSetOriginatingPackage());
-        mPackageSource = jsonObject.getInt("package_source");
+        setPackageSource(jsonObject.getInt("package_source"));
         mInstallScenario = jsonObject.getInt("install_scenario");
         mRequestUpdateOwnership = jsonObject.getBoolean("request_update_ownership");
         mDisableApkVerification = jsonObject.getBoolean("disable_apk_verification");
@@ -190,7 +223,7 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
     }
 
     public void setInstallLocation(int installLocation) {
-        mInstallLocation = installLocation;
+        mInstallLocation = normalizeInstallLocation(installLocation);
     }
 
     @NonNull
@@ -233,7 +266,7 @@ public class InstallerOptions implements Parcelable, IJsonSerializer {
     }
 
     public void setPackageSource(int packageSource) {
-        mPackageSource = packageSource;
+        mPackageSource = normalizePackageSource(packageSource);
     }
 
     public int getInstallScenario() {

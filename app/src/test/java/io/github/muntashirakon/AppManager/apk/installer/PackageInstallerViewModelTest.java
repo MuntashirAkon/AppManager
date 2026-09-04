@@ -163,6 +163,20 @@ public class PackageInstallerViewModelTest {
     }
 
     @Test
+    public void installerOptionsAreStoredAndReturnedAsSnapshots() {
+        InstallerOptions callerOptions = InstallerOptions.getDefault();
+        callerOptions.setUserId(10);
+
+        mViewModel.updateInstallerOptions(callerOptions);
+        callerOptions.setUserId(11);
+        assertEquals(10, mViewModel.getInstallerOptions().getUserId());
+
+        InstallerOptions returnedOptions = mViewModel.getInstallerOptions();
+        returnedOptions.setUserId(12);
+        assertEquals(10, mViewModel.getInstallerOptions().getUserId());
+    }
+
+    @Test
     public void queueItemOperationIdSurvivesParcelAndJson() throws Exception {
         ApkQueueItem item = queueItem(getResourceFile("oandbackups/org.billthefarmer.editor/base.apk"));
         Parcel parcel = Parcel.obtain();

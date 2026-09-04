@@ -127,8 +127,9 @@ public class PackageInstallerService extends ForegroundService {
         if (apkQueueItem == null) {
             return;
         }
-        InstallerOptions options = apkQueueItem.getInstallerOptions() != null
-                ? apkQueueItem.getInstallerOptions()
+        InstallerOptions queuedOptions = apkQueueItem.getInstallerOptions();
+        final InstallerOptions options = queuedOptions != null
+                ? queuedOptions
                 : InstallerOptions.getDefault();
         List<String> selectedSplitIds = Objects.requireNonNull(apkQueueItem.getSelectedSplits());
         // Install package

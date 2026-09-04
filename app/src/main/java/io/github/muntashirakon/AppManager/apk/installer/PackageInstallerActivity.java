@@ -237,6 +237,14 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         }
         mServiceBound = true;
         mInstallerOptions = mModel.getInstallerOptions();
+        getSupportFragmentManager().setFragmentResultListener(
+                InstallerOptionsFragment.REQUEST_KEY, this, (requestKey, result) -> {
+                    InstallerOptions options = InstallerOptionsFragment.getResult(result);
+                    if (options != null) {
+                        mModel.updateInstallerOptions(options);
+                        mInstallerOptions = mModel.getInstallerOptions();
+                    }
+                });
         if (!mModel.isQueueInitialized()) {
             mModel.initializeQueue(getQueueItems(intent));
         }
@@ -264,11 +272,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
             }
             // TODO: Resolve dependencies
             mDialogHelper.onParseSuccess(packageResult.getAppLabel(), getVersionInfoWithTrackers(packageResult),
-                    packageResult.getAppIcon(), v -> displayInstallerOptions((dialog1, which, options) -> {
-                        if (options != null) {
-                            mModel.updateInstallerOptions(options);
-                        }
-                    }));
+                    packageResult.getAppIcon(), v -> displayInstallerOptions());
             displayChangesOrInstallationPrompt();
         });
         mModel.packageUninstalledLiveData().observe(this, success -> {
@@ -387,10 +391,10 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
         } else triggerInstall();
     }
 
-    private void displayInstallerOptions(InstallerOptionsFragment.OnClickListener clickListener) {
+    private void displayInstallerOptions() {
         PackageInfo packageInfo = getCurrentPackage().getNewPackageInfo();
         InstallerOptionsFragment dialog = InstallerOptionsFragment.getInstance(packageInfo.packageName,
-                ApplicationInfoCompat.isTestOnly(packageInfo.applicationInfo), mInstallerOptions, clickListener);
+                ApplicationInfoCompat.isTestOnly(packageInfo.applicationInfo), mInstallerOptions);
         dialog.show(getSupportFragmentManager(), InstallerOptionsFragment.TAG);
     }
 

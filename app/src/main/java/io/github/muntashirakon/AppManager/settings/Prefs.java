@@ -26,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.apk.installer.InstallerOptions;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
@@ -407,11 +408,13 @@ public final class Prefs {
         }
 
         public static int getInstallLocation() {
-            return AppPref.getInt(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT);
+            return InstallerOptions.normalizeInstallLocation(
+                    AppPref.getInt(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT));
         }
 
         public static void setInstallLocation(int installLocation) {
-            AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT, installLocation);
+            AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT,
+                    InstallerOptions.normalizeInstallLocation(installLocation));
         }
 
         @NonNull
@@ -431,11 +434,13 @@ public final class Prefs {
         }
 
         public static int getPackageSource() {
-            return AppPref.getInt(AppPref.PrefKey.PREF_INSTALLER_DEFAULT_PKG_SOURCE_INT);
+            return InstallerOptions.normalizePackageSource(
+                    AppPref.getInt(AppPref.PrefKey.PREF_INSTALLER_DEFAULT_PKG_SOURCE_INT));
         }
 
         public static void setPackageSource(int source) {
-            AppPref.set(AppPref.PrefKey.PREF_INSTALLER_DEFAULT_PKG_SOURCE_INT, source);
+            AppPref.set(AppPref.PrefKey.PREF_INSTALLER_DEFAULT_PKG_SOURCE_INT,
+                    InstallerOptions.normalizePackageSource(source));
         }
 
         public static boolean requestUpdateOwnership() {

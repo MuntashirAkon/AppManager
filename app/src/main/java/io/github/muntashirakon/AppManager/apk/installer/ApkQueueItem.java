@@ -140,21 +140,24 @@ public class ApkQueueItem implements Parcelable, IJsonSerializer {
 
     @Nullable
     public InstallerOptions getInstallerOptions() {
-        return mInstallerOptions;
+        return mInstallerOptions != null ? InstallerOptions.copyOf(mInstallerOptions) : null;
     }
 
     public void setInstallerOptions(@Nullable InstallerOptions installerOptions) {
         if (installerOptions != null) {
-            installerOptions.setOriginatingPackage(mOriginatingPackage);
-            installerOptions.setOriginatingUri(mOriginatingUri);
+            InstallerOptions effectiveOptions = InstallerOptions.copyOf(installerOptions);
+            effectiveOptions.setOriginatingPackage(mOriginatingPackage);
+            effectiveOptions.setOriginatingUri(mOriginatingUri);
             // Set package source to PACKAGE_SOURCE_STORE if it's supported
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
                     && mOriginatingPackage != null
                     && isAppStoreSupported(mOriginatingPackage)) {
-                installerOptions.setPackageSource(PackageInstaller.PACKAGE_SOURCE_STORE);
+                effectiveOptions.setPackageSource(PackageInstaller.PACKAGE_SOURCE_STORE);
             }
+            mInstallerOptions = effectiveOptions;
+        } else {
+            mInstallerOptions = null;
         }
-        mInstallerOptions = installerOptions;
     }
 
     public void setSelectedSplits(@NonNull ArrayList<String> selectedSplits) {

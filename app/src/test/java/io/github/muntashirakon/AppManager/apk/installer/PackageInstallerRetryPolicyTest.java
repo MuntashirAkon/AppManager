@@ -52,7 +52,7 @@ public class PackageInstallerRetryPolicyTest {
     public void retryOptionsDoNotMutateCallerSnapshot() {
         InstallerOptions callerOptions = InstallerOptions.getDefault();
         callerOptions.setInstallerName("original.installer");
-        InstallerOptions retryOptions = PackageInstallerCompat.copyOptions(callerOptions);
+        InstallerOptions retryOptions = InstallerOptions.copyOf(callerOptions);
 
         PackageInstallerCompat.applyRetryOptions(
                 PackageInstallerRetryPolicy.Action.RETRY_WITH_SHELL_INSTALLER, retryOptions);
