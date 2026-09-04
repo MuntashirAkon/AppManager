@@ -51,9 +51,11 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
         Context context = nullableContext != null ? nullableContext : ContextUtils.getContext();
         int status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, -1);
         int sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
-        if (!mOperationId.equals(intent.getStringExtra(PackageInstallerCompat.EXTRA_OPERATION_ID))
+        String operationId = PackageInstallerCompat.getOperationId(intent);
+        if (!mOperationId.equals(operationId)
                 || (mSessionId != -1 && mSessionId != sessionId)) {
-            Log.w(TAG, "Ignoring callback for another operation/session.");
+            Log.w(TAG, "Ignoring callback for another operation/session: expected %s/%d, received %s/%d (%s).",
+                    mOperationId, mSessionId, operationId, sessionId, intent.getData());
             return;
         }
         Log.d(TAG, "Session ID: %d", sessionId);
@@ -88,7 +90,10 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                 broadcastCancel.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, mPackageName);
                 broadcastCancel.putExtra(PackageInstaller.EXTRA_STATUS, PackageInstallerCompat.STATUS_FAILURE_ABORTED);
                 broadcastCancel.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
-                PackageInstallerCompat.setOperationIdentity(broadcastCancel, mOperationId, "confirmation_cancel");
+                broadcastCancel.putExtra(PackageInstallerCompat.EXTRA_ABANDON_SESSION, true);
+                // This app-internal broadcast is handled by an action-only filter, so it must not
+                // carry data. Its operation-specific request code keeps the PendingIntent distinct.
+                broadcastCancel.putExtra(PackageInstallerCompat.EXTRA_OPERATION_ID, mOperationId);
                 // Ask user for permission
                 mConfirmNotificationId = NotificationUtils.displayInstallConfirmNotification(context, builder -> builder
                         .setAutoCancel(false)

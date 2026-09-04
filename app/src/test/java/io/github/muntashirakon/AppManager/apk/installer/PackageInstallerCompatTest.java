@@ -5,9 +5,12 @@ package io.github.muntashirakon.AppManager.apk.installer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInstaller;
 
 import org.junit.Test;
@@ -47,6 +50,47 @@ public class PackageInstallerCompatTest {
         assertNotEquals(firstCallback.getData(), secondCallback.getData());
         assertNotEquals(firstCallback.getData(), firstCancellation.getData());
         assertEquals("first", firstCallback.getStringExtra(PackageInstallerCompat.EXTRA_OPERATION_ID));
+        assertEquals("first", PackageInstallerCompat.getOperationId(firstCallback));
+
+        // PackageInstaller may replace the fill-in extras when delivering a mutable PendingIntent.
+        // The PendingIntent's data URI remains its stable operation identity.
+        firstCallback.removeExtra(PackageInstallerCompat.EXTRA_OPERATION_ID);
+        assertEquals("first", PackageInstallerCompat.getOperationId(firstCallback));
+
+        IntentFilter callbackFilter = PackageInstallerCompat.getPackageInstallerCallbackFilter();
+        assertTrue(callbackFilter.matchAction(PackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER));
+        assertTrue(callbackFilter.hasDataScheme(firstCallback.getScheme()));
+        assertTrue(callbackFilter.hasDataAuthority(firstCallback.getData()));
+        assertTrue(callbackFilter.match(PackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER,
+                null, firstCallback.getScheme(), firstCallback.getData(), null, "test") >= 0);
+        IntentFilter actionOnlyFilter =
+                new IntentFilter(PackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER);
+        assertTrue(actionOnlyFilter.match(PackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER,
+                null, firstCallback.getScheme(), firstCallback.getData(), null, "test") < 0);
+    }
+
+    @Test
+    public void attemptCompletionCanOnlyBeClaimedOnce() {
+        PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
+
+        assertTrue(installer.claimAttemptCompletion(-1));
+        assertFalse(installer.claimAttemptCompletion(-1));
+        assertFalse(installer.claimAttemptCompletion(42));
+    }
+
+    @Test
+    public void localResultWaitIsBoundedAndReturnsARealCallback() {
+        PackageInstallerCompat.LocalIntentReceiver receiver =
+                new PackageInstallerCompat.LocalIntentReceiver();
+
+        assertNull(receiver.getResult(10, TimeUnit.MILLISECONDS));
+        Intent pendingResult = new Intent();
+        Intent terminalResult = new Intent();
+        receiver.offerResult(pendingResult);
+        receiver.offerResult(terminalResult);
+
+        assertSame(pendingResult, receiver.getResult(1, TimeUnit.SECONDS));
+        assertSame(terminalResult, receiver.getResult(1, TimeUnit.SECONDS));
     }
 
     @Test
