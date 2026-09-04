@@ -121,7 +121,7 @@ public class InstallerOptionsFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        mPackageName = requireArguments().getString(ARG_PACKAGE_NAME);
+        mPackageName = Objects.requireNonNull(requireArguments().getString(ARG_PACKAGE_NAME));
         mIsTestOnly = requireArguments().getBoolean(ARG_TEST_ONLY_APP, true);
         mOptions = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_REF_INSTALLER_OPTIONS, InstallerOptions.class));
         mDialogView = View.inflate(requireActivity(), R.layout.dialog_installer_options, null);
@@ -258,7 +258,7 @@ public class InstallerOptionsFragment extends DialogFragment {
         mPackageSourceSpinner.setAdapter(pkgSourceAdapter);
         mPackageSourceSpinner.setSelection(pkgSource);
         mPackageSourceSpinner.setOnItemClickListener((parent, view, position, id) ->
-                mOptions.setInstallLocation(PKG_SOURCES[position]));
+                mOptions.setPackageSource(PKG_SOURCES[position]));
     }
 
     private void initInstallerAppSpinner() {
