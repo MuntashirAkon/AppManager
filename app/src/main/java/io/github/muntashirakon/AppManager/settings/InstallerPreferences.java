@@ -220,9 +220,11 @@ public class InstallerPreferences extends PreferenceFragment {
         ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("installer_display_changes")))
                 .setChecked(Prefs.Installer.displayChanges());
         // Block trackers
+        boolean canBlockTrackers = SelfPermissions.canModifyAppComponentStates(
+                UserHandleHidden.myUserId(), null, true);
         SwitchPreferenceCompat blockTrackersPref = Objects.requireNonNull(findPreference("installer_block_trackers"));
-        blockTrackersPref.setVisible(SelfPermissions.canModifyAppComponentStates(UserHandleHidden.myUserId(), null, true));
-        blockTrackersPref.setChecked(Prefs.Installer.blockTrackers());
+        blockTrackersPref.setVisible(canBlockTrackers);
+        blockTrackersPref.setChecked(canBlockTrackers && Prefs.Installer.blockTrackers());
         // Running installer in the background
         SwitchPreferenceCompat backgroundPref = Objects.requireNonNull(findPreference("installer_always_on_background"));
         backgroundPref.setVisible(Utils.canDisplayNotification(requireContext()));
