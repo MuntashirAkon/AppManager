@@ -123,24 +123,28 @@ public final class FileUtils {
             throws IOException {
         try (InputStream in = from.openInputStream();
              OutputStream out = to.openOutputStream()) {
-            return copy(in, out, from.length(), progressHandler);
+            return copy(in, out, from.length(), 0, progressHandler);
         }
     }
 
     /**
-     * Copy the contents of one stream to another.
+     * Copy the contents of one stream to another as part of a larger copy operation.
      *
-     * @param totalSize Total size of the stream. Only used for handling progress. Set {@code -1} if unknown.
+     * @param totalSize     Total size of the larger operation in bytes.
+     * @param completedSize Number of bytes completed before this stream.
      */
     @AnyThread
     public static long copy(@NonNull InputStream in, @NonNull OutputStream out, long totalSize,
-                            @Nullable ProgressHandler progressHandler) throws IOException {
-        float lastProgress = progressHandler != null ? progressHandler.getLastProgress() : 0;
-        return IoUtils.copy(in, out, ThreadUtils.getBackgroundThreadExecutor(), progress -> {
-            if (progressHandler != null) {
-                progressHandler.postUpdate(100, lastProgress + (progress * 100f / totalSize));
+                            long completedSize, @Nullable ProgressHandler progressHandler) throws IOException {
+        long copiedSize = IoUtils.copy(in, out, Runnable::run, progress -> {
+            if (progressHandler != null && totalSize > 0) {
+                progressHandler.postUpdate(100, (completedSize + progress) * 100f / totalSize);
             }
         });
+        if (progressHandler != null && totalSize > 0) {
+            progressHandler.postUpdate(100, (completedSize + copiedSize) * 100f / totalSize);
+        }
+        return copiedSize;
     }
 
     @WorkerThread

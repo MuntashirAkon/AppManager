@@ -186,7 +186,7 @@ public final class ApkFile implements AutoCloseable {
     @NonNull
     private final String mPackageName;
     @NonNull
-    private final List<ZipEntry> mObbFiles = new ArrayList<>();
+    private final List<ObbEntry> mObbFiles = new ArrayList<>();
     private final FileCache mFileCache = new FileCache();
     @NonNull
     private final File mCacheFilePath;
@@ -332,7 +332,7 @@ public final class ApkFile implements AutoCloseable {
                         Log.w(TAG, "The contents of info.json in the bundle is invalid", e);
                     }
                 } else if (fileName.endsWith(".obb")) {
-                    mObbFiles.add(zipEntry);
+                    mObbFiles.add(new ObbEntry(zipEntry));
                 } else if (fileName.endsWith(".idsig")) {
                     try {
                         mIdsigFile = mFileCache.getCachedFile(mZipFile.getInputStream(zipEntry), ".idsig");
@@ -455,18 +455,9 @@ public final class ApkFile implements AutoCloseable {
         return !mObbFiles.isEmpty();
     }
 
-    @WorkerThread
-    public void extractObb(Path writableObbDir) throws IOException {
-        if (!hasObb() || mZipFile == null) return;
-        for (ZipEntry obbEntry : mObbFiles) {
-            String fileName = FileUtils.getFilenameFromZipEntry(obbEntry);
-            Path obbDir = writableObbDir.findOrCreateFile(fileName, null);
-            // Extract obb file to the destination directory
-            try (InputStream zipInputStream = mZipFile.getInputStream(obbEntry);
-                 OutputStream outputStream = obbDir.openOutputStream()) {
-                IoUtils.copy(zipInputStream, outputStream);
-            }
-        }
+    @NonNull
+    public List<ObbEntry> getObbEntries() {
+        return mObbFiles;
     }
 
     public boolean isClosed() {
@@ -503,6 +494,31 @@ public final class ApkFile implements AutoCloseable {
     protected void finalize() {
         if (!mClosed) {
             close();
+        }
+    }
+
+    public class ObbEntry {
+        @NonNull
+        private final ZipEntry mZipEntry;
+
+        private ObbEntry(@NonNull ZipEntry zipEntry) {
+            mZipEntry = zipEntry;
+        }
+
+        @NonNull
+        public String getFileName() {
+            return FileUtils.getFilenameFromZipEntry(mZipEntry);
+        }
+
+        public long getFileSize() {
+            return mZipEntry.getSize();
+        }
+
+        @WorkerThread
+        @NonNull
+        public InputStream openInputStream() throws IOException {
+            ZipFile zipFile = Objects.requireNonNull(mZipFile);
+            return zipFile.getInputStream(mZipEntry);
         }
     }
 

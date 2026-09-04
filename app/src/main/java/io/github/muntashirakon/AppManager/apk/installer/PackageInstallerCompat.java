@@ -654,9 +654,30 @@ public final class PackageInstallerCompat {
                     return false;
                 }
             }
+            List<ApkFile.Entry> selectedEntries = new ArrayList<>();
+            long apkSize = 0;
+            for (ApkFile.Entry entry : apkFile.getEntries()) {
+                if (selectedSplitIds.contains(entry.id)) {
+                    selectedEntries.add(entry);
+                    try {
+                        apkSize = addSizes(apkSize, entry.getFile(options.isSignApkFiles()).length());
+                    } catch (IOException e) {
+                        Log.e(TAG, "Install: Cannot retrieve the selected APK files.", e);
+                        callFinish(STATUS_FAILURE_INVALID);
+                        return false;
+                    }
+                }
+            }
+            long obbSize = copyObbFiles ? getObbSize(apkFile) : 0;
+            long totalSize = multiplyAndAddSizes(obbSize, allRequestedUsers.length, apkSize);
+            long completedSize = 0;
+            if (progressHandler != null && totalSize > 0) {
+                progressHandler.postUpdate(100, 0);
+            }
             if (copyObbFiles) {
                 for (int u : allRequestedUsers) {
-                    copyObb(apkFile, u);
+                    copyObb(apkFile, u, totalSize, completedSize, progressHandler);
+                    completedSize = addSizes(completedSize, obbSize);
                 }
             }
             userId = allRequestedUsers[0];
@@ -668,26 +689,14 @@ public final class PackageInstallerCompat {
                     options.requestUpdateOwnership(), options.isDisableApkVerification())) {
                 return false;
             }
-            List<ApkFile.Entry> selectedEntries = new ArrayList<>();
-            long totalSize = 0;
-            for (ApkFile.Entry entry : apkFile.getEntries()) {
-                if (selectedSplitIds.contains(entry.id)) {
-                    selectedEntries.add(entry);
-                    try {
-                        totalSize += entry.getFile(options.isSignApkFiles()).length();
-                    } catch (IOException e) {
-                        Log.e(TAG, "Install: Cannot retrieve the selected APK files.", e);
-                        return failAndAbandon(STATUS_FAILURE_INVALID);
-                    }
-                }
-            }
             Log.d(TAG, "Install: selected entries: %s", selectedSplitIds);
             // Write apk files
             for (ApkFile.Entry entry : selectedEntries) {
                 long entrySize = entry.getFileSize(options.isSignApkFiles());
                 try (InputStream apkInputStream = entry.getInputStream(options.isSignApkFiles());
                      OutputStream apkOutputStream = mSession.openWrite(entry.getFileName(), 0, entrySize)) {
-                    FileUtils.copy(apkInputStream, apkOutputStream, totalSize, progressHandler);
+                    completedSize += FileUtils.copy(apkInputStream, apkOutputStream, totalSize,
+                            completedSize, progressHandler);
                     mSession.fsync(apkOutputStream);
                     Log.d(TAG, "Install: copied entry %s", entry.name);
                 } catch (IOException e) {
@@ -698,6 +707,7 @@ public final class PackageInstallerCompat {
                     return failAndAbandon(STATUS_FAILURE_SECURITY);
                 }
             }
+            finishCopyProgress(totalSize, progressHandler);
             Log.d(TAG, "Install: Running installation...");
             // Commit
             return commit(userId);
@@ -765,13 +775,18 @@ public final class PackageInstallerCompat {
             }
             long totalSize = 0;
             for (Path apkFile : apkFiles) {
-                totalSize += apkFile.length();
+                totalSize = addSizes(totalSize, apkFile.length());
+            }
+            long completedSize = 0;
+            if (progressHandler != null && totalSize > 0) {
+                progressHandler.postUpdate(100, 0);
             }
             // Write apk files
             for (Path apkFile : apkFiles) {
                 try (InputStream apkInputStream = apkFile.openInputStream();
                      OutputStream apkOutputStream = mSession.openWrite(apkFile.getName(), 0, apkFile.length())) {
-                    FileUtils.copy(apkInputStream, apkOutputStream, totalSize, progressHandler);
+                    completedSize += FileUtils.copy(apkInputStream, apkOutputStream, totalSize,
+                            completedSize, progressHandler);
                     mSession.fsync(apkOutputStream);
                 } catch (IOException e) {
                     Log.e(TAG, "Install: Cannot copy files to session.", e);
@@ -781,6 +796,7 @@ public final class PackageInstallerCompat {
                     return failAndAbandon(STATUS_FAILURE_SECURITY);
                 }
             }
+            finishCopyProgress(totalSize, progressHandler);
             // Commit
             return commit(userId);
         } finally {
@@ -1048,7 +1064,8 @@ public final class PackageInstallerCompat {
     }
 
     @WorkerThread
-    private void copyObb(@NonNull ApkFile apkFile, @UserIdInt int userId) {
+    private void copyObb(@NonNull ApkFile apkFile, @UserIdInt int userId, long totalSize,
+                         long completedSize, @Nullable ProgressHandler progressHandler) {
         if (!apkFile.hasObb()) return;
         try {
             // Get writable OBB directory
@@ -1057,11 +1074,55 @@ public final class PackageInstallerCompat {
             for (Path oldFile : writableObbDir.listFiles()) {
                 oldFile.delete();
             }
-            apkFile.extractObb(writableObbDir);
+            long copiedSize = 0;
+            for (ApkFile.ObbEntry obbEntry : apkFile.getObbEntries()) {
+                Path destination = writableObbDir.findOrCreateFile(obbEntry.getFileName(), null);
+                try (InputStream inputStream = obbEntry.openInputStream();
+                     OutputStream outputStream = destination.openOutputStream()) {
+                    copiedSize += FileUtils.copy(inputStream, outputStream, totalSize,
+                            completedSize + copiedSize, progressHandler);
+                }
+            }
             ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.obb_files_extracted_successfully));
         } catch (Exception e) {
             Log.e(TAG, e);
             ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.failed_to_extract_obb_files));
+        } finally {
+            long obbSize = getObbSize(apkFile);
+            if (totalSize > 0 && obbSize >= 0 && progressHandler != null) {
+                progressHandler.postUpdate(100, (completedSize + obbSize) * 100f / totalSize);
+            }
+        }
+    }
+
+    private static long getObbSize(@NonNull ApkFile apkFile) {
+        long totalSize = 0;
+        for (ApkFile.ObbEntry obbEntry : apkFile.getObbEntries()) {
+            totalSize = addSizes(totalSize, obbEntry.getFileSize());
+            if (totalSize < 0) {
+                return -1;
+            }
+        }
+        return totalSize;
+    }
+
+    private static long addSizes(long first, long second) {
+        if (first < 0 || second < 0 || Long.MAX_VALUE - first < second) {
+            return -1;
+        }
+        return first + second;
+    }
+
+    private static long multiplyAndAddSizes(long size, int count, long additionalSize) {
+        if (size < 0 || additionalSize < 0 || (size != 0 && count > Long.MAX_VALUE / size)) {
+            return -1;
+        }
+        return addSizes(size * count, additionalSize);
+    }
+
+    private static void finishCopyProgress(long totalSize, @Nullable ProgressHandler progressHandler) {
+        if (totalSize > 0 && progressHandler != null) {
+            progressHandler.postUpdate(100, 100);
         }
     }
 
