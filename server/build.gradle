@@ -69,6 +69,22 @@ android.libraryVariants.configureEach { variant ->
 
             String androidJar = "${android.sdkDirectory.path}/platforms/android-${target_sdk}/android.jar"
             String d8Path = "${android.sdkDirectory.path}/build-tools/${android.buildToolsVersion}/d8"
+            // Make sure the build script and d8 use the same version of java.
+            String gradleJavaHome = System.getProperty("java.home")
+            File gradleJava = new File(gradleJavaHome, "bin/java")
+            if (!gradleJava.isFile()) {
+                gradleJavaHome = new File(gradleJavaHome).parent
+            }
+            String gradlePath = "${gradleJavaHome}/bin:${System.getenv('PATH')}"
+
+            def runD8 = { List<String> args ->
+                injected.execOps.exec {
+                    environment "JAVA_HOME", gradleJavaHome
+                    environment "PATH", gradlePath
+                    executable = d8Path
+                    it.args(args)
+                }
+            }
 
             println("Creating am.jar...")
             def amArgs = ['--release', '--min-api', min_sdk, '--output', amJar.absolutePath, '--lib', androidJar]
@@ -78,10 +94,7 @@ android.libraryVariants.configureEach { variant ->
             amArgs.addAll(Files.list(Paths.get("${serverClassDir}/${serverPkg}")).filter {
                 !it.fileName.toString().startsWith("RootServiceMain") && Files.isRegularFile(it)
             }.map { it.toString() }.sorted().collect(Collectors.toList()))
-            injected.execOps.exec {
-                executable = d8Path
-                args = amArgs
-            }
+            runD8(amArgs)
             println("Created ${amJar}")
 
             println("Creating main.jar...")
@@ -92,10 +105,7 @@ android.libraryVariants.configureEach { variant ->
             mainArgs.addAll(Files.list(Paths.get("${serverClassDir}/${serverPkg}")).filter {
                 it.fileName.toString().startsWith("RootServiceMain") && Files.isRegularFile(it)
             }.map { it.toString() }.sorted().collect(Collectors.toList()))
-            injected.execOps.exec {
-                executable = d8Path
-                args = mainArgs
-            }
+            runD8(mainArgs)
             println("Created ${mainJar}")
         }
     }

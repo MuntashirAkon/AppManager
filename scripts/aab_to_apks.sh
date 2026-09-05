@@ -13,10 +13,33 @@ if [[ "$#" -lt 1 ]]; then
   exit 1
 fi
 
-if ! which bundletool >/dev/null 2>&1; then
+if ! command -v bundletool >/dev/null 2>&1; then
   echo "Bundletool doesn't exist in path"
   exit 1
 fi
+
+if [[ -n "${JAVA_HOME:-}" ]]; then
+  JAVA_COMMAND="${JAVA_HOME}/bin/java"
+else
+  JAVA_COMMAND=$(command -v java || true)
+fi
+
+if [[ -z "${JAVA_COMMAND}" ]] || [[ ! -x "${JAVA_COMMAND}" ]]; then
+  echo "A Java installation could not be found. Set JAVA_HOME or add java to PATH."
+  exit 1
+fi
+
+RESOLVED_JAVA_HOME=$("${JAVA_COMMAND}" -XshowSettings:properties -version 2>&1 \
+  | sed -n 's/^[[:space:]]*java.home = //p' \
+  | head -n 1)
+if [[ -z "${RESOLVED_JAVA_HOME}" ]] || [[ ! -x "${RESOLVED_JAVA_HOME}/bin/java" ]]; then
+  echo "Could not determine JAVA_HOME from ${JAVA_COMMAND}."
+  exit 1
+fi
+
+export JAVA_HOME="${RESOLVED_JAVA_HOME}"
+export PATH="${JAVA_HOME}/bin:${PATH}"
+GRADLE_JAVA_ARGS=(-Dorg.gradle.java.home="${JAVA_HOME}")
 
 RELEASE_TYPE=$1
 INTERACTIVE=true
@@ -78,7 +101,7 @@ fi
 if [[ -f "${AAB_PATH}" ]]; then
   rm "${AAB_PATH}"
 fi
-./gradlew "bundle$CAPITALIZED_RELEASE_TYPE" --no-build-cache --no-configuration-cache --no-daemon
+./gradlew "${GRADLE_JAVA_ARGS[@]}" "bundle$CAPITALIZED_RELEASE_TYPE" --no-build-cache --no-configuration-cache --no-daemon
 
 if [[ -f ${AAB_PATH} ]]; then
   if ! [[ "${KEYSTORE}" == "" ]]; then
@@ -146,7 +169,7 @@ if ! [[ "${KEYSTORE}" == "" ]]; then
 else
   KS_PARAMS=()
 fi
-./gradlew "package${CAPITALIZED_RELEASE_TYPE}UniversalApk" --no-daemon "${KS_PARAMS[@]}"
+./gradlew "${GRADLE_JAVA_ARGS[@]}" "package${CAPITALIZED_RELEASE_TYPE}UniversalApk" --no-daemon "${KS_PARAMS[@]}"
 
 if [[ -f ${APK_PATH} ]]; then
   mv "${APK_PATH}" "${RELEASE_PATH}/${APP_NAME}.apk"
