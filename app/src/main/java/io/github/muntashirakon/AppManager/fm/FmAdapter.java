@@ -51,6 +51,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmItem, FmAdapter.ViewHolder>
 
     private final FmViewModel mViewModel;
     private final FmActivity mFmActivity;
+    private TextUtils.TruncateAt mFilenameEllipsize = TextUtils.TruncateAt.MIDDLE;
 
     private static final DiffUtil.ItemCallback<FmItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<FmItem>() {
         @Override
@@ -73,6 +74,10 @@ class FmAdapter extends MultiSelectionView.Adapter<FmItem, FmAdapter.ViewHolder>
         mFmActivity = activity;
     }
 
+    public void setFilenameEllipsize(@NonNull TextUtils.TruncateAt ellipsize) {
+        mFilenameEllipsize = ellipsize;
+    }
+
     public void setFmList(List<FmItem> list) {
         submitList(list != null ? new ArrayList<>(list) : null);
         notifySelectionChange();
@@ -93,6 +98,10 @@ class FmAdapter extends MultiSelectionView.Adapter<FmItem, FmAdapter.ViewHolder>
         FmItem item = getItem(position);
         holder.itemView.setTag(item.path);
         holder.title.setText(item.getName());
+        holder.title.setEllipsize(mFilenameEllipsize);
+        boolean marquee = mFilenameEllipsize == TextUtils.TruncateAt.MARQUEE;
+        holder.title.setHorizontallyScrolling(marquee);
+        holder.title.setSelected(marquee);
         // Load attributes
         cacheAndLoadAttributes(holder, item);
         if (item.isDirectory) {

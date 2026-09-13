@@ -73,11 +73,11 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@android:id/title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceListItem"
-                android:ellipsize="middle"
+                tools:ellipsize="middle"
                 tools:text="@tools:sample/lorem[10]" />
 
             <com.google.android.material.textview.MaterialTextView
