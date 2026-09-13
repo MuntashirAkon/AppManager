@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.details;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +35,22 @@ public final class AppDetailsTabs {
     @NonNull
     public static List<AppDetailsTab> getDefaultTabs() {
         return DEFAULT_TABS;
+    }
+
+    @NonNull
+    public static List<AppDetailsTab> getTabs(@NonNull List<Integer> order, int enabledFlags) {
+        List<AppDetailsTab> tabs = new ArrayList<>();
+        for (Integer id : order) {
+            if (id == null || (enabledFlags & (1 << id)) == 0) continue;
+            for (AppDetailsTab tab : DEFAULT_TABS) {
+                if (tab.getId() == id) {
+                    tabs.add(tab);
+                    break;
+                }
+            }
+        }
+        if (tabs.isEmpty()) tabs.add(DEFAULT_TABS.get(0));
+        return tabs;
     }
 
     @NonNull
