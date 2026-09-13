@@ -1,5 +1,6 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
@@ -27,6 +28,15 @@
             app:title="@string/pref_layout_direction"
             tools:summary="Left to right" />
 
+    </PreferenceCategory>
+
+    <PreferenceCategory app:layout="@layout/m3_preference_category_empty">
+        <Preference
+            android:fragment="io.github.muntashirakon.AppManager.settings.AppDetailsTabsPreferences"
+            app:iconSpaceReserved="false"
+            app:key="app_details_tabs"
+            app:summary="@string/pref_app_details_tabs_description"
+            app:title="@string/pref_app_details_tabs" />
     </PreferenceCategory>
 
     <PreferenceCategory app:layout="@layout/m3_preference_category_empty">

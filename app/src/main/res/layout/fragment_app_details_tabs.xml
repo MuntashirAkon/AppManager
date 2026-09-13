@@ -1,0 +1,23 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_medium"
+        android:paddingBottom="@dimen/padding_small"
+        android:text="@string/pref_app_details_tabs_description" />
+
+    <io.github.muntashirakon.widget.RecyclerView
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/padding_small" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>
