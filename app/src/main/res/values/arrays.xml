@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
-    <array name="TAB_TITLES">
-        <item>@string/app_info</item>
-        <item>@string/activities</item>
-        <item>@string/service</item>
-        <item>@string/receivers</item>
-        <item>@string/providers</item>
-        <item>@string/app_ops</item>
-        <item>@string/permissions</item>
-        <item>@string/declared_permission</item>
-        <item>@string/uses_feature</item>
-        <item>@string/configurations</item>
-        <item>@string/app_signing_signatures</item>
-        <item>@string/shared_libs</item>
-        <item>@string/overlays</item>
-    </array>
     <array name="rule_types">
         <item>@string/activities</item>
         <item>@string/service</item>

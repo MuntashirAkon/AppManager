@@ -6,7 +6,6 @@ import android.annotation.UserIdInt;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -29,6 +28,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
@@ -101,7 +101,7 @@ public class AppDetailsActivity extends BaseActivity {
     public AdvancedSearchView searchView;
 
     private ViewPager2 mViewPager;
-    private TypedArray mTabTitleIds;
+    private List<AppDetailsTab> mTabs;
     private Fragment[] mTabFragments;
 
     private boolean mBackToMainPage;
@@ -145,8 +145,8 @@ public class AppDetailsActivity extends BaseActivity {
         }
         model.setUserId(mUserId);
         // Initialize tabs
-        mTabTitleIds = getResources().obtainTypedArray(R.array.TAB_TITLES);
-        mTabFragments = new Fragment[mTabTitleIds.length()];
+        mTabs = AppDetailsTabs.getDefaultTabs();
+        mTabFragments = new Fragment[mTabs.size()];
         if (mPackageName == null && mApkSource == null) {
             UIUtils.displayLongToast(R.string.empty_package_name);
             finish();
@@ -169,7 +169,8 @@ public class AppDetailsActivity extends BaseActivity {
         // Set tabs
         mViewPager.setOffscreenPageLimit(4);
         mViewPager.setAdapter(new AppDetailsFragmentPagerAdapter(this));
-        new TabLayoutMediator(tabLayout, mViewPager, (tab, position) -> tab.setText(mTabTitleIds.getString(position)))
+        new TabLayoutMediator(tabLayout, mViewPager,
+                (tab, position) -> tab.setText(mTabs.get(position).getTitleRes()))
                 .attach();
         // Load package info
         (mPackageName != null
@@ -259,7 +260,7 @@ public class AppDetailsActivity extends BaseActivity {
         }
 
         @Override
-        public void writeToParcel(Parcel dest, int flags) {
+        public void writeToParcel(@NonNull Parcel dest, int flags) {
             ParcelCompat.writeBoolean(dest, mBackToMainPage);
             dest.writeString(mPackageName);
             dest.writeParcelable(mApkSource, flags);
@@ -314,9 +315,10 @@ public class AppDetailsActivity extends BaseActivity {
     }
 
     private void loadTabs() {
-        @AppDetailsFragment.Property int id = mViewPager.getCurrentItem();
-        Log.d("ADA - " + mTabTitleIds.getText(id), "isPackageChanged called");
-        for (int i = 0; i < mTabTitleIds.length(); ++i) model.load(i);
+        int position = mViewPager.getCurrentItem();
+        AppDetailsTab currentTab = mTabs.get(position);
+        Log.d("ADA - " + getString(currentTab.getTitleRes()), "isPackageChanged called");
+        for (AppDetailsTab tab : mTabs) model.load(tab.getId());
     }
 
     // For tab layout
@@ -327,11 +329,12 @@ public class AppDetailsActivity extends BaseActivity {
 
         @NonNull
         @Override
-        public Fragment createFragment(@AppDetailsFragment.Property int position) {
+        public Fragment createFragment(int position) {
             if (mTabFragments[position] != null) {
                 return mTabFragments[position];
             }
-            switch (position) {
+            @AppDetailsFragment.Property int id = mTabs.get(position).getId();
+            switch (id) {
                 case AppDetailsFragment.APP_INFO:
                     return mTabFragments[position] = new AppInfoFragment();
                 case AppDetailsFragment.ACTIVITIES:
@@ -340,7 +343,7 @@ public class AppDetailsActivity extends BaseActivity {
                 case AppDetailsFragment.PROVIDERS: {
                     AppDetailsComponentsFragment fragment = new AppDetailsComponentsFragment();
                     Bundle args = new Bundle();
-                    args.putInt(AppDetailsFragment.ARG_TYPE, position);
+                    args.putInt(AppDetailsFragment.ARG_TYPE, id);
                     fragment.setArguments(args);
                     return mTabFragments[position] = fragment;
                 }
@@ -349,7 +352,7 @@ public class AppDetailsActivity extends BaseActivity {
                 case AppDetailsFragment.USES_PERMISSIONS: {
                     AppDetailsPermissionsFragment fragment = new AppDetailsPermissionsFragment();
                     Bundle args = new Bundle();
-                    args.putInt(AppDetailsFragment.ARG_TYPE, position);
+                    args.putInt(AppDetailsFragment.ARG_TYPE, id);
                     fragment.setArguments(args);
                     return mTabFragments[position] = fragment;
                 }
@@ -359,14 +362,14 @@ public class AppDetailsActivity extends BaseActivity {
                 case AppDetailsFragment.SIGNATURES: {
                     AppDetailsOtherFragment fragment = new AppDetailsOtherFragment();
                     Bundle args = new Bundle();
-                    args.putInt(AppDetailsFragment.ARG_TYPE, position);
+                    args.putInt(AppDetailsFragment.ARG_TYPE, id);
                     fragment.setArguments(args);
                     return mTabFragments[position] = fragment;
                 }
                 case AppDetailsFragment.OVERLAYS:
                     AppDetailsOverlaysFragment fragment = new AppDetailsOverlaysFragment();
                     Bundle args = new Bundle();
-                    args.putInt(AppDetailsFragment.ARG_TYPE, position);
+                    args.putInt(AppDetailsFragment.ARG_TYPE, id);
                     fragment.setArguments(args);
                     return mTabFragments[position] = fragment;
             }
@@ -375,7 +378,7 @@ public class AppDetailsActivity extends BaseActivity {
 
         @Override
         public int getItemCount() {
-            return mTabTitleIds.length();
+            return mTabs.size();
         }
     }
 }
