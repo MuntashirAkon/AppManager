@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.StringJoiner;
 
 import io.github.muntashirakon.AppManager.R;
 
@@ -33,5 +34,29 @@ public final class AppDetailsTabs {
     @NonNull
     public static List<AppDetailsTab> getDefaultTabs() {
         return DEFAULT_TABS;
+    }
+
+    @NonNull
+    public static String getDefaultOrder() {
+        StringJoiner order = new StringJoiner(",");
+        for (AppDetailsTab tab : DEFAULT_TABS) {
+            order.add(Integer.toString(tab.getId()));
+        }
+        return order.toString();
+    }
+
+    public static int getAllTabFlags() {
+        int flags = 0;
+        for (AppDetailsTab tab : DEFAULT_TABS) {
+            flags |= 1 << tab.getId();
+        }
+        return flags;
+    }
+
+    public static boolean isKnownTabId(int id) {
+        for (AppDetailsTab tab : DEFAULT_TABS) {
+            if (tab.getId() == id) return true;
+        }
+        return false;
     }
 }

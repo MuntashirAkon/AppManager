@@ -35,6 +35,7 @@ import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.crypto.auth.AuthManager;
 import io.github.muntashirakon.AppManager.debloat.DebloaterListOptions;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
+import io.github.muntashirakon.AppManager.details.AppDetailsTabs;
 import io.github.muntashirakon.AppManager.fm.FmListOptions;
 import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
 import io.github.muntashirakon.AppManager.main.MainListOptions;
@@ -58,6 +59,9 @@ public class AppPref {
         PREF_ADB_LOCAL_SERVER_PORT_INT,
         PREF_APP_OP_SHOW_DEFAULT_BOOL,
         PREF_APP_OP_SORT_ORDER_INT,
+        PREF_APP_DETAILS_TABS_ENABLED_INT,
+        PREF_APP_DETAILS_TABS_ORDER_STR,
+        PREF_APP_DETAILS_TABS_START_INT,
         PREF_APP_THEME_INT,
         PREF_APP_THEME_CUSTOM_INT,
         // This is just a placeholder to prevent crash
@@ -434,6 +438,12 @@ public class AppPref {
             case PREF_COMPONENTS_SORT_ORDER_INT:
             case PREF_PERMISSIONS_SORT_ORDER_INT:
                 return AppDetailsFragment.SORT_BY_NAME;
+            case PREF_APP_DETAILS_TABS_ENABLED_INT:
+                return AppDetailsTabs.getAllTabFlags();
+            case PREF_APP_DETAILS_TABS_ORDER_STR:
+                return AppDetailsTabs.getDefaultOrder();
+            case PREF_APP_DETAILS_TABS_START_INT:
+                return AppDetailsFragment.APP_INFO;
             case PREF_OVERLAYS_SORT_ORDER_INT:
                 return AppDetailsFragment.SORT_BY_PRIORITY;
             case PREF_RUNNING_APPS_SORT_ORDER_INT:

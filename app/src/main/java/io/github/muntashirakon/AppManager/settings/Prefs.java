@@ -23,7 +23,11 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.apk.installer.InstallerOptions;
@@ -33,6 +37,8 @@ import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
+import io.github.muntashirakon.AppManager.details.AppDetailsTab;
+import io.github.muntashirakon.AppManager.details.AppDetailsTabs;
 import io.github.muntashirakon.AppManager.fm.FmActivity;
 import io.github.muntashirakon.AppManager.fm.FmListOptions;
 import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
@@ -56,6 +62,105 @@ import io.github.muntashirakon.io.Paths;
 // changes to the settings are not immediately reflected unless the settings page is opened from the page itself.
 public final class Prefs {
     public static final class AppDetailsPage {
+        private static final int TAB_ID_MASK = AppDetailsTabs.getAllTabFlags();
+
+        @NonNull
+        public static List<Integer> getTabOrder() {
+            String serializedOrder = AppPref.getString(AppPref.PrefKey.PREF_APP_DETAILS_TABS_ORDER_STR);
+            List<Integer> order = new ArrayList<>();
+            Set<Integer> seen = new HashSet<>();
+            for (String value : serializedOrder.split(",")) {
+                try {
+                    int id = Integer.parseInt(value.trim());
+                    if (AppDetailsTabs.isKnownTabId(id) && seen.add(id)) {
+                        order.add(id);
+                    }
+                } catch (NumberFormatException ignored) {
+                }
+            }
+            // Handle newly added tabs if any
+            for (AppDetailsTab tab : AppDetailsTabs.getDefaultTabs()) {
+                if (seen.add(tab.getId())) order.add(tab.getId());
+            }
+            String normalizedOrder = serializeTabOrder(order);
+            if (!normalizedOrder.equals(serializedOrder)) {
+                AppPref.set(AppPref.PrefKey.PREF_APP_DETAILS_TABS_ORDER_STR, normalizedOrder);
+            }
+            return order;
+        }
+
+        public static void setTabOrder(@NonNull List<Integer> order) {
+            List<Integer> normalizedOrder = new ArrayList<>();
+            Set<Integer> seen = new HashSet<>();
+            for (Integer id : order) {
+                if (id != null && AppDetailsTabs.isKnownTabId(id) && seen.add(id)) {
+                    normalizedOrder.add(id);
+                }
+            }
+            // Handle newly added tabs if any
+            for (AppDetailsTab tab : AppDetailsTabs.getDefaultTabs()) {
+                if (seen.add(tab.getId())) normalizedOrder.add(tab.getId());
+            }
+            AppPref.set(AppPref.PrefKey.PREF_APP_DETAILS_TABS_ORDER_STR, serializeTabOrder(normalizedOrder));
+        }
+
+        public static int getEnabledTabFlags() {
+            int enabledTabs = AppPref.getInt(AppPref.PrefKey.PREF_APP_DETAILS_TABS_ENABLED_INT) & TAB_ID_MASK;
+            if (enabledTabs == 0) {
+                enabledTabs = 1 << AppDetailsFragment.APP_INFO;
+                AppPref.set(AppPref.PrefKey.PREF_APP_DETAILS_TABS_ENABLED_INT, enabledTabs);
+            }
+            return enabledTabs;
+        }
+
+        public static void setEnabledTabFlags(int enabledTabs) {
+            enabledTabs &= TAB_ID_MASK;
+            if (enabledTabs == 0) enabledTabs = 1 << AppDetailsFragment.APP_INFO;
+            AppPref.set(AppPref.PrefKey.PREF_APP_DETAILS_TABS_ENABLED_INT, enabledTabs);
+            int startTab = getInitialTab();
+            if ((enabledTabs & (1 << startTab)) == 0) {
+                setInitialTab(findFirstEnabledTab(enabledTabs));
+            }
+        }
+
+        public static boolean isTabEnabled(@AppDetailsFragment.Property int id) {
+            return (getEnabledTabFlags() & (1 << id)) != 0;
+        }
+
+        @AppDetailsFragment.Property
+        public static int getInitialTab() {
+            int startTab = AppPref.getInt(AppPref.PrefKey.PREF_APP_DETAILS_TABS_START_INT);
+            if (!AppDetailsTabs.isKnownTabId(startTab) || !isTabEnabled(startTab)) {
+                startTab = findFirstEnabledTab(getEnabledTabFlags());
+                AppPref.set(AppPref.PrefKey.PREF_APP_DETAILS_TABS_START_INT, startTab);
+            }
+            return startTab;
+        }
+
+        public static void setInitialTab(@AppDetailsFragment.Property int id) {
+            if (!AppDetailsTabs.isKnownTabId(id) || !isTabEnabled(id)) {
+                id = findFirstEnabledTab(getEnabledTabFlags());
+            }
+            AppPref.set(AppPref.PrefKey.PREF_APP_DETAILS_TABS_START_INT, id);
+        }
+
+        private static int findFirstEnabledTab(int enabledTabs) {
+            for (AppDetailsTab tab : AppDetailsTabs.getDefaultTabs()) {
+                if ((enabledTabs & (1 << tab.getId())) != 0) return tab.getId();
+            }
+            return AppDetailsFragment.APP_INFO;
+        }
+
+        @NonNull
+        private static String serializeTabOrder(@NonNull List<Integer> order) {
+            StringBuilder serializedOrder = new StringBuilder();
+            for (int i = 0; i < order.size(); ++i) {
+                if (i > 0) serializedOrder.append(',');
+                serializedOrder.append(order.get(i));
+            }
+            return serializedOrder.toString();
+        }
+
         public static boolean displayDefaultAppOps() {
             return AppPref.getBoolean(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL);
         }
