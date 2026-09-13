@@ -83,13 +83,7 @@ public class LocalServices {
     @WorkerThread
     @NoOps(used = true)
     private static void bindFileSystemManager() throws RemoteException {
-        synchronized (sFileSystemServiceConnectionWrapper) {
-            try {
-                sFileSystemServiceConnectionWrapper.bindService();
-            } finally {
-                sFileSystemServiceConnectionWrapper.notifyAll();
-            }
-        }
+        sFileSystemServiceConnectionWrapper.bindService();
     }
 
     @AnyThread
@@ -113,13 +107,7 @@ public class LocalServices {
     @WorkerThread
     @NoOps(used = true)
     private static void bindAmService() throws RemoteException {
-        synchronized (sAMServiceConnectionWrapper) {
-            try {
-                sAMServiceConnectionWrapper.bindService();
-            } finally {
-                sAMServiceConnectionWrapper.notifyAll();
-            }
-        }
+        sAMServiceConnectionWrapper.bindService();
     }
 
     @AnyThread

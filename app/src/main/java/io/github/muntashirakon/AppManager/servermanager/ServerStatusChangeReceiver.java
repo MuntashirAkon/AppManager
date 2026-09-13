@@ -69,8 +69,7 @@ public class ServerStatusChangeReceiver extends BroadcastReceiver {
             case ServerActions.ACTION_SERVER_STOPPED:
                 // Server was stopped
                 sServerStartGeneration.incrementAndGet();
-                LocalServer.die();
-                LocalServices.stopServices();
+                stopServerAndServices();
                 break;
             case ServerActions.ACTION_SERVER_CONNECTED:
                 // Server was connected with App Manager
@@ -79,10 +78,16 @@ public class ServerStatusChangeReceiver extends BroadcastReceiver {
             case ServerActions.ACTION_SERVER_DISCONNECTED:
                 // Exited from App Manager
                 sServerStartGeneration.incrementAndGet();
-                LocalServer.die();
-                LocalServices.stopServices();
+                stopServerAndServices();
                 break;
         }
+    }
+
+    private static void stopServerAndServices() {
+        ThreadUtils.postOnBackgroundThread(() -> {
+            LocalServer.die();
+            LocalServices.stopServices();
+        });
     }
 
     @AnyThread
