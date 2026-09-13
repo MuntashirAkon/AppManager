@@ -92,6 +92,7 @@ public class AppPref {
 
         PREF_FREEZE_TYPE_INT,
         PREF_FM_DISPLAY_IN_LAUNCHER_BOOL,
+        PREF_FM_FILENAME_ELLIPSIZE_STR,
         PREF_FM_HOME_STR,
         PREF_FM_LAST_PATH_STR,
         PREF_FM_OPTIONS_INT,
@@ -491,6 +492,8 @@ public class AppPref {
                 return ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE;
             case PREF_SAVED_APK_FORMAT_STR:
                 return "%label%_%version%";
+            case PREF_FM_FILENAME_ELLIPSIZE_STR:
+                return "middle";
             case PREF_AUTHORIZATION_KEY_STR:
                 return AuthManager.generateKey();
             case PREF_FREEZE_TYPE_INT:

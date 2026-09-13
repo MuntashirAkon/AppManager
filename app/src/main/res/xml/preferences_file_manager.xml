@@ -13,6 +13,11 @@
         app:iconSpaceReserved="false" />
 
     <Preference
+        app:key="fm_filename_ellipsize"
+        app:title="@string/fm_filename_ellipsize"
+        app:iconSpaceReserved="false" />
+
+    <Preference
         app:key="fm_home"
         app:title="@string/pref_set_home"
         app:iconSpaceReserved="false" />

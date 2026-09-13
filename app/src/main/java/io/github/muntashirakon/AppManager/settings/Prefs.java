@@ -394,6 +394,29 @@ public final class Prefs {
     }
 
     public static final class FileManager {
+        public static final String FILENAME_ELLIPSIZE_START = "start";
+        public static final String FILENAME_ELLIPSIZE_END = "end";
+        public static final String FILENAME_ELLIPSIZE_MIDDLE = "middle";
+        public static final String FILENAME_ELLIPSIZE_MARQUEE = "marquee";
+
+        @NonNull
+        public static String getFilenameEllipsize() {
+            String ellipsize = AppPref.getString(AppPref.PrefKey.PREF_FM_FILENAME_ELLIPSIZE_STR);
+            switch (ellipsize) {
+                case FILENAME_ELLIPSIZE_START:
+                case FILENAME_ELLIPSIZE_END:
+                case FILENAME_ELLIPSIZE_MIDDLE:
+                case FILENAME_ELLIPSIZE_MARQUEE:
+                    return ellipsize;
+                default:
+                    return FILENAME_ELLIPSIZE_MIDDLE;
+            }
+        }
+
+        public static void setFilenameEllipsize(@NonNull String ellipsize) {
+            AppPref.set(AppPref.PrefKey.PREF_FM_FILENAME_ELLIPSIZE_STR, ellipsize);
+        }
+
         public static boolean displayInLauncher() {
             ComponentName componentName = new ComponentName(BuildConfig.APPLICATION_ID, FmActivity.LAUNCHER_ALIAS);
             int state = ContextUtils.getContext().getPackageManager().getComponentEnabledSetting(componentName);

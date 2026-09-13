@@ -1283,6 +1283,11 @@
     <string name="file_cut">Cut</string>
     <string name="fm_always_open_with">Always open</string>
     <string name="fm_open_with_for_this_file_only">Only for this file</string>
+    <string name="fm_filename_ellipsize">Filename ellipsize</string>
+    <string name="fm_filename_ellipsize_start">Start</string>
+    <string name="fm_filename_ellipsize_end">End</string>
+    <string name="fm_filename_ellipsize_middle">Middle</string>
+    <string name="fm_filename_ellipsize_marquee">Marquee</string>
     <string name="file_open_as">Open as…</string>
     <string name="file_open_with_custom_activity">Custom</string>
     <string name="file_open_with_os_default_dialog">Open with OS-default dialog</string>
