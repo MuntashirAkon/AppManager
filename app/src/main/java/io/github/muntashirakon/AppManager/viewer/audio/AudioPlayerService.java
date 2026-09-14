@@ -23,6 +23,7 @@ import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -92,6 +93,7 @@ public class AudioPlayerService extends Service {
 
     private int mCurrentPlaylistIndex = -1;
     private boolean mPrepared;
+    private boolean mPreparing;
     private boolean mPlaying;
     private boolean mCompleted;
     private boolean mForegroundStarted;
@@ -184,6 +186,13 @@ public class AudioPlayerService extends Service {
             public void onSeekTo(long pos) {
                 seekTo((int) pos);
             }
+
+            @Override
+            public void onCustomAction(@NonNull String action, Bundle extras) {
+                if (ACTION_STOP.equals(action)) {
+                    stopServicePlayback();
+                }
+            }
         }, mPlayerHandler);
         createNotificationChannel();
         mPlayerHandler.post(() -> {
@@ -191,6 +200,7 @@ public class AudioPlayerService extends Service {
             mPlayer.setAudioAttributes(mAudioAttributes);
             mPlayer.setOnPreparedListener(player -> {
                 mPrepared = true;
+                mPreparing = false;
                 mError = null;
                 applyPlaybackSpeed();
                 mCompleted = false;
@@ -200,6 +210,7 @@ public class AudioPlayerService extends Service {
             mPlayer.setOnCompletionListener(player -> handleCompletion());
             mPlayer.setOnErrorListener((player, what, extra) -> {
                 mPrepared = false;
+                mPreparing = false;
                 mPlaying = false;
                 mCompleted = false;
                 mError = "MediaPlayer error: " + what + ", " + extra;
@@ -449,8 +460,6 @@ public class AudioPlayerService extends Service {
         abandonAudioFocus();
         releaseWakeLock();
         mResumeOnFocusGain = false;
-        mCurrentPlaylistIndex = -1;
-        mPlaylist.clear();
         mError = null;
         if (mMediaSession != null) {
             mMediaSession.setActive(false);
@@ -544,6 +553,7 @@ public class AudioPlayerService extends Service {
             return;
         }
         resetPlayer();
+        mPreparing = true;
         mError = null;
         AudioMetadata metadata = mPlaylist.get(mCurrentPlaylistIndex);
         try {
@@ -552,6 +562,7 @@ public class AudioPlayerService extends Service {
             notifyState();
         } catch (IOException | RuntimeException e) {
             mPrepared = false;
+            mPreparing = false;
             mPlaying = false;
             mError = e.toString();
             notifyState();
@@ -559,6 +570,12 @@ public class AudioPlayerService extends Service {
     }
 
     private void startPlayback() {
+        if (mPlayer != null && !mPrepared) {
+            if (!mPreparing) {
+                prepareCurrentTrack();
+            }
+            return;
+        }
         if (mPlayer != null && mPrepared && !mPlaying) {
             if (!requestAudioFocus()) {
                 mError = "Audio focus was not granted";
@@ -623,6 +640,7 @@ public class AudioPlayerService extends Service {
             }
         }
         mPrepared = false;
+        mPreparing = false;
         mPlaying = false;
         mCompleted = false;
     }
@@ -691,12 +709,15 @@ public class AudioPlayerService extends Service {
                 | PlaybackState.ACTION_SKIP_TO_PREVIOUS | PlaybackState.ACTION_SKIP_TO_NEXT;
         int playbackState = state.getError() != null ? PlaybackState.STATE_ERROR
                 : state.isPlaying() ? PlaybackState.STATE_PLAYING
+                : state.isCompleted() ? PlaybackState.STATE_STOPPED
                 : state.isPrepared() ? PlaybackState.STATE_PAUSED : PlaybackState.STATE_NONE;
-        mMediaSession.setPlaybackState(new PlaybackState.Builder()
+        PlaybackState.Builder playbackStateBuilder = new PlaybackState.Builder()
                 .setActions(actions)
                 .setState(playbackState, state.getPosition(), state.getPlaybackSpeed())
-                .setErrorMessage(state.getError())
-                .build());
+                .setErrorMessage(state.getError());
+        playbackStateBuilder.addCustomAction(new PlaybackState.CustomAction.Builder(
+                ACTION_STOP, getString(R.string.action_stop_service), R.drawable.ic_stop).build());
+        mMediaSession.setPlaybackState(playbackStateBuilder.build());
         mMediaSession.setActive(state.isPrepared() || state.isPlaying() || state.isCompleted());
     }
 

@@ -195,7 +195,7 @@ public class AudioPlayerDialogFragment extends CapsuleBottomSheetDialogFragment 
         mPlayPauseButton.setOnClickListener(v -> {
             AudioPlayerService service = mAudioPlayerService;
             AudioPlayerState state = mLastState;
-            if (service == null || state == null || !state.isPrepared()) {
+            if (service == null || state == null || state.getMetadata() == null) {
                 return;
             }
             if (state.isPlaying()) {
@@ -295,6 +295,11 @@ public class AudioPlayerDialogFragment extends CapsuleBottomSheetDialogFragment 
             mSlider.setValueFrom(0);
             mSlider.setValueTo(state.getDuration());
             mSlider.setValue(Math.max(0, Math.min(state.getPosition(), state.getDuration())));
+        } else {
+            // Stop clears the progress
+            mSlider.setValueFrom(0);
+            mSlider.setValueTo(1);
+            mSlider.setValue(0);
         }
         updateTimeViews(state);
 
