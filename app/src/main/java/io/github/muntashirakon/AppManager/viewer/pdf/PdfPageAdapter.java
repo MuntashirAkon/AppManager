@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.concurrent.Future;
@@ -67,12 +68,14 @@ final class PdfPageAdapter extends RecyclerView.Adapter<PdfPageAdapter.ViewHolde
                 }
                 holder.mBitmap = bitmap;
                 holder.mImageView.setImageBitmap(bitmap);
+                holder.mPageDivider.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onError(@NonNull Throwable throwable) {
                 if (!mCleared && Integer.valueOf(position).equals(holder.mPageTag)) {
                     holder.mImageView.setImageResource(io.github.muntashirakon.ui.R.drawable.ic_caution);
+                    holder.mPageDivider.setVisibility(View.GONE);
                 }
             }
         });
@@ -84,24 +87,31 @@ final class PdfPageAdapter extends RecyclerView.Adapter<PdfPageAdapter.ViewHolde
         releaseHolderBitmap(holder);
         holder.mPageTag = null;
         holder.mImageView.setImageDrawable(null);
+        holder.mPageDivider.setVisibility(View.GONE);
         super.onViewRecycled(holder);
     }
 
     static final class ViewHolder extends RecyclerView.ViewHolder {
         final ImageView mImageView;
+        final View mPageDivider;
+        @Nullable
         Integer mPageTag;
+        @Nullable
         Bitmap mBitmap;
+        @Nullable
         Future<?> mRenderTask;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.page_image);
+            mPageDivider = itemView.findViewById(R.id.page_divider);
         }
 
         void bind(int page) {
             cancelRender();
             mPageTag = page;
             mImageView.setImageDrawable(null);
+            mPageDivider.setVisibility(View.GONE);
         }
 
         void cancelRender() {
@@ -111,6 +121,7 @@ final class PdfPageAdapter extends RecyclerView.Adapter<PdfPageAdapter.ViewHolde
             }
         }
 
+        @Nullable
         Bitmap detachBitmap() {
             Bitmap bitmap = mBitmap;
             mBitmap = null;
@@ -120,6 +131,8 @@ final class PdfPageAdapter extends RecyclerView.Adapter<PdfPageAdapter.ViewHolde
 
     private void releaseHolderBitmap(@NonNull ViewHolder holder) {
         Bitmap bitmap = holder.detachBitmap();
-        if (bitmap != null) mRenderController.releaseBitmap(bitmap);
+        if (bitmap != null) {
+            mRenderController.releaseBitmap(bitmap);
+        }
     }
 }
