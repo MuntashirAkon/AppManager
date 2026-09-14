@@ -53,6 +53,7 @@ public class AudioPlayerService extends Service {
     public static final String ACTION_STOP = BuildConfig.APPLICATION_ID + ".audio.STOP";
     public static final String ACTION_PREVIOUS = BuildConfig.APPLICATION_ID + ".audio.PREVIOUS";
     public static final String ACTION_NEXT = BuildConfig.APPLICATION_ID + ".audio.NEXT";
+    public static final String ACTION_REPEAT = BuildConfig.APPLICATION_ID + ".audio.REPEAT";
 
     public interface Listener {
         void onAudioPlayerStateChanged(@NonNull AudioPlayerState state);
@@ -191,6 +192,8 @@ public class AudioPlayerService extends Service {
             public void onCustomAction(@NonNull String action, Bundle extras) {
                 if (ACTION_STOP.equals(action)) {
                     stopServicePlayback();
+                } else if (ACTION_REPEAT.equals(action)) {
+                    setRepeatMode(nextRepeatMode(mRepeatMode));
                 }
             }
         }, mPlayerHandler);
@@ -252,6 +255,9 @@ public class AudioPlayerService extends Service {
                     break;
                 case ACTION_NEXT:
                     postToPlayerThread(() -> playNextInternal(mRepeatMode == RepeatMode.REPEAT_INDEFINITELY));
+                    break;
+                case ACTION_REPEAT:
+                    setRepeatMode(nextRepeatMode(mRepeatMode));
                     break;
             }
         }
@@ -381,6 +387,13 @@ public class AudioPlayerService extends Service {
             mRepeatMode = repeatMode;
             notifyState();
         });
+    }
+
+    @RepeatMode
+    private static int nextRepeatMode(@RepeatMode int repeatMode) {
+        if (repeatMode == RepeatMode.NO_REPEAT) return RepeatMode.REPEAT_INDEFINITELY;
+        if (repeatMode == RepeatMode.REPEAT_INDEFINITELY) return RepeatMode.REPEAT_SINGLE_INDEFINITELY;
+        return RepeatMode.NO_REPEAT;
     }
 
     public void setPlaybackSpeed(float playbackSpeed) {
@@ -716,6 +729,8 @@ public class AudioPlayerService extends Service {
                 .setState(playbackState, state.getPosition(), state.getPlaybackSpeed())
                 .setErrorMessage(state.getError());
         playbackStateBuilder.addCustomAction(new PlaybackState.CustomAction.Builder(
+                ACTION_REPEAT, getString(R.string.audio_action_repeat), getRepeatIcon(state.getRepeatMode())).build());
+        playbackStateBuilder.addCustomAction(new PlaybackState.CustomAction.Builder(
                 ACTION_STOP, getString(R.string.action_stop_service), R.drawable.ic_stop).build());
         mMediaSession.setPlaybackState(playbackStateBuilder.build());
         mMediaSession.setActive(state.isPrepared() || state.isPlaying() || state.isCompleted());
@@ -745,6 +760,7 @@ public class AudioPlayerService extends Service {
         PendingIntent playPausePendingIntent = createServicePendingIntent(ACTION_PLAY_PAUSE, 2);
         PendingIntent nextPendingIntent = createServicePendingIntent(ACTION_NEXT, 3);
         PendingIntent stopPendingIntent = createServicePendingIntent(ACTION_STOP, 4);
+        PendingIntent repeatPendingIntent = createServicePendingIntent(ACTION_REPEAT, 5);
 
         Notification.Builder builder = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
                 ? new Notification.Builder(this, CHANNEL_ID) : new Notification.Builder(this);
@@ -768,6 +784,8 @@ public class AudioPlayerService extends Service {
                         playPausePendingIntent).build())
                 .addAction(new Notification.Action.Builder(R.drawable.ic_next,
                         getString(R.string.audio_action_next), nextPendingIntent).build())
+                .addAction(new Notification.Action.Builder(getRepeatIcon(state.getRepeatMode()),
+                        getString(R.string.audio_action_repeat), repeatPendingIntent).build())
                 .addAction(new Notification.Action.Builder(R.drawable.ic_stop,
                         getString(R.string.action_stop_service), stopPendingIntent).build());
         if (state.getDuration() > 0) {
@@ -780,6 +798,12 @@ public class AudioPlayerService extends Service {
                     .setShowActionsInCompactView(0, 1, 2));
         }
         return builder.build();
+    }
+
+    private int getRepeatIcon(@RepeatMode int repeatMode) {
+        if (repeatMode == RepeatMode.REPEAT_INDEFINITELY) return R.drawable.ic_repeat;
+        if (repeatMode == RepeatMode.REPEAT_SINGLE_INDEFINITELY) return R.drawable.ic_repeat_one;
+        return R.drawable.ic_repeat_off;
     }
 
     private PendingIntent createServicePendingIntent(@NonNull String action, int requestCode) {
