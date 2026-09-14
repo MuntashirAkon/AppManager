@@ -47,6 +47,7 @@
         android:name="android.permission.FORCE_STOP_PACKAGES"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission
@@ -1298,9 +1299,10 @@
         <activity
             android:name=".viewer.audio.AudioPlayerActivity"
             android:enableOnBackInvokedCallback="false"
-            android:excludeFromRecents="true"
+            android:excludeFromRecents="false"
             android:exported="true"
             android:label="@string/title_audio_player"
+            android:launchMode="singleTop"
             android:process=":audio_player"
             android:taskAffinity=".misc.music.AudioPlayerActivity"
             android:theme="@style/AppTheme.TransparentBackground">
@@ -1347,6 +1349,11 @@
             android:stateNotNeeded="true"
             android:theme="@android:style/Theme.NoDisplay" />
 
+        <service
+            android:name=".viewer.audio.AudioPlayerService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback"
+            android:process=":audio_player" />
         <service
             android:name=".apk.installer.PackageInstallerService"
             android:exported="false"

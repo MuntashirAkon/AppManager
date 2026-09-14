@@ -1403,6 +1403,10 @@
     <string name="go_to_path">Go to…</string>
     <string name="copy_this_path">Copy path</string>
     <string name="title_audio_player">Audio player</string>
+    <string name="audio_action_play">Play</string>
+    <string name="audio_action_pause">Pause</string>
+    <string name="audio_action_previous">Previous</string>
+    <string name="audio_action_next">Next</string>
     <string name="filter_force_stopped_apps">Stopped apps</string>
     <string name="installing_package">Installing %1$s…</string>
     <string name="backing_up_app">Backing up %1$s…</string>
