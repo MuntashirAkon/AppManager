@@ -1403,6 +1403,8 @@
     <string name="go_to_path">Go to…</string>
     <string name="copy_this_path">Copy path</string>
     <string name="title_audio_player">Audio player</string>
+    <string name="title_pdf_viewer">PDF viewer</string>
+    <string name="pdf_viewer_error">Unable to open this PDF.</string>
     <string name="audio_action_play">Play</string>
     <string name="audio_action_pause">Pause</string>
     <string name="audio_action_previous">Previous</string>

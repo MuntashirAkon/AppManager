@@ -1337,6 +1337,31 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".viewer.pdf.PdfViewerActivity"
+            android:enableOnBackInvokedCallback="false"
+            android:exported="true"
+            android:label="@string/title_pdf_viewer"
+            android:launchMode="singleTop"
+            android:process=":pdf">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/pdf" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:mimeType="application/pdf" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".DummyActivity"
             android:allowTaskReparenting="true"
             android:alwaysRetainTaskState="false"
