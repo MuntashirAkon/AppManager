@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.viewer.pdf;
 
 import android.os.Build;
+import android.os.ext.SdkExtensions;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 
@@ -11,9 +12,19 @@ final class PdfRenderBackendFactory {
     }
 
     static PdfRenderBackend create() {
-        if (BuildConfig.DEBUG) {
-            android.util.Log.d("PdfRenderBackend", "Using PdfRenderer backend on API " + Build.VERSION.SDK_INT);
+        final PdfRenderBackend backend;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            backend = new PdfRendererBackend();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+                && SdkExtensions.getExtensionVersion(Build.VERSION_CODES.S) >= 13) {
+            backend = new Pre35PdfRendererBackend();
+        } else {
+            backend = new Pre30PdfRendererBackend();
         }
-        return new PdfRendererBackend();
+        if (BuildConfig.DEBUG) {
+            android.util.Log.d("PdfRenderBackend", "Using " + backend.getClass().getSimpleName()
+                    + " on API " + Build.VERSION.SDK_INT);
+        }
+        return backend;
     }
 }

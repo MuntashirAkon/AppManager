@@ -10,7 +10,12 @@ import androidx.annotation.NonNull;
 import java.io.IOException;
 
 interface PdfRenderBackend extends AutoCloseable {
-    void open(@NonNull ParcelFileDescriptor fileDescriptor) throws IOException;
+    void open(@NonNull ParcelFileDescriptor fileDescriptor, String password) throws IOException;
+
+    @NonNull
+    String getBackendName();
+
+    int getCapabilities();
 
     int getPageCount();
 
@@ -24,8 +29,17 @@ interface PdfRenderBackend extends AutoCloseable {
 
     long getMaxBitmapPixels();
 
+    int getDocumentLinearizationType();
+
+    int getPdfFormType();
+
+    boolean shouldScaleForPrinting();
+
     @NonNull
-    Bitmap renderPage(int pageIndex, int targetWidth);
+    Bitmap renderPage(int pageIndex, int targetWidth, int renderMode, int renderFlags);
+
+    void writeDocument(@NonNull ParcelFileDescriptor destination, boolean removePasswordProtection)
+            throws IOException;
 
     @Override
     void close();

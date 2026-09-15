@@ -4,7 +4,7 @@ package io.github.muntashirakon.AppManager.viewer.pdf;
 
 import android.graphics.Bitmap;
 import android.graphics.pdf.LoadParams.Builder;
-import android.graphics.pdf.PdfRenderer;
+import android.graphics.pdf.PdfRendererPreV;
 import android.graphics.pdf.RenderParams;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
@@ -12,18 +12,20 @@ import android.os.ParcelFileDescriptor;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.RequiresExtension;
 
 import java.io.IOException;
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-final class PdfRendererBackend extends AbstractPdfRendererBackend {
+@RequiresApi(Build.VERSION_CODES.R)
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 13)
+final class Pre35PdfRendererBackend extends AbstractPdfRendererBackend {
     @Nullable
-    private PdfRenderer mRenderer;
+    private PdfRendererPreV mRenderer;
 
     @Override
     public void open(@NonNull ParcelFileDescriptor fileDescriptor, String password) throws IOException {
         try {
-            mRenderer = new PdfRenderer(fileDescriptor, new Builder().setPassword(password).build());
+            mRenderer = new PdfRendererPreV(fileDescriptor, new Builder().setPassword(password).build());
             if (getPageCount() > MAX_PAGE_COUNT) {
                 close();
                 throw new IOException("PDF contains too many pages");
@@ -61,10 +63,8 @@ final class PdfRendererBackend extends AbstractPdfRendererBackend {
 
     @Override
     public boolean shouldScaleForPrinting() {
-        if (mRenderer == null) {
-            throw new IllegalStateException("PDF renderer is closed");
-        }
-        return mRenderer.shouldScaleForPrinting();
+        // PdfRendererPreV does not expose PdfRenderer.shouldScaleForPrinting().
+        return false;
     }
 
     @Override
@@ -91,7 +91,7 @@ final class PdfRendererBackend extends AbstractPdfRendererBackend {
         if (mRenderer == null) {
             throw new IllegalStateException("PDF renderer is closed");
         }
-        try (PdfRenderer.Page page = mRenderer.openPage(pageIndex)) {
+        try (PdfRendererPreV.Page page = mRenderer.openPage(pageIndex)) {
             return new int[]{page.getWidth(), page.getHeight()};
         }
     }
@@ -102,7 +102,7 @@ final class PdfRendererBackend extends AbstractPdfRendererBackend {
         if (mRenderer == null) {
             throw new IllegalStateException("PDF renderer is closed");
         }
-        try (PdfRenderer.Page page = mRenderer.openPage(pageIndex)) {
+        try (PdfRendererPreV.Page page = mRenderer.openPage(pageIndex)) {
             Bitmap bitmap = createBitmap(page.getWidth(), page.getHeight(), targetWidth);
             int mode = renderMode == IPdfRenderService.RENDER_MODE_PRINT
                     ? RenderParams.RENDER_MODE_FOR_PRINT : RenderParams.RENDER_MODE_FOR_DISPLAY;

@@ -75,7 +75,7 @@ final class PdfRenderController {
                 IPdfRenderService service = mServiceConnection.getService();
                 if (mClosed) return;
                 try (ParcelFileDescriptor fileDescriptor = FileUtils.getFdFromUri(mContext, uri, "r")) {
-                    service.openDocument(fileDescriptor);
+                    service.openDocument(fileDescriptor, null);
                 }
                 postDocumentOpened(service.getPageCount());
             } catch (Throwable throwable) {
