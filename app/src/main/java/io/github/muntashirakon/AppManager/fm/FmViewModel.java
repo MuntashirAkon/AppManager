@@ -339,7 +339,20 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                     Cursor c = null;
                     try {
                         c = resolver.query(childrenUri, null, null, null, null);
+                        if (c == null) {
+                            throw new IOException("Could not query directory: " + currentUri);
+                        }
                         String[] columns = c.getColumnNames();
+                        boolean hasDocumentId = false;
+                        for (String column : columns) {
+                            if (DocumentsContract.Document.COLUMN_DOCUMENT_ID.equals(column)) {
+                                hasDocumentId = true;
+                                break;
+                            }
+                        }
+                        if (!hasDocumentId) {
+                            throw new IOException("Directory query has no document ID column: " + currentUri);
+                        }
                         while (c.moveToNext()) {
                             String documentId = null;
                             for (int i = 0; i < columns.length; ++i) {
@@ -367,6 +380,8 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                         Log.d(TAG, "Time to fetch files via SAF: %d ms", e - s);
                     } catch (Exception ex) {
                         Log.w(TAG, "Failed query: %s", ex);
+                        handleError(ex, currentUri, loadGeneration);
+                        return;
                     } finally {
                         IoUtils.closeQuietly(c);
                     }
