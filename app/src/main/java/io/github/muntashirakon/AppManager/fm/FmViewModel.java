@@ -422,14 +422,15 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                 return;
             }
             // Send folder info for the first time
+            FolderShortInfo initialFolderShortInfo = new FolderShortInfo(folderShortInfo);
             ThreadUtils.postOnMainThread(() -> {
                 if (isCurrentLoad(loadGeneration)) {
-                    mFolderShortInfoLiveData.setValue(folderShortInfo);
+                    mFolderShortInfoLiveData.setValue(initialFolderShortInfo);
                 }
             });
             // Run filter and sorting options for fmItems
             s = System.currentTimeMillis();
-            filterAndSort(loadGeneration, scrollToFilename);
+            filterAndSort(loadGeneration, currentUri, scrollToFilename);
             e = System.currentTimeMillis();
             Log.d(TAG, "Time to sort files: %d ms", e - s);
             synchronized (mSizeLock) {
@@ -533,11 +534,16 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     }
 
     private void filterAndSort() {
-        filterAndSort(mLoadGeneration.get(), null);
+        long loadGeneration = mLoadGeneration.get();
+        Uri currentUri = mCurrentUri;
+        if (currentUri == null) {
+            return;
+        }
+        filterAndSort(loadGeneration, currentUri, null);
     }
 
-    private void filterAndSort(long loadGeneration, @Nullable String scrollToFilename) {
-        Uri currentUri = mCurrentUri;
+    private void filterAndSort(long loadGeneration, @NonNull Uri currentUri,
+                               @Nullable String scrollToFilename) {
         if (!isCurrentLoad(loadGeneration)) {
             return;
         }
