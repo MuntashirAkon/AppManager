@@ -7,6 +7,7 @@ import android.os.ParcelFileDescriptor;
 interface IPdfRenderService {
     void openDocument(in ParcelFileDescriptor fileDescriptor);
     int getPageCount();
+    int[] getPageDimensions(int pageIndex);
     ParcelFileDescriptor renderPage(int pageIndex, int targetWidth);
     void closeDocument();
 }
