@@ -1,0 +1,32 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_zoom_out"
+        android:title="@string/pdf_zoom_out"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_zoom_in"
+        android:title="@string/pdf_zoom_in"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_go_to_page"
+        android:icon="@drawable/ic_run_fast"
+        android:title="@string/pdf_go_to_page"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_print_pdf"
+        android:icon="@drawable/ic_print"
+        android:title="@string/pdf_print"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_export_pdf"
+        android:icon="@drawable/ic_file_export"
+        android:title="@string/pref_export"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_share_pdf"
+        android:icon="@drawable/ic_share"
+        android:title="@string/share"
+        app:showAsAction="never" />
+</menu>
