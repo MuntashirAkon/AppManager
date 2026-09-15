@@ -69,6 +69,14 @@ public final class FmDirectorySettings {
         AppsDb.getInstance().fmDirectorySizeDao().delete(FmDirectoryKey.fromUri(directory.getUri()));
     }
 
+    public static int deleteStaleSort(long cutoff) {
+        return AppsDb.getInstance().fmDirectorySortDao().deleteOlderThan(cutoff);
+    }
+
+    public static int deleteStaleSize(long cutoff) {
+        return AppsDb.getInstance().fmDirectorySizeDao().deleteOlderThan(cutoff);
+    }
+
     @NonNull
     public static String getDirectoryKey(@NonNull Path directory) {
         return FmDirectoryKey.fromUri(directory.getUri());

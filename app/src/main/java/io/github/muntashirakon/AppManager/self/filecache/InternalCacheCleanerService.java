@@ -15,6 +15,7 @@ import androidx.core.app.PendingIntentCompat;
 import java.util.Calendar;
 
 import io.github.muntashirakon.AppManager.types.ForegroundService;
+import io.github.muntashirakon.AppManager.fm.FmDirectorySettings;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.FileSystemManager;
 import io.github.muntashirakon.io.Path;
@@ -23,6 +24,8 @@ import io.github.muntashirakon.io.Paths;
 // IMPORTANT: This service must be run without authentication.
 public class InternalCacheCleanerService extends ForegroundService {
     public static final String TAG = InternalCacheCleanerService.class.getSimpleName();
+    private static final long SORT_RETENTION = 2_592_000_000L; // 30 days
+    private static final long SIZE_RETENTION = 604_800_000L; // 7 days
 
     public static void scheduleAlarm(@NonNull Context context) {
         Intent intent = new Intent(context, InternalCacheCleanerService.class);
@@ -55,8 +58,25 @@ public class InternalCacheCleanerService extends ForegroundService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        clearOldFiles();
-        clearOldImages();
+        runCleanup("file cache", this::clearOldFiles);
+        runCleanup("image cache", this::clearOldImages);
+        runCleanup("file-manager directory settings", this::clearOldDirectorySettings);
+    }
+
+    private void clearOldDirectorySettings() {
+        long now = System.currentTimeMillis();
+        int sortDeleteCount = FmDirectorySettings.deleteStaleSort(now - SORT_RETENTION);
+        int sizeDeleteCount = FmDirectorySettings.deleteStaleSize(now - SIZE_RETENTION);
+        Log.i(TAG, "Deleted " + sortDeleteCount + " stale file-manager sort settings and "
+                + sizeDeleteCount + " stale folder-size records.");
+    }
+
+    private void runCleanup(@NonNull String name, @NonNull Runnable cleanup) {
+        try {
+            cleanup.run();
+        } catch (Throwable e) {
+            Log.e(TAG, "Could not clean " + name + ".", e);
+        }
     }
 
     private void clearOldFiles() {
