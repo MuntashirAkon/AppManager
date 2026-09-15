@@ -624,7 +624,9 @@ public class FmFragment extends Fragment implements MenuProvider, SearchView.OnQ
     public int getRecyclerViewFirstChildPosition() {
         if (mRecyclerView != null) {
             View v = mRecyclerView.getChildAt(0);
-            return mRecyclerView.getChildAdapterPosition(v);
+            if (v != null) {
+                return mRecyclerView.getChildAdapterPosition(v);
+            }
         }
         return RecyclerView.NO_POSITION;
     }
