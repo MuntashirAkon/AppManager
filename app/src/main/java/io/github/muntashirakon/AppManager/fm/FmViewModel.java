@@ -538,11 +538,15 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                 // explicitly indicates that the directory contents changed.
                 if (forceSizeRefresh || cachedSize == null || !FmDirectorySettings.isSizeFresh(
                         cachedSize, System.currentTimeMillis())) {
-                    folderShortInfo.size = Paths.size(path);
                     try {
-                        FmDirectorySettings.saveSize(path, folderShortInfo.size, System.currentTimeMillis());
+                        folderShortInfo.size = Paths.size(path);
+                        try {
+                            FmDirectorySettings.saveSize(path, folderShortInfo.size, System.currentTimeMillis());
+                        } catch (Throwable ex) {
+                            Log.w(TAG, "Could not save cached folder size: %s", ex);
+                        }
                     } catch (Throwable ex) {
-                        Log.w(TAG, "Could not save cached folder size: %s", ex);
+                        Log.w(TAG, "Could not calculate folder size: %s", ex);
                     }
                 }
                 if (ThreadUtils.isInterrupted() || !isCurrentLoad(loadGeneration)) {
