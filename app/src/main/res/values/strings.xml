@@ -877,6 +877,7 @@
     <string name="os_version">OS version</string>
     <string name="reverse">Reverse</string>
     <string name="list_options">List options</string>
+    <string name="apply_for_this_folder_only">Apply for this folder only</string>
     <string name="ssaid">SSAID</string>
     <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) is a device identifier assigned to each app (from Android 8 \"Oreo\" onwards). It is widely used by apps to track users.</string>
     <string name="copied_to_clipboard">Copied to clipboard.</string>

@@ -50,6 +50,13 @@
             app:lineSpacing="@dimen/padding_very_small"
             app:singleSelection="true" />
 
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/folder_only"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="@string/apply_for_this_folder_only" />
+
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

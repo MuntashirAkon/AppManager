@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.misc;
 
 import android.app.Application;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,23 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
     public static final String TAG = ListOptions.class.getSimpleName();
 
     public interface ListOptionActions {
+        default boolean supportsFolderOnly() {
+            return false;
+        }
+
+        default void onOptionsOpened() {
+        }
+
+        default void onOptionsClosed() {
+        }
+
+        default boolean isFolderOnly() {
+            return false;
+        }
+
+        default void setFolderOnly(boolean folderOnly) {
+        }
+
         default void setReverseSort(boolean reverseSort) {
         }
 
@@ -69,6 +87,7 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
     private TextView mSortText;
     private ChipGroup mSortGroup;
     private MaterialCheckBox mReverseSort;
+    private MaterialCheckBox mFolderOnly;
     private TextView mFilterText;
     private ChipGroup mFilterOptions;
     private TextView mOptionsText;
@@ -102,6 +121,7 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
         mSortText = view.findViewById(R.id.sort_text);
         mSortGroup = view.findViewById(R.id.sort_options);
         mReverseSort = view.findViewById(R.id.reverse_sort);
+        mFolderOnly = view.findViewById(R.id.folder_only);
         mFilterText = view.findViewById(R.id.filter_text);
         mFilterOptions = view.findViewById(R.id.filter_options);
         mOptionsText = view.findViewById(R.id.options_text);
@@ -155,6 +175,9 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
             mFilterOptions.removeAllViews();
             mOptionsView.removeAllViews();
         }
+        ListOptionActions actions = requireListOptionActions();
+        actions.onOptionsOpened();
+
         // Enable sorting
         LinkedHashMap<Integer, Integer> sortIdLocaleMap = getSortIdLocaleMap();
         boolean sortingEnabled = sortIdLocaleMap != null;
@@ -168,12 +191,28 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
                 mSortGroup.addView(getRadioChip(sortId, sortStringRes), i);
                 ++i;
             }
-            mSortGroup.check(requireListOptionActions().getSortBy());
+            mSortGroup.check(actions.getSortBy());
             mSortGroup.setOnCheckedStateChangeListener((group, checkedIds) ->
                     requireListOptionActions().setSortBy(mSortGroup.getCheckedChipId()));
-            mReverseSort.setChecked(requireListOptionActions().isReverseSort());
+            mReverseSort.setChecked(actions.isReverseSort());
             mReverseSort.setOnCheckedChangeListener((buttonView, isChecked) ->
                     requireListOptionActions().setReverseSort(isChecked));
+            boolean folderOnlyEnabled = actions.supportsFolderOnly();
+            mFolderOnly.setVisibility(folderOnlyEnabled ? View.VISIBLE : View.GONE);
+            if (folderOnlyEnabled) {
+                mFolderOnly.setChecked(actions.isFolderOnly());
+                mFolderOnly.setOnCheckedChangeListener((buttonView, isChecked) ->
+                {
+                    actions.setFolderOnly(isChecked);
+                    if (!isChecked) {
+                        // Unchecking the scope restores the global sorting options
+                        mSortGroup.check(actions.getSortBy());
+                        mReverseSort.setChecked(actions.isReverseSort());
+                    }
+                });
+            }
+        } else {
+            mFolderOnly.setVisibility(View.GONE);
         }
 
         // Enable filtering
@@ -223,6 +262,17 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
         } else if (optionsEnabled && mOptionsView.getChildCount() > 0) {
             mOptionsView.getChildAt(0).requestFocus();
         }
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        if (mListOptionsViewModel != null) {
+            ListOptionActions actions = mListOptionsViewModel.getListOptionActions();
+            if (actions != null) {
+                actions.onOptionsClosed();
+            }
+        }
+        super.onDismiss(dialog);
     }
 
     @NonNull
