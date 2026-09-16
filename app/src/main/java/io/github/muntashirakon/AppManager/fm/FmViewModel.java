@@ -41,6 +41,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.dex.DexUtils;
 import io.github.muntashirakon.AppManager.db.entity.FmDirectorySort;
+import io.github.muntashirakon.AppManager.db.entity.FmDirectorySize;
 import io.github.muntashirakon.AppManager.fm.icons.FmIconFetcher;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
@@ -254,7 +255,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         mOptions = options;
         if (!options.isVfs()) {
             // No need to mount anything. Options#uri is the base URI
-            loadFiles(defaultUri != null ? defaultUri : options.uri, null);
+            loadFiles(defaultUri != null ? defaultUri : options.uri, null, false);
             return;
         }
         // Need to mount the file system
@@ -269,7 +270,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                     newUri = defaultUri.buildUpon().authority(String.valueOf(vfsId)).build();
                 } else newUri = fs.getRootPath().getUri();
                 // Now load files
-                ThreadUtils.postOnMainThread(() -> loadFiles(newUri, null));
+                ThreadUtils.postOnMainThread(() -> loadFiles(newUri, null, false));
             } catch (IOException e) {
                 handleError(e, mOptions.uri);
             }
@@ -338,7 +339,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     @MainThread
     public void reload(@Nullable String scrollToFilename) {
         if (mOptions != null && mCurrentUri != null) {
-            loadFiles(mCurrentUri, scrollToFilename);
+            loadFiles(mCurrentUri, scrollToFilename, true);
         }
     }
 
@@ -352,7 +353,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                 return;
             }
         }
-        loadFiles(uri, null);
+        loadFiles(uri, null, false);
     }
 
     @MainThread
@@ -363,7 +364,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
 
     @SuppressLint("WrongThread")
     @MainThread
-    private void loadFiles(@NonNull Uri uri, @Nullable String scrollToFilename) {
+    private void loadFiles(@NonNull Uri uri, @Nullable String scrollToFilename, boolean forceSizeRefresh) {
         long loadGeneration = mLoadGeneration.incrementAndGet();
         if (mFmFileLoaderResult != null) {
             mFmFileLoaderResult.cancel(true);
@@ -418,6 +419,15 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             long s, e;
             boolean isSaf = ContentResolver.SCHEME_CONTENT.equals(currentUri.getScheme());
             FolderShortInfo folderShortInfo = new FolderShortInfo();
+            FmDirectorySize cachedSize = null;
+            try {
+                cachedSize = FmDirectorySettings.getSize(path);
+                if (cachedSize != null) {
+                    folderShortInfo.size = cachedSize.sizeBytes;
+                }
+            } catch (Throwable ex) {
+                Log.w(TAG, "Could not load cached folder size: %s", ex);
+            }
             int folderCount = 0;
             List<FmItem> loadedItems = new ArrayList<>();
             if (isSaf) {
@@ -524,8 +534,17 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             e = System.currentTimeMillis();
             Log.d(TAG, "Time to sort files: %d ms", e - s);
             synchronized (mSizeLock) {
-                // Calculate size and send folder info again
-                folderShortInfo.size = Paths.size(path);
+                // Recalculate only when there is no recent cache, or when reload()
+                // explicitly indicates that the directory contents changed.
+                if (forceSizeRefresh || cachedSize == null || !FmDirectorySettings.isSizeFresh(
+                        cachedSize, System.currentTimeMillis())) {
+                    folderShortInfo.size = Paths.size(path);
+                    try {
+                        FmDirectorySettings.saveSize(path, folderShortInfo.size, System.currentTimeMillis());
+                    } catch (Throwable ex) {
+                        Log.w(TAG, "Could not save cached folder size: %s", ex);
+                    }
+                }
                 if (ThreadUtils.isInterrupted() || !isCurrentLoad(loadGeneration)) {
                     return;
                 }

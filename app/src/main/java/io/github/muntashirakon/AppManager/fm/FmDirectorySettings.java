@@ -15,6 +15,7 @@ import io.github.muntashirakon.io.Path;
 @WorkerThread
 public final class FmDirectorySettings {
     private static final long ACCESS_UPDATE_INTERVAL = 86_400_000L;
+    private static final long SIZE_CACHE_VALIDITY = 900_000L;
 
     private FmDirectorySettings() {
     }
@@ -53,6 +54,10 @@ public final class FmDirectorySettings {
             AppsDb.getInstance().fmDirectorySizeDao().upsert(size);
         }
         return size;
+    }
+
+    public static boolean isSizeFresh(@NonNull FmDirectorySize size, long now) {
+        return size.calculatedAt > 0 && now - size.calculatedAt < SIZE_CACHE_VALIDITY;
     }
 
     public static void saveSize(@NonNull Path directory, long sizeBytes, long calculatedAt) {
