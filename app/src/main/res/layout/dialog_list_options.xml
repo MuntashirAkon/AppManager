@@ -16,6 +16,7 @@
         android:orientation="vertical">
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/sort_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -58,6 +59,7 @@
             android:text="@string/apply_for_this_folder_only" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/filter_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

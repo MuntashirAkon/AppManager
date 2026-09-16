@@ -85,10 +85,12 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
     }
 
     private TextView mSortText;
+    private View mSortHeader;
     private ChipGroup mSortGroup;
     private MaterialCheckBox mReverseSort;
     private MaterialCheckBox mFolderOnly;
     private TextView mFilterText;
+    private View mFilterHeader;
     private ChipGroup mFilterOptions;
     private TextView mOptionsText;
     private LinearLayoutCompat mOptionsView;
@@ -119,10 +121,12 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
         mListOptionsViewModel = new ViewModelProvider(this).get(ListOptionsViewModel.class);
         mSortText = view.findViewById(R.id.sort_text);
+        mSortHeader = view.findViewById(R.id.sort_header);
         mSortGroup = view.findViewById(R.id.sort_options);
         mReverseSort = view.findViewById(R.id.reverse_sort);
         mFolderOnly = view.findViewById(R.id.folder_only);
         mFilterText = view.findViewById(R.id.filter_text);
+        mFilterHeader = view.findViewById(R.id.filter_header);
         mFilterOptions = view.findViewById(R.id.filter_options);
         mOptionsText = view.findViewById(R.id.options_text);
         mOptionsView = view.findViewById(R.id.options);
@@ -181,6 +185,7 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
         // Enable sorting
         LinkedHashMap<Integer, Integer> sortIdLocaleMap = getSortIdLocaleMap();
         boolean sortingEnabled = sortIdLocaleMap != null;
+        mSortHeader.setVisibility(sortingEnabled ? View.VISIBLE : View.GONE);
         mSortText.setVisibility(sortingEnabled ? View.VISIBLE : View.GONE);
         mSortGroup.setVisibility(sortingEnabled ? View.VISIBLE : View.GONE);
         mReverseSort.setVisibility(sortingEnabled ? View.VISIBLE : View.GONE);
@@ -218,6 +223,7 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
         // Enable filtering
         LinkedHashMap<Integer, Integer> filterFlagLocaleMap = getFilterFlagLocaleMap();
         boolean filteringEnabled = filterFlagLocaleMap != null;
+        mFilterHeader.setVisibility(filteringEnabled ? View.VISIBLE : View.GONE);
         mFilterText.setVisibility(filteringEnabled ? View.VISIBLE : View.GONE);
         mFilterOptions.setVisibility(filteringEnabled ? View.VISIBLE : View.GONE);
         if (filteringEnabled) {
