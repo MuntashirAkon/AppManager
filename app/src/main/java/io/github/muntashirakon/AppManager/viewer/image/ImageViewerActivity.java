@@ -23,7 +23,7 @@ import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 public class ImageViewerActivity extends PerProcessActivity implements ImageDecodeController.Listener {
     private View mProgress;
     private View mError;
-    private android.widget.ImageView mImageView;
+    private ZoomableImageView mImageView;
     private ImageDecodeController mDecodeController;
     @Nullable
     private Bitmap mBitmap;
@@ -54,10 +54,26 @@ public class ImageViewerActivity extends PerProcessActivity implements ImageDeco
     }
 
     @Override
+    public boolean onCreateOptionsMenu(@NonNull android.view.Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.activity_image_viewer_actions, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
             finish();
+            return true;
+        } else if (itemId == R.id.action_image_reset) {
+            mImageView.resetTransform();
+            return true;
+        } else if (itemId == R.id.action_image_rotate_left) {
+            mImageView.rotateLeft();
+            return true;
+        } else if (itemId == R.id.action_image_rotate_right) {
+            mImageView.rotateRight();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -72,6 +88,7 @@ public class ImageViewerActivity extends PerProcessActivity implements ImageDeco
         releaseBitmap();
         mBitmap = bitmap;
         mImageView.setImageBitmap(bitmap);
+        mImageView.resetTransform();
         mProgress.setVisibility(View.GONE);
         mError.setVisibility(View.GONE);
         mImageView.setVisibility(View.VISIBLE);
@@ -82,6 +99,7 @@ public class ImageViewerActivity extends PerProcessActivity implements ImageDeco
         if (mDestroyed) return;
         releaseBitmap();
         mImageView.setImageDrawable(null);
+        mImageView.resetTransform();
         mProgress.setVisibility(View.GONE);
         mImageView.setVisibility(View.GONE);
         mError.setVisibility(View.VISIBLE);

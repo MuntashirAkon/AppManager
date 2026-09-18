@@ -1,0 +1,12 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_image_reset"
+        android:title="@string/image_reset_zoom" />
+    <item
+        android:id="@+id/action_image_rotate_left"
+        android:title="@string/image_rotate_left" />
+    <item
+        android:id="@+id/action_image_rotate_right"
+        android:title="@string/image_rotate_right" />
+</menu>

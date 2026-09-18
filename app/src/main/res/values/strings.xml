@@ -1421,6 +1421,9 @@
     <string name="pdf_viewer_error">Unable to open this PDF.</string>
     <string name="title_image_viewer">Image viewer</string>
     <string name="image_viewer_error">Unable to open this image.</string>
+    <string name="image_reset_zoom">Fit to screen</string>
+    <string name="image_rotate_left">Rotate left</string>
+    <string name="image_rotate_right">Rotate right</string>
     <string name="audio_action_play">Play</string>
     <string name="audio_action_pause">Pause</string>
     <string name="audio_action_previous">Previous</string>
