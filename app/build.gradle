@@ -180,6 +180,7 @@ dependencies {
     implementation "com.github.MuntashirAkon:time-duration-picker:${duration_picker}"
 
     // Utility
+    implementation "androidx.exifinterface:exifinterface:${exif_version}"
     implementation "com.google.code.gson:gson:${gson_version}"
     implementation "com.github.luben:zstd-jni:${zstd_version}@aar"
 

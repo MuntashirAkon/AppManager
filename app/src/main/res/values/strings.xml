@@ -1424,6 +1424,11 @@
     <string name="image_reset_zoom">Fit to screen</string>
     <string name="image_rotate_left">Rotate left</string>
     <string name="image_rotate_right">Rotate right</string>
+    <string name="image_edit_unavailable">No image editor is available.</string>
+    <string name="image_set_wallpaper">Set as wallpaper</string>
+    <string name="image_wallpaper_failed">Unable to set wallpaper.</string>
+    <string name="image_metadata">Metadata</string>
+    <string name="image_metadata_name">Name</string>
     <string name="audio_action_play">Play</string>
     <string name="audio_action_pause">Pause</string>
     <string name="audio_action_previous">Previous</string>

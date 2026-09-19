@@ -9,4 +9,24 @@
     <item
         android:id="@+id/action_image_rotate_right"
         android:title="@string/image_rotate_right" />
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share"
+        android:title="@string/share" />
+    <item
+        android:id="@+id/action_print"
+        android:icon="@drawable/ic_print"
+        android:title="@string/pdf_print" />
+    <item
+        android:id="@+id/action_edit"
+        android:icon="@drawable/ic_edit"
+        android:title="@string/item_edit" />
+    <item
+        android:id="@+id/action_image_wallpaper"
+        android:icon="@drawable/ic_image"
+        android:title="@string/image_set_wallpaper" />
+    <item
+        android:id="@+id/action_image_metadata"
+        android:icon="@drawable/ic_information_circle"
+        android:title="@string/image_metadata" />
 </menu>

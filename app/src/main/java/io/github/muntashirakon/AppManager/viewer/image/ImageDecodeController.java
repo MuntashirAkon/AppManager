@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.viewer.image;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -18,7 +17,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.Paths;
 
 final class ImageDecodeController implements AutoCloseable {
     private static final int MAX_BITMAP_DIMENSION = 4096;
@@ -42,18 +40,17 @@ final class ImageDecodeController implements AutoCloseable {
         mListener = listener;
     }
 
-    void decode(@NonNull Uri uri, int targetWidth, int targetHeight) {
+    void decode(@NonNull Path path, int targetWidth, int targetHeight) {
         cancel();
         final int generation = ++mGeneration;
         final int width = Math.max(1, Math.min(targetWidth, MAX_BITMAP_DIMENSION));
         final int height = Math.max(1, Math.min(targetHeight, MAX_BITMAP_DIMENSION));
-        mDecodeTask = mExecutor.submit(() -> decodeImage(uri, width, height, generation));
+        mDecodeTask = mExecutor.submit(() -> decodeImage(path, width, height, generation));
     }
 
-    private void decodeImage(@NonNull Uri uri, int targetWidth, int targetHeight, int generation) {
+    private void decodeImage(@NonNull Path path, int targetWidth, int targetHeight, int generation) {
         Bitmap bitmap = null;
         try {
-            Path path = Paths.getStrict(uri);
             BitmapFactory.Options bounds = new BitmapFactory.Options();
             bounds.inJustDecodeBounds = true;
             try (InputStream input = path.openInputStream()) {
