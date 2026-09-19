@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.viewer.pdf;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintDocumentInfo;
 import android.print.PrintManager;
-import android.provider.OpenableColumns;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,9 +29,9 @@ import androidx.documentfile.provider.DocumentFile;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.ArrayDeque;
@@ -46,8 +44,8 @@ import io.github.muntashirakon.AppManager.PerProcessActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
@@ -58,8 +56,7 @@ public class PdfViewerActivity extends PerProcessActivity {
     private View mProgress;
     private View mError;
     private RecyclerView mPages;
-    private Uri mDocumentUri;
-    private String mDocumentTitle;
+    private Path mDocumentPath;
     private int mPageCount;
     private float mZoom = 1f;
     private ArrayDeque<Integer> mExportPages;
@@ -145,8 +142,8 @@ public class PdfViewerActivity extends PerProcessActivity {
             return;
         }
         Uri uri = uris.get(0);
-        mDocumentUri = uri;
-        setDocumentTitle(uri);
+        mDocumentPath = Paths.get(uris.get(0));
+        setDocumentTitle();
         mRenderController.open(uri);
     }
 
@@ -210,15 +207,10 @@ public class PdfViewerActivity extends PerProcessActivity {
     }
 
     private void shareDocument() {
-        if (mDocumentUri == null) {
+        if (mDocumentPath == null) {
             return;
         }
-        Uri shareUri;
-        try {
-            shareUri = FmProvider.getContentUri(Paths.get(mDocumentUri));
-        } catch (Throwable e) {
-            shareUri = mDocumentUri;
-        }
+        Uri shareUri = FmProvider.getContentUri(mDocumentPath);
         Intent intent = new Intent(Intent.ACTION_SEND)
                 .setType("application/pdf")
                 .putExtra(Intent.EXTRA_STREAM, shareUri)
@@ -383,7 +375,7 @@ public class PdfViewerActivity extends PerProcessActivity {
     }
 
     private void printDocument() {
-        if (mDocumentUri == null || mPageCount == 0) return;
+        if (mDocumentPath == null || mPageCount == 0) return;
         PrintManager printManager = (PrintManager) getSystemService(PRINT_SERVICE);
         if (printManager == null) return;
         printManager.print(getDocumentTitle(), new PrintDocumentAdapter() {
@@ -403,8 +395,7 @@ public class PdfViewerActivity extends PerProcessActivity {
             public void onWrite(@NonNull PageRange[] pages, @NonNull ParcelFileDescriptor destination,
                                 @NonNull CancellationSignal cancellationSignal, @NonNull WriteResultCallback callback) {
                 ThreadUtils.postOnBackgroundThread(() -> {
-                    try (ParcelFileDescriptor source = FileUtils.getFdFromUri(PdfViewerActivity.this, mDocumentUri, "r");
-                         FileInputStream input = new FileInputStream(source.getFileDescriptor());
+                    try (InputStream input = mDocumentPath.openInputStream();
                          FileOutputStream output = new FileOutputStream(destination.getFileDescriptor())) {
                         byte[] buffer = new byte[16 * 1024];
                         int count;
@@ -429,33 +420,16 @@ public class PdfViewerActivity extends PerProcessActivity {
         }, null);
     }
 
-    private void setDocumentTitle(@NonNull Uri uri) {
-        String filename = null;
-        if ("content".equals(uri.getScheme())) {
-            try (Cursor cursor = getContentResolver().query(uri,
-                    new String[]{OpenableColumns.DISPLAY_NAME}, null, null, null)) {
-                if (cursor != null && cursor.moveToFirst()) {
-                    filename = cursor.getString(0);
-                }
-            } catch (Throwable ignored) {
-            }
-        }
-        if (filename == null || filename.isEmpty()) {
-            filename = uri.getLastPathSegment();
-        }
-        if (filename == null || filename.isEmpty()) {
-            filename = getString(R.string.title_pdf_viewer);
-        }
-        mDocumentTitle = filename;
+    private void setDocumentTitle() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(filename);
+            actionBar.setTitle(mDocumentPath.getName());
         }
     }
 
     @NonNull
     private String getDocumentTitle() {
-        return mDocumentTitle != null ? mDocumentTitle : getString(R.string.title_pdf_viewer);
+        return mDocumentPath != null ? mDocumentPath.getName() : getString(R.string.title_pdf_viewer);
     }
 
     @Override
