@@ -19,6 +19,7 @@ import android.print.PrintManager;
 import android.app.WallpaperManager;
 import android.print.pdf.PrintedPdfDocument;
 import android.text.SpannableStringBuilder;
+import android.text.format.Formatter;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -310,6 +311,7 @@ public class ImageViewerActivity extends PerProcessActivity implements ImageDeco
         SpannableStringBuilder metadata = new SpannableStringBuilder();
         appendMetadata(metadata, getString(R.string.image_metadata_name), getImageTitle());
         appendMetadata(metadata, getString(R.string.mime_type), getImageMimeType());
+        appendMetadata(metadata, getString(R.string.size), Formatter.formatFileSize(this, mImagePath.length()));
         try {
             CharSequence exifMetadata = ImageMetadataReader.read(this, Paths.get(uri));
             if (exifMetadata.length() > 0) {
