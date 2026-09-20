@@ -3,8 +3,23 @@
 package io.github.muntashirakon.AppManager.viewer.font;
 
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CancellationSignal;
+import android.os.ParcelFileDescriptor;
+import android.print.PageRange;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintDocumentInfo;
+import android.print.PrintManager;
+import android.print.pdf.PrintedPdfDocument;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.view.View;
@@ -22,11 +37,13 @@ import android.text.TextWatcher;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.FileOutputStream;
 
 import io.github.muntashirakon.AppManager.PerProcessActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
@@ -38,6 +55,7 @@ public class FontViewerActivity extends PerProcessActivity implements FontLoadCo
     private FontLoadController mLoadController;
     @Nullable
     private Path mFontPath;
+    private List<FontFace> mFaces = new ArrayList<>();
     private final List<TextView> mPreviewViews = new ArrayList<>();
     private float mTextSizeSp = 32;
     private boolean mDestroyed;
@@ -92,6 +110,9 @@ public class FontViewerActivity extends PerProcessActivity implements FontLoadCo
         } else if (itemId == R.id.action_share) {
             shareFont();
             return true;
+        } else if (itemId == R.id.action_print) {
+            printFont();
+            return true;
         } else if (itemId == R.id.action_font_text_size_decrease) {
             setTextSize(Math.max(16, mTextSizeSp - 4));
             return true;
@@ -115,6 +136,7 @@ public class FontViewerActivity extends PerProcessActivity implements FontLoadCo
     @Override
     public void onFontsLoaded(@NonNull List<FontFace> faces) {
         if (mDestroyed) return;
+        mFaces = new ArrayList<>(faces);
         mPreviews.removeAllViews();
         mPreviewViews.clear();
         for (int i = 0; i < faces.size(); ++i) {
@@ -147,6 +169,7 @@ public class FontViewerActivity extends PerProcessActivity implements FontLoadCo
     @Override
     public void onError(@NonNull Throwable throwable) {
         if (mDestroyed) return;
+        mFaces.clear();
         mProgress.setVisibility(View.GONE);
         mPreviewInput.setVisibility(View.GONE);
         mPreviews.setVisibility(View.GONE);
@@ -155,6 +178,7 @@ public class FontViewerActivity extends PerProcessActivity implements FontLoadCo
 
     private void openFont(@NonNull android.content.Intent intent) {
         mFontPath = null;
+        mFaces.clear();
         List<Uri> uris = IntentCompat.getDataUris(intent);
         if (uris == null || uris.size() != 1) {
             showError();
@@ -186,6 +210,188 @@ public class FontViewerActivity extends PerProcessActivity implements FontLoadCo
                 .putExtra(Intent.EXTRA_STREAM, shareUri)
                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivity(Intent.createChooser(intent, getString(R.string.share)));
+    }
+
+    private void printFont() {
+        if (mFaces.isEmpty()) {
+            return;
+        }
+        PrintManager printManager = (PrintManager) getSystemService(PRINT_SERVICE);
+        if (printManager != null) {
+            printManager.print(getPrintTitle(), new FontPrintDocumentAdapter(), null);
+        }
+    }
+
+    @NonNull
+    private String getPrintTitle() {
+        return mFontPath != null ? mFontPath.getName() : getString(R.string.title_font_viewer);
+    }
+
+    private final class FontPrintDocumentAdapter extends PrintDocumentAdapter {
+        private PrintAttributes mPrintAttributes;
+        private List<Integer> mFacePageCounts = new ArrayList<>();
+        private int mPageCount;
+
+        @Override
+        public void onLayout(@NonNull PrintAttributes oldAttributes,
+                             @NonNull PrintAttributes newAttributes,
+                             @Nullable CancellationSignal cancellationSignal,
+                             @NonNull LayoutResultCallback callback,
+                             @Nullable Bundle extras) {
+            if (cancellationSignal != null && cancellationSignal.isCanceled()) {
+                callback.onLayoutCancelled();
+                return;
+            }
+            mPrintAttributes = newAttributes;
+            mFacePageCounts = getFacePageCounts(newAttributes);
+            mPageCount = 0;
+            for (int pageCount : mFacePageCounts) {
+                mPageCount += pageCount;
+            }
+            PrintDocumentInfo info = new PrintDocumentInfo.Builder(getPrintTitle())
+                    .setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT)
+                    .setPageCount(mPageCount)
+                    .build();
+            callback.onLayoutFinished(info, !newAttributes.equals(oldAttributes));
+        }
+
+        @Override
+        public void onWrite(@NonNull PageRange[] pages,
+                            @NonNull ParcelFileDescriptor destination,
+                            @NonNull CancellationSignal cancellationSignal,
+                            @NonNull WriteResultCallback callback) {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                PrintedPdfDocument document = null;
+                try {
+                    if (mPrintAttributes == null || mPageCount == 0) {
+                        callback.onWriteFailed("No font preview available");
+                        return;
+                    }
+                    document = new PrintedPdfDocument(FontViewerActivity.this, mPrintAttributes);
+                    int documentPage = 0;
+                    for (int faceIndex = 0; faceIndex < mFaces.size(); ++faceIndex) {
+                        int facePageCount = mFacePageCounts.get(faceIndex);
+                        for (int facePage = 0; facePage < facePageCount; ++facePage) {
+                            if (cancellationSignal.isCanceled()) {
+                                callback.onWriteCancelled();
+                                return;
+                            }
+                            if (containsPage(pages, documentPage)) {
+                                PrintedPdfDocument.Page page = document.startPage(documentPage + 1);
+                                drawFacePage(page, mFaces.get(faceIndex), faceIndex, facePage,
+                                        facePageCount);
+                                document.finishPage(page);
+                            }
+                            ++documentPage;
+                        }
+                    }
+                    if (cancellationSignal.isCanceled()) {
+                        callback.onWriteCancelled();
+                    } else {
+                        try (FileOutputStream output = new FileOutputStream(
+                                destination.getFileDescriptor())) {
+                            document.writeTo(output);
+                        }
+                        callback.onWriteFinished(new PageRange[]{PageRange.ALL_PAGES});
+                    }
+                } catch (Throwable e) {
+                    callback.onWriteFailed(e.getMessage());
+                } finally {
+                    if (document != null) {
+                        document.close();
+                    }
+                    try {
+                        destination.close();
+                    } catch (Exception ignored) {
+                    }
+                }
+            });
+        }
+    }
+
+    @NonNull
+    private List<Integer> getFacePageCounts(@NonNull PrintAttributes printAttributes) {
+        List<Integer> pageCounts = new ArrayList<>();
+        PrintedPdfDocument document = null;
+        try {
+            document = new PrintedPdfDocument(this, printAttributes);
+            PrintedPdfDocument.Page page = document.startPage(1);
+            Rect content = page.getInfo().getContentRect();
+            document.finishPage(page);
+            for (int i = 0; i < mFaces.size(); ++i) {
+                pageCounts.add(getFacePageCount(mFaces.get(i), i, content));
+            }
+        } finally {
+            if (document != null) {
+                document.close();
+            }
+        }
+        return pageCounts;
+    }
+
+    private int getFacePageCount(@NonNull FontFace face, int faceIndex, @NonNull Rect content) {
+        StaticLayout title = createPrintLayout(buildFaceLabel(faceIndex + 1, face),
+                createPrintTitlePaint(), content.width());
+        StaticLayout preview = createPrintLayout(mPreviewInput.getText(),
+                createPrintPreviewPaint(face), content.width());
+        int previewHeight = Math.max(1, content.height() - title.getHeight() - 24);
+        return Math.max(1, (preview.getHeight() + previewHeight - 1) / previewHeight);
+    }
+
+    private void drawFacePage(@NonNull PrintedPdfDocument.Page page, @NonNull FontFace face,
+                              int faceIndex, int facePage, int facePageCount) {
+        Canvas canvas = page.getCanvas();
+        Rect content = page.getInfo().getContentRect();
+        canvas.drawColor(Color.WHITE);
+
+        StaticLayout title = createPrintLayout(buildFaceLabel(faceIndex + 1, face),
+                createPrintTitlePaint(), content.width());
+        StaticLayout preview = createPrintLayout(mPreviewInput.getText(),
+                createPrintPreviewPaint(face), content.width());
+        int previewHeight = Math.max(1, content.height() - title.getHeight() - 24);
+
+        canvas.save();
+        canvas.translate(content.left, content.top);
+        title.draw(canvas);
+        canvas.translate(0, title.getHeight() + 24);
+        canvas.clipRect(0, 0, content.width(), previewHeight);
+        canvas.translate(0, -facePage * previewHeight);
+        preview.draw(canvas);
+        canvas.restore();
+    }
+
+    @NonNull
+    private TextPaint createPrintTitlePaint() {
+        TextPaint paint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
+        paint.setColor(Color.BLACK);
+        paint.setTypeface(Typeface.DEFAULT_BOLD);
+        paint.setTextSize(18);
+        return paint;
+    }
+
+    @NonNull
+    private TextPaint createPrintPreviewPaint(@NonNull FontFace face) {
+        TextPaint paint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
+        paint.setColor(Color.BLACK);
+        paint.setTypeface(face.typeface);
+        paint.setTextSize(mTextSizeSp);
+        return paint;
+    }
+
+    @NonNull
+    private StaticLayout createPrintLayout(@NonNull CharSequence text, @NonNull TextPaint paint,
+                                           int width) {
+        return new StaticLayout(text, paint, Math.max(1, width), Layout.Alignment.ALIGN_NORMAL,
+                1f, 8, false);
+    }
+
+    private boolean containsPage(@NonNull PageRange[] pages, int page) {
+        for (PageRange range : pages) {
+            if (range.getStart() <= page && page <= range.getEnd()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void showError() {

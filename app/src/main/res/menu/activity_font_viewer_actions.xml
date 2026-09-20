@@ -13,4 +13,8 @@
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share"
         android:title="@string/share" />
+    <item
+        android:id="@+id/action_print"
+        android:icon="@drawable/ic_print"
+        android:title="@string/pdf_print" />
 </menu>
