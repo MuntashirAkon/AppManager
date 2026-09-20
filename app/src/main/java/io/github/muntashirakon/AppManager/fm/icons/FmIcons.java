@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.pdf.PdfRenderer;
 import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 
 import androidx.annotation.DrawableRes;
@@ -338,29 +339,22 @@ final class FmIcons {
 
     @Nullable
     public static Bitmap generatePdfBitmap(@NonNull Context context, @NonNull Uri uri) {
-        PdfRenderer renderer;
-        try {
-            renderer = new PdfRenderer(FileUtils.getFdFromUri(context, uri, "r"));
-        } catch (IOException e) {
+        try (ParcelFileDescriptor descriptor = FileUtils.getFdFromUri(context, uri, "r");
+             PdfRenderer renderer = new PdfRenderer(descriptor);
+             PdfRenderer.Page page = renderer.openPage(0)) {
+            int srcWidth = page.getWidth();
+            int srcHeight = page.getHeight();
+            if (srcWidth <= 0 || srcHeight <= 0) {
+                return null;
+            }
+            Bitmap bitmap = Bitmap.createBitmap(srcWidth, srcHeight, Bitmap.Config.ARGB_8888);
+            bitmap.eraseColor(Color.WHITE);
+            page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+            return bitmap;
+        } catch (IOException | RuntimeException e) {
             e.printStackTrace();
             return null;
         }
-        PdfRenderer.Page page;
-        try {
-            page = renderer.openPage(0);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            return null;
-        }
-        int srcWidth = page.getWidth();
-        int srcHeight = page.getHeight();
-        if (srcWidth <= 0 || srcHeight <= 0) {
-            return null;
-        }
-        Bitmap bitmap = Bitmap.createBitmap(srcWidth, srcHeight, Bitmap.Config.ARGB_8888);
-        bitmap.eraseColor(Color.WHITE);
-        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-        return bitmap;
     }
 
     @Nullable
