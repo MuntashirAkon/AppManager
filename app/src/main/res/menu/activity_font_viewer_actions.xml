@@ -9,4 +9,8 @@
     <item
         android:id="@+id/action_font_text_size_reset"
         android:title="@string/font_viewer_text_size_reset" />
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share"
+        android:title="@string/share" />
 </menu>

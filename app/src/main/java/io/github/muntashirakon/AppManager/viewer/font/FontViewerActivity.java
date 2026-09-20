@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.viewer.font;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.PerProcessActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -34,6 +36,8 @@ public class FontViewerActivity extends PerProcessActivity implements FontLoadCo
     private TextInputEditText mPreviewInput;
     private LinearLayout mPreviews;
     private FontLoadController mLoadController;
+    @Nullable
+    private Path mFontPath;
     private final List<TextView> mPreviewViews = new ArrayList<>();
     private float mTextSizeSp = 32;
     private boolean mDestroyed;
@@ -84,6 +88,9 @@ public class FontViewerActivity extends PerProcessActivity implements FontLoadCo
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
             finish();
+            return true;
+        } else if (itemId == R.id.action_share) {
+            shareFont();
             return true;
         } else if (itemId == R.id.action_font_text_size_decrease) {
             setTextSize(Math.max(16, mTextSizeSp - 4));
@@ -147,12 +154,14 @@ public class FontViewerActivity extends PerProcessActivity implements FontLoadCo
     }
 
     private void openFont(@NonNull android.content.Intent intent) {
+        mFontPath = null;
         List<Uri> uris = IntentCompat.getDataUris(intent);
         if (uris == null || uris.size() != 1) {
             showError();
             return;
         }
         Path fontPath = Paths.get(uris.get(0));
+        mFontPath = fontPath;
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(fontPath.getName());
@@ -165,6 +174,18 @@ public class FontViewerActivity extends PerProcessActivity implements FontLoadCo
         mPreviewViews.clear();
         mPreviews.setVisibility(View.GONE);
         mLoadController.load(fontPath);
+    }
+
+    private void shareFont() {
+        if (mFontPath == null) {
+            return;
+        }
+        Uri shareUri = FmProvider.getContentUri(mFontPath);
+        Intent intent = new Intent(Intent.ACTION_SEND)
+                .setType(mFontPath.getType())
+                .putExtra(Intent.EXTRA_STREAM, shareUri)
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(Intent.createChooser(intent, getString(R.string.share)));
     }
 
     private void showError() {
