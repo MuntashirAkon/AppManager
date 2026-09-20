@@ -322,7 +322,13 @@ final class FmIcons {
         }
         try {
             Typeface typeface = Typeface.createFromFile(file.first);
+            if (typeface == null || Typeface.DEFAULT.equals(typeface)) {
+                return null;
+            }
             return UIUtils.generateBitmapFromText(text, typeface);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return null;
         } finally {
             if (file.second) {
                 file.first.delete();
