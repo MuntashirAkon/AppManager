@@ -232,7 +232,7 @@ public class AppDetailsActivity extends BaseActivity {
 
     @Nullable
     private ApkSource getApkSource(@NonNull Intent intent) {
-        Uri uri = intent.getData();
+        Uri uri = IntentCompat.getDataUri(intent);
         if (uri != null) {
             return ApkSource.getApkSource(uri, intent.getType());
         }
