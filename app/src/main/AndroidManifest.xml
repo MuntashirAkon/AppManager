@@ -1362,6 +1362,63 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".viewer.font.FontViewerActivity"
+            android:enableOnBackInvokedCallback="false"
+            android:exported="true"
+            android:label="@string/title_font_viewer"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/font-cff" />
+                <data android:mimeType="application/font-off" />
+                <data android:mimeType="application/font-sfnt" />
+                <data android:mimeType="application/font-ttf" />
+                <data android:mimeType="application/vnd.ms-opentype" />
+                <data android:mimeType="application/x-font" />
+                <data android:mimeType="application/x-font-otf" />
+                <data android:mimeType="application/x-font-ttf" />
+                <data android:mimeType="font/otf" />
+                <data android:mimeType="font/ttf" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:mimeType="application/font-cff" />
+                <data android:mimeType="application/font-off" />
+                <data android:mimeType="application/font-sfnt" />
+                <data android:mimeType="application/font-ttf" />
+                <data android:mimeType="application/vnd.ms-opentype" />
+                <data android:mimeType="application/x-font" />
+                <data android:mimeType="application/x-font-otf" />
+                <data android:mimeType="application/x-font-ttf" />
+                <data android:mimeType="font/otf" />
+                <data android:mimeType="font/ttf" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:pathPattern="/.*\.OTF" />
+                <data android:pathPattern="/.*\.otf" />
+                <data android:pathPattern="/.*\.TTF" />
+                <data android:pathPattern="/.*\.ttf" />
+                <data android:pathPattern="/.*\.TTC" />
+                <data android:pathPattern="/.*\.ttc" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".viewer.image.ImageViewerActivity"
             android:enableOnBackInvokedCallback="false"
             android:exported="true"

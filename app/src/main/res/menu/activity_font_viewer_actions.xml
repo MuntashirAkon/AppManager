@@ -1,0 +1,12 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_font_text_size_decrease"
+        android:title="@string/font_viewer_text_size_decrease" />
+    <item
+        android:id="@+id/action_font_text_size_increase"
+        android:title="@string/font_viewer_text_size_increase" />
+    <item
+        android:id="@+id/action_font_text_size_reset"
+        android:title="@string/font_viewer_text_size_reset" />
+</menu>

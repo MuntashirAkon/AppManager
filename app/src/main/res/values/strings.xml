@@ -1421,6 +1421,24 @@
     <string name="pdf_viewer_error">Unable to open this PDF.</string>
     <string name="title_image_viewer">Image viewer</string>
     <string name="image_viewer_error">Unable to open this image.</string>
+    <string name="title_font_viewer">Font viewer</string>
+    <string name="font_viewer_error">Unable to open this font.</string>
+    <string name="font_viewer_preview_text">Preview text</string>
+    <string name="font_viewer_face">Font %1$d</string>
+    <string name="font_viewer_style_regular">Regular</string>
+    <string name="font_viewer_style_bold">Bold</string>
+    <string name="font_viewer_style_italic">Italic</string>
+    <string name="font_viewer_style_bold_italic">Bold italic</string>
+    <string name="font_viewer_weight">Weight %1$d</string>
+    <string name="font_viewer_ttc_index">TTC index %1$d</string>
+    <string name="font_viewer_variations">Variations %1$s</string>
+    <string name="font_viewer_text_size_decrease">Decrease text size</string>
+    <string name="font_viewer_text_size_increase">Increase text size</string>
+    <string name="font_viewer_text_size_reset">Reset text size</string>
+    <string name="font_viewer_sample_text">Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz
+0123456789
+\nThe quick brown fox jumps over the lazy dog.
+\n! ? @ # $ % &amp; * ( ) [ ] { } / \\ &lt; &gt; + - =</string>
     <string name="image_reset_zoom">Fit to screen</string>
     <string name="image_rotate_left">Rotate left</string>
     <string name="image_rotate_right">Rotate right</string>
