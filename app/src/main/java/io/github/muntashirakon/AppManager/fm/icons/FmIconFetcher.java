@@ -62,12 +62,30 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
     @NonNull
     @Override
     public ImageLoader.ImageFetcherResult fetchImage(@NonNull String tag) {
-        PathContentInfo contentInfo = mFmItem.getContentInfo();
-        if (contentInfo == null) {
-            contentInfo = mFmItem.path.getPathContentInfo();
-            mFmItem.setContentInfo(contentInfo);
+        try {
+            return fetchImageInternal(tag);
+        } catch (Throwable e) {
+            // Thumbnail generation is best effort. Malformed or unsupported
+            // files must fall back to a generic file icon.
+            e.printStackTrace();
+            return new ImageLoader.ImageFetcherResult(tag, null,
+                    new ImageLoader.DefaultImageDrawableRes("drawable_generic", R.drawable.ic_file));
         }
-        String mimeType = contentInfo.getMimeType();
+    }
+
+    @NonNull
+    private ImageLoader.ImageFetcherResult fetchImageInternal(@NonNull String tag) {
+        PathContentInfo contentInfo = null;
+        try {
+            contentInfo = mFmItem.getContentInfo();
+            if (contentInfo == null) {
+                contentInfo = mFmItem.path.getPathContentInfo();
+                mFmItem.setContentInfo(contentInfo);
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        String mimeType = contentInfo != null ? contentInfo.getMimeType() : null;
         int drawableRes = FmIcons.getDrawableFromType(mimeType);
         int padding = UiUtils.dpToPx(ContextUtils.getContext(), 4);
         int length = UiUtils.dpToPx(ContextUtils.getContext(), 40);
