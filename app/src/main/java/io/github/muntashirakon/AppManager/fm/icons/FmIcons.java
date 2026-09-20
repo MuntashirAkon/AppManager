@@ -22,6 +22,7 @@ import androidx.core.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -396,7 +397,9 @@ final class FmIcons {
         try (ZipFile zipFile = new ZipFile(file.first)) {
             ZipEntry coverEntry = zipFile.getEntry("Thumbnails/thumbnail.png");
             if (coverEntry != null) {
-                return BitmapFactory.decodeStream(zipFile.getInputStream(coverEntry));
+                try (InputStream input = zipFile.getInputStream(coverEntry)) {
+                    return BitmapFactory.decodeStream(input);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -432,7 +435,9 @@ final class FmIcons {
         try (ZipFile zipFile = new ZipFile(file.first)) {
             ZipEntry iconEntry = zipFile.getEntry("icon.png");
             if (iconEntry != null) {
-                return BitmapFactory.decodeStream(zipFile.getInputStream(iconEntry));
+                try (InputStream input = zipFile.getInputStream(iconEntry)) {
+                    return BitmapFactory.decodeStream(input);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -453,7 +458,9 @@ final class FmIcons {
         try (ZipFile zipFile = new ZipFile(file.first)) {
             ZipEntry iconEntry = zipFile.getEntry("icon.png");
             if (iconEntry != null) {
-                return BitmapFactory.decodeStream(zipFile.getInputStream(iconEntry));
+                try (InputStream input = zipFile.getInputStream(iconEntry)) {
+                    return BitmapFactory.decodeStream(input);
+                }
             }
             // Load as ApkFile
             UriApkSource apkSource = new UriApkSource(Uri.fromFile(file.first), path.getType());
