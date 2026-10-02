@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -68,6 +69,10 @@ public class VirusTotal {
                     || error.code.equals("QuotaExceededError"));
         }
 
+        public boolean isSuccessful() {
+            return response != null && error == null;
+        }
+
         @NonNull
         @Override
         public String toString() {
@@ -83,7 +88,9 @@ public class VirusTotal {
     protected static final String API_V3_PREFIX = "https://www.virustotal.com/api/v3";
     protected static final String URL_FILE_UPLOAD = API_V3_PREFIX + "/files";
     protected static final String URL_LARGE_FILE_UPLOAD = API_V3_PREFIX + "/files/upload_url";
-    protected static final String URL_FILE_REPORT = API_V3_PREFIX + "/files/";
+    protected static final String URL_FILE_REPORT = API_V3_PREFIX + "/files/%s";
+    protected static final String URL_FILE_ANALYSE = API_V3_PREFIX + "/files/%s/analyse";
+    protected static final String URL_ANALYSIS = API_V3_PREFIX + "/analyses/%s";
 
     @Nullable
     public static VirusTotal getInstance() {
@@ -273,7 +280,7 @@ public class VirusTotal {
     @WorkerThread
     @NonNull
     public ResponseV3<VtFileReport> fetchFileReport(@NonNull String id) throws IOException {
-        URL url = new URL(URL_FILE_REPORT + id);
+        URL url = new URL(String.format(Locale.ROOT, URL_FILE_REPORT, id));
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         try {
             connection.setUseCaches(false);
@@ -296,6 +303,64 @@ public class VirusTotal {
                 // Failed
                 return new ResponseV3<>(null, getErrorResponse(connection));
             }
+        } finally {
+            connection.disconnect();
+        }
+    }
+
+    /**
+     * Requests a new analysis for a file already present in VirusTotal. This does not upload the
+     * file again. The returned ID must be polled using {@link #fetchAnalysis(String)}.
+     */
+    @WorkerThread
+    @NonNull
+    public ResponseV3<String> requestRescan(@NonNull String fileId) throws IOException {
+        URL url = new URL(String.format(Locale.ROOT, URL_FILE_ANALYSE, fileId));
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        try {
+            connection.setUseCaches(false);
+            connection.setRequestMethod("POST");
+            connection.setDoInput(true);
+            // Set headers
+            connection.setRequestProperty("accept", "application/json");
+            connection.setRequestProperty("x-apikey", mApiKey);
+            // Response
+            int status = connection.getResponseCode();
+            if (status < 300) {
+                // Success
+                return new ResponseV3<>(getAnalysisId(connection), null);
+            }
+            // Failed
+            return new ResponseV3<>(null, getErrorResponse(connection));
+        } finally {
+            connection.disconnect();
+        }
+    }
+
+    @WorkerThread
+    @NonNull
+    public ResponseV3<VtAnalysis> fetchAnalysis(@NonNull String analysisId) throws IOException {
+        URL url = new URL(String.format(Locale.ROOT, URL_ANALYSIS, analysisId));
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        try {
+            connection.setUseCaches(false);
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+            // Set headers
+            connection.setRequestProperty("accept", "application/json");
+            connection.setRequestProperty("x-apikey", mApiKey);
+            // Response
+            int status = connection.getResponseCode();
+            if (status < 300) {
+                // Success
+                try {
+                    return new ResponseV3<>(new VtAnalysis(new JSONObject(getResponseV3(connection))), null);
+                } catch (JSONException e) {
+                    throw new IOException(e);
+                }
+            }
+            // Failed
+            return new ResponseV3<>(null, getErrorResponse(connection));
         } finally {
             connection.disconnect();
         }

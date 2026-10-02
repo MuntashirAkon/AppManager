@@ -16,9 +16,19 @@ public class VtFileReport {
     public final VtAvEngineStats stats;
     @NonNull
     public final String scanId;
+    /**
+     * The VirusTotal file object ID, currently the file SHA-256.
+     */
+    @NonNull
+    public final String fileId;
     public final long scanDate;
     @NonNull
     public final String permalink;
+    /**
+     * The complete response used to create this report.
+     */
+    @NonNull
+    public final String rawJson;
 
     public VtFileReport(@NonNull JSONObject jsonObject) throws JSONException {
         // Doc: https://docs.virustotal.com/reference/files
@@ -27,7 +37,9 @@ public class VtFileReport {
         JSONObject data = jsonObject.getJSONObject("data");
         assert data.getString("type").equals("file");
         scanId = data.getString("id");
+        fileId = scanId;
         permalink = VirusTotal.getPermalink(scanId);
+        rawJson = jsonObject.toString();
         JSONObject attrs = data.getJSONObject("attributes");
         scanDate = attrs.optLong("last_analysis_date") * 1_000;
         stats = new VtAvEngineStats(attrs.getJSONObject("last_analysis_stats"));
