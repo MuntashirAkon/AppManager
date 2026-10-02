@@ -18,6 +18,9 @@ import io.github.muntashirakon.AppManager.db.dao.FreezeTypeDao;
 import io.github.muntashirakon.AppManager.db.dao.LogFilterDao;
 import io.github.muntashirakon.AppManager.db.dao.OpHistoryDao;
 import io.github.muntashirakon.AppManager.db.dao.PermissionOverrideDao;
+import io.github.muntashirakon.AppManager.db.dao.VtFileDao;
+import io.github.muntashirakon.AppManager.db.dao.VtFileSourceDao;
+import io.github.muntashirakon.AppManager.db.dao.VtScanAttemptDao;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.db.entity.FmFavorite;
@@ -27,10 +30,14 @@ import io.github.muntashirakon.AppManager.db.entity.FreezeType;
 import io.github.muntashirakon.AppManager.db.entity.LogFilter;
 import io.github.muntashirakon.AppManager.db.entity.OpHistory;
 import io.github.muntashirakon.AppManager.db.entity.PermissionOverride;
+import io.github.muntashirakon.AppManager.db.entity.VtFile;
+import io.github.muntashirakon.AppManager.db.entity.VtFileSource;
+import io.github.muntashirakon.AppManager.db.entity.VtScanAttempt;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
 @Database(entities = {App.class, LogFilter.class, Backup.class, OpHistory.class, FmFavorite.class, FreezeType.class,
-        PermissionOverride.class, FmDirectorySort.class, FmDirectorySize.class}, version = 9)
+        PermissionOverride.class, FmDirectorySort.class, FmDirectorySize.class, VtFile.class, VtFileSource.class,
+        VtScanAttempt.class}, version = 11)
 public abstract class AppsDb extends RoomDatabase {
     private static AppsDb sAppsDb;
 
@@ -78,10 +85,75 @@ public abstract class AppsDb extends RoomDatabase {
         }
     };
 
+    public static final Migration M_9_10 = new Migration(9, 10) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+            db.execSQL("CREATE TABLE IF NOT EXISTS `vt_file` (" +
+                    "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "`sha256` TEXT NOT NULL, " +
+                    "`md5` TEXT, " +
+                    "`sha1` TEXT, " +
+                    "`display_name` TEXT, " +
+                    "`mime_type` TEXT, " +
+                    "`size_bytes` INTEGER NOT NULL, " +
+                    "`latest_report_json` TEXT, " +
+                    "`latest_detected` INTEGER, " +
+                    "`latest_total` INTEGER, " +
+                    "`latest_analysis_id` TEXT, " +
+                    "`permalink` TEXT, " +
+                    "`latest_analysis_at` INTEGER NOT NULL, " +
+                    "`local_analysis_json` TEXT, " +
+                    "`last_accessed_at` INTEGER NOT NULL, " +
+                    "`created_at` INTEGER NOT NULL, " +
+                    "`updated_at` INTEGER NOT NULL)");
+            db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_vt_file_sha256` ON `vt_file` (`sha256`)");
+            db.execSQL("CREATE TABLE IF NOT EXISTS `vt_file_source` (" +
+                    "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "`file_id` INTEGER NOT NULL, " +
+                    "`source_uri` TEXT NOT NULL, " +
+                    "`display_name` TEXT, " +
+                    "`mime_type` TEXT, " +
+                    "`last_seen_at` INTEGER NOT NULL, " +
+                    "`is_readable` INTEGER NOT NULL, " +
+                    "`source_type` TEXT, " +
+                    "FOREIGN KEY(`file_id`) REFERENCES `vt_file`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE)");
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_vt_file_source_file_id` ON `vt_file_source` (`file_id`)");
+            db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_vt_file_source_file_uri` ON `vt_file_source` (`file_id`, `source_uri`)");
+            db.execSQL("CREATE TABLE IF NOT EXISTS `vt_scan_attempt` (" +
+                    "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "`file_id` INTEGER NOT NULL, " +
+                    "`type` TEXT NOT NULL, " +
+                    "`status` TEXT NOT NULL, " +
+                    "`analysis_id` TEXT, " +
+                    "`permalink` TEXT, " +
+                    "`report_json` TEXT, " +
+                    "`detected` INTEGER, " +
+                    "`total` INTEGER, " +
+                    "`error_code` TEXT, " +
+                    "`error_message` TEXT, " +
+                    "`created_at` INTEGER NOT NULL, " +
+                    "`started_at` INTEGER NOT NULL, " +
+                    "`updated_at` INTEGER NOT NULL, " +
+                    "`completed_at` INTEGER NOT NULL, " +
+                    "FOREIGN KEY(`file_id`) REFERENCES `vt_file`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE)");
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_vt_scan_attempt_file_id` ON `vt_scan_attempt` (`file_id`)");
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_vt_scan_attempt_status` ON `vt_scan_attempt` (`status`)");
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_vt_scan_attempt_updated_at` ON `vt_scan_attempt` (`updated_at`)");
+        }
+    };
+
+    public static final Migration M_10_11 = new Migration(10, 11) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+            db.execSQL("ALTER TABLE `vt_file` ADD COLUMN `latest_read_at` INTEGER NOT NULL DEFAULT 0");
+            db.execSQL("ALTER TABLE `vt_scan_attempt` ADD COLUMN `read_at` INTEGER NOT NULL DEFAULT 0");
+        }
+    };
+
     public static AppsDb getInstance() {
         if (sAppsDb == null) {
             sAppsDb = Room.databaseBuilder(ContextUtils.getContext(), AppsDb.class, "apps.db")
-                    .addMigrations(M_2_3, M_3_4, M_4_5, M_5_6, M_6_7, M_7_8, M_8_9)
+                    .addMigrations(M_2_3, M_3_4, M_4_5, M_5_6, M_6_7, M_7_8, M_8_9, M_9_10, M_10_11)
                     .fallbackToDestructiveMigrationOnDowngrade()
                     .build();
             try {
@@ -110,4 +182,10 @@ public abstract class AppsDb extends RoomDatabase {
     public abstract FreezeTypeDao freezeTypeDao();
 
     public abstract PermissionOverrideDao permissionOverrideDao();
+
+    public abstract VtFileDao vtFileDao();
+
+    public abstract VtFileSourceDao vtFileSourceDao();
+
+    public abstract VtScanAttemptDao vtScanAttemptDao();
 }
