@@ -29,6 +29,7 @@ import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.terminal.TermActivity;
+import io.github.muntashirakon.AppManager.scanner.vt.VtHistoryActivity;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.viewer.ExplorerActivity;
@@ -117,6 +118,7 @@ public class FeatureController {
     private FeatureController() {
         mPm = ContextUtils.getContext().getPackageManager();
         mFlags = AppPref.getInt(AppPref.PrefKey.PREF_ENABLED_FEATURES_INT);
+        syncVirusTotalComponentState();
     }
 
     public int getFlags() {
@@ -182,7 +184,8 @@ public class FeatureController {
                 // Only depends on flag
                 return (mFlags & key) != 0;
             case FEAT_VIRUS_TOTAL:
-                return (mFlags & key) != 0 && isEnabled(FEAT_INTERNET);
+                cn = getComponentName(key, VtHistoryActivity.class);
+                break;
             case FEAT_INTERNET:
                 return (mFlags & key) != 0 && SelfPermissions.checkSelfPermission(Manifest.permission.INTERNET);
             case FEAT_LOG_VIEWER:
@@ -223,8 +226,10 @@ public class FeatureController {
                 break;
             case FEAT_USAGE_ACCESS:
             case FEAT_INTERNET:
-            case FEAT_VIRUS_TOTAL:
                 // Only depends on flag
+                break;
+            case FEAT_VIRUS_TOTAL:
+                modifyState(key, VtHistoryActivity.class, enabled);
                 break;
             case FEAT_LOG_VIEWER:
                 modifyState(key, LogViewerActivity.class, enabled);
@@ -246,6 +251,14 @@ public class FeatureController {
         mFlags = enabled ? (mFlags | key) : (mFlags & ~key);
         // Save to pref
         AppPref.set(AppPref.PrefKey.PREF_ENABLED_FEATURES_INT, mFlags);
+        syncVirusTotalComponentState();
+    }
+
+    private void syncVirusTotalComponentState() {
+        boolean enabled = (mFlags & FEAT_VIRUS_TOTAL) != 0
+                && (mFlags & FEAT_INTERNET) != 0
+                && SelfPermissions.checkSelfPermission(Manifest.permission.INTERNET);
+        setComponentEnabledState(new ComponentName(mPackageName, VtHistoryActivity.class.getName()), enabled);
     }
 
     private void modifyState(@FeatureFlags int key, @Nullable Class<? extends AppCompatActivity> clazz, boolean enabled) {

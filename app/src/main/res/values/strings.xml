@@ -1140,9 +1140,12 @@
     <string name="vt_uploading">VirusTotal: Uploading…</string>
     <string name="vt_queued">VirusTotal: Queued</string>
     <string name="vt_failed">VirusTotal: Failed</string>
+    <string name="vt_pending_consent">VirusTotal: Waiting for upload consent</string>
+    <string name="vt_cancelled">VirusTotal: Cancelled</string>
     <string name="vt_success">VirusTotal: %1$d/%2$d</string>
     <string name="vt_scan_date">Scan date: %1$s</string>
     <string name="vt_permalink">Permanent link to VirusTotal</string>
+    <string name="vt_engine_results">Antivirus engine results</string>
     <string name="vt_slowness_warning">Depending on the Internet speed and load on the server, this may take a while.</string>
     <string name="vt_disclaimer">VirusTotal and its logos are a trademark of Chronicle LLC. Neither App Manager—the API client—nor its authors are responsible for any data you may send to VirusTotal.</string>
     <string name="pref_vt_apikey">VirusTotal API Key</string>
@@ -1519,6 +1522,14 @@
     <string name="date">Date</string>
     <string name="pref_use_vt">Use VirusTotal</string>
     <string name="virus_total">VirusTotal</string>
+    <string name="vt_view_report">View report</string>
+    <string name="vt_rescan">Rescan</string>
+    <string name="vt_retry">Retry</string>
+    <string name="vt_cancel_scan">Cancel scan</string>
+    <string name="vt_update_report">Update report</string>
+    <string name="vt_report_unavailable">Report unavailable</string>
+    <string name="mark_as_read">Mark as read</string>
+    <string name="mark_as_unread">Mark as unread</string>
     <string name="pref_use_vt_no_internet">VirusTotal requires the Internet to operate which isn\'t enabled. Please enable <a href="app-manager://settings/privacy_prefs/toggle_internet">“Use the Internet”</a> first.</string>
     <string name="pref_use_log_viewer">Use log viewer</string>
     <string name="pref_installer">Use the installer</string>

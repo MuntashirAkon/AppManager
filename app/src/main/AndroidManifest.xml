@@ -407,6 +407,30 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".scanner.vt.VtHistoryActivity"
+            android:exported="true"
+            android:label="@string/virus_total"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:mimeType="*/*"
+                    android:scheme="file" />
+                <data
+                    android:mimeType="*/*"
+                    android:scheme="content" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".viewer.ExplorerActivity"
             android:enableOnBackInvokedCallback="false"
             android:enabled="true"
@@ -1497,6 +1521,10 @@
             android:exported="false" />
         <service
             android:name=".session.SessionMonitoringService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync|specialUse" />
+        <service
+            android:name=".scanner.vt.VtScanService"
             android:exported="false"
             android:foregroundServiceType="dataSync|specialUse" />
         <service

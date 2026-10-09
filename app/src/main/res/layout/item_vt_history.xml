@@ -1,0 +1,59 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.AppTheme.CardView.ListItem.Outlined"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="?attr/listItemMarginHorizontal"
+    android:layout_marginVertical="?attr/listItemMarginVertical"
+    android:focusable="true"
+    app:cardElevation="0dp">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="?attr/listItemPaddingHorizontal"
+        android:paddingVertical="?attr/listItemPaddingVertical">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                tools:text="@tools:sample/lorem" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                tools:text="@tools:sample/lorem" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/hash"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:fontFamily="monospace"
+                tools:text="@tools:sample/lorem" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/more"
+            style="@style/Widget.AppTheme.Button.IconButton"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/options"
+            app:icon="@drawable/ic_more_vert"
+            app:iconSize="20dp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</com.google.android.material.card.MaterialCardView>

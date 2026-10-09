@@ -10,6 +10,8 @@ import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import io.github.muntashirakon.AppManager.scanner.vt.VtScanRepository;
+
 @Entity(tableName = "vt_file_source", foreignKeys = @ForeignKey(
         entity = VtFile.class,
         parentColumns = "id",
@@ -44,6 +46,7 @@ public class VtFileSource {
     @ColumnInfo(name = "is_readable")
     public boolean isReadable;
 
+    @VtScanRepository.FileSource
     @Nullable
     @ColumnInfo(name = "source_type")
     public String sourceType;

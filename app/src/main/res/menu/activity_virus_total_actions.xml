@@ -1,0 +1,12 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/ic_refresh"
+        android:title="@string/refresh"
+        android:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_clear_history"
+        android:title="@string/clear_history"
+        android:showAsAction="never" />
+</menu>

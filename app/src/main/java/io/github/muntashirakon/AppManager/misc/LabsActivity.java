@@ -28,6 +28,7 @@ import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.terminal.TermActivity;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
+import io.github.muntashirakon.AppManager.scanner.vt.VtHistoryActivity;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.FlowLayout;
 
@@ -57,6 +58,10 @@ public class LabsActivity extends BaseActivity {
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                     });
+        }
+        if (FeatureController.isVirusTotalEnabled()) {
+            addAction(this, flowLayout, R.string.virus_total, R.drawable.ic_vt)
+                    .setOnClickListener(v -> startActivity(new Intent(this, VtHistoryActivity.class)));
         }
         addAction(this, flowLayout, R.string.files, R.drawable.ic_file_document_multiple)
                 .setOnClickListener(v -> {
