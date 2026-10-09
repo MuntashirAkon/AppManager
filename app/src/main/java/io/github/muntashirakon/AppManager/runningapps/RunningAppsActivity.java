@@ -201,10 +201,10 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
                             .setTitle(R.string.scan_in_vt)
                             .setMessage(R.string.vt_confirm_uploading_file)
                             .setCancelable(false)
-                            .setPositiveButton(R.string.vt_confirm_upload_and_scan, (dialog, which) -> model.enableUploading())
-                            .setNegativeButton(R.string.no, (dialog, which) -> model.disableUploading())
+                            .setPositiveButton(R.string.vt_confirm_upload_and_scan, (dialog, which) -> model.enableUploading(processItem))
+                            .setNegativeButton(R.string.no, (dialog, which) -> model.disableUploading(processItem))
                             .show();
-                } else model.enableUploading();
+                } else model.enableUploading(processItem);
             } else {
                 UIUtils.displayShortToast(R.string.vt_queued);
             }

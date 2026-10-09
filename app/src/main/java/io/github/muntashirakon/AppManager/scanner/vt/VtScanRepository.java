@@ -285,6 +285,23 @@ public class VtScanRepository implements Closeable {
     }
 
     @WorkerThread
+    public void setLocalAnalysisJson(long fileId, @NonNull String json) {
+        mDatabase.runInTransaction(() -> {
+            VtFile file = mFileDao.get(fileId);
+            if (file == null) return;
+            file.localAnalysisJson = json;
+            file.updatedAt = System.currentTimeMillis();
+            mFileDao.update(file);
+        });
+    }
+
+    @WorkerThread
+    public void setLocalAnalysisJson(@NonNull String sha256, @NonNull String json) {
+        VtFile file = mFileDao.getBySha256(sha256);
+        if (file != null) setLocalAnalysisJson(file.id, json);
+    }
+
+    @WorkerThread
     @Nullable
     public VtScanAttempt getAttempt(long attemptId) {
         return mAttemptDao.get(attemptId);

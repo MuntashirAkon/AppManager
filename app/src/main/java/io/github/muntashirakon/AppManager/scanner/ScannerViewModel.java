@@ -31,16 +31,21 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.regex.Pattern;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.db.entity.VtFile;
 import io.github.muntashirakon.AppManager.fm.ContentType2;
-import io.github.muntashirakon.AppManager.scanner.vt.VirusTotal;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
+import io.github.muntashirakon.AppManager.scanner.vt.VtScanCoordinator;
+import io.github.muntashirakon.AppManager.scanner.vt.VtScanRepository;
+import io.github.muntashirakon.AppManager.db.entity.VtScanAttempt;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -54,23 +59,27 @@ import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.fs.DexFileSystem;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
-public class ScannerViewModel extends AndroidViewModel implements VirusTotal.FullScanResponseInterface {
+public class ScannerViewModel extends AndroidViewModel {
     private static final Pattern SIG_TO_IGNORE = Pattern.compile("^(android(|x)|com\\.android|com\\.google\\.android|java(|x)|j\\$\\.(util|time)|\\w\\d?(\\.\\w\\d?)+)\\..*$");
 
     private File mApkFile;
     private boolean mIsSummaryLoaded = false;
     private Uri mApkUri;
     private int mDexVfsId;
-    @Nullable
-    private final VirusTotal mVt;
+    private final VtScanCoordinator mVtCoordinator;
     @Nullable
     private String mPackageName;
 
     private List<String> mAllClasses;
     private List<String> mTrackerClasses;
+    private List<SignatureInfo> mTrackerInfoList;
+    private List<SignatureInfo> mLibraryInfoList;
+    private ArrayList<String> mMissingClasses;
     private Collection<String> mNativeLibraries;
 
     private CountDownLatch mWaitForFile;
+    @Nullable
+    private VtScanAttempt mPendingUploadAttempt;
     private final FileCache mFileCache = new FileCache();
     private final MultithreadedExecutor mExecutor = MultithreadedExecutor.getNewInstance();
     private final MutableLiveData<Pair<String, String>[]> mApkChecksumsLiveData = new MutableLiveData<>();
@@ -87,13 +96,14 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
 
     public ScannerViewModel(@NonNull Application application) {
         super(application);
-        mVt = VirusTotal.getInstance();
+        mVtCoordinator = new VtScanCoordinator(application);
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
         mExecutor.shutdownNow();
+        mVtCoordinator.close();
         IoUtils.closeQuietly(mFileCache);
         try {
             VirtualFileSystem.unmount(mDexVfsId);
@@ -234,14 +244,31 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         Path file = Paths.getUnprivileged(mApkFile);
         Pair<String, String>[] digests = ExUtils.exceptionAsNull(() -> DigestUtils.getDigests(file));
         mApkChecksumsLiveData.postValue(digests);
-        if (mVt != null && digests != null && FeatureController.isVirusTotalEnabled()) {
-            String md5 = digests[0].second;
-            try {
-                mVt.fetchFileReportOrScan(file, md5, this);
-            } catch (IOException e) {
-                e.printStackTrace();
-                mVtFileReportLiveData.postValue(null);
-            }
+        if (digests != null && FeatureController.isVirusTotalEnabled() && mApkFile != null) {
+            mVtCoordinator.scan(file, file.getUri().toString(), mApkFile.getName(),
+                    "application/vnd.android.package-archive",
+                    VtScanRepository.SOURCE_INSTALLED_APK, new VtScanCoordinator.VtScanCallback() {
+                        @Override
+                        public void onConsentRequired(@NonNull VtScanAttempt attempt, @NonNull VtFile file) {
+                            mPendingUploadAttempt = attempt;
+                            mVtFileUploadLiveData.postValue(null);
+                        }
+
+                        @Override
+                        public void onQueued(@NonNull VtScanAttempt attempt) {
+                            mVtFileUploadLiveData.postValue("");
+                        }
+
+                        @Override
+                        public void onCompleted(@NonNull VtFileReport report) {
+                            mVtFileReportLiveData.postValue(report);
+                        }
+
+                        @Override
+                        public void onFailed(@Nullable String message) {
+                            mVtFileReportLiveData.postValue(null);
+                        }
+                    });
         } else mVtFileReportLiveData.postValue(null);
     }
 
@@ -291,6 +318,36 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         // Load tracker and library info
         loadTrackers();
         loadLibraries();
+        persistLocalAnalysis();
+    }
+
+    @WorkerThread
+    private void persistLocalAnalysis() {
+        if (mApkFile == null || mTrackerInfoList == null || mLibraryInfoList == null) return;
+        try {
+            JSONObject local = new JSONObject();
+            local.put("package", mPackageName);
+            JSONArray trackers = new JSONArray();
+            for (SignatureInfo info : mTrackerInfoList) {
+                trackers.put(new JSONObject().put("signature", info.signature)
+                        .put("label", info.label).put("count", info.getCount()));
+            }
+            JSONArray libraries = new JSONArray();
+            for (SignatureInfo info : mLibraryInfoList) {
+                libraries.put(new JSONObject().put("signature", info.signature)
+                        .put("label", info.label).put("type", info.type)
+                        .put("count", info.getCount()));
+            }
+            local.put("trackers", trackers).put("libraries", libraries);
+            if (mMissingClasses != null) {
+                local.put("missing_signatures", new JSONArray(mMissingClasses));
+            }
+            Pair<String, String>[] digests = DigestUtils.getDigests(Paths.getUnprivileged(mApkFile));
+            try (VtScanRepository repository = new VtScanRepository()) {
+                repository.setLocalAnalysisJson(digests[2].second, local.toString());
+            }
+        } catch (Throwable ignored) {
+        }
     }
 
     @WorkerThread
@@ -326,6 +383,7 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
             trackerInfoList.add(signatureInfo);
         }
         mTrackerClassesLiveData.postValue(trackerInfoList);
+        mTrackerInfoList = trackerInfoList;
     }
 
     public void loadLibraries() {
@@ -364,8 +422,10 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
             libraryInfoList.add(signatureInfo);
         }
         mLibraryClassesLiveData.postValue(libraryInfoList);
+        mLibraryInfoList = libraryInfoList;
 
         if (BuildConfig.DEBUG) {
+            mMissingClasses = missingLibs;
             mMissingClassesLiveData.postValue(missingLibs);
         }
     }
@@ -379,46 +439,55 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         }
     }
 
-    private boolean mUploadingEnabled;
-    private CountDownLatch mUploadingEnabledWatcher;
-
     public void enableUploading() {
-        mUploadingEnabled = true;
-        if (mUploadingEnabledWatcher != null) {
-            mUploadingEnabledWatcher.countDown();
+        VtScanAttempt attempt = mPendingUploadAttempt;
+        if (attempt != null) {
+            mPendingUploadAttempt = null;
+            mVtCoordinator.approve(attempt, new VtScanCoordinator.VtScanCallback() {
+                @Override
+                public void onConsentRequired(@NonNull VtScanAttempt a, @NonNull VtFile f) {
+                }
+
+                @Override
+                public void onQueued(@NonNull VtScanAttempt a) {
+                    mVtFileUploadLiveData.postValue("");
+                }
+
+                @Override
+                public void onCompleted(@NonNull VtFileReport report) {
+                    mVtFileReportLiveData.postValue(report);
+                }
+
+                @Override
+                public void onFailed(@Nullable String message) {
+                    mVtFileReportLiveData.postValue(null);
+                }
+            });
         }
     }
 
     public void disableUploading() {
-        mUploadingEnabled = false;
-        if (mUploadingEnabledWatcher != null) {
-            mUploadingEnabledWatcher.countDown();
+        VtScanAttempt attempt = mPendingUploadAttempt;
+        if (attempt != null) {
+            mPendingUploadAttempt = null;
+            mVtCoordinator.reject(attempt, new VtScanCoordinator.VtScanCallback() {
+                @Override
+                public void onConsentRequired(@NonNull VtScanAttempt a, @NonNull VtFile f) {
+                }
+
+                @Override
+                public void onQueued(@NonNull VtScanAttempt a) {
+                }
+
+                @Override
+                public void onCompleted(@NonNull VtFileReport report) {
+                }
+
+                @Override
+                public void onFailed(@Nullable String message) {
+                    mVtFileReportLiveData.postValue(null);
+                }
+            });
         }
-    }
-
-    @Override
-    public boolean uploadFile() {
-        mUploadingEnabled = false;
-        mUploadingEnabledWatcher = new CountDownLatch(1);
-        mVtFileUploadLiveData.postValue(null);
-        try {
-            mUploadingEnabledWatcher.await(2, TimeUnit.MINUTES);
-        } catch (InterruptedException ignore) {
-        }
-        return mUploadingEnabled;
-    }
-
-    @Override
-    public void onUploadInitiated() {
-    }
-
-    @Override
-    public void onUploadCompleted(@NonNull String permalink) {
-        mVtFileUploadLiveData.postValue(permalink);
-    }
-
-    @Override
-    public void onReportReceived(@NonNull VtFileReport report) {
-        mVtFileReportLiveData.postValue(report);
     }
 }

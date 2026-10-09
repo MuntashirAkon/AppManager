@@ -19,7 +19,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,19 +28,21 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.scanner.vt.VirusTotal;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
+import io.github.muntashirakon.AppManager.scanner.vt.VtScanCoordinator;
+import io.github.muntashirakon.AppManager.scanner.vt.VtScanRepository;
+import io.github.muntashirakon.AppManager.db.entity.VtScanAttempt;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -54,30 +55,31 @@ public class RunningAppsViewModel extends AndroidViewModel {
     @RunningAppsActivity.Filter
     private int mFilter;
     private final MultithreadedExecutor mExecutor = MultithreadedExecutor.getNewInstance();
-    @Nullable
-    private final VirusTotal mVt;
+    private final VtScanCoordinator mVtCoordinator;
 
     public RunningAppsViewModel(@NonNull Application application) {
         super(application);
         mSortOrder = Prefs.RunningApps.getSortOrder();
         mFilter = Prefs.RunningApps.getFilters();
-        mVt = VirusTotal.getInstance();
+        mVtCoordinator = new VtScanCoordinator(application);
     }
 
     @Override
     protected void onCleared() {
         mExecutor.shutdownNow();
+        mVtCoordinator.close();
         super.onCleared();
     }
 
     public boolean isVirusTotalAvailable() {
-        return mVt != null;
+        return FeatureController.isVirusTotalEnabled();
     }
 
     // Null = Uploading, NonNull = Queued
     private final MutableLiveData<Pair<ProcessItem, String>> mVtFileUpload = new MutableLiveData<>();
     // Null = Failed, NonNull = Result generated
     private final MutableLiveData<Pair<ProcessItem, VtFileReport>> mVtFileReport = new MutableLiveData<>();
+    private final Map<ProcessItem, VtScanAttempt> mPendingUploads = new HashMap<>();
 
     public MutableLiveData<Pair<ProcessItem, VtFileReport>> getVtFileReport() {
         return mVtFileReport;
@@ -93,7 +95,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
         if (processItem instanceof AppProcessItem) {
             file = ((AppProcessItem) processItem).packageInfo.applicationInfo.publicSourceDir;
         } else file = processItem.getCommandlineArgs()[0];
-        if (mVt == null || file == null) {
+        if (!isVirusTotalAvailable() || file == null) {
             mVtFileReport.postValue(new Pair<>(processItem, null));
             return;
         }
@@ -103,39 +105,30 @@ public class RunningAppsViewModel extends AndroidViewModel {
                 mVtFileReport.postValue(new Pair<>(processItem, null));
                 return;
             }
-            String sha256 = DigestUtils.getHexDigest(DigestUtils.SHA_256, proxyFile);
-            try {
-                mVt.fetchFileReportOrScan(proxyFile, sha256, new VirusTotal.FullScanResponseInterface() {
-                    @Override
-                    public boolean uploadFile() {
-                        mUploadingEnabled = false;
-                        mUploadingEnabledWatcher = new CountDownLatch(1);
-                        mVtFileUpload.postValue(new Pair<>(processItem, null));
-                        try {
-                            mUploadingEnabledWatcher.await(2, TimeUnit.MINUTES);
-                        } catch (InterruptedException ignore) {
+            mVtCoordinator.scan(proxyFile, proxyFile.getUri().toString(), proxyFile.getName(),
+                    null, VtScanRepository.SOURCE_PROCESS_EXECUTABLE,
+                    new VtScanCoordinator.VtScanCallback() {
+                        @Override
+                        public void onConsentRequired(@NonNull VtScanAttempt attempt, @NonNull io.github.muntashirakon.AppManager.db.entity.VtFile ignored) {
+                            mPendingUploads.put(processItem, attempt);
+                            mVtFileUpload.postValue(new Pair<>(processItem, null));
                         }
-                        return mUploadingEnabled;
-                    }
 
-                    @Override
-                    public void onUploadInitiated() {
-                    }
+                        @Override
+                        public void onQueued(@NonNull VtScanAttempt attempt) {
+                            mVtFileUpload.postValue(new Pair<>(processItem, ""));
+                        }
 
-                    @Override
-                    public void onUploadCompleted(@NonNull String permalink) {
-                        mVtFileUpload.postValue(new Pair<>(processItem, permalink));
-                    }
+                        @Override
+                        public void onCompleted(@NonNull VtFileReport report) {
+                            mVtFileReport.postValue(new Pair<>(processItem, report));
+                        }
 
-                    @Override
-                    public void onReportReceived(@NonNull VtFileReport report) {
-                        mVtFileReport.postValue(new Pair<>(processItem, report));
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-                mVtFileReport.postValue(new Pair<>(processItem, null));
-            }
+                        @Override
+                        public void onFailed(@Nullable String message) {
+                            mVtFileReport.postValue(new Pair<>(processItem, null));
+                        }
+                    });
         });
     }
 
@@ -450,20 +443,51 @@ public class RunningAppsViewModel extends AndroidViewModel {
         mSelectedItems.clear();
     }
 
-    private boolean mUploadingEnabled;
-    private CountDownLatch mUploadingEnabledWatcher;
+    public void enableUploading(@NonNull ProcessItem processItem) {
+        VtScanAttempt attempt = mPendingUploads.remove(processItem);
+        if (attempt == null) return;
+        mVtCoordinator.approve(attempt, new VtScanCoordinator.VtScanCallback() {
+            @Override
+            public void onConsentRequired(@NonNull VtScanAttempt a, @NonNull io.github.muntashirakon.AppManager.db.entity.VtFile f) {
+            }
 
-    public void enableUploading() {
-        mUploadingEnabled = true;
-        if (mUploadingEnabledWatcher != null) {
-            mUploadingEnabledWatcher.countDown();
-        }
+            @Override
+            public void onQueued(@NonNull VtScanAttempt a) {
+                mVtFileUpload.postValue(new Pair<>(processItem, ""));
+            }
+
+            @Override
+            public void onCompleted(@NonNull VtFileReport report) {
+                mVtFileReport.postValue(new Pair<>(processItem, report));
+            }
+
+            @Override
+            public void onFailed(@Nullable String message) {
+                mVtFileReport.postValue(new Pair<>(processItem, null));
+            }
+        });
     }
 
-    public void disableUploading() {
-        mUploadingEnabled = false;
-        if (mUploadingEnabledWatcher != null) {
-            mUploadingEnabledWatcher.countDown();
-        }
+    public void disableUploading(@NonNull ProcessItem processItem) {
+        VtScanAttempt attempt = mPendingUploads.remove(processItem);
+        if (attempt == null) return;
+        mVtCoordinator.reject(attempt, new VtScanCoordinator.VtScanCallback() {
+            @Override
+            public void onConsentRequired(@NonNull VtScanAttempt a, @NonNull io.github.muntashirakon.AppManager.db.entity.VtFile f) {
+            }
+
+            @Override
+            public void onQueued(@NonNull VtScanAttempt a) {
+            }
+
+            @Override
+            public void onCompleted(@NonNull VtFileReport report) {
+            }
+
+            @Override
+            public void onFailed(@Nullable String message) {
+                mVtFileReport.postValue(new Pair<>(processItem, null));
+            }
+        });
     }
 }
