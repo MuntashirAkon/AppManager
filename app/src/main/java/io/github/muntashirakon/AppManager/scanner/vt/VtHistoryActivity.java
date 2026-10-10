@@ -60,7 +60,6 @@ import io.github.muntashirakon.AppManager.db.entity.VtFile;
 import io.github.muntashirakon.AppManager.db.entity.VtScanAttempt;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.scanner.VirusTotalDialog;
-import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -372,6 +371,7 @@ public class VtHistoryActivity extends BaseActivity {
 
     public static class VtHistoryViewModel extends AndroidViewModel {
         private final VtScanRepository mRepository = new VtScanRepository();
+        private final VtScanCoordinator mCoordinator;
         private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
         private final MutableLiveData<List<VtHistoryItem>> mHistoryLiveData = new MutableLiveData<>();
         private final SingleLiveEvent<VtFileReport> mReportLiveData = new SingleLiveEvent<>();
@@ -380,6 +380,7 @@ public class VtHistoryActivity extends BaseActivity {
 
         public VtHistoryViewModel(@NonNull Application application) {
             super(application);
+            mCoordinator = new VtScanCoordinator(application);
         }
 
         LiveData<List<VtHistoryItem>> getHistoryLiveData() {
@@ -400,19 +401,26 @@ public class VtHistoryActivity extends BaseActivity {
 
         void observeUri(@NonNull Uri uri, @Nullable String mimeType,
                         @VtScanRepository.FileSource @NonNull String sourceType) {
-            mExecutor.execute(() -> {
-                try {
-                    VtScanRepository.ObservedFile file = mRepository.observeUri(uri,
-                            mimeType, sourceType);
-                    VtScanAttempt attempt = mRepository.createInitialAttempt(file,
-                            Prefs.VirusTotal.promptBeforeUpload());
-                    if (attempt != null && VtScanAttempt.STATUS_QUEUED.equals(attempt.status)) {
-                        mStartScanLiveData.postValue(true);
-                    }
-                    loadHistoryInternal();
-                } catch (Throwable e) {
-                    mErrorLiveData.postValue(e.getMessage() == null
-                            ? getApplication().getString(R.string.failed) : e.getMessage());
+            mCoordinator.scan(uri, mimeType, sourceType, new VtScanCoordinator.VtScanCallback() {
+                @Override
+                public void onConsentRequired(@NonNull VtScanAttempt attempt, @NonNull VtFile file) {
+                    loadHistory();
+                }
+
+                @Override
+                public void onQueued(@NonNull VtScanAttempt attempt) {
+                    loadHistory();
+                }
+
+                @Override
+                public void onCompleted(@NonNull VtFileReport report) {
+                    loadHistory();
+                }
+
+                @Override
+                public void onFailed(@Nullable String message) {
+                    mErrorLiveData.postValue(message == null ? getApplication().getString(R.string.failed) : message);
+                    loadHistory();
                 }
             });
         }
@@ -557,6 +565,7 @@ public class VtHistoryActivity extends BaseActivity {
         @Override
         protected void onCleared() {
             mExecutor.shutdownNow();
+            mCoordinator.close();
             mRepository.close();
             super.onCleared();
         }

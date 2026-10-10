@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.scanner.vt;
 
 import android.content.Context;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,26 +48,43 @@ public final class VtScanCoordinator implements AutoCloseable {
             try {
                 VtScanRepository.ObservedFile observed = mRepository.observePath(path, sourceUri,
                         displayName, mimeType, sourceType);
-                VtScanAttempt attempt = mRepository.createInitialAttempt(observed,
-                        Prefs.VirusTotal.promptBeforeUpload());
-                if (attempt == null) {
-                    VtFile file = mRepository.getFile(observed.file.id);
-                    if (file != null && file.latestReportJson != null) {
-                        callback.onCompleted(new VtFileReport(new JSONObject(file.latestReportJson)));
-                    } else callback.onFailed("VirusTotal report unavailable.");
-                    return;
-                }
-                if (VtScanAttempt.STATUS_PENDING_CONSENT.equals(attempt.status)) {
-                    callback.onConsentRequired(attempt, observed.file);
-                } else {
-                    callback.onQueued(attempt);
-                    VtScanService.start(mContext);
-                }
-                await(attempt.id, callback);
+                submit(observed, callback);
             } catch (Throwable e) {
                 callback.onFailed(e.getMessage());
             }
         });
+    }
+
+    public void scan(@NonNull Uri uri, @Nullable String mimeType, @Nullable String sourceType,
+                     @NonNull VtScanCallback callback) {
+        mExecutor.execute(() -> {
+            try {
+                VtScanRepository.ObservedFile observed = mRepository.observeUri(uri, mimeType, sourceType);
+                submit(observed, callback);
+            } catch (Throwable e) {
+                callback.onFailed(e.getMessage());
+            }
+        });
+    }
+
+    private void submit(@NonNull VtScanRepository.ObservedFile observed,
+                        @NonNull VtScanCallback callback) throws Exception {
+        VtScanAttempt attempt = mRepository.createInitialAttempt(observed,
+                Prefs.VirusTotal.promptBeforeUpload());
+        if (attempt == null) {
+            VtFile file = mRepository.getFile(observed.file.id);
+            if (file != null && file.latestReportJson != null) {
+                callback.onCompleted(new VtFileReport(new JSONObject(file.latestReportJson)));
+            } else callback.onFailed("VirusTotal report unavailable.");
+            return;
+        }
+        if (VtScanAttempt.STATUS_PENDING_CONSENT.equals(attempt.status)) {
+            callback.onConsentRequired(attempt, observed.file);
+        } else {
+            callback.onQueued(attempt);
+            VtScanService.start(mContext);
+        }
+        await(attempt.id, callback);
     }
 
     public void approve(@NonNull VtScanAttempt attempt, @NonNull VtScanCallback callback) {
