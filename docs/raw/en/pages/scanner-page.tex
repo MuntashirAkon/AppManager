@@ -10,6 +10,12 @@ configured in the settings, it also attempts to retrieve reports from VirusTotal
 file if it is not in the database. It also display a link to the \href{https://beta.pithus.org}{Pithus}
 report provided the Internet features are enabled.
 
+VirusTotal lookups are cached and reused by default. A new lookup or re-analysis is only performed
+when it is explicitly requested. Uploading a file requires confirmation according to the VirusTotal
+upload preference. Once uploaded, VirusTotal retains the uploaded file and its metadata according to
+its own policies. App Manager retains file path, cached report, and selected local APK analysis
+metadata in the local history until it is pruned or cleared.
+
 \begin{danger}{Disclaimer}
     App Manager only scans an application statically without prejudice. The application may provide
     the options for opting out, or in some cases, certain features of the tracker may not be used at
