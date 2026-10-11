@@ -131,7 +131,7 @@ public abstract class FilterOption implements LocalizedString, Parcelable {
                     this.longValue = Long.parseLong(value);
                     break;
                 case TYPE_REGEX:
-                    this.regexValue = Pattern.compile(Pattern.quote(value));
+                    this.regexValue = Pattern.compile(value);
                 case TYPE_STR_MULTIPLE:
                     this.stringValues = value.split("\\n");
             }
