@@ -3,11 +3,11 @@
 package io.github.muntashirakon.AppManager.intercept;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +19,8 @@ import io.github.muntashirakon.widget.MaterialAutoCompleteTextView;
 public class HistoryEditText {
     private static final String DELIMITER = "';'";
     private static final int MAX_HISTORY_SIZE = 8;
-    private static final String HISTORY_PREFIX = "ActivityInterceptor_history_";
+    public static final String HISTORY_PREFIX = "ActivityInterceptor_history_";
+    public static final String HISTORY_PREFS_NAME = "activity_interceptor_history";
 
     private final Activity mContext;
     private final EditorHandler[] mEditorHandlers;
@@ -50,8 +51,13 @@ public class HistoryEditText {
 
         @NonNull
         private List<String> getHistoryItems() {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+            SharedPreferences sharedPref = getHistoryPreferences();
             return getHistory(sharedPref);
+        }
+
+        @NonNull
+        private SharedPreferences getHistoryPreferences() {
+            return mContext.getSharedPreferences(HISTORY_PREFS_NAME, Context.MODE_PRIVATE);
         }
 
         @NonNull
@@ -130,7 +136,7 @@ public class HistoryEditText {
      * include current editor-content to history and save to settings
      */
     public void saveHistory() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences sharedPref = mContext.getSharedPreferences(HISTORY_PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPref.edit();
 
         for (EditorHandler instance : mEditorHandlers) {
@@ -142,7 +148,7 @@ public class HistoryEditText {
     @NonNull
     @Override
     public String toString() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences sharedPref = mContext.getSharedPreferences(HISTORY_PREFS_NAME, Context.MODE_PRIVATE);
         StringBuilder result = new StringBuilder();
         for (EditorHandler instance : mEditorHandlers) {
             result.append(instance.toString(sharedPref)).append("\n");

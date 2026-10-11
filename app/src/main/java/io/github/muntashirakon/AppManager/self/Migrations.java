@@ -3,12 +3,17 @@
 package io.github.muntashirakon.AppManager.self;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.annotation.WorkerThread;
+import androidx.preference.PreferenceManager;
 
 import java.io.File;
+import java.util.Map;
 
 import io.github.muntashirakon.AppManager.db.AppsDb;
+import io.github.muntashirakon.AppManager.intercept.HistoryEditText;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
@@ -18,6 +23,8 @@ import io.github.muntashirakon.io.Paths;
 @SuppressLint("StaticFieldLeak")
 public class Migrations {
     public static final String TAG = Migrations.class.getSimpleName();
+
+    public static final int FROM_VERSION_CURRENT = 0;
 
     private static final MigrationTask MIGRATE_FROM_ALL_VERSION_TO_3_0_0 = new MigrationTask(409, 410) {
         @Override
@@ -68,6 +75,29 @@ public class Migrations {
         }
     };
 
+    private static final MigrationTask MIGRATE_FROM_451_TO_452 = new MigrationTask(451, 452) {
+        @Override
+        public void run() {
+            Log.d(TAG, "Running MIGRATE_FROM_451_TO_452 from %d to %d", fromVersion, toVersion);
+            SharedPreferences legacyPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences historyPreferences = context.getSharedPreferences(
+                    HistoryEditText.HISTORY_PREFS_NAME, Context.MODE_PRIVATE);
+            Map<String, ?> legacyValues = legacyPreferences.getAll();
+            SharedPreferences.Editor historyEditor = historyPreferences.edit();
+            SharedPreferences.Editor legacyEditor = legacyPreferences.edit();
+            for (int i = 0; i < 6; ++i) {
+                String key = HistoryEditText.HISTORY_PREFIX + i;
+                Object value = legacyValues.get(key);
+                if (value instanceof String) {
+                    historyEditor.putString(key, (String) value);
+                    legacyEditor.remove(key);
+                }
+            }
+            historyEditor.apply();
+            legacyEditor.apply();
+        }
+    };
+
     private static final Migration migration;
 
     static {
@@ -75,6 +105,7 @@ public class Migrations {
         migration.addTask(MIGRATE_FROM_ALL_VERSION_TO_3_0_0);
         migration.addTask(MIGRATE_FROM_3_0_0_RC01_RC04_TO_3_0_0);
         migration.addTask(MIGRATE_FROM_4_0_5_TO_4_0_6);
+        migration.addTask(MIGRATE_FROM_451_TO_452);
     }
 
     @WorkerThread
