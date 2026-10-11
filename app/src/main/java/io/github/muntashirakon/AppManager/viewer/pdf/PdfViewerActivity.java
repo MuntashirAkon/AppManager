@@ -27,7 +27,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -55,10 +54,9 @@ public class PdfViewerActivity extends PerProcessActivity {
     private PdfPageAdapter mPageAdapter;
     private View mProgress;
     private View mError;
-    private RecyclerView mPages;
+    private ZoomablePdfRecyclerView mPages;
     private Path mDocumentPath;
     private int mPageCount;
-    private float mZoom = 1f;
     private ArrayDeque<Integer> mExportPages;
     @Nullable
     private DocumentFile mExportDirectory;
@@ -126,6 +124,7 @@ public class PdfViewerActivity extends PerProcessActivity {
         super.onNewIntent(intent);
         setIntent(intent);
         if (mRenderController != null) {
+            mPages.resetZoom();
             mProgress.setVisibility(View.VISIBLE);
             mError.setVisibility(View.GONE);
             mPages.setVisibility(View.GONE);
@@ -157,11 +156,8 @@ public class PdfViewerActivity extends PerProcessActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_zoom_in) {
-            setZoom(Math.min(2f, mZoom + .25f));
-            return true;
-        } else if (id == R.id.action_zoom_out) {
-            setZoom(Math.max(.75f, mZoom - .25f));
+        if (id == R.id.action_fit_width) {
+            mPages.resetZoom();
             return true;
         } else if (id == R.id.action_go_to_page) {
             showGoToPageDialog();
@@ -177,14 +173,6 @@ public class PdfViewerActivity extends PerProcessActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void setZoom(float zoom) {
-        mZoom = zoom;
-        mPages.setPivotX(0);
-        mPages.setPivotY(0);
-        mPages.setScaleX(zoom);
-        mPages.setScaleY(zoom);
     }
 
     private void showGoToPageDialog() {

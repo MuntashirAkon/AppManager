@@ -28,7 +28,7 @@
 
     </io.github.muntashirakon.widget.AppBarLayout>
 
-    <io.github.muntashirakon.widget.RecyclerView
+    <io.github.muntashirakon.AppManager.viewer.pdf.ZoomablePdfRecyclerView
         android:id="@+id/pages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

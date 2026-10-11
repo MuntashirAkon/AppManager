@@ -1405,8 +1405,7 @@
         <item quantity="other">%d files</item>
     </plurals>
     <string name="go_to_path">Go to…</string>
-    <string name="pdf_zoom_in">Zoom in</string>
-    <string name="pdf_zoom_out">Zoom out</string>
+    <string name="pdf_fit_width">Fit to width</string>
     <string name="pdf_go_to_page">Go to page…</string>
     <string name="pdf_print">Print</string>
     <string name="pdf_export_format">Export format</string>

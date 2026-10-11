@@ -2,12 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_zoom_out"
-        android:title="@string/pdf_zoom_out"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_zoom_in"
-        android:title="@string/pdf_zoom_in"
+        android:id="@+id/action_fit_width"
+        android:title="@string/pdf_fit_width"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_go_to_page"
