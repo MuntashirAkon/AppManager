@@ -54,6 +54,7 @@ public class ModeOfOpsPreference extends Fragment {
     private MaterialTextView mRemoteServicesStatusView;
     private MaterialTextView mModeOfOpsView;
     private MainPreferencesViewModel mModel;
+    @Nullable
     private AlertDialog mModeOfOpsAlertDialog;
     private String[] mModes;
     @Ops.Mode
@@ -122,13 +123,15 @@ public class ModeOfOpsPreference extends Fragment {
                 .setSelection(mCurrentMode)
                 .addDisabledItems(disabledItems)
                 .setPositiveButton(R.string.apply, (dialog, which, selectedItem) -> {
-                    if (selectedItem != null && !mModel.isModeOperationPending()) {
+                    if (isResumed() && selectedItem != null && !mModel.isModeOperationPending()) {
                         mCurrentMode = selectedItem;
                         if (Ops.MODE_ADB_OVER_TCP.equals(mCurrentMode)) {
                             ServerConfig.setAdbPort(ServerConfig.DEFAULT_ADB_PORT);
                         }
                         Ops.setMode(mCurrentMode);
-                        mModeOfOpsAlertDialog.show();
+                        if (mModeOfOpsAlertDialog != null) {
+                            mModeOfOpsAlertDialog.show();
+                        }
                         mConnecting = true;
                         updateViews();
                         mModel.setModeOfOps();
@@ -157,19 +160,25 @@ public class ModeOfOpsPreference extends Fragment {
                     } // fall-through
                 case Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        mModeOfOpsAlertDialog.dismiss();
+                        if (mModeOfOpsAlertDialog != null) {
+                            mModeOfOpsAlertDialog.dismiss();
+                        }
                         updateViews();
                         Ops.connectWirelessDebugging(requireActivity(), mModel);
                         return;
                     } // fall-through
                 case Ops.STATUS_ADB_CONNECT_REQUIRED:
-                    mModeOfOpsAlertDialog.dismiss();
+                    if (mModeOfOpsAlertDialog != null) {
+                        mModeOfOpsAlertDialog.dismiss();
+                    }
                     updateViews();
                     Ops.connectAdbInput(requireActivity(), mModel);
                     return;
                 case Ops.STATUS_ADB_PAIRING_REQUIRED:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        mModeOfOpsAlertDialog.dismiss();
+                        if (mModeOfOpsAlertDialog != null) {
+                            mModeOfOpsAlertDialog.dismiss();
+                        }
                         updateViews();
                         Ops.pairAdbInput(requireActivity(), mModel);
                         return;
@@ -204,6 +213,15 @@ public class ModeOfOpsPreference extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        if (mModeOfOpsAlertDialog != null) {
+            mModeOfOpsAlertDialog.dismiss();
+            mModeOfOpsAlertDialog = null;
+        }
+        super.onDestroyView();
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         requireActivity().setTitle(R.string.pref_mode_of_operations);
@@ -211,13 +229,16 @@ public class ModeOfOpsPreference extends Fragment {
 
     private void completeModeOperation() {
         mConnecting = false;
-        mModeOfOpsAlertDialog.dismiss();
+        if (mModeOfOpsAlertDialog != null) {
+            mModeOfOpsAlertDialog.dismiss();
+        }
         mCurrentMode = Ops.getMode();
         mServerHealthCheckStarted = false;
         updateViews();
     }
 
     private void updateViews() {
+        if (!isAdded() || getView() == null) return;
         boolean serverActive = mServerHealth;
         if (!mServerHealthCheckStarted) {
             mServerHealthCheckStarted = true;
@@ -226,7 +247,7 @@ public class ModeOfOpsPreference extends Fragment {
             ThreadUtils.postOnBackgroundThread(() -> {
                 boolean healthy = LocalServer.checkServerHealth(context);
                 ThreadUtils.postOnMainThread(() -> {
-                    if (!isAdded()) return;
+                    if (!isAdded() || getView() == null) return;
                     mServerHealth = healthy;
                     updateViews();
                 });
