@@ -15,12 +15,19 @@ class NormalShell extends Runner {
     private final Shell mShell;
 
     public NormalShell(boolean isRoot) {
-        if (isRoot == Shell.getShell().isRoot()) {
+        if (!isRoot) {
+            // Because Shell.getShell().isRoot() attempts to request root if not present
+            mShell = Shell.Builder.create()
+                    .setFlags(Shell.FLAG_NON_ROOT_SHELL)
+                    .setTimeout(10)
+                    .build();
+            return;
+        }
+        if (Shell.getShell().isRoot()) {
             mShell = Shell.getShell();
             return;
         }
-        int flags = isRoot ? Shell.FLAG_MOUNT_MASTER : Shell.FLAG_NON_ROOT_SHELL;
-        mShell = Shell.Builder.create().setFlags(flags).setTimeout(10).build();
+        mShell = Shell.Builder.create().setFlags(Shell.FLAG_MOUNT_MASTER).setTimeout(10).build();
     }
 
     @Override

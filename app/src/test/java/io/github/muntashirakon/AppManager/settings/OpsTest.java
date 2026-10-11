@@ -75,6 +75,18 @@ public class OpsTest {
     }
 
     @Test
+    public void explicitNoRootDoesNotProbeForRoot() {
+        ShadowRoot.rootGiven = true;
+        Ops.setMode(Ops.MODE_NO_ROOT);
+
+        assertEquals(Ops.STATUS_SUCCESS, Ops.init(mContext, false));
+
+        assertFalse(Ops.isDirectRoot());
+        assertFalse(Ops.isAdb());
+        assertEquals(Process.myUid(), Ops.getWorkingUid());
+    }
+
+    @Test
     public void autoCommitsRootAfterValidatedRootBinding() {
         ShadowRoot.rootGiven = true;
         ShadowServices.bindUid = Ops.ROOT_UID;

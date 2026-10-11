@@ -311,7 +311,7 @@ public class Ops {
     @Status
     private static int initLocked(@NonNull Context context, boolean force) {
         String mode = getMode();
-        sDirectRoot = hasRoot();
+        sDirectRoot = !MODE_NO_ROOT.equals(mode) && hasRoot();
         if (MODE_AUTO.equals(mode)) {
             autoDetectRootSystemOrAdbAndPersist(context);
             return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
