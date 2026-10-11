@@ -125,6 +125,7 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     private ApkQueueItem mCurrentItem;
     private String mPackageName;
     private String mOperationId;
+    private final List<Intent> mPendingIntents = new ArrayList<>();
     /**
      * Whether this activity is currently dealing with an apk
      */
@@ -247,6 +248,14 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
                 });
         if (!mModel.isQueueInitialized()) {
             mModel.initializeQueue(getQueueItems(intent));
+        }
+        if (!mPendingIntents.isEmpty()) {
+            // Intents arrived before the viewmodel was initialized
+            List<Intent> pendingIntents = new ArrayList<>(mPendingIntents);
+            mPendingIntents.clear();
+            for (Intent pendingIntent : pendingIntents) {
+                onNewIntent(pendingIntent);
+            }
         }
         // Init fragment before observing retained LiveData.
         Fragment restoredFragment = getSupportFragmentManager()
@@ -452,6 +461,11 @@ public class PackageInstallerActivity extends BaseActivity implements InstallerD
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Log.d(TAG, "New intent called: %s", intent);
+        if (mModel == null) {
+            // A new intent can arrive while the authentication UI is being shown.
+            mPendingIntents.add(intent);
+            return;
+        }
         // Check for action first
         if (ACTION_PACKAGE_INSTALLED.equals(intent.getAction())) {
             mSessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
