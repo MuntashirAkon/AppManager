@@ -510,8 +510,10 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
             if (packageOps != null && packageOps.size() == 1) {
                 mAppOpEntries = packageOps.get(0).getOps();
             }
-        } else mAppOpEntries = Collections.emptyList();
-        return mAppOpEntries;
+        } else if (mAppOpEntries == null) {
+            mAppOpEntries = Collections.emptyList();
+        }
+        return mAppOpEntries != null ? mAppOpEntries : Collections.emptyList();
     }
 
     @NonNull
@@ -542,7 +544,7 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
             }
             mAllComponents = components;
         }
-        return mAllComponents;
+        return mAllComponents != null ? mAllComponents : Collections.emptyMap();
     }
 
     @NonNull
@@ -582,7 +584,7 @@ public class ApplicationItem extends PackageItemInfo implements IFilterableAppIn
             }
             mUsedPermissions = new ArrayList<>(usedPermissions);
         }
-        return mUsedPermissions;
+        return mUsedPermissions != null ? mUsedPermissions : Collections.emptyList();
     }
 
     @NonNull
