@@ -6,6 +6,8 @@ import static org.junit.Assert.assertEquals;
 import androidx.annotation.NonNull;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,6 +16,7 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 
+@RunWith(RobolectricTestRunner.class)
 public class ActionPlanTest {
     @Test
     public void executesActionsInOrderAndKeepsStateRecords() {
