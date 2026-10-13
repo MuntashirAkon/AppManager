@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,6 +75,7 @@ public final class ActionParameters implements IJsonSerializer, Parcelable {
         return mParameters.containsKey(key);
     }
 
+    @Nullable
     public Object get(@NonNull String key) {
         return mParameters.get(key);
     }

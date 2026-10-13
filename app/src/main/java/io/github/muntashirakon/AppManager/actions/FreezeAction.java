@@ -58,19 +58,12 @@ public final class FreezeAction extends PackageScopedAction {
                 } else {
                     FreezeUtils.unfreeze(target.getPackageName(), target.getUserId());
                 }
-                results.add(result(target, ActionResultStatus.SUCCESS, null));
+                results.add(actionResult(target, ActionResultStatus.SUCCESS, null));
             } catch (Throwable e) {
-                results.add(result(target, ActionResultStatus.FAILED, e.getMessage()));
+                results.add(actionResult(target, ActionResultStatus.FAILED, e.getMessage()));
             }
         }
         return results;
-    }
-
-    @NonNull
-    private ActionResult result(@NonNull UserPackagePair target, @NonNull ActionResultStatus status,
-                                @Nullable String message) {
-        return new ActionResult(getId(), target, status, ActionConflict.NO_CONFLICT,
-                null, null, message);
     }
 
     @VisibleForTesting

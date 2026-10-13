@@ -71,9 +71,47 @@ public abstract class PackageScopedAction extends Action {
     protected final int requireInt(@NonNull ActionParameters parameters, @NonNull String key) {
         Object value = parameters.get(key);
         if (!(value instanceof Integer)) {
-            throw new IllegalArgumentException("Expected integer parameter: " + key);
+            throw new IllegalArgumentException("Expected int parameter: " + key);
         }
         return (Integer) value;
+    }
+
+    @NonNull
+    protected final int[] requireIntArray(@NonNull ActionParameters parameters, @NonNull String key) {
+        Object value = parameters.get(key);
+        if (!(value instanceof int[])) {
+            throw new IllegalArgumentException("Expected int[] parameter: " + key);
+        }
+        return (int[]) value;
+    }
+
+    @NonNull
+    protected final String[] requireStringArray(@NonNull ActionParameters parameters, @NonNull String key) {
+        Object value = parameters.get(key);
+        if (!(value instanceof String[])) {
+            throw new IllegalArgumentException("Expected String[] parameter: " + key);
+        }
+        return (String[]) value;
+    }
+
+    protected final boolean optionalBoolean(@NonNull ActionParameters parameters, @NonNull String key, boolean defaultValue) {
+        Object value = parameters.get(key);
+        if (value == null) {
+            return defaultValue;
+        }
+        if (!(value instanceof Boolean)) {
+            throw new IllegalArgumentException("Expected String parameter: " + key);
+        }
+        return (boolean) value;
+    }
+
+    @Nullable
+    protected final String optionalString(@NonNull ActionParameters parameters, @NonNull String key) {
+        Object value = parameters.get(key);
+        if (value != null && !(value instanceof String)) {
+            throw new IllegalArgumentException("Expected String parameter: " + key);
+        }
+        return (String) value;
     }
 
     @NonNull

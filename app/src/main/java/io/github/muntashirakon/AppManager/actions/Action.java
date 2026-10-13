@@ -185,6 +185,39 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
         if (kind == ActionKind.FREEZE) {
             return new FreezeAction(id, name, schema, target, on, off, strictness, revert);
         }
+        if (kind == ActionKind.FORCE_STOP) {
+            return new ForceStopAction(id, name, schema, target, on, strictness, revert);
+        }
+        if (kind == ActionKind.COMPONENT_STATE) {
+            return new ComponentStateAction(id, name, schema, target, on, off, strictness, revert);
+        }
+        if (kind == ActionKind.PERMISSION_STATE) {
+            return new PermissionStateAction(id, name, schema, target, on, off, strictness, revert);
+        }
+        if (kind == ActionKind.APP_OP_MODE) {
+            return new AppOpModeAction(id, name, schema, target, on, off, strictness, revert);
+        }
+        if (kind == ActionKind.TRACKER_BLOCKING) {
+            return new TrackerStateAction(id, name, schema, target, on, off, strictness, revert);
+        }
+        if (kind == ActionKind.NETWORK_POLICY) {
+            return new NetworkPolicyAction(id, name, schema, target, on, off, strictness, revert);
+        }
+        if (kind == ActionKind.SENSOR_ACCESS) {
+            return new SensorAccessAction(id, name, schema, target, on, off, strictness, revert);
+        }
+        if (kind == ActionKind.BATTERY_OPTIMIZATION) {
+            return new BatteryOptimizationAction(id, name, schema, target, on, off, strictness, revert);
+        }
+        if (kind == ActionKind.CLEAR_CACHE) {
+            return new ClearCacheAction(id, name, schema, target, on, strictness, revert);
+        }
+        if (kind == ActionKind.CLEAR_DATA) {
+            return new ClearDataAction(id, name, schema, target, on, strictness, revert);
+        }
+        if (kind == ActionKind.DEXOPT) {
+            return new DexOptAction(id, name, schema, target, on, strictness, revert);
+        }
         throw new IllegalArgumentException("No concrete Action implementation registered for " + kind);
     }
 
@@ -219,7 +252,42 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
         @Override
         public Action createFromParcel(Parcel in) {
             ActionKind kind = ActionKind.valueOf(in.readString());
-            if (kind == ActionKind.FREEZE) return FreezeAction.fromParcel(in, kind);
+            if (kind == ActionKind.FREEZE) {
+                return FreezeAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.FORCE_STOP) {
+                return ForceStopAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.COMPONENT_STATE) {
+                return ComponentStateAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.PERMISSION_STATE) {
+                return PermissionStateAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.APP_OP_MODE) {
+                return AppOpModeAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.TRACKER_BLOCKING) {
+                return TrackerStateAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.NETWORK_POLICY) {
+                return NetworkPolicyAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.SENSOR_ACCESS) {
+                return SensorAccessAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.BATTERY_OPTIMIZATION) {
+                return BatteryOptimizationAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.CLEAR_CACHE) {
+                return ClearCacheAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.CLEAR_DATA) {
+                return ClearDataAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.DEXOPT) {
+                return DexOptAction.fromParcel(in, kind);
+            }
             throw new IllegalArgumentException("No concrete Action implementation registered for " + kind);
         }
 
