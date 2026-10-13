@@ -44,8 +44,10 @@ public final class ActionParameters implements IJsonSerializer, Parcelable {
     }
 
     @NonNull
-    public ActionParameters put(@NonNull String key, @NonNull Object value) {
-        if (value instanceof String) {
+    public ActionParameters put(@NonNull String key, @Nullable Object value) {
+        if (value == null) {
+            mParameters.putString(key, null);
+        } else if (value instanceof String) {
             mParameters.putString(key, (String) value);
         } else if (value instanceof Boolean) {
             mParameters.putBoolean(key, (Boolean) value);

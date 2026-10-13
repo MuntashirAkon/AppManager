@@ -100,7 +100,7 @@ public abstract class PackageScopedAction extends Action {
             return defaultValue;
         }
         if (!(value instanceof Boolean)) {
-            throw new IllegalArgumentException("Expected String parameter: " + key);
+            throw new IllegalArgumentException("Expected boolean parameter: " + key);
         }
         return (boolean) value;
     }
@@ -112,6 +112,15 @@ public abstract class PackageScopedAction extends Action {
             throw new IllegalArgumentException("Expected String parameter: " + key);
         }
         return (String) value;
+    }
+
+    @Nullable
+    protected final String[] optionalStringArray(@NonNull ActionParameters parameters, @NonNull String key) {
+        Object value = parameters.get(key);
+        if (value != null && !(value instanceof String[])) {
+            throw new IllegalArgumentException("Expected String[] parameter: " + key);
+        }
+        return (String[]) value;
     }
 
     @NonNull

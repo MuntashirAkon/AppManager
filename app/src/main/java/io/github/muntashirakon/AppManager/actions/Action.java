@@ -218,6 +218,15 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
         if (kind == ActionKind.DEXOPT) {
             return new DexOptAction(id, name, schema, target, on, strictness, revert);
         }
+        if (kind == ActionKind.BACKUP) {
+            return new BackupAction(id, name, schema, target, on, strictness, revert);
+        }
+        if (kind == ActionKind.RESTORE_BACKUP) {
+            return new RestoreBackupAction(id, name, schema, target, on, strictness, revert);
+        }
+        if (kind == ActionKind.DELETE_BACKUP) {
+            return new DeleteBackupAction(id, name, schema, target, on, strictness, revert);
+        }
         throw new IllegalArgumentException("No concrete Action implementation registered for " + kind);
     }
 
@@ -250,7 +259,7 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
     public static final Creator<Action> CREATOR = new Creator<Action>() {
         @NonNull
         @Override
-        public Action createFromParcel(Parcel in) {
+        public Action createFromParcel(@NonNull Parcel in) {
             ActionKind kind = ActionKind.valueOf(in.readString());
             if (kind == ActionKind.FREEZE) {
                 return FreezeAction.fromParcel(in, kind);
@@ -287,6 +296,15 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
             }
             if (kind == ActionKind.DEXOPT) {
                 return DexOptAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.BACKUP) {
+                return BackupAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.RESTORE_BACKUP) {
+                return RestoreBackupAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.DELETE_BACKUP) {
+                return DeleteBackupAction.fromParcel(in, kind);
             }
             throw new IllegalArgumentException("No concrete Action implementation registered for " + kind);
         }
