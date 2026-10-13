@@ -236,6 +236,12 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
         if (kind == ActionKind.INSTALL_EXISTING) {
             return new InstallExistingAction(id, name, schema, target, on, strictness, revert);
         }
+        if (kind == ActionKind.MAGISK_HIDE) {
+            return new MagiskHideAction(id, name, schema, target, on, off, strictness, revert);
+        }
+        if (kind == ActionKind.MAGISK_DENYLIST) {
+            return new MagiskDenylistAction(id, name, schema, target, on, off, strictness, revert);
+        }
         throw new IllegalArgumentException("No concrete Action implementation registered for " + kind);
     }
 
@@ -323,6 +329,12 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
             }
             if (kind == ActionKind.INSTALL_EXISTING) {
                 return InstallExistingAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.MAGISK_HIDE) {
+                return MagiskHideAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.MAGISK_DENYLIST) {
+                return MagiskDenylistAction.fromParcel(in, kind);
             }
             throw new IllegalArgumentException("No concrete Action implementation registered for " + kind);
         }
