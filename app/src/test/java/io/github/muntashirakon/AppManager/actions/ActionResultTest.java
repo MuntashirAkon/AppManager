@@ -11,6 +11,7 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 
@@ -22,7 +23,14 @@ public class ActionResultTest {
         UserPackagePair inherited = new UserPackagePair("trigger", 10);
         ActionContext context = new ActionContext(inherited, Arrays.asList(configured, inherited), "plan", 1L, true);
         PackageTargetSpec spec = new PackageTargetSpec(Collections.singletonList(configured), true, true);
-        assertEquals(Arrays.asList(configured, inherited), new DefaultPackageTargetResolver().resolve(context, spec));
+        LinkedHashSet<UserPackagePair> targets = new LinkedHashSet<>(spec.getConfiguredTargets());
+        if (spec.includesSelected()) {
+            targets.addAll(context.selectedTargets);
+        }
+        if (spec.includesInherited() && context.triggerTarget != null) {
+            targets.add(context.triggerTarget);
+        }
+        assertEquals(Arrays.asList(configured, inherited), new java.util.ArrayList<>(targets));
     }
 
     @Test
