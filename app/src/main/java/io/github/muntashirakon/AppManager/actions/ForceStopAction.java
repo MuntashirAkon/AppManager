@@ -46,11 +46,7 @@ public final class ForceStopAction extends PackageScopedAction {
         List<UserPackagePair> targets = resolveTargets(context);
         List<ActionResult> results = new ArrayList<>(targets.size());
         if (mode == ActionMode.OFF) {
-            for (UserPackagePair target : targets) {
-                results.add(actionResult(target, ActionResultStatus.UNSUPPORTED,
-                        "Force-stop has no reverse operation"));
-            }
-            return results;
+            return unsupportedResults(targets, "Force-stop has no reverse operation");
         }
         for (UserPackagePair target : targets) {
             try {

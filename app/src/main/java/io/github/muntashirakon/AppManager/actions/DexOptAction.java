@@ -44,16 +44,10 @@ public final class DexOptAction extends PackageScopedAction {
         List<UserPackagePair> targets = resolveTargets(context);
         List<ActionResult> results = new ArrayList<>(targets.size());
         if (mode == ActionMode.OFF) {
-            for (UserPackagePair target : targets) {
-                results.add(actionResult(target, ActionResultStatus.UNSUPPORTED, "Dex optimization has no reverse operation"));
-            }
-            return results;
+            return unsupportedResults(targets, "Dex optimization has no reverse operation");
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            for (UserPackagePair target : targets) {
-                results.add(actionResult(target, ActionResultStatus.UNSUPPORTED, "Dex optimization is unavailable"));
-            }
-            return results;
+            return unsupportedResults(targets, "Dex optimization is unavailable");
         }
         ActionParameters parameters = getOnParameters();
         String compilerFilter = optionalString(parameters, "compiler_filter");
