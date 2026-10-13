@@ -178,6 +178,88 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
     }
 
     @NonNull
+    protected final ActionParameters requireParameters(@NonNull ActionMode mode) {
+        ActionParameters params = mode == ActionMode.ON ? getOnParameters() : getOffParameters();
+        if (params == null) {
+            throw new IllegalStateException("Missing parameters for " + mode + " transition");
+        }
+        return params;
+    }
+
+    protected final boolean requireBoolean(@NonNull ActionParameters parameters,
+                                           @NonNull String key) {
+        Object value = parameters.get(key);
+        if (!(value instanceof Boolean)) {
+            throw new IllegalArgumentException("Expected boolean parameter: " + key);
+        }
+        return (Boolean) value;
+    }
+
+    protected final int requireInt(@NonNull ActionParameters parameters, @NonNull String key) {
+        Object value = parameters.get(key);
+        if (!(value instanceof Integer)) {
+            throw new IllegalArgumentException("Expected int parameter: " + key);
+        }
+        return (Integer) value;
+    }
+
+    @NonNull
+    protected final int[] requireIntArray(@NonNull ActionParameters parameters, @NonNull String key) {
+        Object value = parameters.get(key);
+        if (!(value instanceof int[])) {
+            throw new IllegalArgumentException("Expected int[] parameter: " + key);
+        }
+        return (int[]) value;
+    }
+
+    @NonNull
+    protected final String requireString(@NonNull ActionParameters parameters, @NonNull String key) {
+        Object value = parameters.get(key);
+        if (!(value instanceof String)) {
+            throw new IllegalArgumentException("Expected String parameter: " + key);
+        }
+        return (String) value;
+    }
+
+    @NonNull
+    protected final String[] requireStringArray(@NonNull ActionParameters parameters, @NonNull String key) {
+        Object value = parameters.get(key);
+        if (!(value instanceof String[])) {
+            throw new IllegalArgumentException("Expected String[] parameter: " + key);
+        }
+        return (String[]) value;
+    }
+
+    protected final boolean optionalBoolean(@NonNull ActionParameters parameters, @NonNull String key, boolean defaultValue) {
+        Object value = parameters.get(key);
+        if (value == null) {
+            return defaultValue;
+        }
+        if (!(value instanceof Boolean)) {
+            throw new IllegalArgumentException("Expected boolean parameter: " + key);
+        }
+        return (boolean) value;
+    }
+
+    @Nullable
+    protected final String optionalString(@NonNull ActionParameters parameters, @NonNull String key) {
+        Object value = parameters.get(key);
+        if (value != null && !(value instanceof String)) {
+            throw new IllegalArgumentException("Expected String parameter: " + key);
+        }
+        return (String) value;
+    }
+
+    @Nullable
+    protected final String[] optionalStringArray(@NonNull ActionParameters parameters, @NonNull String key) {
+        Object value = parameters.get(key);
+        if (value != null && !(value instanceof String[])) {
+            throw new IllegalArgumentException("Expected String[] parameter: " + key);
+        }
+        return (String[]) value;
+    }
+
+    @NonNull
     private static Action create(@NonNull ActionKind kind, @NonNull String id, @Nullable String name,
                                  int schema, @NonNull ActionTargetSpec target,
                                  @NonNull ActionParameters on, @Nullable ActionParameters off,
