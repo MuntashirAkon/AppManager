@@ -221,6 +221,9 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
         if (kind == ActionKind.BACKUP) {
             return new BackupAction(id, name, schema, target, on, strictness, revert);
         }
+        if (kind == ActionKind.BACKUP_APK) {
+            return new BackupApkAction(id, name, schema, target, on, strictness, revert);
+        }
         if (kind == ActionKind.RESTORE_BACKUP) {
             return new RestoreBackupAction(id, name, schema, target, on, strictness, revert);
         }
@@ -299,6 +302,9 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
             }
             if (kind == ActionKind.BACKUP) {
                 return BackupAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.BACKUP_APK) {
+                return BackupApkAction.fromParcel(in, kind);
             }
             if (kind == ActionKind.RESTORE_BACKUP) {
                 return RestoreBackupAction.fromParcel(in, kind);

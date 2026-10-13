@@ -18,6 +18,7 @@ public enum ActionKind {
     MAGISK_HIDE(ActionScope.PACKAGE),
     MAGISK_DENYLIST(ActionScope.PACKAGE),
     BACKUP(ActionScope.PACKAGE),
+    BACKUP_APK(ActionScope.PACKAGE),
     RESTORE_BACKUP(ActionScope.PACKAGE),
     DELETE_BACKUP(ActionScope.PACKAGE),
     DEXOPT(ActionScope.PACKAGE),
