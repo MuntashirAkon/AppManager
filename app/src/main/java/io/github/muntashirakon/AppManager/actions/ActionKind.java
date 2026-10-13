@@ -22,9 +22,10 @@ public enum ActionKind {
     RESTORE_BACKUP(ActionScope.PACKAGE),
     DELETE_BACKUP(ActionScope.PACKAGE),
     DEXOPT(ActionScope.PACKAGE),
-    INSTALL(ActionScope.PACKAGE),
+    INSTALL_EXISTING(ActionScope.PACKAGE),
     UNINSTALL(ActionScope.PACKAGE),
 
+    INSTALL(ActionScope.GLOBAL),
     SETTING(ActionScope.GLOBAL),
     DEVICE_STATE(ActionScope.GLOBAL),
     RUN_SCRIPT(ActionScope.GLOBAL),
