@@ -59,51 +59,113 @@ public final class DeviceStateAction extends GlobalScopedAction {
         return new DeviceStateAction(parcel, kind);
     }
 
+    private String mState;
+    private boolean mEnabled;
+
+    @Override
+    protected void onPreExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                @NonNull List<ActionExecutionRecord> previousRecords)
+            throws IllegalStateException {
+        if (mode == ActionMode.OFF && getOffParameters() == null) {
+            throw new IllegalStateException("Device state has no reverse operation");
+        }
+        mState = normalizeState(requireTargetString(TARGET_STATE));
+        mEnabled = requireBoolean(requireParameters(mode), PARAM_ENABLED);
+    }
+
     @NonNull
     @Override
-    public List<ActionResult> execute(@NonNull ActionContext context, @NonNull ActionMode mode,
-                                      @NonNull List<ActionExecutionRecord> previousRecords) {
-        if (mode == ActionMode.OFF && getOffParameters() == null) {
-            return unsupportedResults("Device state has no reverse operation");
+    protected ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                     @NonNull List<ActionExecutionRecord> previousRecords) {
+        boolean supported;
+        switch (mState) {
+            case STATE_AIRPLANE_MODE:
+                supported = setAirplaneMode(mEnabled);
+                break;
+            case STATE_LOCATION:
+                supported = setLocation(mEnabled);
+                break;
+            case STATE_DEVELOPER_OPTIONS:
+                supported = setGlobalSetting(Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, mEnabled);
+                break;
+            case STATE_USB_DEBUGGING:
+                supported = setGlobalSetting(Settings.Global.ADB_ENABLED, mEnabled);
+                break;
+            case STATE_WIRELESS_DEBUGGING:
+                supported = setWirelessDebugging(mEnabled);
+                break;
+            case STATE_AUTO_ROTATE:
+                supported = setSystemSetting(Settings.System.ACCELEROMETER_ROTATION, mEnabled);
+                break;
+            default:
+                return globalResult(ActionResultStatus.UNSUPPORTED,
+                        "Unsupported device state: " + mState);
         }
-        ActionParameters parameters = requireParameters(mode);
-        boolean enabled = requireBoolean(parameters, PARAM_ENABLED);
-        String state = normalizeState(requireTargetString(TARGET_STATE));
-        try {
-            boolean supported;
-            switch (state) {
-                case STATE_AIRPLANE_MODE:
-                    supported = setAirplaneMode(enabled);
-                    break;
-                case STATE_LOCATION:
-                    supported = setLocation(enabled);
-                    break;
-                case STATE_DEVELOPER_OPTIONS:
-                    supported = setGlobalSetting(Settings.Global.DEVELOPMENT_SETTINGS_ENABLED,
-                            enabled);
-                    break;
-                case STATE_USB_DEBUGGING:
-                    supported = setGlobalSetting(Settings.Global.ADB_ENABLED, enabled);
-                    break;
-                case STATE_WIRELESS_DEBUGGING:
-                    supported = setWirelessDebugging(enabled);
-                    break;
-                case STATE_AUTO_ROTATE:
-                    supported = setSystemSetting(Settings.System.ACCELEROMETER_ROTATION,
-                            enabled);
-                    break;
-                default:
-                    return unsupportedResults("Unsupported device state: " + state);
-            }
-            return Collections.singletonList(globalResult(
-                    supported ? ActionResultStatus.SUCCESS : ActionResultStatus.UNSUPPORTED,
-                    supported ? null : "Device state is not supported on this device"));
-        } catch (SecurityException exception) {
-            return unsupportedResults("Error: " + exception.getMessage());
-        } catch (Throwable exception) {
-            return Collections.singletonList(globalResult(ActionResultStatus.FAILED,
-                    exception.getMessage()));
+        return globalResult(supported ? ActionResultStatus.SUCCESS : ActionResultStatus.UNSUPPORTED,
+                supported ? null : "Device state is not supported on this device");
+    }
+
+    @NonNull
+    @Override
+    protected ActionState getCurrentState() throws IllegalArgumentException {
+        return readState(mState == null ? normalizeState(requireTargetString(TARGET_STATE)) : mState);
+    }
+
+    @NonNull
+    @Override
+    protected ActionState getOnState() {
+        return state(mState, requireBoolean(requireParameters(ActionMode.ON), PARAM_ENABLED));
+    }
+
+    @NonNull
+    @Override
+    protected ActionState getOffState() {
+        return state(mState, requireBoolean(requireParameters(ActionMode.OFF), PARAM_ENABLED));
+    }
+
+    @NonNull
+    private ActionState readState(@NonNull String state) {
+        boolean enabled;
+        switch (state) {
+            case STATE_AIRPLANE_MODE:
+                enabled = Settings.Global.getInt(ContextUtils.getContext().getContentResolver(),
+                        Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
+                break;
+            case STATE_LOCATION:
+                enabled = Settings.Secure.getInt(ContextUtils.getContext().getContentResolver(),
+                        Settings.Secure.LOCATION_MODE, Settings.Secure.LOCATION_MODE_OFF)
+                        != Settings.Secure.LOCATION_MODE_OFF;
+                break;
+            case STATE_DEVELOPER_OPTIONS:
+                enabled = getGlobalSetting(Settings.Global.DEVELOPMENT_SETTINGS_ENABLED);
+                break;
+            case STATE_USB_DEBUGGING:
+                enabled = getGlobalSetting(Settings.Global.ADB_ENABLED);
+                break;
+            case STATE_WIRELESS_DEBUGGING:
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+                    throw new IllegalStateException("Wireless debugging is unavailable");
+                }
+                enabled = getGlobalSetting(SettingsHidden.Global.ADB_WIFI_ENABLED);
+                break;
+            case STATE_AUTO_ROTATE:
+                enabled = Settings.System.getInt(ContextUtils.getContext().getContentResolver(),
+                        Settings.System.ACCELEROMETER_ROTATION, 0) != 0;
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported device state: " + state);
         }
+        return state(state, enabled);
+    }
+
+    private boolean getGlobalSetting(@NonNull String key) {
+        return Settings.Global.getInt(ContextUtils.getContext().getContentResolver(), key, 0) != 0;
+    }
+
+    @NonNull
+    private static ActionState state(@NonNull String state, boolean enabled) {
+        return new ActionState("global:device:" + state,
+                ActionValue.of(enabled));
     }
 
     private boolean setAirplaneMode(boolean enabled) {

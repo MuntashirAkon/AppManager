@@ -148,7 +148,18 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
                                               @Nullable ActionState observedState,
                                               @Nullable ActionState writtenState,
                                               @Nullable String message) {
-        return new ActionResult(getId(), target, status, ActionConflict.NO_CONFLICT,
+        return actionResult(target, status, ActionConflict.NO_CONFLICT, observedState,
+                writtenState, message);
+    }
+
+    @NonNull
+    protected final ActionResult actionResult(@Nullable UserPackagePair target,
+                                              @NonNull ActionResultStatus status,
+                                              @NonNull ActionConflict conflict,
+                                              @Nullable ActionState observedState,
+                                              @Nullable ActionState writtenState,
+                                              @Nullable String message) {
+        return new ActionResult(getId(), target, status, conflict,
                 observedState, writtenState, message);
     }
 

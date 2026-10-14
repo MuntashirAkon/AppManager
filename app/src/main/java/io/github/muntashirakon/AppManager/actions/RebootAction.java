@@ -6,7 +6,6 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -48,41 +47,41 @@ public final class RebootAction extends GlobalScopedAction {
 
     @NonNull
     @Override
-    public List<ActionResult> execute(@NonNull ActionContext context, @NonNull ActionMode mode,
-                                      @NonNull List<ActionExecutionRecord> previousRecords) {
+    protected ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                     @NonNull List<ActionExecutionRecord> previousRecords) {
         if (mode == ActionMode.OFF) {
-            return unsupportedResults("Reboot has no reverse operation");
+            return globalResult(ActionResultStatus.UNSUPPORTED, "Reboot has no reverse operation");
         }
 
         String modeName = normalizeMode(requireString(getOnParameters(), PARAM_MODE));
-        try {
-            switch (modeName) {
-                case MODE_NORMAL:
-                    RestartUtils.restart(RestartUtils.RESTART_NORMAL);
-                    break;
-                case MODE_RECOVERY:
-                    RestartUtils.restart(RestartUtils.RESTART_RECOVERY);
-                    break;
-                case MODE_BOOTLOADER:
-                    RestartUtils.restart(RestartUtils.RESTART_BOOTLOADER);
-                    break;
-                case MODE_USERSPACE:
-                    RestartUtils.restart(RestartUtils.RESTART_USERSPACE);
-                    break;
-                case MODE_DOWNLOAD:
-                    RestartUtils.restart(RestartUtils.RESTART_DOWNLOAD);
-                    break;
-                case MODE_EDL:
-                    RestartUtils.restart(RestartUtils.RESTART_EDL);
-                    break;
-                default:
-                    return Collections.singletonList(globalResult(ActionResultStatus.FAILED,
-                            "Unsupported reboot mode: " + modeName));
-            }
-            return Collections.singletonList(globalResult(ActionResultStatus.SUCCESS, null));
-        } catch (Throwable exception) {
-            return Collections.singletonList(globalResult(ActionResultStatus.FAILED,
-                    exception.getMessage()));
+        boolean success;
+        switch (modeName) {
+            case MODE_NORMAL:
+                success = RestartUtils.restart(RestartUtils.RESTART_NORMAL);
+                break;
+            case MODE_RECOVERY:
+                success = RestartUtils.restart(RestartUtils.RESTART_RECOVERY);
+                break;
+            case MODE_BOOTLOADER:
+                success = RestartUtils.restart(RestartUtils.RESTART_BOOTLOADER);
+                break;
+            case MODE_USERSPACE:
+                success = RestartUtils.restart(RestartUtils.RESTART_USERSPACE);
+                break;
+            case MODE_DOWNLOAD:
+                success = RestartUtils.restart(RestartUtils.RESTART_DOWNLOAD);
+                break;
+            case MODE_EDL:
+                success = RestartUtils.restart(RestartUtils.RESTART_EDL);
+                break;
+            default:
+                return globalResult(ActionResultStatus.FAILED,
+                        "Unsupported reboot mode: " + modeName);
+        }
+        if (success) {
+            return globalResult(ActionResultStatus.SUCCESS, null);
+        } else {
+            return globalResult(ActionResultStatus.FAILED, "Unable to reboot to " + modeName);
         }
     }
 

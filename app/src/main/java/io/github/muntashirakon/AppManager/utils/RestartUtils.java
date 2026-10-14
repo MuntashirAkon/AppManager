@@ -35,17 +35,17 @@ public class RestartUtils {
             "", "recovery", "bootloader", "userspace", "download", "edl"
     };
 
-    public static void restart(@RestartType int type) {
-        restart(RESTART_REASON[type]);
+    public static boolean restart(@RestartType int type) {
+        return restart(RESTART_REASON[type]);
     }
 
-    private static void restart(String reason) {
+    private static boolean restart(String reason) {
         // https://github.com/topjohnwu/Magisk/blob/5512917ec123e815dec1e3af871357f760acc1f3/app/src/main/java/com/topjohnwu/magisk/ktx/XSU.kt
         if (RESTART_REASON[RESTART_RECOVERY].equals(reason)) {
             // KEYCODE_POWER = 26, hide incorrect "Factory data reset" message
             Runner.runCommand(new String[]{"/system/bin/input", "keyevent", "26"});
         }
         String cmd = String.format(Locale.ROOT, "/system/bin/svc power reboot %s || /system/bin/reboot %s", reason, reason);
-        Runner.runCommand(cmd);
+        return Runner.runCommand(cmd).isSuccessful();
     }
 }

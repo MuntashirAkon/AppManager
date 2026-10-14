@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.github.muntashirakon.AppManager.actions;
 
+import android.content.ContentResolver;
 import android.os.Parcel;
 import android.provider.Settings;
 
@@ -10,7 +11,6 @@ import androidx.annotation.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -55,43 +55,84 @@ public final class SettingAction extends GlobalScopedAction {
         return new SettingAction(parcel, kind);
     }
 
+    private String mNamespace;
+    private String mKey;
+    private String mValue;
+    private ContentResolver mResolver;
+
+    @Override
+    protected void onPreExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                @NonNull List<ActionExecutionRecord> previousRecords)
+            throws IllegalArgumentException {
+        if (mode == ActionMode.OFF && getOffParameters() == null) {
+            throw new IllegalStateException("Setting has no reverse operation");
+        }
+        mNamespace = requireTargetString("namespace");
+        mKey = requireTargetString("key");
+        mValue = requireString(requireParameters(mode), PARAM_VALUE);
+        mResolver = ContextUtils.getContext().getContentResolver();
+    }
+
     @NonNull
     @Override
-    public List<ActionResult> execute(@NonNull ActionContext context, @NonNull ActionMode mode,
-                                      @NonNull List<ActionExecutionRecord> previousRecords) {
-
-        if (mode == ActionMode.OFF && getOffParameters() == null) {
-            return unsupportedResults("Setting has no reverse operation");
-        }
-        ActionParameters parameters = requireParameters(mode);
-        String namespace = requireTargetString("namespace");
-        String key = requireTargetString("key");
-        String value = requireString(parameters, PARAM_VALUE);
+    protected ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                     @NonNull List<ActionExecutionRecord> previousRecords) {
         boolean successful;
-        try {
-            switch (namespace) {
-                case NAMESPACE_GLOBAL:
-                    successful = Settings.Global.putString(ContextUtils.getContext()
-                            .getContentResolver(), key, value);
-                    break;
-                case NAMESPACE_SECURE:
-                    successful = Settings.Secure.putString(ContextUtils.getContext()
-                            .getContentResolver(), key, value);
-                    break;
-                case NAMESPACE_SYSTEM:
-                    successful = Settings.System.putString(ContextUtils.getContext()
-                            .getContentResolver(), key, value);
-                    break;
-                default:
-                    return unsupportedResults("Unsupported setting namespace: " + namespace);
-            }
-        } catch (Throwable exception) {
-            return Collections.singletonList(globalResult(ActionResultStatus.FAILED,
-                    exception.getMessage()));
+        switch (mNamespace) {
+            case NAMESPACE_GLOBAL:
+                successful = Settings.Global.putString(mResolver, mKey, mValue);
+                break;
+            case NAMESPACE_SECURE:
+                successful = Settings.Secure.putString(mResolver, mKey, mValue);
+                break;
+            case NAMESPACE_SYSTEM:
+                successful = Settings.System.putString(mResolver, mKey, mValue);
+                break;
+            default:
+                return globalResult(ActionResultStatus.UNSUPPORTED,
+                        "Unsupported setting namespace: " + mNamespace);
         }
-        return Collections.singletonList(globalResult(
-                successful ? ActionResultStatus.SUCCESS : ActionResultStatus.FAILED,
-                successful ? null : "Setting write failed"));
+        return globalResult(successful ? ActionResultStatus.SUCCESS : ActionResultStatus.FAILED,
+                successful ? null : "Setting write failed");
+    }
+
+    @Nullable
+    private String readValue(@NonNull String namespace, @NonNull String key) {
+        switch (namespace) {
+            case NAMESPACE_GLOBAL:
+                return Settings.Global.getString(ContextUtils.getContext().getContentResolver(), key);
+            case NAMESPACE_SECURE:
+                return Settings.Secure.getString(ContextUtils.getContext().getContentResolver(), key);
+            case NAMESPACE_SYSTEM:
+                return Settings.System.getString(ContextUtils.getContext().getContentResolver(), key);
+            default:
+                throw new IllegalArgumentException("Unsupported setting namespace: " + namespace);
+        }
+    }
+
+    @NonNull
+    @Override
+    protected ActionState getCurrentState() throws IllegalArgumentException {
+        return state(mNamespace, mKey, readValue(mNamespace, mKey));
+    }
+
+    @NonNull
+    @Override
+    protected ActionState getOnState() {
+        return state(mNamespace, mKey, requireString(requireParameters(ActionMode.ON), PARAM_VALUE));
+    }
+
+    @NonNull
+    @Override
+    protected ActionState getOffState() {
+        return state(mNamespace, mKey, requireString(requireParameters(ActionMode.OFF), PARAM_VALUE));
+    }
+
+    @NonNull
+    private static ActionState state(@NonNull String namespace, @NonNull String key,
+                                     @Nullable String value) {
+        return new ActionState("global:" + namespace + ":" + key,
+                ActionValue.of(value == null ? JSONObject.NULL : value));
     }
 
     @NonNull

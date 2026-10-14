@@ -41,6 +41,13 @@ public final class ActionResult implements Parcelable {
         this.message = message;
     }
 
+    @NonNull
+    public ActionResult withStateSnapshots(@Nullable ActionState observedState,
+                                           @Nullable ActionState writtenState) {
+        return new ActionResult(actionId, target, status, conflict, observedState,
+                writtenState, message);
+    }
+
     private ActionResult(@NonNull Parcel in) {
         actionId = in.readString();
         target = in.readParcelable(UserPackagePair.class.getClassLoader());
