@@ -28,6 +28,7 @@ public enum ActionKind {
     INSTALL(ActionScope.GLOBAL),
     SETTING(ActionScope.GLOBAL),
     DEVICE_STATE(ActionScope.GLOBAL),
+    REBOOT(ActionScope.GLOBAL),
     RUN_SCRIPT(ActionScope.GLOBAL),
     SEND_BROADCAST(ActionScope.GLOBAL);
 
