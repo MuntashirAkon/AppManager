@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchBackupOptions;
+import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 
 public final class RestoreBackupAction extends PackageScopedAction {
@@ -49,12 +50,15 @@ public final class RestoreBackupAction extends PackageScopedAction {
         BatchBackupOptions options = createOptions(getOnParameters());
         BackupManager backupManager = new BackupManager();
         for (UserPackagePair target : targets) {
+            ProgressHandler subProgressHandler = newSubProgressHandler(context);
             try {
                 backupManager.restore(options.getRestoreOpOptions(target.getPackageName(),
-                        target.getUserId()), null);
+                        target.getUserId()), subProgressHandler);
                 results.add(actionResult(target, ActionResultStatus.SUCCESS, null));
             } catch (Throwable exception) {
                 results.add(actionResult(target, ActionResultStatus.FAILED, exception.getMessage()));
+            } finally {
+                finishSubProgressHandler(subProgressHandler);
             }
         }
         return results;

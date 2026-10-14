@@ -50,6 +50,11 @@ public abstract class PackageScopedAction extends Action {
         return new ArrayList<>(targets);
     }
 
+    @Override
+    public final int getProgressMax(@NonNull ActionContext context) {
+        return Math.max(1, resolveTargets(context).size());
+    }
+
     @NonNull
     protected final List<ActionResult> unsupportedResults(@NonNull List<UserPackagePair> targets,
                                                           @NonNull String message) {
@@ -64,8 +69,7 @@ public abstract class PackageScopedAction extends Action {
     protected final ActionResult actionResult(@NonNull UserPackagePair target,
                                               @NonNull ActionResultStatus status,
                                               @Nullable String message) {
-        return new ActionResult(getId(), target, status, ActionConflict.NO_CONFLICT,
-                null, null, message);
+        return super.actionResult(target, status, null, null, message);
     }
 
     @NonNull

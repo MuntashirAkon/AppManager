@@ -11,8 +11,10 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 
@@ -34,6 +36,74 @@ public class ActionPlanTest {
         assertEquals(2, plan.getExecutionRecords().size());
         assertEquals("first-state", plan.getExecutionRecords().get(0).stateKey);
         assertEquals("second-state", plan.getExecutionRecords().get(1).stateKey);
+    }
+
+    @Test
+    public void reportsProgressAndPreservesSuppliedStateSnapshots() {
+        List<String> order = new ArrayList<>();
+        RecordingProgressHandler progressHandler = new RecordingProgressHandler();
+        ActionPlan plan = new ActionPlan("plan", Collections.singletonList(
+                new RecordingAction("action", "state", order)));
+
+        ActionContext context = new ActionContext(null, Collections.emptyList(), plan.getId(),
+                1L, false, progressHandler);
+        plan.execute(context, ActionMode.ON);
+
+        assertEquals(1, progressHandler.startedMax);
+        assertEquals(Collections.singletonList(1f), progressHandler.updates);
+        assertEquals(1, plan.getExecutionRecords().size());
+        assertEquals("state", plan.getExecutionRecords().get(0).stateKey);
+        assertEquals(1, progressHandler.resultCount);
+    }
+
+    private static final class RecordingProgressHandler extends ProgressHandler {
+        int startedMax;
+        int resultCount;
+        final List<Float> updates = new ArrayList<>();
+
+        @Override
+        public void onAttach(android.app.Service service, @NonNull Object message) {
+        }
+
+        @Override
+        public void onProgressStart(int max, float current, Object message) {
+            startedMax = max;
+        }
+
+        @Override
+        public void onProgressUpdate(int max, float current, Object message) {
+            updates.add(current);
+        }
+
+        @Override
+        public void onResult(Object message) {
+            resultCount++;
+        }
+
+        @Override
+        public void onDetach(android.app.Service service) {
+        }
+
+        @NonNull
+        @Override
+        public ProgressHandler newSubProgressHandler() {
+            return this;
+        }
+
+        @Override
+        public Object getLastMessage() {
+            return null;
+        }
+
+        @Override
+        public int getLastMax() {
+            return startedMax;
+        }
+
+        @Override
+        public float getLastProgress() {
+            return updates.isEmpty() ? 0 : updates.get(updates.size() - 1);
+        }
     }
 
     private static final class RecordingAction extends Action {

@@ -56,8 +56,15 @@ public abstract class GlobalScopedAction extends Action {
     @NonNull
     protected final ActionResult globalResult(@NonNull ActionResultStatus status,
                                               @Nullable String message) {
-        return new ActionResult(getId(), null, status, ActionConflict.NO_CONFLICT,
-                null, null, message);
+        return globalResult(status, null, null, message);
+    }
+
+    @NonNull
+    protected final ActionResult globalResult(@NonNull ActionResultStatus status,
+                                              @Nullable ActionState observedState,
+                                              @Nullable ActionState writtenState,
+                                              @Nullable String message) {
+        return actionResult(null, status, observedState, writtenState, message);
     }
 
     @NonNull

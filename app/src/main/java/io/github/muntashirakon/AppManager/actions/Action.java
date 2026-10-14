@@ -16,6 +16,9 @@ import java.util.UUID;
 
 import io.github.muntashirakon.AppManager.history.IJsonSerializer;
 import io.github.muntashirakon.AppManager.history.JsonDeserializer;
+import io.github.muntashirakon.AppManager.progress.ProgressHandler;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.util.LocalizedString;
 
 /**
@@ -131,6 +134,45 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
     public abstract List<ActionResult> execute(@NonNull ActionContext context,
                                                @NonNull ActionMode mode,
                                                @NonNull List<ActionExecutionRecord> previousRecords);
+
+    /**
+     * Number of progress units this action is expected to consume.
+     */
+    public int getProgressMax(@NonNull ActionContext context) {
+        return 1;
+    }
+
+    @NonNull
+    protected final ActionResult actionResult(@Nullable UserPackagePair target,
+                                              @NonNull ActionResultStatus status,
+                                              @Nullable ActionState observedState,
+                                              @Nullable ActionState writtenState,
+                                              @Nullable String message) {
+        return new ActionResult(getId(), target, status, ActionConflict.NO_CONFLICT,
+                observedState, writtenState, message);
+    }
+
+    /**
+     * Creates an isolated progress stream for a nested operation such as backup or restore.
+     * The parent stream remains reserved for the ActionPlan.
+     */
+    @Nullable
+    protected final ProgressHandler newSubProgressHandler(@NonNull ActionContext context) {
+        ProgressHandler parent = context.progressHandler;
+        if (parent == null) {
+            return null;
+        }
+        ProgressHandler child = parent.newSubProgressHandler();
+        Object message = parent.getLastMessage();
+        ThreadUtils.postOnMainThread(() -> child.onProgressStart(-1, 0, message));
+        return child;
+    }
+
+    protected final void finishSubProgressHandler(@Nullable ProgressHandler child) {
+        if (child != null) {
+            ThreadUtils.postOnMainThread(() -> child.onResult(null));
+        }
+    }
 
     @NonNull
     @Override

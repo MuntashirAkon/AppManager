@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 
 /**
  * Runtime-only inputs used when resolving configured and inherited targets.
@@ -28,15 +29,24 @@ public final class ActionContext implements Parcelable {
     public final List<UserPackagePair> selectedTargets;
     public final long startedAt;
     public final boolean automatic;
+    @Nullable
+    public final transient ProgressHandler progressHandler;
 
     public ActionContext(@Nullable UserPackagePair triggerTarget, @NonNull List<UserPackagePair> selectedTargets,
                          @NonNull String planId, long startedAt, boolean automatic) {
+        this(triggerTarget, selectedTargets, planId, startedAt, automatic, null);
+    }
+
+    public ActionContext(@Nullable UserPackagePair triggerTarget, @NonNull List<UserPackagePair> selectedTargets,
+                         @NonNull String planId, long startedAt, boolean automatic,
+                         @Nullable ProgressHandler progressHandler) {
         executionId = UUID.randomUUID().toString();
         this.planId = planId;
         this.triggerTarget = triggerTarget;
         this.selectedTargets = Collections.unmodifiableList(new ArrayList<>(selectedTargets));
         this.startedAt = startedAt;
         this.automatic = automatic;
+        this.progressHandler = progressHandler;
     }
 
     private ActionContext(@NonNull Parcel in) {
@@ -46,6 +56,7 @@ public final class ActionContext implements Parcelable {
         selectedTargets = Collections.unmodifiableList(in.createTypedArrayList(UserPackagePair.CREATOR));
         startedAt = in.readLong();
         automatic = in.readInt() != 0;
+        progressHandler = null;
     }
 
     @Override

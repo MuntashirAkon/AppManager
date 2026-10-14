@@ -18,6 +18,7 @@ import java.util.UUID;
 
 import io.github.muntashirakon.AppManager.history.IJsonSerializer;
 import io.github.muntashirakon.AppManager.history.JsonDeserializer;
+import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.util.LocalizedString;
 
 /**
@@ -93,6 +94,15 @@ public final class ActionPlan implements IJsonSerializer, Parcelable, LocalizedS
     public synchronized List<ActionResult> execute(@NonNull ActionContext context,
                                                    @NonNull ActionMode mode) {
         List<ActionResult> results = new ArrayList<>();
+        ProgressHandler progressHandler = context.progressHandler;
+        int progressMax = 0;
+        for (Action action : mActions) {
+            progressMax += Math.max(1, action.getProgressMax(context));
+        }
+        int progress = 0;
+        if (progressHandler != null) {
+            progressHandler.onProgressStart(progressMax, 0, progressHandler.getLastMessage());
+        }
         for (Action action : mActions) {
             List<ActionExecutionRecord> previous = new ArrayList<>();
             for (ActionExecutionRecord record : mExecutionRecords) {
@@ -102,6 +112,10 @@ public final class ActionPlan implements IJsonSerializer, Parcelable, LocalizedS
             }
             List<ActionResult> actionResults = action.execute(context, mode, previous);
             results.addAll(actionResults);
+            progress += Math.max(1, action.getProgressMax(context));
+            if (progressHandler != null) {
+                progressHandler.postUpdate(progressMax, progress, action);
+            }
             for (ActionResult result : actionResults) {
                 ActionState original = result.observedState;
                 ActionState written = result.writtenState;
@@ -112,6 +126,9 @@ public final class ActionPlan implements IJsonSerializer, Parcelable, LocalizedS
                             written, System.currentTimeMillis(), result.status));
                 }
             }
+        }
+        if (progressHandler != null) {
+            progressHandler.onResult(progressHandler.getLastMessage());
         }
         return Collections.unmodifiableList(results);
     }
