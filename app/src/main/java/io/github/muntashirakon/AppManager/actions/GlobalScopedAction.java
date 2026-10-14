@@ -18,6 +18,7 @@ public abstract class GlobalScopedAction extends Action {
                                  @NonNull ActionParameters onParameters,
                                  @Nullable ActionParameters offParameters) {
         super(kind, target, onParameters, offParameters);
+        assert getTarget().getScope() == ActionScope.GLOBAL;
     }
 
     protected GlobalScopedAction(@NonNull String id, @Nullable String name, int schemaVersion,
@@ -28,10 +29,12 @@ public abstract class GlobalScopedAction extends Action {
                                  @NonNull RevertMode revertMode) {
         super(id, name, schemaVersion, kind, target, onParameters, offParameters, strictness,
                 revertMode);
+        assert getTarget().getScope() == ActionScope.GLOBAL;
     }
 
     protected GlobalScopedAction(@NonNull Parcel parcel, @NonNull ActionKind kind) {
         super(parcel, kind);
+        assert getTarget().getScope() == ActionScope.GLOBAL;
     }
 
     @NonNull

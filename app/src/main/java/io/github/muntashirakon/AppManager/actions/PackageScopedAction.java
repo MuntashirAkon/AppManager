@@ -21,6 +21,7 @@ public abstract class PackageScopedAction extends Action {
                                   @NonNull ActionParameters onParameters,
                                   @Nullable ActionParameters offParameters) {
         super(kind, target, onParameters, offParameters);
+        assert getTarget().getScope() == ActionScope.PACKAGE;
     }
 
     protected PackageScopedAction(@NonNull String id, @Nullable String name, int schemaVersion,
@@ -31,10 +32,12 @@ public abstract class PackageScopedAction extends Action {
                                   @NonNull RevertMode revertMode) {
         super(id, name, schemaVersion, kind, target, onParameters, offParameters,
                 strictness, revertMode);
+        assert getTarget().getScope() == ActionScope.PACKAGE;
     }
 
     protected PackageScopedAction(@NonNull Parcel parcel, @NonNull ActionKind kind) {
         super(parcel, kind);
+        assert getTarget().getScope() == ActionScope.PACKAGE;
     }
 
     @NonNull
