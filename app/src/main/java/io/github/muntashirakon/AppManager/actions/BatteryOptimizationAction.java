@@ -6,7 +6,6 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,8 +14,8 @@ import io.github.muntashirakon.AppManager.types.UserPackagePair;
 
 public final class BatteryOptimizationAction extends PackageScopedAction {
     public BatteryOptimizationAction(@NonNull ActionTargetSpec target,
-                                      @NonNull ActionParameters onParameters,
-                                      @NonNull ActionParameters offParameters) {
+                                     @NonNull ActionParameters onParameters,
+                                     @NonNull ActionParameters offParameters) {
         this(UUID.randomUUID().toString(), null, CURRENT_SCHEMA_VERSION, target, onParameters,
                 offParameters, Strictness.STRICT, RevertMode.EXPLICIT);
     }
@@ -40,31 +39,51 @@ public final class BatteryOptimizationAction extends PackageScopedAction {
         return new BatteryOptimizationAction(parcel, kind);
     }
 
+    private boolean mOptimized;
+
+    @Override
+    protected void onPreExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                @NonNull List<UserPackagePair> targets,
+                                @NonNull List<ActionExecutionRecord> previousRecords) {
+        mOptimized = requireBoolean(requireParameters(mode), "optimized");
+    }
+
     @NonNull
     @Override
-    public List<ActionResult> execute(@NonNull ActionContext context,
-                                      @NonNull ActionMode mode,
-                                      @NonNull List<ActionExecutionRecord> previousRecords) {
-        ActionParameters parameters = requireParameters(mode);
-        List<UserPackagePair> targets = resolveTargets(context);
-        List<ActionResult> results = new ArrayList<>(targets.size());
-        boolean optimizedValue = requireBoolean(parameters, "optimized");
-        for (UserPackagePair target : targets) {
-            try {
-                boolean successful;
-                if (optimizedValue) {
-                    successful = DeviceIdleManagerCompat.enableBatteryOptimization(
-                            target.getPackageName());
-                } else {
-                    successful = DeviceIdleManagerCompat.disableBatteryOptimization(
-                            target.getPackageName());
-                }
-                results.add(actionResult(target, successful
-                        ? ActionResultStatus.SUCCESS : ActionResultStatus.FAILED, null));
-            } catch (Throwable exception) {
-                results.add(actionResult(target, ActionResultStatus.FAILED, exception.getMessage()));
-            }
+    protected ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                     @NonNull UserPackagePair target,
+                                     @NonNull List<ActionExecutionRecord> previousRecords) {
+        boolean successful;
+        if (mOptimized) {
+            successful = DeviceIdleManagerCompat.enableBatteryOptimization(target.getPackageName());
+        } else {
+            successful = DeviceIdleManagerCompat.disableBatteryOptimization(target.getPackageName());
         }
-        return results;
+        return actionResult(target, successful
+                ? ActionResultStatus.SUCCESS : ActionResultStatus.FAILED, null);
+    }
+
+    @NonNull
+    @Override
+    protected ActionState getCurrentState(@NonNull UserPackagePair target) {
+        return state(DeviceIdleManagerCompat.isBatteryOptimizedApp(target.getPackageName()));
+    }
+
+    @NonNull
+    @Override
+    protected ActionState getOnState(@NonNull UserPackagePair target) {
+        return state(requireBoolean(requireParameters(ActionMode.ON), "optimized"));
+    }
+
+    @NonNull
+    @Override
+    protected ActionState getOffState(@NonNull UserPackagePair target) {
+        return state(requireBoolean(requireParameters(ActionMode.OFF), "optimized"));
+    }
+
+    @NonNull
+    private static ActionState state(boolean optimized) {
+        return new ActionState("package:battery_optimization",
+                ActionValue.of(optimized));
     }
 }

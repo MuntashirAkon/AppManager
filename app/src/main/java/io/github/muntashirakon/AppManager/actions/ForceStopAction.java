@@ -6,7 +6,6 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,21 +40,11 @@ public final class ForceStopAction extends PackageScopedAction {
 
     @NonNull
     @Override
-    public List<ActionResult> execute(@NonNull ActionContext context, @NonNull ActionMode mode,
-                                      @NonNull List<ActionExecutionRecord> previousRecords) {
-        List<UserPackagePair> targets = resolveTargets(context);
-        List<ActionResult> results = new ArrayList<>(targets.size());
-        if (mode == ActionMode.OFF) {
-            return unsupportedResults(targets, "Force-stop has no reverse operation");
-        }
-        for (UserPackagePair target : targets) {
-            try {
-                PackageManagerCompat.forceStopPackage(target.getPackageName(), target.getUserId());
-                results.add(actionResult(target, ActionResultStatus.SUCCESS, null));
-            } catch (Throwable e) {
-                results.add(actionResult(target, ActionResultStatus.FAILED, e.getMessage()));
-            }
-        }
-        return results;
+    protected ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                     @NonNull UserPackagePair target,
+                                     @NonNull List<ActionExecutionRecord> previousRecords)
+            throws SecurityException {
+        PackageManagerCompat.forceStopPackage(target.getPackageName(), target.getUserId());
+        return actionResult(target, ActionResultStatus.SUCCESS, null);
     }
 }

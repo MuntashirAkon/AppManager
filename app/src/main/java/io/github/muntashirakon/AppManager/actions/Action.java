@@ -121,6 +121,14 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
     }
 
     @NonNull
+    public final ActionParameters requireOffParameters() {
+        if (mOffParameters == null) {
+            throw new IllegalStateException(mKind + " has no reverse parameters");
+        }
+        return mOffParameters;
+    }
+
+    @NonNull
     public final Strictness getStrictness() {
         return mStrictness;
     }
@@ -232,11 +240,7 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
 
     @NonNull
     protected final ActionParameters requireParameters(@NonNull ActionMode mode) {
-        ActionParameters params = mode == ActionMode.ON ? getOnParameters() : getOffParameters();
-        if (params == null) {
-            throw new IllegalStateException("Missing parameters for " + mode + " transition");
-        }
-        return params;
+        return mode == ActionMode.ON ? getOnParameters() : requireOffParameters();
     }
 
     protected final boolean requireBoolean(@NonNull ActionParameters parameters,

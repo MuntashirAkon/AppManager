@@ -6,10 +6,10 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchBackupOptions;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -37,26 +37,27 @@ public final class DeleteBackupAction extends PackageScopedAction {
         return new DeleteBackupAction(parcel, kind);
     }
 
+    private BatchBackupOptions mOptions;
+    private BackupManager mBackupManager;
+
+    @Override
+    protected void onPreExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                @NonNull List<UserPackagePair> targets,
+                                @NonNull List<ActionExecutionRecord> previousRecords) {
+        if (mode == ActionMode.OFF) return;
+        mOptions = createOptions(getOnParameters());
+        mBackupManager = new BackupManager();
+    }
+
     @NonNull
     @Override
-    public List<ActionResult> execute(@NonNull ActionContext context, @NonNull ActionMode mode, @NonNull List<ActionExecutionRecord> previousRecords) {
-        List<UserPackagePair> targets = resolveTargets(context);
-        List<ActionResult> results = new ArrayList<>(targets.size());
-        if (mode == ActionMode.OFF) {
-            return unsupportedResults(targets, "Delete backup has no reverse operation");
-        }
-        BatchBackupOptions options = createOptions(getOnParameters());
-        BackupManager backupManager = new BackupManager();
-        for (UserPackagePair target : targets) {
-            try {
-                backupManager.deleteBackup(options.getDeleteOpOptions(target.getPackageName(),
-                        target.getUserId()));
-                results.add(actionResult(target, ActionResultStatus.SUCCESS, null));
-            } catch (Throwable exception) {
-                results.add(actionResult(target, ActionResultStatus.FAILED, exception.getMessage()));
-            }
-        }
-        return results;
+    protected ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                     @NonNull UserPackagePair target,
+                                     @NonNull List<ActionExecutionRecord> previousRecords)
+            throws BackupException {
+        mBackupManager.deleteBackup(mOptions.getDeleteOpOptions(target.getPackageName(),
+                target.getUserId()));
+        return actionResult(target, ActionResultStatus.SUCCESS, null);
     }
 
     @NonNull

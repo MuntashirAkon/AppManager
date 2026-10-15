@@ -59,20 +59,119 @@ public abstract class PackageScopedAction extends Action {
     }
 
     @NonNull
-    protected final List<ActionResult> unsupportedResults(@NonNull List<UserPackagePair> targets,
-                                                          @NonNull String message) {
-        List<ActionResult> results = new ArrayList<>(targets.size());
-        for (UserPackagePair target : targets) {
-            results.add(actionResult(target, ActionResultStatus.UNSUPPORTED, message));
-        }
-        return results;
-    }
-
-    @NonNull
     protected final ActionResult actionResult(@NonNull UserPackagePair target,
                                               @NonNull ActionResultStatus status,
                                               @Nullable String message) {
         return super.actionResult(target, status, null, null, message);
+    }
+
+    protected void onPreExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                @NonNull List<UserPackagePair> targets,
+                                @NonNull List<ActionExecutionRecord> previousRecords) throws Throwable {
+    }
+
+    @NonNull
+    protected ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                     @NonNull UserPackagePair target,
+                                     @NonNull List<ActionExecutionRecord> previousRecords) throws Throwable {
+        return actionResult(target, ActionResultStatus.UNSUPPORTED,
+                "Action has no package execution implementation");
+    }
+
+    protected void onPostExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                 @NonNull List<UserPackagePair> targets,
+                                 @NonNull List<ActionResult> results) throws Throwable {
+    }
+
+    @Nullable
+    protected ActionState getCurrentState(@NonNull UserPackagePair target) throws Throwable {
+        return null;
+    }
+
+    @Nullable
+    protected ActionState getOnState(@NonNull UserPackagePair target) throws Throwable {
+        return null;
+    }
+
+    @Nullable
+    protected ActionState getOffState(@NonNull UserPackagePair target) throws Throwable {
+        return null;
+    }
+
+    @NonNull
+    @Override
+    public List<ActionResult> execute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                      @NonNull List<ActionExecutionRecord> previousRecords) {
+        return executePackageTargets(context, mode, previousRecords);
+    }
+
+    @NonNull
+    protected final List<ActionResult> executePackageTargets(
+            @NonNull ActionContext context, @NonNull ActionMode mode,
+            @NonNull List<ActionExecutionRecord> previousRecords) {
+        List<UserPackagePair> targets = resolveTargets(context);
+        List<ActionResult> results = new ArrayList<>(targets.size());
+        try {
+            onPreExecute(context, mode, targets, previousRecords);
+            for (UserPackagePair target : targets) {
+                ActionResult result;
+                ActionState currentState = null;
+                try {
+                    ActionState onState = getOnState(target);
+                    ActionState offState = getOffState(target);
+                    if (mode == ActionMode.OFF && getOffParameters() == null) {
+                        result = actionResult(target, ActionResultStatus.UNSUPPORTED,
+                                "Action has no reverse operation");
+                    } else if (onState == null && offState == null) {
+                        // Stateless actions, such as clear-data, have no state to compare.
+                        result = onExecute(context, mode, target, previousRecords);
+                    } else {
+                        currentState = getCurrentState(target);
+                        if (currentState == null || onState == null || offState == null) {
+                            throw new IllegalStateException(
+                                    "Package action must provide all states or none");
+                        }
+                        ActionState requestedState = mode == ActionMode.ON ? onState : offState;
+                        if (currentState.isSame(requestedState)) {
+                            result = actionResult(target, ActionResultStatus.UNCHANGED,
+                                    currentState, currentState, null);
+                        } else if (mode == ActionMode.OFF && getStrictness() == Strictness.STRICT
+                                && !currentState.isSame(onState)) {
+                            result = actionResult(target, ActionResultStatus.SKIPPED_STRICT_MISMATCH,
+                                    ActionConflict.EXTERNAL_CHANGE, currentState, null,
+                                    "Current state does not match the expected ON state");
+                        } else {
+                            result = onExecute(context, mode, target, previousRecords);
+                            ActionState writtenState = result.writtenState;
+                            if (writtenState == null && result.status == ActionResultStatus.SUCCESS) {
+                                try {
+                                    writtenState = getCurrentState(target);
+                                } catch (Throwable ignored) {
+                                    // The mutation succeeded, but its resulting state was unreadable.
+                                }
+                            }
+                            result = result.withStateSnapshots(currentState, writtenState);
+                        }
+                    }
+                } catch (Throwable throwable) {
+                    result = actionResult(target, ActionResultStatus.FAILED,
+                            currentState, null, throwable.getMessage());
+                }
+                results.add(result);
+            }
+        } catch (Throwable throwable) {
+            for (UserPackagePair target : targets) {
+                results.add(actionResult(target, ActionResultStatus.FAILED,
+                        throwable.getMessage()));
+            }
+        } finally {
+            try {
+                onPostExecute(context, mode, targets, results);
+            } catch (Throwable ignored) {
+                // Cleanup failures must not discard per-target execution results.
+            }
+        }
+        return results;
     }
 
     @NonNull

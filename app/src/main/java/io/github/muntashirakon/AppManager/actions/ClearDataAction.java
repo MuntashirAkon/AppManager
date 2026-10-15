@@ -2,11 +2,11 @@
 package io.github.muntashirakon.AppManager.actions;
 
 import android.os.Parcel;
+import android.util.AndroidException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,20 +42,11 @@ public final class ClearDataAction extends PackageScopedAction {
 
     @NonNull
     @Override
-    public List<ActionResult> execute(@NonNull ActionContext context, @NonNull ActionMode mode,
-                                      @NonNull List<ActionExecutionRecord> previousRecords) {
-        List<UserPackagePair> targets = resolveTargets(context);
-        List<ActionResult> results = new ArrayList<>(targets.size());
-        if (mode == ActionMode.OFF) {
-            return unsupportedResults(targets, "Clear data has no reverse operation");
-        }
-        for (UserPackagePair target : targets)
-            try {
-                PackageManagerCompat.clearApplicationUserData(target);
-                results.add(actionResult(target, ActionResultStatus.SUCCESS, null));
-            } catch (Throwable exception) {
-                results.add(actionResult(target, ActionResultStatus.FAILED, exception.getMessage()));
-            }
-        return results;
+    protected ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                     @NonNull UserPackagePair target,
+                                     @NonNull List<ActionExecutionRecord> previousRecords)
+            throws AndroidException {
+        PackageManagerCompat.clearApplicationUserData(target);
+        return actionResult(target, ActionResultStatus.SUCCESS, null);
     }
 }

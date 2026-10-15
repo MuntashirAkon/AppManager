@@ -7,7 +7,6 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,38 +36,51 @@ public final class DexOptAction extends PackageScopedAction {
         return new DexOptAction(parcel, kind);
     }
 
-    @NonNull
+    @Nullable
+    private String mCompilerFilter;
+    private boolean mClearApplicationProfileData;
+    private boolean mCheckProfiles;
+    private boolean mForceCompilation;
+    private boolean mBootComplete;
+
     @Override
-    public List<ActionResult> execute(@NonNull ActionContext context, @NonNull ActionMode mode,
-                                      @NonNull List<ActionExecutionRecord> previousRecords) {
-        List<UserPackagePair> targets = resolveTargets(context);
-        List<ActionResult> results = new ArrayList<>(targets.size());
+    protected void onPreExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                @NonNull List<UserPackagePair> targets,
+                                @NonNull List<ActionExecutionRecord> previousRecords) {
         if (mode == ActionMode.OFF) {
-            return unsupportedResults(targets, "Dex optimization has no reverse operation");
+            return;
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            return unsupportedResults(targets, "Dex optimization is unavailable");
+            return;
         }
         ActionParameters parameters = getOnParameters();
-        String compilerFilter = optionalString(parameters, "compiler_filter");
-        boolean clearApplicationProfileData = optionalBoolean(parameters, "clear_profile_data", false);
-        boolean checkProfiles = optionalBoolean(parameters, "check_profiles", false);
-        boolean forceCompilation = optionalBoolean(parameters, "force_compilation", false);
-        boolean bootComplete = optionalBoolean(parameters, "boot_complete", false);
-        for (UserPackagePair target : targets)
-            try {
-                DexOptimizer optimizer = new DexOptimizer(PackageManagerCompat.getPackageManager(), target.getPackageName());
-                boolean successful = true;
-                if (clearApplicationProfileData) {
-                    successful &= optimizer.clearApplicationProfileData();
-                }
-                if (compilerFilter != null) {
-                    successful &= optimizer.performDexOptMode(checkProfiles, compilerFilter, forceCompilation, bootComplete, null);
-                } else successful &= optimizer.forceDexOpt();
-                results.add(actionResult(target, successful ? ActionResultStatus.SUCCESS : ActionResultStatus.FAILED, null));
-            } catch (Throwable exception) {
-                results.add(actionResult(target, ActionResultStatus.FAILED, exception.getMessage()));
-            }
-        return results;
+        mCompilerFilter = optionalString(parameters, "compiler_filter");
+        mClearApplicationProfileData = optionalBoolean(parameters, "clear_profile_data", false);
+        mCheckProfiles = optionalBoolean(parameters, "check_profiles", false);
+        mForceCompilation = optionalBoolean(parameters, "force_compilation", false);
+        mBootComplete = optionalBoolean(parameters, "boot_complete", false);
+    }
+
+    @NonNull
+    @Override
+    protected ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                     @NonNull UserPackagePair target,
+                                     @NonNull List<ActionExecutionRecord> previousRecords) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            return actionResult(target, ActionResultStatus.UNSUPPORTED,
+                    "Dex optimization is unavailable");
+        }
+        DexOptimizer optimizer = new DexOptimizer(PackageManagerCompat.getPackageManager(),
+                target.getPackageName());
+        boolean successful = true;
+        if (mClearApplicationProfileData) {
+            successful &= optimizer.clearApplicationProfileData();
+        }
+        if (mCompilerFilter != null) {
+            successful &= optimizer.performDexOptMode(mCheckProfiles, mCompilerFilter,
+                    mForceCompilation, mBootComplete, null);
+        } else successful &= optimizer.forceDexOpt();
+        return actionResult(target,
+                successful ? ActionResultStatus.SUCCESS : ActionResultStatus.FAILED, null);
     }
 }

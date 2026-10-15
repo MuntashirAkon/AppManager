@@ -6,7 +6,6 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,21 +37,45 @@ public final class NetworkPolicyAction extends PackageScopedAction {
         return new NetworkPolicyAction(in, kind);
     }
 
+    private int mPolicy;
+
+    @Override
+    protected void onPreExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                @NonNull List<UserPackagePair> targets,
+                                @NonNull List<ActionExecutionRecord> previousRecords) {
+        mPolicy = requireInt(requireParameters(mode), "policy");
+    }
+
     @NonNull
     @Override
-    public List<ActionResult> execute(@NonNull ActionContext context, @NonNull ActionMode mode,
-                                      @NonNull List<ActionExecutionRecord> previous) {
-        ActionParameters parameters = requireParameters(mode);
-        List<UserPackagePair> targets = resolveTargets(context);
-        List<ActionResult> results = new ArrayList<>(targets.size());
-        int policyValue = requireInt(parameters, "policy");
-        for (UserPackagePair target : targets)
-            try {
-                NetworkPolicyManagerCompat.setUidPolicy(PackageUtils.getAppUid(target), policyValue);
-                results.add(actionResult(target, ActionResultStatus.SUCCESS, null));
-            } catch (Throwable exception) {
-                results.add(actionResult(target, ActionResultStatus.FAILED, exception.getMessage()));
-            }
-        return results;
+    protected ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                     @NonNull UserPackagePair target,
+                                     @NonNull List<ActionExecutionRecord> previousRecords) {
+        NetworkPolicyManagerCompat.setUidPolicy(PackageUtils.getAppUid(target), mPolicy);
+        return actionResult(target, ActionResultStatus.SUCCESS, null);
+    }
+
+    @NonNull
+    @Override
+    protected ActionState getCurrentState(@NonNull UserPackagePair target) {
+        return state(target, NetworkPolicyManagerCompat.getUidPolicy(PackageUtils.getAppUid(target)));
+    }
+
+    @NonNull
+    @Override
+    protected ActionState getOnState(@NonNull UserPackagePair target) {
+        return state(target, requireInt(requireParameters(ActionMode.ON), "policy"));
+    }
+
+    @NonNull
+    @Override
+    protected ActionState getOffState(@NonNull UserPackagePair target) {
+        return state(target, requireInt(requireParameters(ActionMode.OFF), "policy"));
+    }
+
+    @NonNull
+    private static ActionState state(@NonNull UserPackagePair target, int policy) {
+        return new ActionState("package:" + target.getPackageName() + ":"
+                + target.getUserId() + ":network_policy", ActionValue.of(policy));
     }
 }

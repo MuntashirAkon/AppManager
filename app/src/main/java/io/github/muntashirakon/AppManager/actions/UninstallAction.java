@@ -7,7 +7,6 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,44 +41,42 @@ public final class UninstallAction extends PackageScopedAction {
         return new UninstallAction(parcel, kind);
     }
 
+    private boolean mKeepData;
+    private boolean mAccessibilityEnabled;
+
+    @Override
+    protected void onPreExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                @NonNull List<UserPackagePair> targets,
+                                @NonNull List<ActionExecutionRecord> previousRecords) {
+        if (mode == ActionMode.OFF) {
+            return;
+        }
+        mKeepData = requireBoolean(requireParameters(mode), PARAM_KEEP_DATA);
+        if (!SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.DELETE_PACKAGES)) {
+            AccessibilityMultiplexer.getInstance().enableUninstall(true);
+            mAccessibilityEnabled = true;
+        }
+    }
+
     @NonNull
     @Override
-    public List<ActionResult> execute(@NonNull ActionContext context, @NonNull ActionMode mode,
-                                      @NonNull List<ActionExecutionRecord> previousRecords) {
-        List<UserPackagePair> targets = resolveTargets(context);
-        if (mode == ActionMode.OFF) {
-            return unsupportedResults(targets, "Uninstall has no reverse operation");
+    protected ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                     @NonNull UserPackagePair target,
+                                     @NonNull List<ActionExecutionRecord> previousRecords) {
+        PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
+        if (installer.uninstall(target.getPackageName(), target.getUserId(), mKeepData)) {
+            return actionResult(target, ActionResultStatus.SUCCESS, null);
         }
+        return actionResult(target, ActionResultStatus.FAILED, "Package uninstallation failed");
+    }
 
-        boolean keepData = requireBoolean(requireParameters(mode), PARAM_KEEP_DATA);
-        AccessibilityMultiplexer accessibility = AccessibilityMultiplexer.getInstance();
-        boolean accessibilityEnabled = false;
-        if (!SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.DELETE_PACKAGES)) {
-            accessibility.enableUninstall(true);
-            accessibilityEnabled = true;
+    @Override
+    protected void onPostExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                 @NonNull List<UserPackagePair> targets,
+                                 @NonNull List<ActionResult> results) {
+        if (mAccessibilityEnabled) {
+            AccessibilityMultiplexer.getInstance().enableUninstall(false);
+            mAccessibilityEnabled = false;
         }
-
-        List<ActionResult> results = new ArrayList<>(targets.size());
-        try {
-            for (UserPackagePair target : targets) {
-                try {
-                    PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
-                    if (installer.uninstall(target.getPackageName(), target.getUserId(), keepData)) {
-                        results.add(actionResult(target, ActionResultStatus.SUCCESS, null));
-                    } else {
-                        results.add(actionResult(target, ActionResultStatus.FAILED,
-                                "Package uninstallation failed"));
-                    }
-                } catch (Throwable exception) {
-                    results.add(actionResult(target, ActionResultStatus.FAILED,
-                            exception.getMessage()));
-                }
-            }
-        } finally {
-            if (accessibilityEnabled) {
-                accessibility.enableUninstall(false);
-            }
-        }
-        return results;
     }
 }

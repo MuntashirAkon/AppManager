@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.github.muntashirakon.AppManager.actions;
 
+import android.content.pm.PackageManager;
 import android.os.Parcel;
+import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,24 +41,11 @@ public final class BackupApkAction extends PackageScopedAction {
 
     @NonNull
     @Override
-    public List<ActionResult> execute(@NonNull ActionContext context, @NonNull ActionMode mode,
-                                      @NonNull List<ActionExecutionRecord> previousRecords) {
-        List<UserPackagePair> targets = resolveTargets(context);
-        if (mode == ActionMode.OFF) {
-            return unsupportedResults(targets, "APK backup has no reverse operation");
-        }
-
-        List<ActionResult> results = new ArrayList<>(targets.size());
-        for (UserPackagePair target : targets) {
-            try {
-                ApkUtils.backupApk(ContextUtils.getContext(), target.getPackageName(),
-                        target.getUserId());
-                results.add(actionResult(target, ActionResultStatus.SUCCESS, null));
-            } catch (Throwable exception) {
-                results.add(actionResult(target, ActionResultStatus.FAILED,
-                        exception.getMessage()));
-            }
-        }
-        return results;
+    protected ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                     @NonNull UserPackagePair target,
+                                     @NonNull List<ActionExecutionRecord> previousRecords)
+            throws PackageManager.NameNotFoundException, IOException, RemoteException {
+        ApkUtils.backupApk(ContextUtils.getContext(), target.getPackageName(), target.getUserId());
+        return actionResult(target, ActionResultStatus.SUCCESS, null);
     }
 }

@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.github.muntashirakon.AppManager.actions;
 
+import android.os.Build;
 import android.os.Parcel;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,21 +37,55 @@ public final class SensorAccessAction extends PackageScopedAction {
         return new SensorAccessAction(in, kind);
     }
 
+    private boolean mEnabled;
+
+    @Override
+    protected void onPreExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                @NonNull List<UserPackagePair> targets,
+                                @NonNull List<ActionExecutionRecord> previousRecords) {
+        mEnabled = requireBoolean(requireParameters(mode), "enabled");
+    }
+
     @NonNull
     @Override
-    public List<ActionResult> execute(@NonNull ActionContext context, @NonNull ActionMode mode,
-                                      @NonNull List<ActionExecutionRecord> previous) {
-        ActionParameters parameters = requireParameters(mode);
-        List<UserPackagePair> targets = resolveTargets(context);
-        List<ActionResult> results = new ArrayList<>(targets.size());
-        boolean enabledValue = requireBoolean(parameters, "enabled");
-        for (UserPackagePair target : targets)
-            try {
-                SensorServiceCompat.enableSensor(target.getPackageName(), target.getUserId(), enabledValue);
-                results.add(actionResult(target, ActionResultStatus.SUCCESS, null));
-            } catch (Throwable exception) {
-                results.add(actionResult(target, ActionResultStatus.FAILED, exception.getMessage()));
-            }
-        return results;
+    protected ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                     @NonNull UserPackagePair target,
+                                     @NonNull List<ActionExecutionRecord> previousRecords)
+            throws IOException {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            return actionResult(target, ActionResultStatus.UNSUPPORTED,
+                    "Sensor settings is unavailable");
+        }
+        SensorServiceCompat.enableSensor(target.getPackageName(), target.getUserId(), mEnabled);
+        return actionResult(target, ActionResultStatus.SUCCESS, null);
+    }
+
+    @NonNull
+    @Override
+    protected ActionState getCurrentState(@NonNull UserPackagePair target) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            return state(target, SensorServiceCompat.isSensorEnabled(target.getPackageName(),
+                    target.getUserId()));
+        }
+        // Fall back is enabled
+        return state(target, true);
+    }
+
+    @NonNull
+    @Override
+    protected ActionState getOnState(@NonNull UserPackagePair target) {
+        return state(target, requireBoolean(requireParameters(ActionMode.ON), "enabled"));
+    }
+
+    @NonNull
+    @Override
+    protected ActionState getOffState(@NonNull UserPackagePair target) {
+        return state(target, requireBoolean(requireParameters(ActionMode.OFF), "enabled"));
+    }
+
+    @NonNull
+    private static ActionState state(@NonNull UserPackagePair target, boolean enabled) {
+        return new ActionState("package:" + target.getPackageName() + ":"
+                + target.getUserId() + ":sensor_access", ActionValue.of(enabled));
     }
 }

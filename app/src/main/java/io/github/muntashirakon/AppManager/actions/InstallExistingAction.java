@@ -6,7 +6,6 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,26 +37,13 @@ public final class InstallExistingAction extends PackageScopedAction {
 
     @NonNull
     @Override
-    public List<ActionResult> execute(@NonNull ActionContext context, @NonNull ActionMode mode,
-                                      @NonNull List<ActionExecutionRecord> previousRecords) {
-        List<UserPackagePair> targets = resolveTargets(context);
-        if (mode == ActionMode.OFF) {
-            return unsupportedResults(targets, "Install-existing has no reverse operation");
-        }
-
-        List<ActionResult> results = new ArrayList<>(targets.size());
-        for (UserPackagePair target : targets) {
-            try {
-                boolean installed = PackageInstallerCompat.getNewInstance()
-                        .installExisting(target.getPackageName(), target.getUserId());
-                results.add(actionResult(target,
-                        installed ? ActionResultStatus.SUCCESS : ActionResultStatus.FAILED,
-                        installed ? null : "Package installation failed"));
-            } catch (Throwable exception) {
-                results.add(actionResult(target, ActionResultStatus.FAILED,
-                        exception.getMessage()));
-            }
-        }
-        return results;
+    protected ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                     @NonNull UserPackagePair target,
+                                     @NonNull List<ActionExecutionRecord> previousRecords) {
+        boolean installed = PackageInstallerCompat.getNewInstance()
+                .installExisting(target.getPackageName(), target.getUserId());
+        return actionResult(target,
+                installed ? ActionResultStatus.SUCCESS : ActionResultStatus.FAILED,
+                installed ? null : "Package installation failed");
     }
 }

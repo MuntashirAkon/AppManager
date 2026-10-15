@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collections;
 import java.util.List;
 
 public abstract class GlobalScopedAction extends Action {
@@ -49,11 +48,6 @@ public abstract class GlobalScopedAction extends Action {
             throw new IllegalArgumentException("Missing global target parameter: " + key);
         }
         return value;
-    }
-
-    @NonNull
-    protected final List<ActionResult> unsupportedResults(@NonNull String message) {
-        return Collections.singletonList(globalResult(ActionResultStatus.UNSUPPORTED, message));
     }
 
     @NonNull

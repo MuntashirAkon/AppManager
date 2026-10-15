@@ -6,10 +6,10 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchBackupOptions;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
@@ -38,30 +38,32 @@ public final class RestoreBackupAction extends PackageScopedAction {
         return new RestoreBackupAction(parcel, kind);
     }
 
+    private BatchBackupOptions mOptions;
+    private BackupManager mBackupManager;
+
+    @Override
+    protected void onPreExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                @NonNull List<UserPackagePair> targets,
+                                @NonNull List<ActionExecutionRecord> previousRecords) {
+        if (mode == ActionMode.OFF) return;
+        mOptions = createOptions(getOnParameters());
+        mBackupManager = new BackupManager();
+    }
+
     @NonNull
     @Override
-    public List<ActionResult> execute(@NonNull ActionContext context, @NonNull ActionMode mode,
-                                      @NonNull List<ActionExecutionRecord> previousRecords) {
-        List<UserPackagePair> targets = resolveTargets(context);
-        List<ActionResult> results = new ArrayList<>(targets.size());
-        if (mode == ActionMode.OFF) {
-            return unsupportedResults(targets, "Restore has no reverse operation");
+    protected ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+                                     @NonNull UserPackagePair target,
+                                     @NonNull List<ActionExecutionRecord> previousRecords)
+            throws BackupException {
+        ProgressHandler subProgressHandler = newSubProgressHandler(context);
+        try {
+            mBackupManager.restore(mOptions.getRestoreOpOptions(target.getPackageName(),
+                    target.getUserId()), subProgressHandler);
+            return actionResult(target, ActionResultStatus.SUCCESS, null);
+        } finally {
+            finishSubProgressHandler(subProgressHandler);
         }
-        BatchBackupOptions options = createOptions(getOnParameters());
-        BackupManager backupManager = new BackupManager();
-        for (UserPackagePair target : targets) {
-            ProgressHandler subProgressHandler = newSubProgressHandler(context);
-            try {
-                backupManager.restore(options.getRestoreOpOptions(target.getPackageName(),
-                        target.getUserId()), subProgressHandler);
-                results.add(actionResult(target, ActionResultStatus.SUCCESS, null));
-            } catch (Throwable exception) {
-                results.add(actionResult(target, ActionResultStatus.FAILED, exception.getMessage()));
-            } finally {
-                finishSubProgressHandler(subProgressHandler);
-            }
-        }
-        return results;
     }
 
     @NonNull
