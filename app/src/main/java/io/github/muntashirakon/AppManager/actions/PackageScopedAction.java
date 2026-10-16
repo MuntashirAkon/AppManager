@@ -71,12 +71,9 @@ public abstract class PackageScopedAction extends Action {
     }
 
     @NonNull
-    protected ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
+    protected abstract ActionResult onExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
                                      @NonNull UserPackagePair target,
-                                     @NonNull List<ActionExecutionRecord> previousRecords) throws Throwable {
-        return actionResult(target, ActionResultStatus.UNSUPPORTED,
-                "Action has no package execution implementation");
-    }
+                                     @NonNull List<ActionExecutionRecord> previousRecords) throws Throwable;
 
     protected void onPostExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
                                  @NonNull List<UserPackagePair> targets,
@@ -100,15 +97,8 @@ public abstract class PackageScopedAction extends Action {
 
     @NonNull
     @Override
-    public List<ActionResult> execute(@NonNull ActionContext context, @NonNull ActionMode mode,
+    public final List<ActionResult> execute(@NonNull ActionContext context, @NonNull ActionMode mode,
                                       @NonNull List<ActionExecutionRecord> previousRecords) {
-        return executePackageTargets(context, mode, previousRecords);
-    }
-
-    @NonNull
-    protected final List<ActionResult> executePackageTargets(
-            @NonNull ActionContext context, @NonNull ActionMode mode,
-            @NonNull List<ActionExecutionRecord> previousRecords) {
         List<UserPackagePair> targets = resolveTargets(context);
         List<ActionResult> results = new ArrayList<>(targets.size());
         try {
