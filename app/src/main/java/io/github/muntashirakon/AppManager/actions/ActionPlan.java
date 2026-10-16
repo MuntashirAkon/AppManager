@@ -14,10 +14,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import io.github.muntashirakon.AppManager.history.IJsonSerializer;
 import io.github.muntashirakon.AppManager.history.JsonDeserializer;
+import io.github.muntashirakon.AppManager.logs.Logger;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.util.LocalizedString;
 
@@ -92,7 +94,8 @@ public final class ActionPlan implements IJsonSerializer, Parcelable, LocalizedS
 
     @NonNull
     public synchronized List<ActionResult> execute(@NonNull ActionContext context,
-                                                   @NonNull ActionMode mode) {
+                                                   @NonNull ActionMode mode,
+                                                   @NonNull Logger logger) {
         List<ActionResult> results = new ArrayList<>();
         ProgressHandler progressHandler = context.progressHandler;
         int progressMax = 0;
@@ -103,32 +106,42 @@ public final class ActionPlan implements IJsonSerializer, Parcelable, LocalizedS
         if (progressHandler != null) {
             progressHandler.onProgressStart(progressMax, 0, progressHandler.getLastMessage());
         }
-        for (Action action : mActions) {
-            List<ActionExecutionRecord> previous = new ArrayList<>();
-            for (ActionExecutionRecord record : mExecutionRecords) {
-                if (record.actionId.equals(action.getId())) {
-                    previous.add(record);
+        logger.println("====> Started action plan: " + mName + " with mode: " + mode);
+        try {
+            for (Action action : mActions) {
+                logger.println("====> Started action: " + action.getKind() + " (" + action.getId() + ")");
+                List<ActionExecutionRecord> previous = new ArrayList<>();
+                for (ActionExecutionRecord record : mExecutionRecords) {
+                    if (record.actionId.equals(action.getId())) {
+                        previous.add(record);
+                    }
+                }
+                List<ActionResult> actionResults = action.execute(context, mode, previous);
+                results.addAll(actionResults);
+                progress += Math.max(1, action.getProgressMax(context));
+                if (progressHandler != null) {
+                    progressHandler.postUpdate(progressMax, progress, action);
+                }
+                for (ActionResult result : actionResults) {
+                    if (result.status != ActionResultStatus.SUCCESS) {
+                        logger.println("[!] action=" + action.getKind() + ", target=" + result.target
+                                + ", status=" + result.status
+                                + (result.message == null ? "" : ", message=" + result.message));
+                    }
+                    ActionState original = result.observedState;
+                    ActionState written = result.writtenState;
+                    ActionState state = original == null ? written : original;
+                    if (state != null) {
+                        mExecutionRecords.add(new ActionExecutionRecord(context.executionId,
+                                action.getId(), mId, state.getStateKey(), result.target, original,
+                                written, System.currentTimeMillis(), result.status));
+                    }
                 }
             }
-            List<ActionResult> actionResults = action.execute(context, mode, previous);
-            results.addAll(actionResults);
-            progress += Math.max(1, action.getProgressMax(context));
+        } finally {
             if (progressHandler != null) {
-                progressHandler.postUpdate(progressMax, progress, action);
+                progressHandler.onResult(progressHandler.getLastMessage());
             }
-            for (ActionResult result : actionResults) {
-                ActionState original = result.observedState;
-                ActionState written = result.writtenState;
-                ActionState state = original == null ? written : original;
-                if (state != null) {
-                    mExecutionRecords.add(new ActionExecutionRecord(context.executionId,
-                            action.getId(), mId, state.getStateKey(), result.target, original,
-                            written, System.currentTimeMillis(), result.status));
-                }
-            }
-        }
-        if (progressHandler != null) {
-            progressHandler.onResult(progressHandler.getLastMessage());
         }
         return Collections.unmodifiableList(results);
     }

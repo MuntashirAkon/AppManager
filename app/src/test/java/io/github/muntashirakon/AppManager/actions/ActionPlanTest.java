@@ -9,19 +9,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
+import io.github.muntashirakon.AppManager.logs.EmptyLogger;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 
 @RunWith(RobolectricTestRunner.class)
 public class ActionPlanTest {
     @Test
-    public void executesActionsInOrderAndKeepsStateRecords() {
+    public void executesActionsInOrderAndKeepsStateRecords() throws IOException {
         List<String> order = new java.util.ArrayList<>();
         RecordingAction first = new RecordingAction("first", "first-state", order);
         RecordingAction second = new RecordingAction("second", "second-state", order);
@@ -29,7 +31,7 @@ public class ActionPlanTest {
 
         List<ActionResult> results = plan.execute(
                 new ActionContext(null, Collections.emptyList(), plan.getId(), 1L, false),
-                ActionMode.ON);
+                ActionMode.ON, new EmptyLogger());
 
         assertEquals(Arrays.asList("first", "second"), order);
         assertEquals(2, results.size());
@@ -39,7 +41,7 @@ public class ActionPlanTest {
     }
 
     @Test
-    public void reportsProgressAndPreservesSuppliedStateSnapshots() {
+    public void reportsProgressAndPreservesSuppliedStateSnapshots() throws IOException {
         List<String> order = new ArrayList<>();
         RecordingProgressHandler progressHandler = new RecordingProgressHandler();
         ActionPlan plan = new ActionPlan("plan", Collections.singletonList(
@@ -47,7 +49,7 @@ public class ActionPlanTest {
 
         ActionContext context = new ActionContext(null, Collections.emptyList(), plan.getId(),
                 1L, false, progressHandler);
-        plan.execute(context, ActionMode.ON);
+        plan.execute(context, ActionMode.ON, new EmptyLogger());
 
         assertEquals(1, progressHandler.startedMax);
         assertEquals(Collections.singletonList(1f), progressHandler.updates);
