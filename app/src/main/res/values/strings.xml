@@ -527,6 +527,14 @@
     <string name="failed_to_fetch_package_info">Could not fetch package info</string>
     <string name="batch_ops">Batch operations</string>
     <string name="operation_running">Operation running…</string>
+    <string name="action_running">Running %1$s…</string>
+    <string name="action_progress_with_percent">%1$s · %2$s</string>
+    <string name="action_running_on_package">Running on %1$s…</string>
+    <string name="action_running_for_package">Running %1$s for %2$s…</string>
+    <string name="action_install_existing">Install existing app</string>
+    <string name="action_device_state">Device state</string>
+    <string name="action_run_script">Run script</string>
+    <string name="action_send_broadcast">Send broadcast</string>
     <string name="full_stop_tap_to_see_details">. Tap to see details.</string>
     <string name="try_again">Try again</string>
     <string name="install_app_message">Do you want to install this app?</string>
