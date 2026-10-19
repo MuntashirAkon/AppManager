@@ -46,5 +46,5 @@ ext {
 
     // Test dependencies
     junit_version = "4.13.2" // https://github.com/junit-team/junit4
-    robolectric_version = "4.16.1" // https://github.com/robolectric/robolectric
+    robolectric_version = "4.17" // https://github.com/robolectric/robolectric
 }

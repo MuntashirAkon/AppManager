@@ -193,7 +193,12 @@ dependencies {
 
     // Unit Testing
     testImplementation "junit:junit:${junit_version}"
-    testImplementation "org.robolectric:robolectric:${robolectric_version}"
+    testImplementation("org.robolectric:robolectric:${robolectric_version}") {
+        // Use the app's jdk15to18 provider family; mixing it with jdk18on duplicates signed classes.
+        exclude group: 'org.bouncycastle', module: 'bcprov-jdk18on'
+        exclude group: 'org.bouncycastle', module: 'bcpkix-jdk18on'
+        exclude group: 'org.bouncycastle', module: 'bcutil-jdk18on'
+    }
 }
 
 android.applicationVariants.configureEach { variant ->
