@@ -24,10 +24,115 @@ import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.NotificationInfo;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.NotificationManagerInfo;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(application = Application.class)
 public class ActionNotificationProgressTest {
+    @Test
+    public void genericSubHandlerCopiesContextWithoutAnyActionEvents() {
+        Application app = RuntimeEnvironment.getApplication();
+        Shadows.shadowOf(app).grantPermissions(Manifest.permission.POST_NOTIFICATIONS);
+        NotificationManager manager = app.getSystemService(NotificationManager.class);
+        NotificationManagerInfo channel = new NotificationManagerInfo("progress", "Progress", 2);
+        NotificationProgressHandler parent = new NotificationProgressHandler(app, channel, channel, null);
+        NotificationInfo message = new NotificationInfo().setTitle("Files")
+                .setBody("Copying files…").setOperationName("File manager");
+        parent.onAttach(null, message);
+        parent.onProgressStart(10, 1, null);
+        ProgressHandler child = parent.newSubProgressHandler("Copy");
+        child.onProgressStart(5, 2, null);
+        assertNotSame(message, child.getLastMessage());
+        assertNull(parent.getLastActionProgress());
+        assertNull(child.getLastActionProgress());
+        Notification notification = Shadows.shadowOf(manager).getAllNotifications().stream()
+                .filter(item -> "Copy".contentEquals(item.extras.getCharSequence(Notification.EXTRA_SUB_TEXT)))
+                .findFirst().get();
+        assertEquals("Files", notification.extras.getCharSequence(Notification.EXTRA_TITLE));
+        assertEquals("Copying files…", notification.extras.getCharSequence(Notification.EXTRA_TEXT));
+        assertNotNull(notification.getGroup());
+        child.onResult(null);
+        assertEquals(1, Shadows.shadowOf(manager).getAllNotifications().size());
+        assertEquals(1f, parent.getLastProgress(), 0f);
+        ProgressHandler inherited = parent.newSubProgressHandler(null);
+        inherited.onProgressStart(-1, 0, null);
+        assertTrue(Shadows.shadowOf(manager).getAllNotifications().stream()
+                .allMatch(item -> "File manager".contentEquals(item.extras.getCharSequence(Notification.EXTRA_SUB_TEXT))));
+        inherited.onResult(null);
+        parent.onResult(null);
+        assertTrue(Shadows.shadowOf(manager).getAllNotifications().isEmpty());
+    }
+
+    @Test
+    public void childNotificationsCopyContextAndFinishWithoutChangingParent() {
+        verifyChildNotifications(false);
+    }
+
+    @Test
+    public void lateChildSnapshotInitializesNotificationAtCurrentPosition() {
+        verifyChildNotifications(true);
+    }
+
+    private void verifyChildNotifications(boolean replay) {
+        Application app = RuntimeEnvironment.getApplication();
+        Shadows.shadowOf(app).grantPermissions(Manifest.permission.POST_NOTIFICATIONS);
+        NotificationManager manager = app.getSystemService(NotificationManager.class);
+        NotificationManagerInfo channel = new NotificationManagerInfo("progress", "Progress", 2);
+        NotificationProgressHandler handler = new NotificationProgressHandler(app, channel, channel, null);
+        NotificationInfo parent = new NotificationInfo().setTitle("Original title")
+                .setBody("Operation running…").setOperationName("Profiles");
+        handler.onAttach(null, parent);
+        handler.setProgressTextInterface(new ActionProgressText(app, "My profile"));
+        ActionContext context = new ActionContext(null, Collections.emptyList(), "plan",
+                ActionExecutionMode.BATCH, 0, false);
+        if (!replay) context.addProgressHandler(handler);
+        ActionProgress parentProgress = new ActionProgress("Running Backup for Maps…", 17, 3,
+                ActionProgress.State.UPDATED, ActionExecutionMode.BATCH, Collections.emptyList());
+        context.dispatch(parentProgress);
+        ActionProgress.Child child = new ActionProgress.Child("backup", new UserPackagePair("maps", 10),
+                "Backup", "Backing up Maps…");
+        context.dispatch(childProgress(child, ActionProgress.State.STARTED, -1, 0));
+        context.dispatch(childProgress(child, ActionProgress.State.UPDATED, 5, 2));
+        if (replay) context.addProgressHandler(handler);
+        assertEquals(2, Shadows.shadowOf(manager).getAllNotifications().size());
+        Notification childNotification = Shadows.shadowOf(manager).getAllNotifications().stream()
+                .filter(notification -> "Backing up Maps…".contentEquals(
+                        notification.extras.getCharSequence(Notification.EXTRA_TITLE)))
+                .findFirst().get();
+        assertEquals("Backup · 40% complete", childNotification.extras.getCharSequence(Notification.EXTRA_SUB_TEXT));
+        assertEquals("Backing up Maps…", childNotification.extras.getCharSequence(Notification.EXTRA_TEXT));
+        assertEquals(4000, childNotification.extras.getInt(Notification.EXTRA_PROGRESS));
+        assertNotNull(childNotification.getGroup());
+        assertSame(parent, handler.getLastMessage());
+        assertSame(parentProgress, handler.getLastActionProgress());
+        assertEquals(17, handler.getLastMax());
+        assertEquals(3f, handler.getLastProgress(), 0f);
+
+        context.dispatch(childProgress(child, ActionProgress.State.COMPLETED, 5, 2));
+        assertEquals(1, Shadows.shadowOf(manager).getAllNotifications().size());
+        Notification parentNotification = Shadows.shadowOf(manager).getAllNotifications().get(0);
+        assertEquals("My profile", parentNotification.extras.getCharSequence(Notification.EXTRA_TITLE));
+        assertEquals("Profiles · 17% complete", parentNotification.extras.getCharSequence(Notification.EXTRA_SUB_TEXT));
+        assertEquals("Running Backup for Maps…", parentNotification.extras.getCharSequence(Notification.EXTRA_TEXT));
+
+        // Switching to an empty formatter reveals the original, unmodified host metadata.
+        handler.setProgressTextInterface(null);
+        handler.postUpdate(17, 4);
+        Notification original = Shadows.shadowOf(manager).getAllNotifications().get(0);
+        assertEquals("Original title", original.extras.getCharSequence(Notification.EXTRA_TITLE));
+        assertEquals("Profiles", original.extras.getCharSequence(Notification.EXTRA_SUB_TEXT));
+        assertEquals("Operation running…", original.extras.getCharSequence(Notification.EXTRA_TEXT));
+        context.dispatch(new ActionProgress(null, 17, 4, ActionProgress.State.COMPLETED,
+                ActionExecutionMode.BATCH, Collections.emptyList()));
+        assertTrue(Shadows.shadowOf(manager).getAllNotifications().isEmpty());
+    }
+
+    private static ActionProgress childProgress(ActionProgress.Child child, ActionProgress.State state,
+                                                int max, float current) {
+        return new ActionProgress(child.title, max, current, state, ActionExecutionMode.BATCH,
+                Collections.emptyList(), child);
+    }
+
     @Test
     public void singletonSeparatesTitleTaskAndProgressText() {
         verify(ActionExecutionMode.SINGLETON, "Freeze", "Running on Maps…", "Profiles · 37% complete", 8, 3, 10000, 3750);

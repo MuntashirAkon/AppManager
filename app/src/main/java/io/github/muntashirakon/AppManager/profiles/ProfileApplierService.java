@@ -24,13 +24,14 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsResultsActivity;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.history.ops.OpHistoryManager;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
+import io.github.muntashirakon.AppManager.progress.ActionProgressText;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.NotificationManagerInfo;
-import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.progress.QueuedProgressHandler;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Path;
 
 public class ProfileApplierService extends ForegroundService {
@@ -73,7 +74,6 @@ public class ProfileApplierService extends ForegroundService {
                 notificationManagerInfo,
                 NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO,
                 NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO);
-        mProgressHandler.setProgressTextInterface(ProgressHandler.PROGRESS_REGULAR);
         mNotificationInfo = new NotificationProgressHandler.NotificationInfo()
                 .setBody(getString(R.string.operation_running))
                 .setOperationName(getText(R.string.profiles));
@@ -130,6 +130,8 @@ public class ProfileApplierService extends ForegroundService {
         }
         // Set profile name in the ongoing notification
         mNotificationInfo.setTitle(item != null ? item.getProfileName() : null);
+        mProgressHandler.setProgressTextInterface(new ActionProgressText(this,
+                item != null ? item.getProfileName() : null));
         mProgressHandler.onProgressStart(-1, 0, mNotificationInfo);
     }
 
@@ -173,6 +175,7 @@ public class ProfileApplierService extends ForegroundService {
                     PendingIntent.FLAG_ONE_SHOT, false);
             notificationInfo.addAction(0, getString(R.string.restart_device), pendingIntent);
         }
-        mProgressHandler.onResult(notify ? notificationInfo : null);
+        ThreadUtils.postOnMainThread(
+                () -> mProgressHandler.onResult(notify ? notificationInfo : null));
     }
 }

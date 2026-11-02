@@ -94,7 +94,7 @@ public class ActionPlanTest {
 
         @NonNull
         @Override
-        public ProgressHandler newSubProgressHandler() {
+        public ProgressHandler newSubProgressHandler(CharSequence operationName) {
             return this;
         }
 

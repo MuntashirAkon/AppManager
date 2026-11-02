@@ -113,19 +113,7 @@ public final class ActionPlan implements IJsonSerializer, Parcelable, LocalizedS
         }
         int progressMax = singleIndeterminate ? ActionProgress.INDETERMINATE : offset;
         if (context.progressHandler != null) {
-            context.addProgressListener(new ActionContext.ProgressListener() {
-                @Override
-                public void onProgress(@NonNull ActionProgress progress) {
-                    try {
-                        context.progressHandler.postActionProgress(progress);
-                    } finally {
-                        if (progress.state == ActionProgress.State.COMPLETED) {
-                            // The terminal event may still be queued when execute() returns.
-                            context.removeProgressListener(this);
-                        }
-                    }
-                }
-            });
+            context.addProgressHandler(context.progressHandler);
         }
         // Dispatch initial progress, 0
         context.dispatch(new ActionProgress(null, progressMax, 0,

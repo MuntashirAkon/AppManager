@@ -2,6 +2,7 @@
 package io.github.muntashirakon.AppManager.actions;
 
 import android.content.Context;
+import android.app.Service;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
@@ -13,13 +14,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Collections;
 import java.util.UUID;
 
 import io.github.muntashirakon.AppManager.history.IJsonSerializer;
 import io.github.muntashirakon.AppManager.history.JsonDeserializer;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.util.LocalizedString;
 
 /**
@@ -197,24 +198,95 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
     }
 
     /**
-     * Creates an isolated progress stream for a nested operation such as backup or restore.
-     * The parent stream remains reserved for the ActionPlan.
+     * Creates an independently measured child progress on the context's progress stream. This is
+     * useful for actions (e.g., backup/restore) that have individual progress.
      */
-    @Nullable
-    protected final ProgressHandler newSubProgressHandler(@NonNull ActionContext context) {
-        ProgressHandler parent = context.progressHandler;
-        if (parent == null) {
-            return null;
-        }
-        ProgressHandler child = parent.newSubProgressHandler();
-        Object message = parent.getLastMessage();
-        ThreadUtils.postOnMainThread(() -> child.onProgressStart(-1, 0, message));
-        return child;
+    @NonNull
+    protected final SubProgressHandler newSubProgressHandler(@NonNull ActionContext context,
+                                                             @NonNull UserPackagePair target,
+                                                             @NonNull CharSequence operationName,
+                                                             @NonNull CharSequence title) {
+        return new SubProgressHandler(context, new ActionProgress.Child(getId(), target, operationName, title));
     }
 
-    protected final void finishSubProgressHandler(@Nullable ProgressHandler child) {
-        if (child != null) {
-            ThreadUtils.postOnMainThread(() -> child.onResult(null));
+    protected static final class SubProgressHandler extends ProgressHandler implements AutoCloseable {
+        private final ActionContext mContext;
+        private final ActionProgress.Child mChild;
+        private int mMax = ActionProgress.INDETERMINATE;
+        private float mCurrent;
+        private boolean mCompleted;
+
+        private SubProgressHandler(ActionContext context, ActionProgress.Child child) {
+            mContext = context;
+            mChild = child;
+            publish(ActionProgress.State.STARTED);
+        }
+
+        private void publish(ActionProgress.State state) {
+            mContext.dispatch(new ActionProgress(mChild.title, mMax, mCurrent, state,
+                    mContext.executionMode, Collections.emptyList(), mChild));
+        }
+
+        @Override
+        public synchronized void postUpdate(int max, float current, @Nullable Object message) {
+            if (mCompleted) {
+                return;
+            }
+            mMax = max;
+            mCurrent = max == ActionProgress.INDETERMINATE ? 0 : current;
+            publish(ActionProgress.State.UPDATED);
+        }
+
+        @Override
+        public void onProgressStart(int max, float current, @Nullable Object message) {
+            postUpdate(max, current, message);
+        }
+
+        @Override
+        public void onProgressUpdate(int max, float current, @Nullable Object message) {
+            postUpdate(max, current, message);
+        }
+
+        @Override
+        public void onResult(@Nullable Object message) {
+            close();
+        }
+
+        @Override
+        public synchronized void close() {
+            if (mCompleted) return;
+            mCompleted = true;
+            publish(ActionProgress.State.COMPLETED);
+        }
+
+        @Override
+        public synchronized int getLastMax() {
+            return mMax;
+        }
+
+        @Override
+        public synchronized float getLastProgress() {
+            return mCurrent;
+        }
+
+        @Nullable
+        @Override
+        public Object getLastMessage() {
+            return null;
+        }
+
+        @Override
+        public void onAttach(@Nullable Service service, @NonNull Object message) {
+        }
+
+        @Override
+        public void onDetach(@Nullable Service service) {
+        }
+
+        @NonNull
+        @Override
+        public ProgressHandler newSubProgressHandler(@Nullable CharSequence operationName) {
+            throw new UnsupportedOperationException("Backup progress has no further nested operations");
         }
     }
 

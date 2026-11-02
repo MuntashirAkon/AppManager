@@ -18,8 +18,13 @@ import java.util.Map;
 import java.util.IdentityHashMap;
 import java.util.ArrayDeque;
 
+import io.github.muntashirakon.AppManager.logs.Logger;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
+import io.github.muntashirakon.AppManager.progress.ActionProgressText;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 /**
  * Runtime-only inputs used when resolving configured and inherited targets.
@@ -43,6 +48,7 @@ public final class ActionContext implements Parcelable {
     private final ArrayDeque<Runnable> mPendingProgress = new ArrayDeque<>();
     @Nullable
     private ActionProgress mLatestProgress;
+    private final Map<String, ActionProgress> mChildProgress = new LinkedHashMap<>();
     private boolean mDispatchingProgress;
     private int mPlanProgressMax;
     private int mActionProgressOffset;
@@ -141,6 +147,93 @@ public final class ActionContext implements Parcelable {
     }
 
     /**
+     * Attach an special listener to the ProgressHandler capable of handling the progress of its
+     * children. The listener is unregistered automatically upon completion.
+     * <p>
+     * Intended for {@link ActionPlan#execute(ActionContext, ActionMode, Logger)}.
+     *
+     * @return Registered listener.
+     */
+    @NonNull
+    public ProgressListener addProgressHandler(@NonNull ProgressHandler handler) {
+        ProgressListener listener = new ProgressListenerWithChildren(handler);
+        addProgressListener(listener);
+        return listener;
+    }
+
+    private final class ProgressListenerWithChildren implements ProgressListener {
+        private final ProgressHandler mHandler;
+        // Presentation state is accessed only on the main thread.
+        private final Map<String, ProgressHandler> mChildren = new LinkedHashMap<>();
+        private volatile boolean mClosed;
+
+        ProgressListenerWithChildren(ProgressHandler handler) {
+            mHandler = handler;
+        }
+
+        @Override
+        public void onProgress(@NonNull ActionProgress progress) {
+            ThreadUtils.postOrRunOnMainThread(() -> {
+                if (mClosed) {
+                    return;
+                }
+                try {
+                    ExUtils.exceptionAsIgnored(() -> {
+                        if (progress.child == null) {
+                            mHandler.postActionProgress(progress);
+                        } else {
+                            deliverChild(progress, progress.child);
+                        }
+                    });
+                } finally {
+                    if (progress.child == null && progress.state == ActionProgress.State.COMPLETED) {
+                        removeProgressListener(this);
+                    }
+                }
+            });
+        }
+
+        private void deliverChild(@NonNull ActionProgress progress, @NonNull ActionProgress.Child childProgress) {
+            String id = childProgress.id;
+            ProgressHandler child = mChildren.get(id);
+            if (child == null) {
+                // A child was expected but doesn't exist.
+                if (progress.state == ActionProgress.State.COMPLETED) {
+                    // Progress already finished, no need to create a child anymore
+                    return;
+                }
+                // Create a new child
+                child = mHandler.newSubProgressHandler(childProgress.operationName);
+                child.setProgressTextInterface(new ActionProgressText(ContextUtils.getContext(), childProgress.title));
+                mChildren.put(id, child);
+                if (progress.state != ActionProgress.State.STARTED) {
+                    // Initialize a late subscriber at the active child's current position.
+                    child.postActionProgress(new ActionProgress(progress.label, progress.max,
+                            progress.current, ActionProgress.State.STARTED, progress.executionMode,
+                            progress.results, progress.child));
+                }
+            }
+            try {
+                child.postActionProgress(progress);
+            } finally {
+                if (progress.state == ActionProgress.State.COMPLETED) {
+                    mChildren.remove(id);
+                }
+            }
+        }
+
+        void close() {
+            mClosed = true;
+            ThreadUtils.postOrRunOnMainThread(() -> {
+                for (ProgressHandler child : mChildren.values()) {
+                    ExUtils.exceptionAsIgnored(() -> child.onResult(null));
+                }
+                mChildren.clear();
+            });
+        }
+    }
+
+    /**
      * Registers an observer and replays the latest snapshot in publication order.
      */
     public void addProgressListener(@NonNull ProgressListener listener) {
@@ -154,6 +247,9 @@ public final class ActionContext implements Parcelable {
             if (latest != null) {
                 mPendingProgress.add(() -> notifyProgressListener(listener, registration, latest));
             }
+            for (ActionProgress child : mChildProgress.values()) {
+                mPendingProgress.add(() -> notifyProgressListener(listener, registration, child));
+            }
         }
         drainProgress();
     }
@@ -162,8 +258,12 @@ public final class ActionContext implements Parcelable {
      * Unregisters an observer. A callback already being delivered may finish.
      */
     public void removeProgressListener(@NonNull ProgressListener listener) {
+        boolean removed;
         synchronized (mProgressListeners) {
-            mProgressListeners.remove(listener);
+            removed = mProgressListeners.remove(listener) != null;
+        }
+        if (removed && listener instanceof ProgressListenerWithChildren) {
+            ((ProgressListenerWithChildren) listener).close();
         }
     }
 
@@ -198,7 +298,7 @@ public final class ActionContext implements Parcelable {
     public void dispatch(@NonNull ActionProgress progress) {
         synchronized (mProgressListeners) {
             ActionProgress event = progress;
-            if (mActionProgressWorkload >= 0) {
+            if (progress.child == null && mActionProgressWorkload >= 0) {
                 float localProgress;
                 if (progress.max == ActionProgress.INDETERMINATE) {
                     localProgress = progress.state == ActionProgress.State.COMPLETED
@@ -212,7 +312,13 @@ public final class ActionContext implements Parcelable {
                                 ? 0 : mActionProgressOffset + localProgress,
                         ActionProgress.State.UPDATED, executionMode, progress.results);
             }
-            mLatestProgress = event;
+            if (event.child == null) {
+                mLatestProgress = event;
+            } else if (event.state == ActionProgress.State.COMPLETED) {
+                mChildProgress.remove(event.child.id);
+            } else {
+                mChildProgress.put(event.child.id, event);
+            }
             ActionProgress snapshot = event;
             Map<ProgressListener, Object> listeners = new LinkedHashMap<>(mProgressListeners);
             mPendingProgress.add(() -> {

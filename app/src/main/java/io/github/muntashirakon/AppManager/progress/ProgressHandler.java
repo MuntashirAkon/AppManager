@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.app.Service;
 
 import androidx.annotation.AnyThread;
-import androidx.annotation.CallSuper;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -107,10 +106,11 @@ public abstract class ProgressHandler {
     public abstract void onDetach(@Nullable Service service);
 
     /**
-     * Get a new progress handler from this handler. The handler will never have a queue handler.
+     * Get an independent child handler without a queue handler. A null operation name
+     * inherits the parent's operation context.
      */
     @NonNull
-    public abstract ProgressHandler newSubProgressHandler();
+    public abstract ProgressHandler newSubProgressHandler(@Nullable CharSequence operationName);
 
     @Nullable
     public abstract Object getLastMessage();
@@ -150,8 +150,8 @@ public abstract class ProgressHandler {
     @AnyThread
     public final void postActionProgress(@NonNull ActionProgress progress) {
         ThreadUtils.postOrRunOnMainThread(() -> {
-            mLastActionProgress = progress;
             try {
+                mLastActionProgress = progress;
                 onActionProgress(progress);
             } catch (RuntimeException ignored) {
                 // Failure here must not stop actual execution.
@@ -195,7 +195,6 @@ public abstract class ProgressHandler {
      */
     @SuppressLint("WrongThread")
     @AnyThread
-    @CallSuper
     public void postUpdate(int max, float current, @Nullable Object message) {
         ThreadUtils.postOrRunOnMainThread(() -> onProgressUpdate(max, current, message));
     }

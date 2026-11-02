@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.github.muntashirakon.AppManager.actions;
 
+import android.content.Context;
 import android.os.Parcel;
 
 import androidx.annotation.NonNull;
@@ -12,8 +13,10 @@ import java.util.UUID;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.batchops.struct.BatchBackupOptions;
-import io.github.muntashirakon.AppManager.progress.ProgressHandler;
+import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public final class BackupAction extends PackageScopedAction {
     public BackupAction(@NonNull ActionTargetSpec target, @NonNull ActionParameters onParameters) {
@@ -56,13 +59,16 @@ public final class BackupAction extends PackageScopedAction {
                                      @NonNull UserPackagePair target,
                                      @NonNull List<ActionExecutionRecord> previousRecords)
             throws BackupException {
-        ProgressHandler subProgressHandler = newSubProgressHandler(context);
-        try {
+        Context ctx = ContextUtils.getContext();
+        CharSequence operationName = toLocalizedString(ctx);
+        CharSequence appLabel = PackageUtils.getPackageLabel(ctx.getPackageManager(),
+                target.getPackageName(), target.getUserId());
+        CharSequence title = ctx.getString(R.string.backing_up_app, appLabel);
+        try (SubProgressHandler subProgressHandler = newSubProgressHandler(context, target,
+                operationName, title)) {
             mBackupManager.backup(mOptions.getBackupOpOptions(target.getPackageName(),
                     target.getUserId()), subProgressHandler);
             return actionResult(target, ActionResultStatus.SUCCESS, null);
-        } finally {
-            finishSubProgressHandler(subProgressHandler);
         }
     }
 

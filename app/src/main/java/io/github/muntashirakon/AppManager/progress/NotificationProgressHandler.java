@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Contract;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
@@ -179,9 +180,18 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
 
     @Override
     @NonNull
-    public ProgressHandler newSubProgressHandler() {
-        return new NotificationProgressHandler(mContext, mProgressNotificationManagerInfo,
+    public ProgressHandler newSubProgressHandler(@Nullable CharSequence operationName) {
+        NotificationProgressHandler child = new NotificationProgressHandler(mContext, mProgressNotificationManagerInfo,
                 mCompletionNotificationManagerInfo, null);
+        if (mLastProgressNotification != null) {
+            NotificationInfo info = new NotificationInfo(mLastProgressNotification);
+            if (operationName != null) {
+                info.setOperationName(operationName);
+            }
+            info.setGroupId(BuildConfig.APPLICATION_ID + ".notification_group.PROGRESS." + mProgressNotificationId);
+            child.mLastProgressNotification = info;
+        }
+        return child;
     }
 
     @Override

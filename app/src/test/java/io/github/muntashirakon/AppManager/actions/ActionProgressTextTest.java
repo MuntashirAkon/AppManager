@@ -82,7 +82,7 @@ public class ActionProgressTextTest {
 
         @NonNull
         @Override
-        public ProgressHandler newSubProgressHandler() {
+        public ProgressHandler newSubProgressHandler(CharSequence operationName) {
             return new TestHandler();
         }
 

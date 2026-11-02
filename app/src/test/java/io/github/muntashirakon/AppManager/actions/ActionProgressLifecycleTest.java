@@ -424,7 +424,7 @@ public class ActionProgressLifecycleTest {
 
         @NonNull
         @Override
-        public ProgressHandler newSubProgressHandler() {
+        public ProgressHandler newSubProgressHandler(CharSequence operationName) {
             return new RecordingHandler();
         }
 

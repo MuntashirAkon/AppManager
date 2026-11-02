@@ -313,7 +313,7 @@ public class VtScanService extends Service {
             if (root == null) {
                 throw new IllegalStateException("Progress handler is not initialized.");
             }
-            mHandler = root.newSubProgressHandler();
+            mHandler = root.newSubProgressHandler(null);
             mHandler.setProgressTextInterface(handler -> mText.get());
             VtFile file = mRepository == null ? null : mRepository.getFile(attempt.fileId);
             mTitle = file == null || file.displayName == null ? "VirusTotal scan #" + attempt.id : file.displayName;

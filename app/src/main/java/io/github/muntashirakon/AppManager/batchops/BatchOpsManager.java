@@ -987,7 +987,7 @@ public class BatchOpsManager {
         if (message == null) {
             return null;
         }
-        ProgressHandler p = mProgressHandler.newSubProgressHandler();
+        ProgressHandler p = mProgressHandler.newSubProgressHandler(operationName);
         if (p instanceof NotificationProgressHandler) {
             NotificationInfo parentNotificationInfo = (NotificationInfo) message;
             NotificationInfo notificationInfo = new NotificationInfo(parentNotificationInfo)

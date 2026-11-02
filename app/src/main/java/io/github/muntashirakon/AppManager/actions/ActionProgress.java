@@ -8,12 +8,42 @@ import androidx.annotation.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
 
 /**
  * Progress emitted by an {@link Action} during execution.
  */
 public final class ActionProgress {
     public enum State {STARTED, UPDATED, COMPLETED}
+
+    public static final class Child {
+        @NonNull
+        public final String id = UUID.randomUUID().toString();
+        @NonNull
+        public final String actionId;
+        @NonNull
+        public final UserPackagePair target;
+        @NonNull
+        public final String operationName;
+        @NonNull
+        public final String title;
+
+        public Child(@NonNull String actionId, @NonNull UserPackagePair target,
+                     @NonNull CharSequence operationName, @NonNull CharSequence title) {
+            this.actionId = actionId;
+            this.target = target;
+            this.operationName = operationName.toString();
+            this.title = title.toString();
+        }
+    }
+
+    /**
+     * Null for parent progress. Never null for child progress.
+     */
+    @Nullable
+    public final Child child;
 
     @NonNull
     public final State state;
@@ -39,6 +69,12 @@ public final class ActionProgress {
     public ActionProgress(@Nullable CharSequence label, int max, float current,
                           @NonNull State state, @NonNull ActionExecutionMode executionMode,
                           @NonNull List<ActionResult> results) {
+        this(label, max, current, state, executionMode, results, null);
+    }
+
+    public ActionProgress(@Nullable CharSequence label, int max, float current,
+                          @NonNull State state, @NonNull ActionExecutionMode executionMode,
+                          @NonNull List<ActionResult> results, @Nullable Child child) {
         if (max < 0 && max != INDETERMINATE) {
             throw new IllegalArgumentException("Invalid progress maximum: " + max);
         }
@@ -58,6 +94,7 @@ public final class ActionProgress {
         this.state = state;
         this.executionMode = executionMode;
         this.results = Collections.unmodifiableList(new ArrayList<>(results));
+        this.child = child;
     }
 
     @VisibleForTesting
