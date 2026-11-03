@@ -12,9 +12,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.Map;
+import java.util.HashMap;
 
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
@@ -24,6 +27,7 @@ import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 
 public final class PermissionStateAction extends PackageScopedAction {
+    private final Map<UserPackagePair, String[]> mResolvedPermissions = new HashMap<>();
     public static final String PARAM_PERMISSIONS = "permissions";
     public static final String PARAM_GRANTED = "granted";
 
@@ -67,6 +71,7 @@ public final class PermissionStateAction extends PackageScopedAction {
                                 @NonNull List<UserPackagePair> targets,
                                 @NonNull List<ActionExecutionRecord> previousRecords) {
         validatePermissionParameters();
+        mResolvedPermissions.clear();
         ActionParameters parameters = requireParameters(mode);
         mPermissions = requireStringArray(parameters, PARAM_PERMISSIONS);
         mGranted = requireBoolean(parameters, PARAM_GRANTED);
@@ -81,12 +86,21 @@ public final class PermissionStateAction extends PackageScopedAction {
                                      @NonNull List<ActionExecutionRecord> previousRecords) {
         try {
             PackageInfo packageInfo = getPackageInfo(target);
-            for (String permission : mPermissions) {
-                PermissionChangeResult change = mControllers.trySetGrantedForBatch(packageInfo,
-                        permission, target.getUserId(), mAppOpsManager, mGranted);
-                if (!change.isSuccessful()) {
-                    throw new IllegalStateException(change.getMessage(), change.getCause());
+            int successfulChanges = 0;
+            List<String> failures = new ArrayList<>();
+            for (String permission : permissionsForTarget(target)) {
+                try {
+                    PermissionChangeResult change = mControllers.trySetGrantedForBatch(packageInfo,
+                            permission, target.getUserId(), mAppOpsManager, mGranted);
+                    if (change.isSuccessful()) successfulChanges++;
+                    else failures.add(permission + ": " + change.getMessage());
+                } catch (Throwable exception) {
+                    failures.add(permission + ": " + exception.getMessage());
                 }
+            }
+            if (!failures.isEmpty()) {
+                return actionResult(target, successfulChanges == 0 ? ActionResultStatus.FAILED
+                        : ActionResultStatus.PARTIAL, android.text.TextUtils.join("; ", failures));
             }
             return actionResult(target, ActionResultStatus.SUCCESS, null);
         } catch (Throwable exception) {
@@ -96,10 +110,10 @@ public final class PermissionStateAction extends PackageScopedAction {
 
     @NonNull
     @Override
-    protected ActionState getCurrentState(@NonNull UserPackagePair target) {
+    protected ActionState getCurrentState(@NonNull UserPackagePair target) throws Throwable {
         JSONArray states = new JSONArray();
         try {
-            for (String permission : sortedPermissions(mPermissions)) {
+            for (String permission : sortedPermissions(permissionsForTarget(target))) {
                 states.put(new JSONObject()
                         .put("name", permission)
                         .put("granted", PermissionCompat.checkPermission(permission,
@@ -114,13 +128,13 @@ public final class PermissionStateAction extends PackageScopedAction {
 
     @NonNull
     @Override
-    protected ActionState getOnState(@NonNull UserPackagePair target) {
+    protected ActionState getOnState(@NonNull UserPackagePair target) throws Throwable {
         return desiredState(target, getOnParameters());
     }
 
     @NonNull
     @Override
-    protected ActionState getOffState(@NonNull UserPackagePair target) {
+    protected ActionState getOffState(@NonNull UserPackagePair target) throws Throwable {
         return desiredState(target, requireOffParameters());
     }
 
@@ -144,12 +158,11 @@ public final class PermissionStateAction extends PackageScopedAction {
 
     @NonNull
     private ActionState desiredState(@NonNull UserPackagePair target,
-                                     @NonNull ActionParameters parameters) {
+                                     @NonNull ActionParameters parameters) throws Throwable {
         JSONArray states = new JSONArray();
         boolean granted = requireBoolean(parameters, PARAM_GRANTED);
         try {
-            for (String permission : sortedPermissions(
-                    requireStringArray(parameters, PARAM_PERMISSIONS))) {
+            for (String permission : sortedPermissions(permissionsForTarget(target))) {
                 states.put(new JSONObject()
                         .put("name", permission)
                         .put("granted", granted));
@@ -164,6 +177,22 @@ public final class PermissionStateAction extends PackageScopedAction {
     private static ActionState state(@NonNull UserPackagePair target, @NonNull String value) {
         return new ActionState("package:" + target.getPackageName() + ":"
                 + target.getUserId() + ":permissions", ActionValue.of(value));
+    }
+
+    @NonNull
+    private String[] permissionsForTarget(@NonNull UserPackagePair target) throws Throwable {
+        if (mPermissions.length != 1 || !"*".equals(mPermissions[0])) {
+            return mPermissions;
+        }
+        String[] permissions = mResolvedPermissions.get(target);
+        if (permissions == null) {
+            permissions = getPackageInfo(target).requestedPermissions;
+            if (permissions == null) {
+                permissions = new String[0];
+            }
+            mResolvedPermissions.put(target, permissions);
+        }
+        return permissions;
     }
 
     @NonNull
