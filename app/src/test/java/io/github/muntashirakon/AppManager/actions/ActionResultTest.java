@@ -38,11 +38,13 @@ public class ActionResultTest {
     public void resultParcelRoundTripPreservesConflictAndStates() {
         ActionState state = new ActionState("package:0:freeze", ActionValue.of(true));
         ActionResult result = new ActionResult("action", new UserPackagePair("pkg", 0), ActionResultStatus.CONFLICT,
-                ActionConflict.EXTERNAL_CHANGE, state, null, "changed externally");
+                ActionConflict.EXTERNAL_CHANGE, state, null, "changed externally")
+                .withRequiresRestart(true).withStateSnapshots(state, null);
         Parcel parcel = Parcel.obtain();
         result.writeToParcel(parcel, 0);
         parcel.setDataPosition(0);
         ActionResult restored = ActionResult.CREATOR.createFromParcel(parcel);
+        assertTrue(restored.requiresRestart);
         assertEquals(result.status, restored.status);
         assertEquals(result.conflict, restored.conflict);
         assertTrue(restored.observedState.isSame(state));

@@ -27,11 +27,19 @@ public final class ActionResult implements Parcelable {
     public final ActionState writtenState;
     @Nullable
     public final String message;
+    public final boolean requiresRestart;
 
     public ActionResult(@NonNull String actionId, @Nullable UserPackagePair target,
                         @NonNull ActionResultStatus status, @NonNull ActionConflict conflict,
                         @Nullable ActionState observedState, @Nullable ActionState writtenState,
                         @Nullable String message) {
+        this(actionId, target, status, conflict, observedState, writtenState, message, false);
+    }
+
+    private ActionResult(@NonNull String actionId, @Nullable UserPackagePair target,
+                         @NonNull ActionResultStatus status, @NonNull ActionConflict conflict,
+                         @Nullable ActionState observedState, @Nullable ActionState writtenState,
+                         @Nullable String message, boolean requiresRestart) {
         this.actionId = actionId;
         this.target = target;
         this.status = status;
@@ -39,13 +47,20 @@ public final class ActionResult implements Parcelable {
         this.observedState = observedState;
         this.writtenState = writtenState;
         this.message = message;
+        this.requiresRestart = requiresRestart;
     }
 
     @NonNull
     public ActionResult withStateSnapshots(@Nullable ActionState observedState,
                                            @Nullable ActionState writtenState) {
         return new ActionResult(actionId, target, status, conflict, observedState,
-                writtenState, message);
+                writtenState, message, requiresRestart);
+    }
+
+    @NonNull
+    public ActionResult withRequiresRestart(boolean requiresRestart) {
+        return new ActionResult(actionId, target, status, conflict, observedState, writtenState,
+                message, requiresRestart);
     }
 
     private ActionResult(@NonNull Parcel in) {
@@ -56,6 +71,7 @@ public final class ActionResult implements Parcelable {
         observedState = in.readParcelable(ActionState.class.getClassLoader());
         writtenState = in.readParcelable(ActionState.class.getClassLoader());
         message = in.readString();
+        requiresRestart = in.readInt() != 0;
     }
 
     @Override
@@ -67,6 +83,7 @@ public final class ActionResult implements Parcelable {
         dest.writeParcelable(observedState, flags);
         dest.writeParcelable(writtenState, flags);
         dest.writeString(message);
+        dest.writeInt(requiresRestart ? 1 : 0);
     }
 
     @Override

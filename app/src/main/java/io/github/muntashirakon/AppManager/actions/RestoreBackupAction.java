@@ -69,7 +69,8 @@ public final class RestoreBackupAction extends PackageScopedAction {
                 operationName, title)) {
             mBackupManager.restore(mOptions.getRestoreOpOptions(target.getPackageName(),
                     target.getUserId()), subProgressHandler);
-            return actionResult(target, ActionResultStatus.SUCCESS, null);
+            return actionResult(target, ActionResultStatus.SUCCESS, null)
+                    .withRequiresRestart(mBackupManager.requiresRestart());
         }
     }
 
