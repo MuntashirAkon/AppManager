@@ -30,6 +30,7 @@ public enum ActionKind implements LocalizedString {
     UNINSTALL(ActionScope.PACKAGE),
 
     INSTALL(ActionScope.GLOBAL),
+    TRIM_CACHES(ActionScope.GLOBAL),
     SETTING(ActionScope.GLOBAL),
     DEVICE_STATE(ActionScope.GLOBAL),
     REBOOT(ActionScope.GLOBAL),
@@ -61,6 +62,7 @@ public enum ActionKind implements LocalizedString {
             case SENSOR_ACCESS: label = R.string.sensors; break;
             case BATTERY_OPTIMIZATION: label = R.string.battery_optimization; break;
             case CLEAR_CACHE: label = R.string.clear_cache; break;
+            case TRIM_CACHES: label = R.string.trim_caches_in_all_apps; break;
             case CLEAR_DATA: label = R.string.clear_data; break;
             case TRACKER_BLOCKING: label = R.string.trackers; break;
             case MAGISK_HIDE: label = R.string.magisk_hide_enabled; break;

@@ -484,6 +484,9 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
         if (kind == ActionKind.REBOOT) {
             return new RebootAction(id, name, schema, target, on, strictness, revert);
         }
+        if (kind == ActionKind.TRIM_CACHES) {
+            return new TrimCachesAction(id, name, schema, target, on, strictness, revert);
+        }
         if (kind == ActionKind.DEVICE_STATE) {
             return new DeviceStateAction(id, name, schema, target, on, off, strictness, revert);
         }
@@ -586,6 +589,9 @@ public abstract class Action implements IJsonSerializer, Parcelable, LocalizedSt
             }
             if (kind == ActionKind.REBOOT) {
                 return RebootAction.fromParcel(in, kind);
+            }
+            if (kind == ActionKind.TRIM_CACHES) {
+                return TrimCachesAction.fromParcel(in, kind);
             }
             if (kind == ActionKind.DEVICE_STATE) {
                 return DeviceStateAction.fromParcel(in, kind);
