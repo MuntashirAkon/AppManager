@@ -590,7 +590,7 @@ public class BatchOpsManager {
             updateProgress(lastProgress, i + 1);
             pair = info.getPair(i);
             int type;
-            if (options.isPreferCustom()) {
+            if (options.isPreferPerApp()) {
                 type = Optional.ofNullable(FreezeUtils.loadFreezeMethod(pair.getPackageName()))
                         .orElse(options.getType());
             } else type = options.getType();

@@ -21,6 +21,7 @@ import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 public final class FreezeAction extends PackageScopedAction {
     public static final String PARAM_FREEZE = "freeze";
     public static final String PARAM_FREEZE_TYPE = "freeze_type";
+    public static final String PARAM_PREFER_PER_APP = "prefer_per_app";
 
     public FreezeAction(@NonNull ActionTargetSpec target, @NonNull ActionParameters onParameters,
                         @Nullable ActionParameters offParameters) {
@@ -48,6 +49,7 @@ public final class FreezeAction extends PackageScopedAction {
 
     private boolean mFreeze;
     private int mFreezeType;
+    private boolean mPreferPerApp;
 
     @Override
     protected void onPreExecute(@NonNull ActionContext context, @NonNull ActionMode mode,
@@ -57,6 +59,7 @@ public final class FreezeAction extends PackageScopedAction {
         ActionParameters params = requireParameters(mode);
         mFreeze = requireBoolean(params, PARAM_FREEZE);
         mFreezeType = getFreezeType(requireInt(params, PARAM_FREEZE_TYPE));
+        mPreferPerApp = optionalBoolean(params, PARAM_PREFER_PER_APP, false);
     }
 
     @NonNull
@@ -66,7 +69,9 @@ public final class FreezeAction extends PackageScopedAction {
                                      @NonNull List<ActionExecutionRecord> previousRecords)
             throws Throwable {
         if (mFreeze) {
-            FreezeUtils.freeze(target.getPackageName(), target.getUserId(), mFreezeType);
+            Integer customMethod = mPreferPerApp ? FreezeUtils.loadFreezeMethod(target.getPackageName()) : null;
+            int freezeType = customMethod == null ? mFreezeType : getFreezeType(customMethod);
+            FreezeUtils.freeze(target.getPackageName(), target.getUserId(), freezeType);
         } else {
             FreezeUtils.unfreeze(target.getPackageName(), target.getUserId());
         }

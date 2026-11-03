@@ -17,19 +17,19 @@ public class BatchFreezeOptions implements IBatchOpOptions {
 
     @FreezeUtils.FreezeMethod
     private int mType;
-    private boolean mPreferCustom;
+    private boolean mPreferPerApp;
 
-    public BatchFreezeOptions(@FreezeUtils.FreezeMethod int type, boolean preferCustom) {
+    public BatchFreezeOptions(@FreezeUtils.FreezeMethod int type, boolean preferPerApp) {
         mType = type;
-        mPreferCustom = preferCustom;
+        mPreferPerApp = preferPerApp;
     }
 
     public int getType() {
         return mType;
     }
 
-    public boolean isPreferCustom() {
-        return mPreferCustom;
+    public boolean isPreferPerApp() {
+        return mPreferPerApp;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class BatchFreezeOptions implements IBatchOpOptions {
     protected BatchFreezeOptions(@NonNull JSONObject jsonObject) throws JSONException {
         assert jsonObject.getString("tag").equals(TAG);
         mType = jsonObject.getInt("type");
-        mPreferCustom = jsonObject.getBoolean("prefer_custom");
+        mPreferPerApp = jsonObject.getBoolean("prefer_custom");
     }
 
 
@@ -49,7 +49,7 @@ public class BatchFreezeOptions implements IBatchOpOptions {
 
     protected BatchFreezeOptions(@NonNull Parcel in) {
         mType = in.readInt();
-        mPreferCustom = in.readByte() != 0;
+        mPreferPerApp = in.readByte() != 0;
     }
 
     public static final Creator<BatchFreezeOptions> CREATOR = new Creator<BatchFreezeOptions>() {
@@ -69,7 +69,7 @@ public class BatchFreezeOptions implements IBatchOpOptions {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeInt(mType);
-        dest.writeByte((byte) (mPreferCustom ? 1 : 0));
+        dest.writeByte((byte) (mPreferPerApp ? 1 : 0));
     }
 
     @NonNull
@@ -78,7 +78,8 @@ public class BatchFreezeOptions implements IBatchOpOptions {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("tag", TAG);
         jsonObject.put("type", mType);
-        jsonObject.put("prefer_custom", mPreferCustom);
+        // Legacy entry
+        jsonObject.put("prefer_custom", mPreferPerApp);
         return jsonObject;
     }
 }
