@@ -150,8 +150,9 @@ public class RulesPreferences extends PreferenceFragment {
         // Remove all rules
         ((Preference) Objects.requireNonNull(findPreference("remove_all_rules"))).setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(mActivity)
+                    .setIcon(io.github.muntashirakon.ui.R.drawable.ic_caution)
                     .setTitle(R.string.pref_remove_all_rules)
-                    .setMessage(getString(R.string.are_you_sure) + " " + getString(R.string.pref_remove_all_rules_msg))
+                    .setMessage(getString(R.string.are_you_sure) + " " + getString(R.string.pref_remove_all_rules_msg) + "\n\n" + getString(R.string.warning_shared_uid_global_reset))
                     .setPositiveButton(R.string.yes, (dialog, which) -> {
                         mActivity.progressIndicator.show();
                         model.removeAllRules();

@@ -28,6 +28,7 @@ import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.UidWarningHelper;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 
 public class RulesTypeSelectionDialogFragment extends DialogFragment {
@@ -89,9 +90,6 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
                                 mSelectedTypes.add(RULE_TYPES[i]);
                             }
                             Log.d("TestImportExport", "Types: %s\nURI: %s", mSelectedTypes, mUri);
-                            if (mActivity instanceof SettingsActivity) {
-                                ((SettingsActivity) mActivity).progressIndicator.show();
-                            }
                             if (mode == MODE_IMPORT) {
                                 handleImport();
                             } else handleExport();
@@ -103,6 +101,9 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
     private void handleExport() {
         if (mUri == null) {
             return;
+        }
+        if (mActivity instanceof SettingsActivity) {
+            ((SettingsActivity) mActivity).progressIndicator.show();
         }
         WeakReference<FragmentActivity> activityRef = new WeakReference<>(mActivity);
         ThreadUtils.postOnBackgroundThread(() -> {
@@ -125,22 +126,54 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
         if (mUri == null) {
             return;
         }
-        WeakReference<FragmentActivity> activityRef = new WeakReference<>(mActivity);
-        ThreadUtils.postOnBackgroundThread(() -> {
-            PowerManager.WakeLock wakeLock = CpuUtils.getPartialWakeLock("rules_exporter");
-            wakeLock.acquire();
-            try (RulesImporter importer = new RulesImporter(new ArrayList<>(mSelectedTypes), mUserIds)) {
-                importer.addRulesFromUri(mUri);
-                if (mPackages != null) importer.setPackagesToImport(mPackages);
-                importer.applyRules(true);
-                ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.the_import_was_successful));
-            } catch (IOException e) {
-                ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.import_failed));
-            } finally {
-                CpuUtils.releaseWakeLock(wakeLock);
+        Runnable doImport = () -> {
+            if (mActivity instanceof SettingsActivity) {
+                ((SettingsActivity) mActivity).progressIndicator.show();
             }
-            hideProgressBar(activityRef);
-        });
+            WeakReference<FragmentActivity> activityRef = new WeakReference<>(mActivity);
+            ThreadUtils.postOnBackgroundThread(() -> {
+                PowerManager.WakeLock wakeLock = CpuUtils.getPartialWakeLock("rules_exporter");
+                wakeLock.acquire();
+                try (RulesImporter importer = new RulesImporter(new ArrayList<>(mSelectedTypes), mUserIds)) {
+                    importer.addRulesFromUri(mUri);
+                    if (mPackages != null) importer.setPackagesToImport(mPackages);
+                    importer.applyRules(true);
+                    ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.the_import_was_successful));
+                } catch (IOException e) {
+                    ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.import_failed));
+                } finally {
+                    CpuUtils.releaseWakeLock(wakeLock);
+                }
+                hideProgressBar(activityRef);
+            });
+        };
+        
+        if (mSelectedTypes != null && mSelectedTypes.contains(RuleType.APP_OP)) {
+            if (mPackages != null && !mPackages.isEmpty()) {
+                List<String> targetPackages = new ArrayList<>();
+                List<Integer> targetUserIds = new ArrayList<>();
+                int[] userIds = (mUserIds != null && mUserIds.length > 0)
+                        ? mUserIds : new int[]{UserHandleHidden.myUserId()};
+                for (String pkg : mPackages) {
+                    for (int userId : userIds) {
+                        targetPackages.add(pkg);
+                        targetUserIds.add(userId);
+                    }
+                }
+                UidWarningHelper.warnIfSharedUids(mActivity, targetPackages, targetUserIds, doImport);
+            } else {
+                // Warn generally for all rules import
+                new com.google.android.material.dialog.MaterialAlertDialogBuilder(mActivity)
+                        .setIcon(io.github.muntashirakon.ui.R.drawable.ic_caution)
+                        .setTitle(R.string.are_you_sure)
+                        .setMessage(R.string.warning_shared_uid_global_import)
+                        .setPositiveButton(R.string.yes, (dialog, which) -> doImport.run())
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+            }
+        } else {
+            doImport.run();
+        }
     }
 
     private void hideProgressBar(@NonNull WeakReference<FragmentActivity> activityRef) {

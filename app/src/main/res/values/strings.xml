@@ -1656,4 +1656,15 @@
     <string name="manual_wireless_debugging_title">Connect using Wireless Debugging</string>
     <string name="launch_activity_dialog_title">Launch activity: action required</string>
     <string name="launch_activity_dialog_message">Android 5.x cannot trigger the <b>Search assistant</b> automatically. To open the activity, activate the Search assistant manually (usually by long-pressing the Home button). Tap <b>Close</b> after the activity opens to restore the original assistant.</string>
+    <plurals name="warning_shared_uid_other_packages">
+        <item quantity="one">%d other package</item>
+        <item quantity="other">%d other packages</item>
+    </plurals>
+    <string name="warning_shared_uid_single">This app shares its UID (%1$d) with %2$s (e.g. %3$s). Modifying AppOps will affect all of them globally due to Android\'s UID-based AppOps implementation. Are you sure you want to proceed?</string>
+    <string name="warning_system_shared_uid_title">System Shared UID Warning</string>
+    <string name="warning_system_shared_uid_single">This app shares a core system UID (%1$d) with %2$s (e.g. %3$s).\n\nModifying its AppOps will globally alter permissions for the core Android system framework, which may cause system crashes (such as SecurityException in Settings) or instability. Are you sure you want to proceed?</string>
+    <string name="warning_system_shared_uid_multiple">One or more selected apps share a core system UID (&lt; 10000) with Android framework components.\n\nModifying AppOps or rules will affect the core operating system globally and may cause system instability. Are you sure you want to proceed?</string>
+    <string name="warning_shared_uid_multiple">One or more selected apps share their UID with other packages. Modifying AppOps or rules will affect all packages sharing the UID globally. Are you sure you want to proceed?</string>
+    <string name="warning_shared_uid_global_reset">Warning: This will reset AppOps for all apps, including system apps that share UIDs (like Android OS), which may globally affect system stability.</string>
+    <string name="warning_shared_uid_global_import">Warning: Importing rules for all packages may reset AppOps for apps that share UIDs (like Android OS), which may globally affect system stability. Are you sure you want to proceed?</string>
 </resources>

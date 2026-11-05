@@ -1471,4 +1471,15 @@
     <string name="selected_items_accessibility_description">选中了 %d 项，共 %d 项</string>
     <string name="adb_local_server_port">ADB 本地服务器端口</string>
     <string name="waiting_for_wifi">正等待 Wi-Fi</string>
+    <plurals name="warning_shared_uid_other_packages">
+        <item quantity="one">%d 个其他应用</item>
+        <item quantity="other">%d 个其他应用</item>
+    </plurals>
+    <string name="warning_shared_uid_single">该应用与其关联的 %2$s（例如 %3$s）共享 UID（%1$d）。根据 Android 的 UID 机制，修改 AppOps 将全局同步影响所有共享该 UID 的应用。是否确定继续？</string>
+    <string name="warning_system_shared_uid_title">共享系统 UID 警告</string>
+    <string name="warning_system_shared_uid_single">该应用与 %2$s（例如 %3$s）共享核心系统 UID（%1$d）。\n\n修改或重置其 AppOps 会直接作用于整机的 Android 系统框架，极易引发系统崩溃（如设置界面报 SecurityException 闪退）或核心功能异常。是否确定继续？</string>
+    <string name="warning_system_shared_uid_multiple">所选应用中包含与 Android 核心系统共享 UID（&lt; 10000）的系统组件。\n\n修改或重置 AppOps 规则将对系统底层产生全局影响，可能危及系统稳定性。是否确定继续？</string>
+    <string name="warning_shared_uid_multiple">所选应用中存在与其他应用共享 UID 的情况。修改 AppOps 或规则将全局同步影响所有共享该 UID 的应用。是否确定继续？</string>
+    <string name="warning_shared_uid_global_reset">警告：此操作将重置全机所有应用的 AppOps（包括与 Android OS 共享 UID 的系统组件），可能危及系统底层稳定性。</string>
+    <string name="warning_shared_uid_global_import">警告：为所有应用导入规则可能重置与 Android OS 共享 UID 的系统组件 AppOps，从而危及系统稳定性。是否确定继续？</string>
 </resources>

@@ -57,6 +57,7 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.AppManager.utils.UidWarningHelper;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
@@ -90,6 +91,19 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
      * of launching one so the current tab can re-query its state when the Settings activity returns.
      */
     private boolean mSettingsActionLaunched;
+    private boolean mSharedUidWarningDismissed;
+
+    private void warnIfSharedUidThen(@NonNull Runnable onProceed) {
+        if (viewModel == null) return;
+        if (mSharedUidWarningDismissed) {
+            onProceed.run();
+            return;
+        }
+        UidWarningHelper.warnIfSharedUid(activity, viewModel.getUid(), mPackageName, () -> {
+            mSharedUidWarningDismissed = true;
+            onProceed.run();
+        });
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -184,35 +198,38 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
         if (id == R.id.action_refresh_details) {
             refreshDetails();
         } else if (id == R.id.action_reset_to_default) {  // App ops
-            ProgressIndicatorCompat.setVisibility(progressIndicator, true);
-            // TODO: 19/3/23 Perform using a ViewModel
-            ThreadUtils.postOnBackgroundThread(() -> {
-                if (viewModel == null || !viewModel.resetAppOps()) {
-                    ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed_to_reset_app_ops));
-                } else {
-                    ThreadUtils.postOnMainThread(() -> {
-                        if (!isDetached()) {
-                            refreshDetails();
-                        }
-                    });
-                }
+            warnIfSharedUidThen(() -> {
+                ProgressIndicatorCompat.setVisibility(progressIndicator, true);
+                // TODO: 19/3/23 Perform using a ViewModel
+                ThreadUtils.postOnBackgroundThread(() -> {
+                    if (!viewModel.resetAppOps()) {
+                        ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed_to_reset_app_ops));
+                    } else {
+                        ThreadUtils.postOnMainThread(() -> {
+                            if (!isDetached()) {
+                                refreshDetails();
+                            }
+                        });
+                    }
+                });
             });
         } else if (id == R.id.action_deny_dangerous_app_ops) {  // App ops
-            ProgressIndicatorCompat.setVisibility(progressIndicator, true);
-            // TODO: 19/3/23 Perform using a ViewModel
-            ThreadUtils.postOnBackgroundThread(() -> {
-                boolean isSuccessful = ExUtils.requireNonNullElse(() -> viewModel != null
-                        && viewModel.ignoreDangerousAppOps(), false);
-                if (isSuccessful) {
-                    ThreadUtils.postOnMainThread(() -> {
-                        if (!isDetached()) {
-                            refreshDetails();
-                        }
-                    });
-                } else {
-                    ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(
-                            R.string.failed_to_deny_dangerous_app_ops));
-                }
+            warnIfSharedUidThen(() -> {
+                ProgressIndicatorCompat.setVisibility(progressIndicator, true);
+                // TODO: 19/3/23 Perform using a ViewModel
+                ThreadUtils.postOnBackgroundThread(() -> {
+                    boolean isSuccessful = viewModel.ignoreDangerousAppOps();
+                    if (isSuccessful) {
+                        ThreadUtils.postOnMainThread(() -> {
+                            if (!isDetached()) {
+                                refreshDetails();
+                            }
+                        });
+                    } else {
+                        ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(
+                                R.string.failed_to_deny_dangerous_app_ops));
+                    }
+                });
             });
         } else if (id == R.id.action_toggle_default_app_ops) {  // App ops
             ProgressIndicatorCompat.setVisibility(progressIndicator, true);
@@ -245,17 +262,19 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                             return;
                         }
                         // TODO: 22/5/23 Perform using a ViewModel
-                        ThreadUtils.postOnBackgroundThread(() -> {
-                            if (viewModel != null && viewModel.setAppOp(op, mode)) {
-                                ThreadUtils.postOnMainThread(() -> {
-                                    if (!isDetached()) {
-                                        refreshDetails();
-                                    }
-                                });
-                            } else {
-                                ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(
-                                        R.string.failed_to_enable_op));
-                            }
+                        warnIfSharedUidThen(() -> {
+                            ThreadUtils.postOnBackgroundThread(() -> {
+                                if (viewModel.setAppOp(op, mode)) {
+                                    ThreadUtils.postOnMainThread(() -> {
+                                        if (!isDetached()) {
+                                            refreshDetails();
+                                        }
+                                    });
+                                } else {
+                                    ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(
+                                            R.string.failed_to_enable_op));
+                                }
+                            });
                         });
                     })
                     .setNegativeButton(R.string.cancel, null)
@@ -702,15 +721,20 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             holder.itemView.setOnClickListener(v -> {
                 boolean isAllowed = !item.isAllowed();
                 // TODO: 22/5/23 Perform using a ViewModel
-                ThreadUtils.postOnBackgroundThread(() -> {
-                    if (viewModel != null && viewModel.setAppOpMode(item)) {
-                        int currentPos = holder.getBindingAdapterPosition();
-                        if (currentPos == RecyclerView.NO_POSITION) return;
-                        ThreadUtils.postOnMainThread(() -> notifyItemChanged(currentPos, AdapterUtils.STUB));
-                    } else {
-                        ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(isAllowed
-                                ? R.string.failed_to_enable_op : R.string.failed_to_disable_op));
-                    }
+                warnIfSharedUidThen(() -> {
+                    ThreadUtils.postOnBackgroundThread(() -> {
+                        if (viewModel.setAppOpMode(item)) {
+                            ThreadUtils.postOnMainThread(() -> {
+                                int currentPos = holder.getBindingAdapterPosition();
+                                if (currentPos != RecyclerView.NO_POSITION) {
+                                    notifyItemChanged(currentPos, AdapterUtils.STUB);
+                                }
+                            });
+                        } else {
+                            ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(isAllowed
+                                    ? R.string.failed_to_enable_op : R.string.failed_to_disable_op));
+                        }
+                    });
                 });
             });
             holder.itemView.setOnLongClickListener(v -> {
@@ -720,16 +744,21 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                         .setSelection(item.getMode())
                         .setOnSingleChoiceClickListener((dialog, which, item1, isChecked) -> {
                             int opMode = modes.get(which);
-                            int currentPos = holder.getBindingAdapterPosition();
-                            if (currentPos == RecyclerView.NO_POSITION) return;
                             // TODO: 22/5/23 Perform using a ViewModel
-                            ThreadUtils.postOnBackgroundThread(() -> {
-                                if (viewModel != null && viewModel.setAppOpMode(item, opMode)) {
-                                    ThreadUtils.postOnMainThread(() -> notifyItemChanged(currentPos, AdapterUtils.STUB));
-                                } else {
-                                    ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(
-                                            R.string.failed_to_change_app_op_mode));
-                                }
+                            warnIfSharedUidThen(() -> {
+                                ThreadUtils.postOnBackgroundThread(() -> {
+                                    if (viewModel.setAppOpMode(item, opMode)) {
+                                        ThreadUtils.postOnMainThread(() -> {
+                                            int currentPos = holder.getBindingAdapterPosition();
+                                            if (currentPos != RecyclerView.NO_POSITION) {
+                                                notifyItemChanged(currentPos, AdapterUtils.STUB);
+                                            }
+                                        });
+                                    } else {
+                                        ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(
+                                                R.string.failed_to_change_app_op_mode));
+                                    }
+                                });
                             });
                             dialog.dismiss();
                         })

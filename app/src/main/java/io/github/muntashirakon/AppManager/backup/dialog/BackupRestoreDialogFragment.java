@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.batchops.BatchQueueItem;
@@ -47,6 +48,7 @@ import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
+import io.github.muntashirakon.AppManager.utils.UidWarningHelper;
 import io.github.muntashirakon.dialog.BottomSheetBehavior;
 import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
@@ -392,19 +394,27 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
 
     @UiThread
     private void startOperation(@NonNull BackupRestoreDialogViewModel.OperationInfo operationInfo) {
-        mMode = operationInfo.mode;
-        if (mActionBeginInterface != null) {
-            mActionBeginInterface.onActionBegin(operationInfo.mode);
+        Runnable doStart = () -> {
+            mMode = operationInfo.mode;
+            if (mActionBeginInterface != null) {
+                mActionBeginInterface.onActionBegin(operationInfo.mode);
+            }
+            ContextCompat.registerReceiver(mActivity, mBatchOpsBroadCastReceiver,
+                    new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            // Start batch ops service
+            BatchBackupOptions options = new BatchBackupOptions(operationInfo.flags, operationInfo.backupNames, operationInfo.relativeDirs);
+            BatchQueueItem queueItem = BatchQueueItem.getBatchOpQueue(operationInfo.op,
+                    operationInfo.packageList, operationInfo.userIdListMappedToPackageList, options);
+            Intent intent = BatchOpsService.getServiceIntent(mActivity, queueItem);
+            ContextCompat.startForegroundService(mActivity, intent);
+            dismiss();
+        };
+
+        if (operationInfo.op == BatchOpsManager.OP_RESTORE_BACKUP && (operationInfo.flags & BackupFlags.BACKUP_RULES) != 0) {
+            UidWarningHelper.warnIfSharedUids(mActivity, operationInfo.packageList, operationInfo.userIdListMappedToPackageList, doStart);
+        } else {
+            doStart.run();
         }
-        ContextCompat.registerReceiver(mActivity, mBatchOpsBroadCastReceiver,
-                new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED), ContextCompat.RECEIVER_NOT_EXPORTED);
-        // Start batch ops service
-        BatchBackupOptions options = new BatchBackupOptions(operationInfo.flags, operationInfo.backupNames, operationInfo.relativeDirs);
-        BatchQueueItem queueItem = BatchQueueItem.getBatchOpQueue(operationInfo.op,
-                operationInfo.packageList, operationInfo.userIdListMappedToPackageList, options);
-        Intent intent = BatchOpsService.getServiceIntent(mActivity, queueItem);
-        ContextCompat.startForegroundService(mActivity, intent);
-        dismiss();
     }
 
     private class BackupDialogFragmentPagerAdapter extends FragmentStateAdapter {
