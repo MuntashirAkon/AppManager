@@ -88,6 +88,8 @@ import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView.ChoiceGenerator;
 import io.github.muntashirakon.AppManager.permission.DevelopmentPermission;
 import io.github.muntashirakon.AppManager.permission.PermUtils;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.permission.Permission;
 import io.github.muntashirakon.AppManager.permission.PermissionControllerRegistry;
 import io.github.muntashirakon.AppManager.permission.PermissionState;
@@ -1170,6 +1172,31 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @Nullable
     public PackageInfo getPackageInfo() {
         return mPackageInfo;
+    }
+
+    private volatile int mCachedUid = -1;
+
+    @AnyThread
+    public int getUid() {
+        if (mCachedUid != -1) {
+            return mCachedUid;
+        }
+        if (mExternalApk) {
+            if (mInstalledPackageInfo != null && mInstalledPackageInfo.applicationInfo != null) {
+                mCachedUid = mInstalledPackageInfo.applicationInfo.uid;
+                return mCachedUid;
+            }
+            return -1;
+        }
+        if (mPackageInfo != null && mPackageInfo.applicationInfo != null) {
+            mCachedUid = mPackageInfo.applicationInfo.uid;
+            return mCachedUid;
+        }
+        if (mPackageName != null) {
+            mCachedUid = PackageUtils.getAppUid(new UserPackagePair(mPackageName, mUserId));
+            return mCachedUid;
+        }
+        return -1;
     }
 
     @AnyThread

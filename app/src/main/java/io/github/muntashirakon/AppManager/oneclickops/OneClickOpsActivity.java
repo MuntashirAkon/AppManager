@@ -48,6 +48,7 @@ import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.UidWarningHelper;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
@@ -369,10 +370,13 @@ public class OneClickOpsActivity extends BaseActivity {
                 .addSelections(selectedPackages)
                 .setTitle(R.string.filtered_packages)
                 .setPositiveButton(R.string.apply, (dialog1, which1, selectedItems) -> {
-                    progressIndicator.show();
-                    BatchQueueItem item = BatchQueueItem.getOneClickQueue(BatchOpsManager.OP_SET_APP_OPS,
-                            selectedItems, null, options);
-                    launchService(item);
+                    Runnable doSetAppOps = () -> {
+                        progressIndicator.show();
+                        BatchQueueItem item = BatchQueueItem.getOneClickQueue(BatchOpsManager.OP_SET_APP_OPS,
+                                selectedItems, null, options);
+                        launchService(item);
+                    };
+                    UidWarningHelper.warnIfSharedUids(this, selectedItems, doSetAppOps);
                 })
                 .setNegativeButton(R.string.cancel, (dialog1, which1, selectedItems) -> progressIndicator.hide())
                 .show();
